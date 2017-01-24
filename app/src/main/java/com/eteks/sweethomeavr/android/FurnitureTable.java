@@ -132,8 +132,11 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			imageView.setScaleType(ImageView.ScaleType.CENTER);
 			imageView.setMinimumWidth(widths[0]);
 
-			ImageIcon icon = (ImageIcon)IconManager.getInstance().getIcon(piece.getIcon(), 24, null);
-			imageView.setImageBitmap(((Bitmap)icon.getImage().getDelegate()));
+			Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), 24, null);
+			if(icon instanceof ImageIcon)
+			{
+				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
+			}
 
 			tableRow.addView(imageView, new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));

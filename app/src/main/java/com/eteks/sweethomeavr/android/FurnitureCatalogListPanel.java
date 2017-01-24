@@ -206,8 +206,11 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 			}
 
 			int DEFAULT_ICON_HEIGHT = 80;//see below
-			ImageIcon icon = (ImageIcon)IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT, null);
-			imageView.setImageBitmap(((Bitmap)icon.getImage().getDelegate()));
+			Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT, null);
+			if(icon instanceof ImageIcon)
+			{
+				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
+			}
 			return imageView;
 		}
 
