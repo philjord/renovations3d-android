@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/exit"
+          android:title="@string/exit"/>
+    <item android:id="@+id/menu_new"
+          android:title="@string/menu_new"/>
+    <item android:id="@+id/menu_load"
+          android:title="@string/menu_load"
+          android:enabled="false"/>
+    <item android:id="@+id/menu_save"
+          android:title="@string/menu_save"
+          android:enabled="false"/>
+    <item android:id="@+id/menu_saveas"
+          android:title="@string/menu_save_as"
+          android:enabled="false"/>
+    <item android:id="@+id/menu_preferences"
+          android:title="@string/menu_preferences" />
+    <item android:id="@+id/menu_help"
+          android:title="@string/menu_help" />
+    <item android:id="@+id/menu_about"
+          android:title="@string/menu_about" />
+
+</menu>

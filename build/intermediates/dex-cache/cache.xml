@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\jogl-all-android.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4a5c04a2df41d72c94fd78561e7eadf6a1e6cc22">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\jogl-all-android_89cf857e2041778c8a81925c5a57a8425855eb74\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\gluegen-rt-android.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4ac2f75e31424ece97dabb225ba3cfb4fd332909">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\gluegen-rt-android_182fd09875233b7a688fff00fed05a599be2a373\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\sweethome3D-tools.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="81276d265dd982f8b425746852a912c123c0b3e4">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\sweethome3D-tools_e5c15483cac26ac7177a13e422940aa5a4ab2079\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.0.1_35c92229de79548c5b1391a4ff6449463d16e7fc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\sweethome3D-android.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="bfe01f60185765b3b4f2a4896350a7beaa2f2977">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\sweethome3D-android_051dab930d9d71625e43816b82aedbaf3e40b6cc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.1_8f1844d21c85a7739fcce35e3ad5019e3bb89a6d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\sweethome3D-android.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a336fe0b48592ed0dda8cf6a3d5ff5d0e8846fd5">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\sweethome3D-android_051dab930d9d71625e43816b82aedbaf3e40b6cc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.0.1_4e94a54abd17fd98ae34b9d56f3effa0911a2141\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.1_8f1844d21c85a7739fcce35e3ad5019e3bb89a6d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\sweethome3D-tools.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="aa4d6f7bfcf2e167bf8de8f05bf49c309e3c9f09">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\sweethome3D-tools_e5c15483cac26ac7177a13e422940aa5a4ab2079\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\sweethome3D-tools.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c19133b14c8f41161429af70f9e1d75e8243f005">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\sweethome3D-tools_e5c15483cac26ac7177a13e422940aa5a4ab2079\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\gluegen-rt-android.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4ac2f75e31424ece97dabb225ba3cfb4fd332909">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\gluegen-rt-android_182fd09875233b7a688fff00fed05a599be2a373\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.0.1_35c92229de79548c5b1391a4ff6449463d16e7fc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\libs\jogl-all-android.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4a5c04a2df41d72c94fd78561e7eadf6a1e6cc22">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\2\jogl-all-android_89cf857e2041778c8a81925c5a57a8425855eb74\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\phil\AndroidStudioProjects\sweethomeavr-android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.0.1_4e94a54abd17fd98ae34b9d56f3effa0911a2141\classes.dex" />
+    </item>
+
+</items>

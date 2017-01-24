@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "843754081116",
+    "firebase_url": "https://sweet-home-avr.firebaseio.com",
+    "project_id": "sweet-home-avr",
+    "storage_bucket": "sweet-home-avr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843754081116:android:1a7d41a25c15b08d",
+        "android_client_info": {
+          "package_name": "com.mindblowing.sweethomeavr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843754081116-h10ir6kb3i8t1pqajcju2me47sc7me6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mindblowing.sweethomeavr",
+            "certificate_hash": "4B79B71539F7EE5BB1F10F510F284CCB6354EB8C"
+          }
+        },
+        {
+          "client_id": "843754081116-ifcjfjd7j6kc08grg292is272gshi7n7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOd3qLCaOXzYAmHbMwL7478-B9RefhsEo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "843754081116-ifcjfjd7j6kc08grg292is272gshi7n7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

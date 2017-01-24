@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/alignment"
+          android:title="@string/alignment"
+          android:checkable="true"/>
+    <item android:id="@+id/magnetism"
+          android:title="@string/magnetism"
+          android:checkable="true"
+          android:checked="true"/>
+</menu>
