@@ -250,6 +250,16 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		possiblyShowWelcomeScreen();
 	}
 
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
@@ -260,16 +270,24 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			boolean homeLoaded = sweetHomeAVR.getHomeController() != null;
 			menu.findItem(R.id.menu_save).setEnabled(homeLoaded);
 			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
-
 		}
-		return true;
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
+		menu.findItem(R.id.exit).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		menu.findItem(R.id.menu_new).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
+		menu.findItem(R.id.menu_load).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name"));
+		menu.findItem(R.id.menu_save).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name"));
+		menu.findItem(R.id.menu_saveas).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name"));
+		menu.findItem(R.id.menu_help).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name"));
+		menu.findItem(R.id.menu_about).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name"));
+		menu.findItem(R.id.menu_preferences).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name"));
 		return true;
 	}
 
@@ -291,25 +309,30 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			case R.id.menu_save:
 				//I must get off the EDT as it may ask the question in a blocking manner
 				Thread t = new Thread(){public void run(){
-				sweetHomeAVR.getHomeController().saveAndCompress();
+					if(sweetHomeAVR.getHomeController()!=null)
+						sweetHomeAVR.getHomeController().saveAndCompress();
 				}};
 				t.start();
 				return true;
 			case R.id.menu_saveas:
 				//I must get off the EDT and ask the question in a blocking manner
 				Thread t2 = new Thread(){public void run(){
-					sweetHomeAVR.getHomeController().saveAsAndCompress();
+					if(sweetHomeAVR.getHomeController()!=null)
+						sweetHomeAVR.getHomeController().saveAsAndCompress();
 				}};
 				t2.start();
 				return true;
 			case R.id.menu_help:
-				sweetHomeAVR.getHomeController().help();
+				if(sweetHomeAVR.getHomeController() != null)
+					sweetHomeAVR.getHomeController().help();
 				return true;
 			case R.id.menu_about:
-				sweetHomeAVR.getHomeController().about();
+				if(sweetHomeAVR.getHomeController() != null)
+					sweetHomeAVR.getHomeController().about();
 				return true;
 			case R.id.menu_preferences:
-				sweetHomeAVR.getHomeController().editPreferences();
+				if(sweetHomeAVR.getHomeController()!=null)
+					sweetHomeAVR.getHomeController().editPreferences();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

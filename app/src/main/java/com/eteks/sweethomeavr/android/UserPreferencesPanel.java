@@ -66,10 +66,6 @@ import javaawt.VMGraphics2D;
 import javaawt.image.BufferedImage;
 import javaawt.image.VMBufferedImage;
 
-import static android.R.attr.x;
-import static android.R.attr.y;
-
-
 /**
  * User preferences panel.
  * @author Emmanuel Puybaret
@@ -112,8 +108,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   private NumberPicker         newWallHeightSpinner;
   private TextView           newFloorThicknessLabel;
   private NumberPicker newFloorThicknessSpinner;
-  private CheckBox        checkUpdatesCheckBox;
-  private Button          checkUpdatesNowButton;
+ // private CheckBox        checkUpdatesCheckBox;
+  //private Button          checkUpdatesNowButton;
   private CheckBox        autoSaveDelayForRecoveryCheckBox;
   private NumberPicker         autoSaveDelayForRecoverySpinner;
   private TextView           autoSaveDelayForRecoveryUnitLabel;
@@ -122,8 +118,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
 
 	private Activity activity;
-
 	private LinearLayout rootView;
+	private Button closeButton;
   /**
    * Creates a preferences panel that layouts the editable properties
    * of its <code>controller</code>. 
@@ -156,25 +152,32 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       this.languageComboBox = new EasySpinner(new DefaultComboBoxModel(preferences.getSupportedLanguages()));
 		languageComboBox.setAdapter(new ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,preferences.getSupportedLanguages())
 		{
-			public View getDropDownView (int position,
-										 View convertView,
-										 ViewGroup parent)
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				return getAnyViews( position,  convertView,  parent);
+			}
+			public View getDropDownView (int position, View convertView, ViewGroup parent)
+			{
+				return getAnyViews(position, convertView, parent);
+			}
+			public View getAnyViews(int position, View convertView, ViewGroup parent)
 			{
 				TextView ret = new TextView(activity);
-            String language = (String)languageComboBox.getItemAtPosition(position);
-            Locale locale;
-            int underscoreIndex = language.indexOf("_");
-            if (underscoreIndex != -1) {
-              locale = new Locale(language.substring(0, underscoreIndex), 
-                  language.substring(underscoreIndex + 1));
-            } else {
-              locale = new Locale(language);
-            }
-            String displayedValue = locale.getDisplayLanguage(locale);
-            displayedValue = Character.toUpperCase(displayedValue.charAt(0)) + displayedValue.substring(1);
-            if (underscoreIndex != -1) {
-              displayedValue += " - " + locale.getDisplayCountry(locale); 
-            }
+				String language = (String)languageComboBox.getItemAtPosition(position);
+				Locale locale;
+				int underscoreIndex = language.indexOf("_");
+				if (underscoreIndex != -1) {
+				  locale = new Locale(language.substring(0, underscoreIndex),
+					  language.substring(underscoreIndex + 1));
+				} else {
+				  locale = new Locale(language);
+				}
+				String displayedValue = locale.getDisplayLanguage(locale);
+				displayedValue = Character.toUpperCase(displayedValue.charAt(0)) + displayedValue.substring(1);
+				if (underscoreIndex != -1) {
+				  displayedValue += " - " + locale.getDisplayCountry(locale);
+				}
 				ret.setText(displayedValue);
             return ret;
           }
@@ -197,19 +200,19 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
           new SupportedLanguagesChangeListener(this));
     }
     
-    if (controller.mayImportLanguageLibrary()) {
+    /*if (controller.mayImportLanguageLibrary()) {
       this.languageLibraryImportButton = new Button(activity);languageLibraryImportButton.setText("Import lanaguage library not enabled");
 		//TODO: note this has an icon, not a text
-				/*new ResourceAction(
+				 new ResourceAction(
           preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY", true) {
             @Override
             public void actionPerformed(ActionEvent ev) {
               controller.importLanguageLibrary();
             }
-          });*/
+          });
      // this.languageLibraryImportButton.setToolTipText(preferences.getLocalizedString(
       //    com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
-    }
+    }*/
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.UNIT)) {
       // Create unit label and combo box bound to controller UNIT property
@@ -229,6 +232,13 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitComboBox.inchDecimals.text"));
 		unitComboBox.setAdapter(new ArrayAdapter<LengthUnit>(activity,android.R.layout.simple_list_item_1,LengthUnit.values())
 		{
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				TextView ret = new TextView(activity);
+				ret.setText(comboBoxTexts.get(unitComboBox.getItemAtPosition(position)));
+				return ret;
+			}
 			public View getDropDownView (int position,
 							   View convertView,
 							   ViewGroup parent)
@@ -688,7 +698,15 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
 
-
+	  this.closeButton = new Button(activity);closeButton.setText(SwingTools.getLocalizedLabelText(preferences,
+			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
+	  closeButton.setOnClickListener(new View.OnClickListener(){
+		  public void onClick(View view)
+		  {
+			  activity.invalidateOptionsMenu();
+			  UserPreferencesPanel.this.dismiss();
+		  }
+	  });
   }
 
   /**
@@ -1128,15 +1146,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
         //  GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     }
 
-	  Button close = new Button(activity);close.setText("Close");
-	  //TODO: what is the key, not OK ? SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "CLOSE.Name"));
-	  close.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  UserPreferencesPanel.this.dismiss();
-		  }
-	  });
-	  rootView.addView(close, params);
+
+	  rootView.addView(closeButton, params);
   }
 
   /**

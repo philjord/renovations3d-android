@@ -245,6 +245,18 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	}
 
 	@Override
+	public void onPrepareOptionsMenu(Menu menu)
+	{
+		//In fact tehre is no text about these at all just button operations and teh prefer about magnet
+	//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(
+	//			com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+	//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(
+	//			com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		super.onPrepareOptionsMenu(menu);
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		// Handle item selection
