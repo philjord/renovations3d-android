@@ -19,5 +19,4 @@
           android:title="@string/menu_help" />
     <item android:id="@+id/menu_about"
           android:title="@string/menu_about" />
-
 </menu>

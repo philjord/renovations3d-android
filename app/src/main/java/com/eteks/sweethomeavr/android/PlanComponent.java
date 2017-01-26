@@ -19,20 +19,15 @@
  */
 package com.eteks.sweethomeavr.android;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Paint.FontMetrics;
-import android.opengl.GLES20;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
@@ -67,17 +62,11 @@ import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.eteks.sweethome3d.tools.ResourceURLContent;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.sweethome3d.viewcontroller.VCView;
-import com.eteks.sweethomeavr.SweetHomeAVRActivity;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
 import com.eteks.sweethomeavr.j3d.Component3DManager;
-import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.GL2ES2;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.mindblowing.sweethomeavr.R;
 
 
 import org.jogamp.java3d.AmbientLight;
@@ -89,7 +78,6 @@ import org.jogamp.java3d.Canvas3D;
 import org.jogamp.java3d.DirectionalLight;
 import org.jogamp.java3d.Group;
 import org.jogamp.java3d.ImageComponent2D;
-import org.jogamp.java3d.Jogl2es2Context;
 import org.jogamp.java3d.Light;
 import org.jogamp.java3d.Link;
 import org.jogamp.java3d.Node;
@@ -97,7 +85,6 @@ import org.jogamp.java3d.Shape3D;
 import org.jogamp.java3d.Texture;
 import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
-import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
@@ -112,7 +99,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
-import java.security.AccessControlException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,7 +106,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -165,8 +150,6 @@ import javaawt.print.PageFormat;
 import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
-
-import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 
 /**
@@ -610,6 +593,11 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 	public void setDrawableView(DrawableView dv)
 	{
 		super.setDrawableView(dv);
+
+		// Now determine a fat fingers size for the indicators
+		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
+		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize);
+
 		// Set JComponent default properties
 		setOpaque(true);
 		// Add listeners
@@ -1243,6 +1231,19 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 	 //proper! https://developer.android.com/training/gestures/scale.html
 	  //https://android-developers.googleblog.com/2010/06/making-sense-of-multitouch.html
 	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
+
+	  //see http://stackoverflow.com/questions/4804798/doubletap-in-android OnDoubleTapListener
+	  this.getDrawableView().setOnLongClickListener(new View.OnLongClickListener(){
+
+
+		  @Override
+		  public boolean onLongClick(View v)
+		  {
+			  System.out.println("Long click");
+			  return false;
+		  }
+	  });
+
 	  this.getDrawableView().setOnTouchListener(new View.OnTouchListener()
 												{
 													@Override
@@ -1300,7 +1301,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 																if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
 																{
 																	//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
-																	if((System.currentTimeMillis()-lastMousePressedTime)>100)
+																	if((System.currentTimeMillis() - lastMousePressedTime)>100)
 																		mouseMoved(v, ev);
 																}
 																break;
@@ -1310,7 +1311,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 															{
 																mActivePointerId = INVALID_POINTER_ID;
 																if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+																{
+																	lastMouseReleasedTime = System.currentTimeMillis();
 																	mouseReleased(v, ev);
+																}
 																break;
 															}
 
@@ -1342,6 +1346,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 													}
 
 													private long lastMousePressedTime = 0;
+													private long lastMouseReleasedTime = 0;
 													private Point lastMousePressedLocation = null;
 
 													public void mousePressed(View v, MotionEvent ev)
@@ -1352,6 +1357,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 														this.lastMousePressedLocation = new Point((int) x, (int) y);
 														if (isEnabled())
 														{
+
+
 															//alignment and magnetism come from menu now
 															//requestFocusInWindow();
 															//always button 1
@@ -1367,8 +1374,14 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 																//OperatingSystem.isWindows()
 																//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
 																//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
+
+																//TODO: the previous click is still fired so this is not quite right! see below for the bcorrect system
+																int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400? 2 :1;
+																System.out.println("clickCount "+clickCount);
+
+
 																controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-																		1, false, alignmentActivated, duplicationActivated, magnetismToggled);
+																		clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
 															}
 														}
 													}
@@ -1417,6 +1430,19 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 	  );
   }
+
+	//TODO: use this system, not the last released system above
+/*	private GestureDetector gestureDetector = new GestureDetector(this.getDrawableView(), new GestureDetector.SimpleOnGestureListener() {
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+
+			return super.onDoubleTap(e);
+		}
+
+	});*/
+
+
+
 	//PJPJPJPJ   pinch zooming
 	private static final int INVALID_POINTER_ID = -1;
 
@@ -2228,7 +2254,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 	 * Paints this component.
 	 */
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D)g.create();
 		if (this.backgroundPainted) {
 			paintBackground(g2D, getBackgroundColor(PaintMode.PAINT));
@@ -6150,7 +6176,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
      * Paints this component.
      */
     @Override
-    protected void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
       Graphics2D g2D = (Graphics2D)g.create();
       paintBackground(g2D);
 		Insets insets = getInsets();

@@ -42,7 +42,6 @@ import com.ingenieur.andyelderscrolls.utils.SopInterceptor;
 import com.mindblowing.sweethomeavr.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,9 +49,6 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static android.R.attr.action;
-import static android.R.attr.scheme;
-import static android.R.id.message;
 import static com.mindblowing.sweethomeavr.R.id.pager;
 
 /**
@@ -307,10 +303,13 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				t2.start();
 				return true;
 			case R.id.menu_help:
-				//sweetHomeAVR.getHomeController().help(); can't add until HelpPane works and that's a big job!
+				sweetHomeAVR.getHomeController().help();
 				return true;
 			case R.id.menu_about:
 				sweetHomeAVR.getHomeController().about();
+				return true;
+			case R.id.menu_preferences:
+				sweetHomeAVR.getHomeController().editPreferences();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

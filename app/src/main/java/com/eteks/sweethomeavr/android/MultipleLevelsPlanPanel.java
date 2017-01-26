@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -26,11 +27,15 @@ import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
+import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
+import com.eteks.sweethomeavr.android.swingish.ButtonGroup;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
+import com.eteks.sweethomeavr.android.swingish.JTabbedPane;
 import com.mindblowing.sweethomeavr.R;
 
 
@@ -50,6 +55,8 @@ import javaawt.print.PrinterException;
 import javaxswing.ImageIcon;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
+
+import static android.R.id.message;
 
 /**
  * Created by phil on 11/22/2016.
@@ -74,7 +81,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public static boolean magnetismToggled = false;// careful toggle != checked!
 	public static boolean duplicationActivated = false;
 	public static float dpiMinSpanForZoom = 1.0f;
+	public static float dpiIndicatorTouchSize = 0.25f;
 	private DrawableView drawableView;
+
+	private ButtonGroup selectionGroup = new ButtonGroup();
 
 
 	@Override
@@ -116,14 +126,19 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		((RadioGroup) rootView.findViewById(R.id.planActionGroup)).setOnCheckedChangeListener(planActionGroupToggleListener);
 		// now to programmatically register teh call back for the damn buttons!
 		rootView.findViewById(R.id.planSelect).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.planSelect));
 		rootView.findViewById(R.id.createWalls).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createWalls));
 		rootView.findViewById(R.id.createRooms).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createRooms));
 		rootView.findViewById(R.id.createPolyLines).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createPolyLines));
 		rootView.findViewById(R.id.createDimensions).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createDimensions));
 		rootView.findViewById(R.id.createText).setOnClickListener(planActionListener);
+		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createText));
 
 		rootView.findViewById(R.id.lockCheck).setOnClickListener(planActionListener);
 
@@ -152,24 +167,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case R.id.createWalls:
 					planController.escape();// in case we are doing a create now
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.WALL_CREATION);
 					break;
 				case R.id.createRooms:
 					planController.escape();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.ROOM_CREATION);
 					break;
 				case R.id.createPolyLines:
 					planController.escape();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 					break;
 				case R.id.createDimensions:
 					planController.escape();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case R.id.createText:
 					planController.escape();
-					//TODO: planController.setMode(PlanController.Mode.LABEL_CREATION);
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Not done", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish (not working yet)", message), Toast.LENGTH_SHORT).show();
+					planController.setMode(PlanController.Mode.LABEL_CREATION);
 					break;
 				case R.id.lockCheck:
 					ToggleButton lockButton = (ToggleButton)view;
@@ -210,22 +229,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 	};
 
-	RadioGroup.OnCheckedChangeListener planActionGroupToggleListener = new RadioGroup.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(final RadioGroup radioGroup, final int id) {
-			for (int j = 0; j < radioGroup.getChildCount(); j++) {
-				final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
-				view.setChecked(view.getId() == id);
-			}
-		}
-	};
+
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.plan_component_menu, menu);
 
 		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
-		menu.findItem(R.id.magnetism).setChecked(!magnetismToggled);
+
+		//TODO: should also be done after prefs undated too
+		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
+		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -283,10 +297,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	private UserPreferences preferences;
 	private PlanController planController;
 
-	public void init(Home home, UserPreferences preferences, PlanController planController)
+	private boolean rulersVisible = true;
+
+	public void init(Home home, UserPreferences preferences2, PlanController planController)
 	{
 		this.home = home;
-		this.preferences = preferences;
+		this.preferences = preferences2;
 		this.planController = planController;
 		// Card layout relates to the odd single/multiple options
 		//super(new CardLayout());
@@ -300,6 +316,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		//updateSelectedTab(home);
 
 
+		// taken from HomePane
+		rulersVisible = preferences.isRulersVisible();
+		preferences.addPropertyChangeListener(UserPreferences.Property.RULERS_VISIBLE,
+				new PropertyChangeListener(){
+					public void propertyChange(PropertyChangeEvent event)
+					{
+						rulersVisible = preferences.isRulersVisible();
+						multipleLevelsTabbedPane.repaint();
+						planComponent.repaint();
+					}
+				});
 	}
 
 
@@ -321,25 +348,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 *
 	 * @param g
 	 */
-	protected void paintComponent(Graphics g)
+	public void paintComponent(Graphics g)
 	{
 		//TODO: lock icon need drawing about now
 		AffineTransform previousTransform = ((Graphics2D) g).getTransform();
 		planComponent.paintComponent(g);
 		((Graphics2D) g).setTransform(previousTransform);
 
-		AffineTransform previousTransform2 = ((Graphics2D) g).getTransform();
-		//PJPJ rendering rulers moved from jscrollpane to here (after the plan in order to overwrite)
-		JComponent hRuler = (JComponent) this.getHorizontalRuler();
-		hRuler.setWidth(planComponent.getWidth());
-		hRuler.setHeight(30);
-		hRuler.paintComponent(g);
+		if(rulersVisible)
+		{
+			AffineTransform previousTransform2 = ((Graphics2D) g).getTransform();
+			//PJPJ rendering rulers moved from jscrollpane to here (after the plan in order to overwrite)
+			JComponent hRuler = (JComponent) this.getHorizontalRuler();
+			hRuler.setWidth(planComponent.getWidth());
+			hRuler.setHeight(30);
+			hRuler.paintComponent(g);
 
-		JComponent vRuler = (JComponent) this.getVerticalRuler();
-		vRuler.setWidth(30);
-		vRuler.setHeight(planComponent.getHeight());
-		vRuler.paintComponent(g);
-		((Graphics2D) g).setTransform(previousTransform2);
+			JComponent vRuler = (JComponent) this.getVerticalRuler();
+			vRuler.setWidth(30);
+			vRuler.setHeight(planComponent.getHeight());
+			vRuler.paintComponent(g);
+			((Graphics2D) g).setTransform(previousTransform2);
+		}
 
 
 	}
@@ -1062,5 +1092,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 
 	}
+
+
 
 }

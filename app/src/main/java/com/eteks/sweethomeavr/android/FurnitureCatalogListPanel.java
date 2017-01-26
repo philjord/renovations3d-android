@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,37 +19,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 
-import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.FurnitureCatalog;
 import com.eteks.sweethome3d.model.FurnitureCategory;
-import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
-import com.eteks.sweethome3d.model.HomeTexture;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
-import com.eteks.sweethome3d.viewcontroller.FurnitureController;
-import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
 import com.mindblowing.sweethomeavr.R;
 
 import java.beans.PropertyChangeEvent;
@@ -65,13 +53,8 @@ import java.util.List;
 
 import javaawt.EventQueue;
 import javaawt.Graphics;
-import javaawt.VMImage;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
-import jogamp.graph.font.typecast.ot.table.Table;
-
-import static android.R.attr.id;
-import static com.eteks.sweethomeavr.android.HomeComponent3D.virtualvisit;
 
 
 /**
@@ -84,7 +67,7 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	{
 	}
 	@Override
-	protected void paintComponent(Graphics g)
+	public void paintComponent(Graphics g)
 	{
 		//PJ do I ever need this
 	}

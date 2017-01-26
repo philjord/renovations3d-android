@@ -22,25 +22,22 @@ package com.eteks.sweethomeavr.android;
 
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.media.ImageReader;
 import android.view.View;
 
-import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javaawt.BasicStroke;
 import javaawt.Color;
 import javaawt.Graphics2D;
 import javaawt.Image;
@@ -346,8 +343,8 @@ public class SwingTools
 	{
 		String localizedString = preferences.getLocalizedString(resourceClass, resourceKey, resourceParameters);
 		// Under Mac OS X, remove bracketed upper case roman letter used in oriental languages to indicate mnemonic
-		String language = Locale.getDefault().getLanguage();
-	/*	if (OperatingSystem.isMacOSX()
+	/*	String language = Locale.getDefault().getLanguage();
+		if (OperatingSystem.isMacOSX()
 				&& (language.equals(Locale.CHINESE.getLanguage())
 				|| language.equals(Locale.JAPANESE.getLanguage())
 				|| language.equals(Locale.KOREAN.getLanguage())

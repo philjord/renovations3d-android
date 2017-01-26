@@ -25,8 +25,7 @@ import java.util.concurrent.Executors;
 
 
 		import javaawt.Graphics;
-		import javaawt.Image;
-		import javaawt.image.BufferedImage;
+import javaawt.image.BufferedImage;
 		import java.io.IOException;
 		import java.io.InputStream;
 		import java.util.Collections;
@@ -34,14 +33,14 @@ import java.util.concurrent.Executors;
 		import java.util.Map;
 		import java.util.WeakHashMap;
 		import java.util.concurrent.ExecutorService;
-		import java.util.concurrent.Executors;
 
-		import javaawt.imageio.ImageIO;
+import javaawt.imageio.ImageIO;
 		import javaxswing.Icon;
 		import javaxswing.ImageIcon;
 
 		import com.eteks.sweethome3d.model.Content;
 		import com.eteks.sweethome3d.tools.ResourceURLContent;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
 
 /**
  * Singleton managing icons cache.

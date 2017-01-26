@@ -20,52 +20,28 @@
 package com.eteks.sweethomeavr.android;
 
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.text.Html;
 
 import javaawt.EventQueue;
 
-import javaawt.VMImage;
 import javaawt.geom.Rectangle2D;
-import javaawt.print.PageFormat;
-import javaawt.print.PrinterException;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.AccessControlException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -79,53 +55,26 @@ import org.jogamp.java3d.Node;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.OBJWriter;
 import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
-import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.Camera;
-import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
-import com.eteks.sweethome3d.model.CollectionEvent;
-import com.eteks.sweethome3d.model.CollectionListener;
-import com.eteks.sweethome3d.model.Compass;
 import com.eteks.sweethome3d.model.Content;
-import com.eteks.sweethome3d.model.DimensionLine;
 import com.eteks.sweethome3d.model.Elevatable;
 import com.eteks.sweethome3d.model.Home;
-import com.eteks.sweethome3d.model.HomeEnvironment;
 import com.eteks.sweethome3d.model.HomeFurnitureGroup;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.InterruptedRecorderException;
-import com.eteks.sweethome3d.model.Label;
-import com.eteks.sweethome3d.model.Level;
-import com.eteks.sweethome3d.model.Library;
-import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.RecorderException;
-import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
-import com.eteks.sweethome3d.model.SelectionEvent;
-import com.eteks.sweethome3d.model.SelectionListener;
-import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.eteks.sweethome3d.model.Wall;
-import com.eteks.sweethome3d.plugin.HomePluginController;
-import com.eteks.sweethome3d.plugin.Plugin;
-import com.eteks.sweethome3d.plugin.PluginAction;
-import com.eteks.sweethome3d.plugin.PluginManager;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
-import com.eteks.sweethome3d.viewcontroller.FurnitureController;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
-import com.eteks.sweethome3d.viewcontroller.HomeController3D;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
-import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.Mode;
-import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
-import com.mindblowing.sweethomeavr.R;
-
-import static android.R.attr.action;
-import static android.R.id.message;
-import static com.eteks.sweethomeavr.SweetHomeAVRActivity.PREFS_NAME;
+import com.eteks.sweethomeavr.android.swingish.JComponent;
+import com.eteks.sweethomeavr.android.swingish.JOptionPane;
 
 /**
  * ONLY used for dialogs and menu item enabling
@@ -155,7 +104,7 @@ public class HomePane implements HomeView {
   private final Home            home;
   private final UserPreferences preferences;
   private final HomeController  controller;
-  private JComponent            lastFocusedComponent;
+  private JComponent lastFocusedComponent;
   private Mode   previousPlanControllerMode;
   //private TransferHandler       catalogTransferHandler;
   //private TransferHandler       furnitureTransferHandler;

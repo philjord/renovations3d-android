@@ -21,6 +21,8 @@
  */
 package com.eteks.sweethomeavr.android;
 
+import android.widget.Toast;
+
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CatalogTexture;
@@ -68,6 +70,8 @@ import com.eteks.sweethome3d.viewcontroller.WizardController;
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
 
 import java.security.AccessControlException;
+
+import static android.R.id.message;
 
 /**
  * View factory that instantiates the Swing components of this package.
@@ -219,7 +223,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createUserPreferencesView(UserPreferences preferences,
 												UserPreferencesController userPreferencesController)
 	{
-		throw new UnsupportedOperationException();//return new UserPreferencesPanel(preferences, userPreferencesController);
+		return new UserPreferencesPanel(preferences, userPreferencesController, activity);
 	}
 
 	/**
@@ -236,7 +240,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHomeFurnitureView(UserPreferences preferences,
 											  HomeFurnitureController homeFurnitureController)
 	{
-		throw new UnsupportedOperationException();//return new FurnitureTable(preferences, homeFurnitureController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createHomeFurnitureView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new FurnitureTable(preferences, homeFurnitureController);
 	}
 
 	/**
@@ -245,7 +253,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createWallView(UserPreferences preferences,
 									 WallController wallController)
 	{
-		throw new UnsupportedOperationException();//return new WallPanel(preferences, wallController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createWallView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new WallPanel(preferences, wallController);
 	}
 
 	/**
@@ -254,7 +266,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createRoomView(UserPreferences preferences,
 									 RoomController roomController)
 	{
-		throw new UnsupportedOperationException();//return new RoomPanel(preferences, roomController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createRoomView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new RoomPanel(preferences, roomController);
 	}
 
 	/**
@@ -263,7 +279,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createPolylineView(UserPreferences preferences,
 										 PolylineController polylineController)
 	{
-		throw new UnsupportedOperationException();//return new PolylinePanel(preferences, polylineController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createPolylineView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new PolylinePanel(preferences, polylineController);
 	}
 
 	/**
@@ -273,7 +293,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  LabelController labelController)
 	{
-		throw new UnsupportedOperationException();//return new LabelPanel(modification, preferences, labelController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createLabelView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new LabelPanel(modification, preferences, labelController);
 	}
 
 	/**
@@ -282,7 +306,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createCompassView(UserPreferences preferences,
 										CompassController compassController)
 	{
-		throw new UnsupportedOperationException();//return new CompassPanel(preferences, compassController);
+		//TODO: this fires on a double click  of the object
+		Toast.makeText(this.activity, String.format("createCompassView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new DialogView(){public void displayView(VCView vcView){}};
+		//return new CompassPanel(preferences, compassController);
 	}
 
 	/**
@@ -385,6 +413,9 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public HelpView createHelpView(UserPreferences preferences,
 								   HelpController helpController)
 	{
-		throw new UnsupportedOperationException();//return new HelpPane(preferences, helpController);
+		Toast.makeText(this.activity, String.format("createHelpView", message), Toast.LENGTH_SHORT).show();
+		//new UnsupportedOperationException().printStackTrace();
+		return new HelpView(){public void displayView(){}};
+		//return new HelpPane(preferences, helpController);
 	}
 }

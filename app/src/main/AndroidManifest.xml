@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.sweethomeavr"
-  android:versionCode="126"
-  android:versionName="1.26">
+  android:versionCode="128"
+  android:versionName="1.28">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -80,6 +80,8 @@
               <!-- keep going if you need more -->
 
           </intent-filter>
+
+
       </activity>
 
 

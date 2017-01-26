@@ -2,12 +2,11 @@ package com.eteks.sweethomeavr.android;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.eteks.sweethomeavr.android.swingish.JComponent;
 
 import javaawt.Graphics2D;
 import javaawt.Insets;
