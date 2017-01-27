@@ -244,7 +244,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 		Toast.makeText(this.activity, String.format("createHomeFurnitureView", message), Toast.LENGTH_SHORT).show();
 		//new UnsupportedOperationException().printStackTrace();
 		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new FurnitureTable(preferences, homeFurnitureController);
+		//return new FurnitureTable(preferences, homeFurnitureController, activity);
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 		Toast.makeText(this.activity, String.format("createWallView", message), Toast.LENGTH_SHORT).show();
 		//new UnsupportedOperationException().printStackTrace();
 		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new WallPanel(preferences, wallController);
+		//return new WallPanel(preferences, wallController, activity);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 		Toast.makeText(this.activity, String.format("createRoomView", message), Toast.LENGTH_SHORT).show();
 		//new UnsupportedOperationException().printStackTrace();
 		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new RoomPanel(preferences, roomController);
+		//return new RoomPanel(preferences, roomController, activity);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 		Toast.makeText(this.activity, String.format("createPolylineView", message), Toast.LENGTH_SHORT).show();
 		//new UnsupportedOperationException().printStackTrace();
 		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new PolylinePanel(preferences, polylineController);
+		//return new PolylinePanel(preferences, polylineController, activity);
 	}
 
 	/**
@@ -293,11 +293,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  LabelController labelController)
 	{
-		//TODO: this fires on a double click  of the object
-		Toast.makeText(this.activity, String.format("createLabelView", message), Toast.LENGTH_SHORT).show();
-		//new UnsupportedOperationException().printStackTrace();
-		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new LabelPanel(modification, preferences, labelController);
+		return new LabelPanel(modification, preferences, labelController, activity);
 	}
 
 	/**
@@ -310,7 +306,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 		Toast.makeText(this.activity, String.format("createCompassView", message), Toast.LENGTH_SHORT).show();
 		//new UnsupportedOperationException().printStackTrace();
 		return new DialogView(){public void displayView(VCView vcView){}};
-		//return new CompassPanel(preferences, compassController);
+		//return new CompassPanel(preferences, compassController, activity);
 	}
 
 	/**
@@ -319,7 +315,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHome3DAttributesView(UserPreferences preferences,
 												 Home3DAttributesController home3DAttributesController)
 	{
-		throw new UnsupportedOperationException();//return new Home3DAttributesPanel(preferences, home3DAttributesController);
+		throw new UnsupportedOperationException();//return new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
 	}
 
 	/**
@@ -328,7 +324,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createObserverCameraView(UserPreferences preferences,
 											   ObserverCameraController observerCameraController)
 	{
-		throw new UnsupportedOperationException();//return new ObserverCameraPanel(preferences, observerCameraController);
+		throw new UnsupportedOperationException();//return new ObserverCameraPanel(preferences, observerCameraController, activity);
 	}
 
 	/**
@@ -337,7 +333,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public TextureChoiceView createTextureChoiceView(UserPreferences preferences,
 													 TextureChoiceController textureChoiceController)
 	{
-		throw new UnsupportedOperationException();//return new TextureChoiceComponent(preferences, textureChoiceController);
+		throw new UnsupportedOperationException();//return new TextureChoiceComponent(preferences, textureChoiceController, activity);
 	}
 
 	/**
@@ -346,7 +342,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public VCView createBaseboardChoiceView(UserPreferences preferences,
 										  BaseboardChoiceController baseboardChoiceController)
 	{
-		throw new UnsupportedOperationException();//return new BaseboardChoiceComponent(preferences, baseboardChoiceController);
+		throw new UnsupportedOperationException();//return new BaseboardChoiceComponent(preferences, baseboardChoiceController, activity);
 	}
 
 	/**

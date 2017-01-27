@@ -38,6 +38,7 @@ import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.j3d.Component3DManager;
 import com.ingenieur.andyelderscrolls.utils.AndyFPSCounter;
 import com.ingenieur.andyelderscrolls.utils.Canvas3D2D;
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -99,12 +100,15 @@ import java.util.concurrent.TimeUnit;
 import javaawt.Color;
 import javaawt.EventQueue;
 import javaawt.GraphicsConfiguration;
+import javaawt.Point;
 import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
+import static android.R.attr.x;
+import static android.R.attr.y;
 
 /**
  * Created by phil on 11/22/2016.
@@ -1433,7 +1437,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 
 		//PJPJPJPJP///////////////////////////////////////////////////////////////////////////////////////
-		/*MouseListener mouseListener2 = new MouseListener()
+		MouseListener mouseListener2 = new MouseListener()
 		{
 			private int xLastMouseMove;
 			private int yLastMouseMove;
@@ -1441,26 +1445,24 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 			public void mousePressed(com.jogamp.newt.event.MouseEvent ev)
 			{
-
 				this.xLastMouseMove = ev.getX();
 				this.yLastMouseMove = ev.getY();
-
 			}
 
 			public void mouseReleased(com.jogamp.newt.event.MouseEvent ev)
 			{
-				/*if (!retargetMouseEventToNavigationPanelChildren(ev))
-				{
-					if (false)
-					{//ev.isPopupTrigger()) {
-						JPopupMenu componentPopupMenu = getComponentPopupMenu();
-						if (componentPopupMenu != null)
-						{
-							componentPopupMenu.show(HomeComponent3D.this, ev.getX(), ev.getY());
-						}
-					}
-				}*/
-			/*}
+				//if (!retargetMouseEventToNavigationPanelChildren(ev))
+				//{
+				//	if (false)
+				//	{//ev.isPopupTrigger()) {
+				//		JPopupMenu componentPopupMenu = getComponentPopupMenu();
+				//		if (componentPopupMenu != null)
+				//		{
+				//			componentPopupMenu.show(HomeComponent3D.this, ev.getX(), ev.getY());
+				//		}
+				//	}
+				//}
+			}
 
 			public void mouseClicked(com.jogamp.newt.event.MouseEvent ev)
 			{
@@ -1474,11 +1476,12 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 			public void mouseDragged(com.jogamp.newt.event.MouseEvent ev)
 			{
+
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				{
 					//if (isEnabled())
 					{
-						if (ev.isAltDown())
+						/*if (ev.isAltDown())
 						{
 							// Mouse move along Y axis while alt is down changes camera location
 							float delta = 1.25f * (this.yLastMouseMove - ev.getY());
@@ -1489,21 +1492,32 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 							}
 							controller.moveCamera(delta);
 						}
-						else
+						else*/
 						{
-							final float ANGLE_FACTOR = 0.005f;
-							// Mouse move along X axis changes camera yaw
-							float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove);
-							// Multiply yaw delta by 5 if shift is down
-							if (ev.isShiftDown())
+							if (ev.getPointerCount() == 2)
 							{
-								yawDelta *= 5;
+								final float FACTOR = 0.5f;
+								float xd = FACTOR * (ev.getX() - this.xLastMouseMove);
+								float yd = FACTOR * (ev.getY() - this.yLastMouseMove);
+								controller.moveCamera(-yd);
+								controller.moveCameraSideways(xd);//note does nothing in overhead view
 							}
-							controller.rotateCameraYaw(yawDelta);
+							else if (ev.getPointerCount() == 1)
+							{
+								final float ANGLE_FACTOR = 0.005f;
+								// Mouse move along X axis changes camera yaw
+								float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove);
+								// Multiply yaw delta by 5 if shift is down
+								if (ev.isShiftDown())
+								{
+									yawDelta *= 5;
+								}
+								controller.rotateCameraYaw(yawDelta);
 
-							// Mouse move along Y axis changes camera pitch
-							float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove);
-							controller.rotateCameraPitch(pitchDelta);
+								// Mouse move along Y axis changes camera pitch
+								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove);
+								controller.rotateCameraPitch(pitchDelta);
+							}
 						}
 
 						this.xLastMouseMove = ev.getX();
@@ -1512,15 +1526,9 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 				}
 			}
 
-			public void mouseEntered(com.jogamp.newt.event.MouseEvent ev)
-			{
+			public void mouseEntered(com.jogamp.newt.event.MouseEvent ev){}
 
-			}
-
-			public void mouseExited(com.jogamp.newt.event.MouseEvent ev)
-			{
-
-			}
+			public void mouseExited(com.jogamp.newt.event.MouseEvent ev){}
 
 			public void mouseWheelMoved(com.jogamp.newt.event.MouseEvent ev)
 			{
@@ -1535,189 +1543,15 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 					}
 					controller.moveCamera(delta);
 				}
-
 			}
+		};
 
+		canvas3D2D.getGLWindow().addMouseListener(mouseListener2);
 
-		};*/
-
-		//canvas3D2D.getGLWindow().addMouseListener(mouseListener2);
 		//canvas3D.getGLWindow().addMouseMotionListener(mouseListener);
 		//canvas3D.getGLWindow().addMouseWheelListener(mouseWheelListener);
-		//PJPJPJPJP///////////////////////////////////////////////////////////////////////////////////////
-
-
-		mScaleDetector = new ScaleGestureDetector( this.getContext(), new HomeComponent3D.ScaleListener());
-		this.getView().setOnTouchListener(new android.view.View.OnTouchListener()
-												  {
-													  @Override
-													  public boolean onTouch(android.view.View v, MotionEvent ev)
-													  {
-														  // Let the ScaleGestureDetector inspect all events.
-														  mScaleDetector.onTouchEvent(ev);
-
-														  final int action = ev.getAction();
-														  switch (action & MotionEvent.ACTION_MASK)
-														  {
-															  case MotionEvent.ACTION_DOWN:
-															  {
-																  final float x = ev.getX();
-																  final float y = ev.getY();
-
-																  mLastTouchX = x;
-																  mLastTouchY = y;
-																  mActivePointerId = ev.getPointerId(0);
-
-																  if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-																  {
-																	  lastMousePressedTime = System.currentTimeMillis();
-																	  mousePressed(v, ev);
-																  }
-
-																  break;
-															  }
-
-															  case MotionEvent.ACTION_MOVE:
-															  {
-																  final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-																  final float x = ev.getX(pointerIndex);
-																  final float y = ev.getY(pointerIndex);
-
-																  // Only move if the ScaleGestureDetector isn't processing a gesture.
-																  if (!mScaleDetector.isInProgress())
-																  {
-																	  final float dx = x - mLastTouchX;
-																	  final float dy = y - mLastTouchY;
-
-																	  if (ev.getPointerCount() == 2)
-																	  {
-																		  if(Math.abs(dy)>2)
-																			  controller.moveCamera(dy);
-																		  if(Math.abs(dx)>2)
-																		  	controller.moveCameraSideways(dx);//TODO: oddly this doesn't work in the orginal!
-																	  }
-																  }
-
-																  mLastTouchX = x;
-																  mLastTouchY = y;
-																  if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-																  {
-																	  if((System.currentTimeMillis()-lastMousePressedTime)>100)
-																	  	mouseMoved(v, ev);
-																  }
-																  break;
-															  }
-
-															  case MotionEvent.ACTION_UP:
-															  {
-																  mActivePointerId = INVALID_POINTER_ID;
-																  break;
-															  }
-
-															  case MotionEvent.ACTION_CANCEL:
-															  {
-																  mActivePointerId = INVALID_POINTER_ID;
-																  break;
-															  }
-
-															  case MotionEvent.ACTION_POINTER_UP:
-															  {
-																  final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
-																		  >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-																  final int pointerId = ev.getPointerId(pointerIndex);
-																  if (pointerId == mActivePointerId)
-																  {
-																	  // This was our active pointer going up. Choose a new
-																	  // active pointer and adjust accordingly.
-																	  final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-																	  mLastTouchX = ev.getX(newPointerIndex);
-																	  mLastTouchY = ev.getY(newPointerIndex);
-																	  mActivePointerId = ev.getPointerId(newPointerIndex);
-																  }
-																  break;
-															  }
-														  }
-
-														  return true;
-													  }
-
-													  private long lastMousePressedTime = 0;
-													  private float xLastMouseMove;
-													  private float yLastMouseMove;
-
-													  public void mousePressed(android.view.View v, MotionEvent ev)
-													  {
-														  final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-														  final float x = ev.getX(pointerIndex);
-														  final float y = ev.getY(pointerIndex);
-														  this.xLastMouseMove = x;
-														  this.yLastMouseMove = y;
-
-													  }
-
-													  public void mouseMoved(android.view.View v, MotionEvent ev)
-													  {
-														  final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-														  final float x = ev.getX(pointerIndex);
-														  final float y = ev.getY(pointerIndex);
-
-														  final float ANGLE_FACTOR = 0.005f;
-														  // Mouse move along X axis changes camera yaw
-														  float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove);
-
-														  controller.rotateCameraYaw(yawDelta);
-
-														  float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove);
-														  controller.rotateCameraPitch(pitchDelta);
-
-														  this.xLastMouseMove = x;
-														  this.yLastMouseMove = y;
-													  }
-												  }
-
-		);
 	}
-	//PJPJPJPJ   pinch zooming
-	private static final int INVALID_POINTER_ID = -1;
 
-	// The ‘active pointer’ is the one currently moving our object.
-	private int mActivePointerId = INVALID_POINTER_ID;
-	private float mLastTouchX;
-	private float mLastTouchY;
-	private ScaleGestureDetector mScaleDetector;
-
-	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-		/** fingers together are for panning now!
-		 *
-		 * @param detector
-		 * @return
-		 */
-		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector)
-		{
-			//System.out.println("mScaleDetector.getCurrentSpan()  "+mScaleDetector.getCurrentSpan() );
-			DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-			float mDPI = (float) mDisplayMetrics.densityDpi;
-			float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-			return measurement > MultipleLevelsPlanPanel.dpiMinSpanForZoom;
-		}
-
-		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
-			//TODO: can't see the zoom easily from here
-
-			float newElevate = detector.getScaleFactor();
-
-			//scale is always positive, I want small to be negative, downwards
-			newElevate = newElevate < 1.0 ? (-1/newElevate) :newElevate;
-			newElevate *= 2.5f;
-
-			controller.elevateCamera(newElevate);
-			return true;
-		}
-
-	}
 
 	/**
 	 * Installs keys bound to actions.

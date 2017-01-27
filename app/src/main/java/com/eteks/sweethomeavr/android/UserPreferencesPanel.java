@@ -23,8 +23,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -58,6 +60,8 @@ import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.UserPreferencesController;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.android.swingish.ButtonGroup;
+import com.eteks.sweethomeavr.android.swingish.DefaultComboBoxModel;
+import com.eteks.sweethomeavr.android.swingish.JComboBox;
 import com.eteks.sweethomeavr.android.swingish.SpinnerNumberModel;
 
 import javaawt.Color;
@@ -73,10 +77,10 @@ import javaawt.image.VMBufferedImage;
 public class UserPreferencesPanel extends Dialog implements DialogView {
   private final UserPreferencesController controller;
   private TextView languageLabel;
-  private EasySpinner languageComboBox;
+  private JComboBox languageComboBox;
   private Button languageLibraryImportButton;
   private TextView           unitLabel;
-  private EasySpinner         unitComboBox;
+  private JComboBox         unitComboBox;
   private TextView           furnitureCatalogViewLabel;
   private RadioButton treeRadioButton;
   private RadioButton     listRadioButton;
@@ -91,7 +95,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   private TextView           gridLabel;
   private CheckBox        gridCheckBox;
   private TextView           defaultFontNameLabel;
-  private EasySpinner defaultFontNameComboBox;
+  private JComboBox defaultFontNameComboBox;
   private TextView           furnitureIconLabel;
   private RadioButton     catalogIconRadioButton;
   private RadioButton     topViewRadioButton;
@@ -99,9 +103,9 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   private RadioButton     monochromeRadioButton;
   private RadioButton     floorColorOrTextureRadioButton;
   private TextView           wallPatternLabel;
-  private EasySpinner         wallPatternComboBox;
+  private JComboBox         wallPatternComboBox;
   private TextView           newWallPatternLabel;
-  private EasySpinner        newWallPatternComboBox;
+  private JComboBox        newWallPatternComboBox;
   private TextView           newWallThicknessLabel;
   private NumberPicker         newWallThicknessSpinner;
   private TextView           newWallHeightLabel;
@@ -149,7 +153,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       // Create language label and combo box bound to controller LANGUAGE property
       this.languageLabel = new TextView(activity);languageLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "languageLabel.text"));
-      this.languageComboBox = new EasySpinner(new DefaultComboBoxModel(preferences.getSupportedLanguages()));
+      this.languageComboBox = new JComboBox(activity, new DefaultComboBoxModel(preferences.getSupportedLanguages()));
 		languageComboBox.setAdapter(new ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,preferences.getSupportedLanguages())
 		{
 			@Override
@@ -218,7 +222,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       // Create unit label and combo box bound to controller UNIT property
       this.unitLabel = new TextView(activity);unitLabel.setText(SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitLabel.text"));
-      this.unitComboBox = new EasySpinner(new DefaultComboBoxModel(LengthUnit.values()));
+      this.unitComboBox = new JComboBox(activity, new DefaultComboBoxModel(LengthUnit.values()));
       final Map<LengthUnit, String> comboBoxTexts = new HashMap<LengthUnit, String>();
       comboBoxTexts.put(LengthUnit.MILLIMETER, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitComboBox.millimeter.text"));
@@ -507,7 +511,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       this.newWallPatternLabel = new TextView(activity);newWallPatternLabel.setText(SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
-      this.newWallPatternComboBox = new EasySpinner(new DefaultComboBoxModel(patterns.toArray()));
+      this.newWallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
       this.newWallPatternComboBox.setAdapter( new PatternRenderer(patterns.toArray()));
       TextureImage newWallPattern = controller.getNewWallPattern();
       this.newWallPatternComboBox.setSelectedItem(newWallPattern != null 
@@ -530,7 +534,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       this.wallPatternLabel = new TextView(activity);wallPatternLabel.setText(SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "wallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
-      this.wallPatternComboBox = new EasySpinner(new DefaultComboBoxModel(patterns.toArray()));
+      this.wallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
       this.wallPatternComboBox.setAdapter( new PatternRenderer(patterns.toArray()) );
       this.wallPatternComboBox.setSelectedItem(controller.getWallPattern());
       this.wallPatternComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -808,7 +812,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
         ((UserPreferences)ev.getSource()).removePropertyChangeListener(
             UserPreferences.Property.SUPPORTED_LANGUAGES, this);
       } else {
-        EasySpinner languageComboBox = userPreferencesPanel.languageComboBox;
+		  JComboBox languageComboBox = userPreferencesPanel.languageComboBox;
         List<String> oldSupportedLanguages = Arrays.asList((String [])ev.getOldValue());
         String [] supportedLanguages = (String [])ev.getNewValue();
         languageComboBox.setModel(new DefaultComboBoxModel(supportedLanguages));
@@ -931,6 +935,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents() {
+
+
    /* int labelAlignment = OperatingSystem.isMacOSX()
         ? GridBagConstraints.LINE_END
         : GridBagConstraints.LINE_START;
@@ -938,91 +944,108 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     Insets labelInsetsWithSpace = new Insets(0, 0, 10, 5);
     Insets rightComponentInsets = new Insets(0, 0, 5, 0);
     Insets rightComponentInsetsWithSpace = new Insets(0, 0, 10, 0);*/
-	  ViewGroup.LayoutParams  params=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+	  Resources r = activity.getResources();
+	  int px5dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
+	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
+	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
+
+	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
+
+	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
+	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
+	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
+	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
+
+
     if (this.languageLabel != null) {
       // First row
-      rootView.addView(this.languageLabel, params);//, params);//, new GridBagConstraints(
+      rootView.addView(this.languageLabel, labelInsets);//, params);//, new GridBagConstraints(
           //0, 0, 1, 1, 0, 0, labelAlignment,
           //GridBagConstraints.NONE, labelInsets, 0, 0));
-		this.rootView.addView(this.languageComboBox, params);//, params);//, new GridBagConstraints(
+		this.rootView.addView(this.languageComboBox, rightComponentInsets);//, params);//, new GridBagConstraints(
         //  1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
          // GridBagConstraints.HORIZONTAL, new Insets(OperatingSystem.isMacOSX() ? 1 : 0, 0, 5, 0), 0, 0));
       if (this.languageLibraryImportButton != null) {
-        rootView.addView(this.languageLibraryImportButton, params);//, params);//, new GridBagConstraints(
+        rootView.addView(this.languageLibraryImportButton, labelInsets);//, params);//, new GridBagConstraints(
         //    2, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
         //    GridBagConstraints.NONE, new Insets(0, 5, 5, 0), 0, 0));
       }
     }
     if (this.unitLabel != null) {
       // Second row
-      rootView.addView(this.unitLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.unitLabel, labelInsets);//, new GridBagConstraints(
        //   0, 1, 1, 1, 0, 0, labelAlignment, 
        //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.unitComboBox, params);//, new GridBagConstraints(
+      rootView.addView(this.unitComboBox, rightComponentInsets);//, new GridBagConstraints(
        //   1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
       // Keep third row empty (used to contain unit radio buttons)
     }
     if (this.furnitureCatalogViewLabel != null) {
       // Fourth row
-      rootView.addView(this.furnitureCatalogViewLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.furnitureCatalogViewLabel, labelInsets);//, new GridBagConstraints(
       //    0, 3, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.treeRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.treeRadioButton, labelInsets);//, new GridBagConstraints(
       //    1, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.listRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.listRadioButton, rightComponentInsets);//, new GridBagConstraints(
       //    2, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.navigationPanelLabel != null) {
       // Fifth row
-      rootView.addView(this.navigationPanelLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.navigationPanelLabel, labelInsets);//, new GridBagConstraints(
       //    0, 4, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.navigationPanelCheckBox, params);//, new GridBagConstraints(
+      rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);//, new GridBagConstraints(
        //   1, 4, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.aerialViewCenteredOnSelectionLabel != null) {
       // Sixth row
-      rootView.addView(this.aerialViewCenteredOnSelectionLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.aerialViewCenteredOnSelectionLabel, labelInsetsWithSpace);//, new GridBagConstraints(
       //    0, 5, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsetsWithSpace, 0, 0));
-      rootView.addView(this.aerialViewCenteredOnSelectionCheckBox, params);//, new GridBagConstraints(
+      rootView.addView(this.aerialViewCenteredOnSelectionCheckBox, rightComponentInsetsWithSpace);//, new GridBagConstraints(
       //    1, 5, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsetsWithSpace, 0, 0));
     }
     if (this.magnetismLabel != null) {
       // Seventh row
-      rootView.addView(this.magnetismLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.magnetismLabel, labelInsets);//, new GridBagConstraints(
        //   0, 6, 1, 1, 0, 0, labelAlignment, 
        //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.magnetismCheckBox, params);//, new GridBagConstraints(
+      rootView.addView(this.magnetismCheckBox, rightComponentInsets);//, new GridBagConstraints(
       //    1, 6, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.rulersLabel != null) {
       // Eighth row
-      rootView.addView(this.rulersLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.rulersLabel, labelInsets);//, new GridBagConstraints(
       //    0, 7, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.rulersCheckBox, params);//, new GridBagConstraints(
+      rootView.addView(this.rulersCheckBox, rightComponentInsets);//, new GridBagConstraints(
       //    1, 7, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.gridLabel != null) {
       // Ninth row
-      rootView.addView(this.gridLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.gridLabel, labelInsets);//, new GridBagConstraints(
        //   0, 8, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.gridCheckBox, params);//, new GridBagConstraints(
+      rootView.addView(this.gridCheckBox, rightComponentInsets);//, new GridBagConstraints(
       //    1, 8, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.defaultFontNameLabel != null) {
       // Tenth row
-      rootView.addView(this.defaultFontNameLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.defaultFontNameLabel, labelInsets);//, new GridBagConstraints(
       //    0, 9, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
      /* Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
@@ -1034,74 +1057,74 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
         preferredSize.width = Math.min(preferredSize.width, 250); 
       }
       this.defaultFontNameComboBox.setPreferredSize(preferredSize);*/
-      rootView.addView(this.defaultFontNameComboBox, params);//, new GridBagConstraints(
+      rootView.addView(this.defaultFontNameComboBox, rightComponentInsets);//, new GridBagConstraints(
        //   1, 9, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.furnitureIconLabel != null) {
       // Eleventh row
-      rootView.addView(this.furnitureIconLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.furnitureIconLabel, labelInsets);//, new GridBagConstraints(
       //    0, 10, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.catalogIconRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.catalogIconRadioButton, labelInsets);//, new GridBagConstraints(
       //    1, 10, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.topViewRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.topViewRadioButton, rightComponentInsets);//, new GridBagConstraints(
       //    2, 10, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.roomRenderingLabel != null) {
       // Twelfth row
-      rootView.addView(this.roomRenderingLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.roomRenderingLabel, labelInsets);//, new GridBagConstraints(
       //    0, 11, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.monochromeRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.monochromeRadioButton, labelInsets);//, new GridBagConstraints(
       //    1, 11, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.floorColorOrTextureRadioButton, params);//, new GridBagConstraints(
+      rootView.addView(this.floorColorOrTextureRadioButton, rightComponentInsets);//, new GridBagConstraints(
       //    2, 11, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     }
     if (this.newWallPatternLabel != null) {
       // Thirteenth row
-      rootView.addView(this.newWallPatternLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallPatternLabel, labelInsets);//, new GridBagConstraints(
        //   0, 12, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallPatternComboBox, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallPatternComboBox, rightComponentInsets);//, new GridBagConstraints(
       //    1, 12, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     } else if (this.wallPatternLabel != null) {
-      rootView.addView(this.wallPatternLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.wallPatternLabel, labelInsets);//, new GridBagConstraints(
       //    0, 12, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.wallPatternComboBox, params);//, new GridBagConstraints(
+      rootView.addView(this.wallPatternComboBox, rightComponentInsets);//, new GridBagConstraints(
       //    1, 12, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
     } 
     if (this.newWallThicknessLabel != null) {
       // Fourteenth row
-      rootView.addView(this.newWallThicknessLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallThicknessLabel, labelInsets);//, new GridBagConstraints(
       //    0, 13, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallThicknessSpinner, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallThicknessSpinner, rightComponentInsets);//, new GridBagConstraints(
       //    1, 13, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
     }
     if (this.newWallHeightLabel != null) {
       // Fifteenth row
-      rootView.addView(this.newWallHeightLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallHeightLabel, labelInsets);//, new GridBagConstraints(
        //   0, 14, 1, 1, 0, 0, labelAlignment, 
        //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallHeightSpinner, params);//, new GridBagConstraints(
+      rootView.addView(this.newWallHeightSpinner, rightComponentInsets);//, new GridBagConstraints(
        //   1, 14, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
     }
     if (this.newFloorThicknessLabel != null) {
       // Sixteenth row
-      rootView.addView(this.newFloorThicknessLabel, params);//, new GridBagConstraints(
+      rootView.addView(this.newFloorThicknessLabel, labelInsets);//, new GridBagConstraints(
        //   0, 15, 1, 1, 0, 0, labelAlignment, 
        //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newFloorThicknessSpinner, params);//, new GridBagConstraints(
+      rootView.addView(this.newFloorThicknessSpinner, rightComponentInsets);//, new GridBagConstraints(
        //   1, 15, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
     }
@@ -1141,13 +1164,13 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     if (this.resetDisplayedActionTipsButton.getText() != null
         && this.resetDisplayedActionTipsButton.getText().length() > 0) {
       // Display reset button only if its text isn't empty 
-		rootView.addView(this.resetDisplayedActionTipsButton, params);//, new GridBagConstraints(
+		rootView.addView(this.resetDisplayedActionTipsButton, labelInsets);//, new GridBagConstraints(
         //  0, 17, 3, 1, 0, 0, GridBagConstraints.CENTER, 
         //  GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     }
 
-
-	  rootView.addView(closeButton, params);
+	  this.setTitle(dialogTitle);
+	  rootView.addView(closeButton, labelInsets);
   }
 
   /**
@@ -1172,12 +1195,12 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   }
 
   private static class SpinnerLengthModel extends SpinnerNumberModel {
-    public SpinnerLengthModel(final float centimeterStepSize, 
+    public SpinnerLengthModel(final float centimeterStepSize,
                               final float inchStepSize,
                               final UserPreferencesController controller) {
       // Invoke constructor that take objects in parameter to avoid any ambiguity
       super(new Float(1f), new Float(0f), new Float(400f), new Float(centimeterStepSize));
-      // Add a listener to update step when unit changes 
+      // Add a listener to update step when unit changes
       controller.addPropertyChangeListener(UserPreferencesController.Property.UNIT,
         new PropertyChangeListener () {
           public void propertyChange(PropertyChangeEvent ev) {
@@ -1186,8 +1209,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
         });
       updateStepsAndLength(centimeterStepSize, inchStepSize, controller);
     }
-    
-    private void updateStepsAndLength(float centimeterStepSize, 
+
+    private void updateStepsAndLength(float centimeterStepSize,
                                       float inchStepSize,
                                       UserPreferencesController controller) {
       if (controller.getUnit() == LengthUnit.INCH
@@ -1214,42 +1237,5 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     }
   }
 
-	private class EasySpinner extends Spinner
-	{
-		private Object[] objs;
-		public EasySpinner(DefaultComboBoxModel dcbm)
-		{
-			super(activity);
-			setModel(dcbm);
-		}
 
-		public void setModel(DefaultComboBoxModel dcbm)
-		{
-			this.objs = dcbm.objs;
-			setAdapter(new ArrayAdapter(activity, android.R.layout.simple_list_item_1, dcbm.objs));
-		}
-
-		public void setSelectedItem(Object selection)
-		{
-			int selectionPos = 0;
-			for(int i = 0 ; i < objs.length; i++)
-			{
-				if (objs[i].equals(selection))
-				{
-					selectionPos = i;
-					break;
-				}
-			}
-			this.setSelection(selectionPos);
-		}
-	}
-
-	private class DefaultComboBoxModel
-	{
-		public Object[] objs;
-		DefaultComboBoxModel(Object[] objs)
-		{
-			this.objs = objs;
-		}
-	}
 }

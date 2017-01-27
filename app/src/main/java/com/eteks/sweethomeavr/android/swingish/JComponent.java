@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethomeavr.android.DrawableView;
 
 import javaawt.Color;
@@ -165,7 +166,7 @@ public abstract class JComponent extends Fragment implements ImageObserver
 	public abstract void paintComponent(Graphics g);
 
 
-	private Font currentFont = new VMFont();
+	private Font currentFont = new VMFont(Typeface.DEFAULT,24);
 
 	public Font getFont()
 	{
@@ -195,35 +196,27 @@ public abstract class JComponent extends Fragment implements ImageObserver
 		return new Rectangle(r.left, r.bottom, r.right - r.left, r.top - r.bottom);
 	}
 
-
-	// handy util not part of JComponent
-	public static Rectangle2D getStringBounds(String text, Graphics g)
-	{
-		android.graphics.Paint p = null;
-		if (g != null)
-		{
-			p = ((VMGraphics) g).canvasPaint;
-			p.setTypeface((Typeface) (((VMFont) g.getFont()).getDelegate()));
-		}
-		else
-		{
-			p = new android.graphics.Paint();
-		}
-		Rect r = new Rect();
-		p.getTextBounds(text, 0, text.length(), r);
-		Rectangle2D textBounds = new Rectangle(r.left, r.bottom, r.right - r.left, r.top - r.bottom);
-		return textBounds;
-	}
+	private static android.graphics.Paint fontSizingPaint = new android.graphics.Paint();
 
 	protected static Paint.FontMetrics getFontMetrics(Font f)
 	{
 		//PJPJPJ
 		//android.graphics.Paint.FontMetrics
 		//https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html
-		android.graphics.Paint canvasPaint = new android.graphics.Paint();
-		canvasPaint.setTypeface((Typeface) (((VMFont) f).getDelegate()));
-		Paint.FontMetrics fontMetrics = canvasPaint.getFontMetrics();
+		fontSizingPaint.setTypeface((Typeface) (((VMFont) f).getDelegate()));
+		Paint.FontMetrics fontMetrics = fontSizingPaint.getFontMetrics();
 		return fontMetrics;
+	}
+
+	// handy util not part of JComponent
+	public static Rectangle2D getStringBounds(String text, Font f)
+	{
+		fontSizingPaint.setTypeface((Typeface) (((VMFont) f).getDelegate()));
+		fontSizingPaint.setTextSize(f.getSize());
+		Rect r = new Rect();
+		fontSizingPaint.getTextBounds(text, 0, text.length(), r);
+		Rectangle2D textBounds = new Rectangle(r.left, r.bottom, r.right - r.left, r.top - r.bottom);
+		return textBounds;
 	}
 
 }

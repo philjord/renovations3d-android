@@ -187,7 +187,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case R.id.createText:
 					planController.escape();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish (not working yet)", message), Toast.LENGTH_SHORT).show();
+					// note single tap works for this one
 					planController.setMode(PlanController.Mode.LABEL_CREATION);
 					break;
 				case R.id.lockCheck:
@@ -214,7 +214,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					}
 					break;
 				case R.id.controlKeyToggle:
-					//TODO: this guy needs to reflec tthe cntrl option on anything, so duplication for select, but curve wall for create
+					//TODO: this guy needs to reflect the contrl option on anything, so duplication for select, but curve wall for create
 					ToggleButton controlKeyToggle = (ToggleButton)view;
 					duplicationActivated = controlKeyToggle.isChecked();
 					break;

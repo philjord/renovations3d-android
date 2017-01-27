@@ -21,6 +21,7 @@ package com.eteks.sweethomeavr.android;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -1244,192 +1245,191 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		  }
 	  });
 
-	  this.getDrawableView().setOnTouchListener(new View.OnTouchListener()
-												{
-													@Override
-													public boolean onTouch(View v, MotionEvent ev)
-													{
-														// Let the ScaleGestureDetector inspect all events.
-														mScaleDetector.onTouchEvent(ev);
-
-														final int action = ev.getAction();
-														switch (action & MotionEvent.ACTION_MASK)
-														{
-															case MotionEvent.ACTION_DOWN:
-															{
-																final float x = ev.getX();
-																final float y = ev.getY();
-
-																mLastTouchX = x;
-																mLastTouchY = y;
-																mActivePointerId = ev.getPointerId(0);
-
-																if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-																{
-																	lastMousePressedTime = System.currentTimeMillis();
-																	mousePressed(v, ev);
-																}
-
-																break;
-															}
-
-															case MotionEvent.ACTION_MOVE:
-															{
-																final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-																final float x = ev.getX(pointerIndex);
-																final float y = ev.getY(pointerIndex);
-
-																// Only move if the ScaleGestureDetector isn't processing a gesture.
-																if (!mScaleDetector.isInProgress())
-																{
-																	if (ev.getPointerCount() > 1)
-																	{
-																		final float dx = x - mLastTouchX;
-																		final float dy = y - mLastTouchY;
-
-																		scrolledX -= dx;
-																		scrolledY -= dy;
-																		controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(scrolledX));
-																		controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
-
-																		PlanComponent.this.revalidate();
-																	}
-																}
-
-																mLastTouchX = x;
-																mLastTouchY = y;
-																if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-																{
-																	//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
-																	if((System.currentTimeMillis() - lastMousePressedTime)>100)
-																		mouseMoved(v, ev);
-																}
-																break;
-															}
-
-															case MotionEvent.ACTION_UP:
-															{
-																mActivePointerId = INVALID_POINTER_ID;
-																if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-																{
-																	lastMouseReleasedTime = System.currentTimeMillis();
-																	mouseReleased(v, ev);
-																}
-																break;
-															}
-
-															case MotionEvent.ACTION_CANCEL:
-															{
-																mActivePointerId = INVALID_POINTER_ID;
-																break;
-															}
-
-															case MotionEvent.ACTION_POINTER_UP:
-															{
-																final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
-																		>> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-																final int pointerId = ev.getPointerId(pointerIndex);
-																if (pointerId == mActivePointerId)
-																{
-																	// This was our active pointer going up. Choose a new
-																	// active pointer and adjust accordingly.
-																	final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-																	mLastTouchX = ev.getX(newPointerIndex);
-																	mLastTouchY = ev.getY(newPointerIndex);
-																	mActivePointerId = ev.getPointerId(newPointerIndex);
-																}
-																break;
-															}
-														}
-
-														return true;
-													}
-
-													private long lastMousePressedTime = 0;
-													private long lastMouseReleasedTime = 0;
-													private Point lastMousePressedLocation = null;
-
-													public void mousePressed(View v, MotionEvent ev)
-													{
-														final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-														final float x = ev.getX(pointerIndex);
-														final float y = ev.getY(pointerIndex);
-														this.lastMousePressedLocation = new Point((int) x, (int) y);
-														if (isEnabled())
-														{
-
-
-															//alignment and magnetism come from menu now
-															//requestFocusInWindow();
-															//always button 1
-															// if (ev.getButton() == MouseEvent.BUTTON1)
-															{
-																boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
-																//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
-																//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
-																boolean duplicationActivated = MultipleLevelsPlanPanel.duplicationActivated;
-																//OperatingSystem.isMacOSX()
-																//		? ev.isAltDown() : ev.isControlDown();
-																boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
-																//OperatingSystem.isWindows()
-																//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
-																//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
-
-																//TODO: the previous click is still fired so this is not quite right! see below for the bcorrect system
-																int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400? 2 :1;
-																System.out.println("clickCount "+clickCount);
-
-
-																controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-																		clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
-															}
-														}
-													}
-
-
-													public void mouseReleased(View v, MotionEvent ev)
-													{
-														final int pointerIndex = ev.findPointerIndex(ev.getPointerId(0));
-														final float x = ev.getX(pointerIndex);
-														final float y = ev.getY(pointerIndex);
-														if (isEnabled())
-														{
-															controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-														}
-													}
-
-
-													public void mouseMoved(View v, MotionEvent ev)
-													{
-														final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-														final float x = ev.getX(pointerIndex);
-														final float y = ev.getY(pointerIndex);
-														// Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
-														if (this.lastMousePressedLocation != null
-																&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y)))
-														{
-															this.lastMousePressedLocation = null;
-														}
-														if (this.lastMousePressedLocation == null)
-														{
-															if (isEnabled())
-															{
-																controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-															}
-														}
-													}
-
-													public void mouseDragged(View v, MotionEvent ev)
-													{
-														if (isEnabled())
-														{
-															mouseMoved(v, ev);
-														}
-													}
-												}
-
-	  );
+	  this.getDrawableView().setOnTouchListener(new TouchyListener());
   }
+
+	private class TouchyListener implements android.view.View.OnTouchListener
+	{
+		@Override
+		public boolean onTouch(View v, MotionEvent ev)
+		{
+			// Let the ScaleGestureDetector inspect all events.
+			mScaleDetector.onTouchEvent(ev);
+
+			final int action = ev.getAction();
+			switch (action & MotionEvent.ACTION_MASK)
+			{
+				case MotionEvent.ACTION_DOWN:
+				{
+					final float x = ev.getX();
+					final float y = ev.getY();
+
+					mLastTouchX = x;
+					mLastTouchY = y;
+					mActivePointerId = ev.getPointerId(0);
+
+					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+					{
+						lastMousePressedTime = System.currentTimeMillis();
+						mousePressed(v, ev);
+					}
+
+					break;
+				}
+
+				case MotionEvent.ACTION_MOVE:
+				{
+					final int pointerIndex = ev.findPointerIndex(mActivePointerId);
+					final float x = ev.getX(pointerIndex);
+					final float y = ev.getY(pointerIndex);
+
+					// Only move if the ScaleGestureDetector isn't processing a gesture.
+					if (!mScaleDetector.isInProgress())
+					{
+						if (ev.getPointerCount() > 1)
+						{
+							final float dx = x - mLastTouchX;
+							final float dy = y - mLastTouchY;
+
+							scrolledX -= dx;
+							scrolledY -= dy;
+							controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(scrolledX));
+							controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
+
+							PlanComponent.this.revalidate();
+						}
+					}
+
+					mLastTouchX = x;
+					mLastTouchY = y;
+					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+					{
+						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
+						if((System.currentTimeMillis() - lastMousePressedTime)>100)
+							mouseMoved(v, ev);
+					}
+					break;
+				}
+
+				case MotionEvent.ACTION_UP:
+				{
+					mActivePointerId = INVALID_POINTER_ID;
+					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+					{
+						lastMouseReleasedTime = System.currentTimeMillis();
+						mouseReleased(v, ev);
+					}
+					break;
+				}
+
+				case MotionEvent.ACTION_CANCEL:
+				{
+					mActivePointerId = INVALID_POINTER_ID;
+					break;
+				}
+
+				case MotionEvent.ACTION_POINTER_UP:
+				{
+					final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
+							>> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+					final int pointerId = ev.getPointerId(pointerIndex);
+					if (pointerId == mActivePointerId)
+					{
+						// This was our active pointer going up. Choose a new
+						// active pointer and adjust accordingly.
+						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+						mLastTouchX = ev.getX(newPointerIndex);
+						mLastTouchY = ev.getY(newPointerIndex);
+						mActivePointerId = ev.getPointerId(newPointerIndex);
+					}
+					break;
+				}
+			}
+
+			return true;
+		}
+
+		private long lastMousePressedTime = 0;
+		private long lastMouseReleasedTime = 0;
+		private Point lastMousePressedLocation = null;
+
+		public void mousePressed(View v, MotionEvent ev)
+		{
+			final int pointerIndex = ev.findPointerIndex(mActivePointerId);
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
+			this.lastMousePressedLocation = new Point((int) x, (int) y);
+			if (isEnabled())
+			{
+				//alignment and magnetism come from menu now
+				//requestFocusInWindow();
+				//always button 1
+				// if (ev.getButton() == MouseEvent.BUTTON1)
+				{
+					boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
+					//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
+					//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
+					boolean duplicationActivated = MultipleLevelsPlanPanel.duplicationActivated;
+					//OperatingSystem.isMacOSX()
+					//		? ev.isAltDown() : ev.isControlDown();
+					boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
+					//OperatingSystem.isWindows()
+					//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
+					//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
+
+					//TODO: the previous click is still fired so this is not quite right! see below for the correct system
+					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400? 2 :1;
+
+					controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+							clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
+				}
+			}
+		}
+
+
+		public void mouseReleased(View v, MotionEvent ev)
+		{
+			final int pointerIndex = ev.findPointerIndex(ev.getPointerId(0));
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
+			if (isEnabled())
+			{
+				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+			}
+		}
+
+
+		public void mouseMoved(View v, MotionEvent ev)
+		{
+			final int pointerIndex = ev.findPointerIndex(mActivePointerId);
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
+			// Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
+			if (this.lastMousePressedLocation != null
+					&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y)))
+			{
+				this.lastMousePressedLocation = null;
+			}
+			if (this.lastMousePressedLocation == null)
+			{
+				if (isEnabled())
+				{
+					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+				}
+			}
+		}
+
+		public void mouseDragged(View v, MotionEvent ev)
+		{
+			if (isEnabled())
+			{
+				mouseMoved(v, ev);
+			}
+		}
+	}
+
+
+
 
 	//TODO: use this system, not the last released system above
 /*	private GestureDetector gestureDetector = new GestureDetector(this.getDrawableView(), new GestureDetector.SimpleOnGestureListener() {
@@ -2056,7 +2056,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         lengthStyle = this.preferences.getDefaultTextStyle(dimensionLine.getClass());
       }
       FontMetrics lengthFontMetrics = getFontMetrics(componentFont, lengthStyle);
-      Rectangle2D lengthTextBounds = getStringBounds(lengthText, g);
+      Rectangle2D lengthTextBounds = getStringBounds(lengthText, componentFont);
       // Transform length text bounding rectangle corners to their real location
       double angle = Math.atan2(dimensionLine.getYEnd() - dimensionLine.getYStart(),
           dimensionLine.getXEnd() - dimensionLine.getXStart());
@@ -2130,7 +2130,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public float [][] getTextBounds(String text, TextStyle style,
                                   float x, float y, float angle) {
     FontMetrics fontMetrics = getFontMetrics(getFont(), style);
-    Rectangle2D textBounds = getStringBounds(text, null);
+    Rectangle2D textBounds = getStringBounds(text, getFont());
     float halfTextLength = (float)textBounds.getWidth() / 2;
     if (angle == 0) {
       float minY = (float)(y + textBounds.getY());
@@ -2170,34 +2170,33 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Returns the AWT font matching a given text style.
    */
   protected Font getFont(Font defaultFont, TextStyle textStyle) {
-	  //TODO: notice I'm ignoring everything here!!!
-	  //PJPJ
-	  return new VMFont();
-   /* if (this.fonts == null) {
+    if (this.fonts == null) {
       this.fonts = new WeakHashMap<TextStyle, Font>();
     }
     Font font = this.fonts.get(textStyle);
     if (font == null) {
-      int fontStyle = Font.PLAIN;
+      /*int fontStyle = Font.PLAIN;
       if (textStyle.isBold()) {
         fontStyle = Font.BOLD;
       }
       if (textStyle.isItalic()) {
         fontStyle |= Font.ITALIC;
-      }
+      }*/
       if (defaultFont == null
           || this.preferences.getDefaultFontName() != null
           || textStyle.getFontName() != null) {
-        String fontName = textStyle.getFontName();
-        if (fontName == null) {
-          fontName = this.preferences.getDefaultFontName();
-        }
-        defaultFont = new Font(fontName, fontStyle, 1);
+        //String fontName = textStyle.getFontName();
+        //if (fontName == null) {
+        //  fontName = this.preferences.getDefaultFontName();
+        //}
+        //defaultFont = new Font(fontName, fontStyle, 1);
+		  //defaultFont = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
       }
-      font = defaultFont.deriveFont(fontStyle, textStyle.getFontSize());
+      //font = defaultFont.deriveFont(fontStyle, textStyle.getFontSize());
+		font = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
       this.fonts.put(textStyle, font);
     }
-    return font;*/
+    return font;
   }
 
   /**
@@ -3371,8 +3370,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       style = this.preferences.getDefaultTextStyle(selectableClass);
     }
 
-    FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
-    Rectangle2D textBounds = getStringBounds(text, g2D);
+    //FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
+    Rectangle2D textBounds = getStringBounds(text, defaultFont);
     g2D.translate(x, y);
     g2D.rotate(angle);
     if (outlineColor != null) {
@@ -3395,6 +3394,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       g2D.setColor(defaultColor);
     } else {
       g2D.setFont(getFont(defaultFont, style));
+		((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
       g2D.translate(-(float)textBounds.getWidth() / 2, 0);
     }
     // Draw text
@@ -4641,7 +4641,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         }
         Font font = getFont(previousFont, lengthStyle);
         FontMetrics lengthFontMetrics = getFontMetrics(font, lengthStyle);
-        Rectangle2D lengthTextBounds = getStringBounds(lengthText, g2D);
+        Rectangle2D lengthTextBounds = getStringBounds(lengthText, font);
         int fontAscent = (int)lengthFontMetrics.ascent;
         g2D.translate((dimensionLineLength - (float)lengthTextBounds.getWidth()) / 2,
             dimensionLine.getOffset() <= 0
@@ -4668,6 +4668,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       }
     }
     g2D.setFont(previousFont);
+
     // Paint resize indicator of selected dimension line
     if (selectedItems.size() == 1
         && selectedItems.get(0) instanceof DimensionLine
@@ -4746,7 +4747,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
             labelStyle = this.preferences.getDefaultTextStyle(label.getClass());
           }
           if (labelStyle.getFontName() == null && getFont() != null) {
-			  //TODO: fonty rubbish again
+			  // there are basically no fonts on android, look it up
             labelStyle = labelStyle.deriveStyle("Roboto");//getFont().getFontName());
           }
           Integer color = label.getColor();
@@ -6090,7 +6091,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		this.pc = pc;
       setOpaque(true);
       // Use same font as tool tips
-      setFont(new VMFont());//UIManager.getFont("ToolTip.font"));
+      setFont(new VMFont(Typeface.DEFAULT, 24));//UIManager.getFont("ToolTip.font"));
       addMouseListeners();
     }
 
