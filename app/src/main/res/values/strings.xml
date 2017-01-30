@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sweet Home AVR</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="edit_message">Enter a message</string>
     <string name="home_select_button">Select Home</string>
     <string name="setting_select_button">Settings</string>
@@ -15,13 +15,14 @@
     <string name="welcometext">This is the Sweet Home 3D desktop app ported across to work on Android.\n
 Swipe 2 fingers together to pan and pinch to zoom on the plan view.\n
 Alignment and Magnetism are on the menu bar.\n
-Swipe one finger from right edge to get 3D view, and again for the tables.\n
-The 3D view only supports camera rotate currently.\n
+Swipe one finger from left edge for furniture, from the right edge for furniture catalog, and right again for 3d view.\n
 If you minimize the app for a long time it may fail to restart.\n
-Only one home will load currently. In order to load another home please close the app and reopen.\n
-Currently homes on your device can be opened, 2 sh3d files are automatically downloaded for you on opening the app to demonstrate it, please wait for the larger file to finish downloading.\n
+Currently homes in your download folder are easiest to opened, 2 sh3d files are automatically downloaded for you on opening the app to demonstrate it, please wait for the larger file to finish downloading.\n
 If the sh3d demo files become corrupt or you have saved them and want to reset, please delete both from your downloads folder, using a file explorer.\n
-Menu-> Help and Menu-> Delete do nothing currently.\n
+You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
+You can download furniture and texture libraries form the internet, but you must unzip them using file explorer before importing from within the app, see the menu on the catalog view.\n
+When changing languages from preferences there is currently a very large pause before the app becomes responsive, this is a bug.\n
+Menu-> Help does nothing currently.\n
 Minimizing the app while the plan view is still loading icons means it will not resume again, you have to wait till they are all loaded before leaving.\n
 If a crash report dialog pops up PLEASE press "Report", it is extremely useful to development :).</string>
     <string name="search_hint">Search Furniture</string>

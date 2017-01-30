@@ -5,7 +5,7 @@
               android:orientation="vertical"
               android:background="@android:color/white">
 
-    <com.eteks.sweethomeavr.utils.HorizontalFlowLayout
+    <com.eteks.renovations3d.utils.HorizontalFlowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -193,10 +193,10 @@
             android:minHeight="24dp"
             android:minWidth="24dp"
             />
-    </com.eteks.sweethomeavr.utils.HorizontalFlowLayout>
+    </com.eteks.renovations3d.utils.HorizontalFlowLayout>
 
 
-        <com.eteks.sweethomeavr.android.DrawableView
+        <com.eteks.renovations3d.android.DrawableView
             android:id="@+id/drawableView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

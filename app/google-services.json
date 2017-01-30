@@ -1,43 +1,27 @@
 {
   "project_info": {
-    "project_number": "843754081116",
-    "firebase_url": "https://sweet-home-avr.firebaseio.com",
-    "project_id": "sweet-home-avr",
-    "storage_bucket": "sweet-home-avr.appspot.com"
+    "project_number": "69716389910",
+    "firebase_url": "https://renovations-3d.firebaseio.com",
+    "project_id": "renovations-3d",
+    "storage_bucket": "renovations-3d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:843754081116:android:1a7d41a25c15b08d",
+        "mobilesdk_app_id": "1:69716389910:android:82c48d249b90d2be",
         "android_client_info": {
-          "package_name": "com.mindblowing.sweethomeavr"
+          "package_name": "com.mindblowing.renovations3d"
         }
       },
       "oauth_client": [
         {
-          "client_id": "843754081116-ml9r9l2bkn8ctj30nhtfgvd8l2jge86s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mindblowing.sweethomeavr",
-            "certificate_hash": "F122898B35E396CB4F7F06AE7C9A1408FA9D474C"
-          }
-        },
-        {
-          "client_id": "843754081116-h10ir6kb3i8t1pqajcju2me47sc7me6s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mindblowing.sweethomeavr",
-            "certificate_hash": "4B79B71539F7EE5BB1F10F510F284CCB6354EB8C"
-          }
-        },
-        {
-          "client_id": "843754081116-ifcjfjd7j6kc08grg292is272gshi7n7.apps.googleusercontent.com",
+          "client_id": "69716389910-i93n4dkaihhf0tkgjtlmclnhu05j8lcl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDOd3qLCaOXzYAmHbMwL7478-B9RefhsEo"
+          "current_key": "AIzaSyCaQP3qeB-Fy_FyDEwDPul4aBZ1QRuCOag"
         }
       ],
       "services": {
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "843754081116-ifcjfjd7j6kc08grg292is272gshi7n7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

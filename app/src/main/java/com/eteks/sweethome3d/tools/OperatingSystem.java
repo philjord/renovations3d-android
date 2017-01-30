@@ -20,12 +20,8 @@
 package com.eteks.sweethome3d.tools;
 
 import android.app.Activity;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
 
 import com.eteks.sweethome3d.model.Home;
-import com.eteks.sweethomeavr.SweetHomeAVRActivity;
 
 import java.io.File;
 import java.io.FileFilter;

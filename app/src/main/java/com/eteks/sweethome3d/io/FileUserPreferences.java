@@ -541,7 +541,6 @@ public class FileUserPreferences extends UserPreferences {
                 }
               }
             });
-          
           // Read default furniture catalog
           final FurnitureCatalog resourceFurnitureCatalog = 
               readFurnitureCatalogFromResource(getFurnitureLibrariesPluginFolders());
@@ -554,6 +553,7 @@ public class FileUserPreferences extends UserPreferences {
                 });
             }
           }
+			System.out.println("C");
           if (resourceFurnitureCatalog instanceof DefaultFurnitureCatalog) {
             updater.execute(new Runnable() {
                 public void run() {
@@ -607,7 +607,7 @@ public class FileUserPreferences extends UserPreferences {
                 }
               }
             });
-            
+			System.out.println("F");
           // Read default textures catalog
           final TexturesCatalog resourceTexturesCatalog = 
               readTexturesCatalogFromResource(getTexturesLibrariesPluginFolders());
@@ -645,7 +645,7 @@ public class FileUserPreferences extends UserPreferences {
    * Adds to auto completion strings the default strings of the new chosen language.
    */
   private void updateAutoCompletionStrings() {
-    DefaultUserPreferences defaultPreferences = new DefaultUserPreferences(false, this);
+	 DefaultUserPreferences defaultPreferences = new DefaultUserPreferences(false, this);
     for (String property : defaultPreferences.getAutoCompletedProperties()) {
       for (String autoCompletionString : defaultPreferences.getAutoCompletionStrings(property)) {
         addAutoCompletionString(property, autoCompletionString);

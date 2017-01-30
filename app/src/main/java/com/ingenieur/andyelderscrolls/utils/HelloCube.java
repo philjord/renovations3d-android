@@ -1,12 +1,10 @@
 package com.ingenieur.andyelderscrolls.utils;
 
-import com.eteks.sweethomeavr.android.HomeComponent3D;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
 
 import org.jogamp.java3d.Alpha;
-import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.BoundingSphere;
 import org.jogamp.java3d.BranchGroup;
 import org.jogamp.java3d.Canvas3D;
@@ -17,8 +15,6 @@ import org.jogamp.java3d.utils.shader.Cube;
 import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.vecmath.Point3d;
-
-import static com.jogamp.nativewindow.util.PixelFormat.CType.V;
 
 /**
  * Created by phil on 11/26/2016.

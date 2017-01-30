@@ -79,7 +79,7 @@
 
 #in fact flag it
 -keep class com.eteks.sweethome3d.** { *; }
--keep class com.eteks.sweethomeavr.** { *; }
+-keep class renovations3d.** { *; }
 -keep class javaawt.** { *; }
 -keep class javaswing.** { *; }
 -keep class sun.util.calendar.ZoneInfo { *; }

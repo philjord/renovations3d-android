@@ -4,7 +4,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.mindblowing.sweethomeavr"
+        applicationId "com.mindblowing.renovations3d"
         minSdkVersion 15
         targetSdkVersion 23
         multiDexEnabled = true

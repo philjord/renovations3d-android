@@ -6,12 +6,12 @@
               android:layout_height="match_parent">
 
 
-    <com.eteks.sweethomeavr.EdgeViewPager
+    <com.eteks.renovations3d.EdgeViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    </com.eteks.sweethomeavr.EdgeViewPager>
+    </com.eteks.renovations3d.EdgeViewPager>
 
 
 
