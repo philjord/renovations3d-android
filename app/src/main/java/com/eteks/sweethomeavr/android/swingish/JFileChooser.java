@@ -1,8 +1,7 @@
-package com.ingenieur.andyelderscrolls.utils;
+package com.eteks.sweethomeavr.android.swingish;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
@@ -15,12 +14,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 
-import static android.R.attr.path;
-
 /**
  * TODO: must add cancel button that return a null file, but ignore for now
  */
-public class FileChooser
+public class JFileChooser
 {
 	private static final String PARENT_DIR = "..";
 
@@ -32,7 +29,24 @@ public class FileChooser
 	// filter on file extension
 	private String extension = null;
 
-	public FileChooser setExtension(String extension)
+	// MUCH sexier system
+	private FileFilter fileFilter = null;
+
+	/**
+	 * Note replaces current and therefore only last set is used (and you can't pick anyway!)
+	 * @param filter
+	 */
+	public void addChoosableFileFilter(FileFilter filter)
+	{
+		fileFilter = filter;
+	}
+
+	public void setFileFilter(FileFilter filter)
+	{
+		fileFilter = filter;
+	}
+
+	public JFileChooser setExtension(String extension)
 	{
 		this.extension = (extension == null) ? null :
 				extension.toLowerCase();
@@ -45,7 +59,7 @@ public class FileChooser
 		void fileSelected(File file);
 	}
 
-	public FileChooser setFileListener(FileSelectedListener fileListener)
+	public JFileChooser setFileListener(FileSelectedListener fileListener)
 	{
 		this.fileListener = fileListener;
 		return this;
@@ -53,12 +67,12 @@ public class FileChooser
 
 	private FileSelectedListener fileListener;
 
-	public FileChooser(Activity activity)
+	public JFileChooser(Activity activity)
 	{
 		this(activity, null);
 	}
 
-	public FileChooser(Activity activity, File startFolder)
+	public JFileChooser(Activity activity, File startFolder)
 	{
 		this.activity = activity;
 		dialog = new Dialog(activity);
@@ -91,7 +105,7 @@ public class FileChooser
 			//this doesn't work no navigate from here
 			//startFolder = Environment.getExternalStorageDirectory();
 
-			File chooserStartFolder = new File( System.getenv("EXTERNAL_STORAGE"));
+			startFolder = new File( System.getenv("EXTERNAL_STORAGE"));
 		}
 		else if (startFolder.isFile())
 		{
@@ -100,6 +114,10 @@ public class FileChooser
 		refresh(startFolder);
 	}
 
+	public Dialog getDialog()
+	{
+		return dialog;
+	}
 
 	public void showDialog()
 	{
@@ -136,11 +154,11 @@ public class FileChooser
 					{
 						if (!file.canRead())
 						{
-							return false;
+							return fileFilter !=null ? fileFilter.accept(file) : false;
 						}
 						else if (extension == null)
 						{
-							return true;
+							return fileFilter !=null ? fileFilter.accept(file) : true;
 						}
 						else
 						{

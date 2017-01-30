@@ -19,13 +19,8 @@
  */
 package com.eteks.sweethomeavr.android;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -40,7 +35,7 @@ import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
-import com.ingenieur.andyelderscrolls.utils.FileChooser;
+import com.eteks.sweethomeavr.android.swingish.JFileChooser;
 import com.mindblowing.sweethomeavr.R;
 
 import java.io.File;
@@ -50,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
-import static com.eteks.sweethomeavr.SweetHomeAVRActivity.sweetHomeAVR;
 
 /**
  * Content manager for files with Swing file choosers.
@@ -704,7 +698,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
    */
   private String showFileChooser(VCView          parentView,
                                  String        dialogTitle,
-                                 ContentType   contentType,
+								 final ContentType   contentType,
                                  final String        path,
                                  boolean       save) {
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
@@ -739,7 +733,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 										  dialogSemaphore.release();
 									  }
 								  })
-						  .setNegativeButton("Cancel",
+						  .setNegativeButton(   "NO" ,
 								  new DialogInterface.OnClickListener()
 								  {
 									  public void onClick(DialogInterface dialog, int id)
@@ -748,6 +742,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 									  }
 								  });
 
+				  alertDialogBuilder.setTitle(getFileDialogTitle(true));
 				  AlertDialog alertDialog = alertDialogBuilder.create();
 				  alertDialog.show();
 			  }
@@ -756,16 +751,30 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  else if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY )
 	  {
 			// in this case we want ot show a real file picker (with an extension filter of the right type
-		  final String ext = contentType == ContentType.FURNITURE_LIBRARY ? "sh3f" :"sh3t"; //(need  zip as well one day)
+		  //TODO:  "sh3f" :"sh3t"; //(need  zip as well one day)
 		  final File chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-		  //TODO: filfileter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
+		  //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
 
 		  activity.runOnUiThread(new Runnable()
 		  {
 			  public void run()
 			  {
-				  final FileChooser fileChooser = new FileChooser(FileContentManager.this.activity, chooserStartFolder).setExtension(ext).setFileListener(new FileChooser.FileSelectedListener()
+				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, chooserStartFolder);
+				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
+				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+				  fileChooser.getDialog().setCancelable(true);
+				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
+															   {
+																   @Override
+																   public void onDismiss(DialogInterface dialog)
+																   {
+																	   dialogSemaphore.release();
+																   }
+															   }
+				  );
+
+				  fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
 				  {
 					  @Override
 					  public void fileSelected(final File file)

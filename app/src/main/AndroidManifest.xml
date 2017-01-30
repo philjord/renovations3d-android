@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.sweethomeavr"
-  android:versionCode="133"
-  android:versionName="1.33">
+  android:versionCode="134"
+  android:versionName="1.34">
 
     <uses-sdk
         android:minSdkVersion="15"

@@ -20,8 +20,15 @@
 package com.eteks.sweethomeavr.android;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Html;
 
 import javaawt.EventQueue;
 
@@ -62,6 +69,7 @@ import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomeFurnitureGroup;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.InterruptedRecorderException;
+import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -75,6 +83,9 @@ import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
 import com.eteks.sweethomeavr.android.swingish.JComponent;
 import com.eteks.sweethomeavr.android.swingish.JOptionPane;
+
+import static com.eteks.sweethomeavr.android.SwingTools.getLocalizedLabelText;
+import static com.eteks.sweethomeavr.android.swingish.JOptionPane.showOptionDialog;
 
 /**
  * ONLY used for dialogs and menu item enabling
@@ -2517,17 +2528,17 @@ public class HomePane implements HomeView {
           boolean transferHandlerEnabled = homePane.transferHandlerEnabled; 
           homePane.setTransferEnabled(false);
           JComponent newFurnitureCatalogView = (JComponent)homePane.controller.getFurnitureCatalogController().getView();
-          //PJnewFurnitureCatalogView.setComponentPopupMenu(oldFurnitureCatalogView.getComponentPopupMenu());
+          //PJ newFurnitureCatalogView.setComponentPopupMenu(oldFurnitureCatalogView.getComponentPopupMenu());
           homePane.setTransferEnabled(transferHandlerEnabled);
-          JComponent splitPaneTopComponent = newFurnitureCatalogView; 
-          //if (newFurnitureCatalogView instanceof Scrollable) {
-          //  splitPaneTopComponent = SwingTools.createScrollPane(newFurnitureCatalogView);
-          //} else
+          /*JComponent splitPaneTopComponent = newFurnitureCatalogView;
+          if (newFurnitureCatalogView instanceof Scrollable) {
+            splitPaneTopComponent = SwingTools.createScrollPane(newFurnitureCatalogView);
+          } else
 			{
             splitPaneTopComponent = newFurnitureCatalogView;
           }
-          //((JSplitPane)SwingUtilities.getAncestorOfClass(JSplitPane.class, oldFurnitureCatalogView)).
-          //    setTopComponent(splitPaneTopComponent);
+          ((JSplitPane)SwingUtilities.getAncestorOfClass(JSplitPane.class, oldFurnitureCatalogView)).
+              setTopComponent(splitPaneTopComponent);*/
           this.furnitureCatalogView = new WeakReference<JComponent>(newFurnitureCatalogView);
         }
       }
@@ -3403,7 +3414,7 @@ public class HomePane implements HomeView {
     String replaceDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.replaceDamagedItems");
     String doNotOpenHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.doNotOpenHome");
 
-    switch (JOptionPane.showOptionDialog(activity, message, title,
+    switch (showOptionDialog(activity, message, title,
         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
         null, new Object [] {removeDamagedItems, replaceDamagedItems, doNotOpenHome}, doNotOpenHome)) {
       // Convert showOptionDialog answer to SaveAnswer enum constants
@@ -3437,7 +3448,7 @@ public class HomePane implements HomeView {
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.replace");
     String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.doNotReplace");
         
-    return JOptionPane.showOptionDialog(activity,
+    return showOptionDialog(activity,
         message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
 
@@ -3464,7 +3475,7 @@ public class HomePane implements HomeView {
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.replace");
     String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.doNotReplace");
         
-    return JOptionPane.showOptionDialog(activity,
+    return showOptionDialog(activity,
         message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
 
@@ -3491,7 +3502,7 @@ public class HomePane implements HomeView {
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.replace");
     String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.doNotReplace");
         
-    return JOptionPane.showOptionDialog(activity,
+    return showOptionDialog(activity,
         message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
   }
@@ -3508,7 +3519,7 @@ public class HomePane implements HomeView {
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.replace");
     String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.doNotReplace");
         
-    return JOptionPane.showOptionDialog(activity,
+    return showOptionDialog(activity,
         message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
   }
@@ -3543,10 +3554,14 @@ public class HomePane implements HomeView {
    * returns <code>true</code> if the user chose not to display again the tip.
    */
   public boolean showActionTipMessage(String actionTipKey) {
-    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipTitle");
-    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipMessage");
- /*   if (message.length() > 0) {
-      JPanel tipPanel = new JPanel(new GridBagLayout());
+	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
+		  System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+	  }
+
+    final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipTitle");
+    final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipMessage");
+    if (message.length() > 0) {
+     /* JPanel tipPanel = new JPanel(new GridBagLayout());
       
       JLabel messageLabel = new JLabel(message);
       tipPanel.add(messageLabel, new GridBagConstraints(
@@ -3566,14 +3581,19 @@ public class HomePane implements HomeView {
       
       SwingTools.showMessageDialog(this, tipPanel, title, 
           JOptionPane.INFORMATION_MESSAGE, doNotDisplayTipCheckBox);
-      return doNotDisplayTipCheckBox.isSelected();
+      return doNotDisplayTipCheckBox.isSelected();*/
+
+		final String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+		final String closeAndNoShow = SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
+		boolean noShow = JOptionPane.showOptionDialog(activity, message, title,
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				null, new String[]{closeAndNoShow, close}, close) == JOptionPane.OK_OPTION;
+		return noShow;
     } else {
       // Ignore untranslated tips
       return true;
-    }*/
+    }
 
-	  JOptionPane.showMessageDialog(activity, message, title, JOptionPane.INFORMATION_MESSAGE, null);
-	  return true;
   }
   
   /**
@@ -3601,7 +3621,7 @@ public class HomePane implements HomeView {
     String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.doNotSave");
     String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.cancel");
 
-    switch (JOptionPane.showOptionDialog(activity, message, title,
+    switch (showOptionDialog(activity, message, title,
         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {save, doNotSave, cancel}, save)) {
       // Convert showOptionDialog answer to SaveAnswer enum constants
@@ -3626,7 +3646,7 @@ public class HomePane implements HomeView {
     String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.save");
     String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.doNotSave");
     
-    return JOptionPane.showOptionDialog(activity, message, title,
+    return showOptionDialog(activity, message, title,
         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {save, doNotSave}, doNotSave) == JOptionPane.YES_OPTION;
   }
@@ -3642,7 +3662,7 @@ public class HomePane implements HomeView {
     String quit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.quit");
     String doNotQuit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.doNotQuit");
     
-    return JOptionPane.showOptionDialog(activity, message, title,
+    return showOptionDialog(activity, message, title,
         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {quit, doNotQuit}, doNotQuit) == JOptionPane.YES_OPTION;
   }
@@ -3685,9 +3705,9 @@ public class HomePane implements HomeView {
 	  title = "Sweet Home AVR";//TODO: PJ fix
     Icon icon = new ImageIcon(com.eteks.sweethome3d.android_props.HomePane.class.getResource(
         this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.icon")));
-   /* try {
+   //try {
       String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-      String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.showLibraries");
+    /*  String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.showLibraries");
       List<Library> libraries = this.preferences.getLibraries();
      /* if (!libraries.isEmpty()) {
         if (JOptionPane.showOptionDialog(this, messagePane, title,
@@ -3703,7 +3723,7 @@ public class HomePane implements HomeView {
       // Unknown about.close or about.libraries libraries
     }*/
     //JOptionPane.showMessageDialog(this, messagePane, title, JOptionPane.INFORMATION_MESSAGE, icon);
-	  JOptionPane.showMessageDialog(activity, message, title, JOptionPane.INFORMATION_MESSAGE, icon);
+	  JOptionPane.showMessageDialog(activity, message, title, JOptionPane.INFORMATION_MESSAGE, icon, close);
 
 
   }
@@ -3990,7 +4010,7 @@ public class HomePane implements HomeView {
         this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showUpdatesMessage.title"), 
         JOptionPane.PLAIN_MESSAGE, doNotDisplayShownUpdatesCheckBox);
     return !doNotDisplayShownUpdatesCheckBox.isSelected();*/
-	  return false;
+	  throw new UnsupportedOperationException("No update but what I make...");
   }
 
   /**
@@ -4027,7 +4047,7 @@ public class HomePane implements HomeView {
     } else {
       return null;
     }*/
-	  return null;
+	  throw new UnsupportedOperationException("No print...");
   }
 
   /**
@@ -4069,6 +4089,7 @@ public class HomePane implements HomeView {
         throw new RecorderException("Couldn't export to PDF", ex);
       }
     }*/
+	  throw new UnsupportedOperationException("No print...");
   }
   
   /**
@@ -4116,6 +4137,7 @@ public class HomePane implements HomeView {
         }
       }
     }*/
+	  throw new UnsupportedOperationException("No export to CSV...");
   }
 
   /**
@@ -4163,6 +4185,7 @@ public class HomePane implements HomeView {
         }
       }
     }*/
+	  throw new UnsupportedOperationException("No export to SVG...");
   }
 
   /**
@@ -4192,7 +4215,7 @@ public class HomePane implements HomeView {
         return null;
       }
     }*/
-    return homeName;
+	  throw new UnsupportedOperationException("No export to OBJ...");
   }
   
   /**
@@ -4208,20 +4231,20 @@ public class HomePane implements HomeView {
    * Caution !!! This method may be called from an other thread than EDT.  
    */
   protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException {
-    String header = this.preferences != null
+/*    String header = this.preferences != null
         ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, 
                                               "exportToOBJ.header", new Date())
         : "";
         
     // Use a clone of home to ignore selection and for thread safety
     OBJExporter.exportHomeToFile(cloneHomeInEventDispatchThread(this.home), 
-        objFile, header, this.exportAllToOBJ, object3dFactory);
+        objFile, header, this.exportAllToOBJ, object3dFactory);*/
   }
 
   /**
    * Returns a clone of the given <code>home</code> safely cloned in the EDT.
    */
-  private Home cloneHomeInEventDispatchThread(final Home home) throws RecorderException {
+/*  private Home cloneHomeInEventDispatchThread(final Home home) throws RecorderException {
     if (EventQueue.isDispatchThread()) {
       return home.clone();
     } else {
@@ -4239,12 +4262,12 @@ public class HomePane implements HomeView {
         throw new RecorderException("Couldn't clone home", ex.getCause());
       } 
     }
-  }
+  }*/
   
   /**
    * Export to OBJ in a separate class to be able to run HomePane without Java 3D classes.
    */
-  private static class OBJExporter {
+/*  private static class OBJExporter {
     public static void exportHomeToFile(Home home, String objFile, String header, 
                                         boolean exportAllToOBJ, Object3DFactory object3dFactory) throws RecorderException {
       OBJWriter writer = null;
@@ -4314,12 +4337,12 @@ public class HomePane implements HomeView {
           }
         }
       }
-    }
+    }*/
     
     /**
      * Returns <code>home</code> bounds. 
      */
-    private static Rectangle2D getExportedHomeBounds(Home home) {
+ /*   private static Rectangle2D getExportedHomeBounds(Home home) {
       // Compute bounds that include walls and furniture
       Rectangle2D homeBounds = updateObjectsBounds(null, home.getWalls());
       for (HomePieceOfFurniture piece : getVisibleFurniture(home.getFurniture())) {
@@ -4332,12 +4355,12 @@ public class HomePane implements HomeView {
         }
       }
       return updateObjectsBounds(homeBounds, home.getRooms());
-    }
+    }*/
 
     /**
      * Returns all the visible pieces in the given <code>furniture</code>.  
      */
-    private static List<HomePieceOfFurniture> getVisibleFurniture(List<HomePieceOfFurniture> furniture) {
+/*    private static List<HomePieceOfFurniture> getVisibleFurniture(List<HomePieceOfFurniture> furniture) {
       List<HomePieceOfFurniture> visibleFurniture = new ArrayList<HomePieceOfFurniture>(furniture.size());
       for (HomePieceOfFurniture piece : furniture) {
         if (piece.isVisible()
@@ -4356,7 +4379,7 @@ public class HomePane implements HomeView {
     /**
      * Updates <code>objectBounds</code> to include the bounds of <code>items</code>.
      */
-    private static Rectangle2D updateObjectsBounds(Rectangle2D objectBounds,
+ /*   private static Rectangle2D updateObjectsBounds(Rectangle2D objectBounds,
                                             Collection<? extends Selectable> items) {
       for (Selectable item : items) {
         if (!(item instanceof Elevatable)
@@ -4387,7 +4410,7 @@ public class HomePane implements HomeView {
     String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.delete");
     String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.cancel");
     
-    return JOptionPane.showOptionDialog(activity, message, title,
+    return showOptionDialog(activity, message, title,
         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
         null, new Object [] {delete, cancel}, cancel) == JOptionPane.OK_OPTION;
   }
@@ -4401,9 +4424,9 @@ public class HomePane implements HomeView {
     String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.message");
     String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.title");
     
-    List<Camera> storedCameras = this.home.getStoredCameras();
+/*    List<Camera> storedCameras = this.home.getStoredCameras();
     JComponent cameraNameChooser;
-/*    JTextComponent cameraNameTextComponent;
+    JTextComponent cameraNameTextComponent;
     if (storedCameras.isEmpty()) {
       cameraNameChooser = cameraNameTextComponent = new JTextField(cameraName, 20);
     } else {
@@ -4437,8 +4460,8 @@ public class HomePane implements HomeView {
         return cameraName;
       }
     } */
-      
-    return null;
+
+	  throw new UnsupportedOperationException("No store camera dialog yet!...");
   }
 
   /**
@@ -4447,9 +4470,9 @@ public class HomePane implements HomeView {
    */
   public List<Camera> showDeletedCamerasDialog() {    
     // Build stored cameras list
-    List<Camera> storedCameras = this.home.getStoredCameras();
+  /*  List<Camera> storedCameras = this.home.getStoredCameras();
     final List<Camera> selectedCameras = new ArrayList<Camera>();
- /*   final JList camerasList = new JList(storedCameras.toArray());
+    final JList camerasList = new JList(storedCameras.toArray());
     camerasList.setCellRenderer(new ListCellRenderer() {
         private JCheckBox cameraCheckBox = new JCheckBox();
         
@@ -4513,7 +4536,7 @@ public class HomePane implements HomeView {
         return selectedCameras;
       }
     } */
-    return null;    
+	  throw new UnsupportedOperationException("No deleted cameras dailog yet...");
   }
 
   /**

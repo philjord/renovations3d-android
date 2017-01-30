@@ -28,6 +28,7 @@ import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
+import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
@@ -193,17 +194,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case R.id.planSelect:
 					planController.escape();// in case we are doing a create now
-					planController.setMode(PlanController.Mode.SELECTION);
+					setMode(PlanController.Mode.SELECTION);
 					break;
 				case R.id.createWalls:
 					planController.escape();// in case we are doing a create now
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
-					planController.setMode(PlanController.Mode.WALL_CREATION);
+					setMode(PlanController.Mode.WALL_CREATION);
 					break;
 				case R.id.createRooms:
 					planController.escape();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
-					planController.setMode(PlanController.Mode.ROOM_CREATION);
+					setMode(PlanController.Mode.ROOM_CREATION);
 					break;
 				case R.id.createPolyLines:
 					planController.escape();
@@ -213,12 +214,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.createDimensions:
 					planController.escape();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
-					planController.setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
+					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case R.id.createText:
 					planController.escape();
 					// note single tap works for this one
-					planController.setMode(PlanController.Mode.LABEL_CREATION);
+					setMode(PlanController.Mode.LABEL_CREATION);
 					break;
 
 
@@ -226,6 +227,39 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 	};
 
+	//copied from HomeController as we can't touch the EDT thread like they do
+	public void setMode(PlanController.Mode mode) {
+		if(planController.getMode() != mode) {
+			final String actionKey;
+			if(mode == PlanController.Mode.WALL_CREATION) {
+				actionKey = HomeView.ActionType.CREATE_WALLS.name();
+			} else if(mode == PlanController.Mode.ROOM_CREATION) {
+				actionKey = HomeView.ActionType.CREATE_ROOMS.name();
+			} else if(mode == PlanController.Mode.POLYLINE_CREATION) {
+				actionKey = HomeView.ActionType.CREATE_POLYLINES.name();
+			} else if(mode == PlanController.Mode.DIMENSION_LINE_CREATION) {
+				actionKey = HomeView.ActionType.CREATE_DIMENSION_LINES.name();
+			} else if(mode == PlanController.Mode.LABEL_CREATION) {
+				actionKey = HomeView.ActionType.CREATE_LABELS.name();
+			} else {
+				actionKey = null;
+			}
+
+			if(actionKey != null && !this.preferences.isActionTipIgnored(actionKey)) {
+				Thread t = new Thread(new Runnable() {
+					public void run() {
+						if(SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getView().showActionTipMessage(actionKey)) {
+							preferences.setActionTipIgnored(actionKey);
+						}
+					}
+				});
+				t.start();
+			}
+
+			planController.setMode(mode);
+		}
+
+	}
 
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

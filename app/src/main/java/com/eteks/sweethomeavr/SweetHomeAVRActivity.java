@@ -37,7 +37,7 @@ import com.eteks.sweethomeavr.android.FurnitureTable;
 import com.eteks.sweethomeavr.android.HomeComponent3D;
 import com.eteks.sweethomeavr.android.MultipleLevelsPlanPanel;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.ingenieur.andyelderscrolls.utils.FileChooser;
+import com.eteks.sweethomeavr.android.swingish.JFileChooser;
 import com.ingenieur.andyelderscrolls.utils.SopInterceptor;
 import com.mindblowing.sweethomeavr.R;
 
@@ -272,8 +272,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
 		}
 
-		menu.findItem(R.id.exit).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
 		menu.findItem(R.id.menu_new).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
 		menu.findItem(R.id.menu_load).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
@@ -297,9 +295,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		// Handle item selection
 		switch (item.getItemId())
 		{
-			case R.id.exit:
-				System.exit(1);
-				return true;
 			case R.id.menu_new:
 				sweetHomeAVR.newHome();
 				return true;
@@ -516,7 +511,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
 
-		final FileChooser fileChooser = new FileChooser(SweetHomeAVRActivity.this, chooserStartFolder).setExtension("sh3d").setFileListener(new FileChooser.FileSelectedListener()
+		final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder).setExtension("sh3d").setFileListener(new JFileChooser.FileSelectedListener()
 		{
 			@Override
 			public void fileSelected(final File file)

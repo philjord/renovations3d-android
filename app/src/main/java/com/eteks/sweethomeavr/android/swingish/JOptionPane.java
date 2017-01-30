@@ -76,7 +76,15 @@ public class JOptionPane
 
 	public static void showMessageDialog(Context context, String message, String title, int type)
 	{
-		showMessageDialog(context, message, title, type, null);
+		showMessageDialog(context, message, title, type, null, "OK");
+	}
+	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon)
+	{
+		showMessageDialog(context, message, title, type, icon, "OK");
+	}
+	public static void showMessageDialog(Context context, String message, String title, int type, final String closeText)
+	{
+		showMessageDialog(context, message, title, type, null, closeText);
 	}
 
 	/**
@@ -87,7 +95,7 @@ public class JOptionPane
 	 * @param type ignored
 	 * @param icon must be an ImageIcon
 	 */
-	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon)
+	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon, final String closeText)
 	{
 		Handler handler = new Handler(Looper.getMainLooper());
 		handler.post(new Runnable()
@@ -102,7 +110,7 @@ public class JOptionPane
 					dialog.setIcon(bmd);
 				}
 				dialog.setMessage(Html.fromHtml(message));
-				dialog.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
 				dialog.create().show();
@@ -110,14 +118,14 @@ public class JOptionPane
 	}
 
 
-	public static int showOptionDialog(final Context context, final String message, final String title, int options, int type,
-									   final Icon icon, Object [] optionsText, Object defaultText)
+	public static int showOptionDialog(final Context context, final String message, final String title, final int options, final int type,
+									   final Icon icon, final Object [] optionsText, Object defaultText)
 	{
 		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
 		}
 
-		final int[] selectedFile = new int[]{CANCEL_OPTION};
+		final int[] selectedOption = new int[]{CANCEL_OPTION};
 		final Semaphore dialogSemaphore = new Semaphore(0, true);
 
 		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
@@ -131,11 +139,11 @@ public class JOptionPane
 								 public void onClick(DialogInterface dialog, int which) {
 									 switch (which){
 										 case DialogInterface.BUTTON_POSITIVE:
-											 selectedFile[0] = OK_OPTION;
+											 selectedOption[0] = OK_OPTION;
 											 dialogSemaphore.release();
 											 break;
 										 case DialogInterface.BUTTON_NEGATIVE:
-											 selectedFile[0] = NO_OPTION;
+											 selectedOption[0] = NO_OPTION;
 											 dialogSemaphore.release();
 											 break;
 									 }
@@ -150,15 +158,14 @@ public class JOptionPane
 								 dialog.setIcon(bmd);
 							 }
 							 dialog.setMessage(Html.fromHtml(message));
-							 dialog.setPositiveButton("Yes", dialogClickListener);
-							 dialog.setNegativeButton("No", dialogClickListener);
+
+							 dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
+							 dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
+							 dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
 							 dialog.create().show();
 						 }
 					 });
-		//TODO: fixme in some modal manner!, see FileContent Manager too the showFileChooser method
-		// see FileContnet Manager
-		// modal is hard http://stackoverflow.com/questions/6120567/android-how-to-get-a-modal-dialog-or-similar-modal-behavior
-		// but there are a few solutions so long as you are not on teh vent thread (probably true??
+
 		try
 		{
 			dialogSemaphore.acquire();
@@ -167,7 +174,7 @@ public class JOptionPane
 		{
 		}
 
-		return selectedFile[0] ;
+		return selectedOption[0] ;
 
 	}
 
