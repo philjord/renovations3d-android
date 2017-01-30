@@ -29,12 +29,14 @@ import com.eteks.sweethome3d.model.CollectionListener;
 
 import com.eteks.sweethome3d.model.FurnitureCatalog;
 import com.eteks.sweethome3d.model.FurnitureCategory;
+import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
+import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 
 import com.eteks.sweethomeavr.SweetHomeAVRActivity;
@@ -56,6 +58,9 @@ import javaawt.Graphics;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
+import static android.R.attr.id;
+import static com.eteks.sweethomeavr.SweetHomeAVRActivity.sweetHomeAVR;
+
 
 /**
  * Created by phil on 11/22/2016.
@@ -76,7 +81,7 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 
 
 	private GridView gridView;
-	private int gridViewSelectedPosition = -1;
+	private FurnitureImageView selectedFiv = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -91,10 +96,10 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id)
 			{
-				gridViewSelectedPosition = position;
+				selectedFiv = (FurnitureImageView)v;
 				for (int j = 0; j < gridView.getChildCount(); j++) {
 					final ImageView iv = (ImageView) gridView.getChildAt(j);
-					if(j == position)
+					if(iv == v)
 						iv.setBackgroundColor(Color.CYAN);
 					else
 						iv.setBackgroundColor(Color.WHITE);
@@ -117,11 +122,11 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 			{
 				case R.id.furnitureAdd:
 
-						FurnitureImageView fiv = (FurnitureImageView) gridView.getChildAt(gridViewSelectedPosition);
-						if (fiv != null)
+
+						if (selectedFiv != null)
 						{
 							ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
-							al.add(new HomePieceOfFurniture(fiv.getCatalogPieceOfFurniture()));
+							al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
 							((SweetHomeAVRActivity) FurnitureCatalogListPanel.this.getActivity())
 									.sweetHomeAVR.getHomeController().getFurnitureController().addFurniture(al);
 							Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
@@ -137,14 +142,47 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-
+	@Override
+	public void onPrepareOptionsMenu(Menu menu)
+	{
+		menu.findItem(R.id.import_furniture_lib).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE_LIBRARY.Name"));
+		menu.findItem(R.id.import_texture_lib).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_TEXTURES_LIBRARY.Name"));
+		super.onPrepareOptionsMenu(menu);
+	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.search:
+			case R.id.import_furniture_lib:
+				Thread t2 = new Thread(){public void run(){
+					HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+					if(controller != null)
+					{
+						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
+						//controller.importFurnitureLibrary();
+						String furnitureLibraryName = controller.getView().showImportFurnitureLibraryDialog();
+						if(furnitureLibraryName != null) {
+							controller.importFurnitureLibrary(furnitureLibraryName);
+						}
+					}}};
+				t2.start();
 				return true;
-			case R.id.filter:
+			case R.id.import_texture_lib:
+				Thread t3 = new Thread(){public void run(){
+					HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+					if(controller2 != null)
+					{
+						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
+						//	controller.importTexturesLibrary();
+						String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
+						if(texturesLibraryName != null) {
+							controller2.importTexturesLibrary(texturesLibraryName);
+						}
+					}
+				}};
+				t3.start();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -176,7 +214,8 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		public View getView(int position, View convertView, ViewGroup parent) {
 			  CatalogPieceOfFurniture  catalogPieceOfFurniture  = (CatalogPieceOfFurniture) catalogListModel.getElementAt(position);
 			ImageView imageView;
-			if (convertView == null) {
+			//can't recycle as the furniture catalog is wrong
+			//if (convertView == null) {
 				// if it's not recycled, initialize some attributes
 				imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
 
@@ -184,16 +223,17 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 				imageView.setBackgroundColor(Color.WHITE);
-			} else {
-				imageView = (ImageView) convertView;
-			}
+				int DEFAULT_ICON_HEIGHT = 80;//see below
+				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT, null);
+				if(icon instanceof ImageIcon)
+				{
+					imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
+				}
+			//} else {
+			//	imageView = (ImageView) convertView;
+			//}
 
-			int DEFAULT_ICON_HEIGHT = 80;//see below
-			Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT, null);
-			if(icon instanceof ImageIcon)
-			{
-				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
-			}
+
 			return imageView;
 		}
 
@@ -670,8 +710,8 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	 * Computes furniture list visible row count to ensure its horizontal scrollbar
 	 * won't be seen.
 	 */
-	private void spreadFurnitureIconsAlongListWidth() {
-/*		ListModel model = this.catalogFurnitureList.getModel();
+/*	private void spreadFurnitureIconsAlongListWidth() {
+		ListModel model = this.catalogFurnitureList.getModel();
 		int size = model.getSize();
 		int extentWidth = ((JViewport)this.catalogFurnitureList.getParent()).getExtentSize().width;
 		ListCellRenderer cellRenderer = this.catalogFurnitureList.getCellRenderer();
@@ -692,8 +732,8 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 		this.catalogFurnitureList.setFixedCellWidth(maxCellWidth + (extentWidth % maxCellWidth) / visibleItemsPerRow);
 		// Set also cell height otherwise first calls to repaint done by icon manager won't repaint it
 		// because the list have a null size at the beginning
-		this.catalogFurnitureList.setFixedCellHeight(maxCellHeight);*/
-	}
+		this.catalogFurnitureList.setFixedCellHeight(maxCellHeight);
+	}*/
 
 	/**
 	 * Adds the listeners that manage selection synchronization in this tree.
@@ -904,7 +944,7 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 /**
  * List model adaptor to CatalogPieceOfFurniture instances of catalog.
  */
-private static class FurnitureCatalogListModel
+private class FurnitureCatalogListModel
 {//extends AbstractListModel {
 	private FurnitureCatalog catalog;
 	private List<CatalogPieceOfFurniture> furniture;
@@ -951,7 +991,11 @@ private static class FurnitureCatalogListModel
 			{
 				public void run()
 				{
-//					fireContentsChanged(this, -1, -1);
+					//fireContentsChanged(this, -1, -1);
+
+					// called in cases like where language changes or perhaps catalog imported
+					FurnitureCatalogListPanel.this.getView().postInvalidate();
+					gridView.setAdapter(new ImageAdapter(FurnitureCatalogListPanel.this.getContext()));
 				}
 			});
 		}

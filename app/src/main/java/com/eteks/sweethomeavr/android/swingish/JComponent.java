@@ -166,7 +166,7 @@ public abstract class JComponent extends Fragment implements ImageObserver
 	public abstract void paintComponent(Graphics g);
 
 
-	private Font currentFont = new VMFont(Typeface.DEFAULT,24);
+	private Font currentFont = new VMFont(Typeface.DEFAULT, 24);
 
 	public Font getFont()
 	{

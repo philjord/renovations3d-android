@@ -293,10 +293,19 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		}
 	}
 	public static boolean virtualvisit = false;
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
 		inflater.inflate(R.menu.home_component3d_menu, menu);
+		virtualvisit = home.getCamera() == home.getObserverCamera();
 		menu.findItem(R.id.virtualvisit).setChecked(virtualvisit);
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+	@Override
+	public void onPrepareOptionsMenu(Menu menu)
+	{
+		menu.findItem(R.id.virtualvisit).setTitle(preferences.getLocalizedString(
+					com.eteks.sweethome3d.android_props.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -304,14 +313,8 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.virtualvisit:
-				//CheckBox checkBox1 = (CheckBox) item.getActionView();
 				item.setChecked(!item.isChecked());
 				this.virtualvisit = item.isChecked();
-				 // taken from homepane
-				//createToggleAction(ActionType.VIEW_FROM_TOP, home.getCamera() == home.getTopCamera(), viewGroup,
-				//		preferences, homeController3D, "viewFromTop");
-				//createToggleAction(ActionType.VIEW_FROM_OBSERVER, home.getCamera() == home.getObserverCamera(), viewGroup,
-				//		preferences, homeController3D, "viewFromObserver");
 
 				if(virtualvisit)
 					controller.viewFromObserver();

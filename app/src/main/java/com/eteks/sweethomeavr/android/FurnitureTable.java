@@ -62,18 +62,35 @@ public class FurnitureTable extends JTable implements VCView, Printable
 	private FurnitureController controller;
 
 
+
+	// terrible but it'll do
+	private int[] widths = new int[]{100,200,150,150,150,150};
+	//TODO: these should be localized
+	private HomePieceOfFurniture.SortableProperty[] headerNames = new HomePieceOfFurniture.SortableProperty[]{
+			HomePieceOfFurniture.SortableProperty.TEXTURE,HomePieceOfFurniture.SortableProperty.NAME,HomePieceOfFurniture.SortableProperty.WIDTH,
+			HomePieceOfFurniture.SortableProperty.DEPTH,HomePieceOfFurniture.SortableProperty.HEIGHT,HomePieceOfFurniture.SortableProperty.VISIBLE};
+	private TableLayout tableLayout;
+	private LinearLayout header;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
 		View rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
-		//ScrollView scrollView = new ScrollView(this.getContext());
-		LinearLayout header = (LinearLayout) rootView.findViewById(R.id.header);
-		TableRow headerRow = new TableRow(this.getContext());
+		header = (LinearLayout) rootView.findViewById(R.id.header);
+		updateHeader();
 
-		// terrible but it'll do
-		int[] widths = new int[]{100,200,150,150,150,150};
-		String[] headerNames = new String[]{"","","Width","Depth","Height","Visible"};
+		tableLayout = (TableLayout) rootView.findViewById(R.id.table);
+		updateTable();
+
+		return rootView;
+	}
+
+	private void updateHeader()
+	{
+		header.removeAllViews();
+
+		TableRow headerRow = new TableRow(this.getContext());
 
 		for (int i = 0; i < headerNames.length; i++)
 		{
@@ -82,14 +99,15 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			tv.setTextColor(Color.BLACK);
 			tv.setPadding(10, 10, 10, 10);
 			tv.setGravity(Gravity.CENTER);
-			tv.setText(headerNames[i]);
+			tv.setText(getColumnName(headerNames[i], preferences));
 			tv.setWidth(widths[i]);
 			headerRow.addView(tv);
 		}
 		header.addView(headerRow);
-
-		TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.table);
-		// new TableLayout(this.getContext());
+	}
+	private void updateTable()
+	{
+		tableLayout.removeAllViews();
 
 		FurnitureTreeTableModel model = getModel();
 		for (int i = 0; i < model.getRowCount(); i++)
@@ -168,14 +186,7 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			v.setBackgroundColor(Color.rgb(51, 51, 51));
 			tableLayout.addView(v);
 		}
-
-
-
-
-		//scrollView.addView(tableLayout);
-		return rootView;
 	}
-
 
 	private class VisibleCheckBoxListener implements View.OnClickListener
 	{
@@ -638,6 +649,9 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			} else {
 				//furnitureTable.repaint();
 				//furnitureTable.getTableHeader().repaint();
+				furnitureTable.updateTable();
+				furnitureTable.getView().postInvalidate();
+
 			}
 		}
 	}
@@ -670,6 +684,8 @@ public class FurnitureTable extends JTable implements VCView, Printable
 						// Update selected rows
 						updateTableSelectedFurniture(home);
 						//storeExpandedRows(home, controller);
+						updateTable();
+						getView().postInvalidate();
 					}
 				};
 		for (HomePieceOfFurniture piece : home.getFurniture()) {
@@ -1080,7 +1096,7 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			createAvailableColumns(home, preferences);
 			addHomeListener(home);
 			addLanguageListener(preferences);
-			updateModelColumns(home.getFurnitureVisibleProperties());
+			//PJ no wait for the view create updateModelColumns(home.getFurnitureVisibleProperties());
 		}
 
 		/**
@@ -1142,6 +1158,9 @@ public class FurnitureTable extends JTable implements VCView, Printable
 					preferences.removePropertyChangeListener(
 							UserPreferences.Property.LANGUAGE, this);
 				} else {
+					updateHeader();
+					updateTable();
+					getView().postInvalidate();
 					// Change column name and renderer from current locale
 /*					for (TableColumn tableColumn : furnitureTableColumnModel.availableColumns.values()) {
 						HomePieceOfFurniture.SortableProperty columnIdentifier =
@@ -1157,6 +1176,7 @@ public class FurnitureTable extends JTable implements VCView, Printable
 		 * Updates displayed columns list from furniture visible properties.
 		 */
 		private void updateModelColumns(List<HomePieceOfFurniture.SortableProperty> furnitureVisibleProperties) {
+			updateHeader();
 			// Remove columns not in furnitureVisibleProperties
 /*			for (int i = this.tableColumns.size() - 1; i >= 0; i--) {
 				TableColumn tableColumn = this.tableColumns.get(i);
@@ -1190,43 +1210,43 @@ public class FurnitureTable extends JTable implements VCView, Printable
 									 UserPreferences preferences) {
 			switch (property) {
 				case CATALOG_ID :
-					return preferences.getLocalizedString(FurnitureTable.class, "catalogIdColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "catalogIdColumn");
 				case NAME :
-					return preferences.getLocalizedString(FurnitureTable.class, "nameColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "nameColumn");
 				case WIDTH :
-					return preferences.getLocalizedString(FurnitureTable.class, "widthColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "widthColumn");
 				case DEPTH :
-					return preferences.getLocalizedString(FurnitureTable.class, "depthColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "depthColumn");
 				case HEIGHT :
-					return preferences.getLocalizedString(FurnitureTable.class, "heightColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "heightColumn");
 				case X :
-					return preferences.getLocalizedString(FurnitureTable.class, "xColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "xColumn");
 				case Y :
-					return preferences.getLocalizedString(FurnitureTable.class, "yColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "yColumn");
 				case ELEVATION :
-					return preferences.getLocalizedString(FurnitureTable.class, "elevationColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "elevationColumn");
 				case ANGLE :
-					return preferences.getLocalizedString(FurnitureTable.class, "angleColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "angleColumn");
 				case LEVEL :
-					return preferences.getLocalizedString(FurnitureTable.class, "levelColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "levelColumn");
 				case COLOR :
-					return preferences.getLocalizedString(FurnitureTable.class, "colorColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "colorColumn");
 				case TEXTURE :
-					return preferences.getLocalizedString(FurnitureTable.class, "textureColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "textureColumn");
 				case MOVABLE :
-					return preferences.getLocalizedString(FurnitureTable.class, "movableColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "movableColumn");
 				case DOOR_OR_WINDOW :
-					return preferences.getLocalizedString(FurnitureTable.class, "doorOrWindowColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "doorOrWindowColumn");
 				case VISIBLE :
-					return preferences.getLocalizedString(FurnitureTable.class, "visibleColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "visibleColumn");
 				case PRICE :
-					return preferences.getLocalizedString(FurnitureTable.class, "priceColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "priceColumn");
 				case VALUE_ADDED_TAX_PERCENTAGE :
-					return preferences.getLocalizedString(FurnitureTable.class, "valueAddedTaxPercentageColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "valueAddedTaxPercentageColumn");
 				case VALUE_ADDED_TAX :
-					return preferences.getLocalizedString(FurnitureTable.class, "valueAddedTaxColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "valueAddedTaxColumn");
 				case PRICE_VALUE_ADDED_TAX_INCLUDED :
-					return preferences.getLocalizedString(FurnitureTable.class, "priceValueAddedTaxIncludedColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "priceValueAddedTaxIncludedColumn");
 				default :
 					throw new IllegalArgumentException("Unknown column name " + property);
 			}

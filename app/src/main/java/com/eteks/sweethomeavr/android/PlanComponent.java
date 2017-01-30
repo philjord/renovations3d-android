@@ -6091,7 +6091,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		this.pc = pc;
       setOpaque(true);
       // Use same font as tool tips
-      setFont(new VMFont(Typeface.DEFAULT, 24));//UIManager.getFont("ToolTip.font"));
+      setFont(new VMFont(Typeface.DEFAULT, 12));//UIManager.getFont("ToolTip.font"));
       addMouseListeners();
     }
 
@@ -6289,6 +6289,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
             // Draw unit text
             g2D.translate(x, yMax - mainTickSize);
             g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
+			  g2D.setFont(getFont());
             g2D.drawString(getFormattedTickText(format, x), 3, fontAscent - 1);
             g2D.setTransform(previousTransform);
           }
@@ -6302,6 +6303,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
               g2D.translate(xMax - mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
               g2D.rotate(-Math.PI / 2);
+				g2D.setFont(getFont());
 				g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
               //PJ swapped for above g2D.drawString(yText, -metrics.stringWidth(yText) - 3, fontAscent - 1);
             } else {
@@ -6310,6 +6312,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
               g2D.translate(xMin + mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
               g2D.rotate(Math.PI / 2);
+				g2D.setFont(getFont());
               g2D.drawString(yText, 3, fontAscent - 1);
             }
             g2D.setTransform(previousTransform);

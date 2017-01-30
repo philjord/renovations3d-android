@@ -19,8 +19,14 @@
  */
 package com.eteks.sweethomeavr.android;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +49,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+
+import static com.eteks.sweethomeavr.SweetHomeAVRActivity.sweetHomeAVR;
 
 /**
  * Content manager for files with Swing file choosers.
@@ -697,47 +705,84 @@ private SweetHomeAVRActivity activity;//for dialogs etc
   private String showFileChooser(VCView          parentView,
                                  String        dialogTitle,
                                  ContentType   contentType,
-                                 String        path,
+                                 final String        path,
                                  boolean       save) {
-
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-		  System.err.println("FileContentManager asked to showFileChooser on EDT thread");
+		  System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
 	  }
 
-	  final String selectedFile[] = new String[1];
+	  final File selectedFile[] = new File[1];
 	  final Semaphore dialogSemaphore = new Semaphore(0, true);
 
-	  activity.runOnUiThread(new Runnable()
+	  // just a name picker for the save as system
+	  if(contentType == ContentType.SWEET_HOME_3D)
 	  {
-		  public void run()
+		  activity.runOnUiThread(new Runnable()
 		  {
-			  LayoutInflater li = LayoutInflater.from(activity);
-			  View promptsView = li.inflate(R.layout.new_file_name, null);
+			  public void run()
+			  {
+				  LayoutInflater li = LayoutInflater.from(activity);
+				  View promptsView = li.inflate(R.layout.new_file_name, null);
 
-			  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-			  alertDialogBuilder.setView(promptsView);
-			  final EditText userInput = (EditText) promptsView.findViewById(R.id.editFileName);
+				  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+				  alertDialogBuilder.setView(promptsView);
+				  final EditText userInput = (EditText) promptsView.findViewById(R.id.editFileName);
 
-			  alertDialogBuilder
-					  .setCancelable(false)
-					  .setPositiveButton("OK",
-							  new DialogInterface.OnClickListener() {
-								  public void onClick(DialogInterface dialog,int id) {
-									  selectedFile[0] = userInput.getText().toString();
-									  dialogSemaphore.release();
-								  }
-							  })
-					  .setNegativeButton("Cancel",
-							  new DialogInterface.OnClickListener() {
-								  public void onClick(DialogInterface dialog,int id) {
-									  dialogSemaphore.release();
-								  }
-							  });
+				  alertDialogBuilder
+						  .setCancelable(false)
+						  .setPositiveButton("OK",
+								  new DialogInterface.OnClickListener()
+								  {
+									  public void onClick(DialogInterface dialog, int id)
+									  {
+										  selectedFile[0] = new File(new File(path).getParentFile(), userInput.getText().toString());
+										  dialogSemaphore.release();
+									  }
+								  })
+						  .setNegativeButton("Cancel",
+								  new DialogInterface.OnClickListener()
+								  {
+									  public void onClick(DialogInterface dialog, int id)
+									  {
+										  dialogSemaphore.release();
+									  }
+								  });
 
-			  AlertDialog alertDialog = alertDialogBuilder.create();
-			  alertDialog.show();
-		  }
-	  });
+				  AlertDialog alertDialog = alertDialogBuilder.create();
+				  alertDialog.show();
+			  }
+		  });
+	  }
+	  else if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY )
+	  {
+			// in this case we want ot show a real file picker (with an extension filter of the right type
+		  final String ext = contentType == ContentType.FURNITURE_LIBRARY ? "sh3f" :"sh3t"; //(need  zip as well one day)
+		  final File chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+		  //TODO: filfileter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
+
+		  activity.runOnUiThread(new Runnable()
+		  {
+			  public void run()
+			  {
+				  final FileChooser fileChooser = new FileChooser(FileContentManager.this.activity, chooserStartFolder).setExtension(ext).setFileListener(new FileChooser.FileSelectedListener()
+				  {
+					  @Override
+					  public void fileSelected(final File file)
+					  {
+						  selectedFile[0] = file;
+						  dialogSemaphore.release();
+					  }
+				  });
+				  fileChooser.showDialog();
+			  }
+		  });
+	  }
+	  else
+	  {
+		  System.err.println("FileContentManager bad content type asked showFileChooser " + contentType );
+		  return null;
+	  }
 	  try
 	  {
 		  dialogSemaphore.acquire();
@@ -750,7 +795,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  else
 	  {
 		  // add the original path
-		  return new File(new File(path).getParentFile(), selectedFile[0]).getAbsolutePath();
+		  return selectedFile[0].getAbsolutePath();
 	  }
 
 	  // modal is hard http://stackoverflow.com/questions/6120567/android-how-to-get-a-modal-dialog-or-similar-modal-behavior

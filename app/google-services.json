@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "843754081116-ml9r9l2bkn8ctj30nhtfgvd8l2jge86s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mindblowing.sweethomeavr",
+            "certificate_hash": "F122898B35E396CB4F7F06AE7C9A1408FA9D474C"
+          }
+        },
+        {
           "client_id": "843754081116-h10ir6kb3i8t1pqajcju2me47sc7me6s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

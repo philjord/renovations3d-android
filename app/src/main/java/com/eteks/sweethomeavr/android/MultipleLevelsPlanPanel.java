@@ -126,7 +126,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		// now to programmatically register teh call back for the damn buttons!
+		// now to programmatically register the call back for the damn buttons!
+
+		rootView.findViewById(R.id.lockCheck).setOnClickListener(planActionListener);
+		rootView.findViewById(R.id.editUndo).setOnClickListener(planActionListener);
+		rootView.findViewById(R.id.editRedo).setOnClickListener(planActionListener);
+		rootView.findViewById(R.id.controlKeyToggle).setOnClickListener(planActionListener);
+		rootView.findViewById(R.id.delete).setOnClickListener(planActionListener);
+
 		rootView.findViewById(R.id.planSelect).setOnClickListener(planActionListener);
 		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.planSelect));
 		rootView.findViewById(R.id.createWalls).setOnClickListener(planActionListener);
@@ -140,13 +147,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		rootView.findViewById(R.id.createText).setOnClickListener(planActionListener);
 		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createText));
 
-		rootView.findViewById(R.id.lockCheck).setOnClickListener(planActionListener);
-
-		rootView.findViewById(R.id.editUndo).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.editRedo).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.controlKeyToggle).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.delete).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.furnitureModify).setOnClickListener(planActionListener);
 
 
 		return rootView;
@@ -161,6 +161,36 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			// now set the action to the action
 			switch (view.getId())
 			{
+				case R.id.lockCheck:
+					ToggleButton lockButton = (ToggleButton)view;
+					if(lockButton.isChecked())
+						planController.lockBasePlan();
+					else
+						planController.unlockBasePlan();
+					break;
+				case R.id.editUndo:
+					try
+					{
+						((SweetHomeAVRActivity) MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().undo();
+					}catch (CannotUndoException e)
+					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
+					}
+					break;
+				case R.id.editRedo:
+					try
+					{((SweetHomeAVRActivity)MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().redo();
+					}catch (CannotRedoException e)
+					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
+					}
+					break;
+				case R.id.controlKeyToggle:
+					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
+					ToggleButton controlKeyToggle = (ToggleButton)view;
+					duplicationActivated = controlKeyToggle.isChecked();
+					break;
+				case R.id.delete:
+					planController.deleteSelection();
+					break;
 				case R.id.planSelect:
 					planController.escape();// in case we are doing a create now
 					planController.setMode(PlanController.Mode.SELECTION);
@@ -190,40 +220,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					// note single tap works for this one
 					planController.setMode(PlanController.Mode.LABEL_CREATION);
 					break;
-				case R.id.lockCheck:
-					ToggleButton lockButton = (ToggleButton)view;
-					if(lockButton.isChecked())
-						planController.lockBasePlan();
-					else
-						planController.unlockBasePlan();
-					break;
 
-				case R.id.editUndo:
-					try
-					{
-						((SweetHomeAVRActivity) MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().undo();
-					}catch (CannotUndoException e)
-					{//ignored, as teh button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
-					}
-					break;
-				case R.id.editRedo:
-					try
-					{((SweetHomeAVRActivity)MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().redo();
-					}catch (CannotRedoException e)
-					{//ignored, as teh button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
-					}
-					break;
-				case R.id.controlKeyToggle:
-					//TODO: this guy needs to reflect the contrl option on anything, so duplication for select, but curve wall for create
-					ToggleButton controlKeyToggle = (ToggleButton)view;
-					duplicationActivated = controlKeyToggle.isChecked();
-					break;
-				case R.id.delete:
-					planController.deleteSelection();
-					break;
-				case R.id.furnitureModify:
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Not done, very swing", Toast.LENGTH_SHORT).show();
-					break;
 
 			}
 		}
@@ -247,7 +244,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
-		//In fact tehre is no text about these at all just button operations and teh prefer about magnet
+		//In fact there is no text about these at all just button operations and teh prefer about magnet
 	//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(
 	//			com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
 	//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(
@@ -263,12 +260,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		switch (item.getItemId())
 		{
 			case R.id.alignment:
-				//CheckBox checkBox1 = (CheckBox) item.getActionView();
 				item.setChecked(!item.isChecked());
 				this.alignmentActivated = item.isChecked();
 				return true;
 			case R.id.magnetism:
-				//CheckBox checkBox2= (CheckBox) item.getActionView();
 				item.setChecked(!item.isChecked());
 				this.magnetismToggled = !item.isChecked();// careful toggle != checked!
 				return true;
@@ -362,7 +357,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 */
 	public void paintComponent(Graphics g)
 	{
-		//TODO: lock icon need drawing about now
 		AffineTransform previousTransform = ((Graphics2D) g).getTransform();
 		planComponent.paintComponent(g);
 		((Graphics2D) g).setTransform(previousTransform);
@@ -1049,7 +1043,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		//	JViewport viewport = this.planScrollPane.getViewport();
 		//	Point point = SwingUtilities.convertPoint(this, x, y, viewport);
 		//	return viewport.contains(point);
-		//tODO: I need this working I guess at aaomse point
 		return false;
 	}
 

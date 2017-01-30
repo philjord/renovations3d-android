@@ -33,4 +33,6 @@ If a crash report dialog pops up PLEASE press "Report", it is extremely useful t
     <string name="menu_about">About</string>
     <string name="menu_new">New home</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="importFurnitureLib">Import furniture library...</string>
+    <string name="importTextureLib">Import texture library...</string>
 </resources>

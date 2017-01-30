@@ -68,7 +68,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private File chooserStartFolder;
 
-	public SweetHomeAVR sweetHomeAVR; // for plan undo redo
+	public static SweetHomeAVR sweetHomeAVR; // for plan undo redo, now for import statements too
 
 	private boolean fileSystemAccessGranted = false;
 
@@ -334,6 +334,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				if(sweetHomeAVR.getHomeController()!=null)
 					sweetHomeAVR.getHomeController().editPreferences();
 				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}

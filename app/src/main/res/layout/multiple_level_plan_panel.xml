@@ -58,15 +58,6 @@
             android:minHeight="24dp"
             android:minWidth="24dp"
             />
-        <Button
-            android:id="@+id/furnitureModify"
-            android:background="@drawable/furniture_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:minHeight="24dp"
-            android:minWidth="24dp"
-            />
         <View
             android:layout_margin="5dp"
             android:layout_width="1dp"
