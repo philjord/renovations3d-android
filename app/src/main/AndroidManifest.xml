@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.renovations3d"
-  android:versionCode="135"
-  android:versionName="1.35">
+  android:versionCode="137"
+  android:versionName="1.37">
 
     <uses-sdk
         android:minSdkVersion="15"

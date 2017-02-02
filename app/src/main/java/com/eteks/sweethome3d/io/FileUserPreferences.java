@@ -553,7 +553,6 @@ public class FileUserPreferences extends UserPreferences {
                 });
             }
           }
-			System.out.println("C");
           if (resourceFurnitureCatalog instanceof DefaultFurnitureCatalog) {
             updater.execute(new Runnable() {
                 public void run() {
@@ -607,7 +606,6 @@ public class FileUserPreferences extends UserPreferences {
                 }
               }
             });
-			System.out.println("F");
           // Read default textures catalog
           final TexturesCatalog resourceTexturesCatalog = 
               readTexturesCatalogFromResource(getTexturesLibrariesPluginFolders());

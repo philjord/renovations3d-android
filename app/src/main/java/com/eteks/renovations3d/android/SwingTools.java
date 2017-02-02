@@ -24,6 +24,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.View;
 
+import com.eteks.renovations3d.android.swingish.ButtonGroup;
+import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -426,16 +428,18 @@ public class SwingTools
 	/**
 	 * Forces radio buttons to be deselected even if they belong to a button group.
 	 */
-/*	public static void deselectAllRadioButtons(JRadioButton ... radioButtons) {
+	public static void deselectAllRadioButtons(JRadioButton... radioButtons) {
 		for (JRadioButton radioButton : radioButtons) {
 			if (radioButton != null) {
-				ButtonGroup group = ((JToggleButton.ToggleButtonModel)radioButton.getModel()).getGroup();
-				group.remove(radioButton);
-				radioButton.setSelected(false);
-				group.add(radioButton);
+				//TODO: my radio button don't know their groups
+				radioButton.setChecked(false);
+				//ButtonGroup group = ((JToggleButton.ToggleButtonModel)radioButton.getModel()).getGroup();
+				//group.remove(radioButton);
+				//radioButton.setSelected(false);
+				//group.add(radioButton);
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * Displays <code>messageComponent</code> in a modal dialog box, giving focus to one of its components.

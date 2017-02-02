@@ -5,6 +5,7 @@
               android:orientation="vertical">
 
     <com.eteks.renovations3d.utils.HorizontalFlowLayout
+        android:id="@+id/furncatheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -19,18 +20,7 @@
             android:minHeight="36dp"
             android:minWidth="36dp"
             />
-
     </com.eteks.renovations3d.utils.HorizontalFlowLayout>
-
-
-    <TextView   android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text ="search">
-    </TextView>
-    <TextView   android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text ="filter">
-    </TextView>
 
     <GridView
               android:id="@+id/main_grid"

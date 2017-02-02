@@ -1,6 +1,9 @@
 package com.eteks.renovations3d.android.swingish;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -24,6 +27,11 @@ public class JComboBox extends Spinner
 		setModel(dcbm);
 	}
 
+	public JComboBox(Context context, String[] objs)
+	{
+		this(context, new DefaultComboBoxModel(objs));
+	}
+
 	public void setModel(DefaultComboBoxModel dcbm)
 	{
 		this.objs = dcbm.objs;
@@ -35,7 +43,7 @@ public class JComboBox extends Spinner
 		int selectionPos = 0;
 		for (int i = 0; i < objs.length; i++)
 		{
-			if (objs[i].equals(selection))
+			if (objs[i] != null && objs[i].equals(selection))
 			{
 				selectionPos = i;
 				break;
@@ -44,4 +52,31 @@ public class JComboBox extends Spinner
 		this.setSelection(selectionPos);
 	}
 
+	public void addItemListener( final ItemListener il)
+	{
+		this.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onNothingSelected(AdapterView<?> parent) {
+				il.itemStateChanged(new ItemEvent());
+			}
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+			{
+				il.itemStateChanged(new ItemEvent());
+			}
+		});
+	}
+
+	public void setMaximumRowCount(int maximumRowCount)
+	{
+		// ignored this.maximumRowCount = maximumRowCount;
+	}
+
+	public interface ItemListener
+	{
+		public void itemStateChanged(ItemEvent ev);
+	}
+
+	public static class ItemEvent
+	{
+
+	}
 }

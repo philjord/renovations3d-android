@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.utils.HorizontalFlowLayout;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -70,6 +71,7 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	}
 
 	private GridView gridView;
+	private HorizontalFlowLayout headerView;
 	private FurnitureImageView selectedFiv = null;
 
 	@Override
@@ -78,6 +80,12 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	{
 		this.setHasOptionsMenu(true);
 		View rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
+
+		headerView = (HorizontalFlowLayout)rootView.findViewById(R.id.furncatheader);
+		createComponents(catalog, preferences, controller);
+		setMnemonics(preferences);
+		layoutComponents();
+
 
 		gridView = (GridView) rootView.findViewById(R.id.main_grid);
 		gridView.setAdapter(new ImageAdapter(this.getContext()));
@@ -97,7 +105,7 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 			}
 		});
 
-		rootView.findViewById(R.id.furnitureAdd).setOnClickListener(buttonListener);
+
 
 		return rootView;
 	}
@@ -234,7 +242,7 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		public FurnitureImageView(Context c,  CatalogPieceOfFurniture catalogPieceOfFurniture )
 		{
 			super(c);
-			this.catalogPieceOfFurniture =catalogPieceOfFurniture;
+			this.catalogPieceOfFurniture = catalogPieceOfFurniture;
 		}
 
 		public CatalogPieceOfFurniture getCatalogPieceOfFurniture()
@@ -269,9 +277,10 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		this.preferences = preferences;
 		this.controller = controller;
 
-		createComponents(catalog, preferences, controller);
-		setMnemonics(preferences);
-		layoutComponents();
+		// moved to on create view
+		//createComponents(catalog, preferences, controller);
+		//setMnemonics(preferences);
+		//layoutComponents();
 	}
 
 	/**
@@ -281,6 +290,9 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 								  final UserPreferences preferences,
 								  final FurnitureCatalogController controller) {
 		    catalogListModel = new FurnitureCatalogListModel(catalog);
+
+		//headerView
+
 /*		this.catalogFurnitureList = new JList(catalogListModel) {
 			private CatalogItemToolTip toolTip = new CatalogItemToolTip(false, preferences);
 			private boolean mousePressed;

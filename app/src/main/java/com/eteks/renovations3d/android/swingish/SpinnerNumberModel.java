@@ -7,40 +7,47 @@ import java.util.ArrayList;
 
 public class SpinnerNumberModel
 {
-	private float stepSize, value;
-	private float minimum, maximum;
+	protected ArrayList<ChangeListener> listenerList = new ArrayList<ChangeListener>();
 
-	public SpinnerNumberModel(float value, float minimum, float maximum, float stepSize)
+	private double stepSize, value;
+	private double minimum, maximum;
+
+	public SpinnerNumberModel(double value, double minimum, double maximum, double stepSize)
 	{
 
-		this.value = value;
-		this.minimum = minimum;
-		this.maximum = maximum;
+		if (value < minimum || value > maximum)
+			throw new RuntimeException("Bad setting for spinner model v=" + this.value + " min=" +
+					this.minimum + " max=" + this.maximum + " step=" + this.stepSize);
+
+		// value has to be a multiple of the stepSize or we have terrible trouble
+		this.value = stepSize * (Math.round(value / stepSize));
+		this.minimum = stepSize * (Math.round(minimum / stepSize));
+		this.maximum = stepSize * (Math.round(maximum / stepSize));
 		this.stepSize = stepSize;
 	}
 
 
-	public void setMinimum(float minimum)
+	public void setMinimum(double minimum)
 	{
-		this.minimum = minimum;
+		this.minimum = stepSize * (Math.round(minimum / stepSize));
 		fireStateChanged();
 	}
 
 
-	public float getMinimum()
+	public double getMinimum()
 	{
 		return minimum;
 	}
 
 
-	public void setMaximum(float maximum)
+	public void setMaximum(double maximum)
 	{
-		this.maximum = maximum;
+		this.maximum = stepSize * (Math.round(maximum / stepSize));
 		fireStateChanged();
 	}
 
 
-	public float getMaximum()
+	public double getMaximum()
 	{
 		return maximum;
 	}
@@ -48,30 +55,33 @@ public class SpinnerNumberModel
 
 	public void setStepSize(float stepSize)
 	{
-		this.stepSize = stepSize;
+
+		// value has to be a multiple of the stepSize or we have terrible trouble
+		this.value = stepSize * (Math.round(value / stepSize));
 		fireStateChanged();
 	}
 
-	public float getStepSize()
+	public Number getStepSize()
 	{
 		return stepSize;
 	}
 
-	public float getValue()
+	public double getValue()
 	{
 		return value;
 	}
 
-
-	public void setValue(float value)
+	public Number getNumber()
 	{
-		this.value = value;
-		fireStateChanged();
+		return getValue();
 	}
 
-
-	protected ArrayList<ChangeListener> listenerList = new ArrayList<ChangeListener>();
-
+	public void setValue(double value)
+	{
+		// value has to be a multiple of the stepSize or we have terrible trouble
+		this.value = stepSize * (Math.round(value / stepSize));
+		fireStateChanged();
+	}
 
 	public void addChangeListener(ChangeListener l)
 	{
@@ -89,6 +99,18 @@ public class SpinnerNumberModel
 		{
 			cl.stateChanged(null);
 		}
+	}
+
+
+	//TODO: it's be nice if I could get this to work somehow, good for modulo
+	public Object getNextValue()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public Object getPreviousValue()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 }

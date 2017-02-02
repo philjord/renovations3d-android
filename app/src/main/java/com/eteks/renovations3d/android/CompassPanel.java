@@ -1,0 +1,596 @@
+/*
+ * CompassPanel.java 22 sept. 2010
+ *
+ * Sweet Home 3D, Copyright (c) 2010 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+package com.eteks.renovations3d.android;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+
+import com.eteks.renovations3d.android.swingish.JButton;
+import com.eteks.renovations3d.android.swingish.JCheckBox;
+import com.eteks.renovations3d.android.swingish.JComboBox;
+import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.tools.OperatingSystem;
+import com.eteks.sweethome3d.viewcontroller.CompassController;
+import com.eteks.sweethome3d.viewcontroller.DialogView;
+import com.eteks.sweethome3d.viewcontroller.VCView;
+
+import javaawt.BasicStroke;
+import javaawt.Graphics2D;
+import javaawt.RenderingHints;
+import javaawt.VMGraphics2D;
+import javaawt.geom.Ellipse2D;
+import javaawt.geom.GeneralPath;
+import javaawt.geom.Line2D;
+
+
+/**
+ * Compass editing panel.
+ * @author Emmanuel Puybaret
+ */
+public class CompassPanel extends Dialog implements DialogView {
+  private final CompassController controller;
+  private JLabel xLabel;
+  private JSpinner xSpinner;
+  private JLabel                  yLabel;
+  private JSpinner                ySpinner;
+  private JLabel                  diameterLabel;
+  private JSpinner                diameterSpinner;
+  private JCheckBox visibleCheckBox;
+  private ImageView northDirectionComponent;
+  private JLabel                  longitudeLabel;
+  private JSpinner                longitudeSpinner;
+  private JLabel                  latitudeLabel;
+  private JSpinner                latitudeSpinner;
+  private JLabel                  timeZoneLabel;
+  private JComboBox timeZoneComboBox;
+  private JLabel                  northDirectionLabel;
+  private JSpinner                northDirectionSpinner;
+  private String                  dialogTitle;
+
+	private Activity activity;
+	private LinearLayout rootView;
+	private Button closeButton;
+
+  /**
+   * Creates a panel that displays compass data.
+   * @param preferences user preferences
+   * @param controller the controller of this panel
+   */
+  public CompassPanel(UserPreferences preferences,
+                      CompassController controller
+		  , Activity activity) {
+	  //super(new GridBagLayout());
+	  super(activity);
+    this.controller = controller;
+	  this.activity = activity;
+	  this.rootView = new LinearLayout(activity);
+	  rootView.setOrientation(LinearLayout.VERTICAL);
+	  ScrollView sv = new ScrollView(activity);
+	  sv.addView(rootView);
+	  this.setContentView(sv);
+    createComponents(preferences, controller);
+    setMnemonics(preferences);
+    layoutComponents(preferences);
+  }
+
+  /**
+   * Creates and initializes components.
+   */
+  private void createComponents(UserPreferences preferences, 
+                                final CompassController controller) {
+    // Get unit name matching current unit 
+    String unitName = preferences.getLengthUnit().getName();
+
+    // Create X label and its spinner bound to X controller property
+    this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+        com.eteks.sweethome3d.android_props.CompassPanel.class, "xLabel.text", unitName));
+    float maximumLength = preferences.getLengthUnit().getMaximumLength();
+    final NullableSpinner.NullableSpinnerLengthModel xSpinnerModel =
+        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+    xSpinnerModel.setLength(controller.getX());
+    final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          xSpinnerModel.setLength((Float)ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.X, xChangeListener);
+    xSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.X, xChangeListener);
+          controller.setX((float)xSpinnerModel.getLength());
+          controller.addPropertyChangeListener(CompassController.Property.X, xChangeListener);
+        }
+      });
+    
+    // Create Y label and its spinner bound to Y controller property
+    this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+			com.eteks.sweethome3d.android_props.CompassPanel.class, "yLabel.text", unitName));
+    final NullableSpinner.NullableSpinnerLengthModel ySpinnerModel = 
+        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+    ySpinnerModel.setLength(controller.getY());
+    final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          ySpinnerModel.setLength((Float)ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.Y, yChangeListener);
+    ySpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.Y, yChangeListener);
+          controller.setY(ySpinnerModel.getLength());
+          controller.addPropertyChangeListener(CompassController.Property.Y, yChangeListener);
+        }
+      });
+    
+    // Create diameter label and its spinner bound to DIAMETER controller property
+    this.diameterLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+			com.eteks.sweethome3d.android_props.CompassPanel.class, "diameterLabel.text", unitName));
+    final NullableSpinner.NullableSpinnerLengthModel diameterSpinnerModel = 
+        new NullableSpinner.NullableSpinnerLengthModel(preferences, 
+            preferences.getLengthUnit().getMinimumLength(), preferences.getLengthUnit().getMaximumLength()  / 10);
+    this.diameterSpinner = new NullableSpinner(activity, diameterSpinnerModel);
+    diameterSpinnerModel.setLength(controller.getDiameter());
+    final PropertyChangeListener diameterChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          diameterSpinnerModel.setLength((Float)ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.DIAMETER, 
+        diameterChangeListener);
+    diameterSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.DIAMETER, 
+              diameterChangeListener);
+          controller.setDiameter(diameterSpinnerModel.getLength());
+          controller.addPropertyChangeListener(CompassController.Property.DIAMETER, 
+              diameterChangeListener);
+        }
+      });
+    
+    // Create visible check box bound to VISIBLE controller property
+    this.visibleCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+			com.eteks.sweethome3d.android_props.CompassPanel.class, "visibleCheckBox.text"));
+    this.visibleCheckBox.setSelected(controller.isVisible());
+    final PropertyChangeListener visibleChangeListener = new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent ev) {
+        visibleCheckBox.setSelected((Boolean)ev.getNewValue());
+      }
+    };
+    controller.addPropertyChangeListener(CompassController.Property.VISIBLE, visibleChangeListener);
+    this.visibleCheckBox.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.VISIBLE, visibleChangeListener);
+          controller.setVisible(visibleCheckBox.isSelected());
+          controller.addPropertyChangeListener(CompassController.Property.VISIBLE, visibleChangeListener);
+        }
+      });
+
+    this.latitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "latitudeLabel.text"));
+    final SpinnerNumberModel latitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-90), new Float(90), new Float(5));
+    this.latitudeSpinner = new AutoCommitSpinner(activity, latitudeSpinnerModel);
+    // Change positive / negative notation by North / South
+//    JFormattedTextField textField = ((DefaultEditor)this.latitudeSpinner.getEditor()).getTextField();
+//    NumberFormatter numberFormatter = (NumberFormatter)((DefaultFormatterFactory)textField.getFormatterFactory()).getDefaultFormatter();
+//    numberFormatter.setFormat(new DecimalFormat("N ##0.000;S ##0.000"));
+//    textField.setFormatterFactory(new DefaultFormatterFactory(numberFormatter));
+//    SwingTools.addAutoSelectionOnFocusGain(textField);
+    latitudeSpinnerModel.setValue(controller.getLatitudeInDegrees());
+    final PropertyChangeListener latitudeChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          latitudeSpinnerModel.setValue((Float)ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.LATITUDE_IN_DEGREES, latitudeChangeListener);
+    latitudeSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.LATITUDE_IN_DEGREES, latitudeChangeListener);
+          controller.setLatitudeInDegrees(((Number)latitudeSpinnerModel.getValue()).floatValue());
+          controller.addPropertyChangeListener(CompassController.Property.LATITUDE_IN_DEGREES, latitudeChangeListener);
+        }
+      });
+    
+    this.longitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "longitudeLabel.text"));
+    final SpinnerNumberModel longitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-180), new Float(180), new Float(5));
+    this.longitudeSpinner = new AutoCommitSpinner(activity, longitudeSpinnerModel);
+    // Change positive / negative notation by East / West
+//    textField = ((DefaultEditor)this.longitudeSpinner.getEditor()).getTextField();
+//    numberFormatter = (NumberFormatter)((DefaultFormatterFactory)textField.getFormatterFactory()).getDefaultFormatter();
+//    numberFormatter.setFormat(new DecimalFormat("E ##0.000;W ##0.000"));
+//    textField.setFormatterFactory(new DefaultFormatterFactory(numberFormatter));
+//    SwingTools.addAutoSelectionOnFocusGain(textField);
+    longitudeSpinnerModel.setValue(controller.getLongitudeInDegrees());
+    final PropertyChangeListener longitudeChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          longitudeSpinnerModel.setValue((Float)ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.LONGITUDE_IN_DEGREES, longitudeChangeListener);
+    longitudeSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.LONGITUDE_IN_DEGREES, longitudeChangeListener);
+          controller.setLongitudeInDegrees(((Number)longitudeSpinnerModel.getValue()).floatValue());
+          controller.addPropertyChangeListener(CompassController.Property.LONGITUDE_IN_DEGREES, longitudeChangeListener);
+        }
+      });
+
+    this.timeZoneLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "timeZoneLabel.text"));
+    List<String> timeZoneIds = new ArrayList<String>(Arrays.asList(TimeZone.getAvailableIDs()));
+    // Remove synonymous time zones
+    timeZoneIds.remove("GMT");
+    timeZoneIds.remove("GMT0");
+    timeZoneIds.remove("Etc/GMT0");
+    timeZoneIds.remove("Etc/GMT-0");
+    timeZoneIds.remove("Etc/GMT+0");
+    // Replace Etc/GMT... ids by their English value that are less misleading
+    for (int i = 0; i < timeZoneIds.size(); i++) {
+      String timeZoneId = timeZoneIds.get(i);
+      if (timeZoneId.startsWith("Etc/GMT")) {
+        timeZoneIds.set(i, TimeZone.getTimeZone(timeZoneId).getDisplayName(Locale.ENGLISH));
+      }
+    }
+    String [] timeZoneIdsArray = timeZoneIds.toArray(new String [timeZoneIds.size()]);
+    Arrays.sort(timeZoneIdsArray);
+    this.timeZoneComboBox = new JComboBox(activity, timeZoneIdsArray);
+    this.timeZoneComboBox.setSelectedItem(controller.getTimeZone());
+    final PropertyChangeListener timeZoneChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          timeZoneComboBox.setSelectedItem(ev.getNewValue());
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
+	  this.timeZoneComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, timeZoneIdsArray)
+	  {
+		  @Override
+		  public View getView(int position, View convertView, ViewGroup parent)
+		  {
+			  return getDropDownView(position, convertView, parent);
+		  }
+		  @Override
+		  public View getDropDownView(int position, View convertView, ViewGroup parent)
+		  {
+			  String timeZoneId = (String)timeZoneComboBox.getItemAtPosition(position);
+			  if (timeZoneId.startsWith("GMT")) {
+				  if (!OperatingSystem.isMacOSX()) {
+					  //setToolTipText(timeZoneId);
+				  }
+			  } else {
+				  String timeZoneDisplayName = TimeZone.getTimeZone(timeZoneId).getDisplayName();
+				  if (OperatingSystem.isMacOSX()) {
+					  timeZoneId = timeZoneId + " - " + timeZoneDisplayName;
+				  } else {
+					  // Use tool tip do display the complete time zone information
+					  //setToolTipText(timeZoneId + " - " + timeZoneDisplayName);
+				  }
+			  }
+			  TextView ret = new TextView(activity);
+			  ret.setText(timeZoneId);
+			  return ret;
+		  }
+	  });
+    /*this.timeZoneComboBox.setRenderer(new DefaultListCellRenderer() {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                                                      boolean cellHasFocus) {
+          String timeZoneId = (String)value;
+          if (timeZoneId.startsWith("GMT")) {
+            if (!OperatingSystem.isMacOSX()) {
+              setToolTipText(timeZoneId);
+            }
+          } else {
+            String timeZoneDisplayName = TimeZone.getTimeZone(timeZoneId).getDisplayName();
+            if (OperatingSystem.isMacOSX()) {
+              value = timeZoneId + " - " + timeZoneDisplayName;
+            } else {
+              // Use tool tip do display the complete time zone information
+              setToolTipText(timeZoneId + " - " + timeZoneDisplayName);
+            }
+          }
+          return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        }
+      });*/
+
+    this.timeZoneComboBox.addItemListener(new JComboBox.ItemListener() {
+        public void itemStateChanged(JComboBox.ItemEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
+          controller.setTimeZone((String)timeZoneComboBox.getSelectedItem());
+          controller.addPropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
+        }
+      });
+    //this.timeZoneComboBox.setPrototypeDisplayValue("GMT");
+    
+    this.northDirectionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "northDirectionLabel.text"));
+    // Create a spinner model able to choose an angle modulo 360
+    final SpinnerNumberModel northDirectionSpinnerModel = new AutoCommitSpinner.SpinnerModuloNumberModel(0, 0, 360, 5);
+    this.northDirectionSpinner = new AutoCommitSpinner(activity, northDirectionSpinnerModel);
+    northDirectionSpinnerModel.setValue(new Integer(Math.round(controller.getNorthDirectionInDegrees())));
+    this.northDirectionComponent = new ImageView(activity){//JComponent() {
+		public void onDraw(Canvas canvas)
+		{
+
+			Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
+
+          g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+          g2D.translate(getWidth() / 2, getHeight() / 2);
+          g2D.scale(getWidth() / 2, getWidth() / 2);
+          g2D.rotate(Math.toRadians(controller.getNorthDirectionInDegrees()));
+          // Draw a round arc
+          g2D.setStroke(new BasicStroke(0.5f / getWidth()));
+          g2D.draw(new Ellipse2D.Float(-0.7f, -0.7f, 1.4f, 1.4f));
+          g2D.draw(new Line2D.Float(-0.85f, 0, -0.7f, 0));
+          g2D.draw(new Line2D.Float(0.85f, 0, 0.7f, 0));
+          g2D.draw(new Line2D.Float(0, -0.8f, 0, -0.7f));
+          g2D.draw(new Line2D.Float(0, 0.85f, 0, 0.7f));
+          // Draw a N
+          GeneralPath path = new GeneralPath();
+          path.moveTo(-0.1f, -0.8f);
+          path.lineTo(-0.1f, -1f);
+          path.lineTo(0.1f, -0.8f);
+          path.lineTo(0.1f, -1f);
+          g2D.setStroke(new BasicStroke(1.5f / getWidth()));
+          g2D.draw(path);
+          // Draw the needle
+          GeneralPath needlePath = new GeneralPath();
+          needlePath.moveTo(0, -0.75f);
+          needlePath.lineTo(0.2f, 0.7f);
+          needlePath.lineTo(0, 0.5f);
+          needlePath.lineTo(-0.2f, 0.7f);
+          needlePath.closePath();
+          needlePath.moveTo(-0.02f, 0);
+          needlePath.lineTo(0.02f, 0);
+          g2D.setStroke(new BasicStroke(4 / getWidth()));
+          g2D.draw(needlePath);
+        }
+      };
+	  northDirectionComponent.setMinimumWidth(35);
+	  northDirectionComponent.setMinimumHeight(35);
+    //this.northDirectionComponent.setOpaque(false);
+    final PropertyChangeListener northDirectionChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          northDirectionSpinnerModel.setValue(((Number)ev.getNewValue()).intValue());
+          //northDirectionComponent.repaint();
+			northDirectionComponent.postInvalidate();
+        }
+      };
+    controller.addPropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
+    northDirectionSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
+          controller.setNorthDirectionInDegrees(((Number)northDirectionSpinnerModel.getValue()).floatValue());
+          //northDirectionComponent.repaint();
+			northDirectionComponent.postInvalidate();
+          controller.addPropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
+        }
+      });
+
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
+
+	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
+			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
+	  closeButton.setOnClickListener(new View.OnClickListener(){
+		  public void onClick(View view)
+		  {
+			  dismiss();
+		  }
+	  });
+  }
+
+  /**
+   * Sets components mnemonics and label / component associations.
+   */
+  private void setMnemonics(UserPreferences preferences) {
+  /*  if (!OperatingSystem.isMacOSX()) {
+      this.xLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "xLabel.mnemonic")).getKeyCode());
+      this.xLabel.setLabelFor(this.xSpinner);
+      this.yLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "yLabel.mnemonic")).getKeyCode());
+      this.yLabel.setLabelFor(this.ySpinner);
+      this.diameterLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "diameterLabel.mnemonic")).getKeyCode());
+      this.diameterLabel.setLabelFor(this.diameterSpinner);
+      this.visibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "visibleCheckBox.mnemonic")).getKeyCode());
+      this.latitudeLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "latitudeLabel.mnemonic")).getKeyCode());
+      this.latitudeLabel.setLabelFor(this.latitudeSpinner);
+      this.longitudeLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "longitudeLabel.mnemonic")).getKeyCode());
+      this.longitudeLabel.setLabelFor(this.longitudeSpinner);
+      this.timeZoneLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "timeZoneLabel.mnemonic")).getKeyCode());
+      this.timeZoneLabel.setLabelFor(this.timeZoneComboBox);
+      this.northDirectionLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
+          CompassPanel.class, "northDirectionLabel.mnemonic")).getKeyCode());
+      this.northDirectionLabel.setLabelFor(this.northDirectionSpinner);
+    }*/
+  }
+  
+  /**
+   * Layouts panel components in panel with their labels. 
+   */
+  private void layoutComponents(UserPreferences preferences) {
+   // int labelAlignment = OperatingSystem.isMacOSX()
+    //    ? GridBagConstraints.LINE_END
+     //   : GridBagConstraints.LINE_START;
+	  Resources r = activity.getResources();
+	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
+	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
+	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
+
+	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
+
+	  LinearLayout.LayoutParams  rowInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  rowInsets.setMargins(px10dp,px10dp,px10dp,px10dp);
+	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
+	  LinearLayout.LayoutParams  componentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  componentInsets.setMargins(px10dp,px10dp,px20dp,px15dp);
+	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
+	  LinearLayout.LayoutParams  lastComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+	  lastComponentInsets.setMargins(px10dp,px10dp,px20dp,px10dp);
+
+	  JLabel compassRosePanel = new JLabel(activity, preferences.getLocalizedString(
+			  com.eteks.sweethome3d.android_props.CompassPanel.class, "compassRosePanel.title"));
+	  rootView.addView(compassRosePanel, rowInsets);
+	  rootView.addView(this.xLabel, rowInsets);
+	  rootView.addView(this.xSpinner, rowInsets);
+	  rootView.addView(this.visibleCheckBox, rowInsets);
+	  rootView.addView(this.yLabel, rowInsets);
+	  rootView.addView(this.ySpinner, rowInsets);
+	  rootView.addView(this.diameterLabel, rowInsets);
+	  rootView.addView(this.diameterSpinner, rowInsets);
+
+
+    // First row
+    /*JPanel compassRosePanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
+        CompassPanel.class, "compassRosePanel.title"));
+    Insets labelInsets = new Insets(0, 0, 5, 5);
+    Insets componentInsets = new Insets(0, 0, 5, 10);
+    Insets lastComponentInsets = new Insets(0, 0, 5, 0);
+    int rowGap = OperatingSystem.isMacOSXLeopardOrSuperior() ? 0 : 5;
+    compassRosePanel.add(this.xLabel, new GridBagConstraints(
+        0, 0, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, labelInsets, 0, 0));
+    compassRosePanel.add(this.xSpinner, new GridBagConstraints(
+        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 20), -10, 0));
+    compassRosePanel.add(this.visibleCheckBox, new GridBagConstraints(
+        2, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, lastComponentInsets, 0, 0));
+    compassRosePanel.add(this.yLabel, new GridBagConstraints(
+        0, 1, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+    compassRosePanel.add(this.ySpinner, new GridBagConstraints(
+        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 20), -10, 0));
+    compassRosePanel.add(this.diameterLabel, new GridBagConstraints(
+        2, 1, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+    compassRosePanel.add(this.diameterSpinner, new GridBagConstraints(
+        3, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+    add(compassRosePanel, new GridBagConstraints(
+        0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, rowGap, 0), 0, 0));*/
+
+
+	  JLabel geographicLocationPanel = new JLabel(activity, preferences.getLocalizedString(
+			  com.eteks.sweethome3d.android_props.CompassPanel.class, "geographicLocationPanel.title"));
+	  rootView.addView(geographicLocationPanel, rowInsets);
+	  rootView.addView(this.latitudeLabel, rowInsets);
+	  rootView.addView(this.latitudeSpinner, rowInsets);
+	  rootView.addView(this.northDirectionLabel, rowInsets);
+	  rootView.addView(this.northDirectionSpinner, rowInsets);
+	  rootView.addView(this.northDirectionComponent, rowInsets);
+	  rootView.addView(this.longitudeLabel, rowInsets);
+	  rootView.addView(this.longitudeSpinner, rowInsets);
+	  rootView.addView(this.timeZoneLabel, rowInsets);
+	  rootView.addView(this.timeZoneComboBox, rowInsets);
+
+    // Second row
+/*    JPanel geographicLocationPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
+        CompassPanel.class, "geographicLocationPanel.title"));
+    geographicLocationPanel.add(this.latitudeLabel, new GridBagConstraints(
+        0, 0, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, labelInsets, 0, 0));
+    geographicLocationPanel.add(this.latitudeSpinner, new GridBagConstraints(
+        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, componentInsets, 20, 0));
+    geographicLocationPanel.add(this.northDirectionLabel, new GridBagConstraints(
+        2, 0, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, labelInsets, 0, 0));
+    geographicLocationPanel.add(this.northDirectionSpinner, new GridBagConstraints(
+        3, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 5), 0, 0));
+    geographicLocationPanel.add(this.northDirectionComponent, new GridBagConstraints(
+        4, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
+    geographicLocationPanel.add(this.longitudeLabel, new GridBagConstraints(
+        0, 1, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+    geographicLocationPanel.add(this.longitudeSpinner, new GridBagConstraints(
+        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 20, 0));
+    geographicLocationPanel.add(this.timeZoneLabel, new GridBagConstraints(
+        2, 1, 1, 1, 0, 0, labelAlignment, 
+        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+    geographicLocationPanel.add(this.timeZoneComboBox, new GridBagConstraints(
+        3, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+    this.timeZoneComboBox.setPreferredSize(new Dimension(this.latitudeSpinner.getPreferredSize().width + 60, 
+        this.timeZoneComboBox.getPreferredSize().height));
+    add(geographicLocationPanel, new GridBagConstraints(
+        0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, 
+        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));*/
+
+	  this.setTitle(dialogTitle);
+	  rootView.addView(closeButton, labelInsets);
+  }
+
+  /**
+   * Displays this panel in a modal dialog box. 
+   */
+  public void displayView(VCView parentView) {
+  /*  JFormattedTextField northDirectionTextField =
+        ((JSpinner.DefaultEditor)this.northDirectionSpinner.getEditor()).getTextField();
+    if (SwingTools.showConfirmDialog((JComponent)parentView, 
+            this, this.dialogTitle, northDirectionTextField) == JOptionPane.OK_OPTION
+        && this.controller != null) {
+      this.controller.modifyCompass();
+    }*/
+	  this.setOnDismissListener(new OnDismissListener()
+	  {
+		  @Override
+		  public void onDismiss(DialogInterface dialog)
+		  {
+			  controller.modifyCompass();
+		  }
+	  });
+	  this.show();
+  }
+}

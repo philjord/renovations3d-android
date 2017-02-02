@@ -51,6 +51,11 @@ import java.util.Locale;
 import java.util.Map;
 
 
+import com.eteks.renovations3d.android.swingish.JButton;
+import com.eteks.renovations3d.android.swingish.JCheckBox;
+import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JRadioButton;
+import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -74,49 +79,50 @@ import javaawt.image.VMBufferedImage;
  */
 public class UserPreferencesPanel extends Dialog implements DialogView {
   private final UserPreferencesController controller;
-  private TextView languageLabel;
-  private JComboBox languageComboBox;
-  private Button languageLibraryImportButton;
-  private TextView           unitLabel;
-  private JComboBox         unitComboBox;
-  private TextView           furnitureCatalogViewLabel;
-  private RadioButton treeRadioButton;
-  private RadioButton     listRadioButton;
-  private TextView           navigationPanelLabel;
-  private CheckBox        navigationPanelCheckBox;
-  private TextView           aerialViewCenteredOnSelectionLabel;
-  private CheckBox        aerialViewCenteredOnSelectionCheckBox;
-  private TextView           magnetismLabel;
-  private CheckBox        magnetismCheckBox;
-  private TextView           rulersLabel;
-  private CheckBox rulersCheckBox;
-  private TextView           gridLabel;
-  private CheckBox        gridCheckBox;
-  private TextView           defaultFontNameLabel;
-  private JComboBox defaultFontNameComboBox;
-  private TextView           furnitureIconLabel;
-  private RadioButton     catalogIconRadioButton;
-  private RadioButton     topViewRadioButton;
-  private TextView           roomRenderingLabel;
-  private RadioButton     monochromeRadioButton;
-  private RadioButton     floorColorOrTextureRadioButton;
-  private TextView           wallPatternLabel;
-  private JComboBox         wallPatternComboBox;
-  private TextView           newWallPatternLabel;
-  private JComboBox        newWallPatternComboBox;
-  private TextView           newWallThicknessLabel;
-  private NumberPicker         newWallThicknessSpinner;
-  private TextView           newWallHeightLabel;
-  private NumberPicker         newWallHeightSpinner;
-  private TextView           newFloorThicknessLabel;
-  private NumberPicker newFloorThicknessSpinner;
- // private CheckBox        checkUpdatesCheckBox;
-  //private Button          checkUpdatesNowButton;
-  private CheckBox        autoSaveDelayForRecoveryCheckBox;
-  private NumberPicker         autoSaveDelayForRecoverySpinner;
-  private TextView           autoSaveDelayForRecoveryUnitLabel;
-  private Button          resetDisplayedActionTipsButton;
-  private String           dialogTitle;
+	private JLabel           languageLabel;
+	private JComboBox        languageComboBox;
+	private JButton          languageLibraryImportButton;
+	private JLabel           unitLabel;
+	private JComboBox        unitComboBox;
+	private JLabel           furnitureCatalogViewLabel;
+	private JRadioButton     treeRadioButton;
+	private JRadioButton     listRadioButton;
+	private JLabel           navigationPanelLabel;
+	private JCheckBox        navigationPanelCheckBox;
+	private JLabel           aerialViewCenteredOnSelectionLabel;
+	private JCheckBox        aerialViewCenteredOnSelectionCheckBox;
+	private JLabel           magnetismLabel;
+	private JCheckBox        magnetismCheckBox;
+	private JLabel           rulersLabel;
+	private JCheckBox rulersCheckBox;
+	private JLabel           gridLabel;
+	private JCheckBox        gridCheckBox;
+	private JLabel           defaultFontNameLabel;
+	//private FontNameComboBox defaultFontNameComboBox;
+	private JComboBox defaultFontNameComboBox;
+	private JLabel           furnitureIconLabel;
+	private JRadioButton catalogIconRadioButton;
+	private JRadioButton     topViewRadioButton;
+	private JLabel           roomRenderingLabel;
+	private JRadioButton     monochromeRadioButton;
+	private JRadioButton     floorColorOrTextureRadioButton;
+	private JLabel           wallPatternLabel;
+	private JComboBox        wallPatternComboBox;
+	private JLabel           newWallPatternLabel;
+	private JComboBox        newWallPatternComboBox;
+	private JLabel           newWallThicknessLabel;
+	private JSpinner newWallThicknessSpinner;
+	private JLabel           newWallHeightLabel;
+	private JSpinner         newWallHeightSpinner;
+	private JLabel           newFloorThicknessLabel;
+	private JSpinner         newFloorThicknessSpinner;
+	//private JCheckBox        checkUpdatesCheckBox;
+	//private JButton checkUpdatesNowButton;
+	private JCheckBox        autoSaveDelayForRecoveryCheckBox;
+	private JSpinner         autoSaveDelayForRecoverySpinner;
+	private JLabel           autoSaveDelayForRecoveryUnitLabel;
+	private JButton          resetDisplayedActionTipsButton;
+	private String           dialogTitle;
 
 
 	private Activity activity;
@@ -149,7 +155,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
                                 final UserPreferencesController controller) {
     if (controller.isPropertyEditable(UserPreferencesController.Property.LANGUAGE)) {
       // Create language label and combo box bound to controller LANGUAGE property
-      this.languageLabel = new TextView(activity);languageLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.languageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "languageLabel.text"));
       this.languageComboBox = new JComboBox(activity, new DefaultComboBoxModel(preferences.getSupportedLanguages()));
 		languageComboBox.setAdapter(new ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,preferences.getSupportedLanguages())
@@ -157,13 +163,10 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				return getAnyViews( position,  convertView,  parent);
+				return getDropDownView(position, convertView, parent);
 			}
+			@Override
 			public View getDropDownView (int position, View convertView, ViewGroup parent)
-			{
-				return getAnyViews(position, convertView, parent);
-			}
-			public View getAnyViews(int position, View convertView, ViewGroup parent)
 			{
 				TextView ret = new TextView(activity);
 				String language = (String)languageComboBox.getItemAtPosition(position);
@@ -181,10 +184,10 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 				  displayedValue += " - " + locale.getDisplayCountry(locale);
 				}
 				ret.setText(displayedValue);
-            return ret;
-          }
+            	return ret;
+          	}
         });
-      //this.languageComboBox.setMaximumRowCount(Integer.MAX_VALUE);
+      this.languageComboBox.setMaximumRowCount(Integer.MAX_VALUE);
       this.languageComboBox.setSelectedItem(controller.getLanguage());
       this.languageComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 		  public void onNothingSelected(AdapterView<?> parent) {}
@@ -218,7 +221,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.UNIT)) {
       // Create unit label and combo box bound to controller UNIT property
-      this.unitLabel = new TextView(activity);unitLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.unitLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitLabel.text"));
       this.unitComboBox = new JComboBox(activity, new DefaultComboBoxModel(LengthUnit.values()));
       final Map<LengthUnit, String> comboBoxTexts = new HashMap<LengthUnit, String>();
@@ -237,13 +240,10 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				TextView ret = new TextView(activity);
-				ret.setText(comboBoxTexts.get(unitComboBox.getItemAtPosition(position)));
-				return ret;
+				return getDropDownView(position, convertView, parent);
 			}
-			public View getDropDownView (int position,
-							   View convertView,
-							   ViewGroup parent)
+			@Override
+			public View getDropDownView (int position,	View convertView, ViewGroup parent)
 			{
 				TextView ret = new TextView(activity);
 				ret.setText(comboBoxTexts.get(unitComboBox.getItemAtPosition(position)));
@@ -338,12 +338,12 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED)) {
       // Create aerialViewCenteredOnSelection label and check box bound to controller AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED property
-      this.aerialViewCenteredOnSelectionLabel = new TextView(activity);aerialViewCenteredOnSelectionLabel.setText(preferences.getLocalizedString(
+      this.aerialViewCenteredOnSelectionLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "aerialViewCenteredOnSelectionLabel.text"));
-      this.aerialViewCenteredOnSelectionCheckBox = new CheckBox(activity);aerialViewCenteredOnSelectionCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "aerialViewCenteredOnSelectionCheckBox.text"));aerialViewCenteredOnSelectionCheckBox.setChecked(controller.isAerialViewCenteredOnSelectionEnabled());
-      this.aerialViewCenteredOnSelectionCheckBox.setOnClickListener(new View.OnClickListener() {
-		  public void onClick(View v) {
+      this.aerialViewCenteredOnSelectionCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "aerialViewCenteredOnSelectionCheckBox.text"), controller.isAerialViewCenteredOnSelectionEnabled());
+      this.aerialViewCenteredOnSelectionCheckBox.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
             controller.setAerialViewCenteredOnSelectionEnabled(aerialViewCenteredOnSelectionCheckBox.isChecked());
           }
         });
@@ -357,12 +357,12 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.MAGNETISM_ENABLED)) {
       // Create magnetism label and check box bound to controller MAGNETISM_ENABLED property
-      this.magnetismLabel = new TextView(activity);magnetismLabel.setText(preferences.getLocalizedString(
+      this.magnetismLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "magnetismLabel.text"));
-      this.magnetismCheckBox = new CheckBox(activity);magnetismCheckBox.setText(SwingTools.getLocalizedLabelText(preferences, 
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "magnetismCheckBox.text"));magnetismCheckBox.setChecked( controller.isMagnetismEnabled());
-      this.magnetismCheckBox.setOnClickListener(new View.OnClickListener() {
-		  public void onClick(View v) {
+      this.magnetismCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "magnetismCheckBox.text"), controller.isMagnetismEnabled());
+      this.magnetismCheckBox.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
             controller.setMagnetismEnabled(magnetismCheckBox.isChecked());
           }
         });
@@ -376,12 +376,12 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.RULERS_VISIBLE)) {
       // Create rulers label and check box bound to controller RULERS_VISIBLE property
-      this.rulersLabel = new TextView(activity);rulersLabel.setText(preferences.getLocalizedString(
+      this.rulersLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "rulersLabel.text"));
-      this.rulersCheckBox = new CheckBox(activity);rulersCheckBox.setText(SwingTools.getLocalizedLabelText(preferences, 
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "rulersCheckBox.text"));rulersCheckBox.setChecked( controller.isRulersVisible());
-      this.rulersCheckBox.setOnClickListener(new View.OnClickListener() {
-		  public void onClick(View v) {
+      this.rulersCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "rulersCheckBox.text"), controller.isRulersVisible());
+      this.rulersCheckBox.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
             controller.setRulersVisible(rulersCheckBox.isChecked());
           }
         });
@@ -395,12 +395,12 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.GRID_VISIBLE)) {
       // Create grid label and check box bound to controller GRID_VISIBLE property
-      this.gridLabel = new TextView(activity);gridLabel.setText(preferences.getLocalizedString(
+      this.gridLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "gridLabel.text"));
-      this.gridCheckBox = new CheckBox(activity);gridCheckBox.setText(SwingTools.getLocalizedLabelText(preferences, 
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "gridCheckBox.text"));gridCheckBox.setChecked(controller.isGridVisible());
-      this.gridCheckBox.setOnClickListener(new View.OnClickListener() {
-		  public void onClick(View v) {
+      this.gridCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "gridCheckBox.text"), controller.isGridVisible());
+      this.gridCheckBox.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
             controller.setGridVisible(gridCheckBox.isChecked());
           }
         });
@@ -477,13 +477,13 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.ROOM_FLOOR_COLORED_OR_TEXTURED)) {
       // Create room rendering label and radio buttons bound to controller ROOM_FLOOR_COLORED_OR_TEXTURED property
-      this.roomRenderingLabel = new TextView(activity);roomRenderingLabel.setText(preferences.getLocalizedString(
+      this.roomRenderingLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "roomRenderingLabel.text"));
-      this.monochromeRadioButton = new RadioButton(activity);monochromeRadioButton.setText(SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "monochromeRadioButton.text"));monochromeRadioButton.setChecked(
+      this.monochromeRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "monochromeRadioButton.text"),
           !controller.isRoomFloorColoredOrTextured());
-      this.floorColorOrTextureRadioButton = new RadioButton(activity);floorColorOrTextureRadioButton.setText(SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "floorColorOrTextureRadioButton.text"));floorColorOrTextureRadioButton.setChecked(
+      this.floorColorOrTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
+          com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "floorColorOrTextureRadioButton.text"),
 				controller.isRoomFloorColoredOrTextured());
       ButtonGroup roomRenderingButtonGroup = new ButtonGroup();
       roomRenderingButtonGroup.add(this.monochromeRadioButton);
@@ -506,7 +506,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.NEW_WALL_PATTERN)) {
       // Create new wall pattern label and combo box bound to controller NEW_WALL_PATTERN property
-      this.newWallPatternLabel = new TextView(activity);newWallPatternLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.newWallPatternLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
       this.newWallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
@@ -515,11 +515,11 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       this.newWallPatternComboBox.setSelectedItem(newWallPattern != null 
           ? newWallPattern  
           : controller.getWallPattern());
-      this.newWallPatternComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-		  public void onNothingSelected(AdapterView<?> parent) {}
-		  public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            controller.setNewWallPattern((TextureImage)newWallPatternComboBox.getSelectedItem());
-          }
+      this.newWallPatternComboBox.addItemListener( new JComboBox.ItemListener() {
+		  public void itemStateChanged(JComboBox.ItemEvent ev)
+		  {
+			  controller.setNewWallPattern((TextureImage)newWallPatternComboBox.getSelectedItem());
+		  }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_WALL_PATTERN, 
           new PropertyChangeListener() {
@@ -529,7 +529,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
           });
     } else if (controller.isPropertyEditable(UserPreferencesController.Property.WALL_PATTERN)) {
       // Create wall pattern label and combo box bound to controller WALL_PATTERN property
-      this.wallPatternLabel = new TextView(activity);wallPatternLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.wallPatternLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "wallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
       this.wallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
@@ -551,16 +551,14 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.NEW_WALL_THICKNESS)) {
       // Create wall thickness label and spinner bound to controller NEW_WALL_THICKNESS property
-      this.newWallThicknessLabel = new TextView(activity);newWallThicknessLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.newWallThicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallThicknessLabel.text"));
       final SpinnerLengthModel newWallThicknessSpinnerModel = new SpinnerLengthModel(0.5f, 0.125f, controller);
       this.newWallThicknessSpinner = new AutoCommitLengthSpinner(newWallThicknessSpinnerModel, controller);
       newWallThicknessSpinnerModel.setValue(controller.getNewWallThickness());
-      newWallThicknessSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	  {
-		  public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		  {
-            controller.setNewWallThickness((float)newWallThicknessSpinner.getValue() * newWallThicknessSpinnerModel.getStepSize());
+      newWallThicknessSpinnerModel.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+            controller.setNewWallThickness((float)newWallThicknessSpinnerModel.getValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_WALL_THICKNESS, 
@@ -573,16 +571,14 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.NEW_WALL_HEIGHT)) {
       // Create wall height label and spinner bound to controller NEW_WALL_HEIGHT property
-      this.newWallHeightLabel = new TextView(activity);newWallHeightLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.newWallHeightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallHeightLabel.text"));
       final SpinnerLengthModel newWallHeightSpinnerModel = new SpinnerLengthModel(10f, 2f, controller);
       this.newWallHeightSpinner = new AutoCommitLengthSpinner(newWallHeightSpinnerModel, controller);
       newWallHeightSpinnerModel.setValue(controller.getNewWallHeight());
-      newWallHeightSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	  {
-		  public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		  {
-            controller.setNewWallHeight((float)newWallHeightSpinner.getValue() * newWallHeightSpinnerModel.getStepSize());
+      newWallHeightSpinnerModel.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+            controller.setNewWallHeight((float)newWallHeightSpinnerModel.getValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_WALL_HEIGHT, 
@@ -595,16 +591,14 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     if (controller.isPropertyEditable(UserPreferencesController.Property.NEW_FLOOR_THICKNESS)) {
       // Create wall thickness label and spinner bound to controller NEW_FLOOR_THICKNESS property
-      this.newFloorThicknessLabel = new TextView(activity);newFloorThicknessLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.newFloorThicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newFloorThicknessLabel.text"));
       final SpinnerLengthModel newFloorThicknessSpinnerModel = new SpinnerLengthModel(0.5f, 0.125f, controller);
       this.newFloorThicknessSpinner = new AutoCommitLengthSpinner(newFloorThicknessSpinnerModel, controller);
       newFloorThicknessSpinnerModel.setValue(controller.getNewFloorThickness());
-      newFloorThicknessSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	  {
-		  public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		  {
-            controller.setNewFloorThickness((float)newFloorThicknessSpinner.getValue() * newFloorThicknessSpinnerModel.getStepSize());
+      newFloorThicknessSpinnerModel.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+            controller.setNewFloorThickness((float)newFloorThicknessSpinnerModel.getValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_FLOOR_THICKNESS, 
@@ -642,7 +636,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
 
     if (controller.isPropertyEditable(UserPreferencesController.Property.AUTO_SAVE_DELAY_FOR_RECOVERY)) {
-      this.autoSaveDelayForRecoveryCheckBox = new CheckBox(activity);autoSaveDelayForRecoveryCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.autoSaveDelayForRecoveryCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryCheckBox.text"));
 		// PJ min number altered to 5 cos my spinner needs exact maths!
       final SpinnerNumberModel autoSaveDelayForRecoverySpinnerModel = new SpinnerNumberModel(10, 5, 60, 5);/* {
@@ -665,19 +659,17 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
           }
         };*/
       this.autoSaveDelayForRecoverySpinner = new AutoCommitSpinner(activity, autoSaveDelayForRecoverySpinnerModel);
-      this.autoSaveDelayForRecoveryUnitLabel = new TextView(activity);autoSaveDelayForRecoveryUnitLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.autoSaveDelayForRecoveryUnitLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryUnitLabel.text"));
       updateAutoSaveDelayForRecoveryComponents(controller);
-      this.autoSaveDelayForRecoveryCheckBox.setOnClickListener(new View.OnClickListener() {
-		  public void onClick(View v) {
+      this.autoSaveDelayForRecoveryCheckBox.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
             controller.setAutoSaveForRecoveryEnabled(autoSaveDelayForRecoveryCheckBox.isChecked());
           }
         });
-      autoSaveDelayForRecoverySpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	  {
-		  public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		  {
-            controller.setAutoSaveDelayForRecovery((int)((float)autoSaveDelayForRecoverySpinner.getValue() * autoSaveDelayForRecoverySpinnerModel.getStepSize() * 60000));
+      autoSaveDelayForRecoverySpinnerModel.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+            controller.setAutoSaveDelayForRecovery((int)(autoSaveDelayForRecoverySpinnerModel.getValue() * 60000));
           }
         });
       PropertyChangeListener listener = new PropertyChangeListener() {
@@ -689,7 +681,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
       controller.addPropertyChangeListener(UserPreferencesController.Property.AUTO_SAVE_FOR_RECOVERY_ENABLED, listener);
     }
     
-    this.resetDisplayedActionTipsButton = new Button(activity);resetDisplayedActionTipsButton.setText(
+    this.resetDisplayedActionTipsButton = new JButton(activity,
 			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "RESET_DISPLAYED_ACTION_TIPS.Name"));
 	  resetDisplayedActionTipsButton.setOnClickListener(new View.OnClickListener(){
 		  public void onClick(View view)
@@ -700,7 +692,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
 
-	  this.closeButton = new Button(activity);closeButton.setText(SwingTools.getLocalizedLabelText(preferences,
+	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
 	  closeButton.setOnClickListener(new View.OnClickListener(){
 		  public void onClick(View view)
@@ -714,7 +706,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   /**
    * Returns a renderer for patterns combo box.
    */
-  private class  PatternRenderer extends ArrayAdapter {
+  private class PatternRenderer extends ArrayAdapter {
 	  public  PatternRenderer(Object[] images)
 	  {
 			super(activity, android.R.layout.simple_list_item_1, images);

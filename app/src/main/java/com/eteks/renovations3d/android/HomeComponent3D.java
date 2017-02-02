@@ -103,6 +103,7 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
+
 /**
  * Created by phil on 11/22/2016.
  */
@@ -285,12 +286,11 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
 		}
 	}
-	public static boolean virtualvisit = false;
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.home_component3d_menu, menu);
-		virtualvisit = home.getCamera() == home.getObserverCamera();
-		menu.findItem(R.id.virtualvisit).setChecked(virtualvisit);
+		menu.findItem(R.id.virtualvisit).setChecked(home.getCamera() == home.getObserverCamera());
+		menu.findItem(R.id.viewalllevels).setChecked(false);//TODO: what's teh what's it?
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	@Override
@@ -298,6 +298,20 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 	{
 		menu.findItem(R.id.virtualvisit).setTitle(preferences.getLocalizedString(
 					com.eteks.sweethome3d.android_props.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
+		menu.findItem(R.id.modifyvirtualvisitor).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name"));
+		menu.findItem(R.id.storepov).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "STORE_POINT_OF_VIEW.Name"));
+		menu.findItem(R.id.gotopov).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "GO_TO_POINT_OF_VIEW.Name"));
+		menu.findItem(R.id.deletepov).setTitle(preferences.getLocalizedString(
+			com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_POINTS_OF_VIEW.Name"));
+		menu.findItem(R.id.viewalllevels).setTitle(preferences.getLocalizedString(
+			com.eteks.sweethome3d.android_props.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
+		menu.findItem(R.id.modify3dview).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
+
+
 		super.onPrepareOptionsMenu(menu);
 	}
 
@@ -307,18 +321,33 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		switch (item.getItemId()) {
 			case R.id.virtualvisit:
 				item.setChecked(!item.isChecked());
-				this.virtualvisit = item.isChecked();
-
-				if(virtualvisit)
+				if(item.isChecked())
 					controller.viewFromObserver();
 				else
 					controller.viewFromTop();
-
-				return true;
-
+			break;
+			case R.id.modifyvirtualvisitor:
+				break;
+			case R.id.storepov:
+				break;
+			case R.id.gotopov:
+				break;
+			case R.id.deletepov:
+				break;
+			case R.id.viewalllevels:
+				item.setChecked(!item.isChecked());
+				if(item.isChecked())
+					controller.displayAllLevels();
+				else
+					controller.displaySelectedLevel();
+				break;
+			case R.id.modify3dview:
+				controller.modifyAttributes();
+				break;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
 	private enum ActionType
@@ -1458,6 +1487,8 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 				//		}
 				//	}
 				//}
+
+
 			}
 
 			public void mouseClicked(com.jogamp.newt.event.MouseEvent ev)
@@ -1495,6 +1526,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 								final float FACTOR = 0.5f;
 								float xd = FACTOR * (ev.getX() - this.xLastMouseMove);
 								float yd = FACTOR * (ev.getY() - this.yLastMouseMove);
+								System.out.println("xd " +xd + " yd " +yd);
 								controller.moveCamera(-yd);
 								controller.moveCameraSideways(xd);//note does nothing in overhead view
 							}

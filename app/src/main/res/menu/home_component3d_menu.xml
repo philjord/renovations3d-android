@@ -3,5 +3,22 @@
     <item android:id="@+id/virtualvisit"
           android:title="@string/virtualvisit"
           android:checkable="true"/>
-
+    <item android:id="@+id/modifyvirtualvisitor"
+          android:title="@string/modifyvirtualvisitor"
+          />
+    <item android:id="@+id/storepov"
+          android:title="@string/storepov"
+          />
+    <item android:id="@+id/gotopov"
+          android:title="@string/gotopov"
+          />
+    <item android:id="@+id/deletepov"
+          android:title="@string/deletepov"
+          />
+    <item android:id="@+id/viewalllevels"
+          android:title="@string/viewalllevels"
+          android:checkable="true"/>
+    <item android:id="@+id/modify3dview"
+          android:title="@string/modify3dview"
+          />
 </menu>

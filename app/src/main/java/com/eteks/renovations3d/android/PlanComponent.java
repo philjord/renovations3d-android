@@ -597,6 +597,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)/2;
 		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize);
 
 		// Set JComponent default properties
@@ -1380,8 +1381,20 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					//TODO: the previous click is still fired so this is not quite right! see below for the correct system
 					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400? 2 :1;
 
-					controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-							clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
+					try
+					{
+						controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+								clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
+					}catch(ArrayIndexOutOfBoundsException e)
+					{
+						// this happens :
+						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+						//ignore for now, investigate later
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -1393,8 +1406,18 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			final float x = ev.getX(pointerIndex);
 			final float y = ev.getY(pointerIndex);
 			if (isEnabled())
+			{try
 			{
-				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));}catch(ArrayIndexOutOfBoundsException e)
+			{
+				// this happens :
+				//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+				//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
+				//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
+				//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+				//ignore for now, investigate later
+				e.printStackTrace();
+			}
 			}
 		}
 
@@ -1413,8 +1436,18 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			if (this.lastMousePressedLocation == null)
 			{
 				if (isEnabled())
+				{try
 				{
-					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));}catch(ArrayIndexOutOfBoundsException e)
+				{
+					// this happens :
+					//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+					//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
+					//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
+					//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+					//ignore for now, investigate later
+					e.printStackTrace();
+				}
 				}
 			}
 		}

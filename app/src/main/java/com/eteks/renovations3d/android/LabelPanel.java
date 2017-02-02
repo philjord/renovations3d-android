@@ -29,17 +29,18 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eteks.renovations3d.android.swingish.JButton;
+import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JRadioButton;
+import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
@@ -58,20 +59,20 @@ import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 public class LabelPanel extends Dialog implements DialogView {
   private final boolean         labelModification;
   private final LabelController controller;
-  private TextView textLabel;
-  private EditText textTextField;
-  //private TextView                fontNameLabel;//there are only 4 fonts on android!http://stackoverflow.com/questions/12128331/how-to-change-fontfamily-of-textview-in-android/13329907#13329907
+  private JLabel textLabel;
+  private JTextField textTextField;
+  //private JLabel                fontNameLabel;//there are only 4 fonts on android!http://stackoverflow.com/questions/12128331/how-to-change-fontfamily-of-textview-in-android/13329907#13329907
   //private FontNameComboBox      fontNameComboBox;
-  private TextView                fontSizeLabel;
-  private AutoCommitSpinner       fontSizeSpinner;
-  private TextView                colorLabel;
-  //private ColorButton           colorButton;
-  private CheckBox visibleIn3DViewCheckBox;
-  private TextView                pitchLabel;
-  private RadioButton          pitch0DegreeRadioButton;
-  private RadioButton pitch90DegreeRadioButton;
-  private TextView                elevationLabel;
-  private AutoCommitSpinner elevationSpinner;
+  private JLabel                fontSizeLabel;
+  private JSpinner fontSizeSpinner;
+  private JLabel                colorLabel;
+  private ColorButton           colorButton;
+  private NullableCheckBox visibleIn3DViewCheckBox;
+  private JLabel                pitchLabel;
+  private JRadioButton pitch0DegreeRadioButton;
+  private JRadioButton pitch90DegreeRadioButton;
+  private JLabel                elevationLabel;
+  private JSpinner elevationSpinner;
   private String                dialogTitle;
 
 	private Activity activity;
@@ -109,9 +110,9 @@ public class LabelPanel extends Dialog implements DialogView {
                                 UserPreferences preferences, 
                                 final LabelController controller) {
     // Create text label and its text field bound to NAME controller property
-    this.textLabel = new TextView(activity);textLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.textLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "textLabel.text"));
-    this.textTextField = new EditText(activity);textTextField.setText(controller.getText());//, 20, preferences.getAutoCompletionStrings("LabelText"));
+    this.textTextField = new AutoCompleteTextField(activity, controller.getText(), 20, preferences.getAutoCompletionStrings("LabelText"));
     //if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
     //  SwingTools.addAutoSelectionOnFocusGain(this.textTextField);
     //}
@@ -185,40 +186,37 @@ public class LabelPanel extends Dialog implements DialogView {
 */
     // Create font size label and its spinner bound to FONT_SIZE controller property
     String unitName = preferences.getLengthUnit().getName();
-    this.fontSizeLabel = new TextView(activity);fontSizeLabel.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LabelPanel.class,
+    this.fontSizeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LabelPanel.class,
         "fontSizeLabel.text", unitName));
     final SpinnerLengthModel fontSizeSpinnerModel = new SpinnerLengthModel(
         preferences, 5, 999);
-    this.fontSizeSpinner = new AutoCommitSpinner(activity, fontSizeSpinnerModel);
+    this.fontSizeSpinner = new NullableSpinner(activity, fontSizeSpinnerModel);
     final PropertyChangeListener fontSizeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           Float fontSize = controller.getFontSize();
-          //fontSizeSpinnerModel.setNullable(fontSize == null);
-          fontSizeSpinner.setValue((int)(fontSize  / fontSizeSpinnerModel.getStepSize()));
+          fontSizeSpinnerModel.setNullable(fontSize == null);
+          fontSizeSpinnerModel.setValue(fontSize);
         }
       };
     fontSizeChangeListener.propertyChange(null);
     controller.addPropertyChangeListener(LabelController.Property.FONT_SIZE, fontSizeChangeListener);
-    fontSizeSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	{
-		public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		{
+    fontSizeSpinnerModel.addChangeListener(new ChangeListener() {
+		public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(LabelController.Property.FONT_SIZE, fontSizeChangeListener);
-			// TODO: if the model was asked for the value it scould do this multiply happily and even return floats and do lots of nice ness
-          controller.setFontSize(fontSizeSpinner.getValue() * fontSizeSpinnerModel.getStepSize());
+          controller.setFontSize((float)fontSizeSpinnerModel.getValue());
           controller.addPropertyChangeListener(LabelController.Property.FONT_SIZE, fontSizeChangeListener);
         }
       });
 
     // Create color label and button bound to controller COLOR property
-    this.colorLabel = new TextView(activity);colorLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.colorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "colorLabel.text"));
     
-/*    this.colorButton = new ColorButton(preferences);
-    if (OperatingSystem.isMacOSX()) {
-      this.colorButton.putClientProperty("JButton.buttonType", "segmented");
-      this.colorButton.putClientProperty("JButton.segmentPosition", "only");
-    }
+    this.colorButton = new ColorButton(activity, preferences);
+   // if (OperatingSystem.isMacOSX()) {
+    //  this.colorButton.putClientProperty("JButton.buttonType", "segmented");
+    //  this.colorButton.putClientProperty("JButton.segmentPosition", "only");
+    //}
     this.colorButton.setColorDialogTitle(preferences
         .getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "colorDialog.title"));
     this.colorButton.setColor(controller.getColor());
@@ -231,7 +229,7 @@ public class LabelPanel extends Dialog implements DialogView {
         public void propertyChange(PropertyChangeEvent ev) {
           colorButton.setColor(controller.getColor());
         }
-      });*/
+      });
 
     // Create pitch components bound to PITCH controller property
     final PropertyChangeListener pitchChangeListener = new PropertyChangeListener() {
@@ -240,20 +238,20 @@ public class LabelPanel extends Dialog implements DialogView {
         }
       };
     controller.addPropertyChangeListener(LabelController.Property.PITCH, pitchChangeListener);
-    this.visibleIn3DViewCheckBox = new CheckBox(activity);visibleIn3DViewCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.visibleIn3DViewCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "visibleIn3DViewCheckBox.text"));
     if (controller.isPitchEnabled() != null) {
       this.visibleIn3DViewCheckBox.setChecked(controller.isPitchEnabled());
     } else {
-      //this.visibleIn3DViewCheckBox.setNullable(true);
+      this.visibleIn3DViewCheckBox.setNullable(true);
       this.visibleIn3DViewCheckBox.setChecked(false);
     }
-    this.visibleIn3DViewCheckBox.setOnClickListener(new View.OnClickListener() {
-		public void onClick(View v) {
+    this.visibleIn3DViewCheckBox.addChangeListener(new ChangeListener() {
+		public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(LabelController.Property.PITCH, pitchChangeListener);
-         // if (visibleIn3DViewCheckBox.isNullable()) {
-         //   visibleIn3DViewCheckBox.setNullable(false);
-         // }
+          if (visibleIn3DViewCheckBox.isNullable()) {
+            visibleIn3DViewCheckBox.setNullable(false);
+          }
           if (Boolean.FALSE.equals(visibleIn3DViewCheckBox.isChecked())) {
             controller.setPitch(null);
           } else if (pitch90DegreeRadioButton.isSelected()) {
@@ -265,9 +263,9 @@ public class LabelPanel extends Dialog implements DialogView {
           controller.addPropertyChangeListener(LabelController.Property.PITCH, pitchChangeListener);
         }
       });
-    this.pitchLabel = new TextView(activity);pitchLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.pitchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "pitchLabel.text"));
-    this.pitch0DegreeRadioButton = new RadioButton(activity);pitch0DegreeRadioButton.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.pitch0DegreeRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "pitch0DegreeRadioButton.text"));
 	  View.OnClickListener pitchRadioButtonsItemListener = new View.OnClickListener() {
 		  public void onClick(View v) {
@@ -279,7 +277,7 @@ public class LabelPanel extends Dialog implements DialogView {
         }
       };
     this.pitch0DegreeRadioButton.setOnClickListener(pitchRadioButtonsItemListener);
-    this.pitch90DegreeRadioButton = new RadioButton(activity);pitch90DegreeRadioButton.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.pitch90DegreeRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "pitch90DegreeRadioButton.text"));
     this.pitch90DegreeRadioButton.setOnClickListener(pitchRadioButtonsItemListener);
     ButtonGroup pitchGroup = new ButtonGroup();
@@ -287,26 +285,24 @@ public class LabelPanel extends Dialog implements DialogView {
     pitchGroup.add(this.pitch90DegreeRadioButton);
     
     // Create elevation label and its spinner bound to ELEVATION controller property
-    this.elevationLabel = new TextView(activity);elevationLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+    this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "elevationLabel.text", unitName));
     final SpinnerLengthModel elevationSpinnerModel = new SpinnerLengthModel(
         preferences, 0f, preferences.getLengthUnit().getMaximumElevation()/20);//PJPJP 10k is too much
     this.elevationSpinner = new AutoCommitSpinner(activity, elevationSpinnerModel);
-    //elevationSpinnerModel.setNullable(controller.getElevation() == null);
-    elevationSpinner.setValue((int)(controller.getElevation() / elevationSpinnerModel.getStepSize()));
+    elevationSpinnerModel.setNullable(controller.getElevation() == null);
+    elevationSpinnerModel.setValue(controller.getElevation());
     final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          //elevationSpinnerModel.setNullable(ev.getNewValue() == null);
-          elevationSpinner.setValue((int)((Float)ev.getNewValue() / elevationSpinnerModel.getStepSize()));
+          elevationSpinnerModel.setNullable(ev.getNewValue() == null);
+          elevationSpinnerModel.setValue((Float)ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(LabelController.Property.ELEVATION, elevationChangeListener);
-    elevationSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
-	{
-		public void onValueChange(NumberPicker picker, int oldVal, int newVal)
-		{
+    elevationSpinnerModel.addChangeListener(new ChangeListener() {
+		public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(LabelController.Property.ELEVATION, elevationChangeListener);
-          controller.setElevation(elevationSpinner.getValue() * elevationSpinnerModel.getStepSize());
+          controller.setElevation((float)elevationSpinnerModel.getValue());
           controller.addPropertyChangeListener(LabelController.Property.ELEVATION, elevationChangeListener);
         }
       });
@@ -318,12 +314,12 @@ public class LabelPanel extends Dialog implements DialogView {
             ? "labelModification.title"
             : "labelCreation.title");
 
-	  this.closeButton = new Button(activity);closeButton.setText(SwingTools.getLocalizedLabelText(preferences,
+	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
 	  closeButton.setOnClickListener(new View.OnClickListener(){
 		  public void onClick(View view)
 		  {
-			  LabelPanel.this.dismiss();
+			  dismiss();
 		  }
 	  });
   }
@@ -418,9 +414,9 @@ public class LabelPanel extends Dialog implements DialogView {
 	  rootView.addView(this.colorLabel, labelInsets);//, new GridBagConstraints(
        // 2, 2, 1, 1, 0, 0, labelAlignment,
        // GridBagConstraints.NONE, new Insets(0, 10, 0, 5), 0, 0));
-/*    nameAndStylePanel.add(this.colorButton, new GridBagConstraints(
-        3, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, OperatingSystem.isMacOSX()  ? 6  : 0), 0, 0));*/
+	  rootView.addView(this.colorButton, labelInsets);//, new GridBagConstraints(
+   //     3, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START,
+   //     GridBagConstraints.NONE, new Insets(0, 0, 0, OperatingSystem.isMacOSX()  ? 6  : 0), 0, 0));
    // int rowGap = OperatingSystem.isMacOSXLeopardOrSuperior() ? 0 : 5;
    // add(nameAndStylePanel, new GridBagConstraints(
     //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
@@ -525,6 +521,11 @@ public class LabelPanel extends Dialog implements DialogView {
 		public Float getLength()
 		{
 			return Float.valueOf(((Number) getValue()).floatValue());
+		}
+
+		public void setNullable(boolean nullable)
+		{
+			//ignored this.nullable = nullable;
 		}
 	}
 

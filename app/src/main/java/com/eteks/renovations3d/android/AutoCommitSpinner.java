@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 
 
+import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 
 
@@ -37,10 +38,8 @@ import java.text.Format;
  * the value displayed in its editor when it gains focus.
  * @author Emmanuel Puybaret
  */
-public class AutoCommitSpinner extends NumberPicker
+public class AutoCommitSpinner extends JSpinner
 {
-	private SpinnerNumberModel model;
-
   /**
    * Creates a spinner with a given <code>model</code>.
    */
@@ -51,40 +50,11 @@ public class AutoCommitSpinner extends NumberPicker
   /**
    * Creates a spinner with a given <code>model</code> and <code>format</code>.
    */
-  public AutoCommitSpinner(Context context, SpinnerNumberModel model2,
+  public AutoCommitSpinner(Context context, SpinnerNumberModel model,
                            Format format) {
-	  super(context);
-	  this.model = model2;
+	super(context, model, format);
 
-	  float multiplier = 1 / model.getStepSize();
-	  this.setMinValue((int)(model.getMinimum() * multiplier));
-	  this.setMaxValue((int)(model.getMaximum() * multiplier));
-
-	  setFormat(format);
-	  resetDisplayValues();
-	  this.setValue((int)(model.getValue() * multiplier));
-
-	  //get rid of dman keybaord for now
-	  EditText numberPickerChild = (EditText) getChildAt(0);
-	  numberPickerChild.setFocusable(false);
-	  numberPickerChild.setInputType(InputType.TYPE_NULL);
-
-
-	  model.addChangeListener(new ChangeListener(){
-		  @Override
-		  public void stateChanged(ChangeEvent ev)
-		  {
-			  float multiplier = 1 / model.getStepSize();
-			  setMinValue((int)(model.getMinimum() * multiplier));
-			  setMaxValue((int)(model.getMaximum() * multiplier));
-			  resetDisplayValues();
-			  setValue((int)(model.getValue() * multiplier));
-		  }
-	  } );
-
-
-	  //TODO: this spinner should set the value to teh model, so it can be gotten from there
-
+	  //TODO: this has no more function a than a spinner? what's autocommit mean?
 
     /*JComponent editor = getEditor();
     if (editor instanceof JSpinner.DefaultEditor) {
@@ -187,44 +157,33 @@ public class AutoCommitSpinner extends NumberPicker
     }*/
   }
 
-	private void resetDisplayValues()
-	{
-		String[] valueDisplays = new String[(int)(((model.getMaximum() - model.getMinimum())) / model.getStepSize())+1];
-		int idx = 0;
-		for(float i = model.getMinimum(); i <= model.getMaximum(); i += model.getStepSize() )
-		{
-			float val = i - model.getMinimum();
-			String strVal;
-			if (currentFormat != null)
-				strVal = currentFormat.format(val);
-			else
-				strVal = "" + val;
 
-			valueDisplays[idx] = strVal;
-			idx++;
+
+	/**
+	 * A spinner number model that will reset to minimum when maximum is reached.
+	 */
+	public static class SpinnerModuloNumberModel extends SpinnerNumberModel {
+		public SpinnerModuloNumberModel(int value, int minimum, int maximum, int stepSize) {
+			super(value, minimum, maximum, stepSize);
 		}
-		this.setDisplayedValues(valueDisplays);
+
+		@Override
+		public Object getNextValue() {
+			if (getNumber().intValue() + getStepSize().intValue() < ((Number)getMaximum()).intValue()) {
+				return ((Number)super.getNextValue()).intValue();
+			} else {
+				return getNumber().intValue() + getStepSize().intValue() - ((Number)getMaximum()).intValue() + ((Number)getMinimum()).intValue();
+			}
+		}
+
+		@Override
+		public Object getPreviousValue() {
+			if (getNumber().intValue() - getStepSize().intValue() >= ((Number)getMinimum()).intValue()) {
+				return ((Number)super.getPreviousValue()).intValue();
+			} else {
+				return getNumber().intValue() - getStepSize().intValue() - ((Number)getMinimum()).intValue() + ((Number)getMaximum()).intValue();
+			}
+		}
 	}
-
-  /**
-   * Sets the format used to display the value of this spinner.
-   */
-  private Format currentFormat;
-  public void setFormat(Format format) {
-
-	  this.currentFormat = format;
-	  resetDisplayValues();
-
-   /* JComponent editor = getEditor();
-    if (editor instanceof JSpinner.DefaultEditor) {
-      JFormattedTextField textField = ((JSpinner.DefaultEditor)editor).getTextField();
-      AbstractFormatter formatter = textField.getFormatter();
-      if (formatter instanceof NumberFormatter) {
-        ((NumberFormatter)formatter).setFormat(format);
-        fireStateChanged();
-      }
-    }*/
-  }
-
 
 }
