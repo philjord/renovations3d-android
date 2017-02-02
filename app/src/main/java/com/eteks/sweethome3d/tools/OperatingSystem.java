@@ -31,25 +31,28 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Tools used to test current user operating system.
  * @author Emmanuel Puybaret
  */
 public class OperatingSystem {
-	private static final String EDITOR_SUB_FOLDER = "editorSubFolder";
-	private static final String APPLICATION_SUB_FOLDER = "applicationSubFolder";
-	private static final String TEMPORARY_SUB_FOLDER = "work";
-	private static final String TEMPORARY_SESSION_SUB_FOLDER ="123456";
+	private static final String EDITOR_SUB_FOLDER;
+	private static final String APPLICATION_SUB_FOLDER;
+	private static final String TEMPORARY_SUB_FOLDER;
+	private static final String TEMPORARY_SESSION_SUB_FOLDER;
 
 
 	public static Activity activity;
 
-	/*static {
+	static {
 		// Retrieve sub folders where is stored application data
-    ResourceBundle resource = ResourceBundle.getBundle(OperatingSystem.class.getName());
+    /*ResourceBundle resource = ResourceBundle.getBundle(OperatingSystem.class.getName());
     if (OperatingSystem.isMacOSX()) {
       EDITOR_SUB_FOLDER = resource.getString("editorSubFolder.Mac OS X");
       APPLICATION_SUB_FOLDER = resource.getString("applicationSubFolder.Mac OS X");
@@ -59,7 +62,7 @@ public class OperatingSystem {
     } else {
       EDITOR_SUB_FOLDER = resource.getString("editorSubFolder");
       APPLICATION_SUB_FOLDER = resource.getString("applicationSubFolder");
-    }
+    }*/
 		EDITOR_SUB_FOLDER = "editorSubFolder";
 		APPLICATION_SUB_FOLDER = "applicationSubFolder";
 
@@ -80,7 +83,7 @@ public class OperatingSystem {
 		}
 		TEMPORARY_SUB_FOLDER = temporarySubFolder;
 		TEMPORARY_SESSION_SUB_FOLDER = UUID.randomUUID().toString();
-	}*/
+	}
 
 	// This class contains only static methods
 	private OperatingSystem() {
@@ -90,21 +93,21 @@ public class OperatingSystem {
 	 * Returns <code>true</code> if current operating is Linux.
 	 */
 	public static boolean isLinux() {
-		return System.getProperty("os.name").startsWith("Linux");
+		return true;//System.getProperty("os.name").startsWith("Linux");
 	}
 
 	/**
 	 * Returns <code>true</code> if current operating is Windows.
 	 */
 	public static boolean isWindows() {
-		return System.getProperty("os.name").startsWith("Windows");
+		return false;//System.getProperty("os.name").startsWith("Windows");
 	}
 
 	/**
 	 * Returns <code>true</code> if current operating is Mac OS X.
 	 */
 	public static boolean isMacOSX() {
-		return System.getProperty("os.name").startsWith("Mac OS X");
+		return false;//System.getProperty("os.name").startsWith("Mac OS X");
 	}
 
 	/**
@@ -113,8 +116,8 @@ public class OperatingSystem {
 	public static boolean isMacOSXLeopardOrSuperior() {
 		// Just need to test is OS version is different of 10.4 because Sweet Home 3D
 		// isn't supported under Mac OS X versions previous to 10.4
-		return isMacOSX()
-				&& !System.getProperty("os.version").startsWith("10.4");
+		return false;//isMacOSX()
+				//&& !System.getProperty("os.version").startsWith("10.4");
 	}
 
 	/**
@@ -122,8 +125,8 @@ public class OperatingSystem {
 	 * @since 4.1
 	 */
 	public static boolean isMacOSXLionOrSuperior() {
-		return isMacOSX()
-				&& compareVersions(System.getProperty("os.version"), "10.7") >= 0;
+		return false;//isMacOSX()
+				//&& compareVersions(System.getProperty("os.version"), "10.7") >= 0;
 	}
 
 	/**
@@ -131,8 +134,8 @@ public class OperatingSystem {
 	 * @since 4.5
 	 */
 	public static boolean isMacOSXYosemiteOrSuperior() {
-		return isMacOSX()
-				&& compareVersions(System.getProperty("os.version"), "10.10") >= 0;
+		return false;//isMacOSX()
+				//&& compareVersions(System.getProperty("os.version"), "10.10") >= 0;
 	}
 
 	/**
@@ -375,8 +378,9 @@ public class OperatingSystem {
 				if (siblingTemporaryFolders != null
 						&& siblingTemporaryFolders.length > 0) {
 					// Launch a timer that will delete in 10 min temporary folders older than a week
-					final long deleteDelay = 10 * 60000;
-					final long age = 7 * 24 * 3600000;
+					//PJPJPJPJPJPJPPJPJPJPJPJ really shorten this up to keep the world clean, 1 min  and 1 day
+					final long deleteDelay = 1 * 60000;//10 * 60000;
+					final long age = 1 * 24 * 3600000;//7 * 24 * 3600000;
 					new Timer(true).schedule(new TimerTask() {
 						@Override
 						public void run() {

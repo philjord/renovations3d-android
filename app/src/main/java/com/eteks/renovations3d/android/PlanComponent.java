@@ -152,6 +152,8 @@ import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
+import static com.eteks.sweethome3d.viewcontroller.PlanController.WALL_ENDS_PIXEL_MARGIN;
+
 
 /**
  * A component displaying the plan of a home.
@@ -597,8 +599,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)/2;
-		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize);
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*4;
+		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*5;
+		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*2;
 
 		// Set JComponent default properties
 		setOpaque(true);
