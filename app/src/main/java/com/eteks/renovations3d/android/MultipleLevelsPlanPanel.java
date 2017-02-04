@@ -1,22 +1,27 @@
 package com.eteks.renovations3d.android;
 
-
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
+import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.android.swingish.ButtonGroup;
+import com.eteks.renovations3d.android.swingish.JComponent;
+import com.eteks.renovations3d.android.swingish.JTabbedPane;
+import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.HomeFrameController;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -32,22 +37,14 @@ import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.sweethome3d.viewcontroller.VCView;
-import com.eteks.renovations3d.SweetHomeAVRActivity;
-import com.eteks.renovations3d.android.swingish.ButtonGroup;
-import com.eteks.renovations3d.android.swingish.JComponent;
-import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.mindblowing.renovations3d.R;
-
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
-
 import java.util.List;
 
-
 import javaawt.Graphics;
-
 import javaawt.Graphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.print.PageFormat;
@@ -56,26 +53,11 @@ import javaxswing.ImageIcon;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
 
-import static android.R.id.message;
+import static com.mindblowing.renovations3d.R.id.controlKeyToggle;
 
-/**
- * Created by phil on 11/22/2016.
- * This guy is the tabbed panel itself
- * <p>
- * why is there only one plan component? are the tabs not really used and just flip the level for the plan???
- * yep definitely only one plan and a simple non tabbed layout
- * <p>
- * yep and change listeners state updated calls the plancontroller telling it to set the level number
- * which comes through as a LEVEL_CHANGED event to plancomp, which just dumps all cache and calls repaint
- * so presumably a paintComponent will check level to draw
- * <p>
- * So possibly this guy just needs a bunch of level buttons, probably capped at 6 say for now
- * I wonder if I should shim up tab pane and organise myself like data?
- */
 
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
-
 	//menu item options
 	public static boolean alignmentActivated = false;
 	public static boolean magnetismToggled = false;// careful toggle != checked!
@@ -93,10 +75,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	{
 		this.setHasOptionsMenu(true);
 
-		View rootView = inflater.inflate(
-				R.layout.multiple_level_plan_panel, container, false);
+		View rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
 
-		//now get the drawableView from it
 		drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
 		drawableView.setDrawer(this);
 
@@ -110,13 +90,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		layoutComponents();
 		updateSelectedTab(home);
 
-
-		//controller.addLevel();
-		// select new level then...
-		// controller.modifySelectedLevel();
-		// but possibly the new jtabbedpane gear sorts this out?
-
-
 		View sp = rootView.findViewById(R.id.levelPlusButton);
 		sp.setOnClickListener(new View.OnClickListener()
 		{
@@ -126,48 +99,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		// now to programmatically register the call back for the damn buttons!
-
-		rootView.findViewById(R.id.lockCheck).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.editUndo).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.editRedo).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.controlKeyToggle).setOnClickListener(planActionListener);
-		rootView.findViewById(R.id.delete).setOnClickListener(planActionListener);
-
-		rootView.findViewById(R.id.planSelect).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.planSelect));
-		rootView.findViewById(R.id.createWalls).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createWalls));
-		rootView.findViewById(R.id.createRooms).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createRooms));
-		rootView.findViewById(R.id.createPolyLines).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createPolyLines));
-		rootView.findViewById(R.id.createDimensions).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createDimensions));
-		rootView.findViewById(R.id.createText).setOnClickListener(planActionListener);
-		selectionGroup.add((CompoundButton) rootView.findViewById(R.id.createText));
-
-
-
 		return rootView;
 	}
 
-	View.OnClickListener planActionListener = new View.OnClickListener() {
-		public void onClick(View view) {
 
-			if( view.getParent() instanceof RadioGroup)
-				((RadioGroup) view.getParent()).check(view.getId());
+	MenuItem.OnMenuItemClickListener planMenuItemActionListener = new MenuItem.OnMenuItemClickListener() {
 
-			// now set the action to the action
-			switch (view.getId())
+		@Override
+		public boolean onMenuItemClick(MenuItem item)
+		{
+			switch (item.getItemId())
 			{
-				case R.id.lockCheck:
-					ToggleButton lockButton = (ToggleButton)view;
-					if(lockButton.isChecked())
-						planController.lockBasePlan();
-					else
-						planController.unlockBasePlan();
-					break;
 				case R.id.editUndo:
 					try
 					{
@@ -183,46 +125,82 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
 					}
 					break;
-				case R.id.controlKeyToggle:
-					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
-					ToggleButton controlKeyToggle = (ToggleButton)view;
-					duplicationActivated = controlKeyToggle.isChecked();
-					break;
 				case R.id.delete:
 					planController.deleteSelection();
 					break;
+				case R.id.controlKeyToggle:
+					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
+					item.setChecked(!item.isChecked());
+					setIconFromSelector(item, R.drawable.edit_copy_selector);
+					duplicationActivated = item.isChecked();
+					break;
 				case R.id.planSelect:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();// in case we are doing a create now
 					setMode(PlanController.Mode.SELECTION);
 					break;
 				case R.id.createWalls:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();// in case we are doing a create now
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.WALL_CREATION);
 					break;
 				case R.id.createRooms:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.ROOM_CREATION);
 					break;
 				case R.id.createPolyLines:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 					break;
 				case R.id.createDimensions:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), String.format("Double tap to finish", message), Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case R.id.createText:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
 					planController.escape();
 					// note single tap works for this one
 					setMode(PlanController.Mode.LABEL_CREATION);
 					break;
 
+				case R.id.lockCheck:
+					item.setChecked(!item.isChecked());
 
+					int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
+					String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
+					String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
+					SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
+					builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					item.setTitle(builder);
+					item.setIcon(iconId);
+
+					if (item.isChecked())
+						planController.lockBasePlan();
+					else
+						planController.unlockBasePlan();
+					break;
 			}
+			return false;
+		}
+		private void setIconFromSelector(MenuItem item, int resId)
+		{
+			StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
+			int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
+			stateListDrawable.setState(state);
+			item.setIcon(stateListDrawable.getCurrent());
 		}
 	};
 
@@ -257,7 +235,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 			planController.setMode(mode);
 		}
-
 	}
 
 
@@ -267,9 +244,38 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
 
-		//TODO: should also be done after prefs undated too
 		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
 		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);
+
+		MenuItem item = menu.findItem(R.id.lockCheck);
+		item.setChecked(home.isBasePlanLocked());
+		item.setOnMenuItemClickListener(planMenuItemActionListener);
+
+		int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
+		String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
+		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
+		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
+		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		item.setTitle(builder);
+		item.setIcon(iconId);
+
+		menu.findItem(R.id.editUndo).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(R.id.editRedo).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(controlKeyToggle).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(R.id.delete).setOnMenuItemClickListener(planMenuItemActionListener);
+
+		menu.findItem(R.id.planSelect).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.planSelect));
+		menu.findItem(R.id.createWalls).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.createWalls));
+		menu.findItem(R.id.createRooms).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.createRooms));
+		menu.findItem(R.id.createPolyLines).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.createPolyLines));
+		menu.findItem(R.id.createDimensions).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.createDimensions));
+		menu.findItem(R.id.createText).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.createText));
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -277,11 +283,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
-		//In fact there is no text about these at all just button operations and teh prefer about magnet
-	//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(
-	//			com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
-	//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(
-	//			com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		menu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
+		menu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
+		menu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
+		menu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
+		menu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
+		menu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
+
+		//In fact there is no text about these at all just button operations and the prefer about magnet
+	//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+	//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
 		super.onPrepareOptionsMenu(menu);
 	}
 
@@ -347,14 +358,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		// Card layout relates to the odd single/multiple options
 		//super(new CardLayout());
 
-
 		// taken from createComponents
 		this.planComponent = createPlanComponent(home, preferences, planController);
 		//moved to onCreateView
 		//createComponents(home, preferences, planController);
 		//layoutComponents();
 		//updateSelectedTab(home);
-
 
 		// taken from HomePane
 		rulersVisible = preferences.isRulersVisible();
@@ -369,14 +378,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				});
 	}
 
-
 	//private static final String ONE_LEVEL_PANEL_NAME = "oneLevelPanel";
 	//private static final String MULTIPLE_LEVELS_PANEL_NAME = "multipleLevelsPanel";
 
 	// use a class from the jar
-	private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(HomeFrameController.class.getResource("swing/resources/sameElevation.png"));
+	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(HomeFrameController.class.getResource("swing/resources/sameElevation.png"));
 	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(FurnitureTable.class.getResource("resources/sameElevation.png"));
-
 
 	private PlanComponent planComponent;
 	//	private JScrollPane planScrollPane;
@@ -439,6 +446,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			this.planScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		}*/
 
+		// notice this must be set before any tabs are created
+		this.multipleLevelsTabbedPane.addOnLongClickListener(new View.OnLongClickListener()
+		{
+			@Override
+			public boolean onLongClick(View v)
+			{
+				LevelLabel selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
+				//if (selectedComponent instanceof LevelLabel)
+				{
+					controller.setSelectedLevel(selectedComponent.getLevel());
+				}
+				controller.modifySelectedLevel();
+				return false;
+			}
+		});
+
 		createTabs(home, preferences);
 
 		final ChangeListener changeListener = new ChangeListener()
@@ -446,13 +469,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			public void stateChanged(ChangeEvent ev)
 			{
 				LevelLabel selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
-				if (selectedComponent instanceof LevelLabel)
+				//if (selectedComponent instanceof LevelLabel)
 				{
-					controller.setSelectedLevel(((LevelLabel) selectedComponent).getLevel());
+					controller.setSelectedLevel(selectedComponent.getLevel());
 				}
 			}
 		};
 		this.multipleLevelsTabbedPane.addChangeListener(changeListener);
+
+
+
+
 		// Add a mouse listener that will give focus to plan component only if a change in tabbed pane comes from the mouse
 		// and will add a level only if user clicks on the last tab
 	/*	this.multipleLevelsTabbedPane.addMouseListener(new MouseAdapter()

@@ -27,10 +27,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 
 import java.beans.PropertyChangeEvent;
@@ -41,11 +38,11 @@ import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSlider;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.Home3DAttributesController;
 import com.eteks.sweethome3d.viewcontroller.VCView;
@@ -54,7 +51,7 @@ import com.eteks.sweethome3d.viewcontroller.VCView;
  * Home 3D attributes editing panel.
  * @author Emmanuel Puybaret
  */
-public class Home3DAttributesPanel extends Dialog implements DialogView {
+public class Home3DAttributesPanel extends AndroidDialogView implements DialogView {
   private final Home3DAttributesController controller;
   private JRadioButton  groundColorRadioButton;
   private ColorButton   groundColorButton;
@@ -74,9 +71,6 @@ public class Home3DAttributesPanel extends Dialog implements DialogView {
   private JSlider wallsTransparencySlider;
   private String        dialogTitle;
 
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
   /**
    * Creates a panel that displays home 3D attributes data.
    * @param preferences user preferences
@@ -85,14 +79,8 @@ public class Home3DAttributesPanel extends Dialog implements DialogView {
   public Home3DAttributesPanel(UserPreferences preferences,
                                Home3DAttributesController controller, Activity activity) {
     //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(preferences, controller);
     setMnemonics(preferences);
     layoutComponents(preferences);
@@ -255,14 +243,6 @@ public class Home3DAttributesPanel extends Dialog implements DialogView {
     this.dialogTitle = preferences.getLocalizedString(
         com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "home3DAttributes.title");
 
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  dismiss();
-		  }
-	  });
   }
 
   /**
@@ -322,24 +302,6 @@ public class Home3DAttributesPanel extends Dialog implements DialogView {
    // int labelAlignment = OperatingSystem.isMacOSX()
    //     ? GridBagConstraints.LINE_END
    //     : GridBagConstraints.LINE_START;
-	  Resources r = activity.getResources();
-	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
-
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
-
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
-
-
 
     //JPanel groundPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
     //    com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundPanel.title"));

@@ -71,7 +71,6 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	}
 
 	private GridView gridView;
-	private HorizontalFlowLayout headerView;
 	private FurnitureImageView selectedFiv = null;
 
 	@Override
@@ -81,11 +80,9 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		this.setHasOptionsMenu(true);
 		View rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
 
-		headerView = (HorizontalFlowLayout)rootView.findViewById(R.id.furncatheader);
 		createComponents(catalog, preferences, controller);
 		setMnemonics(preferences);
 		layoutComponents();
-
 
 		gridView = (GridView) rootView.findViewById(R.id.main_grid);
 		gridView.setAdapter(new ImageAdapter(this.getContext()));
@@ -101,38 +98,11 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 					else
 						iv.setBackgroundColor(Color.WHITE);
 				}
-
 			}
 		});
 
-
-
 		return rootView;
 	}
-
-	View.OnClickListener buttonListener = new View.OnClickListener()
-	{
-		public void onClick(View view)
-		{
-			// now set the action to the action
-			switch (view.getId())
-			{
-				case R.id.furnitureAdd:
-
-
-						if (selectedFiv != null)
-						{
-							ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
-							al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
-							((SweetHomeAVRActivity) FurnitureCatalogListPanel.this.getActivity())
-									.sweetHomeAVR.getHomeController().getFurnitureController().addFurniture(al);
-							Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
-						}
-
-					break;
-			}
-		}
-	};
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.furniture_cat_list_menu, menu);
@@ -142,6 +112,8 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
+		menu.findItem(R.id.furnitureAdd).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "ADD_HOME_FURNITURE.Name"));
 		menu.findItem(R.id.import_furniture_lib).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE_LIBRARY.Name"));
 		menu.findItem(R.id.import_texture_lib).setTitle(preferences.getLocalizedString(
@@ -152,6 +124,16 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+			case R.id.furnitureAdd:
+				if (selectedFiv != null)
+				{
+					ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
+					al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
+					((SweetHomeAVRActivity) FurnitureCatalogListPanel.this.getActivity())
+							.sweetHomeAVR.getHomeController().getFurnitureController().addFurniture(al);
+					Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
+				}
+				return true;
 			case R.id.import_furniture_lib:
 				Thread t2 = new Thread(){public void run(){
 					HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();

@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.TextureManager;
@@ -151,8 +152,6 @@ import javaawt.print.PageFormat;
 import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
-
-import static com.eteks.sweethome3d.viewcontroller.PlanController.WALL_ENDS_PIXEL_MARGIN;
 
 
 /**

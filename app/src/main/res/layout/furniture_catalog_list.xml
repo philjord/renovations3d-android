@@ -3,25 +3,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-
-    <com.eteks.renovations3d.utils.HorizontalFlowLayout
-        android:id="@+id/furncatheader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/furnitureAdd"
-            android:text=""
-            android:background="@drawable/furniture_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:minHeight="36dp"
-            android:minWidth="36dp"
-            />
-    </com.eteks.renovations3d.utils.HorizontalFlowLayout>
-
     <GridView
               android:id="@+id/main_grid"
               android:layout_width="match_parent"

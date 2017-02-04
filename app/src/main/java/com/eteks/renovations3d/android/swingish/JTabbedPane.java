@@ -3,10 +3,11 @@ package com.eteks.renovations3d.android.swingish;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.eteks.renovations3d.android.ChangeListener;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
 
 import java.util.ArrayList;
@@ -21,21 +22,17 @@ public class JTabbedPane
 	private ArrayList<RadioButton> buttons = new ArrayList<RadioButton>();
 	private ArrayList<LevelLabel> levelLabels = new ArrayList<LevelLabel>();
 	private ChangeListener changeListener = null; //note singleton
+	private View.OnLongClickListener onLongClickListener = null; //note singleton
 
 	public JTabbedPane(Context context2, RadioGroup radioGrp2)
 	{
 		this.context = context2;
 		this.radioGrp = radioGrp2;
-
-		//set listener to radio button group
 		radioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
 		{
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId)
 			{
-				//int checkedRadioButtonId = radioGrp.getCheckedRadioButtonId();
-				//RadioButton rb = buttons.get(checkedRadioButtonId);
-				//Toast.makeText(context, "text of clicky = " + rb.getText(), Toast.LENGTH_SHORT).show();
 				if(changeListener!=null)
 				{
 					changeListener.stateChanged(new ChangeListener.ChangeEvent());
@@ -55,6 +52,10 @@ public class JTabbedPane
 	{
 		this.changeListener = changeListener;
 	}
+	public void addOnLongClickListener(View.OnLongClickListener onLongClickListener)
+	{
+		this.onLongClickListener = onLongClickListener;
+	}
 
 	public void setTitleAt(int index, String newValue)
 	{
@@ -65,6 +66,10 @@ public class JTabbedPane
 	public void removeChangeListener(ChangeListener changeListener)
 	{
 		this.changeListener = null;
+	}
+	public void removeOnLongClickListener(View.OnLongClickListener onLongClickListener)
+	{
+		this.onLongClickListener = null;
 	}
 
 	public void removeAll()
@@ -81,7 +86,7 @@ public class JTabbedPane
 		levelLabels.remove(index);
 	}
 
-	public void insertTab(String title, Object icon, LevelLabel levelLabel, Object tooltip, int index)
+	public RadioButton insertTab(String title, Object icon, LevelLabel levelLabel, Object tooltip, int index)
 	{
 		RadioGroup.LayoutParams lParams = new RadioGroup.LayoutParams(
 				RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
@@ -92,20 +97,22 @@ public class JTabbedPane
 		radioButton.setText(title);
 		radioButton.setTextColor(Color.BLACK);// cos my sexy white background
 		radioButton.setId(index);
+		radioButton.setOnLongClickListener(onLongClickListener);
 		radioGrp.addView(radioButton, index, lParams);
 
 		buttons.add(index, radioButton);
 		levelLabels.add(index, levelLabel);
+		return radioButton;
 	}
 
-	public void addTab(String title, LevelLabel levelLabel)
+	public RadioButton addTab(String title, LevelLabel levelLabel)
 	{
-		addTab(title, null, levelLabel, null);
+		return addTab(title, null, levelLabel, null);
 	}
 
-	public void addTab(String title, Object icon, LevelLabel levelLabel, Object tooltip)
+	public RadioButton addTab(String title, Object icon, LevelLabel levelLabel, Object tooltip)
 	{
-		insertTab(title, icon, levelLabel, tooltip, buttons.size());
+		return insertTab(title, icon, levelLabel, tooltip, buttons.size());
 	}
 
 	public void repaint()

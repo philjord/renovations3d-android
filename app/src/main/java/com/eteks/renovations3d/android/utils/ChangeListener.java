@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.android;
+package com.eteks.renovations3d.android.utils;
 
 /**
  * Created by phil on 1/1/2017.

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:state_checked="true">
             <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-                <item android:drawable="@android:color/holo_blue_light" />
+                <item android:drawable="@android:color/holo_green_dark" />
                 <item android:drawable="@drawable/plan_create_dimension_lines"/>
             </layer-list>
         </item>

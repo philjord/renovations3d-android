@@ -20,27 +20,22 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.ScrollView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.JTextField;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
@@ -56,7 +51,7 @@ import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
  * Label editing panel.
  * @author Emmanuel Puybaret
  */
-public class LabelPanel extends Dialog implements DialogView {
+public class LabelPanel extends AndroidDialogView implements DialogView {
   private final boolean         labelModification;
   private final LabelController controller;
   private JLabel textLabel;
@@ -75,10 +70,6 @@ public class LabelPanel extends Dialog implements DialogView {
   private JSpinner elevationSpinner;
   private String                dialogTitle;
 
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
-
   /**
    * Creates a panel that displays label data.
    * @param modification specifies whether this panel edits an existing label or new one
@@ -89,15 +80,9 @@ public class LabelPanel extends Dialog implements DialogView {
                     UserPreferences preferences,
                     LabelController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.labelModification = modification;
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(modification, preferences, controller);
     setMnemonics(preferences);
     layoutComponents(controller, preferences);
@@ -314,14 +299,6 @@ public class LabelPanel extends Dialog implements DialogView {
             ? "labelModification.title"
             : "labelCreation.title");
 
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  dismiss();
-		  }
-	  });
   }
 
   private void update3DViewComponents(LabelController controller) {
@@ -371,23 +348,11 @@ public class LabelPanel extends Dialog implements DialogView {
    // int labelAlignment = OperatingSystem.isMacOSX()
    //     ? GridBagConstraints.LINE_END
    //     : GridBagConstraints.LINE_START;
-	  Resources r = activity.getResources();
-	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
 
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
+	  JLabel nameAndAreaPanel = new JLabel(activity,
+			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
+	  rootView.addView(nameAndAreaPanel, rowInsets);
 
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
-    
     //JPanel nameAndStylePanel = SwingTools.createTitledPanel(
     //    preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
 	  rootView.addView(this.textLabel, labelInsets);//, new GridBagConstraints(
@@ -421,6 +386,10 @@ public class LabelPanel extends Dialog implements DialogView {
    // add(nameAndStylePanel, new GridBagConstraints(
     //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
     //    GridBagConstraints.BOTH, new Insets(0, 0, rowGap, 0), 0, 0));
+
+	  JLabel rendering3DPanel = new JLabel(activity,
+			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "rendering3DPanel.title"));
+	  rootView.addView(rendering3DPanel, rowInsets);
 
     //JPanel rendering3DPanel = SwingTools.createTitledPanel(
    //     preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "rendering3DPanel.title"));

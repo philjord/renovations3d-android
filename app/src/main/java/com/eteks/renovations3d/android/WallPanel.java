@@ -48,6 +48,8 @@ import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.HomeTexture;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -69,7 +71,7 @@ import static android.R.attr.y;
  * Wall editing panel.
  * @author Emmanuel Puybaret
  */
-public class WallPanel extends Dialog implements DialogView {
+public class WallPanel extends AndroidDialogView implements DialogView {
   private final WallController controller;
   private JLabel               xStartLabel;
   private JSpinner             xStartSpinner;
@@ -117,10 +119,6 @@ public class WallPanel extends Dialog implements DialogView {
   private String               dialogTitle;
 
 
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
-
   /**
    * Creates a panel that displays wall data according to the units set in
    * <code>preferences</code>.
@@ -130,14 +128,8 @@ public class WallPanel extends Dialog implements DialogView {
   public WallPanel(UserPreferences preferences,
                    WallController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(preferences, controller);
     setMnemonics(preferences);
     layoutComponents(preferences, controller);
@@ -800,15 +792,6 @@ public class WallPanel extends Dialog implements DialogView {
     //this.wallOrientationLabel.setFont(UIManager.getFont("ToolTip.font"));
     
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "wall.title");
-
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  dismiss();
-		  }
-	  });
   }
 
   /**
@@ -992,25 +975,7 @@ public class WallPanel extends Dialog implements DialogView {
     //int labelAlignment = OperatingSystem.isMacOSX()
     //    ? GridBagConstraints.LINE_END
     //    : GridBagConstraints.LINE_START;
-	  Resources r = activity.getResources();
-	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
 
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
-
-
-	  LinearLayout.LayoutParams  rowInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rowInsets.setMargins(px10dp,px10dp,px10dp,px10dp);
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
 
     // First row
 	  JLabel startPointPanel = new JLabel(activity,

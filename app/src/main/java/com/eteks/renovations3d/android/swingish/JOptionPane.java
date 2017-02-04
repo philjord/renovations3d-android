@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
+import android.view.View;
 
 import java.util.concurrent.Semaphore;
 
@@ -159,6 +160,70 @@ public class JOptionPane
 							 dialog.create().show();
 						 }
 					 });
+
+		try
+		{
+			dialogSemaphore.acquire();
+		}
+		catch (InterruptedException e)
+		{
+		}
+
+		return selectedOption[0] ;
+
+	}
+
+
+
+
+
+	public static int showOptionDialog(final Context context, final View root, final String title, final int options, final int type,
+									   final Icon icon, final Object [] optionsText, Object defaultText)
+	{
+		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
+			System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+		}
+
+		final int[] selectedOption = new int[]{CANCEL_OPTION};
+		final Semaphore dialogSemaphore = new Semaphore(0, true);
+
+		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.post(new Runnable()
+		{
+			public void run()
+			{
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which){
+							case DialogInterface.BUTTON_POSITIVE:
+								selectedOption[0] = OK_OPTION;
+								dialogSemaphore.release();
+								break;
+							case DialogInterface.BUTTON_NEGATIVE:
+								selectedOption[0] = NO_OPTION;
+								dialogSemaphore.release();
+								break;
+						}
+					}
+				};
+
+				AlertDialog.Builder dialog = new AlertDialog.Builder(context) ;
+				dialog.setTitle(title);
+				if (icon != null && icon instanceof ImageIcon)
+				{
+					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
+					dialog.setIcon(bmd);
+				}
+				dialog.setView(root);
+
+				dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
+				dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
+				dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
+				dialog.create().show();
+			}
+		});
 
 		try
 		{

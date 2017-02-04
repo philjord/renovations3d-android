@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
+    <string name="lower_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="real">ca-app-pub-7177705441403385/5503621354</string>
     <string name="edit_message">Enter a message</string>
     <string name="home_select_button">Select Home</string>
     <string name="setting_select_button">Settings</string>

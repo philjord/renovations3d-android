@@ -7,6 +7,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.eteks.renovations3d.SweetHomeAVR;
+import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -290,7 +292,8 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 	{
 		inflater.inflate(R.menu.home_component3d_menu, menu);
 		menu.findItem(R.id.virtualvisit).setChecked(home.getCamera() == home.getObserverCamera());
-		menu.findItem(R.id.viewalllevels).setChecked(false);//TODO: what's teh what's it?
+		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
+		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	@Override
@@ -322,17 +325,33 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 			case R.id.virtualvisit:
 				item.setChecked(!item.isChecked());
 				if(item.isChecked())
+				{
 					controller.viewFromObserver();
+				}
 				else
+				{
 					controller.viewFromTop();
+				}
 			break;
 			case R.id.modifyvirtualvisitor:
+				SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getPlanController().modifyObserverCamera();
 				break;
 			case R.id.storepov:
+				//I must get off the EDT and ask the question in a blocking manner
+				Thread t2 = new Thread(){public void run(){
+					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().storeCamera();
+				}};
+				t2.start();
 				break;
 			case R.id.gotopov:
+				// this is a weird list of menu as seen in HomePane.updateGotoPointOfViewMenu
+				// so I need this to show a new dialog with that list in it! cool
 				break;
 			case R.id.deletepov:
+				Thread t3 = new Thread(){public void run(){
+					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().deleteCameras();
+				}};
+				t3.start();
 				break;
 			case R.id.viewalllevels:
 				item.setChecked(!item.isChecked());

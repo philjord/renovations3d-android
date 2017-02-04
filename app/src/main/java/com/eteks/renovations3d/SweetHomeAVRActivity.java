@@ -2,6 +2,7 @@ package com.eteks.renovations3d;
 
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -36,6 +37,10 @@ import com.eteks.renovations3d.android.FurnitureCatalogListPanel;
 import com.eteks.renovations3d.android.FurnitureTable;
 import com.eteks.renovations3d.android.HomeComponent3D;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
+import com.eteks.sweethome3d.viewcontroller.HomeController;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.ingenieur.andyelderscrolls.utils.SopInterceptor;
@@ -160,8 +165,23 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	{
 		super.onCreate(savedInstanceState);
 
+		MobileAds.initialize(getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
+		//Use AdRequest.Builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73") to get test ads on this device.
+
+		setContentView(R.layout.main);
+
+		AdView mAdView = (AdView)findViewById(R.id.lowerBannerAdView);
+		AdRequest adRequest = new AdRequest.Builder().build();
+		mAdView.loadAd(adRequest);
+
 		// Obtain the FirebaseAnalytics instance.
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+		ActionBar actionBar = getActionBar();
+		//actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowCustomEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+
 
 		PrintStream interceptor = new SopInterceptor(System.out, "sysout");
 		System.setOut(interceptor);
@@ -197,7 +217,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	 */
 	public void createViewNow()
 	{
-		setContentView(R.layout.main);
 		mViewPager = (ViewPager) findViewById(pager);
 		mViewPager.setAdapter(mSweetHomeAVRPagerAdapter);
 		mViewPager.setCurrentItem(1);
@@ -304,7 +323,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			case R.id.menu_save:
 				//I must get off the EDT as it may ask the question in a blocking manner
 				Thread t = new Thread(){public void run(){
-					if(sweetHomeAVR.getHomeController()!=null)
+					if(sweetHomeAVR.getHomeController() != null)
 						sweetHomeAVR.getHomeController().saveAndCompress();
 				}};
 				t.start();
@@ -312,7 +331,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			case R.id.menu_saveas:
 				//I must get off the EDT and ask the question in a blocking manner
 				Thread t2 = new Thread(){public void run(){
-					if(sweetHomeAVR.getHomeController()!=null)
+					if(sweetHomeAVR.getHomeController() != null)
 						sweetHomeAVR.getHomeController().saveAsAndCompress();
 				}};
 				t2.start();
@@ -458,7 +477,32 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 						Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
 						Toast.makeText(SweetHomeAVRActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
-						loadHome(new File(uri.getPath()));
+
+						File inFile = new File(uri.getPath());
+						if(inFile.getName().toLowerCase().endsWith(".sh3d"))
+						{
+							loadHome(inFile);
+						}
+						else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
+						{
+							sweetHomeAVR.newHome();
+							HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+							if (controller != null)
+							{
+								controller.importFurnitureLibrary(inFile.getAbsolutePath());
+							}
+						}
+						else if(inFile.getName().toLowerCase().endsWith(".sh3t"))
+						{
+							sweetHomeAVR.newHome();
+							HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+							if (controller2 != null)
+							{
+								controller2.importTexturesLibrary(inFile.getAbsolutePath());
+							}
+
+						}
+
 						setIntent(null);
 						return;
 					}

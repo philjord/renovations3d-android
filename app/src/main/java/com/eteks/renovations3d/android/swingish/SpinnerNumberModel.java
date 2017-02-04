@@ -1,7 +1,7 @@
 package com.eteks.renovations3d.android.swingish;
 
 
-import com.eteks.renovations3d.android.ChangeListener;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 
 import java.util.ArrayList;
 

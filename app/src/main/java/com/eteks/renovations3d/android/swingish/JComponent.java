@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.eteks.renovations3d.android.DrawableView;
+import com.eteks.renovations3d.android.utils.DrawableView;
 
 import javaawt.Color;
 import javaawt.Font;

@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.android;
+package com.eteks.renovations3d.android.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;

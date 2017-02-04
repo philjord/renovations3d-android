@@ -49,6 +49,8 @@ import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.CompassController;
@@ -68,7 +70,7 @@ import javaawt.geom.Line2D;
  * Compass editing panel.
  * @author Emmanuel Puybaret
  */
-public class CompassPanel extends Dialog implements DialogView {
+public class CompassPanel extends AndroidDialogView implements DialogView {
   private final CompassController controller;
   private JLabel xLabel;
   private JSpinner xSpinner;
@@ -88,10 +90,6 @@ public class CompassPanel extends Dialog implements DialogView {
   private JSpinner                northDirectionSpinner;
   private String                  dialogTitle;
 
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
-
   /**
    * Creates a panel that displays compass data.
    * @param preferences user preferences
@@ -101,14 +99,8 @@ public class CompassPanel extends Dialog implements DialogView {
                       CompassController controller
 		  , Activity activity) {
 	  //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(preferences, controller);
     setMnemonics(preferences);
     layoutComponents(preferences);
@@ -406,15 +398,6 @@ public class CompassPanel extends Dialog implements DialogView {
       });
 
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
-
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  dismiss();
-		  }
-	  });
   }
 
   /**
@@ -455,24 +438,6 @@ public class CompassPanel extends Dialog implements DialogView {
    // int labelAlignment = OperatingSystem.isMacOSX()
     //    ? GridBagConstraints.LINE_END
      //   : GridBagConstraints.LINE_START;
-	  Resources r = activity.getResources();
-	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
-
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
-
-	  LinearLayout.LayoutParams  rowInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rowInsets.setMargins(px10dp,px10dp,px10dp,px10dp);
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  componentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  componentInsets.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  lastComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  lastComponentInsets.setMargins(px10dp,px10dp,px20dp,px10dp);
 
 	  JLabel compassRosePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.CompassPanel.class, "compassRosePanel.title"));

@@ -32,11 +32,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -56,6 +53,8 @@ import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -77,7 +76,7 @@ import javaawt.image.VMBufferedImage;
  * User preferences panel.
  * @author Emmanuel Puybaret
  */
-public class UserPreferencesPanel extends Dialog implements DialogView {
+public class UserPreferencesPanel extends AndroidDialogView implements DialogView {
   private final UserPreferencesController controller;
 	private JLabel           languageLabel;
 	private JComboBox        languageComboBox;
@@ -124,10 +123,6 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
 	private JButton          resetDisplayedActionTipsButton;
 	private String           dialogTitle;
 
-
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
   /**
    * Creates a preferences panel that layouts the editable properties
    * of its <code>controller</code>. 
@@ -135,14 +130,8 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
   public UserPreferencesPanel(UserPreferences preferences,
                               UserPreferencesController controller, Activity activity) {
     //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(preferences, controller);
     setMnemonics(preferences);
     layoutComponents();
@@ -235,7 +224,7 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitComboBox.inch.text"));
       comboBoxTexts.put(LengthUnit.INCH_DECIMALS, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitComboBox.inchDecimals.text"));
-		unitComboBox.setAdapter(new ArrayAdapter<LengthUnit>(activity,android.R.layout.simple_list_item_1,LengthUnit.values())
+		unitComboBox.setAdapter(new ArrayAdapter<LengthUnit>(activity, android.R.layout.simple_list_item_1, LengthUnit.values())
 		{
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
@@ -691,16 +680,6 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
         });
     
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
-
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  activity.invalidateOptionsMenu();
-			  UserPreferencesPanel.this.dismiss();
-		  }
-	  });
   }
 
   /**
@@ -925,8 +904,6 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents() {
-
-
    /* int labelAlignment = OperatingSystem.isMacOSX()
         ? GridBagConstraints.LINE_END
         : GridBagConstraints.LINE_START;
@@ -934,22 +911,6 @@ public class UserPreferencesPanel extends Dialog implements DialogView {
     Insets labelInsetsWithSpace = new Insets(0, 0, 10, 5);
     Insets rightComponentInsets = new Insets(0, 0, 5, 0);
     Insets rightComponentInsetsWithSpace = new Insets(0, 0, 10, 0);*/
-	  Resources r = activity.getResources();
-	  int px5dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
-
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
-
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
 
 
     if (this.languageLabel != null) {

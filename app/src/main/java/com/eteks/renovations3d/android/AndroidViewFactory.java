@@ -231,7 +231,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createLevelView(UserPreferences preferences, LevelController levelController)
 	{
-		throw new UnsupportedOperationException();//return new LevelPanel(preferences, levelController);
+		return new LevelPanel(preferences, levelController, activity);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createObserverCameraView(UserPreferences preferences,
 											   ObserverCameraController observerCameraController)
 	{
-		throw new UnsupportedOperationException();//return new ObserverCameraPanel(preferences, observerCameraController, activity);
+		return new ObserverCameraPanel(preferences, observerCameraController, activity);
 	}
 
 	/**
@@ -390,7 +390,6 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 								   HelpController helpController)
 	{
 		Toast.makeText(this.activity, String.format("createHelpView", message), Toast.LENGTH_SHORT).show();
-		//new UnsupportedOperationException().printStackTrace();
 		return new HelpView(){public void displayView(){}};
 		//return new HelpPane(preferences, helpController);
 	}

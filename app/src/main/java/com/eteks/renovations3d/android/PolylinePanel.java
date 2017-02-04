@@ -7,18 +7,12 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,10 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
-import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.Polyline.ArrowStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -53,7 +48,7 @@ import javaawt.geom.GeneralPath;
  * User preferences panel.
  * @author Emmanuel Puybaret
  */
-public class PolylinePanel extends Dialog implements DialogView {
+public class PolylinePanel extends AndroidDialogView implements DialogView {
   private final PolylineController controller;
   private JLabel thicknessLabel;
   private JSpinner thicknessSpinner;
@@ -67,10 +62,6 @@ public class PolylinePanel extends Dialog implements DialogView {
   private ColorButton    colorButton;
   private String         dialogTitle;
 
-
-	private Activity activity;
-	private LinearLayout rootView;
-	private Button closeButton;
   /**
    * Creates a preferences panel that layouts the editable properties
    * of its <code>controller</code>. 
@@ -78,14 +69,8 @@ public class PolylinePanel extends Dialog implements DialogView {
   public PolylinePanel(UserPreferences preferences,
                               PolylineController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(activity);
+	  super(preferences, activity);
     this.controller = controller;
-	  this.activity = activity;
-	  this.rootView = new LinearLayout(activity);
-	  rootView.setOrientation(LinearLayout.VERTICAL);
-	  ScrollView sv = new ScrollView(activity);
-	  sv.addView(rootView);
-	  this.setContentView(sv);
     createComponents(preferences, controller);
     setMnemonics(preferences);
     layoutComponents();
@@ -529,15 +514,6 @@ public class PolylinePanel extends Dialog implements DialogView {
 
 
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PolylinePanel.class, "polyline.title");
-
-	  this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
-	  closeButton.setOnClickListener(new View.OnClickListener(){
-		  public void onClick(View view)
-		  {
-			  dismiss();
-		  }
-	  });
   }
   
   /**
@@ -571,26 +547,6 @@ public class PolylinePanel extends Dialog implements DialogView {
   //      ? GridBagConstraints.LINE_END
   //      : GridBagConstraints.LINE_START;
     //Insets labelInsets = new Insets(0, 0, 5, 5);
-	  Resources r = activity.getResources();
-	  int px5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, r.getDisplayMetrics());
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  int px15dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-	  int px20dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
-
-	  rootView.setPadding(px10dp,px10dp,px10dp,px10dp);
-
-	  LinearLayout.LayoutParams  rowInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rowInsets.setMargins(px10dp,px10dp,px10dp,px10dp);
-	  LinearLayout.LayoutParams  labelInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsets.setMargins(px10dp,px10dp,px15dp,px15dp);
-	  LinearLayout.LayoutParams  labelInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  labelInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px15dp);
-	  LinearLayout.LayoutParams  rightComponentInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsets.setMargins(px10dp,px10dp,px15dp,px10dp);
-	  LinearLayout.LayoutParams  rightComponentInsetsWithSpace = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  rightComponentInsetsWithSpace.setMargins(px10dp,px10dp,px20dp,px10dp);
-
-
 
 	  rootView.addView(this.thicknessLabel, rowInsets);
 	  rootView.addView(this.thicknessSpinner, rowInsets);
