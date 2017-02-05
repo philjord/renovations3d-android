@@ -23,13 +23,13 @@ import android.graphics.Bitmap;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
@@ -69,7 +69,6 @@ import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.j3d.Component3DManager;
-
 
 import org.jogamp.java3d.AmbientLight;
 import org.jogamp.java3d.Appearance;
@@ -158,21 +157,7 @@ import javaxswing.ImageIcon;
  * A component displaying the plan of a home.
  * @author Emmanuel Puybaret
  *
- *
- * Compass currently looks like rubbish cos of scaling
- *
- * I have scrolling by buttons working, but not viewport moving style solution?
- * Maybe an oversized surface view will sort this out for me?
- * No http://stackoverflow.com/questions/1096618/android-surfaceview-scrolling
- * but I have lots of paint support so a bit of scroll is probably fine?
- *
- *
- * THINGS cut out for now or permanently
- * 1 Cursors are gone and replaced by the tool in use being highlighted
- * 2 Tooltips? possibly some sort of toat messge if you hover over somethign for long enough, for now just dummied off
- * 3 parents being JViewports ignored and chopped out - but the getview is a scrollable so can be added back
- * 4 addMouseListeners are disabled for now
- * 5 Composites for alpha image drawing are disbaled for now
+ * Composites for alpha image drawing are disbaled for now
  *
  * insets are  padding from view, but seem to be all 0's
  *
@@ -182,9 +167,6 @@ import javaxswing.ImageIcon;
  *
  * this.getView has dispatch scroll so possibly the scrolly stuff
  * ScrollView scroller = new ScrollView(getActivity()); see https://developer.android.com/reference/android/app/Fragment.html
- *
- * Fonts and Font Metrics (incl ascent and descent) Typeface is the android equivalent of Font, what is the status of fonts, is a shim needed?
- *
  *
  *
  */
@@ -242,7 +224,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
   private static final float    MARGIN = 40;
 
-	//PJPJPJPJ fast and dirty scrolling system!
+	//PJPJPJPJ fast and dirty scrolling system! needs to be more like a ViewPort
 	public int scrolledX = 0;
 	public int scrolledY = 0;
 	
@@ -623,13 +605,12 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		/**
 		 * Creates a new plan that displays <code>home</code>.
 		 */
-  public void init(Home home,
+    public void init(Home home,
                        UserPreferences preferences,
                        PlanController controller) {
-    this.home = home;
-    this.preferences = preferences;
+      this.home = home;
+      this.preferences = preferences;
 
-	  //PJPJPJ View based gear deferred to setDrawableCall
 	  this.controller = controller;
 
 
@@ -1079,13 +1060,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    */
   private void revalidate(boolean invalidatePlanBoundsCache) {
 
-
-
-
-
     boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
-    final float planBoundsMinX = (float)getPlanBounds().getMinX();
-    final float planBoundsMinY = (float)getPlanBounds().getMinY();
+    //final float planBoundsMinX = (float)getPlanBounds().getMinX();
+    //final float planBoundsMinY = (float)getPlanBounds().getMinY();
     if (invalidatePlanBoundsCache
         && planBoundsCacheWereValid) {
       this.planBoundsCacheValid = false;
@@ -1133,9 +1110,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Adds AWT mouse listeners to this component that calls back <code>controller</code> methods.
    */
   private void addMouseListeners(final PlanController controller) {
-
-	  //TODO: mouse listeners not looked at need re-implementing
-	  //PJPJ look at this lot
+	  //PJPJ replaced with below
  /*   MouseInputAdapter mouseListener = new MouseInputAdapter() {
       private Point lastMousePressedLocation;
 
@@ -1231,60 +1206,71 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         }
       });*/
 
-	  //PJPJPJPJ add a touch listener for the zoom and pan effects
-	 //proper! https://developer.android.com/training/gestures/scale.html
-	  //https://android-developers.googleblog.com/2010/06/making-sense-of-multitouch.html
 	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
-
-	  //see http://stackoverflow.com/questions/4804798/doubletap-in-android OnDoubleTapListener
-	  this.getDrawableView().setOnLongClickListener(new View.OnLongClickListener(){
-
-
-		  @Override
-		  public boolean onLongClick(View v)
-		  {
-			  System.out.println("Long click");
-			  return false;
-		  }
-	  });
-
 	  this.getDrawableView().setOnTouchListener(new TouchyListener());
   }
 
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
+		// what are we currently doing finger-wise
+		private int fingers = -1;
+
+		private MotionEvent potentialSinglePress = null;
 		@Override
 		public boolean onTouch(View v, MotionEvent ev)
 		{
 			// Let the ScaleGestureDetector inspect all events.
 			mScaleDetector.onTouchEvent(ev);
 
-			final int action = ev.getAction();
+			final int action = MotionEventCompat.getActionMasked(ev);
+
 			switch (action & MotionEvent.ACTION_MASK)
 			{
 				case MotionEvent.ACTION_DOWN:
 				{
-					final float x = ev.getX();
-					final float y = ev.getY();
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final float x = MotionEventCompat.getX(ev, pointerIndex);
+					final float y = MotionEventCompat.getY(ev, pointerIndex);
 
 					mLastTouchX = x;
 					mLastTouchY = y;
-					mActivePointerId = ev.getPointerId(0);
+					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
 
 					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
 					{
+						// we need to fire off the previous now, though lord knows how this could happen
+						if(potentialSinglePress != null)
+						{
+							mousePressed(v,potentialSinglePress);
+							potentialSinglePress = null;
+							System.out.println("potentialSinglePress != null seen during action down, look into this");
+						}
+
 						lastMousePressedTime = System.currentTimeMillis();
-						mousePressed(v, ev);
+
+						// this will be fired on a move or an up or another single down
+						fingers = 1;
+						potentialSinglePress = ev;
+						//mousePressed(v, ev);
 					}
 
 					break;
 				}
 
+				case MotionEvent.ACTION_POINTER_DOWN:
+				{
+					// second finger down now
+					// cancel any pending single down as we are now firmly in double finger mode
+					fingers = 2;
+					potentialSinglePress = null;
+					break;
+				}
+
 				case MotionEvent.ACTION_MOVE:
 				{
-					final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-					final float x = ev.getX(pointerIndex);
-					final float y = ev.getY(pointerIndex);
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final float x = MotionEventCompat.getX(ev, pointerIndex);
+					final float y = MotionEventCompat.getY(ev, pointerIndex);
 
 					// Only move if the ScaleGestureDetector isn't processing a gesture.
 					if (!mScaleDetector.isInProgress())
@@ -1300,25 +1286,47 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 							controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
 
 							PlanComponent.this.revalidate();
+
+							// to be safe
+							fingers = 2;
+							potentialSinglePress = null;
 						}
 					}
 
 					mLastTouchX = x;
 					mLastTouchY = y;
-					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+					if (ev.getPointerCount() == 1)
 					{
 						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
-						if((System.currentTimeMillis() - lastMousePressedTime)>100)
+						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
+						{
+							// if we have a pending click we'd better fire it off now before moving
+							if(potentialSinglePress != null)
+							{
+								mousePressed(v,potentialSinglePress);
+								potentialSinglePress = null;
+							}
+
+							fingers = 1;
 							mouseMoved(v, ev);
+						}
 					}
+
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:
 				{
 					mActivePointerId = INVALID_POINTER_ID;
-					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
+					// make sure this isn't the exit of a double touch too
+					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
 					{
+						// all is good, fire off the down now
+						if(potentialSinglePress != null)
+						{
+							mousePressed(v, potentialSinglePress);
+							potentialSinglePress = null;
+						}
 						lastMouseReleasedTime = System.currentTimeMillis();
 						mouseReleased(v, ev);
 					}
@@ -1328,22 +1336,27 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				case MotionEvent.ACTION_CANCEL:
 				{
 					mActivePointerId = INVALID_POINTER_ID;
+
+					// just to be safe, not really sure
+					fingers = -1;
+					potentialSinglePress = null;
 					break;
 				}
 
 				case MotionEvent.ACTION_POINTER_UP:
 				{
-					final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
-							>> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-					final int pointerId = ev.getPointerId(pointerIndex);
+					//second finger has been released
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+
 					if (pointerId == mActivePointerId)
 					{
 						// This was our active pointer going up. Choose a new
 						// active pointer and adjust accordingly.
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-						mLastTouchX = ev.getX(newPointerIndex);
-						mLastTouchY = ev.getY(newPointerIndex);
-						mActivePointerId = ev.getPointerId(newPointerIndex);
+						mLastTouchX = MotionEventCompat.getX(ev, newPointerIndex);
+						mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
+						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
 					}
 					break;
 				}
@@ -1352,23 +1365,24 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			return true;
 		}
 
+		private final long msAllowedBetweenTouchForDouble = 100;
 		private long lastMousePressedTime = 0;
 		private long lastMouseReleasedTime = 0;
 		private Point lastMousePressedLocation = null;
 
 		public void mousePressed(View v, MotionEvent ev)
 		{
-			final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-			final float x = ev.getX(pointerIndex);
-			final float y = ev.getY(pointerIndex);
+			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+			final float x = MotionEventCompat.getX(ev, pointerIndex);
+			final float y = MotionEventCompat.getY(ev, pointerIndex);
 			this.lastMousePressedLocation = new Point((int) x, (int) y);
 			if (isEnabled())
 			{
-				//alignment and magnetism come from menu now
 				//requestFocusInWindow();
-				//always button 1
-				// if (ev.getButton() == MouseEvent.BUTTON1)
+				//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
 				{
+
+					//alignment and magnetism come from menu now
 					boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
 					//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
 					//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
@@ -1380,8 +1394,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
 					//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
 
-					//TODO: the previous click is still fired so this is not quite right! see below for the correct system
-					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400? 2 :1;
+					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400 ? 2 : 1;
 
 					try
 					{
@@ -1404,13 +1417,15 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		public void mouseReleased(View v, MotionEvent ev)
 		{
-			final int pointerIndex = ev.findPointerIndex(ev.getPointerId(0));
-			final float x = ev.getX(pointerIndex);
-			final float y = ev.getY(pointerIndex);
+			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+			final float x = MotionEventCompat.getX(ev, pointerIndex);
+			final float y = MotionEventCompat.getY(ev, pointerIndex);
 			if (isEnabled())
-			{try
 			{
-				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));}catch(ArrayIndexOutOfBoundsException e)
+				try
+			{
+				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+			}catch(ArrayIndexOutOfBoundsException e)
 			{
 				// this happens :
 				//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
@@ -1426,9 +1441,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		public void mouseMoved(View v, MotionEvent ev)
 		{
-			final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-			final float x = ev.getX(pointerIndex);
-			final float y = ev.getY(pointerIndex);
+			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+			final float x = MotionEventCompat.getX(ev, pointerIndex);
+			final float y = MotionEventCompat.getY(ev, pointerIndex);
 			// Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
 			if (this.lastMousePressedLocation != null
 					&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y)))
@@ -1438,9 +1453,11 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			if (this.lastMousePressedLocation == null)
 			{
 				if (isEnabled())
-				{try
 				{
-					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));}catch(ArrayIndexOutOfBoundsException e)
+					try
+				{
+					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+				}catch(ArrayIndexOutOfBoundsException e)
 				{
 					// this happens :
 					//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
@@ -1462,20 +1479,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			}
 		}
 	}
-
-
-
-
-	//TODO: use this system, not the last released system above
-/*	private GestureDetector gestureDetector = new GestureDetector(this.getDrawableView(), new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onDoubleTap(MotionEvent e) {
-
-			return super.onDoubleTap(e);
-		}
-
-	});*/
-
 
 
 	//PJPJPJPJ   pinch zooming
@@ -1507,8 +1510,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
 
-
-		/*	float mouseX = 0;
+			float mouseX = 0;
 			float mouseY = 0;
 			int deltaX = 0;
 			int deltaY = 0;
@@ -1517,32 +1519,47 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				mouseY = convertYPixelToModel((int)detector.getFocusY());
 			//TODO: this business will keep me in the right spot I wager
 				//Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
-				deltaX = (int)detector.getFocusX() - (int)(scrolledX*getScale());
-				deltaY = (int)detector.getFocusX() - (int)(scrolledY*getScale());
+				//deltaX = ev.getX() - viewRectangle.x;
+				//deltaY = ev.getY() - viewRectangle.y;
+				deltaX = (int)(detector.getFocusX() + scrolledX);
+				deltaY = (int)(detector.getFocusY() + scrolledY);
 			//}
 
-			float oldScale = getScale();*/
+			float oldScale = getScale();
 
 			float newScale = getScale() * detector.getScaleFactor();
 			// Don't let the object get too small or too large.
 			newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
-			//controller.zoom(newScale); oddly buggy? possibly want to do a bit of pan as well
+			//controller.zoom(newScale); don't want the mouse move calls
 			controllerSetScale(newScale);
 
 			//controller.zoom((float)(ev.getWheelRotation() < 0
 			//		? Math.pow(1.05, -ev.getWheelRotation())
 			//		: Math.pow(0.95, ev.getWheelRotation())));
 
-	/*		if (getScale() != oldScale ){//&& getParent() instanceof JViewport) {
+			//System.out.println("scrolledX " +scrolledX + "  detector.getFocusX() " +detector.getFocusX() + " oldScale " + oldScale + " deltaX " +deltaX + " mouseX "+mouseX);
+			//System.out.println("newScale " + newScale + " detector.getScaleFactor() "+detector.getScaleFactor() );
+
+			if (getScale() != oldScale ){//&& getParent() instanceof JViewport) {
 				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
 				//((JViewport)getParent()).setViewPosition(new Point());
-				moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
-			}*/
+				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
+			}
+			//System.out.println("mouseX - convertXPixelToModel(deltaX) " +(mouseX - convertXPixelToModel(deltaX)));
+			//System.out.println("after scrolledX " +scrolledX);
+
+
+
+			System.out.println(" mouseX "+mouseX + " new MouseX = " + convertXPixelToModel((int)detector.getFocusX()) );
+			deltaX = (int) (detector.getFocusX() - mouseX);
+			System.out.println(" deltaX "+deltaX + " " +(deltaX*newScale));
+
+
 			return true;
 		}
 
-		/** used here to avoid the unwanted mouse move call
-		 *
+		/**
+		 * used here to avoid the unwanted mouse move call
 		 */
 		private void controllerSetScale(float scale)
 		{
@@ -1569,7 +1586,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * escape method on focus lost event.
    */
   private void addFocusListener(final PlanController controller) {
-	  //TODO: focus might possibly be related to activity lifecycle at some point
 	  //PJPJPJ
    /* addFocusListener(new FocusAdapter() {
         @Override
@@ -1594,8 +1610,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Installs default keys bound to actions.
    */
   private void installDefaultKeyboardActions() {
-
-	  //TODO: keyboard is pretty much gone, but toolbar buttons can do the same
 	  //PJPJ
 	  /*
     InputMap inputMap = getInputMap(WHEN_FOCUSED);
@@ -1706,8 +1720,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Installs keys bound to actions during edition.
    */
   private void installEditionKeyboardActions() {
-
-	  //TODO: keyboard is pretty much gone, but toolbar buttons can do the same
 	  //PJPJ
 /*    InputMap inputMap = getInputMap(WHEN_FOCUSED);
     inputMap.clear();
@@ -1741,7 +1753,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    */
   private void createActions(final PlanController controller) {
 
-	  //PJPJPJPJ are there real actions that I want to keep?
+	  //PJPJPJPJ
  /*   // Delete selection action
     Action deleteSelectionAction = new AbstractAction() {
       public void actionPerformed(ActionEvent ev) {
@@ -5537,11 +5549,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       viewRectangle.y = Math.min(Math.max(0, viewRectangle.y), getHeight() - viewRectangle.height);
       viewport.setViewPosition(viewRectangle.getLocation());
     }*/
-
-
-
-	  this.scrolledX +=  Math.round(dx * getScale());
-	  this.scrolledY +=  Math.round(dy * getScale());
+	  //my scrolled are -ve versus the viewport location x,y
+	  this.scrolledX -=  Math.round(dx * getScale());
+	  this.scrolledY -=  Math.round(dy * getScale());
   }
 
   /**
@@ -5559,7 +5569,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public void setScale(float scale) {
     if (this.scale != scale) {
     //  JViewport parent = null;
-      Rectangle viewRectangle = null;
+      //Rectangle viewRectangle = null;
       float xViewCenterPosition = 0;
       float yViewCenterPosition = 0;
 		//PJPJ
@@ -5569,24 +5579,35 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         xViewCenterPosition = convertXPixelToModel(viewRectangle.x + viewRectangle.width / 2);
         yViewCenterPosition = convertYPixelToModel(viewRectangle.y + viewRectangle.height / 2);
       }*/
-
+		xViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
+		yViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
 
       this.scale = scale;
-      revalidate(false);
+      //revalidate(false);
 
 		//PJPJ
-  /*    if (parent instanceof JViewport) {
-        Dimension viewSize = parent.getViewSize();
-        float viewWidth = convertXPixelToModel(viewRectangle.x + viewRectangle.width)
-            - convertXPixelToModel(viewRectangle.x);
-        int xViewLocation = Math.max(0, Math.min(convertXModelToPixel(xViewCenterPosition - viewWidth / 2),
-            viewSize.width - viewRectangle.x));
-        float viewHeight = convertYPixelToModel(viewRectangle.y + viewRectangle.height)
-            - convertYPixelToModel(viewRectangle.y);
-        int yViewLocation = Math.max(0, Math.min(convertYModelToPixel(yViewCenterPosition - viewHeight / 2),
-            viewSize.height - viewRectangle.y));
-        parent.setViewPosition(new Point(xViewLocation, yViewLocation));
-      }*/
+  //    if (parent instanceof JViewport) {
+        //Dimension viewSize = parent.getViewSize();
+        float viewWidth = convertXPixelToModel(getDrawableView().getWidth());
+        int xViewLocation = (int) convertXModelToPixel(xViewCenterPosition - viewWidth / 2);
+        float viewHeight = convertYPixelToModel(getDrawableView().getHeight());
+        int yViewLocation = (int) convertYModelToPixel(yViewCenterPosition - viewHeight / 2);
+
+		//scrolledX = xViewLocation;
+		//scrolledY = yViewLocation;
+
+
+		float newxViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
+		float newyViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
+
+		//System.out.println("scrolledX " +scrolledX + " getDrawableView().getWidth() " +getDrawableView().getWidth());
+		//System.out.println("newxViewCenterPosition " +newxViewCenterPosition + " xViewCenterPosition " +xViewCenterPosition);
+		//TODO: I'd love for this to work
+		//scrolledX += convertYModelToPixel(newxViewCenterPosition-xViewCenterPosition);
+		//scrolledY += convertYModelToPixel(newyViewCenterPosition-yViewCenterPosition);
+
+		revalidate(false);
+     // }
     }
   }
 

@@ -7,12 +7,13 @@ import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 /**
-* Spinner that accepts empty string values. In this case the returned value is <code>null</code>.
+ * Spinner that accepts empty string values. In this case the returned value is <code>null</code>.
  */
 public class NullableSpinner extends AutoCommitSpinner
 {
 
-	public NullableSpinner(Context context) {
+	public NullableSpinner(Context context)
+	{
 		this(context, new NullableSpinnerNumberModel(0, 0, 100, 1));
 	}
 
@@ -20,63 +21,76 @@ public class NullableSpinner extends AutoCommitSpinner
 	{
 		super(context, model,
 				model instanceof NullableSpinnerLengthModel
-						? ((NullableSpinnerLengthModel)model).getLengthUnit().getFormat()
+						? ((NullableSpinnerLengthModel) model).getLengthUnit().getFormat()
 						: null);
 	}
-
 
 
 	public static class NullableSpinnerNumberModel extends SpinnerNumberModel
 	{
 		private boolean isNull = false;
 		private boolean nullable = false;
+
 		public NullableSpinnerNumberModel(float value, float minimum, float maximum, float stepSize)
 		{
-			super(value,  minimum,  maximum,  stepSize);
+			super(value, minimum, maximum, stepSize);
 		}
 
 		@Override
-		public Object getNextValue() {
-			if (this.isNull) {
+		public Object getNextValue()
+		{
+			if (this.isNull)
+			{
 				return super.getValue();
 			}
 			Object nextValue = super.getNextValue();
-			if (nextValue == null) {
+			if (nextValue == null)
+			{
 				// Force to maximum value
 				return getMaximum();
-			} else {
+			}
+			else
+			{
 				return nextValue;
 			}
 		}
 
 		@Override
-		public Object getPreviousValue() {
-			if (this.isNull) {
+		public Object getPreviousValue()
+		{
+			if (this.isNull)
+			{
 				return super.getValue();
 			}
 			Object previousValue = super.getPreviousValue();
-			if (previousValue == null) {
+			if (previousValue == null)
+			{
 				// Force to minimum value
 				return getMinimum();
-			} else {
+			}
+			else
+			{
 				return previousValue;
 			}
 		}
 
 		@Override
-		public double getValue() {
+		public double getValue()
+		{
 			//if (this.isNull) {
 			//	return null;
 			//} else {
-				return super.getValue();
+			return super.getValue();
 			//}
 		}
+
 		/**
 		 * Sets model value. This method is overridden to store whether current value is <code>null</code>
 		 * or not (super class <code>setValue</code> doesn't accept <code>null</code> value).
 		 */
 		@Override
-		public void setValue(double value) {
+		public void setValue(double value)
+		{
 			/*if (value == null && isNullable()) {
 				if (!this.isNull) {
 					this.isNull = true;
@@ -91,31 +105,34 @@ public class NullableSpinner extends AutoCommitSpinner
 					this.isNull = false;
 					fireStateChanged();
 				} else {*/
-					this.isNull = false;
-					super.setValue(value);
+			this.isNull = false;
+			super.setValue(value);
 			//	}
 			//}
 		}
 
 		@Override
-		public Number getNumber() {
-			return (Number)getValue();
+		public Number getNumber()
+		{
+			return (Number) getValue();
 		}
 
 		/**
 		 * Returns <code>true</code> if this spinner model is nullable.
 		 */
-		public boolean isNullable() {
+		public boolean isNullable()
+		{
 			return this.nullable;
 		}
 
 		/**
 		 * Sets whether this spinner model is nullable.
 		 */
-		public void setNullable(boolean nullable) {
+		public void setNullable(boolean nullable)
+		{
 			this.nullable = nullable;
 			//if (!nullable && getValue() == null) {
-				setValue(getMinimum());
+			setValue(getMinimum());
 			//}
 		}
 	}
@@ -123,49 +140,58 @@ public class NullableSpinner extends AutoCommitSpinner
 	/**
 	 * A nullable spinner number model that will reset to minimum when maximum is reached.
 	 */
-	public static class NullableSpinnerModuloNumberModel extends NullableSpinnerNumberModel {
-		public NullableSpinnerModuloNumberModel(int value, int minimum, int maximum, int stepSize) {
+	public static class NullableSpinnerModuloNumberModel extends NullableSpinnerNumberModel
+	{
+		public NullableSpinnerModuloNumberModel(int value, int minimum, int maximum, int stepSize)
+		{
 			super(value, minimum, maximum, stepSize);
 		}
+
 		@Override
-		public Object getNextValue() {
+		public Object getNextValue()
+		{
 			//if (getValue() == null
 			//		|| getNumber().intValue() + getStepSize().intValue() < ((Number)getMaximum()).intValue()) {
 			//	return ((Number)super.getNextValue()).intValue();
 			//} else {
-				return getNumber().intValue() + getStepSize().intValue() - ((Number)getMaximum()).intValue() + ((Number)getMinimum()).intValue();
+			return getNumber().intValue() + getStepSize().intValue() - ((Number) getMaximum()).intValue() + ((Number) getMinimum()).intValue();
 			//}
 		}
 
 		@Override
-		public Object getPreviousValue() {
+		public Object getPreviousValue()
+		{
 			//if (getValue() == null
 			//		|| getNumber().intValue() - getStepSize().intValue() >= ((Number)getMinimum()).intValue()) {
 			//	return ((Number)super.getPreviousValue()).intValue();
 			//} else {
-				return getNumber().intValue() - getStepSize().intValue() - ((Number)getMinimum()).intValue() + ((Number)getMaximum()).intValue();
+			return getNumber().intValue() - getStepSize().intValue() - ((Number) getMinimum()).intValue() + ((Number) getMaximum()).intValue();
 			//}
 		}
 
 
 	}
+
 	/**
 	 * Nullable spinner model displaying length values matching preferences unit.
 	 */
-	public static class NullableSpinnerLengthModel extends NullableSpinnerNumberModel {
+	public static class NullableSpinnerLengthModel extends NullableSpinnerNumberModel
+	{
 		private final UserPreferences preferences;
 
 		/**
 		 * Creates a model managing lengths between the given <code>minimum</code> and <code>maximum</code> values in centimeter.
 		 */
-		public NullableSpinnerLengthModel(UserPreferences preferences, float minimum, float maximum) {
+		public NullableSpinnerLengthModel(UserPreferences preferences, float minimum, float maximum)
+		{
 			this(preferences, minimum, minimum, maximum);
 		}
 
 		/**
 		 * Creates a model managing lengths between the given <code>minimum</code> and <code>maximum</code> values in centimeter.
 		 */
-		public NullableSpinnerLengthModel(UserPreferences preferences, float value, float minimum, float maximum) {
+		public NullableSpinnerLengthModel(UserPreferences preferences, float value, float minimum, float maximum)
+		{
 			super(value, minimum, maximum,
 					preferences.getLengthUnit() == LengthUnit.INCH
 							|| preferences.getLengthUnit() == LengthUnit.INCH_DECIMALS
@@ -176,33 +202,40 @@ public class NullableSpinner extends AutoCommitSpinner
 		/**
 		 * Returns the displayed value in centimeter.
 		 */
-		public float getLength() {
+		public float getLength()
+		{
 			/*if (getValue() == null) {
 				return null;
 			} else {
 				return Float.valueOf(((Number)getValue()).floatValue());
 			}*/
-			return (float)getValue();
+			return (float) getValue();
 		}
 
 		/**
 		 * Sets the length in centimeter displayed in this model.
 		 */
-		public void setLength(Float length) {
-			setValue(length);
+		public void setLength(Float length)
+		{
+			if (length != null)
+				setValue(length);
+			else
+				setValue(0);
 		}
 
 		/**
 		 * Sets the minimum length in centimeter displayed in this model.
 		 */
-		public void setMinimumLength(double minimum) {
+		public void setMinimumLength(double minimum)
+		{
 			setMinimum(Double.valueOf(minimum));
 		}
 
 		/**
 		 * Returns the length unit used by this model.
 		 */
-		private LengthUnit getLengthUnit() {
+		private LengthUnit getLengthUnit()
+		{
 			return this.preferences.getLengthUnit();
 		}
 	}

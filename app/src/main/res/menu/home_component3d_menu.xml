@@ -2,23 +2,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/virtualvisit"
           android:title="@string/virtualvisit"
-          android:checkable="true"/>
+          android:icon="@drawable/view3d_view_from_observer"
+          android:checkable="true"
+          android:checked="false"
+          android:showAsAction="always"/>
+    <item android:id="@+id/gotopov"
+          android:title="@string/gotopov"
+          android:icon="@android:drawable/ic_menu_view"
+          android:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/gotodefaultpov"
+                android:title="Default" />
+        </menu>
+    </item>
     <item android:id="@+id/modifyvirtualvisitor"
           android:title="@string/modifyvirtualvisitor"
           />
     <item android:id="@+id/storepov"
           android:title="@string/storepov"
           />
-    <item android:id="@+id/gotopov"
-          android:title="@string/gotopov"
-          />
     <item android:id="@+id/deletepov"
           android:title="@string/deletepov"
           />
     <item android:id="@+id/viewalllevels"
           android:title="@string/viewalllevels"
-          android:checkable="true"/>
+          android:checkable="true"
+        />
     <item android:id="@+id/modify3dview"
           android:title="@string/modify3dview"
-          />
+        />
 </menu>

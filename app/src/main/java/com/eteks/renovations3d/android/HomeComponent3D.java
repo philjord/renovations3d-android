@@ -1,13 +1,15 @@
 package com.eteks.renovations3d.android;
 
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import com.eteks.renovations3d.SweetHomeAVR;
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
@@ -31,6 +33,7 @@ import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.model.Wall;
+import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeController3D;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.VCView;
@@ -105,6 +108,8 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
+import static com.eteks.renovations3d.android.SwingTools.getLocalizedLabelText;
+
 
 /**
  * Created by phil on 11/22/2016.
@@ -136,90 +141,89 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 		// equal to addAnsecter listeners but that's too late by far
 		gl_window.addGLEventListener(new GLEventListener()
-									 {
-										 @Override
-										 public void init(@SuppressWarnings("unused") final GLAutoDrawable drawable)
-										 {
+			 {
+				 @Override
+				 public void init(@SuppressWarnings("unused") final GLAutoDrawable drawable)
+				 {
 
-										 }
+				 }
 
-										 @Override
-										 public void reshape(final GLAutoDrawable drawable, final int x, final int y,
-															 final int w, final int h)
-										 {
-										 }
+				 @Override
+				 public void reshape(final GLAutoDrawable drawable, final int x, final int y,
+									 final int w, final int h)
+				 {
+				 }
 
-										 @Override
-										 public void display(final GLAutoDrawable drawable)
-										 {
-											 // this has come from a onResume state restore, if canvas3D2D already exists, so just get rendering again
-											 if (canvas3D2D != null)
-											 {
-												 // must call this as onPause has called removeNotify
-												 canvas3D2D.addNotify();
-												 //wait for onscreen hint
-												 if (!HomeComponent3D.this.getUserVisibleHint())
-												 {
-													 canvas3D2D.stopRenderer();
-												 }
-												 else
-												 {
-													 canvas3D2D.startRenderer();
-												 }
-											 }
-											 else
-											 {
-												 // taken from ancestor listener originally so get back onto EDT thread
-												 EventQueue.invokeLater(new Runnable()
-												 {
-													 public void run()
-													 {
-														 // Create component 3D only once the graphics configuration of its parent is known
-														 if (canvas3D2D == null)
-														 {
-															 createComponent3D(null, preferences, controller);
+				 @Override
+				 public void display(final GLAutoDrawable drawable)
+				 {
+					 // this has come from a onResume state restore, if canvas3D2D already exists, so just get rendering again
+					 if (canvas3D2D != null)
+					 {
+						 // must call this as onPause has called removeNotify
+						 canvas3D2D.addNotify();
+						 //wait for onscreen hint
+						 if (!HomeComponent3D.this.getUserVisibleHint())
+						 {
+							 canvas3D2D.stopRenderer();
+						 }
+						 else
+						 {
+							 canvas3D2D.startRenderer();
+						 }
+					 }
+					 else
+					 {
+						 // taken from ancestor listener originally so get back onto EDT thread
+						 EventQueue.invokeLater(new Runnable()
+						 {
+							 public void run()
+							 {
+								 // Create component 3D only once the graphics configuration of its parent is known
+								 if (canvas3D2D == null)
+								 {
+									 createComponent3D(null, preferences, controller);
 
-															 // called here not in createComponent, just for life cycle clarity
-															 canvas3D2D.addNotify();
-															 //wait for onscreen hint as this component is create whilst off screen
-															 if (!HomeComponent3D.this.getUserVisibleHint())
-																 canvas3D2D.stopRenderer();
-														 }
+									 // called here not in createComponent, just for life cycle clarity
+									 canvas3D2D.addNotify();
+									 //wait for onscreen hint as this component is create whilst off screen
+									 if (!HomeComponent3D.this.getUserVisibleHint())
+										 canvas3D2D.stopRenderer();
+								 }
 
 
-														 if (onscreenUniverse == null)
-														 {
-															 onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
+								 if (onscreenUniverse == null)
+								 {
+									 onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
 
-															 onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
-															 fpsCounter = new AndyFPSCounter();
-															 onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
-															 fpsCounter.addToCanvas(canvas3D2D);
-														 }
-													 }
-												 });
-											 }
-										 }
+									 onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
+									 fpsCounter = new AndyFPSCounter();
+									 onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
+									 fpsCounter.addToCanvas(canvas3D2D);
+								 }
+							 }
+						 });
+					 }
+				 }
 
-										 @Override
-										 public void dispose(final GLAutoDrawable drawable)
-										 {
-											 // taken from anscestor listener originally so get back onto EDT thread
-											 EventQueue.invokeLater(new Runnable()
-											 {
-												 public void run()
-												 {
-													 if (onscreenUniverse != null)
-													 {
-														 onscreenUniverse.cleanup();
-														 removeHomeListeners();
-														 onscreenUniverse = null;
-													 }
-												 }
-											 });
-										 }
-									 }
-
+				 @Override
+				 public void dispose(final GLAutoDrawable drawable)
+				 {
+					 // taken from anscestor listener originally so get back onto EDT thread
+					 EventQueue.invokeLater(new Runnable()
+					 {
+						 public void run()
+						 {
+							 if (onscreenUniverse != null)
+							 {
+								 onscreenUniverse.cleanup();
+								 removeHomeListeners();
+								 onscreenUniverse = null;
+							 }
+						 }
+					 });
+				 }
+			 }
 		);
 
 	}
@@ -235,7 +239,6 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		super.onStart();
 	}
 	public void onResume() {
-
 		super.onResume();
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
@@ -243,8 +246,9 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		// 		now we've (possible onStart then) onResume and GLStateKeeper is working in the background on restoring state
 		// 		a display is going to come through soon to make things show after state is happy
 		// in both cases display callback is gonna get called, he needs to addNotify in all cases
-
 	}
+
+	@Override
 	public void onPause() {
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
@@ -261,6 +265,8 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
 		super.onPause();
 	}
+
+	@Override
 	public void onStop()
 	{
 		// MUST output GLStatePreserved on console, or it won't restart
@@ -288,25 +294,33 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
 		}
 	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.home_component3d_menu, menu);
 		menu.findItem(R.id.virtualvisit).setChecked(home.getCamera() == home.getObserverCamera());
 		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
 		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
+
+		createGoToPointOfViewMenu(home, preferences, SweetHomeAVRActivity.sweetHomeAVR.getHomeController(), menu.findItem(R.id.gotopov));
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
+
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
 		menu.findItem(R.id.virtualvisit).setTitle(preferences.getLocalizedString(
 					com.eteks.sweethome3d.android_props.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
+		setIconFromSelector(menu.findItem(R.id.virtualvisit), R.drawable.virtualvist_selector);
+		menu.findItem(R.id.gotopov).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "GO_TO_POINT_OF_VIEW.Name"));
+
 		menu.findItem(R.id.modifyvirtualvisitor).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name"));
 		menu.findItem(R.id.storepov).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "STORE_POINT_OF_VIEW.Name"));
-		menu.findItem(R.id.gotopov).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "GO_TO_POINT_OF_VIEW.Name"));
 		menu.findItem(R.id.deletepov).setTitle(preferences.getLocalizedString(
 			com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_POINTS_OF_VIEW.Name"));
 		menu.findItem(R.id.viewalllevels).setTitle(preferences.getLocalizedString(
@@ -314,59 +328,146 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 		menu.findItem(R.id.modify3dview).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
 
+		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, SweetHomeAVRActivity.sweetHomeAVR.getHomeController());
 
 		super.onPrepareOptionsMenu(menu);
 	}
 
+	//PJPJPJ Taken from HomePane and adapted
+	private void createGoToPointOfViewMenu(final Home home,
+											UserPreferences preferences,
+											final HomeController controller,
+										   final MenuItem goToPointOfViewMenu) {
+		updateGoToPointOfViewMenu(goToPointOfViewMenu, home, controller);
+		home.addPropertyChangeListener(Home.Property.STORED_CAMERAS,
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent ev) {
+						// need to do this on the EDT
+						Handler mainHandler = new Handler(getActivity().getMainLooper());
+						Runnable myRunnable = new Runnable() {
+							@Override
+							public void run() {
+								updateGoToPointOfViewMenu(goToPointOfViewMenu, home, controller);
+							}
+						};
+						mainHandler.post(myRunnable);
+					}
+				});
+	}
+
+	private static int NoViewMenuId = -1;
+	private static int MENU_STORED_CAMERAS = 10;
+	//PJPJPJ Taken from HomePane and adapted
+	/**
+	 * Updates Go to point of view menu items from the cameras stored in home.
+	 */
+	private void updateGoToPointOfViewMenu(MenuItem goToPointOfViewMenu,
+										   Home home,
+										   final HomeController controller) {
+		List<Camera> storedCameras = home.getStoredCameras();
+		goToPointOfViewMenu.getSubMenu().clear();
+
+		if (storedCameras.isEmpty()) {
+			goToPointOfViewMenu.setEnabled(false);
+			String name = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "RESET_DISPLAYED_ACTION_TIPS.Name");
+			goToPointOfViewMenu.getSubMenu().add(MENU_STORED_CAMERAS, NoViewMenuId, Menu.NONE, name);
+			//goToPointOfViewMenu.add(new ResourceAction(preferences, HomePane.class, "NoStoredPointOfView", false));
+		} else {
+			goToPointOfViewMenu.setEnabled(true);
+			int menuId = Menu.FIRST;
+			for (final Camera camera : storedCameras) {
+				goToPointOfViewMenu.getSubMenu().add(MENU_STORED_CAMERAS, menuId++, Menu.NONE, camera.getName());
+
+				// this is below in the onOptionsItemSelected
+				//goToPointOfViewMenu.add(new AbstractAction(camera.getName()) {
+				//			public void actionPerformed(ActionEvent e) {
+				//				controller.getHomeController3D().goToCamera(camera);
+				//			}
+				//		});
+			}
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case R.id.virtualvisit:
-				item.setChecked(!item.isChecked());
-				if(item.isChecked())
+
+
+		// handle camera selections first
+		if(item.getGroupId() == MENU_STORED_CAMERAS)
+		{
+			String cameraName = item.getTitle().toString();
+			List<Camera> storedCameras = home.getStoredCameras();
+			for (final Camera camera : storedCameras)
+			{
+				if(cameraName.equals(camera.getName()))
 				{
-					controller.viewFromObserver();
+					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getHomeController3D().goToCamera(camera);
+					return true;
 				}
-				else
-				{
-					controller.viewFromTop();
-				}
-			break;
-			case R.id.modifyvirtualvisitor:
-				SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getPlanController().modifyObserverCamera();
-				break;
-			case R.id.storepov:
-				//I must get off the EDT and ask the question in a blocking manner
-				Thread t2 = new Thread(){public void run(){
-					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().storeCamera();
-				}};
-				t2.start();
-				break;
-			case R.id.gotopov:
-				// this is a weird list of menu as seen in HomePane.updateGotoPointOfViewMenu
-				// so I need this to show a new dialog with that list in it! cool
-				break;
-			case R.id.deletepov:
-				Thread t3 = new Thread(){public void run(){
-					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().deleteCameras();
-				}};
-				t3.start();
-				break;
-			case R.id.viewalllevels:
-				item.setChecked(!item.isChecked());
-				if(item.isChecked())
-					controller.displayAllLevels();
-				else
-					controller.displaySelectedLevel();
-				break;
-			case R.id.modify3dview:
-				controller.modifyAttributes();
-				break;
-			default:
-				return super.onOptionsItemSelected(item);
+			}
+		}
+		else
+		{
+			// Handle item selection
+			switch (item.getItemId())
+			{
+				case R.id.virtualvisit:
+					item.setChecked(!item.isChecked());
+					setIconFromSelector(item, R.drawable.virtualvist_selector);
+					if (item.isChecked())
+						controller.viewFromObserver();
+					else
+						controller.viewFromTop();
+					break;
+				case R.id.gotopov:
+					// do nothing it just nicely opens the list for us
+					break;
+				case R.id.modifyvirtualvisitor:
+					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getPlanController().modifyObserverCamera();
+					break;
+				case R.id.storepov:
+					//I must get off the EDT and ask the question in a blocking manner
+					Thread t2 = new Thread()
+					{
+						public void run()
+						{
+							SweetHomeAVRActivity.sweetHomeAVR.getHomeController().storeCamera();
+						}
+					};
+					t2.start();
+					break;
+				case R.id.deletepov:
+					Thread t3 = new Thread()
+					{
+						public void run()
+						{
+							SweetHomeAVRActivity.sweetHomeAVR.getHomeController().deleteCameras();
+						}
+					};
+					t3.start();
+					break;
+				case R.id.viewalllevels:
+					item.setChecked(!item.isChecked());
+					if (item.isChecked())
+						controller.displayAllLevels();
+					else
+						controller.displaySelectedLevel();
+					break;
+				case R.id.modify3dview:
+					controller.modifyAttributes();
+					break;
+				default:
+					return super.onOptionsItemSelected(item);
+			}
 		}
 		return true;
+	}
+	private void setIconFromSelector(MenuItem item, int resId)
+	{
+		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
+		int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
+		stateListDrawable.setState(state);
+		item.setIcon(stateListDrawable.getCurrent());
 	}
 
 	private enum ActionType
@@ -1478,19 +1579,31 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 	 */
 	private void addMouseListeners(final HomeController3D controller, final Canvas3D component3D)
 	{
-
-
 		//PJPJPJPJP///////////////////////////////////////////////////////////////////////////////////////
 		MouseListener mouseListener2 = new MouseListener()
 		{
-			private int xLastMouseMove;
-			private int yLastMouseMove;
+			private int xLastMouseMove1;
+			private int yLastMouseMove1;
+
+			private int xLastMouseMove2;
+			private int yLastMouseMove2;
 
 
 			public void mousePressed(com.jogamp.newt.event.MouseEvent ev)
 			{
-				this.xLastMouseMove = ev.getX();
-				this.yLastMouseMove = ev.getY();
+				if( ev.getPointerCount() == 1 )
+				{
+					this.xLastMouseMove1 = ev.getX();
+					this.yLastMouseMove1 = ev.getY();
+					//System.out.println("mousePressed ev.getPointerCount() == 1");
+				}
+				else if( ev.getPointerCount() == 2 )
+				{
+					// the mouse press is often well different from the drag value (possibly an averaging issue)
+					this.xLastMouseMove2 = -1;
+					this.yLastMouseMove2 = -1;
+					//System.out.println("mousePressed ev.getPointerCount() == 2");
+				}
 			}
 
 			public void mouseReleased(com.jogamp.newt.event.MouseEvent ev)
@@ -1507,7 +1620,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 				//	}
 				//}
 
-
+				//System.out.println("mouseReleased ev.getPointerCount() == "+ ev.getPointerCount());
 			}
 
 			public void mouseClicked(com.jogamp.newt.event.MouseEvent ev)
@@ -1522,7 +1635,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 			public void mouseDragged(com.jogamp.newt.event.MouseEvent ev)
 			{
-
+				//System.out.println("mouseDragged ev.getPointerCount() == "+ ev.getPointerCount());
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				{
 					//if (isEnabled())
@@ -1540,35 +1653,45 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 						}
 						else*/
 						{
-							if (ev.getPointerCount() == 2)
-							{
-								final float FACTOR = 0.5f;
-								float xd = FACTOR * (ev.getX() - this.xLastMouseMove);
-								float yd = FACTOR * (ev.getY() - this.yLastMouseMove);
-								System.out.println("xd " +xd + " yd " +yd);
-								controller.moveCamera(-yd);
-								controller.moveCameraSideways(xd);//note does nothing in overhead view
-							}
-							else if (ev.getPointerCount() == 1)
+							if (ev.getPointerCount() == 1)
 							{
 								final float ANGLE_FACTOR = 0.005f;
 								// Mouse move along X axis changes camera yaw
-								float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove);
+								float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove1);
 								// Multiply yaw delta by 5 if shift is down
-								if (ev.isShiftDown())
-								{
-									yawDelta *= 5;
-								}
-								controller.rotateCameraYaw(yawDelta);
+								//if (ev.isShiftDown())
+								//{
+								//	yawDelta *= 5;
+								//}
+
+								// inside feels more natural to drag, but not outside, odd
+								int rev = home.getCamera() == home.getObserverCamera()?-1:1;
+
+								controller.rotateCameraYaw(rev*yawDelta);
 
 								// Mouse move along Y axis changes camera pitch
-								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove);
-								controller.rotateCameraPitch(pitchDelta);
+								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1);
+								controller.rotateCameraPitch(rev*pitchDelta);
+								this.xLastMouseMove1 = ev.getX();
+								this.yLastMouseMove1 = ev.getY();
 							}
+							else if (ev.getPointerCount() == 2)
+							{
+								if(this.xLastMouseMove2 != -1 && this.yLastMouseMove2 != -1)
+								{
+									final float FACTOR = 0.5f;
+									float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
+									float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
+									controller.moveCamera(yd);
+									controller.moveCameraSideways(-xd);//note does nothing in overhead view
+								}
+								this.xLastMouseMove2 = ev.getX();
+								this.yLastMouseMove2 = ev.getY();
+							}
+
 						}
 
-						this.xLastMouseMove = ev.getX();
-						this.yLastMouseMove = ev.getY();
+
 					}
 				}
 			}
@@ -1580,7 +1703,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 			public void mouseWheelMoved(com.jogamp.newt.event.MouseEvent ev)
 			{
 				//if (isEnabled())
-				{
+				/*{
 					// Mouse wheel changes camera location
 					float delta = -2.5f * -ev.getRotation()[1];//ev.getWheelRotation();
 					// Multiply delta by 5 if shift is down
@@ -1589,7 +1712,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 						delta *= 5;
 					}
 					controller.moveCamera(delta);
-				}
+				}*/
 			}
 		};
 

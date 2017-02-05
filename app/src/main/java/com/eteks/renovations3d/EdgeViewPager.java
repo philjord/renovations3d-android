@@ -15,7 +15,7 @@ public class EdgeViewPager extends ViewPager
 {
 	public float gripWidthMaxInch = 0.5f;
 	public float gripWidthMaxPix = 200;
-	public float gripWidthPercent = 0.1f;
+	public float gripWidthPercent = 0.1f; //10% max otherwise nothing else works I wager
 
 
 	public EdgeViewPager(Context context)
@@ -31,7 +31,7 @@ public class EdgeViewPager extends ViewPager
 		super(context, attrs);
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-		gripWidthMaxPix = (int)(mDisplayMetrics.densityDpi * gripWidthMaxInch);
+		gripWidthMaxPix = (int)Math.min((mDisplayMetrics.densityDpi * gripWidthMaxInch), gripWidthPercent*mDisplayMetrics.widthPixels );
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent ev)
@@ -44,7 +44,13 @@ public class EdgeViewPager extends ViewPager
 			//float y = ev.getY();
 			//int pointerId = MotionEventCompat.getPointerId(ev, 0);
 			boolean grip = x < gripWidthMaxPix || (this.getWidth() - x) < gripWidthMaxPix;
-			if (!grip) return false;
+			if (!grip || ev.getPointerCount() != 1)
+				return false;
+		}
+		else if(action == MotionEvent.ACTION_MOVE)
+		{
+			if (ev.getPointerCount() != 1)
+				return false;
 		}
 
 		return super.onInterceptTouchEvent(ev);
