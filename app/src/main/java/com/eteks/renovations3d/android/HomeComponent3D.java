@@ -274,6 +274,16 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 	}
 
 	@Override
+	public void onDestroy()
+	{
+		// now we want to dump the universe as this fragment is being garbage collected shortly
+		 if(onscreenUniverse != null)
+			 onscreenUniverse.cleanup();
+
+		super.onDestroy();
+	}
+
+	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 
@@ -369,7 +379,7 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 		if (storedCameras.isEmpty()) {
 			goToPointOfViewMenu.setEnabled(false);
-			String name = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "RESET_DISPLAYED_ACTION_TIPS.Name");
+			String name = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "NoStoredPointOfView");
 			goToPointOfViewMenu.getSubMenu().add(MENU_STORED_CAMERAS, NoViewMenuId, Menu.NONE, name);
 			//goToPointOfViewMenu.add(new ResourceAction(preferences, HomePane.class, "NoStoredPointOfView", false));
 		} else {
@@ -390,8 +400,6 @@ public class HomeComponent3D extends NewtBaseFragment implements VCView
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
-
 		// handle camera selections first
 		if(item.getGroupId() == MENU_STORED_CAMERAS)
 		{

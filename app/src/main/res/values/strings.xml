@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
-    <string name="lower_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="real">ca-app-pub-7177705441403385/5503621354</string>
+    <string name="testad">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="lower_banner_ad_unit_id">ca-app-pub-7177705441403385/5503621354</string>
     <string name="edit_message">Enter a message</string>
     <string name="home_select_button">Select Home</string>
     <string name="setting_select_button">Settings</string>
@@ -14,17 +14,21 @@
     <string name="magnetism">Magnetism</string>
     <string name="welcometextyes">Ok</string>
     <string name="welcometextno">Don\'t show again</string>
-    <string name="welcometext">This is the Sweet Home 3D desktop app ported across to work on Android.\n
- Swipe with 2 fingers together to pan and use pinch to zoom.\n
- Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
- 2 sh3d files are automatically downloaded for you on opening the app to demonstrate it, please wait for the larger file to finish downloading.\n
- You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
- You can download furniture and texture libraries from the internet, but you must unzip them using a file explorer before importing them. Importing can be done within the app, see the menu on the catalog view.\n
- When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
- Alignment and Magnetism are on the menu bar.\n
- Menu-> Help does nothing currently.\n
- If you minimize the app for a long time it may fail to restart. Minimizing the app while the plan view is still loading icons means it will not resume again, you have to wait till they are all loaded before leaving.\n
- If a crash report dialog pops up PLEASE press "Report", it is extremely useful to development :).</string>
+    <string name="planview_welcometext">
+    Swipe with 2 fingers together to pan and use pinch to zoom.\n
+    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
+    There will be 2 demo sh3d files in your downloads folder, select Menu->Open home.\n
+    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
+    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
+    Menu-> Help does nothing currently.\n
+    If you minimize the app for a long time it may fail to restart. Minimizing the app while the plan view is still loading icons means it will not resume again, you have to wait till they are all loaded before leaving.\n
+    </string>
+    <string name="catalogview_welcometext">
+    Press the add furniture icon to place the selected furniture item onto the plan view at 0,0.\n
+    From this view you can import more furniture catalog libraries, select Menu->Import furniture library...\n
+    There will be one demo sh3f furniture file in your downloads folder\n
+    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
+    </string>
     <string name="search_hint">Search Furniture</string>
     <string name="exit">Exit</string>
     <string name="virtualvisit">Virtual visit</string>

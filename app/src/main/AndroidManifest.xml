@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.renovations3d"
-  android:versionCode="141"
-  android:versionName="1.41">
+  android:versionCode="143"
+  android:versionName="1.43">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -108,10 +108,6 @@
               <data android:pathPattern=".*\\..*\\..*\\..*\\.sh3t" />
 
           </intent-filter>
-
-
       </activity>
-
-
   </application>
 </manifest>

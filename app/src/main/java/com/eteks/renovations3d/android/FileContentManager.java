@@ -291,6 +291,7 @@ public class FileContentManager implements ContentManager {
   
   private final UserPreferences           preferences;
   private final String                    sweetHome3DFileExtension;
+  private final String                    sweetHome3DFileExtension2;
   private final String                    languageLibraryFileExtension;
   private final String                    furnitureLibraryFileExtension;
   private final String                    texturesLibraryFileExtension;
@@ -307,6 +308,14 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 
 	  //use class with same name but inside the jar
     this.sweetHome3DFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension");
+	  String homeExtension2;
+	  try {
+		  // Get optional second extension
+		  homeExtension2 = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension2");
+	  } catch (IllegalArgumentException ex) {
+		  homeExtension2 = null;
+	  }
+	  this.sweetHome3DFileExtension2 = homeExtension2;
     this.languageLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "languageLibraryExtension");
     this.furnitureLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "furnitureLibraryExtension");
     this.texturesLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "texturesLibraryExtension");
@@ -325,20 +334,22 @@ private SweetHomeAVRActivity activity;//for dialogs etc
     this.fileFilters.put(ContentType.SVG, SVG_FILTER);
     this.fileFilters.put(ContentType.OBJ, OBJ_FILTER);
     this.fileFilters.put(ContentType.SWEET_HOME_3D, new FileFilter [] {
-        new FileFilter() {
-          @Override
-          public boolean accept(File file) {
-            // Accept directories and .sh3d files
-            return file.isDirectory()
-                || file.getName().toLowerCase().endsWith(sweetHome3DFileExtension);
-          }
-          
+			new FileFilter() {
+				@Override
+				public boolean accept(File file) {
+					// Accept directories, .sh3d and .sh3x files
+					return file.isDirectory()
+							|| file.getName().toLowerCase().endsWith(sweetHome3DFileExtension)
+							|| (sweetHome3DFileExtension2 != null
+							&& file.getName().toLowerCase().endsWith(sweetHome3DFileExtension2));
+				}
 
-          public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeDescription");
-          }
-        }
-      });
+
+				public String getDescription() {
+					return preferences.getLocalizedString(FileContentManager.class, "homeDescription");
+				}
+			}
+	});
     this.fileFilters.put(ContentType.LANGUAGE_LIBRARY, new FileFilter [] {
         new FileFilter() {
           @Override
@@ -709,7 +720,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  final Semaphore dialogSemaphore = new Semaphore(0, true);
 
 	  // just a name picker for the save as system
-	  if(contentType == ContentType.SWEET_HOME_3D)
+	  if(save && contentType == ContentType.SWEET_HOME_3D)
 	  {
 		  activity.runOnUiThread(new Runnable()
 		  {
@@ -733,7 +744,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 										  dialogSemaphore.release();
 									  }
 								  })
-						  .setNegativeButton(   "NO" ,
+						  .setNegativeButton("NO",
 								  new DialogInterface.OnClickListener()
 								  {
 									  public void onClick(DialogInterface dialog, int id)
@@ -747,11 +758,12 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 				  alertDialog.show();
 			  }
 		  });
+
 	  }
 	  else if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY )
 	  {
 			// in this case we want ot show a real file picker (with an extension filter of the right type
-		  //TODO:  "sh3f" :"sh3t"; //(need  zip as well one day)
+		  //TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
 		  final File chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
 		  //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc

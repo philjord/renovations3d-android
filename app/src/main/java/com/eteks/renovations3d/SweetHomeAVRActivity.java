@@ -3,10 +3,8 @@ package com.eteks.renovations3d;
 
 import android.Manifest;
 import android.app.ActionBar;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,10 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -32,17 +27,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.eteks.renovations3d.android.FurnitureCatalogListPanel;
-import com.eteks.renovations3d.android.FurnitureTable;
-import com.eteks.renovations3d.android.HomeComponent3D;
-import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
+import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.ingenieur.andyelderscrolls.utils.SopInterceptor;
 import com.mindblowing.renovations3d.R;
 
@@ -53,6 +45,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 
 import static com.mindblowing.renovations3d.R.id.pager;
 
@@ -62,21 +55,20 @@ import static com.mindblowing.renovations3d.R.id.pager;
 public class SweetHomeAVRActivity extends FragmentActivity
 {
 
-	public static final String PREFS_NAME = "ElderScrollsActivityDefault";
-	private static final String WELCOME_SCREEN_UNWANTED = "WELCOME_SCREEN_UNWANTED";
+	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";
 
 	public static FirebaseAnalytics mFirebaseAnalytics;
-
 
 	private SweetHomeAVRPagerAdapter mSweetHomeAVRPagerAdapter;
 	private ViewPager mViewPager;
 
 	private File chooserStartFolder;
 
+	public static HashSet<String> welcomScreensShownThisSession = new HashSet<String>();
+
 	public static SweetHomeAVR sweetHomeAVR; // for plan undo redo, now for import statements too
 
 	private boolean fileSystemAccessGranted = false;
-
 
 	// Description of original
 	// SweetHomeAVR|HomeApplication
@@ -166,12 +158,12 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 
 		MobileAds.initialize(getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
-		//Use AdRequest.Builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73") to get test ads on this device.
-
 		setContentView(R.layout.main);
 
-		AdView mAdView = (AdView)findViewById(R.id.lowerBannerAdView);
-		AdRequest adRequest = new AdRequest.Builder().build();
+		AdView mAdView = (AdView) findViewById(R.id.lowerBannerAdView);
+		AdRequest.Builder builder = new AdRequest.Builder();
+		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");
+		AdRequest adRequest = builder.build();
 		mAdView.loadAd(adRequest);
 
 		// Obtain the FirebaseAnalytics instance.
@@ -215,60 +207,24 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	/**
 	 * This must be called eventually by SweetHomeAVR
 	 */
-	public void createViewNow()
+	public void setUpViews()
 	{
 		mViewPager = (ViewPager) findViewById(pager);
 		mViewPager.setAdapter(mSweetHomeAVRPagerAdapter);
 		mViewPager.setCurrentItem(1);
 		mViewPager.setOffscreenPageLimit(4);
+
+		invalidateOptionsMenu();
 	}
 
-	private String getContentName(ContentResolver resolver, Uri uri)
-	{
-		Cursor cursor = resolver.query(uri, null, null, null, null);
-		cursor.moveToFirst();
-		int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-		if (nameIndex >= 0)
-		{
-			return cursor.getString(nameIndex);
-		}
-		else
-		{
-			return null;
-		}
-	}
 
-	private void inputStreamToFile(InputStream in, String file)
-	{
-		try
-		{
-			OutputStream out = new FileOutputStream(new File(file));
-
-			int size = 0;
-			byte[] buffer = new byte[1024];
-
-			while ((size = in.read(buffer)) != -1)
-			{
-				out.write(buffer, 0, size);
-			}
-
-			out.close();
-		}
-		catch (Exception e)
-		{
-			Log.e("MainActivity", "InputStreamToFile exception: " + e.getMessage());
-		}
-	}
 
 	private void permissionGranted()
 	{
-
 		fileSystemAccessGranted = true;
 		invalidateOptionsMenu();
-
-		possiblyShowWelcomeScreen();
+		loadUpContent();
 	}
-
 
 
 	@Override
@@ -315,37 +271,45 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		switch (item.getItemId())
 		{
 			case R.id.menu_new:
-				sweetHomeAVR.newHome();
+				newHome();
 				return true;
 			case R.id.menu_load:
-				showHomesFolderChooser();
+				loadSh3dFile();
 				return true;
 			case R.id.menu_save:
 				//I must get off the EDT as it may ask the question in a blocking manner
-				Thread t = new Thread(){public void run(){
-					if(sweetHomeAVR.getHomeController() != null)
-						sweetHomeAVR.getHomeController().saveAndCompress();
-				}};
+				Thread t = new Thread()
+				{
+					public void run()
+					{
+						if (sweetHomeAVR.getHomeController() != null)
+							sweetHomeAVR.getHomeController().saveAndCompress();
+					}
+				};
 				t.start();
 				return true;
 			case R.id.menu_saveas:
 				//I must get off the EDT and ask the question in a blocking manner
-				Thread t2 = new Thread(){public void run(){
-					if(sweetHomeAVR.getHomeController() != null)
-						sweetHomeAVR.getHomeController().saveAsAndCompress();
-				}};
+				Thread t2 = new Thread()
+				{
+					public void run()
+					{
+						if (sweetHomeAVR.getHomeController() != null)
+							sweetHomeAVR.getHomeController().saveAsAndCompress();
+					}
+				};
 				t2.start();
 				return true;
 			case R.id.menu_help:
-				if(sweetHomeAVR.getHomeController() != null)
+				if (sweetHomeAVR.getHomeController() != null)
 					sweetHomeAVR.getHomeController().help();
 				return true;
 			case R.id.menu_about:
-				if(sweetHomeAVR.getHomeController() != null)
+				if (sweetHomeAVR.getHomeController() != null)
 					sweetHomeAVR.getHomeController().about();
 				return true;
 			case R.id.menu_preferences:
-				if(sweetHomeAVR.getHomeController()!=null)
+				if (sweetHomeAVR.getHomeController() != null)
 					sweetHomeAVR.getHomeController().editPreferences();
 				return true;
 
@@ -354,324 +318,354 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
-	/*public static boolean isIntentAvailable(Context ctx, Intent intent) {
-		final PackageManager mgr = ctx.getPackageManager();
-		List<ResolveInfo> list =
-				mgr.queryIntentActivities(intent,
-						PackageManager.MATCH_ALL);
-		return list.size() > 0;
-	}*/
+	private void loadSh3dFile()
+	{
+		chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+		final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder);
+		fileChooser.setExtension("sh3d");
+		//I can't get hold of the content manager from here
+		// I want to use the real filefilters so sh3x will load
+		//fileChooser.setFileFilter(sweetHomeAVR.getHomeController().getContentManager().getFileFilter(ContentManager.ContentType.SWEET_HOME_3D )[0]);
+		fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
+		{
+			@Override
+			public void fileSelected(final File file)
+			{
+				chooserStartFolder = file;
+				loadHome(file);
+			}
+		});
+		// get on the EDT
+		this.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				fileChooser.showDialog();
+			}
+		});
+		// this is the proper way to do it, but I don't have a home control here
+		/*Thread t2 = new Thread(){public void run(){
+			HomeController controller = sweetHomeAVR.getHomeController();
+			if(controller == null)
+					newHome();
+				String openFileName = controller.getView().showOpenDialog();
+				if(openFileName != null) {
+					loadHome(new File(openFileName));
+				}
+			}};
+		t2.start();*/
+
+	}
+
+	private void newHome()
+	{
+		if (sweetHomeAVR.getHomeController() != null)
+			sweetHomeAVR.getHomeController().close();
+
+		// must always recreate otherwise the pager hand out an IllegalStateException
+		sweetHomeAVR = new SweetHomeAVR(this);
+
+		mSweetHomeAVRPagerAdapter.setSweetHomeAVR(sweetHomeAVR);
+		//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+
+		// discard the old view first
+		mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
+		mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+
+		// create new home and trigger the new views
+		sweetHomeAVR.newHome();
+		mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
+		mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+	}
+
+	public void loadHome(final File homeFile)
+	{
+		if (homeFile != null)
+		{
+			if (sweetHomeAVR.getHomeController() != null)
+				sweetHomeAVR.getHomeController().close();
+
+			// to be safe get this back onto the ui thread
+			SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+			{
+				public void run()
+				{
+					boolean prevHomeLoaded = sweetHomeAVR.getHomeController() != null;
+					sweetHomeAVR = new SweetHomeAVR(SweetHomeAVRActivity.this);
+					mSweetHomeAVRPagerAdapter.setSweetHomeAVR(sweetHomeAVR);
+					//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+
+					// discard the old view first
+					mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
+					mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+
+					sweetHomeAVR.loadHome(homeFile);
+
+					// force teh frags to load up now
+					if(prevHomeLoaded)
+					{
+						mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
+						mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+					}
+				}
+			});
+		}
+		else
+		{
+			newHome();
+		}
+	}
+
 
 	BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver()
 	{
 		public void onReceive(Context ctxt, Intent intent)
 		{
-			unregisterReceiver(this);
-			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+		unregisterReceiver(this);
+		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
+		// This is one of our downloads.
+		final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Query query = new DownloadManager.Query();
+		query.setFilterById(id);
+		Cursor cursor = downloadManager.query(query);
 
-			// This is one of our downloads.
-			final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Query query = new DownloadManager.Query();
-			query.setFilterById(id);
-			Cursor cursor = downloadManager.query(query);
+		if (cursor.moveToFirst())
+		{
+			int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+			int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+			int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-			if (cursor.moveToFirst())
+			int status = cursor.getInt(statusIndex);
+
+			if (status == DownloadManager.STATUS_SUCCESSFUL)
 			{
-				int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-				int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-				int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
-
-				int status = cursor.getInt(statusIndex);
-
-				if (status == DownloadManager.STATUS_SUCCESSFUL)
+				String localUri = cursor.getString(localUriIndex);
+				try
 				{
-					final String localUri = cursor.getString(localUriIndex);
-
-					SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
-					{
-						public void run()
-						{
-							try
-							{
-								loadHome(new File(new URI(localUri).getPath()));
-							}
-							catch (URISyntaxException e)
-							{
-								e.printStackTrace();
-							}
-						}
-					});
+					loadFile(new File(new URI(localUri).getPath()));
 				}
-				else if (status == DownloadManager.STATUS_FAILED)
+				catch (URISyntaxException e)
 				{
-					int reason = cursor.getInt(reasonIndex);
-
-					String message;
-					switch (reason)
-					{
-						case DownloadManager.ERROR_FILE_ERROR:
-						case DownloadManager.ERROR_DEVICE_NOT_FOUND:
-						case DownloadManager.ERROR_INSUFFICIENT_SPACE:
-							message = "DownloadErrorDisk";
-							break;
-						case DownloadManager.ERROR_HTTP_DATA_ERROR:
-						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-							message = "DownloadErrorHttp";
-							break;
-						case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
-							message = "DownloadErrorRedirection";
-							break;
-						default:
-							message = "DownloadErrorUnknown";
-							break;
-					}
-
-					Toast.makeText(SweetHomeAVRActivity.this, String.format("DownloadFailedWithErrorMessage", message), Toast.LENGTH_SHORT).show();
-
+					e.printStackTrace();
 				}
 			}
+			else if (status == DownloadManager.STATUS_FAILED)
+			{
+				int reason = cursor.getInt(reasonIndex);
+
+				String message;
+				switch (reason)
+				{
+					case DownloadManager.ERROR_FILE_ERROR:
+					case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+					case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+						message = "DownloadErrorDisk";
+						break;
+					case DownloadManager.ERROR_HTTP_DATA_ERROR:
+					case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+						message = "DownloadErrorHttp";
+						break;
+					case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+						message = "DownloadErrorRedirection";
+						break;
+					default:
+						message = "DownloadErrorUnknown";
+						break;
+				}
+
+				Toast.makeText(SweetHomeAVRActivity.this, String.format("DownloadFailedWithErrorMessage", message), Toast.LENGTH_SHORT).show();
+
+			}
+		}
 		}
 	};
 
-	private void showHomesFolderChooser()
+	private void loadFile(File inFile)
 	{
-		// in fact don't if we've been given a home to load, about now is when all is good
-		//try
+		if (inFile.getName().toLowerCase().endsWith(".sh3d"))
 		{
-			Intent intent = getIntent();
-			if (intent != null)
+			loadHome(inFile);
+		}
+		else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
+		{
+			//TODO: not sure if this is needed? might start like this?
+			newHome();
+			HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+			if (controller != null)
 			{
-				String action = intent.getAction();
-
-				if (action.compareTo(Intent.ACTION_VIEW) == 0)
-				{
-					if( intent.getData() == null)
-					{
-						// new home form an unload situation
-						sweetHomeAVR.newHome();
-						setIntent(null);
-						return;
-					}
-					String scheme = intent.getScheme();
-					ContentResolver resolver = getContentResolver();
-
-					if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0)
-					{
-						Uri uri = intent.getData();
-						String name = getContentName(resolver, uri);
-
-						//Log.v("tag", "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-						//Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
-						//InputStream input = resolver.openInputStream(uri);
-						//TODO: clicking an http content fires off the http version and this one??
-						//inputStreamToFile(input, Environment.DIRECTORY_DOWNLOADS + "/" + name);
-						//loadHome(new File(Environment.DIRECTORY_DOWNLOADS + "/" + name));
-						setIntent(null);
-						return;
-					}
-					else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0)
-					{
-						Uri uri = intent.getData();
-						String name = uri.getLastPathSegment();
-
-						Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-						Toast.makeText(SweetHomeAVRActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
-
-						File inFile = new File(uri.getPath());
-						if(inFile.getName().toLowerCase().endsWith(".sh3d"))
-						{
-							loadHome(inFile);
-						}
-						else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
-						{
-							sweetHomeAVR.newHome();
-							HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
-							if (controller != null)
-							{
-								controller.importFurnitureLibrary(inFile.getAbsolutePath());
-							}
-						}
-						else if(inFile.getName().toLowerCase().endsWith(".sh3t"))
-						{
-							sweetHomeAVR.newHome();
-							HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
-							if (controller2 != null)
-							{
-								controller2.importTexturesLibrary(inFile.getAbsolutePath());
-							}
-
-						}
-
-						setIntent(null);
-						return;
-					}
-					else if (scheme.compareTo("http") == 0)
-					{
-						Toast.makeText(SweetHomeAVRActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
-
-						Uri uri = intent.getData();
-						final String fileName = uri.getLastPathSegment();
-
-						Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
-						Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
-						DownloadManager.Request request = new DownloadManager.Request(uri);
-						request.setDescription(fileName + "_download");
-						request.setTitle(fileName);
-						// in order for this if to run, you must use the android 3.2 to compile your app
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-						{
-							request.allowScanningByMediaScanner();
-							request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-						}
-						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-						// get download service and enqueue file
-						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-						manager.enqueue(request);
-						registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-						setIntent(null);
-						Toast.makeText(SweetHomeAVRActivity.this,"Download started, please wait...", Toast.LENGTH_LONG).show();
-						return;
-					}
-					else if (scheme.compareTo("ftp") == 0)
-					{
-						// TODO Import from FTP!
-						Toast.makeText(SweetHomeAVRActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
-						setIntent(null);
-						return;
-					}
-
-				}
+				controller.importFurnitureLibrary(inFile.getAbsolutePath());
 			}
 		}
-		//catch (FileNotFoundException e)
-		//{
-		//	e.printStackTrace();
-		//}
-
-		//String extStore = System.getenv("EXTERNAL_STORAGE");
-		//chooserStartFolder = new File(extStore + "/Download");
-		chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-
-		final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder).setExtension("sh3d").setFileListener(new JFileChooser.FileSelectedListener()
+		else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
 		{
-			@Override
-			public void fileSelected(final File file)
+			newHome();
+			HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+			if (controller2 != null)
 			{
-				// if we are loaded up we have to restart
-				if (sweetHomeAVR.getHomeController() == null)
-				{
-					chooserStartFolder = file;
-					loadHome(file);
-				}
-				else
-				{
-					// Load home is now a total restart of the activity!
-					Intent mStartActivity = new Intent(SweetHomeAVRActivity.this, SweetHomeAVRActivity.class);
-					mStartActivity.setAction(Intent.ACTION_VIEW);
-					mStartActivity.setData(Uri.fromFile(file));
-					int mPendingIntentId = 123456;
-					PendingIntent mPendingIntent = PendingIntent.getActivity(SweetHomeAVRActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-					AlarmManager mgr = (AlarmManager) SweetHomeAVRActivity.this.getSystemService(Context.ALARM_SERVICE);
-					mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-					System.exit(0);
-				}
+				controller2.importTexturesLibrary(inFile.getAbsolutePath());
 			}
-		});
+		}
+	}
 
-		// now I should just download a file from drop box regardless
-		//https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0
-		//and put it into a local stoarge location
-		// once all file in url are downloaded set startFolder to the download location
-		//see if it's there first
-		if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SweetHome3DExample10-FlatWithMezzanine.sh3d").exists())
-				&& isDownloadManagerAvailable(SweetHomeAVRActivity.this))
+	private void loadUpContent()
+	{
+		//TODO: see eclipse SweetHomeAVR.protected void start(String[] args) for exactly this setup, but better
+		Intent intent = getIntent();
+		if (intent != null)
 		{
-			//folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";
+			String action = intent.getAction();
+
+			if (action.compareTo(Intent.ACTION_VIEW) == 0)
+			{
+				String scheme = intent.getScheme();
+				ContentResolver resolver = getContentResolver();
+
+				if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0)
+				{
+					//Uri uri = intent.getData();
+					//String name = getContentName(resolver, uri);
+					//Log.v("tag", "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+					//Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+					//InputStream input = resolver.openInputStream(uri);
+					//TODO: clicking an http content fires off the http version and this one??
+					//inputStreamToFile(input, Environment.DIRECTORY_DOWNLOADS + "/" + name);
+					//loadHome(new File(Environment.DIRECTORY_DOWNLOADS + "/" + name));
+
+					setIntent(null);
+					return;
+				}
+				else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0)
+				{
+					Uri uri = intent.getData();
+					String name = uri.getLastPathSegment();
+
+					Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+					Toast.makeText(SweetHomeAVRActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+
+					File inFile = new File(uri.getPath());
+					loadFile(inFile);
+
+					setIntent(null);
+					return;
+				}
+				else if (scheme.compareTo("http") == 0)
+				{
+					Toast.makeText(SweetHomeAVRActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+
+					Uri uri = intent.getData();
+					final String fileName = uri.getLastPathSegment();
+
+					Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
+					Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
+					DownloadManager.Request request = new DownloadManager.Request(uri);
+					request.setDescription(fileName + "_download");
+					request.setTitle(fileName);
+					// in order for this if to run, you must use the android 3.2 to compile your app
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						request.allowScanningByMediaScanner();
+						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+					}
+					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+					// get download service and enqueue file
+					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+					manager.enqueue(request);
+					registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+					setIntent(null);
+					Toast.makeText(SweetHomeAVRActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
+					return;
+				}
+				else if (scheme.compareTo("ftp") == 0)
+				{
+					// TODO Import from FTP!
+					Toast.makeText(SweetHomeAVRActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+					setIntent(null);
+					return;
+				}
+
+			}
+		}
+
+
+		// download managers only appeared in ginger bread
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+		{
+			// now download the files from drop box
+			// folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";
 			// notice the files actual url not the sexy page offering the file
 			String[] urls = new String[]{
 					"https://dl.dropboxusercontent.com/s/0jgkj1wrsvsk1ix/SweetHome3DExample10-FlatWithMezzanine.sh3d",
-					"https://dl.dropboxusercontent.com/s/axkjuhmi03pbhxu/verysimple.sh3d"};
+					"https://dl.dropboxusercontent.com/s/axkjuhmi03pbhxu/verysimple.sh3d",
+					"https://dl.dropboxusercontent.com/s/a7jcxe0xdtkhw9b/LucaPresidente.sh3f"};
 			String[] fileNames = new String[]{
 					"SweetHome3DExample10-FlatWithMezzanine.sh3d",
-					"verysimple.sh3d"};
-			//String url = "https://github.com/philjord/external_jars/raw/master/SweetHome3DExample10-FlatWithMezzanine.sh3d";
+					"verysimple.sh3d",
+					"LucaPresidente.sh3f"};
+
 			for (int i = 0; i < urls.length; i++)
 			{
-				String url = urls[i];
-				String fileName = fileNames[i];
-				DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-				request.setDescription(fileName + "download");
-				request.setTitle(fileName);
-				// in order for this if to run, you must use the android 3.2 to compile your app
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
 				{
-					request.allowScanningByMediaScanner();
-					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-				}
-				request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+					String url = urls[i];
+					String fileName = fileNames[i];
+					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+					request.setDescription(fileName + " download");
+					request.setTitle(fileName);
+					// in order for this if to run, you must use the android 3.2 to compile your app
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						request.allowScanningByMediaScanner();
+						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+					}
+					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
-				// get download service and enqueue file
-				DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-				manager.enqueue(request);
+					// get download service and enqueue file
+					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+					manager.enqueue(request);
+				}
+			}
+		}
+
+		// now just fire up a lovely clear new home
+		newHome();
+	}
+	private String getContentName(ContentResolver resolver, Uri uri)
+	{
+		Cursor cursor = resolver.query(uri, null, null, null, null);
+		cursor.moveToFirst();
+		int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+		if (nameIndex >= 0)
+		{
+			return cursor.getString(nameIndex);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private void inputStreamToFile(InputStream in, String file)
+	{
+		try
+		{
+			OutputStream out = new FileOutputStream(new File(file));
+
+			int size = 0;
+			byte[] buffer = new byte[1024];
+
+			while ((size = in.read(buffer)) != -1)
+			{
+				out.write(buffer, 0, size);
 			}
 
-			BroadcastReceiver onComplete = new BroadcastReceiver()
-			{
-				public void onReceive(Context ctxt, Intent intent)
-				{
-					SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
-					{
-						public void run()
-						{
-							fileChooser.showDialog();
-						}
-					});
-				}
-			};
-			registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+			out.close();
 		}
-		else
+		catch (Exception e)
 		{
-			// show file chooser
-			this.runOnUiThread(new Runnable()
-			{
-				public void run()
-				{
-					fileChooser.showDialog();
-				}
-			});
-		}
-	}
-
-	/**
-	 * @param context used to check the device version and DownloadManager information
-	 * @return true if the download manager is available
-	 */
-	public static boolean isDownloadManagerAvailable(Context context)
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public void loadHome(File homeFile)
-	{
-		if (homeFile != null)
-		{
-			sweetHomeAVR.loadHome(homeFile);
-
-			// home is only loaded up later so this isn't going to enable nothin'
-			invalidateOptionsMenu();
-		}
-		else
-		{
-			Toast.makeText(SweetHomeAVRActivity.this, "Why is that file null you just selected? " + homeFile, Toast.LENGTH_SHORT)
-					.show();
+			Log.e("MainActivity", "InputStreamToFile exception: " + e.getMessage());
 		}
 	}
 
@@ -701,85 +695,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	}
 
 
-	private void possiblyShowWelcomeScreen()
-	{
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		boolean welcomeScreenUnwanted = settings.getBoolean(WELCOME_SCREEN_UNWANTED, false);
 
-		if (welcomeScreenUnwanted)
-		{
-			showHomesFolderChooser();
-		}
-		else
-		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			// Add the buttons
-			builder.setPositiveButton(R.string.welcometextyes, new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int id)
-				{
-					// do remind again so no prefs
-					showHomesFolderChooser();
-				}
-			});
-			builder.setNegativeButton(R.string.welcometextno, new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int id)
-				{
-					// don't remind again
-					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-					SharedPreferences.Editor editor = settings.edit();
-					editor.putBoolean(WELCOME_SCREEN_UNWANTED, true);
-					editor.apply();
-					showHomesFolderChooser();
-				}
-			});
-			builder.setMessage(R.string.welcometext);
 
-			// Create the AlertDialog
-			AlertDialog dialog = builder.create();
-			dialog.show();
-		}
-	}
-
-	public class SweetHomeAVRPagerAdapter extends FragmentPagerAdapter
-	{
-		private SweetHomeAVR sweetHomeAVR;
-
-		public SweetHomeAVRPagerAdapter(FragmentManager fm, SweetHomeAVR sweetHomeAVR)
-		{
-			super(fm);
-			this.sweetHomeAVR = sweetHomeAVR;
-		}
-
-		@Override
-		public Fragment getItem(int i)
-		{
-			if (i == 0)
-			{
-				return (FurnitureTable) sweetHomeAVR.getHomeController().getFurnitureController().getView();
-
-			}
-			else if (i == 1)
-			{
-				return (MultipleLevelsPlanPanel) sweetHomeAVR.getHomeController().getPlanController().getView();
-			}
-			else if (i == 2)
-			{
-				return (FurnitureCatalogListPanel) sweetHomeAVR.getHomeController().getFurnitureCatalogController().getView();
-			}
-			else if (i == 3)
-			{
-				return (HomeComponent3D) sweetHomeAVR.getHomeController().getHomeController3D().getView();
-			}
-			return null;
-		}
-
-		@Override
-		public int getCount()
-		{
-			return 4;
-		}
-
-	}
 }

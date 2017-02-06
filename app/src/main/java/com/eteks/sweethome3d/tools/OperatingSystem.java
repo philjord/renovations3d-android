@@ -378,16 +378,17 @@ public class OperatingSystem {
 				if (siblingTemporaryFolders != null
 						&& siblingTemporaryFolders.length > 0) {
 					// Launch a timer that will delete in 10 min temporary folders older than a week
-					//PJPJPJPJPJPJPPJPJPJPJPJ really shorten this up to keep the world clean, 1 min  and 1 day
-					final long deleteDelay = 1 * 60000;//10 * 60000;
-					final long age = 1 * 24 * 3600000;//7 * 24 * 3600000;
+					//PJPJPJPJPJPJPPJPJPJPJPJ really shorten this up to keep the world clean, 10 sec and everything
+					final long deleteDelay = 10 * 1000;//10 * 60000;
+					final long age = 7 * 24 * 3600000;// not used cos I'm suspicious of the modified date under android
 					new Timer(true).schedule(new TimerTask() {
 						@Override
 						public void run() {
 							long now = System.currentTimeMillis();
+
 							for (File siblingTemporaryFolder : siblingTemporaryFolders) {
 								if (siblingTemporaryFolder.exists()
-										&& now - siblingTemporaryFolder.lastModified() > age) {
+										){//&& now - siblingTemporaryFolder.lastModified() > age) {
 									File [] temporaryFiles = siblingTemporaryFolder.listFiles();
 									for (File temporaryFile : temporaryFiles) {
 										temporaryFile.delete();

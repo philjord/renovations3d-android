@@ -1,6 +1,9 @@
 package com.eteks.renovations3d.android;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -54,6 +57,8 @@ import javaawt.Graphics;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
+import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
+
 
 /**
  * Created by phil on 11/22/2016.
@@ -61,9 +66,12 @@ import javaxswing.ImageIcon;
 
 public class FurnitureCatalogListPanel extends JComponent implements VCView
 {
+	private static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
+
 	public FurnitureCatalogListPanel()
 	{
 	}
+
 	@Override
 	public void paintComponent(Graphics g)
 	{
@@ -102,6 +110,21 @@ public class FurnitureCatalogListPanel extends JComponent implements VCView
 		});
 
 		return rootView;
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
+		// this gets called heaps of time, wat until we have an activity
+		if(getActivity() != null)
+			possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

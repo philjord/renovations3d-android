@@ -1,5 +1,8 @@
 package com.eteks.renovations3d.android.swingish;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -7,7 +10,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.renovations3d.android.utils.DrawableView;
+import com.eteks.sweethome3d.model.UserPreferences;
+import com.mindblowing.renovations3d.R;
+
+import java.util.prefs.Preferences;
 
 import javaawt.Color;
 import javaawt.Font;
@@ -18,6 +27,8 @@ import javaawt.Rectangle;
 import javaawt.VMFont;
 import javaawt.geom.Rectangle2D;
 import javaawt.image.ImageObserver;
+
+import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
 
 /**
  * Very much an assistant with various methods to be sorted out
@@ -214,4 +225,46 @@ public abstract class JComponent extends Fragment implements ImageObserver
 		return textBounds;
 	}
 
+	public void possiblyShowWelcomeScreen(final String welcomeScreenName, int welcometext, UserPreferences preferences)
+	{
+		// only one per session
+		if(!SweetHomeAVRActivity.welcomScreensShownThisSession.contains(welcomeScreenName))
+		{
+			SweetHomeAVRActivity.welcomScreensShownThisSession.add(welcomeScreenName);
+			SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
+
+			if (!welcomeScreenUnwanted)
+			{
+				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				// Add the buttons
+				builder.setPositiveButton(close, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+						// do remind again so no prefs
+					}
+				});
+				builder.setNegativeButton(closeAndNoShow, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+						// don't remind again
+						SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putBoolean(welcomeScreenName, true);
+						editor.apply();
+
+					}
+				});
+				builder.setMessage(welcometext);
+
+				// Create the AlertDialog
+				AlertDialog dialog = builder.create();
+				dialog.show();
+			}
+		}
+	}
 }

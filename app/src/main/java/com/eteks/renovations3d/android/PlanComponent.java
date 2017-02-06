@@ -5579,8 +5579,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         xViewCenterPosition = convertXPixelToModel(viewRectangle.x + viewRectangle.width / 2);
         yViewCenterPosition = convertYPixelToModel(viewRectangle.y + viewRectangle.height / 2);
       }*/
-		xViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
-		yViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
+
+		// note getDrawableView() can be null during init
+//		xViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
+//		yViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
 
       this.scale = scale;
       //revalidate(false);
@@ -5588,7 +5590,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		//PJPJ
   //    if (parent instanceof JViewport) {
         //Dimension viewSize = parent.getViewSize();
-        float viewWidth = convertXPixelToModel(getDrawableView().getWidth());
+ /*       float viewWidth = convertXPixelToModel(getDrawableView().getWidth());
         int xViewLocation = (int) convertXModelToPixel(xViewCenterPosition - viewWidth / 2);
         float viewHeight = convertYPixelToModel(getDrawableView().getHeight());
         int yViewLocation = (int) convertYModelToPixel(yViewCenterPosition - viewHeight / 2);
@@ -5605,7 +5607,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		//TODO: I'd love for this to work
 		//scrolledX += convertYModelToPixel(newxViewCenterPosition-xViewCenterPosition);
 		//scrolledY += convertYModelToPixel(newyViewCenterPosition-yViewCenterPosition);
-
+*/
 		revalidate(false);
      // }
     }

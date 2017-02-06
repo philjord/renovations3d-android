@@ -110,28 +110,14 @@ public class SweetHomeAVR extends HomeApplication
 		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
 		SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
+		Home home = new Home();
+		home.setName(null);// ensures save does a save as
 
-		if (getHomeController() == null)
-		{
-			Home home = new Home();
-			home.setName(null);// ensures save does a save as
+		SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
 
-			SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
+		parentActivity.setUpViews();
+		parentActivity.invalidateOptionsMenu();
 
-			parentActivity.createViewNow();
-			parentActivity.invalidateOptionsMenu();
-		}
-		else
-		{
-			// New home is now a total restart of the activity!
-			Intent mStartActivity = new Intent(parentActivity, SweetHomeAVRActivity.class);
-			mStartActivity.setAction(Intent.ACTION_VIEW);
-			int mPendingIntentId = 123456;
-			PendingIntent mPendingIntent = PendingIntent.getActivity(parentActivity, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-			AlarmManager mgr = (AlarmManager) parentActivity.getSystemService(Context.ALARM_SERVICE);
-			mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-			System.exit(0);
-		}
 	}
 
 	/**
@@ -149,29 +135,29 @@ public class SweetHomeAVR extends HomeApplication
 		{
 			public void run()
 			{
-				// this is coming from internal sd, need to get back to external like call of morrowind
-				//String extsd = ExternalStorage.getSdCardPath();
-				try
+			// this is coming from internal sd, need to get back to external like call of morrowind
+			//String extsd = ExternalStorage.getSdCardPath();
+			try
+			{
+				// this should never happen as there are checks before this point that restart
+				if( SweetHomeAVR.this.homeController != null)
 				{
-					// this should never happen as there are checks before this point that restart
-					if( SweetHomeAVR.this.homeController != null)
-					{
-						Toast.makeText(parentActivity, "SweetHomeAVR.this.homeController != null must unload everything somehow, possibly start with teh page adapter?"    , Toast.LENGTH_LONG)
-								.show();
-					}
-
-					Home home = SweetHomeAVR.this.getHomeRecorder().readHome(homeFile.getAbsolutePath());
-					home.setName(homeFile.getAbsolutePath());// used as the save name
-
-					SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
-
-					parentActivity.createViewNow();
-					parentActivity.invalidateOptionsMenu();
+					Toast.makeText(parentActivity, "SweetHomeAVR.this.homeController != null must unload everything somehow, possibly start with teh page adapter?"    , Toast.LENGTH_LONG)
+							.show();
 				}
-				catch (RecorderException e)
-				{
-					e.printStackTrace();
-				}
+
+				Home home = SweetHomeAVR.this.getHomeRecorder().readHome(homeFile.getAbsolutePath());
+				home.setName(homeFile.getAbsolutePath());// used as the save name
+
+				SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
+
+				parentActivity.setUpViews();
+				parentActivity.invalidateOptionsMenu();
+			}
+			catch (RecorderException e)
+			{
+				e.printStackTrace();
+			}
 			}
 		});
 	}
@@ -419,55 +405,55 @@ public class SweetHomeAVR extends HomeApplication
 				/*		switch (ev.getType())
 						{
 							 case ADD:
-            Home home = ev.getItem();
-            try {
-              HomeFrameController controller = createHomeFrameController(home);
-              controller.displayView();
-              if (!this.firstApplicationHomeAdded) {
-                this.firstApplicationHomeAdded = true;
-                addNewHomeCloseListener(home, controller.getHomeController());
-              }
+							Home home = ev.getItem();
+							try {
+							  HomeFrameController controller = createHomeFrameController(home);
+							  controller.displayView();
+							  if (!this.firstApplicationHomeAdded) {
+								this.firstApplicationHomeAdded = true;
+								addNewHomeCloseListener(home, controller.getHomeController());
+							  }
 
-              homeFrameControllers.put(home, controller);
-            } catch (IllegalStateException ex) {
-              // Check exception by class name to avoid a mandatory bind to Java 3D
-              if ("org.jogamp.java3d.IllegalRenderingStateException".equals(ex.getClass().getName())) {
-                ex.printStackTrace();
-                // In case of a problem in Java 3D, simply exit with a message.
-                exitAfter3DError();
-              } else {
-                throw ex;
-              }
-            }
-            break;
-          case DELETE:
-            homeFrameControllers.remove(ev.getItem());
+							  homeFrameControllers.put(home, controller);
+							} catch (IllegalStateException ex) {
+							  // Check exception by class name to avoid a mandatory bind to Java 3D
+							  if ("org.jogamp.java3d.IllegalRenderingStateException".equals(ex.getClass().getName())) {
+								ex.printStackTrace();
+								// In case of a problem in Java 3D, simply exit with a message.
+								exitAfter3DError();
+							  } else {
+								throw ex;
+							  }
+							}
+							break;
+						  case DELETE:
+							homeFrameControllers.remove(ev.getItem());
 
-            // If application has no more home
-            if (getHomes().isEmpty()
-            		) {
-               // Exit once current events are managed (under Mac OS X, exit is managed by MacOSXConfiguration)
-              EventQueue.invokeLater(new Runnable() {
-                  @Override
-				public void run() {
-                    System.exit(0);
-                  }
-                });
-            }
-            break;
+							// If application has no more home
+							if (getHomes().isEmpty()
+									) {
+							   // Exit once current events are managed (under Mac OS X, exit is managed by MacOSXConfiguration)
+							  EventQueue.invokeLater(new Runnable() {
+								  @Override
+								public void run() {
+									System.exit(0);
+								  }
+								});
+							}
+							break;
 						}*/
 					}
 
 				});
 
-		addComponent3DRenderingErrorObserver();
+//		addComponent3DRenderingErrorObserver();
 
 		getUserPreferences();
 		try
 		{
 			// Set User Agent to follow statistics on used operating systems
-			System.setProperty("http.agent", getId() + "/" + getVersion()
-					+ " (" + System.getProperty("os.name") + " " + System.getProperty("os.version") + "; " + System.getProperty("os.arch") + "; " + Locale.getDefault() + ")");
+//			System.setProperty("http.agent", getId() + "/" + getVersion()
+//					+ " (" + System.getProperty("os.name") + " " + System.getProperty("os.version") + "; " + System.getProperty("os.arch") + "; " + Locale.getDefault() + ")");
 		}
 		catch (AccessControlException ex)
 		{
@@ -476,7 +462,10 @@ public class SweetHomeAVR extends HomeApplication
 		// Init look and feel afterwards to ensure that Swing takes into account
 		// default locale change
 		//initLookAndFeel();
-		try
+
+
+		//PJPJPJ the AutoRecoveryManager has a timer that holds a reference to this SweetHomeAVR once it's been released by everythign else on a change
+		/*try
 		{
 			this.autoRecoveryManager = new AutoRecoveryManager(this);
 		}
@@ -484,7 +473,7 @@ public class SweetHomeAVR extends HomeApplication
 		{
 			// Too bad we can't retrieve homes to recover
 			ex.printStackTrace();
-		}
+		}*/
 
 
 	}
@@ -495,12 +484,11 @@ public class SweetHomeAVR extends HomeApplication
 	 */
 	private static void initSystemProperties()
 	{
-
 		// Request to use system proxies to access to the Internet
-		if (System.getProperty("java.net.useSystemProxies") == null)
+/*		if (System.getProperty("java.net.useSystemProxies") == null)
 		{
 			System.setProperty("java.net.useSystemProxies", "true");
-		}
+		}*/
 	}
 
 
@@ -693,7 +681,8 @@ public class SweetHomeAVR extends HomeApplication
 		private final Class<? extends SweetHomeAVR> mainClass;
 
 		public FileContentManagerWithRecordedLastDirectories(UserPreferences preferences,
-															 Class<? extends SweetHomeAVR> mainClass,SweetHomeAVRActivity activity)
+															 Class<? extends SweetHomeAVR> mainClass,
+															 SweetHomeAVRActivity activity)
 		{
 			super(preferences, activity);
 			this.mainClass = mainClass;

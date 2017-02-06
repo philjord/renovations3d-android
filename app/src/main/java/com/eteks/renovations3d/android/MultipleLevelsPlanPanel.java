@@ -1,5 +1,8 @@
 package com.eteks.renovations3d.android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +25,6 @@ import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
-import com.eteks.sweethome3d.HomeFrameController;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
@@ -49,15 +51,17 @@ import javaawt.Graphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.print.PageFormat;
 import javaawt.print.PrinterException;
-import javaxswing.ImageIcon;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
 
+import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
 import static com.mindblowing.renovations3d.R.id.controlKeyToggle;
 
 
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
+	private static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
+
 	//menu item options
 	public static boolean alignmentActivated = false;
 	public static boolean magnetismToggled = false;// careful toggle != checked!
@@ -102,6 +106,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		return rootView;
 	}
 
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
+		// this gets called heaps of time, wat until we have an activity
+		if(getActivity() != null)
+			possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+	}
+
+	@Override
+	public void onStart()
+	{
+		// here and there because this is the first view so it's gets the visible call far to early
+		super.onStart();
+		possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+	}
 
 	MenuItem.OnMenuItemClickListener planMenuItemActionListener = new MenuItem.OnMenuItemClickListener() {
 
@@ -328,7 +354,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
-
 		switch (item.getItemId())
 		{
 			case R.id.one:
@@ -342,6 +367,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				return super.onContextItemSelected(item);
 		}
 	}
+
 
 
 	private Home home;

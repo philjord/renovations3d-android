@@ -88,6 +88,18 @@ public class FurnitureTable extends JTable implements VCView, Printable
 		return rootView;
 	}
 
+	public void finalize()
+	{
+		System.err.println("finalize " + this);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		System.err.println("DESTROYING " + this);
+		super.onDestroy();
+	}
+
 	private void updateHeader()
 	{
 		header.removeAllViews();
