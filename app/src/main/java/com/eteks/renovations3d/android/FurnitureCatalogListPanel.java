@@ -22,7 +22,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.eteks.renovations3d.utils.HorizontalFlowLayout;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -36,7 +35,6 @@ import com.eteks.sweethome3d.model.UserPreferences;
 
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
@@ -57,14 +55,12 @@ import javaawt.Graphics;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
-import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
-
 
 /**
  * Created by phil on 11/22/2016.
  */
 
-public class FurnitureCatalogListPanel extends JComponent implements VCView
+public class FurnitureCatalogListPanel extends JComponent implements com.eteks.sweethome3d.viewcontroller.View
 {
 	private static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
 

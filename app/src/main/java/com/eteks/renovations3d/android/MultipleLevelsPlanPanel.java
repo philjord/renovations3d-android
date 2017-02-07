@@ -38,7 +38,6 @@ import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.mindblowing.renovations3d.R;
 
 import java.beans.PropertyChangeEvent;
@@ -1135,7 +1134,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	/**
 	 * Returns the component used as an horizontal ruler for the plan displayed by this component.
 	 */
-	public VCView getHorizontalRuler()
+	public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler()
 	{
 		return this.planComponent.getHorizontalRuler();
 	}
@@ -1143,7 +1142,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	/**
 	 * Returns the component used as a vertical ruler for the plan displayed by this component.
 	 */
-	public VCView getVerticalRuler()
+	public com.eteks.sweethome3d.viewcontroller.View getVerticalRuler()
 	{
 		return this.planComponent.getVerticalRuler();
 	}

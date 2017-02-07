@@ -45,7 +45,6 @@ import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.Home3DAttributesController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 
 /**
  * Home 3D attributes editing panel.
@@ -401,7 +400,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
     //if (SwingTools.showConfirmDialog((JComponent)parentView,
     //        this, this.dialogTitle, this.wallsTransparencySlider) == JOptionPane.OK_OPTION
     //    && this.controller != null) {

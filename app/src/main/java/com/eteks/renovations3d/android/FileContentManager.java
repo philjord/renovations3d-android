@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.os.Environment;
 import android.os.Looper;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 
 import com.eteks.sweethome3d.model.Content;
@@ -33,7 +32,7 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
-import com.eteks.sweethome3d.viewcontroller.VCView;
+import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.mindblowing.renovations3d.R;
@@ -541,7 +540,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
    * Returns the file path chosen by user with an open file dialog.
    * @return the file path or <code>null</code> if user canceled its choice.
    */
-  public String showOpenDialog(VCView        parentView,
+  public String showOpenDialog(View        parentView,
                                String      dialogTitle,
                                ContentType contentType) {
     // Use native file dialog under Mac OS X
@@ -559,7 +558,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
    * he wants to overwrite this existing file. 
    * @return the chosen file path or <code>null</code> if user canceled its choice.
    */
-  public String showSaveDialog(VCView        parentView,
+  public String showSaveDialog(View        parentView,
                                String      dialogTitle,
                                ContentType contentType,
                                String      path) {
@@ -614,7 +613,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
   /**
    * Displays an AWT open file dialog.
    */
-  private String showFileDialog(VCView               parentView,
+  private String showFileDialog(View               parentView,
                                 String             dialogTitle,
                                 final ContentType  contentType,
                                 String             path, 
@@ -707,7 +706,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
   /**
    * Displays a Swing open file chooser.
    */
-  private String showFileChooser(VCView          parentView,
+  private String showFileChooser(View          parentView,
                                  String        dialogTitle,
 								 final ContentType   contentType,
                                  final String        path,
@@ -727,7 +726,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 			  public void run()
 			  {
 				  LayoutInflater li = LayoutInflater.from(activity);
-				  View promptsView = li.inflate(R.layout.new_file_name, null);
+				  android.view.View promptsView = li.inflate(R.layout.new_file_name, null);
 
 				  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
 				  alertDialogBuilder.setView(promptsView);
@@ -903,7 +902,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
    * file <code>path</code> or not.
    * @return <code>true</code> if user confirmed to overwrite.
    */
-  protected boolean confirmOverwrite(VCView parentView, String path) {
+  protected boolean confirmOverwrite(View parentView, String path) {
     // Retrieve displayed text in buttons and message
     String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.message", path);
     String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.title");

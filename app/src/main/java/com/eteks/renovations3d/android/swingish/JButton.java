@@ -1,6 +1,8 @@
+
 package com.eteks.renovations3d.android.swingish;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.Button;
 
 /**
@@ -13,5 +15,13 @@ public class JButton extends Button
 	{
 		super(context);
 		setText(text);
+	}
+
+	public void addActionListener(final ActionListener actionListener)
+	{
+		setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				actionListener.actionPerformed(null);
+			}});
 	}
 }

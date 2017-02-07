@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import java.beans.PropertyChangeEvent;
@@ -40,7 +41,6 @@ import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.LabelController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
@@ -359,6 +359,9 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
         //0, 0, 1, 1, 0, 0, labelAlignment,
        // GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
 	  rootView.addView(this.textTextField, labelInsets);//, new GridBagConstraints(
+	  //hide the input keyboard unless the text is blank
+	if(this.textTextField.getText().toString()!=null &&this.textTextField.getText().toString().length()>0)
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
        // 1, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START,
        // GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0));
 	//  rootView.addView(this.fontNameLabel, labelInsets);//, new GridBagConstraints(
@@ -428,7 +431,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
   /*  if (SwingTools.showConfirmDialog((JComponent)parentView,
             this, this.dialogTitle, this.textTextField) == JOptionPane.OK_OPTION
         && this.controller != null) {

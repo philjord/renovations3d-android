@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -39,11 +40,9 @@ import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
-import com.eteks.sweethome3d.viewcontroller.HomeFurnitureController;
 import com.eteks.sweethome3d.viewcontroller.LevelController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
+
 
 /**
  * Level editing panel.
@@ -465,6 +464,8 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
       // Second row
 		rootView.addView(this.nameLabel, labelInsets);
 		rootView.addView(this.nameTextField, labelInsets);
+		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		//add(this.nameLabel, new GridBagConstraints(
        //   0, 1, 1, 1, 0, 0, labelAlignment,
        //   GridBagConstraints.NONE, labelInsets, 0, 0));
@@ -556,7 +557,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
    /* if (SwingTools.showConfirmDialog((JComponent)parentView,
             this, this.dialogTitle, this.nameTextField) == JOptionPane.OK_OPTION) {
       this.controller.modifyLevels();

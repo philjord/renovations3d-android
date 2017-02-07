@@ -3,15 +3,12 @@ package com.eteks.renovations3d;
 
 import android.Manifest;
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,17 +22,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.ingenieur.andyelderscrolls.utils.SopInterceptor;
+import com.eteks.renovations3d.utils.SopInterceptor;
 import com.mindblowing.renovations3d.R;
 
 import java.io.File;
@@ -204,6 +203,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
+
 	/**
 	 * This must be called eventually by SweetHomeAVR
 	 */
@@ -215,15 +215,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		mViewPager.setOffscreenPageLimit(4);
 
 		invalidateOptionsMenu();
-	}
-
-
-
-	private void permissionGranted()
-	{
-		fileSystemAccessGranted = true;
-		invalidateOptionsMenu();
-		loadUpContent();
 	}
 
 
@@ -509,6 +500,13 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
+	private void permissionGranted()
+	{
+		fileSystemAccessGranted = true;
+		invalidateOptionsMenu();
+		loadUpContent();
+	}
+
 	private void loadUpContent()
 	{
 		//TODO: see eclipse SweetHomeAVR.protected void start(String[] args) for exactly this setup, but better
@@ -693,8 +691,5 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
-
-
-
 
 }

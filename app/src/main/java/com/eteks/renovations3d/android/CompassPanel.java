@@ -20,18 +20,12 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
@@ -42,8 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
-import com.eteks.renovations3d.android.swingish.JButton;
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
@@ -55,7 +48,7 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.CompassController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
-import com.eteks.sweethome3d.viewcontroller.VCView;
+
 
 import javaawt.BasicStroke;
 import javaawt.Graphics2D;
@@ -324,8 +317,8 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         }
       });*/
 
-    this.timeZoneComboBox.addItemListener(new JComboBox.ItemListener() {
-        public void itemStateChanged(JComboBox.ItemEvent ev) {
+    this.timeZoneComboBox.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent ev) {
           controller.removePropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
           controller.setTimeZone((String)timeZoneComboBox.getSelectedItem());
           controller.addPropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
@@ -540,7 +533,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
   /*  JFormattedTextField northDirectionTextField =
         ((JSpinner.DefaultEditor)this.northDirectionSpinner.getEditor()).getTextField();
     if (SwingTools.showConfirmDialog((JComponent)parentView, 

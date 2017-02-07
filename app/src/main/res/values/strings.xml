@@ -46,4 +46,5 @@
     <string name="deletepov">Delete point of view</string>
     <string name="modify3dview">Modify 3D view</string>
     <string name="viewalllevels">View all levels</string>
+    <string name="processing">Processing</string>
 </resources>

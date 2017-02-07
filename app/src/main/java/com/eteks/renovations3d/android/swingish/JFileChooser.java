@@ -90,11 +90,11 @@ public class JFileChooser
 				}
 				else
 				{
+					dialog.dismiss();
 					if (fileListener != null)
 					{
 						fileListener.fileSelected(chosenFile);
 					}
-					dialog.dismiss();
 				}
 			}
 		});

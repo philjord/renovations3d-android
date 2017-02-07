@@ -56,11 +56,11 @@ public class JComboBox extends Spinner
 	{
 		this.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			public void onNothingSelected(AdapterView<?> parent) {
-				il.itemStateChanged(new ItemEvent());
+				il.itemStateChanged(new ItemListener.ItemEvent());
 			}
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
 			{
-				il.itemStateChanged(new ItemEvent());
+				il.itemStateChanged(new ItemListener.ItemEvent());
 			}
 		});
 	}
@@ -70,13 +70,4 @@ public class JComboBox extends Spinner
 		// ignored this.maximumRowCount = maximumRowCount;
 	}
 
-	public interface ItemListener
-	{
-		public void itemStateChanged(ItemEvent ev);
-	}
-
-	public static class ItemEvent
-	{
-
-	}
 }

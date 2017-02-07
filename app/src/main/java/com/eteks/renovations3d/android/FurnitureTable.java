@@ -1,5 +1,6 @@
 package com.eteks.renovations3d.android;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -25,7 +27,6 @@ import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.FurnitureController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.android.swingish.JTable;
 import com.mindblowing.renovations3d.R;
 
@@ -57,12 +58,11 @@ import javaxswing.ImageIcon;
  * Created by phil on 11/22/2016.
  */
 
-public class FurnitureTable extends JTable implements VCView, Printable
+public class FurnitureTable extends JTable implements com.eteks.sweethome3d.viewcontroller.View, Printable
 {
 	private Home home;
 	private UserPreferences preferences;
 	private FurnitureController controller;
-
 
 
 	// terrible but it'll do
@@ -184,11 +184,10 @@ public class FurnitureTable extends JTable implements VCView, Printable
 			tv4.setWidth(widths[4]);
 			tableRow.addView(tv4);
 
-			CheckBox vcb = new CheckBox(this.getContext());
+			VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
 			vcb.setBackgroundColor(Color.WHITE);
 			vcb.setPadding(10, 10, 10, 10);
 			vcb.setGravity(Gravity.CENTER);
-			vcb.setChecked(piece.isVisible());
 			vcb.setWidth(widths[5]);
 			tableRow.addView(vcb);
 
@@ -202,21 +201,29 @@ public class FurnitureTable extends JTable implements VCView, Printable
 		}
 	}
 
-	private class VisibleCheckBoxListener implements View.OnClickListener
+	private class VisibilityCheckBox extends CheckBox
 	{
-		@Override
-		public void onClick(View v)
+		public HomePieceOfFurniture piece;
+		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece)
 		{
-		//	controller.setSelectedFurniture(Arrays.asList(new HomePieceOfFurniture [] {
-		//			(HomePieceOfFurniture)furnitureTreeTableModel.getValueAt(row, 0)}));
-		//	controller.toggleSelectedFurnitureVisibility();
-			//if (cb.isChecked())
-			{
-			//	cb.getText().toString(); //This will retrieve the text associated with the Checkbox
-			//	cb.setText("Your new string here"); //This will set the text associated with the CheckBox
-			}
+			super(context);
+			this.piece = piece;
+			setChecked(piece.isVisible());
+			setOnCheckedChangeListener(visibleCheckBoxListener);
 		}
 	}
+	private CompoundButton.OnCheckedChangeListener  visibleCheckBoxListener  = new CompoundButton.OnCheckedChangeListener()
+	{
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+		{
+			//controller.setSelectedFurniture(Arrays.asList(new HomePieceOfFurniture [] {
+			//		(HomePieceOfFurniture)furnitureTreeTableModel.getValueAt(row, 0)}));
+			controller.setSelectedFurniture(Arrays.asList(new HomePieceOfFurniture [] {
+					((VisibilityCheckBox)buttonView).piece}));
+			controller.toggleSelectedFurnitureVisibility();
+		}
+	};
 
 
 	public void init(Home home, UserPreferences preferences, FurnitureController controller)

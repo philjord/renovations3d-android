@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
@@ -37,7 +38,6 @@ import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.ObserverCameraController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 
 /**
  * Observer camera editing panel.
@@ -200,8 +200,8 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     this.adjustObserverCameraElevationCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "adjustObserverCameraElevationCheckBox.text"), controller.isElevationAdjusted());
-    this.adjustObserverCameraElevationCheckBox.addItemListener(new JCheckBox.ItemListener() {
-        public void itemStateChanged(JCheckBox.ItemEvent ev) {
+    this.adjustObserverCameraElevationCheckBox.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent ev) {
           controller.setElevationAdjusted(adjustObserverCameraElevationCheckBox.isSelected());
         }
       });
@@ -368,7 +368,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView)
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView)
   {
    /* JFormattedTextField elevationSpinnerTextField =
         ((JSpinner.DefaultEditor)this.elevationSpinner.getEditor()).getTextField();

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
@@ -32,7 +33,6 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.PolylineController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 
 import javaawt.BasicStroke;
 import javaawt.Color;
@@ -244,8 +244,8 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
           return component;
         }
       });*/
-    this.arrowsStyleComboBox.addItemListener(new JComboBox.ItemListener() {
-      public void itemStateChanged(JComboBox.ItemEvent ev) {
+    this.arrowsStyleComboBox.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent ev) {
           ArrowsStyle arrowsStyle = (ArrowsStyle)arrowsStyleComboBox.getSelectedItem();
           if (arrowsStyle != null) {
             controller.setStartArrowStyle(arrowsStyle.getStartArrowStyle());
@@ -376,8 +376,8 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
           return component;
         }
       });*/
-    this.joinStyleComboBox.addItemListener(new JComboBox.ItemListener() {
-      public void itemStateChanged(JComboBox.ItemEvent ev) {
+    this.joinStyleComboBox.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent ev) {
           controller.setJoinStyle((Polyline.JoinStyle)joinStyleComboBox.getSelectedItem());
         }
       });
@@ -480,8 +480,8 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
         }
       });*/
     this.dashStyleComboBox.setSelectedItem(controller.getDashStyle());
-    this.dashStyleComboBox.addItemListener(new JComboBox.ItemListener() {
-      public void itemStateChanged(JComboBox.ItemEvent ev) {
+    this.dashStyleComboBox.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent ev) {
           controller.setDashStyle((Polyline.DashStyle)dashStyleComboBox.getSelectedItem());
         }
       });
@@ -604,7 +604,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
   /*  if (SwingTools.showConfirmDialog((JComponent)parentView, this, this.dialogTitle,
           ((JSpinner.DefaultEditor)this.thicknessSpinner.getEditor()).getTextField()) == JOptionPane.OK_OPTION
         && this.controller != null) {

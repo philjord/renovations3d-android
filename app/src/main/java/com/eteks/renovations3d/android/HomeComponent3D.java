@@ -36,10 +36,9 @@ import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeController3D;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.j3d.Component3DManager;
-import com.ingenieur.andyelderscrolls.utils.AndyFPSCounter;
-import com.ingenieur.andyelderscrolls.utils.Canvas3D2D;
+import com.eteks.renovations3d.utils.AndyFPSCounter;
+import com.eteks.renovations3d.utils.Canvas3D2D;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -108,14 +107,12 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
-import static com.eteks.renovations3d.android.SwingTools.getLocalizedLabelText;
-
 
 /**
  * Created by phil on 11/22/2016.
  */
 
-public class HomeComponent3D extends NewtBaseFragment implements VCView
+public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweethome3d.viewcontroller.View
 {
 	private AndyFPSCounter fpsCounter;
 	private GLWindow gl_window;

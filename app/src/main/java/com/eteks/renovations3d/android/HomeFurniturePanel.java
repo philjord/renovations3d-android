@@ -21,25 +21,18 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.view.WindowManager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.security.AccessControlException;
 
-
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
-import com.eteks.renovations3d.android.swingish.JButton;
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
@@ -53,7 +46,8 @@ import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.HomeFurnitureController;
 import com.eteks.sweethome3d.viewcontroller.ModelMaterialsController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
+
+import com.mindblowing.renovations3d.R;
 
 /**
  * Home furniture editing panel.
@@ -107,9 +101,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
    * @param controller the controller of this panel
    */
   public HomeFurniturePanel(UserPreferences preferences,
-                            HomeFurnitureController controller, Activity activity) {
+                            HomeFurnitureController controller,
+							Activity activity) {
 	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_homefurniturepanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -503,8 +498,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create keep proportions check box bound to PROPORTIONAL controller property
       this.keepProportionsCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "keepProportionsCheckBox.text"));
-      this.keepProportionsCheckBox.addItemListener(new JCheckBox.ItemListener() {
-        public void itemStateChanged(JCheckBox.ItemEvent ev) {
+      this.keepProportionsCheckBox.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent ev) {
           controller.setProportional(keepProportionsCheckBox.isSelected());
         }
       });
@@ -922,313 +917,165 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       }
     }*/
   }
-  
+
+
+
+
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences, 
                                 final HomeFurnitureController controller) {
-    //int labelAlignment = OperatingSystem.isMacOSX()
-    //    ? GridBagConstraints.LINE_END
-    //    : GridBagConstraints.LINE_START;
-
-    // First row    
     boolean priceDisplayed = this.priceLabel != null;
 
 	  JLabel namePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed  ?  "nameAndPricePanel.title"  : "namePanel.title"));
-	  rootView.addView(namePanel, rowInsets);
+	  swapOut(namePanel, R.id.furniture_panel_namePanel);
 
-  //  JPanel namePanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-  //      com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed  ?  "nameAndPricePanel.title"  : "namePanel.title"));
-   // int rowGap = OperatingSystem.isMacOSXLeopardOrSuperior() ? 0 : 5;
     if (this.nameLabel != null) {
-		rootView.addView(this.nameLabel, rowInsets);
-		rootView.addView(this.nameTextField, rowInsets);
-     /* namePanel.add(this.nameLabel, new GridBagConstraints(
-          0, 0, 1, 1, 0, 0, labelAlignment, GridBagConstraints.NONE,
-          new Insets(0, 0, 0, 5), 0, 0));
-      namePanel.add(this.nameTextField, new GridBagConstraints(
-          1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));*/
+		swapOut(this.nameLabel, R.id.furniture_panel_nameLabel);
+		swapOut(this.nameTextField, R.id.furniture_panel_nameTextField);
+		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
     if (this.nameVisibleCheckBox != null) {
-		rootView.addView(this.nameVisibleCheckBox, rowInsets);
-     // namePanel.add(this.nameVisibleCheckBox, new GridBagConstraints(
-     //     2, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		swapOut(this.nameVisibleCheckBox, R.id.furniture_panel_nameVisibleCheckBox);
     }
     if (this.descriptionLabel != null) {
+		//TODO:
 		rootView.addView(this.descriptionLabel, rowInsets);
 		rootView.addView(this.descriptionTextField, rowInsets);
-     /* namePanel.add(this.descriptionLabel, new GridBagConstraints(
-          0, 1, 1, 1, 0, 0, labelAlignment, GridBagConstraints.NONE,
-          new Insets(5, 0, 0, 5), 0, 0));
-      namePanel.add(this.descriptionTextField, new GridBagConstraints(
-          1, 1, priceDisplayed  ? 1  : 3, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, priceDisplayed  ? 10  : 0), 0, 0));*/
     }
     if (priceDisplayed) {
+		//TODO:
 		rootView.addView(this.priceLabel, rowInsets);
 		rootView.addView(this.priceSpinner, rowInsets);
-      /*namePanel.add(this.priceLabel, new GridBagConstraints(
-          this.descriptionLabel != null  ? 2  : 0, 1, 1, 1, 0, 0, labelAlignment, GridBagConstraints.NONE,
-          new Insets(5, 0, 0, 5), 0, 0));
-      namePanel.add(this.priceSpinner, new GridBagConstraints(
-          this.descriptionLabel != null  ? 3  : 1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));*/
     }
-   /* if (namePanel.getComponentCount() > 0) {
-      add(namePanel, new GridBagConstraints(0, 0, 3, 1, 0, 0, labelAlignment, GridBagConstraints.HORIZONTAL,
-          new Insets(0, 0, rowGap, 0), 0, 0));
-    }*/
 
 	  JLabel locationPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "locationPanel.title"));
-	  rootView.addView(locationPanel, rowInsets);
-    // Location panel
-   /* JPanel locationPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "locationPanel.title"));
-    Insets labelInsets = new Insets(0, 0, 5, 5);
-    Insets rightComponentInsets = new Insets(0, 0, 5, 0);*/
-    if (this.xLabel != null) {
-		rootView.addView(this.xLabel, rowInsets);
-		rootView.addView(this.xSpinner, rowInsets);
-      /*locationPanel.add(this.xLabel, new GridBagConstraints(
-          0, 0, 1, 1, 0, 0, labelAlignment, GridBagConstraints.NONE,
-          labelInsets, 0, 0));
-      locationPanel.add(this.xSpinner, new GridBagConstraints(
-          1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));*/
+	  swapOut(locationPanel, R.id.furniture_panel_locationPanel);
+     if (this.xLabel != null) {
+		swapOut(this.xLabel, R.id.furniture_panel_xLabel);
+		swapOut(this.xSpinner, R.id.furniture_panel_xSpinner);
     }
     if (this.yLabel != null) {
-		rootView.addView(this.yLabel, rowInsets);
-		rootView.addView(this.ySpinner, rowInsets);
-      /*locationPanel.add(this.yLabel, new GridBagConstraints(
-          0, 1, 1, 1, 0, 0, labelAlignment, GridBagConstraints.NONE,
-          labelInsets, 0, 0));
-      locationPanel.add(this.ySpinner, new GridBagConstraints(
-          1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));*/
+		swapOut(this.yLabel, R.id.furniture_panel_yLabel);
+		swapOut(this.ySpinner, R.id.furniture_panel_ySpinner);
     }
     if (this.elevationLabel != null) {
-		rootView.addView(this.elevationLabel, rowInsets);
-		rootView.addView(this.elevationSpinner, rowInsets);
-      /*locationPanel.add(this.elevationLabel, new GridBagConstraints(
-          0, 2, 1, 1, 0, 0, labelAlignment,
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      locationPanel.add(this.elevationSpinner, new GridBagConstraints(
-          1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));*/
+		swapOut(this.elevationLabel, R.id.furniture_panel_elevationLabel);
+		swapOut(this.elevationSpinner, R.id.furniture_panel_elevationSpinner);
     }
     if (this.angleLabel != null) {
-		rootView.addView(this.angleLabel, rowInsets);
-		rootView.addView(this.angleSpinner, rowInsets);
-      /*locationPanel.add(this.angleLabel, new GridBagConstraints(
-          0, 3, 1, 1, 0, 0, labelAlignment,
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      locationPanel.add(this.angleSpinner, new GridBagConstraints(
-          1, 3, 1, 1, 0, 1, GridBagConstraints.LINE_START,
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));*/
+		swapOut(this.angleLabel, R.id.furniture_panel_angleLabel);
+		swapOut(this.angleSpinner, R.id.furniture_panel_angleSpinner);
     }
     if (this.basePlanItemCheckBox != null) {
-		rootView.addView(this.basePlanItemCheckBox, rowInsets);
-      //locationPanel.add(this.basePlanItemCheckBox, new GridBagConstraints(
-       //   0, 4, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		swapOut(this.basePlanItemCheckBox, R.id.furniture_panel_basePlanItemCheckBox);
     }
-    /*if (locationPanel.getComponentCount() > 0) {
-      add(locationPanel, new GridBagConstraints(
-          0, 1, 1, 1, 1, 0, labelAlignment, GridBagConstraints.BOTH, new Insets(
-          0, 0, rowGap, 0), 0, 0));
-    }*/
 
 	  JLabel sizePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "sizePanel.title"));
-	  rootView.addView(sizePanel, rowInsets);
-
-    // Size panel
-   // JPanel sizePanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-   //     com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "sizePanel.title"));
-    if (this.widthLabel != null) {
-		rootView.addView(this.widthLabel, rowInsets);
-		rootView.addView(this.widthSpinner, rowInsets);
-      /*sizePanel.add(this.widthLabel, new GridBagConstraints(
-          0, 0, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      sizePanel.add(this.widthSpinner, new GridBagConstraints(
-          1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, rightComponentInsets, -10, 0));*/
+	  swapOut(sizePanel, R.id.furniture_panel_sizePanel);
+     if (this.widthLabel != null) {
+		swapOut(this.widthLabel, R.id.furniture_panel_widthLabel);
+		swapOut(this.widthSpinner, R.id.furniture_panel_widthSpinner);
     }
     if (this.depthLabel != null) {
-		rootView.addView(this.depthLabel, rowInsets);
-		rootView.addView(this.depthSpinner, rowInsets);
-      /*sizePanel.add(this.depthLabel, new GridBagConstraints(
-          0, 1, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      sizePanel.add(this.depthSpinner, new GridBagConstraints(
-          1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, rightComponentInsets, -10, 0));*/
+		swapOut(this.depthLabel, R.id.furniture_panel_depthLabel);
+		swapOut(this.depthSpinner, R.id.furniture_panel_depthSpinner);
     }
     if (this.heightLabel != null) {
-		rootView.addView(this.heightLabel, rowInsets);
-		rootView.addView(this.heightSpinner, rowInsets);
-      /*sizePanel.add(this.heightLabel, new GridBagConstraints(
-          0, 2, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      sizePanel.add(this.heightSpinner, new GridBagConstraints(
-          1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, rightComponentInsets, -10, 0));*/
+		swapOut(this.heightLabel, R.id.furniture_panel_heightLabel);
+		swapOut(this.heightSpinner, R.id.furniture_panel_heightSpinner);
     }
     if (this.keepProportionsCheckBox != null) {
-		rootView.addView(this.keepProportionsCheckBox, rowInsets);
-      //sizePanel.add(this.keepProportionsCheckBox, new GridBagConstraints(
-      //    0, 3, 2, 1, 0, 1, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.keepProportionsCheckBox, R.id.furniture_panel_keepProportionsCheckBox);
     }
     if (this.mirroredModelCheckBox != null) {
-		rootView.addView(this.mirroredModelCheckBox, rowInsets);
-		//sizePanel.add(this.mirroredModelCheckBox, new GridBagConstraints(
-        //  0, 4, 2, 1, 0, 1, GridBagConstraints.LINE_START,
-        //  GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		swapOut(this.mirroredModelCheckBox, R.id.furniture_panel_mirroredModelCheckBox);
     }
-    /*if (sizePanel.getComponentCount() > 0) {
-      add(sizePanel, new GridBagConstraints(
-          1, 1, 2, 1, 1, 0, labelAlignment, 
-          GridBagConstraints.BOTH, new Insets(0, 0, rowGap, 0), 0, 0));
-    }*/
+
 	  JLabel paintPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
-	  rootView.addView(paintPanel, rowInsets);
-
-    //final JPanel paintPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-    //    com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
+	  swapOut(paintPanel, R.id.furniture_panel_paintPanel);
     if (this.defaultColorAndTextureRadioButton != null) {
-		rootView.addView(this.defaultColorAndTextureRadioButton, rowInsets);
-		rootView.addView(this.colorRadioButton, rowInsets);
-		rootView.addView(this.colorButton, rowInsets);
+		swapOut(this.defaultColorAndTextureRadioButton, R.id.furniture_panel_defaultColorAndTextureRadioButton);
+		swapOut(this.colorRadioButton, R.id.furniture_panel_colorRadioButton);
+		swapOut(this.colorButton, R.id.furniture_panel_colorButton);
 
-     /* int buttonPadY;
-      int buttonsBottomInset;
-      if (OperatingSystem.isMacOSXLeopardOrSuperior() 
-          && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
-        // Ensure the top and bottom of segmented buttons are correctly drawn 
-        buttonPadY = 4;
-        buttonsBottomInset = -4;
-      } else {
-        buttonPadY = 0;
-        buttonsBottomInset = 0;
-      }
-      // Color and Texture panel
-      paintPanel.add(this.defaultColorAndTextureRadioButton, new GridBagConstraints(
-          0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      paintPanel.add(this.colorRadioButton, new GridBagConstraints(
-          0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-      paintPanel.add(this.colorButton, new GridBagConstraints(
-          1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, new Insets(0, 0, buttonsBottomInset, 0), 0, buttonPadY));*/
       if (this.textureComponent != null) {
-		  rootView.addView(this.textureRadioButton, rowInsets);
-//		  rootView.addView(this.textureComponent, rowInsets);
-       /* paintPanel.add(this.textureRadioButton, new GridBagConstraints(
-            0, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.NONE, new Insets(5, 0, 0, 5), 0, 0));
-        paintPanel.add(this.textureComponent, new GridBagConstraints(
-            1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, new Insets(5, 0, buttonsBottomInset, 0), 0, buttonPadY));*/
+		  swapOut(this.textureRadioButton, R.id.furniture_panel_textureRadioButton);
+		  //TODO:
+		  // paintPanel.add(this.textureComponent, new GridBagConstraints(
+
       }
       if (this.modelMaterialsComponent != null) {
-		  rootView.addView(this.modelMaterialsRadioButton, rowInsets);
-//		  rootView.addView(this.modelMaterialsComponent, rowInsets);
-        /*paintPanel.add(this.modelMaterialsRadioButton, new GridBagConstraints(
-            0, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.NONE, new Insets(5, 0, 0, 5), 0, 0));
-        paintPanel.add(this.modelMaterialsComponent, new GridBagConstraints(
-            1, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, new Insets(5, 0, buttonsBottomInset, 0), 0, buttonPadY));*/
+		  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
+		  //TODO:
+		  //paintPanel.add(this.modelMaterialsComponent, new GridBagConstraints(
+
       }
-      //add(paintPanel, new GridBagConstraints(
-      //    0, 2, 1, 1, 0, 0, labelAlignment,
-      //    GridBagConstraints.BOTH, new Insets(0, 0, rowGap, 0), 0, 0));
-      
+
       controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
-				//TODO: more visibility
+
               //paintPanel.setVisible(controller.isTexturable());
+				defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
+				colorRadioButton.setEnabled(controller.isTexturable());
+				colorButton.setEnabled(controller.isTexturable());
+				textureRadioButton.setEnabled(controller.isTexturable());
+				modelMaterialsRadioButton.setEnabled(controller.isTexturable());
             }
           });
       //paintPanel.setVisible(controller.isTexturable());
+		this.defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
+		this.colorRadioButton.setEnabled(controller.isTexturable());
+		this.colorButton.setEnabled(controller.isTexturable());
+		this.textureRadioButton.setEnabled(controller.isTexturable());
+		this.modelMaterialsRadioButton.setEnabled(controller.isTexturable());
     }
     if (this.defaultShininessRadioButton != null) {
 		JLabel shininessPanel = new JLabel(activity, preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shininessPanel.title"));
-		rootView.addView(shininessPanel, rowInsets);
-		rootView.addView(this.defaultShininessRadioButton, rowInsets);
-		rootView.addView(this.mattRadioButton, rowInsets);
-		rootView.addView(this.shinyRadioButton, rowInsets);
+		swapOut(shininessPanel, R.id.furniture_panel_shininessPanel);
+		swapOut(this.defaultShininessRadioButton, R.id.furniture_panel_defaultShininessRadioButton);
+		swapOut(this.mattRadioButton, R.id.furniture_panel_mattRadioButton);
+		swapOut(this.shinyRadioButton, R.id.furniture_panel_shinyRadioButton);
 
-
-
-      // Shininess panel
- /*     final JPanel shininessPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-          com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shininessPanel.title"));
-      shininessPanel.add(this.defaultShininessRadioButton, new GridBagConstraints(
-          0, 0, 1, 1, 0, 1, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-      shininessPanel.add(this.mattRadioButton, new GridBagConstraints(
-          0, 1, 1, 1, 0, 1, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-      shininessPanel.add(this.shinyRadioButton, new GridBagConstraints(
-          0, 2, 1, 1, 0, 1, GridBagConstraints.LINE_START, 
-          GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
-      if (paintPanel.getComponentCount() == 7) {
-        shininessPanel.add(new JLabel(), new GridBagConstraints(
-            0, 3, 1, 1, 0, 1, GridBagConstraints.LINE_START, 
-            GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
-      }
-      add(shininessPanel, new GridBagConstraints(
-          1, 2, 2, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.BOTH, new Insets(0, 0, rowGap, 0), 0, 0));*/
-      
       controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
-              //TODO: more visibility stuff
 				//shininessPanel.setVisible(controller.isTexturable());
+				defaultShininessRadioButton.setEnabled(controller.isTexturable());
+				mattRadioButton.setEnabled(controller.isTexturable());
+				shinyRadioButton.setEnabled(controller.isTexturable());
             }
           });
       //shininessPanel.setVisible(controller.isTexturable());
+		this.defaultShininessRadioButton.setEnabled(controller.isTexturable());
+		this.mattRadioButton.setEnabled(controller.isTexturable());
+		this.shinyRadioButton.setEnabled(controller.isTexturable());
     }
-    // Last row
+
     if (this.visibleCheckBox != null) {
-		rootView.addView(this.visibleCheckBox, rowInsets);
-      //add(this.visibleCheckBox, new GridBagConstraints(
-       //   0, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-       //   GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+		swapOut(this.visibleCheckBox, R.id.furniture_panel_visibleCheckBox);
     }
     if (this.lightPowerLabel != null) {
+		//TODO:
 		rootView.addView(this.lightPowerLabel, rowInsets);
 		rootView.addView(this.lightPowerSpinner, rowInsets);
-     // add(this.lightPowerLabel, new GridBagConstraints(
-     //     1, 3, 1, 1, 0, 0, labelAlignment,
-     //     GridBagConstraints.NONE, new Insets(0, 10, 0, 5), 0, 0));
-     // add(this.lightPowerSpinner, new GridBagConstraints(
-     //     2, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-     //     GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
     }
-
-
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(this.closeButton, R.id.furniture_panel_closeButton);
   }
 
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
     /*if (SwingTools.showConfirmDialog((JComponent)parentView,
             this, this.dialogTitle, this.nameTextField) == JOptionPane.OK_OPTION) {
       this.controller.modifyFurniture();

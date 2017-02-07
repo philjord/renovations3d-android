@@ -46,33 +46,13 @@ public class JCheckBox extends CheckBox
 			}});
 	}
 
-
-
-	public interface ActionListener
-	{
-		public void actionPerformed(ActionEvent ev);
-	}
-	public class ActionEvent
-	{
-
-	}
-
 	public void addItemListener( final ItemListener il)
 	{
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				il.itemStateChanged(new ItemEvent());
+				il.itemStateChanged(null);
 			}
 		});
 	}
 
-	public interface ItemListener
-	{
-		public void itemStateChanged(ItemEvent ev);
-	}
-
-	public static class ItemEvent
-	{
-
-	}
 }

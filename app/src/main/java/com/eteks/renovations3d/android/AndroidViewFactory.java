@@ -62,7 +62,7 @@ import com.eteks.sweethome3d.viewcontroller.TextureChoiceView;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskView;
 import com.eteks.sweethome3d.viewcontroller.UserPreferencesController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
+import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.VideoController;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.eteks.sweethome3d.viewcontroller.WallController;
@@ -90,7 +90,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that displays furniture <code>catalog</code>.
 	 */
-	public VCView createFurnitureCatalogView(FurnitureCatalog catalog,
+	public View createFurnitureCatalogView(FurnitureCatalog catalog,
 										   UserPreferences preferences,
 										   FurnitureCatalogController furnitureCatalogController)
 	{
@@ -109,7 +109,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new table that displays <code>home</code> furniture.
 	 */
-	public VCView createFurnitureView(Home home, UserPreferences preferences,
+	public View createFurnitureView(Home home, UserPreferences preferences,
 									FurnitureController furnitureController)
 	{
 		FurnitureTable furnitureTable = new FurnitureTable();
@@ -132,7 +132,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that displays <code>home</code> in 3D.
 	 */
-	public VCView createView3D(Home home, UserPreferences preferences,
+	public View createView3D(Home home, UserPreferences preferences,
 							 HomeController3D homeController3D)
 	{
 		try
@@ -174,7 +174,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that displays the different steps that helps user to choose a background image.
 	 */
-	public VCView createBackgroundImageWizardStepsView(BackgroundImage backgroundImage,
+	public View createBackgroundImageWizardStepsView(BackgroundImage backgroundImage,
 													   UserPreferences preferences,
 													   BackgroundImageWizardController backgroundImageWizardController)
 	{
@@ -198,7 +198,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that displays the different steps that helps the user to import a texture.
 	 */
-	public VCView createImportedTextureWizardStepsView(
+	public View createImportedTextureWizardStepsView(
 			CatalogTexture texture, String textureName,
 			UserPreferences preferences,
 			ImportedTextureWizardController importedTextureWizardController)
@@ -214,7 +214,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 												   UserPreferences preferences,
 												   ThreadedTaskController threadedTaskController)
 	{
-		return new ThreadedTaskPanel(taskMessage, preferences, threadedTaskController);
+		return new ThreadedTaskPanel(taskMessage, preferences, threadedTaskController, activity);
 	}
 
 	/**
@@ -319,7 +319,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that edits the baseboard of its controller.
 	 */
-	public VCView createBaseboardChoiceView(UserPreferences preferences,
+	public View createBaseboardChoiceView(UserPreferences preferences,
 										  BaseboardChoiceController baseboardChoiceController)
 	{
 		throw new UnsupportedOperationException();//return new BaseboardChoiceComponent(preferences, baseboardChoiceController, activity);
@@ -328,7 +328,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that edits the materials of its controller.
 	 */
-	public VCView createModelMaterialsView(UserPreferences preferences,
+	public View createModelMaterialsView(UserPreferences preferences,
 										 ModelMaterialsController controller)
 	{
 		throw new UnsupportedOperationException();//return new ModelMaterialsComponent(preferences, controller);

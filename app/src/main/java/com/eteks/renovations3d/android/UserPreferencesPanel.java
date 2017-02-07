@@ -48,6 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
@@ -60,7 +61,6 @@ import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.UserPreferencesController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.JComboBox;
@@ -504,8 +504,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       this.newWallPatternComboBox.setSelectedItem(newWallPattern != null 
           ? newWallPattern  
           : controller.getWallPattern());
-      this.newWallPatternComboBox.addItemListener( new JComboBox.ItemListener() {
-		  public void itemStateChanged(JComboBox.ItemEvent ev)
+      this.newWallPatternComboBox.addItemListener( new ItemListener() {
+		  public void itemStateChanged(ItemEvent ev)
 		  {
 			  controller.setNewWallPattern((TextureImage)newWallPatternComboBox.getSelectedItem());
 		  }
@@ -1127,7 +1127,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   /**
    * Displays this panel in a dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
    /* if (SwingTools.showConfirmDialog((JComponent)parentView,
             this, this.dialogTitle, this.languageComboBox) == JOptionPane.OK_OPTION
         && this.controller != null) {

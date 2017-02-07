@@ -36,7 +36,7 @@ import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
 
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.ingenieur.andyelderscrolls.utils.Canvas3D2D;
+import com.eteks.renovations3d.utils.Canvas3D2D;
 import com.jogamp.newt.opengl.GLWindow;
 
 import javaawt.GraphicsConfiguration;

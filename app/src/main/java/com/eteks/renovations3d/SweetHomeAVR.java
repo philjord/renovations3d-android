@@ -1,26 +1,28 @@
 package com.eteks.renovations3d;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.HomePane;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.io.HomeFileRecorder;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
+import com.eteks.sweethome3d.model.DamagedHomeRecorderException;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomeApplication;
 import com.eteks.sweethome3d.model.HomeRecorder;
+import com.eteks.sweethome3d.model.InterruptedRecorderException;
 import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.plugin.PluginManager;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
+import com.eteks.sweethome3d.viewcontroller.HomeView;
+import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
+import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
@@ -38,7 +40,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -69,7 +71,7 @@ public class SweetHomeAVR extends HomeApplication
 	// new magic singleton,
 	private HomeController homeController;
 
-	private static SweetHomeAVRActivity parentActivity;
+	private SweetHomeAVRActivity parentActivity;
 
 	/**
 	 * Creates a home application instance. Recorders, user preferences, content
@@ -131,35 +133,46 @@ public class SweetHomeAVR extends HomeApplication
 		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "loadHome " + homeFile );
 		SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-			// this is coming from internal sd, need to get back to external like call of morrowind
-			//String extsd = ExternalStorage.getSdCardPath();
-			try
-			{
-				// this should never happen as there are checks before this point that restart
-				if( SweetHomeAVR.this.homeController != null)
+		final String homeName = homeFile.getAbsolutePath();
+		// this guy is stolen from the HomeController.open method which does fancy stuff
+		// Read home in a threaded task
+		Callable<Void> openTask = new Callable<Void>() {
+			public Void call() throws RecorderException {
+				// Read home with application recorder
+				Home home = getHomeRecorder().readHome(homeName);
+				home.setName(homeName);// Notice this is used as the save name
+				homeController = new HomeController(home, SweetHomeAVR.this, viewFactory, contentManager);
+				EventQueue.invokeLater(new Runnable()
 				{
-					Toast.makeText(parentActivity, "SweetHomeAVR.this.homeController != null must unload everything somehow, possibly start with teh page adapter?"    , Toast.LENGTH_LONG)
-							.show();
-				}
-
-				Home home = SweetHomeAVR.this.getHomeRecorder().readHome(homeFile.getAbsolutePath());
-				home.setName(homeFile.getAbsolutePath());// used as the save name
-
-				SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
-
-				parentActivity.setUpViews();
-				parentActivity.invalidateOptionsMenu();
+					public void run()
+					{
+						parentActivity.setUpViews();
+						parentActivity.invalidateOptionsMenu();
+					}});
+				return null;
 			}
-			catch (RecorderException e)
-			{
-				e.printStackTrace();
-			}
-			}
-		});
+		};
+		ThreadedTaskController.ExceptionHandler exceptionHandler =
+				new ThreadedTaskController.ExceptionHandler() {
+					public void handleException(Exception ex) {
+						if (!(ex instanceof InterruptedRecorderException)) {
+							//if (ex instanceof DamagedHomeRecorderException) {
+							//	DamagedHomeRecorderException ex2 = (DamagedHomeRecorderException)ex;
+							//	openDamagedHome(homeName, ex2.getDamagedHome(), ex2.getInvalidContent());
+							//} else {
+								ex.printStackTrace();
+								if (ex instanceof RecorderException) {
+									String message = userPreferences.getLocalizedString(HomeController.class, "openError", homeName);
+									new HomePane(null,userPreferences,null,parentActivity).showError(message);
+								}
+							//}
+						}
+					}
+				};
+		new ThreadedTaskController(openTask,
+				this.userPreferences.getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+				this.userPreferences, this.viewFactory).executeTask(new View(){});
+
 	}
 
 	//new singleton hand outerer
@@ -167,7 +180,6 @@ public class SweetHomeAVR extends HomeApplication
 	{
 		return homeController;
 	}
-
 
 	/**
 	 * Returns a recorder able to write and read homes in files.

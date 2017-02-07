@@ -42,6 +42,7 @@ import java.util.List;
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
+import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JComponent;
@@ -56,7 +57,6 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.ResourceURLContent;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.sweethome3d.viewcontroller.WallController;
 
 import javaawt.Color;
@@ -562,8 +562,8 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         }
       });*/
     this.patternComboBox.setSelectedItem(controller.getPattern());
-    this.patternComboBox.addItemListener(new JComboBox.ItemListener() {
-        public void itemStateChanged(JComboBox.ItemEvent ev) {
+    this.patternComboBox.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent ev) {
           controller.setPattern((TextureImage)patternComboBox.getSelectedItem());
         }
       });
@@ -1272,7 +1272,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
   /*  Component homeRoot = SwingUtilities.getRoot((Component)parentView);
     if (homeRoot != null) {
       JOptionPane optionPane = new JOptionPane(this, 

@@ -29,6 +29,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -37,6 +38,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
+import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
@@ -51,7 +53,6 @@ import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.RoomController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 
 /**
  * Room editing panel.
@@ -427,8 +428,8 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
       };
       splitSurroundingWallsChangeListener.propertyChange(null);
       controller.addPropertyChangeListener(RoomController.Property.SPLIT_SURROUNDING_WALLS, splitSurroundingWallsChangeListener);
-      this.splitSurroundingWallsCheckBox.addActionListener(new JCheckBox.ActionListener() {
-          public void actionPerformed(JCheckBox.ActionEvent ev) {
+      this.splitSurroundingWallsCheckBox.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent ev) {
             controller.setSplitSurroundingWalls(splitSurroundingWallsCheckBox.isSelected());
             firstWallChange = false;
           }
@@ -719,6 +720,8 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		rootView.addView(nameAndAreaPanel, rowInsets);
 		rootView.addView(this.nameLabel, rowInsets);
 		rootView.addView(this.nameTextField, rowInsets);
+		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		rootView.addView(this.areaVisibleCheckBox, rowInsets);
 
 /*      JPanel nameAndAreaPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
@@ -897,7 +900,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(VCView parentView) {
+  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
    /* if (SwingTools.showConfirmDialog((JComponent)parentView,
             this, this.dialogTitle, this.nameTextField) == JOptionPane.OK_OPTION
         && this.controller != null) {

@@ -20,19 +20,16 @@
 package com.eteks.renovations3d.android;
 
 
-import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 import android.text.Html;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import javaawt.EventQueue;
 
@@ -67,7 +64,6 @@ import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController.Mode;
-import com.eteks.sweethome3d.viewcontroller.VCView;
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
@@ -3156,7 +3152,7 @@ public class HomePane implements HomeView
   /**
    * Detaches the given <code>view</code> from home view.
    */
-	public void detachView(final VCView view)
+	public void detachView(final com.eteks.sweethome3d.viewcontroller.View view)
 	{
 		JComponent component = (JComponent) view;
 /*    Container parent = component.getParent();
@@ -3351,7 +3347,7 @@ public class HomePane implements HomeView
   /**
    * Attaches the given <code>view</code> to home view.
    */
-	public void attachView(final VCView view)
+	public void attachView(final com.eteks.sweethome3d.viewcontroller.View view)
 	{
   /*  this.controller.setHomeProperty(view.getClass().getName() + DETACHED_VIEW_VISUAL_PROPERTY, String.valueOf(false));
 
