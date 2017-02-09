@@ -1,8 +1,5 @@
 package com.eteks.renovations3d.android;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +22,7 @@ import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
+import com.eteks.renovations3d.android.utils.MenuItemGroup;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
@@ -53,8 +51,7 @@ import javaawt.print.PrinterException;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
 
-import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
-import static com.mindblowing.renovations3d.R.id.controlKeyToggle;
+import static com.mindblowing.renovations3d.R.id.controlKeyOneTimer;
 
 
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
@@ -64,13 +61,15 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	//menu item options
 	public static boolean alignmentActivated = false;
 	public static boolean magnetismToggled = false;// careful toggle != checked!
-	public static boolean duplicationActivated = false;
+	public static boolean selectLasso = false;
+	public static boolean selectMultiple = false;
 	public static float dpiMinSpanForZoom = 1.0f;
-	public static float dpiIndicatorTouchSize = 0.05f;
+	public static float dpiIndicatorTouchSize = 0.04f;
 	private DrawableView drawableView;
 
-	private ButtonGroup selectionGroup = new ButtonGroup();
+	private MenuItemGroup selectionGroup = new MenuItemGroup();
 
+	private Menu mOptionsMenu;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -93,14 +92,23 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		layoutComponents();
 		updateSelectedTab(home);
 
-		View sp = rootView.findViewById(R.id.levelPlusButton);
-		sp.setOnClickListener(new View.OnClickListener()
+		View levelPlusButton = rootView.findViewById(R.id.levelPlusButton);
+		levelPlusButton.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v)
 			{
 				planController.addLevel();
 			}
 		});
+		View goto3DView = rootView.findViewById(R.id.goto3DView);
+		goto3DView.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				SweetHomeAVRActivity.mViewPager.setCurrentItem(3,true);
+			}
+		});
+
 
 		return rootView;
 	}
@@ -109,9 +117,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public void setUserVisibleHint(boolean isVisibleToUser)
 	{
 		super.setUserVisibleHint(isVisibleToUser);
-		// this gets called heaps of time, wat until we have an activity
-		if(getActivity() != null)
-			possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+		// this gets called heaps of time, wait until we have an activity
+		if(isVisibleToUser == true && getActivity() != null)
+			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 	}
 
 	@Override
@@ -119,7 +127,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	{
 		// here and there because this is the first view so it's gets the visible call far to early
 		super.onStart();
-		possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+		//possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 	}
 
 	@Override
@@ -153,17 +161,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.delete:
 					planController.deleteSelection();
 					break;
-				case R.id.controlKeyToggle:
+				case R.id.controlKeyOneTimer:
 					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
 					item.setChecked(!item.isChecked());
 					setIconFromSelector(item, R.drawable.edit_copy_selector);
-					duplicationActivated = item.isChecked();
 					break;
 				case R.id.planSelect:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
 					planController.escape();// in case we are doing a create now
 					setMode(PlanController.Mode.SELECTION);
+					break;
+				case R.id.planPan:
+					item.setChecked(true);
+					selectionGroup.onMenuItemClick(item);
+					planController.escape();// in case we are doing a create now
+					setMode(PlanController.Mode.PANNING);
 					break;
 				case R.id.createWalls:
 					item.setChecked(true);
@@ -220,14 +233,36 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 			return false;
 		}
-		private void setIconFromSelector(MenuItem item, int resId)
-		{
-			StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
-			int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
-			stateListDrawable.setState(state);
-			item.setIcon(stateListDrawable.getCurrent());
-		}
+
 	};
+	private void setIconFromSelector(MenuItem item, int resId)
+	{
+		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
+		int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
+		stateListDrawable.setState(state);
+		item.setIcon(stateListDrawable.getCurrent());
+	}
+
+	/**
+	 * This return the state of teh control key and resets it to off, so it is a one time use button (an auto popper)
+	 * @return
+	 */
+	public boolean getIsControlKeyOn()
+	{
+		MenuItem cntlKey = mOptionsMenu.findItem(R.id.controlKeyOneTimer);
+		// might be missing if we are reloading a home
+		if( cntlKey !=null)
+		{
+			boolean isChecked = cntlKey.isChecked();
+			cntlKey.setChecked(false);
+			setIconFromSelector(cntlKey, R.drawable.edit_copy_selector);
+			return isChecked;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	//copied from HomeController as we can't touch the EDT thread like they do
 	public void setMode(PlanController.Mode mode) {
@@ -265,32 +300,21 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
+		mOptionsMenu = menu;
 		inflater.inflate(R.menu.plan_component_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 
-		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
-
-		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
-		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);
-
-		MenuItem item = menu.findItem(R.id.lockCheck);
-		item.setChecked(home.isBasePlanLocked());
-		item.setOnMenuItemClickListener(planMenuItemActionListener);
-
-		int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
-		String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
-		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
-		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
-		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		item.setTitle(builder);
-		item.setIcon(iconId);
-
+		menu.findItem(R.id.lockCheck).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.editUndo).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.editRedo).setOnMenuItemClickListener(planMenuItemActionListener);
-		menu.findItem(controlKeyToggle).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.delete).setOnMenuItemClickListener(planMenuItemActionListener);
 
 		menu.findItem(R.id.planSelect).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(R.id.planSelect).setChecked(true);// not sure why this isn't coming off the xml?
 		selectionGroup.add(menu.findItem(R.id.planSelect));
+		menu.findItem(R.id.planPan).setOnMenuItemClickListener(planMenuItemActionListener);
+		selectionGroup.add(menu.findItem(R.id.planPan));
 		menu.findItem(R.id.createWalls).setOnMenuItemClickListener(planMenuItemActionListener);
 		selectionGroup.add(menu.findItem(R.id.createWalls));
 		menu.findItem(R.id.createRooms).setOnMenuItemClickListener(planMenuItemActionListener);
@@ -301,23 +325,46 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		selectionGroup.add(menu.findItem(R.id.createDimensions));
 		menu.findItem(R.id.createText).setOnMenuItemClickListener(planMenuItemActionListener);
 		selectionGroup.add(menu.findItem(R.id.createText));
-
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu)
-	{
 		menu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
+		menu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
 		menu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
 		menu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
 		menu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
 		menu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
 		menu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
 
+
 		//In fact there is no text about these at all just button operations and the prefer about magnet
-	//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
-	//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		// remember to update the language listener below too
+		//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+		// 	menu.findItem(R.id.planMulitSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu)
+	{
+		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
+		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
+		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);
+
+		MenuItem item = menu.findItem(R.id.lockCheck);
+		item.setChecked(home.isBasePlanLocked());
+
+		int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
+		String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
+		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
+		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
+		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		item.setTitle(builder);
+		item.setIcon(iconId);
+
+		menu.findItem(R.id.planSelect).setChecked(true);// find out why this is trouble, doesn't hold checked ness from 2D->3D->2D
+		selectionGroup.refreshIcons();
+
+		menu.findItem(R.id.planSelectLasso).setChecked(this.selectLasso);
+		menu.findItem(R.id.planSelectMultiple).setChecked(this.selectMultiple);
+
 		super.onPrepareOptionsMenu(menu);
 	}
 
@@ -335,6 +382,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.magnetism:
 				item.setChecked(!item.isChecked());
 				this.magnetismToggled = !item.isChecked();// careful toggle != checked!
+				return true;
+			case R.id.planSelectLasso:
+				item.setChecked(!item.isChecked());
+				this.selectLasso = item.isChecked();
+				return true;
+			case R.id.planSelectMultiple:
+				item.setChecked(!item.isChecked());
+				this.selectMultiple = item.isChecked();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -399,6 +454,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 						rulersVisible = preferences.isRulersVisible();
 						multipleLevelsTabbedPane.repaint();
 						planComponent.repaint();
+					}
+				});
+
+		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
+				new PropertyChangeListener(){
+					public void propertyChange(PropertyChangeEvent event)
+					{
+						//TODO: this should set teh names of the menu optons just once now
 					}
 				});
 	}
@@ -735,6 +798,15 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				//PJPJPJ tooltips removed
 				//String createNewLevelTooltip = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.ShortDescription");
 				//planPanel.multipleLevelsTabbedPane.setToolTipTextAt(planPanel.multipleLevelsTabbedPane.getTabCount() - 1, createNewLevelTooltip);
+
+				//PJ
+				planPanel.mOptionsMenu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
+				planPanel.mOptionsMenu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
 			}
 		}
 	}
@@ -752,8 +824,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			updateTabComponent(home, i);
 		}
 
-
-		//TODO: the add level tab might just be a simple + button at the end??
+	//PJPJPJ this is just a button on the JTabbedPane now
 	/*	String createNewLevelIcon = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.SmallIcon");
 		String createNewLevelTooltip = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.ShortDescription");
 

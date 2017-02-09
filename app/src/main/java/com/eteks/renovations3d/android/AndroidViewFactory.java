@@ -23,6 +23,8 @@ package com.eteks.renovations3d.android;
 
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.sweethome3d.android_props.TextureChoiceComponent;
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CatalogTexture;
@@ -71,8 +73,6 @@ import com.eteks.renovations3d.SweetHomeAVRActivity;
 
 import java.security.AccessControlException;
 
-import static android.R.id.message;
-
 /**
  * View factory that instantiates the Swing components of this package.
  *
@@ -81,10 +81,18 @@ import static android.R.id.message;
 public class AndroidViewFactory implements ViewFactory // could extend ViewFactoryAdapter
 {
 	private SweetHomeAVRActivity activity;
+
+	private AndroidDialogView currentDialog = null;
+	private DialogView dummy;
+
 	public AndroidViewFactory(SweetHomeAVRActivity activity)
 	{
 		this.activity = activity;
 		//AndroidTools.updateComponentDefaults();
+		dummy = new DialogView(){
+			@Override
+			public void displayView(View view){	}
+		};
 	}
 
 	/**
@@ -223,7 +231,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createUserPreferencesView(UserPreferences preferences,
 												UserPreferencesController userPreferencesController)
 	{
-		return new UserPreferencesPanel(preferences, userPreferencesController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -231,7 +247,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createLevelView(UserPreferences preferences, LevelController levelController)
 	{
-		return new LevelPanel(preferences, levelController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new LevelPanel(preferences, levelController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -240,7 +264,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHomeFurnitureView(UserPreferences preferences,
 											  HomeFurnitureController homeFurnitureController)
 	{
-		return new HomeFurniturePanel(preferences, homeFurnitureController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -249,7 +281,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createWallView(UserPreferences preferences,
 									 WallController wallController)
 	{
-		return new WallPanel(preferences, wallController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new WallPanel(preferences, wallController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -258,7 +298,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createRoomView(UserPreferences preferences,
 									 RoomController roomController)
 	{
-		return new RoomPanel(preferences, roomController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new RoomPanel(preferences, roomController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -267,7 +315,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createPolylineView(UserPreferences preferences,
 										 PolylineController polylineController)
 	{
-		return new PolylinePanel(preferences, polylineController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new PolylinePanel(preferences, polylineController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -277,7 +333,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  LabelController labelController)
 	{
-		return new LabelPanel(modification, preferences, labelController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new LabelPanel(modification, preferences, labelController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -286,7 +350,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createCompassView(UserPreferences preferences,
 										CompassController compassController)
 	{
-		return new CompassPanel(preferences, compassController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new CompassPanel(preferences, compassController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -295,7 +367,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHome3DAttributesView(UserPreferences preferences,
 												 Home3DAttributesController home3DAttributesController)
 	{
-		return new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -304,7 +384,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createObserverCameraView(UserPreferences preferences,
 											   ObserverCameraController observerCameraController)
 	{
-		return new ObserverCameraPanel(preferences, observerCameraController, activity);
+		if(currentDialog == null || !currentDialog.isShowing())
+		{
+			currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
+			return currentDialog;
+		}
+		else
+		{
+			return dummy;
+		}
 	}
 
 	/**
@@ -389,7 +477,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public HelpView createHelpView(UserPreferences preferences,
 								   HelpController helpController)
 	{
-		Toast.makeText(this.activity, String.format("createHelpView", message), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this.activity, "createHelpView", Toast.LENGTH_SHORT).show();
 		return new HelpView(){public void displayView(){}};
 		//return new HelpPane(preferences, helpController);
 	}

@@ -943,13 +943,13 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
     }
     if (this.descriptionLabel != null) {
 		//TODO:
-		rootView.addView(this.descriptionLabel, rowInsets);
-		rootView.addView(this.descriptionTextField, rowInsets);
+		//inflatedView.addView(this.descriptionLabel, rowInsets);
+		//inflatedView.addView(this.descriptionTextField, rowInsets);
     }
     if (priceDisplayed) {
 		//TODO:
-		rootView.addView(this.priceLabel, rowInsets);
-		rootView.addView(this.priceSpinner, rowInsets);
+		//inflatedView.addView(this.priceLabel, rowInsets);
+		//inflatedView.addView(this.priceSpinner, rowInsets);
     }
 
 	  JLabel locationPanel = new JLabel(activity, preferences.getLocalizedString(
@@ -1065,8 +1065,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
     }
     if (this.lightPowerLabel != null) {
 		//TODO:
-		rootView.addView(this.lightPowerLabel, rowInsets);
-		rootView.addView(this.lightPowerSpinner, rowInsets);
+		//inflatedView.addView(this.lightPowerLabel, rowInsets);
+		//inflatedView.addView(this.lightPowerSpinner, rowInsets);
     }
 	  this.setTitle(dialogTitle);
 	  swapOut(this.closeButton, R.id.furniture_panel_closeButton);

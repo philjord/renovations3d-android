@@ -28,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
+import com.eteks.sweethome3d.model.Home;
+import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.google.android.gms.ads.AdRequest;
@@ -59,11 +61,11 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	public static FirebaseAnalytics mFirebaseAnalytics;
 
 	private SweetHomeAVRPagerAdapter mSweetHomeAVRPagerAdapter;
-	private ViewPager mViewPager;
+	public static ViewPager mViewPager; // public to allow fragmenet to move around by button
 
 	private File chooserStartFolder;
 
-	public static HashSet<String> welcomScreensShownThisSession = new HashSet<String>();
+	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
 	public static SweetHomeAVR sweetHomeAVR; // for plan undo redo, now for import statements too
 
@@ -78,7 +80,6 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	// and then leaves it or uses it to open a new HomeController (and it's home model)
 	// which when listener is called back will close the blank HomeFrameController
 	// and display the opened one
-
 
 	// so the HomeFrameController is the entry point to each of the multiple home editors
 
@@ -97,36 +98,28 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	// listeners are only to get the actions displaying right
 	// it has 3 interesting things
 	// createMainPane -> first horizontal split
-	// createCatalogFurniturePane left side vert split
-	// createPlanView3DPane right side vert split
+	// createCatalogFurniturePane left side vertical split
+	// createPlanView3DPane right side vertical split
 	// using the HomeController->getController*->getView x 4
 
 	// Each of the 4 interesting controllers under HomeController holds a lazy single view from the factory
 
-
 	// What I want to do!!!!
 
 	// Activity is entry point, so it's a bit like the SweetHomeAVR is that regard
-	// ActivityPagerAdpater needs to hand out views, so it needs the HomeController loaded before it's talked to at all
+	// ActivityPagerAdapter needs to hand out views, so it needs the HomeController loaded before it's talked to at all
 	// Activity is the main JFrame and ContentPane gear and will dictagte the display
 	// in the longer run it needs to rejig the display for device sizes, not major
 	// I still must recognise the Canvas3D in a view issue before load up of the
 	// 3D gear of Component3D
-	// I would like to teh viewcontroller versions of Component3DController etc
+	// I would like to the viewController versions of Component3DController etc
 	// to come from teh base project, so I need to get that right
 	// notice that the Factory can happily hand out the Fragment bits
 	// so that should be possible?
 
 	//Note the HomeApplication parent of SweetHomeAVR is a multi-home interface, possibly dump for good measure?
 
-	// Question then, can I rely on a HomeController from base project to look aside at factory point
-	// seems possible.
-	//
-	//
-	// What is HomeControllers life cycle, no the dummy controller open is not important
-	// my rewrite suing the homerecorder is fine!
-
-	// key point in inti method Application is listening for the open guy to change teh collection
+	// key point in init method Application is listening for the open guy to change the collection
 	// and open the frame from it
 	//public void collectionChanged(CollectionEvent<Home> ev) {
 	//	switch (ev.getType()) {
@@ -309,6 +302,57 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
+	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState)
+	{
+		super.onSaveInstanceState(savedInstanceState);
+		System.out.println("onSaveInstanceState");
+
+		if(sweetHomeAVR != null && sweetHomeAVR.getHome() != null)
+		{
+			try
+			{
+				File outputDir = getCacheDir();
+				File homeName = new File(outputDir, "currentWork.sh3d");
+				sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
+				System.out.println("onSaveInstanceState written to " + homeName.getAbsolutePath());
+				savedInstanceState.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+
+			}
+			catch (RecorderException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+		System.out.println("onRestoreInstanceState");
+		File outputDir = getCacheDir();
+		File homeName = new File(outputDir, "currentWork.sh3d");
+		System.out.println(""+homeName.getAbsolutePath() + " exists " +homeName.exists());
+		if(homeName.exists())
+		{
+			final String savedHomeName = savedInstanceState.getString(STATE_CURRENT_HOME_NAME);
+			loadHome(homeName);
+			//I need to set the loaded home name back to the correct name so it saves as the right name
+			SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+			{
+				public void run()
+				{
+					//TODO: I've never seen this happen so I've never seen this tested!
+					if(sweetHomeAVR.getHome() != null)
+						sweetHomeAVR.getHome().setName(savedHomeName);
+				}
+			});
+		}
+	}
+
+
 	private void loadSh3dFile()
 	{
 		chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -393,7 +437,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 					sweetHomeAVR.loadHome(homeFile);
 
-					// force teh frags to load up now
+					// force the frags to load up now
 					if(prevHomeLoaded)
 					{
 						mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
@@ -472,6 +516,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 		}
 	};
+
 
 	private void loadFile(File inFile)
 	{

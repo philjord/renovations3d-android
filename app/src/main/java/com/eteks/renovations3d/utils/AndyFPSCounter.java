@@ -14,18 +14,13 @@ import org.jogamp.vecmath.Point3d;
 import java.io.IOException;
 import java.util.Iterator;
 
-
-
-
 public class AndyFPSCounter
 {
 	public static BoundingSphere defaultBounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), Double.POSITIVE_INFINITY);
 
-
-
 	public static int FRAME_SAMPLE = 5;
 	public static int TIME_SAMPLE = 500;
-	public static int HEIGHT = 50;
+	public static int HEIGHT = 25;
 	private long currtime;
 	private long lasttime;
 	private long deltatime;
@@ -53,13 +48,13 @@ public class AndyFPSCounter
 
 	public void addToCanvas(Canvas3D2D canvas3d2d)
 	{
-		float pixelSizeFPS = 0.00015F * (float) canvas3d2d.getGLWindow().getSurfaceHeight();
+		float pixelSizeFPS = 0.00005F * (float) canvas3d2d.getGLWindow().getSurfaceHeight();
 		try
 		{
 			this.fpsLabel = new Label(canvas3d2d.getVertexFactory(), 0, FontFactory.get(0).getDefault(), pixelSizeFPS, "");
 			canvas3d2d.addUIShape(fpsLabel);
 			this.fpsLabel.setEnabled(true);
-			this.fpsLabel.translate(-0.88F, 0.75F, 0.0F);
+			this.fpsLabel.translate(-0.98F, 0.95F, 0.0F);
 			this.fpsLabel.setColor(1.0F, 1.0F, 0.0F, 1.0F);
 		}
 		catch (IOException e)

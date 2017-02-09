@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.os.Looper;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 
@@ -721,6 +722,15 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  // just a name picker for the save as system
 	  if(save && contentType == ContentType.SWEET_HOME_3D)
 	  {
+		  final File parent;
+		  if(path == null || path.length() == 0)
+		  {
+			  parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		  }
+		  else
+		  {
+			  parent = new File(path).getParentFile();
+		  }
 		  activity.runOnUiThread(new Runnable()
 		  {
 			  public void run()
@@ -739,11 +749,12 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 								  {
 									  public void onClick(DialogInterface dialog, int id)
 									  {
-										  selectedFile[0] = new File(new File(path).getParentFile(), userInput.getText().toString());
+										  Editable t = userInput.getText();
+										  selectedFile[0] = new File(parent, userInput.getText().toString());
 										  dialogSemaphore.release();
 									  }
 								  })
-						  .setNegativeButton("NO",
+						  .setNegativeButton("Cancel",
 								  new DialogInterface.OnClickListener()
 								  {
 									  public void onClick(DialogInterface dialog, int id)
@@ -805,6 +816,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  }
 	  try
 	  {
+		  //NOTE: this is a reverse semphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
 		  dialogSemaphore.acquire();
 	  }
 	  catch (InterruptedException e)

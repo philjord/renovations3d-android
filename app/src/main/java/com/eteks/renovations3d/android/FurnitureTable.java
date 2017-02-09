@@ -60,6 +60,9 @@ import javaxswing.ImageIcon;
 
 public class FurnitureTable extends JTable implements com.eteks.sweethome3d.viewcontroller.View, Printable
 {
+
+	private static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
+
 	private Home home;
 	private UserPreferences preferences;
 	private FurnitureController controller;
@@ -88,17 +91,6 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		return rootView;
 	}
 
-	public void finalize()
-	{
-		System.err.println("finalize " + this);
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		System.err.println("DESTROYING " + this);
-		super.onDestroy();
-	}
 
 	private void updateHeader()
 	{
@@ -193,7 +185,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 			tableLayout.addView(tableRow);
 
-			// is this the seperator line a guess?
+			// is this the separator line a guess?
 			View v = new View(this.getContext());
 			v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
 			v.setBackgroundColor(Color.rgb(51, 51, 51));
@@ -225,15 +217,22 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		}
 	};
 
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
+		// this gets called heaps of time, wait until we have an activity
+		if(isVisibleToUser && getActivity() != null)
+		{
+			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
+		}
+	}
 
 	public void init(Home home, UserPreferences preferences, FurnitureController controller)
 	{
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;
-
-
-
 
 		setModel(new FurnitureTreeTableModel(home));
 		setColumnModel(new FurnitureTableColumnModel(home, preferences));

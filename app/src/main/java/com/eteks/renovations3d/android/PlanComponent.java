@@ -113,6 +113,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 import javaawt.AlphaComposite;
 import javaawt.BasicStroke;
@@ -150,6 +151,8 @@ import javaawt.print.PageFormat;
 import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
+
+import static com.eteks.renovations3d.android.MultipleLevelsPlanPanel.selectMultiple;
 
 
 /**
@@ -611,7 +614,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       this.preferences = preferences;
 
 	  this.controller = controller;
-
 
 	  //PJPJPJ Cursors dropped
  /*   this.rotationCursor = createCustomCursor("resources/cursors/rotation16x16.png",
@@ -1279,12 +1281,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 							final float dx = x - mLastTouchX;
 							final float dy = y - mLastTouchY;
 
-							scrolledX -= dx;
-							scrolledY -= dy;
-							controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(scrolledX));
-							controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
-
-							PlanComponent.this.revalidate();
+							float s = getScale();
+							// pan operation wants the move to be div scale as moveview does a multiply, so...
+							moveView(-dx/s,-dy/s);
 
 							// to be safe
 							fingers = 2;
@@ -1292,25 +1291,40 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 						}
 					}
 
-					mLastTouchX = x;
-					mLastTouchY = y;
+
 					if (ev.getPointerCount() == 1)
 					{
 						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
 						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
 						{
-							// if we have a pending click we'd better fire it off now before moving
-							if(potentialSinglePress != null)
+							//PJPJPJPJ this is a mjor divergence from the desktop function! Single finger pan during selection mode
+							if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
 							{
-								mousePressed(v,potentialSinglePress);
-								potentialSinglePress = null;
+								final float dx = x - mLastTouchX;
+								final float dy = y - mLastTouchY;
+
+								float s = getScale();
+								// pan operation wants the move to be div scale as moveview does a multiply, so...
+								moveView(-dx/s, -dy/s);
+							}
+							else
+							{
+								// if we have a pending click we'd better fire it off now before moving
+								if(potentialSinglePress != null)
+								{
+									mousePressed(v,potentialSinglePress);
+									potentialSinglePress = null;
+								}
+
+								mouseMoved(v, ev);
 							}
 
 							fingers = 1;
-							mouseMoved(v, ev);
 						}
 					}
 
+					mLastTouchX = x;
+					mLastTouchY = y;
 					break;
 				}
 
@@ -1327,6 +1341,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 							potentialSinglePress = null;
 						}
 						lastMouseReleasedTime = System.currentTimeMillis();
+
 						mouseReleased(v, ev);
 					}
 					break;
@@ -1385,7 +1400,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
 					//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
 					//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
-					boolean duplicationActivated = MultipleLevelsPlanPanel.duplicationActivated;
+					boolean duplicationActivated = ((MultipleLevelsPlanPanel)controller.getView()).getIsControlKeyOn();
 					//OperatingSystem.isMacOSX()
 					//		? ev.isAltDown() : ev.isControlDown();
 					boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
@@ -1393,12 +1408,14 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
 					//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
 
-					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 400 ? 2 : 1;
+					boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && MultipleLevelsPlanPanel.selectMultiple;
+
+					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1;
 
 					try
 					{
 						controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-								clickCount, false, alignmentActivated, duplicationActivated, magnetismToggled);
+								clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
 					}catch(ArrayIndexOutOfBoundsException e)
 					{
 						// this happens :
@@ -5539,6 +5556,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.
    */
   public void moveView(float dx, float dy) {
+
 	  //PJPJ
    /* if (getParent() instanceof JViewport) {
       JViewport viewport = (JViewport)getParent();
@@ -5549,8 +5567,11 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       viewport.setViewPosition(viewRectangle.getLocation());
     }*/
 	  //my scrolled are -ve versus the viewport location x,y
-	  this.scrolledX -=  Math.round(dx * getScale());
-	  this.scrolledY -=  Math.round(dy * getScale());
+	  this.scrolledX +=  dx * getScale();
+	  this.scrolledY +=  dy * getScale();
+	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(scrolledX));
+	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
+	  PlanComponent.this.revalidate();
   }
 
   /**
@@ -6711,6 +6732,12 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       BranchGroup model = new BranchGroup();
       model.setCapability(BranchGroup.ALLOW_DETACH);
       model.addChild(modelTransformGroup);
+
+
+		try
+		{
+			offScreenRenderSemaphore.acquire();
+
       sceneRoot.addChild(model);
 
       // Render scene with a white background
@@ -6742,6 +6769,15 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		VMBufferedImage img = new VMBufferedImage(bm);
 		return new ImageIcon(img);
 
+		}
+		catch (InterruptedException e)
+		{
+		}
+		finally
+		{
+			offScreenRenderSemaphore.release();
+		}
+		return null;
 		//PJPJPJPJ
      // return new ImageIcon(Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(
       //    imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(),
@@ -6792,4 +6828,20 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       }
     }
   }
+
+	private static Semaphore offScreenRenderSemaphore = new Semaphore(1, true);
+	public static void pauseOffScreenRendering()
+	{
+		try
+		{
+			offScreenRenderSemaphore.acquire();
+		}
+		catch (InterruptedException e)
+		{
+		}
+	}
+	public static void unpauseOffScreenRendering()
+	{
+		offScreenRenderSemaphore.release();
+	}
 }

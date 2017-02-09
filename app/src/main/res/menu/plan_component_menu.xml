@@ -14,11 +14,11 @@
     <item
         android:id="@+id/delete"
         android:title="delete"
-        android:icon="@drawable/delete_last_record"
+        android:icon="@drawable/user_trash"
         android:showAsAction="always"
         />
     <item
-        android:id="@+id/controlKeyToggle"
+        android:id="@+id/controlKeyOneTimer"
         android:title=""
         android:icon="@drawable/edit_copy_selector"
         android:checkable="true"
@@ -32,6 +32,7 @@
         android:showAsAction="always"
         android:state_checked="true"
         />
+
     <item
         android:id="@+id/createWalls"
         android:title="Create walls"
@@ -67,7 +68,25 @@
         android:checkable="true"
         android:showAsAction="@integer/menuShowAsAction"
         />
-
+    <item
+        android:id="@+id/planSelectLasso"
+        android:title="Select lasso"
+        android:checkable="true"
+        android:showAsAction="never"
+        />
+    <item
+        android:id="@+id/planSelectMultiple"
+        android:title="Select multiple"
+        android:checkable="true"
+        android:showAsAction="never"
+        />
+    <item
+        android:id="@+id/planPan"
+        android:title="Pan"
+        android:icon="@drawable/plan_pan_selector"
+        android:checkable="true"
+        android:showAsAction="never"
+        />
     <item
         android:id="@+id/lockCheck"
         android:title="lock"

@@ -113,8 +113,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	{
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wat until we have an activity
-		if(getActivity() != null)
-			possiblyShowWelcomeScreen(WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
+		if(isVisibleToUser && getActivity() != null)
+			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
 	}
 
 	@Override

@@ -4,29 +4,46 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="@android:color/white">
+    <TableLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="vertical"
+                 android:padding="5dp">
+        <TableRow>
+            <com.eteks.renovations3d.utils.HorizontalFlowLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
-    <com.eteks.renovations3d.utils.HorizontalFlowLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <RadioGroup
+                    android:id="@+id/levelsRadioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                </RadioGroup>
 
-        <RadioGroup
-            android:id="@+id/levelsRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        </RadioGroup>
-
-        <Button android:id="@+id/levelPlusButton"
-            android:text=""
-            android:background="@drawable/plan_add_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:minHeight="24dp"
-            android:minWidth="24dp"
-            />
-    </com.eteks.renovations3d.utils.HorizontalFlowLayout>
+                <Button android:id="@+id/levelPlusButton"
+                        android:text=""
+                        android:background="@drawable/plan_add_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="@dimen/button_dp"
+                        android:minWidth="@dimen/button_dp"
+                    />
+            </com.eteks.renovations3d.utils.HorizontalFlowLayout>
+            <Button
+                android:id="@+id/goto3DView"
+                android:text="3D"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:minHeight="@dimen/button_dp"
+                android:minWidth="@dimen/button_dp"/>
+        </TableRow>
+    </TableLayout>
 
 
     <com.eteks.renovations3d.android.utils.DrawableView

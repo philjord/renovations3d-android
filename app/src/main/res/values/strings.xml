@@ -12,34 +12,57 @@
     <string name="menu_help">Help</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
-    <string name="welcometextyes">Ok</string>
+    <string name="welcometextyes">OK</string>
     <string name="welcometextno">Don\'t show again</string>
     <string name="planview_welcometext">
-    Swipe with 2 fingers together to pan and use pinch to zoom.\n
+    Use the pinch gesture to zoom in and out.\n
     Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    There will be 2 demo sh3d files in your downloads folder, select Menu->Open home.\n
+    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
+    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
+    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
     You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
     When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu-> Help does nothing currently.\n
-    If you minimize the app for a long time it may fail to restart. Minimizing the app while the plan view is still loading icons means it will not resume again, you have to wait till they are all loaded before leaving.\n
+    Menu->Help does nothing currently.\n
     </string>
     <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at 0,0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library...\n
+    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
+    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
     There will be one demo sh3f furniture file in your downloads folder\n
     You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
+    </string>
+    <string name="furnitureview_welcometext">
+    This is a view of all the furniture currently placed on your plan.\n
+    For now the only function you can do here is to change an items visibility.\n
+    Many more features are planned on this screen.\n
+    </string>
+    <string name="component3dview_welcometext">
+        This is a 3 dimensional view of your plan. \n
+        From here you can use 1 or 2 fingers to move the view.\n
+        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
+        If you are looking from the top down: \n
+            One finger sliding left or right will rotate the plan.\n
+            One finger sliding up or down will alter the height of the camera and also the pitch.\n
+            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
+            Two fingers sliding side to side will not do anything.\n
+        If you are looking from the visit point of view: \n
+            One finger sliding left or right will rotate the plan around you.\n
+            One finger sliding up or down will alter the direction your head is pointed.\n
+            Two fingers sliding up or down will move the plan towards or aways from you.\n
+            Two fingers sliding side to side will move the plan left or right.\n
+        Saved points of view can be found under the eye icon.\n
+        Changing from top down to visit can be done by the icon of a man or a plan.\n
     </string>
     <string name="search_hint">Search Furniture</string>
     <string name="exit">Exit</string>
     <string name="virtualvisit">Virtual visit</string>
     <string name="searchFurniture">search</string>
     <string name="filterFurniture">filter</string>
-    <string name="menu_save_as">Save as...</string>
+    <string name="menu_save_as">Save as&#8230;</string>
     <string name="menu_about">About</string>
     <string name="menu_new">New home</string>
     <string name="menu_preferences">Preferences</string>
-    <string name="importFurnitureLib">Import furniture library...</string>
-    <string name="importTextureLib">Import texture library...</string>
+    <string name="importFurnitureLib">Import furniture library&#8230;</string>
+    <string name="importTextureLib">Import texture library&#8230;</string>
     <string name="modifyvirtualvisitor">Modify virtual visitor</string>
     <string name="storepov">Store point of view</string>
     <string name="gotopov">Go to point of view</string>
@@ -47,4 +70,5 @@
     <string name="modify3dview">Modify 3D view</string>
     <string name="viewalllevels">View all levels</string>
     <string name="processing">Processing</string>
+
 </resources>

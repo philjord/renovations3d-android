@@ -1,5 +1,6 @@
 package com.eteks.renovations3d.android.swingish;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -14,9 +15,6 @@ import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.mindblowing.renovations3d.R;
-
-import java.util.prefs.Preferences;
 
 import javaawt.Color;
 import javaawt.Font;
@@ -225,20 +223,20 @@ public abstract class JComponent extends Fragment implements ImageObserver
 		return textBounds;
 	}
 
-	public void possiblyShowWelcomeScreen(final String welcomeScreenName, int welcometext, UserPreferences preferences)
+	public static void possiblyShowWelcomeScreen(final Activity activity, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
 	{
 		// only one per session
-		if(!SweetHomeAVRActivity.welcomScreensShownThisSession.contains(welcomeScreenName))
+		if(!SweetHomeAVRActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
 		{
-			SweetHomeAVRActivity.welcomScreensShownThisSession.add(welcomeScreenName);
-			SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+			SweetHomeAVRActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
+			SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
 			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
 
 			if (!welcomeScreenUnwanted)
 			{
 				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
 				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 				// Add the buttons
 				builder.setPositiveButton(close, new DialogInterface.OnClickListener()
 				{
@@ -252,14 +250,14 @@ public abstract class JComponent extends Fragment implements ImageObserver
 					public void onClick(DialogInterface dialog, int id)
 					{
 						// don't remind again
-						SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putBoolean(welcomeScreenName, true);
 						editor.apply();
 
 					}
 				});
-				builder.setMessage(welcometext);
+				builder.setMessage(welcomeTextId);
 
 				// Create the AlertDialog
 				AlertDialog dialog = builder.create();

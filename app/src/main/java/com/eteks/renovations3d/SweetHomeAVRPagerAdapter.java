@@ -1,12 +1,10 @@
 package com.eteks.renovations3d;
 
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.android.FurnitureCatalogListPanel;
@@ -17,7 +15,8 @@ import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
 /**
  * Created by phil on 2/6/2017.
  * Replaces everything from the parent class to get access to the fragment transaction
- * because we don't want the back stack to memory leak these fragments when we swap out
+ * because we don't want the back stack to memory leak these fragments when we swap out for a new sweethome avr
+ * which is simply putting in the call mCurTransaction.remove((Fragment) object);
  */
 public class SweetHomeAVRPagerAdapter extends FragmentPagerAdapter
 {

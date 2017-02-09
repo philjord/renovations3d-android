@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.utils.InfoText3D;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -107,6 +108,8 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
+import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWelcomeScreen;
+
 
 /**
  * Created by phil on 11/22/2016.
@@ -114,7 +117,15 @@ import jogamp.newt.driver.android.NewtBaseFragment;
 
 public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweethome3d.viewcontroller.View
 {
+
+	private static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
+
 	private AndyFPSCounter fpsCounter;
+	private InfoText3D onscreenInfo;
+	private int fingerCount = 0;
+
+	private Menu mOptionsMenu;
+
 	private GLWindow gl_window;
 
 	@Override
@@ -197,6 +208,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 									 fpsCounter = new AndyFPSCounter();
 									 onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
 									 fpsCounter.addToCanvas(canvas3D2D);
+									 onscreenInfo = new InfoText3D()
+									 {
+										 @Override
+										 protected String getText()
+										 {
+											 return "F: " + fingerCount;
+										 }
+									 };
+									 onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
+									 onscreenInfo.addToCanvas(canvas3D2D);
 								 }
 							 }
 						 });
@@ -230,7 +251,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 										  ViewGroup container, Bundle savedInstanceState)
 	{
 		this.setHasOptionsMenu(true);
-		return getContentView(this.getWindow(), gl_window);
+		android.view.View rootView = getContentView(this.getWindow(), gl_window);
+		return rootView;
 	}
 	public void onStart() {
 		super.onStart();
@@ -243,6 +265,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// 		now we've (possible onStart then) onResume and GLStateKeeper is working in the background on restoring state
 		// 		a display is going to come through soon to make things show after state is happy
 		// in both cases display callback is gonna get called, he needs to addNotify in all cases
+
+		if (HomeComponent3D.this.getUserVisibleHint())
+		{
+			canvas3D2D.startRenderer();
+		}
 	}
 
 	@Override
@@ -256,11 +283,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			canvas3D2D.removeNotify();
 		}
 
-		//TODO: OK cool possibly the offscreen bad boy needs to be be calmed now too, or something, maybe wait for offscreen render before pausing?
-		// how the hell do I pause offscreen renderering then?
-
-		// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
+		PlanComponent.pauseOffScreenRendering();
+				// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
 		super.onPause();
+
+		PlanComponent.unpauseOffScreenRendering();
 	}
 
 	@Override
@@ -300,11 +327,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		{
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
 		}
+
+		if(isVisibleToUser && getActivity() != null)
+			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
+		mOptionsMenu = menu;// for later use
 		inflater.inflate(R.menu.home_component3d_menu, menu);
 		menu.findItem(R.id.virtualvisit).setChecked(home.getCamera() == home.getObserverCamera());
 		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
@@ -372,6 +403,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 										   Home home,
 										   final HomeController controller) {
 		List<Camera> storedCameras = home.getStoredCameras();
+		//TODO: very much sort this list so its n the same order ech time
 		goToPointOfViewMenu.getSubMenu().clear();
 
 		if (storedCameras.isEmpty()) {
@@ -407,6 +439,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				if(cameraName.equals(camera.getName()))
 				{
 					SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getHomeController3D().goToCamera(camera);
+					// update the check box item nicely
+					MenuItem vv = mOptionsMenu.findItem(R.id.virtualvisit);
+					vv.setChecked(home.getCamera() == home.getObserverCamera());
+					setIconFromSelector(vv, R.drawable.virtualvist_selector);
 					return true;
 				}
 			}
@@ -416,6 +452,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			// Handle item selection
 			switch (item.getItemId())
 			{
+				case R.id.goto2Dview:
+					SweetHomeAVRActivity.mViewPager.setCurrentItem(1, true);
+					break;
 				case R.id.virtualvisit:
 					item.setChecked(!item.isChecked());
 					setIconFromSelector(item, R.drawable.virtualvist_selector);
@@ -1272,7 +1311,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			public void propertyChange(PropertyChangeEvent ev)
 			{
 				updateView(view, home.getCamera(), home.getTopCamera() == home.getCamera());
-				updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), false);
+				//PJPJPJ false change to true and animate lengthed for cool effect
+				updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true, 750);
 				// Add camera change listener to new active camera
 				((Camera) ev.getOldValue()).removePropertyChangeListener(cameraChangeListener);
 				home.getCamera().addPropertyChangeListener(cameraChangeListener);
@@ -1448,11 +1488,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform, Camera camera, boolean updateWithAnimation)
 	{
+		updateViewPlatformTransform(viewPlatformTransform,  camera,  updateWithAnimation, CameraInterpolator.DEFAULT_ANIMATE_LEN);
+	}
+
+	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform, Camera camera, boolean updateWithAnimation, long animateTime)
+	{
 		if (updateWithAnimation)
 		{
 			// Get the camera interpolator
 			CameraInterpolator cameraInterpolator = (CameraInterpolator) viewPlatformTransform
 					.getChild(viewPlatformTransform.numChildren() - 1);
+			cameraInterpolator.setLenAnimationMS(animateTime);
 			cameraInterpolator.moveCamera(camera);
 		}
 		else
@@ -1469,15 +1515,25 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private class CameraInterpolator extends TransformInterpolator
 	{
+		public static final long DEFAULT_ANIMATE_LEN = 150;
 		private final ScheduledExecutorService scheduledExecutor;
 		private Camera initialCamera;
 		private Camera finalCamera;
+
+
+		private long lenAnimationMS = 150;
+
 
 		public CameraInterpolator(TransformGroup transformGroup)
 		{
 			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 			setTarget(transformGroup);
 		}
+		public void setLenAnimationMS(long lenAnimationMS)
+		{
+			this.lenAnimationMS = lenAnimationMS;
+		}
+
 
 		/**
 		 * Moves the camera to a new location.
@@ -1496,7 +1552,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw(), camera.getPitch(),
 								camera.getFieldOfView());
 					}
-					else if (alpha.value() < 0.3)
+					else if (alpha.value() < 0.1)
 					{
 						Transform3D finalTransformation = new Transform3D();
 						// Jump directly to final location
@@ -1524,7 +1580,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// between initial camera and final camera in 150 ms
 					if (alpha == null)
 					{
-						alpha = new Alpha(1, 150);
+						alpha = new Alpha(1, lenAnimationMS);
 						setAlpha(alpha);
 					}
 					// Start animation now
@@ -1542,7 +1598,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								getTarget().setTransform(transform);
 							}
 						}
-					}, 150, TimeUnit.MILLISECONDS);
+					}, lenAnimationMS, TimeUnit.MILLISECONDS);
 				}
 			}
 		}
@@ -1598,12 +1654,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				if( ev.getPointerCount() == 1 )
 				{
+					fingerCount = 1;
 					this.xLastMouseMove1 = ev.getX();
 					this.yLastMouseMove1 = ev.getY();
 					//System.out.println("mousePressed ev.getPointerCount() == 1");
 				}
 				else if( ev.getPointerCount() == 2 )
 				{
+					fingerCount = 2;
 					// the mouse press is often well different from the drag value (possibly an averaging issue)
 					this.xLastMouseMove2 = -1;
 					this.yLastMouseMove2 = -1;
@@ -1613,6 +1671,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 			public void mouseReleased(com.jogamp.newt.event.MouseEvent ev)
 			{
+				fingerCount = 0;
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				//{
 				//	if (false)
@@ -1660,7 +1719,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						{
 							if (ev.getPointerCount() == 1)
 							{
-								final float ANGLE_FACTOR = 0.005f;
+								fingerCount = 1;
+								final float PITCH_REDUCTION = 0.4f; // pitch is across 180 only, and is less "wanted"
+								final float ANGLE_FACTOR = 0.0025f;
 								// Mouse move along X axis changes camera yaw
 								float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove1);
 								// Multiply yaw delta by 5 if shift is down
@@ -1669,26 +1730,28 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								//	yawDelta *= 5;
 								//}
 
-								// inside feels more natural to drag, but not outside, odd
-								int rev = home.getCamera() == home.getObserverCamera()?-1:1;
+								// inside is made into a slower drag
+								float factor = home.getCamera() == home.getObserverCamera() ? -0.5f : 1f;
 
-								controller.rotateCameraYaw(rev*yawDelta);
+								controller.rotateCameraYaw(factor*yawDelta);
 
 								// Mouse move along Y axis changes camera pitch
-								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1);
-								controller.rotateCameraPitch(rev*pitchDelta);
+								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1) * PITCH_REDUCTION;
+								controller.rotateCameraPitch(factor*pitchDelta);
 								this.xLastMouseMove1 = ev.getX();
 								this.yLastMouseMove1 = ev.getY();
 							}
 							else if (ev.getPointerCount() == 2)
 							{
+								fingerCount = 2;
 								if(this.xLastMouseMove2 != -1 && this.yLastMouseMove2 != -1)
 								{
+									final float STRAF_REDUCTION = 0.5f; // stafing is less "wanted"
 									final float FACTOR = 0.5f;
 									float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
 									float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
 									controller.moveCamera(yd);
-									controller.moveCameraSideways(-xd);//note does nothing in overhead view
+									controller.moveCameraSideways(-xd*STRAF_REDUCTION);//note does nothing in overhead view
 								}
 								this.xLastMouseMove2 = ev.getX();
 								this.yLastMouseMove2 = ev.getY();

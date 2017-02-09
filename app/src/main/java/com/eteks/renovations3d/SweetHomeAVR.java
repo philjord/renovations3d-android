@@ -20,7 +20,6 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.plugin.PluginManager;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
-import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
@@ -70,6 +69,7 @@ public class SweetHomeAVR extends HomeApplication
 	//private final Map<Home, HomeFrameController> homeFrameControllers;
 	// new magic singleton,
 	private HomeController homeController;
+	private Home home;
 
 	private SweetHomeAVRActivity parentActivity;
 
@@ -112,10 +112,10 @@ public class SweetHomeAVR extends HomeApplication
 		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
 		SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-		Home home = new Home();
+		home = new Home();
 		home.setName(null);// ensures save does a save as
 
-		SweetHomeAVR.this.homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
+		homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
 
 		parentActivity.setUpViews();
 		parentActivity.invalidateOptionsMenu();
@@ -139,7 +139,7 @@ public class SweetHomeAVR extends HomeApplication
 		Callable<Void> openTask = new Callable<Void>() {
 			public Void call() throws RecorderException {
 				// Read home with application recorder
-				Home home = getHomeRecorder().readHome(homeName);
+				home = getHomeRecorder().readHome(homeName);
 				home.setName(homeName);// Notice this is used as the save name
 				homeController = new HomeController(home, SweetHomeAVR.this, viewFactory, contentManager);
 				EventQueue.invokeLater(new Runnable()
@@ -179,6 +179,11 @@ public class SweetHomeAVR extends HomeApplication
 	public HomeController getHomeController()
 	{
 		return homeController;
+	}
+	//new singleton hand outerer
+	public Home getHome()
+	{
+		return home;
 	}
 
 	/**

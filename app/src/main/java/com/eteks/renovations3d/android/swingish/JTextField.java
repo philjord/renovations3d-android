@@ -14,5 +14,6 @@ public class JTextField extends EditText
 	{
 		super(context);
 		setText(text);
+		setSingleLine();
 	}
 }
