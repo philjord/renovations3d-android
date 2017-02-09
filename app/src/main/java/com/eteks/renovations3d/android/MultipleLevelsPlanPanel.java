@@ -359,7 +359,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		item.setTitle(builder);
 		item.setIcon(iconId);
 
-		menu.findItem(R.id.planSelect).setChecked(true);// find out why this is trouble, doesn't hold checked ness from 2D->3D->2D
+		menu.findItem(R.id.planSelect).setChecked(true);// TODO: find out why this is trouble, doesn't hold checked ness from 2D->3D->2D
 		selectionGroup.refreshIcons();
 
 		menu.findItem(R.id.planSelectLasso).setChecked(this.selectLasso);

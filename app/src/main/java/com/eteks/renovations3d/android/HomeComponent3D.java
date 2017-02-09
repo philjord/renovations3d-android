@@ -126,6 +126,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private Menu mOptionsMenu;
 
+	private GLCapabilities caps;
 	private GLWindow gl_window;
 
 	@Override
@@ -133,8 +134,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		super.onCreate(savedInstanceState);
 
-		final GLCapabilities caps =
-				new GLCapabilities(GLProfile.get(GLProfile.GLES2));
+		caps = new GLCapabilities(GLProfile.get(GLProfile.GLES2));
 
 		caps.setDoubleBuffered(true);
 		caps.setDepthBits(16);
@@ -146,105 +146,107 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
-
 		// equal to addAnsecter listeners but that's too late by far
-		gl_window.addGLEventListener(new GLEventListener()
-			 {
-				 @Override
-				 public void init(@SuppressWarnings("unused") final GLAutoDrawable drawable)
-				 {
-
-				 }
-
-				 @Override
-				 public void reshape(final GLAutoDrawable drawable, final int x, final int y,
-									 final int w, final int h)
-				 {
-				 }
-
-				 @Override
-				 public void display(final GLAutoDrawable drawable)
-				 {
-					 // this has come from a onResume state restore, if canvas3D2D already exists, so just get rendering again
-					 if (canvas3D2D != null)
-					 {
-						 // must call this as onPause has called removeNotify
-						 canvas3D2D.addNotify();
-						 //wait for onscreen hint
-						 if (!HomeComponent3D.this.getUserVisibleHint())
-						 {
-							 canvas3D2D.stopRenderer();
-						 }
-						 else
-						 {
-							 canvas3D2D.startRenderer();
-						 }
-					 }
-					 else
-					 {
-						 // taken from ancestor listener originally so get back onto EDT thread
-						 EventQueue.invokeLater(new Runnable()
-						 {
-							 public void run()
-							 {
-								 // Create component 3D only once the graphics configuration of its parent is known
-								 if (canvas3D2D == null)
-								 {
-									 createComponent3D(null, preferences, controller);
-
-									 // called here not in createComponent, just for life cycle clarity
-									 canvas3D2D.addNotify();
-									 //wait for onscreen hint as this component is create whilst off screen
-									 if (!HomeComponent3D.this.getUserVisibleHint())
-										 canvas3D2D.stopRenderer();
-								 }
-
-
-								 if (onscreenUniverse == null)
-								 {
-									 onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
-
-									 onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
-									 fpsCounter = new AndyFPSCounter();
-									 onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
-									 fpsCounter.addToCanvas(canvas3D2D);
-									 onscreenInfo = new InfoText3D()
-									 {
-										 @Override
-										 protected String getText()
-										 {
-											 return "F: " + fingerCount;
-										 }
-									 };
-									 onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
-									 onscreenInfo.addToCanvas(canvas3D2D);
-								 }
-							 }
-						 });
-					 }
-				 }
-
-				 @Override
-				 public void dispose(final GLAutoDrawable drawable)
-				 {
-					 // taken from anscestor listener originally so get back onto EDT thread
-					 EventQueue.invokeLater(new Runnable()
-					 {
-						 public void run()
-						 {
-							 if (onscreenUniverse != null)
-							 {
-								 onscreenUniverse.cleanup();
-								 removeHomeListeners();
-								 onscreenUniverse = null;
-							 }
-						 }
-					 });
-				 }
-			 }
-		);
+		gl_window.addGLEventListener(glWindowInitListener);
 
 	}
+
+	GLEventListener glWindowInitListener = new GLEventListener()
+	{
+		@Override
+		public void init(@SuppressWarnings("unused") final GLAutoDrawable drawable)
+		{
+
+		}
+
+		@Override
+		public void reshape(final GLAutoDrawable drawable, final int x, final int y,
+		final int w, final int h)
+		{
+		}
+
+		@Override
+		public void display(final GLAutoDrawable drawable)
+		{
+			// this has come from a onResume state restore, if canvas3D2D already exists, so just get rendering again
+			if (canvas3D2D != null)
+			{
+				// must call this as onPause has called removeNotify
+				canvas3D2D.addNotify();
+				//wait for onscreen hint
+				if (!HomeComponent3D.this.getUserVisibleHint())
+				{
+					canvas3D2D.stopRenderer();
+				}
+				else
+				{
+					canvas3D2D.startRenderer();
+				}
+			}
+			else
+			{
+				// taken from ancestor listener originally so get back onto EDT thread
+				EventQueue.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						// Create component 3D only once the graphics configuration of its parent is known
+						if (canvas3D2D == null)
+						{
+							createComponent3D(null, preferences, controller);
+
+							// called here not in createComponent, just for life cycle clarity
+							canvas3D2D.addNotify();
+							//wait for onscreen hint as this component is create whilst off screen
+							if (!HomeComponent3D.this.getUserVisibleHint())
+								canvas3D2D.stopRenderer();
+						}
+
+
+						if (onscreenUniverse == null)
+						{
+							onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
+
+							onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
+							fpsCounter = new AndyFPSCounter();
+							onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
+							fpsCounter.addToCanvas(canvas3D2D);
+							onscreenInfo = new InfoText3D()
+							{
+								@Override
+								protected String getText()
+								{
+									return "F: " + fingerCount;
+								}
+							};
+							onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
+							onscreenInfo.addToCanvas(canvas3D2D);
+						}
+					}
+				});
+			}
+		}
+
+		@Override
+		public void dispose(final GLAutoDrawable drawable)
+		{
+			// taken from anscestor listener originally so get back onto EDT thread
+			EventQueue.invokeLater(new Runnable()
+			{
+				public void run()
+				{
+					if (onscreenUniverse != null)
+					{
+						System.out.println("Universe clean up called, I'm gonna need a new one!");
+						onscreenUniverse.cleanup();
+						removeHomeListeners();
+						onscreenUniverse = null;
+					}
+				}
+			});
+		}
+
+	};
 
 	@Override
 	public android.view.View onCreateView(LayoutInflater inflater,
@@ -265,10 +267,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// 		now we've (possible onStart then) onResume and GLStateKeeper is working in the background on restoring state
 		// 		a display is going to come through soon to make things show after state is happy
 		// in both cases display callback is gonna get called, he needs to addNotify in all cases
-
-		if (HomeComponent3D.this.getUserVisibleHint())
+		if(canvas3D2D != null)
 		{
-			canvas3D2D.startRenderer();
+			//PJ I add this entire conditional to try to restart after a stop it appears ok, but be suspicious of it
+			if(!canvas3D2D.getGLWindow().isNativeValid())
+			{
+				gl_window = GLWindow.create(caps);
+				// equal to addAnsecter listeners but that's too late by far
+				gl_window.addGLEventListener(glWindowInitListener);
+			}
+			else
+			{
+				canvas3D2D.addNotify();
+			}
+
+			if (HomeComponent3D.this.getUserVisibleHint())
+			{
+				canvas3D2D.startRenderer();
+			}
 		}
 	}
 
@@ -651,9 +667,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			createActions(controller);
 			installKeyboardActions();
 			// Let this component manage focus
-			//ANDY setFocusable(true);
-			//ANDY SwingTools.installFocusBorder(this);
+			//PJ setFocusable(true);
+			//PJ SwingTools.installFocusBorder(this);
 		}
+
+
+		//FIXME: PJ for fun, making this so in the eclipse version for fun
+		this.home.getEnvironment().setDrawingMode(HomeEnvironment.DrawingMode.FILL_AND_OUTLINE);
 
 		//GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		//if (graphicsEnvironment.getScreenDevices().length == 1)

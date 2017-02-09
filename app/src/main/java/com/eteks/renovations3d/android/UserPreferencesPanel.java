@@ -20,21 +20,15 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
@@ -46,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JButton;
@@ -65,6 +58,7 @@ import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.mindblowing.renovations3d.R;
 
 import javaawt.Color;
 import javaawt.Graphics2D;
@@ -80,14 +74,14 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   private final UserPreferencesController controller;
 	private JLabel           languageLabel;
 	private JComboBox        languageComboBox;
-	private JButton          languageLibraryImportButton;
+	//private JButton          languageLibraryImportButton;
 	private JLabel           unitLabel;
 	private JComboBox        unitComboBox;
-	private JLabel           furnitureCatalogViewLabel;
-	private JRadioButton     treeRadioButton;
-	private JRadioButton     listRadioButton;
-	private JLabel           navigationPanelLabel;
-	private JCheckBox        navigationPanelCheckBox;
+	//private JLabel           furnitureCatalogViewLabel;
+	//private JRadioButton     treeRadioButton;
+	//private JRadioButton     listRadioButton;
+	//private JLabel           navigationPanelLabel;
+	//private JCheckBox        navigationPanelCheckBox;
 	private JLabel           aerialViewCenteredOnSelectionLabel;
 	private JCheckBox        aerialViewCenteredOnSelectionCheckBox;
 	private JLabel           magnetismLabel;
@@ -96,12 +90,12 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JCheckBox rulersCheckBox;
 	private JLabel           gridLabel;
 	private JCheckBox        gridCheckBox;
-	private JLabel           defaultFontNameLabel;
+	//private JLabel           defaultFontNameLabel;
 	//private FontNameComboBox defaultFontNameComboBox;
-	private JComboBox defaultFontNameComboBox;
-	private JLabel           furnitureIconLabel;
-	private JRadioButton catalogIconRadioButton;
-	private JRadioButton     topViewRadioButton;
+	//private JComboBox defaultFontNameComboBox;
+	//private JLabel           furnitureIconLabel;
+	//private JRadioButton catalogIconRadioButton;
+	//private JRadioButton     topViewRadioButton;
 	private JLabel           roomRenderingLabel;
 	private JRadioButton     monochromeRadioButton;
 	private JRadioButton     floorColorOrTextureRadioButton;
@@ -130,7 +124,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   public UserPreferencesPanel(UserPreferences preferences,
                               UserPreferencesController controller, Activity activity) {
     //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_preferences);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -915,29 +909,21 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
     if (this.languageLabel != null) {
       // First row
-      rootView.addView(this.languageLabel, labelInsets);//, params);//, new GridBagConstraints(
-          //0, 0, 1, 1, 0, 0, labelAlignment,
-          //GridBagConstraints.NONE, labelInsets, 0, 0));
-		this.rootView.addView(this.languageComboBox, rightComponentInsets);//, params);//, new GridBagConstraints(
-        //  1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-         // GridBagConstraints.HORIZONTAL, new Insets(OperatingSystem.isMacOSX() ? 1 : 0, 0, 5, 0), 0, 0));
-      if (this.languageLibraryImportButton != null) {
+      	swapOut(this.languageLabel, R.id.prefs_languageLabel);
+		swapOut(this.languageComboBox, R.id.prefs_languageSpinner);
+
+      /*if (this.languageLibraryImportButton != null) {
         rootView.addView(this.languageLibraryImportButton, labelInsets);//, params);//, new GridBagConstraints(
-        //    2, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        //    GridBagConstraints.NONE, new Insets(0, 5, 5, 0), 0, 0));
-      }
+           2, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
+            GridBagConstraints.NONE, new Insets(0, 5, 5, 0), 0, 0));
+      }*/
     }
     if (this.unitLabel != null) {
       // Second row
-      rootView.addView(this.unitLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 1, 1, 1, 0, 0, labelAlignment, 
-       //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.unitComboBox, rightComponentInsets);//, new GridBagConstraints(
-       //   1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-       //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-      // Keep third row empty (used to contain unit radio buttons)
+		swapOut(this.unitLabel, R.id.prefs_unitLabel);
+		swapOut(this.unitComboBox, R.id.prefs_unitSpinner);
     }
-    if (this.furnitureCatalogViewLabel != null) {
+   /* if (this.furnitureCatalogViewLabel != null) {
       // Fourth row
       rootView.addView(this.furnitureCatalogViewLabel, labelInsets);//, new GridBagConstraints(
       //    0, 3, 1, 1, 0, 0, labelAlignment, 
@@ -948,8 +934,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       rootView.addView(this.listRadioButton, rightComponentInsets);//, new GridBagConstraints(
       //    2, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }
-    if (this.navigationPanelLabel != null) {
+    }*/
+   /* if (this.navigationPanelLabel != null) {
       // Fifth row
       rootView.addView(this.navigationPanelLabel, labelInsets);//, new GridBagConstraints(
       //    0, 4, 1, 1, 0, 0, labelAlignment, 
@@ -957,49 +943,33 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);//, new GridBagConstraints(
        //   1, 4, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }
+    }*/
     if (this.aerialViewCenteredOnSelectionLabel != null) {
       // Sixth row
-      rootView.addView(this.aerialViewCenteredOnSelectionLabel, labelInsetsWithSpace);//, new GridBagConstraints(
-      //    0, 5, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsetsWithSpace, 0, 0));
-      rootView.addView(this.aerialViewCenteredOnSelectionCheckBox, rightComponentInsetsWithSpace);//, new GridBagConstraints(
-      //    1, 5, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsetsWithSpace, 0, 0));
+		swapOut(this.aerialViewCenteredOnSelectionLabel, R.id.prefs_arialCenterLabel);
+		swapOut(this.aerialViewCenteredOnSelectionCheckBox, R.id.prefs_arialCenterRadioButton);
     }
     if (this.magnetismLabel != null) {
       // Seventh row
-      rootView.addView(this.magnetismLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 6, 1, 1, 0, 0, labelAlignment, 
-       //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.magnetismCheckBox, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 6, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.magnetismLabel, R.id.prefs_magnetismLabel);
+		swapOut(this.magnetismCheckBox, R.id.prefs_magnetismRadioButton);
     }
     if (this.rulersLabel != null) {
       // Eighth row
-      rootView.addView(this.rulersLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 7, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.rulersCheckBox, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 7, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.rulersLabel, R.id.prefs_rulersLabel);
+		swapOut(this.rulersCheckBox, R.id.prefs_rulersRadioButton);
     }
     if (this.gridLabel != null) {
       // Ninth row
-      rootView.addView(this.gridLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 8, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.gridCheckBox, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 8, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.gridLabel, R.id.prefs_gridLabel);
+		swapOut(this.gridCheckBox, R.id.prefs_gridRadioButton);
     }
-    if (this.defaultFontNameLabel != null) {
+    /*if (this.defaultFontNameLabel != null) {
       // Tenth row
       rootView.addView(this.defaultFontNameLabel, labelInsets);//, new GridBagConstraints(
       //    0, 9, 1, 1, 0, 0, labelAlignment, 
       //    GridBagConstraints.NONE, labelInsets, 0, 0));
-     /* Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
+      Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
       if (this.unitComboBox != null 
           && this.floorColorOrTextureRadioButton != null) {
         preferredSize.width = Math.min(preferredSize.width, 
@@ -1007,12 +977,12 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       } else {
         preferredSize.width = Math.min(preferredSize.width, 250); 
       }
-      this.defaultFontNameComboBox.setPreferredSize(preferredSize);*/
+      this.defaultFontNameComboBox.setPreferredSize(preferredSize);
       rootView.addView(this.defaultFontNameComboBox, rightComponentInsets);//, new GridBagConstraints(
        //   1, 9, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
        //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }
-    if (this.furnitureIconLabel != null) {
+    }*/
+    /*if (this.furnitureIconLabel != null) {
       // Eleventh row
       rootView.addView(this.furnitureIconLabel, labelInsets);//, new GridBagConstraints(
       //    0, 10, 1, 1, 0, 0, labelAlignment, 
@@ -1023,61 +993,35 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       rootView.addView(this.topViewRadioButton, rightComponentInsets);//, new GridBagConstraints(
       //    2, 10, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
       //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }
+    }*/
     if (this.roomRenderingLabel != null) {
       // Twelfth row
-      rootView.addView(this.roomRenderingLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 11, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.monochromeRadioButton, labelInsets);//, new GridBagConstraints(
-      //    1, 11, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.floorColorOrTextureRadioButton, rightComponentInsets);//, new GridBagConstraints(
-      //    2, 11, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.roomRenderingLabel, R.id.prefs_roomRenderLabel);
+		swapOut(this.monochromeRadioButton, R.id.prefs_roomRenderMonoRadioButton);
+		swapOut(this.floorColorOrTextureRadioButton, R.id.prefs_roomRenderColorRadioButton);
     }
     if (this.newWallPatternLabel != null) {
       // Thirteenth row
-      rootView.addView(this.newWallPatternLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 12, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallPatternComboBox, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 12, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.newWallPatternLabel, R.id.prefs_newWallsTextureLabel);
+		swapOut(this.newWallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
     } else if (this.wallPatternLabel != null) {
-      rootView.addView(this.wallPatternLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 12, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.wallPatternComboBox, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 12, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
+		swapOut(this.wallPatternLabel, R.id.prefs_newWallsTextureLabel);
+		swapOut(this.wallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
     } 
     if (this.newWallThicknessLabel != null) {
       // Fourteenth row
-      rootView.addView(this.newWallThicknessLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 13, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallThicknessSpinner, rightComponentInsets);//, new GridBagConstraints(
-      //    1, 13, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
+		swapOut(this.newWallThicknessLabel, R.id.prefs_newWallsThicknessLabel);
+		swapOut(this.newWallThicknessSpinner, R.id.prefs_newWallsThicknessSpinner);
     }
     if (this.newWallHeightLabel != null) {
       // Fifteenth row
-      rootView.addView(this.newWallHeightLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 14, 1, 1, 0, 0, labelAlignment, 
-       //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newWallHeightSpinner, rightComponentInsets);//, new GridBagConstraints(
-       //   1, 14, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-       //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
+		swapOut(this.newWallHeightLabel, R.id.prefs_newWallsHeightLabel);
+		swapOut(this.newWallHeightSpinner, R.id.prefs_newWallsHeightSpinner);
     }
     if (this.newFloorThicknessLabel != null) {
       // Sixteenth row
-      rootView.addView(this.newFloorThicknessLabel, labelInsets);//, new GridBagConstraints(
-       //   0, 15, 1, 1, 0, 0, labelAlignment, 
-       //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.newFloorThicknessSpinner, rightComponentInsets);//, new GridBagConstraints(
-       //   1, 15, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-       //   GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
+		swapOut(this.newFloorThicknessLabel, R.id.prefs_newLevelFloorThicknessLabel);
+   		swapOut(this.newFloorThicknessSpinner, R.id.prefs_newLevelFloorThicknessSpinner);
     }
 /*    if (this.checkUpdatesCheckBox != null
         || this.autoSaveDelayForRecoveryCheckBox != null) {
@@ -1092,36 +1036,22 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             new GridBagConstraints(
              //   1, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
              //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-      }
+      }*/
       if (this.autoSaveDelayForRecoveryCheckBox != null) {
-        updatesAndAutoSaveDelayForRecoveryPanel.add(this.autoSaveDelayForRecoveryCheckBox,
-            new GridBagConstraints(
-            //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            //    GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-        updatesAndAutoSaveDelayForRecoveryPanel.add(this.autoSaveDelayForRecoverySpinner,
-            new GridBagConstraints(
-             //   1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-             //   GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-        updatesAndAutoSaveDelayForRecoveryPanel.add(this.autoSaveDelayForRecoveryUnitLabel,
-            new GridBagConstraints(
-             //   2, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-             //   GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		  swapOut(this.autoSaveDelayForRecoveryCheckBox, R.id.prefs_autoSaveRadioButton);
+			swapOut(this.autoSaveDelayForRecoverySpinner, R.id.prefs_autoSaveSpinner);
+			swapOut(this.autoSaveDelayForRecoveryUnitLabel,R.id.prefs_autoSaveUnitLabel);
       }
-      add(updatesAndAutoSaveDelayForRecoveryPanel, params);//, new GridBagConstraints(
-        //  0, 16, 3, 1, 0, 0, GridBagConstraints.LINE_START, 
-        //  GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-    }*/
+
     // Last row
     if (this.resetDisplayedActionTipsButton.getText() != null
         && this.resetDisplayedActionTipsButton.getText().length() > 0) {
       // Display reset button only if its text isn't empty 
-		rootView.addView(this.resetDisplayedActionTipsButton, labelInsets);//, new GridBagConstraints(
-        //  0, 17, 3, 1, 0, 0, GridBagConstraints.CENTER, 
-        //  GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		swapOut(this.resetDisplayedActionTipsButton, R.id.prefs_resetTipsButton);
     }
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.prefs_closeButton);
   }
 
   /**
