@@ -4631,7 +4631,7 @@ public class HomePane implements HomeView
   /*  List<Camera> storedCameras = this.home.getStoredCameras();
     final List<Camera> selectedCameras = new ArrayList<Camera>();
     final JList camerasList = new JList(storedCameras.toArray());
-    camerasList.setCellRenderer(new ListCellRenderer() {
+    camerasList.setCellRenderer(new DefaultListCellRenderer() {
         private JCheckBox cameraCheckBox = new JCheckBox();
         
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,

@@ -21,18 +21,12 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -58,6 +52,7 @@ import com.eteks.sweethome3d.tools.ResourceURLContent;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.WallController;
+import com.mindblowing.renovations3d.R;
 
 import javaawt.Color;
 import javaawt.Graphics2D;
@@ -86,14 +81,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
   private JRadioButton         leftSideColorRadioButton;
   private ColorButton          leftSideColorButton;
   private JRadioButton         leftSideTextureRadioButton;
-  private JComponent           leftSideTextureComponent;
+  private JButton           leftSideTextureComponent;
   private JRadioButton         leftSideMattRadioButton;
   private JButton              leftSideBaseboardButton;
   private JRadioButton         leftSideShinyRadioButton;
   private JRadioButton         rightSideColorRadioButton;
   private ColorButton          rightSideColorButton;
   private JRadioButton         rightSideTextureRadioButton;
-  private JComponent           rightSideTextureComponent;
+  private JButton           rightSideTextureComponent;
   private JRadioButton         rightSideMattRadioButton;
   private JRadioButton         rightSideShinyRadioButton;
   private JButton              rightSideBaseboardButton;
@@ -128,7 +123,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
   public WallPanel(UserPreferences preferences,
                    WallController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_wallpanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -308,7 +303,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         }
       });
     
-//    this.leftSideTextureComponent = (JComponent)controller.getLeftSideTextureController().getView();
+    this.leftSideTextureComponent = (JButton)controller.getLeftSideTextureController().getView();
 
     ButtonGroup leftSideColorButtonGroup = new ButtonGroup();
     leftSideColorButtonGroup.add(this.leftSideColorRadioButton);
@@ -415,7 +410,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         }
       });
   
-//    this.rightSideTextureComponent = (JComponent)controller.getRightSideTextureController().getView();
+    this.rightSideTextureComponent = (JButton)controller.getRightSideTextureController().getView();
 
     ButtonGroup rightSideColorButtonGroup = new ButtonGroup();
     rightSideColorButtonGroup.add(this.rightSideColorRadioButton);
@@ -980,11 +975,11 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // First row
 	  JLabel startPointPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "startPointPanel.title"));
-	  rootView.addView(startPointPanel, rowInsets);
-	  rootView.addView(this.xStartLabel, rowInsets);
-	  rootView.addView(this.xStartSpinner, rowInsets);
-	  rootView.addView(this.yStartLabel, rowInsets);
-	  rootView.addView(this.yStartSpinner, rowInsets);
+	  swapOut(startPointPanel, R.id.wall_panel_startPanel);
+	  swapOut(this.xStartLabel, R.id.wall_panel_xStartLabel);
+	  swapOut(this.xStartSpinner, R.id.wall_panel_xStartSpinner);
+	  swapOut(this.yStartLabel, R.id.wall_panel_yStartLabel);
+	  swapOut(this.yStartSpinner, R.id.wall_panel_yStartSpinner);
 
    /* final JPanel startPointPanel = createTitledPanel(
         preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "startPointPanel.title"),
@@ -1004,11 +999,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 	  JLabel endPointPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "endPointPanel.title"));
-	  rootView.addView(endPointPanel, rowInsets);
-	  rootView.addView(this.xEndLabel, rowInsets);
-	  rootView.addView(this.xEndSpinner, rowInsets);
-	  rootView.addView(this.yEndLabel, rowInsets);
-	  rootView.addView(this.yEndSpinner, rowInsets);
+	  swapOut(endPointPanel, R.id.wall_panel_endPanel);
+	  swapOut(this.xEndLabel, R.id.wall_panel_xEndLabel);
+	  swapOut(this.xEndSpinner, R.id.wall_panel_xEndSpinner);
+	  swapOut(this.yEndLabel, R.id.wall_panel_yEndLabel);
+	  swapOut(this.yEndSpinner, R.id.wall_panel_yEndSpinner);
+
+	  swapOut(this.distanceToEndPointLabel, R.id.wall_panel_distanceLabel);
+	  swapOut(this.distanceToEndPointSpinner, R.id.wall_panel_distanceSpinner);
 
 	  // Second row
    /* final JPanel endPointPanel = createTitledPanel(
@@ -1029,14 +1027,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 	  JLabel leftSidePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSidePanel.title"));
-	  rootView.addView(leftSidePanel, rowInsets);
-	  rootView.addView(this.leftSideColorRadioButton, rowInsets);
-	  rootView.addView(this.leftSideColorButton, rowInsets);
-	  rootView.addView(this.leftSideTextureRadioButton, rowInsets);
-//	  rootView.addView(this.leftSideTextureComponent, rowInsets);
-	  rootView.addView(this.leftSideMattRadioButton, rowInsets);
-	  rootView.addView(this.leftSideShinyRadioButton, rowInsets);
-	  rootView.addView(this.leftSideBaseboardButton, rowInsets);
+	  swapOut(leftSidePanel, R.id.wall_panel_leftSideLabel);
+	  swapOut(this.leftSideColorRadioButton, R.id.wall_panel_leftSideColorRadioButton);
+	  swapOut(this.leftSideColorButton, R.id.wall_panel_leftSideColorButton);
+	  swapOut(this.leftSideTextureRadioButton, R.id.wall_panel_leftSideTextureRadioButton);
+	  swapOut(this.leftSideTextureComponent, R.id.wall_panel_leftSideTextureButton);
+	  swapOut(this.leftSideMattRadioButton, R.id.wall_panel_leftSideMattRadioButton);
+	  swapOut(this.leftSideShinyRadioButton, R.id.wall_panel_leftSideShininessRadioButton);
+	  swapOut(this.leftSideBaseboardButton, R.id.wall_panel_leftSideModifyBaseboardButton);
 
     // Third row
 /*    JPanel leftSidePanel = createTitledPanel(
@@ -1061,14 +1059,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 	  JLabel rightSidePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSidePanel.title"));
-	  rootView.addView(rightSidePanel, rowInsets);
-	  rootView.addView(this.rightSideColorRadioButton, rowInsets);
-	  rootView.addView(this.rightSideColorButton, rowInsets);
-	  rootView.addView(this.rightSideTextureRadioButton, rowInsets);
-//	  rootView.addView(this.rightSideTextureComponent, rowInsets);
-	  rootView.addView(this.rightSideMattRadioButton, rowInsets);
-	  rootView.addView(this.rightSideShinyRadioButton, rowInsets);
-	  rootView.addView(this.rightSideBaseboardButton, rowInsets);
+	  swapOut(rightSidePanel, R.id.wall_panel_rightSideLabel);
+	  swapOut(this.rightSideColorRadioButton, R.id.wall_panel_rightSideColorRadioButton);
+	  swapOut(this.rightSideColorButton, R.id.wall_panel_rightSideColorButton);
+	  swapOut(this.rightSideTextureRadioButton, R.id.wall_panel_rightSideTextureRadioButton);
+	  swapOut(this.rightSideTextureComponent, R.id.wall_panel_rightSideTextureButton);
+	  swapOut(this.rightSideMattRadioButton, R.id.wall_panel_rightSideMattRadioButton);
+	  swapOut(this.rightSideShinyRadioButton, R.id.wall_panel_rightSideShininessRadioButton);
+	  swapOut(this.rightSideBaseboardButton, R.id.wall_panel_rightSideModifyBaseboardButton);
 
 /*    JPanel rightSidePanel = createTitledPanel(
         preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSidePanel.title"),
@@ -1092,13 +1090,13 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 	  JLabel topPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "topPanel.title"));
-	  rootView.addView(topPanel, rowInsets);
-	  rootView.addView(this.patternLabel, rowInsets);
-	  rootView.addView(this.patternComboBox, rowInsets);
-	  rootView.addView(this.topColorLabel, rowInsets);
-	  rootView.addView(this.topDefaultColorRadioButton, rowInsets);
-	  rootView.addView(this.topColorRadioButton, rowInsets);
-	  rootView.addView(this.topColorButton, rowInsets);
+	  swapOut(topPanel, R.id.wall_panel_wallTopPanel);
+	  swapOut(this.patternLabel, R.id.wall_panel_wallTopTextureLabel);
+	  swapOut(this.patternComboBox, R.id.wall_panel_wallTopTextureSpinner);
+	  swapOut(this.topColorLabel, R.id.wall_panel_wallTopColorLabel);
+	  swapOut(this.topDefaultColorRadioButton, R.id.wall_panel_wallTopColorDefaultRadioButton);
+	  swapOut(this.topColorRadioButton, R.id.wall_panel_wallTopColorColorRadioButton);
+	  swapOut(this.topColorButton, R.id.wall_panel_wallTopColorButton);
 
     // Forth row
  /*   JPanel topPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
@@ -1128,15 +1126,15 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 	  JLabel heightPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "heightPanel.title"));
-	  rootView.addView(heightPanel, rowInsets);
-	  rootView.addView(this.rectangularWallRadioButton, rowInsets);
-	  rootView.addView(this.rectangularWallHeightLabel, rowInsets);
-	  rootView.addView(this.rectangularWallHeightSpinner, rowInsets);
-	  rootView.addView(this.slopingWallRadioButton, rowInsets);
-	  rootView.addView(this.slopingWallHeightAtStartLabel, rowInsets);
-	  rootView.addView(this.slopingWallHeightAtStartSpinner, rowInsets);
-	  rootView.addView(this.slopingWallHeightAtEndLabel, rowInsets);
-	  rootView.addView(this.slopingWallHeightAtEndSpinner, rowInsets);
+	  swapOut(heightPanel, R.id.wall_panel_heightPanel);
+	  swapOut(this.rectangularWallRadioButton, R.id.wall_panel_rectangularWallRadioButton);
+	  swapOut(this.rectangularWallHeightLabel, R.id.wall_panel_heightRectangularLabel);
+	  swapOut(this.rectangularWallHeightSpinner, R.id.wall_panel_heightRectangularSpinner);
+	  swapOut(this.slopingWallRadioButton, R.id.wall_panel_slopingWallRadioButton);
+	  swapOut(this.slopingWallHeightAtStartLabel, R.id.wall_panel_heightStartSlopingLabel);
+	  swapOut(this.slopingWallHeightAtStartSpinner, R.id.wall_panel_heightStartSlopingSpinner);
+	  swapOut(this.slopingWallHeightAtEndLabel, R.id.wall_panel_heightEndSlopingLabel);
+	  swapOut(this.slopingWallHeightAtEndSpinner, R.id.wall_panel_heightEndSlopingSpinner);
 
 /*    JPanel heightPanel = SwingTools.createTitledPanel(
         preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "heightPanel.title"));   
@@ -1182,11 +1180,11 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));    */
 
 	 // JLabel ticknessAndArcExtentPanel =
-	 // rootView.addView(heightPanel, rowInsets);
-	  rootView.addView(this.thicknessLabel, rowInsets);
-	  rootView.addView(this.thicknessSpinner, rowInsets);
-	  rootView.addView(this.arcExtentLabel, rowInsets);
-	  rootView.addView(this.arcExtentSpinner, rowInsets);
+	 // swapOut(heightPanel, rowInsets);
+	  swapOut(this.thicknessLabel, R.id.wall_panel_thicknessLabel);
+	  swapOut(this.thicknessSpinner, R.id.wall_panel_thicknessSpinner);
+	  swapOut(this.arcExtentLabel, R.id.wall_panel_ArcLabel);
+	  swapOut(this.arcExtentSpinner, R.id.wall_panel_ArcSpinner);
 
     // Sixth row
  /*   JPanel ticknessAndArcExtentPanel = new JPanel(new GridBagLayout());
@@ -1222,13 +1220,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
             //arcExtentSpinner.setVisible(controller.isEditablePoints());
           }
         });
+	  //TODO: cool visibility via setEnabled
     //startPointPanel.setVisible(controller.isEditablePoints());
     //endPointPanel.setVisible(controller.isEditablePoints());
     //this.arcExtentLabel.setVisible(controller.isEditablePoints());
    // this.arcExtentSpinner.setVisible(controller.isEditablePoints());
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.wall_panel_closeButton);
   }
   
 /*  private JPanel createTitledPanel(String title, JComponent [] components, boolean horizontal) {

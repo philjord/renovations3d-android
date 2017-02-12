@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -47,7 +48,10 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import static android.R.attr.action;
 import static com.mindblowing.renovations3d.R.id.pager;
 
 /**
@@ -302,6 +306,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
+	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState)
@@ -311,19 +316,36 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 		if(sweetHomeAVR != null && sweetHomeAVR.getHome() != null)
 		{
-			try
+			//if(sweetHomeAVR.getHome().isModified() )
 			{
-				File outputDir = getCacheDir();
-				File homeName = new File(outputDir, "currentWork.sh3d");
-				sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
-				System.out.println("onSaveInstanceState written to " + homeName.getAbsolutePath());
+				try
+				{
+					String originalName = sweetHomeAVR.getHome().getName();
+					File outputDir = getCacheDir();
+					File homeName = new File(outputDir, "currentWork.sh3d");
+					sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
+					System.out.println("onSaveInstanceState written to " + homeName.getAbsolutePath());
+					savedInstanceState.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+					SharedPreferences.Editor editor = settings.edit();
+					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+					editor.putString(STATE_CURRENT_HOME_NAME, "");
+					editor.apply();
+				}
+				catch (RecorderException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			/*else
+			{
 				savedInstanceState.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
-
-			}
-			catch (RecorderException e)
-			{
-				e.printStackTrace();
-			}
+				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+				editor.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+				editor.apply();
+			}*/
 		}
 	}
 
@@ -332,23 +354,30 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	{
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("onRestoreInstanceState");
-		File outputDir = getCacheDir();
-		File homeName = new File(outputDir, "currentWork.sh3d");
-		System.out.println(""+homeName.getAbsolutePath() + " exists " +homeName.exists());
-		if(homeName.exists())
+		String unmodifiedFileName = savedInstanceState.getString(STATE_CURRENT_HOME_NAME, "");
+		if(unmodifiedFileName.length() > 0 )
 		{
-			final String savedHomeName = savedInstanceState.getString(STATE_CURRENT_HOME_NAME);
-			loadHome(homeName);
-			//I need to set the loaded home name back to the correct name so it saves as the right name
-			SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+			loadHome(new File(unmodifiedFileName));
+		}
+		else
+		{
+			final String tempWorkingFileRealName = savedInstanceState.getString(STATE_TEMP_HOME_REAL_NAME, "");
+			File outputDir = getCacheDir();
+			File homeName = new File(outputDir, "currentWork.sh3d");
+			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
+			if (homeName.exists())
 			{
-				public void run()
+				loadHome(homeName);
+				// clear the name after load?
+				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
 				{
-					//TODO: I've never seen this happen so I've never seen this tested!
-					if(sweetHomeAVR.getHome() != null)
-						sweetHomeAVR.getHome().setName(savedHomeName);
-				}
-			});
+					public void run()
+					{
+						if (sweetHomeAVR.getHome() != null)
+							sweetHomeAVR.getHome().setName(tempWorkingFileRealName);
+					}
+				});
+			}
 		}
 	}
 
@@ -554,6 +583,8 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private void loadUpContent()
 	{
+
+
 		//TODO: see eclipse SweetHomeAVR.protected void start(String[] args) for exactly this setup, but better
 		Intent intent = getIntent();
 		if (intent != null)
@@ -672,8 +703,91 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			}
 		}
 
-		// now just fire up a lovely clear new home
-		newHome();
+		// do we have an unmodified home we were looking at? if not perhaps a modifed one?
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
+		if(unmodifiedFileName.length() > 0 )
+		{
+			loadHome(new File(unmodifiedFileName));
+		}
+		else
+		{
+			final String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, "");
+			File outputDir = getCacheDir();
+			File homeName = new File(outputDir, "currentWork.sh3d");
+			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
+			if(homeName.exists())
+			{
+				loadHome(homeName);
+				// clear the name after load?
+				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+						if (sweetHomeAVR.getHome() != null)
+							sweetHomeAVR.getHome().setName(tempWorkingFileRealName);
+					}
+				});
+			}
+			else
+			{
+				// now just fire up a lovely clear new home
+				newHome();
+			}
+		}
+		final TimerTask autoSaveTask = new TimerTask(){
+			public void run()
+			{
+				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+					Toast.makeText(SweetHomeAVRActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
+					System.out.println("That was an auto save right three...");
+						doAutoSave();
+					}
+				});
+			}
+		};
+
+		final Timer autoSaveTimer = new Timer("autosave", true);
+		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 1*60*1000, 1*60*1000);
+	}
+
+	private void doAutoSave()
+	{
+		if(sweetHomeAVR != null && sweetHomeAVR.getHome() != null)
+		{
+			//if(sweetHomeAVR.getHome().isModified())
+			{
+				try
+				{
+					String originalName = sweetHomeAVR.getHome().getName();
+					File outputDir = getCacheDir();
+					File homeName = new File(outputDir, "currentWork.sh3d");
+					sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
+					System.out.println("doAutoSave written to " + homeName.getAbsolutePath());
+					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+					SharedPreferences.Editor editor = settings.edit();
+					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+					editor.putString(STATE_CURRENT_HOME_NAME, "");
+					editor.apply();
+				}
+				catch (RecorderException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			/*else
+			{
+				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				SharedPreferences.Editor editor = settings.edit();
+				System.out.println("doAutoSave unmodified recorded as " + sweetHomeAVR.getHome().getName());
+				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+				editor.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+				editor.apply();
+			}*/
+		}
 	}
 	private String getContentName(ContentResolver resolver, Uri uri)
 	{

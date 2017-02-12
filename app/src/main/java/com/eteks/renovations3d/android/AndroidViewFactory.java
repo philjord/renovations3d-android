@@ -24,7 +24,6 @@ package com.eteks.renovations3d.android;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.sweethome3d.android_props.TextureChoiceComponent;
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CatalogTexture;
@@ -401,7 +400,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public TextureChoiceView createTextureChoiceView(UserPreferences preferences,
 													 TextureChoiceController textureChoiceController)
 	{
-		throw new UnsupportedOperationException();//return new TextureChoiceComponent(preferences, textureChoiceController, activity);
+		return new TextureChoiceComponent(preferences, textureChoiceController, activity);
 	}
 
 	/**

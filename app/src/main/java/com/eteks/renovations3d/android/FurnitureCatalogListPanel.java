@@ -716,7 +716,7 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 		ListModel model = this.catalogFurnitureList.getModel();
 		int size = model.getSize();
 		int extentWidth = ((JViewport)this.catalogFurnitureList.getParent()).getExtentSize().width;
-		ListCellRenderer cellRenderer = this.catalogFurnitureList.getCellRenderer();
+		DefaultListCellRenderer cellRenderer = this.catalogFurnitureList.getCellRenderer();
 		// Search max width and height
 		int maxCellWidth = 1;
 		int maxCellHeight = 0;
@@ -842,7 +842,7 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 /**
  * Cell renderer for the furniture list.
  */
-/*private static class CatalogCellRenderer extends JComponent implements ListCellRenderer {
+/*private static class CatalogCellRenderer extends JComponent implements DefaultListCellRenderer {
 	private static final int DEFAULT_ICON_HEIGHT = Math.round(48 * SwingTools.getResolutionScale());
 	private Font                    defaultFont;
 	private Font                    modifiablePieceFont;

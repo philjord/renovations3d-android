@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.android.utils.DrawableView;
+import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.TextureManager;
@@ -1249,8 +1250,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 						lastMousePressedTime = System.currentTimeMillis();
 
-						// this will be fired on a move or an up or another single down
 						fingers = 1;
+
+						// this will be fired on a move or an up or another single down
 						potentialSinglePress = ev;
 						//mousePressed(v, ev);
 					}
@@ -1297,7 +1299,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
 						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
 						{
-							//PJPJPJPJ this is a mjor divergence from the desktop function! Single finger pan during selection mode
+							//PJPJPJPJ this is a major divergence from the desktop function! Single finger pan during selection mode
 							if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
 							{
 								final float dx = x - mLastTouchX;
@@ -1306,6 +1308,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 								float s = getScale();
 								// pan operation wants the move to be div scale as moveview does a multiply, so...
 								moveView(-dx/s, -dy/s);
+
+								// we also cancel any pending press cos that's been confirmed unwanted
+								potentialSinglePress = null;
 							}
 							else
 							{
@@ -1340,9 +1345,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 							mousePressed(v, potentialSinglePress);
 							potentialSinglePress = null;
 						}
-						lastMouseReleasedTime = System.currentTimeMillis();
 
 						mouseReleased(v, ev);
+						lastMouseReleasedTime = System.currentTimeMillis();
 					}
 					break;
 				}
@@ -1412,13 +1417,17 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1;
 
+					// if it's a double, ensure triple != double twice
+					if( clickCount == 2)
+						lastMouseReleasedTime = Long.MAX_VALUE;
+
 					try
 					{
 						controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
 								clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
 					}catch(ArrayIndexOutOfBoundsException e)
 					{
-						// this happens :
+						// TODO this happens :
 						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
 						//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
@@ -1443,7 +1452,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 			}catch(ArrayIndexOutOfBoundsException e)
 			{
-				// this happens :
+				// TODO this happens :
 				//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 				//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
 				//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
@@ -1475,7 +1484,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 				}catch(ArrayIndexOutOfBoundsException e)
 				{
-					// this happens :
+					// TODO this happens :
 					//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 					//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
 					//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
@@ -1528,17 +1537,14 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 			float mouseX = 0;
 			float mouseY = 0;
-			int deltaX = 0;
-			int deltaY = 0;
+			//int deltaX = 0;
+			//int deltaY = 0;
 			//PJ alwaysish if (getParent() instanceof JViewport) {
-				mouseX = convertXPixelToModel((int)detector.getFocusX());//PJ is that right?
+				mouseX = convertXPixelToModel((int)detector.getFocusX());
 				mouseY = convertYPixelToModel((int)detector.getFocusY());
-			//TODO: this business will keep me in the right spot I wager
 				//Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
 				//deltaX = ev.getX() - viewRectangle.x;
 				//deltaY = ev.getY() - viewRectangle.y;
-				deltaX = (int)(detector.getFocusX() + scrolledX);
-				deltaY = (int)(detector.getFocusY() + scrolledY);
 			//}
 
 			float oldScale = getScale();
@@ -1553,23 +1559,17 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			//		? Math.pow(1.05, -ev.getWheelRotation())
 			//		: Math.pow(0.95, ev.getWheelRotation())));
 
-			//System.out.println("scrolledX " +scrolledX + "  detector.getFocusX() " +detector.getFocusX() + " oldScale " + oldScale + " deltaX " +deltaX + " mouseX "+mouseX);
-			//System.out.println("newScale " + newScale + " detector.getScaleFactor() "+detector.getScaleFactor() );
-
 			if (getScale() != oldScale ){//&& getParent() instanceof JViewport) {
 				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
 				//((JViewport)getParent()).setViewPosition(new Point());
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
+
+				float modeldiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
+				scrolledX += modeldiffX * newScale;
+
+				float modeldiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
+				scrolledY += modeldiffY * newScale;
 			}
-			//System.out.println("mouseX - convertXPixelToModel(deltaX) " +(mouseX - convertXPixelToModel(deltaX)));
-			//System.out.println("after scrolledX " +scrolledX);
-
-
-
-			System.out.println(" mouseX "+mouseX + " new MouseX = " + convertXPixelToModel((int)detector.getFocusX()) );
-			deltaX = (int) (detector.getFocusX() - mouseX);
-			System.out.println(" deltaX "+deltaX + " " +(deltaX*newScale));
-
 
 			return true;
 		}
@@ -5659,7 +5659,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertXModelToPixel(float x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)Math.round((x - planBounds.getMinX() + MARGIN) * getScale()) + insets.left - scrolledX;//PJ likely wrong but nothing much uses this
+    return (int)((x - scrolledX + insets.left) * getScale() + MARGIN - planBounds.getMinX());
 
   }
 
@@ -5669,7 +5669,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertYModelToPixel(float y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)Math.round((y - planBounds.getMinY() + MARGIN) * getScale()) + insets.top - scrolledY;
+    return (int)((y - scrolledY + insets.top) * getScale() + MARGIN - planBounds.getMinY());
 
   }
 

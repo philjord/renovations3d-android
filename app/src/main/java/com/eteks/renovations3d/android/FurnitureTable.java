@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +82,15 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
+		DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
+		widths = new int[]{(int)(mDisplayMetrics.densityDpi*0.45f),
+				(int)(mDisplayMetrics.densityDpi*0.55f),
+				(int)(mDisplayMetrics.densityDpi*0.40f),
+				(int)(mDisplayMetrics.densityDpi*0.40f),
+				(int)(mDisplayMetrics.densityDpi*0.40f),
+				(int)(mDisplayMetrics.densityDpi*0.40f)};
+
+
 		View rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
 		header = (LinearLayout) rootView.findViewById(R.id.header);
 		updateHeader();
