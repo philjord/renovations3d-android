@@ -20,8 +20,13 @@
 package com.eteks.renovations3d.android;
 
 import android.content.Context;
-import android.widget.Button;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 
+import com.eteks.renovations3d.android.swingish.ActionListener;
+import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import java.beans.PropertyChangeEvent;
@@ -29,18 +34,23 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javaawt.Color;
+import javaawt.Graphics2D;
+import javaawt.VMGraphics2D;
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 /**
  * Button displaying a color as an icon.
  */
-public class ColorButton extends Button
+public class ColorButton extends JButton
 {
   public static final String COLOR_PROPERTY = "color";
   public static final String COLOR_DIALOG_TITLE_PROPERTY = "colorDialogTitle";
   
   // Share color chooser between ColorButton instances to keep recent colors
 //  private static JColorChooser colorChooser;
-  private static Locale        colorChooserLocale;
-  
+//  private static Locale        colorChooserLocale;
+  private AmbilWarnaDialog colorChooser;
   private Integer color;
   private String  colorDialogTitle;
 
@@ -54,12 +64,73 @@ public class ColorButton extends Button
   /**
    * Creates a color button.
    */
-  public ColorButton(Context context, final UserPreferences preferences) {
-	  super(context);
- /*   JLabel colorLabel = new JLabel("Color");
-    Dimension iconDimension = colorLabel.getPreferredSize();
-    final int iconWidth = iconDimension.width;
-    final int iconHeight = iconDimension.height;
+  public ColorButton(final Context context, final UserPreferences preferences) {
+	  super(context , "");
+ //   JLabel colorLabel = new JLabel("Color");
+ //   Dimension iconDimension = colorLabel.getPreferredSize();
+  //  final int iconWidth = iconDimension.width;
+  //  final int iconHeight = iconDimension.height;
+	  setBackgroundDrawable(new Drawable()
+	  {
+		  @Override
+		  public void draw(Canvas canvas)
+		  {
+			  int iconWidth = getWidth();
+			  int iconHeight = getHeight();
+			  int x = 0;
+			  int y = 0;
+			  Graphics2D g = new VMGraphics2D(canvas);
+			  if (color != null) {
+				  g.setColor(new Color(color));
+				  g.fillRect(x + 2, y + 2, iconWidth - 4,
+						  iconHeight - 4);
+			  }
+			  //g.setColor(getForeground());
+			  g.drawRect(x + 2, y + 2, iconWidth - 5, iconHeight - 5);
+		  }
+
+		  @Override
+		  public void setAlpha(int alpha)
+		  {
+		  }
+
+		  @Override
+		  public void setColorFilter(ColorFilter colorFilter)
+		  {
+		  }
+
+		  @Override
+		  public int getOpacity()
+		  {
+			  return PixelFormat.OPAQUE;
+		  }
+	  });
+
+// initialColor is the initially-selected color to be shown in the rectangle on the left of the arrow.
+// for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
+
+	  addActionListener(new ActionListener() {
+		  public void actionPerformed(ActionEvent ev) {
+			  // Update edited color in furniture color chooser
+			  int initialColor = color==null? 0xffffffff : color.intValue();
+			  AmbilWarnaDialog colorChooser = new AmbilWarnaDialog(context, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener()
+			  {
+				  @Override
+				  public void onOk(AmbilWarnaDialog dialog, int color)
+				  {
+					  // color is the color selected by the user.
+					  setColor(color);
+				  }
+
+				  @Override
+				  public void onCancel(AmbilWarnaDialog dialog)
+				  {
+					  // cancel was selected by the user
+				  }
+			  });
+	  		colorChooser.show();
+		  }});
+    /*
     setIcon(new Icon() {
       public int getIconWidth() {
         return iconWidth;
@@ -79,24 +150,24 @@ public class ColorButton extends Button
         g.drawRect(x + 2, y + 2, iconWidth - 5, iconHeight - 5);
       }
     });
-
+*/
     // Add a listener to update color
-    addActionListener(new ActionListener() {
+ /*   addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ev) {
         if (colorChooser == null
             || !Locale.getDefault().equals(colorChooserLocale)) {
-          // Create color chooser instance each time default locale changed 
-          colorChooser = createColorChooser(preferences);          
+          // Create color chooser instance each time default locale changed
+          colorChooser = createColorChooser(preferences);
           colorChooserLocale = Locale.getDefault();
         }
-        
+
         // Update edited color in furniture color chooser
-        colorChooser.setColor(color != null 
+        colorChooser.setColor(color != null
             ? new Color(color)
             : getBackground());
-        JDialog colorDialog = JColorChooser.createDialog(getParent(), 
+        JDialog colorDialog = JColorChooser.createDialog(getParent(),
             colorDialogTitle, true, colorChooser,
-            new ActionListener () { 
+            new ActionListener () {
               public void actionPerformed(ActionEvent e) {
                 // Change button color when user click on ok button
                 Integer color = colorChooser.getColor().getRGB();
@@ -113,10 +184,10 @@ public class ColorButton extends Button
                     }
                   }
                   recentColors.add(0, color);
-                  preferences.setRecentColors(recentColors);     
+                  preferences.setRecentColors(recentColors);
                 }
               }
-            }, null);   
+            }, null);
         if (preferences != null) {
           AbstractColorChooserPanel colorChooserPanel = colorChooser.getChooserPanels() [0];
           if (colorChooserPanel instanceof PalettesColorChooserPanel) {

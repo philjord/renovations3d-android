@@ -55,11 +55,11 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
   private JRadioButton  groundColorRadioButton;
   private ColorButton   groundColorButton;
   private JRadioButton  groundTextureRadioButton;
-  private JComponent groundTextureComponent;
+  private JButton groundTextureComponent;
   private JRadioButton  skyColorRadioButton;
   private ColorButton   skyColorButton;
   private JRadioButton skyTextureRadioButton;
-  private JComponent    skyTextureComponent;
+  private JButton    skyTextureComponent;
   private JLabel brightnessLabel;
   private JSlider       brightnessSlider;
   private JLabel        darkBrightnessLabel;
@@ -134,7 +134,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
       }
     });
     
-//    this.groundTextureComponent = (JComponent)controller.getGroundTextureController().getView();
+    this.groundTextureComponent = (JButton)controller.getGroundTextureController().getView();
 
     ButtonGroup groundGroup = new ButtonGroup();
     groundGroup.add(this.groundColorRadioButton);
@@ -185,7 +185,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
       }
     });
     
-//    this.skyTextureComponent = (JComponent)controller.getSkyTextureController().getView();
+    this.skyTextureComponent = (JButton)controller.getSkyTextureController().getView();
 
     ButtonGroup skyGroup = new ButtonGroup();
     skyGroup.add(this.skyColorRadioButton);
@@ -320,7 +320,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
 	rootView.addView(this.groundTextureRadioButton, labelInsets);//, new GridBagConstraints(
     //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
     //    GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	//rootView.addView(this.groundTextureComponent, new GridBagConstraints(
+	rootView.addView(this.groundTextureComponent, labelInsets);
     //    1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
     //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
     //Insets rowInsets;
@@ -349,7 +349,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
 	  rootView.addView(this.skyTextureRadioButton, labelInsets);//, new GridBagConstraints(
     //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
     //    GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	 // rootView.addView(this.skyTextureComponent, new GridBagConstraints(
+	  rootView.addView(this.skyTextureComponent, labelInsets);
     //    1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
     //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
    // add(skyPanel, new GridBagConstraints(

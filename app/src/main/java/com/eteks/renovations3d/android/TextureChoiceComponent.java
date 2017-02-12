@@ -22,9 +22,11 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +74,10 @@ import javaawt.VMGraphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.imageio.ImageIO;
 import javaxswing.Icon;
+import javaxswing.ImageIcon;
+
+import static android.R.attr.x;
+import static android.R.attr.y;
 
 
 /**
@@ -94,7 +100,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     this.preferences = preferences;
     JLabel dummyLabel = new JLabel(activity, "Text");
     //Dimension iconDimension = dummyLabel.getPreferredSize();
-    final int iconHeight = 36;//iconDimension.height;
+    //final int iconHeight = iconDimension.height;
 
     controller.addPropertyChangeListener(TextureChoiceController.Property.TEXTURE, 
         new PropertyChangeListener() {
@@ -104,11 +110,14 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
           }
         });
 
+
+
 	  setBackgroundDrawable(new Drawable()
 	  {
 		  @Override
 		  public void draw(Canvas canvas)
 		  {
+			  int iconHeight = getHeight();
 			  int x = 0;
 			  int y = 0;
 			  Graphics2D g = new VMGraphics2D(canvas);

@@ -33,6 +33,7 @@ import java.security.AccessControlException;
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.ItemListener;
+import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
@@ -83,9 +84,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JRadioButton            colorRadioButton;
   private ColorButton             colorButton;
   private JRadioButton            textureRadioButton;
-  private JComponent textureComponent;
+  private JButton textureComponent;
   private JRadioButton            modelMaterialsRadioButton;
-  private JComponent              modelMaterialsComponent;
+  private JButton              modelMaterialsComponent;
   private JRadioButton            defaultShininessRadioButton;
   private JRadioButton            mattRadioButton;
   private JRadioButton            shinyRadioButton;
@@ -603,7 +604,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
               }
             }
           });
-//        this.textureComponent = (JComponent) textureController.getView();
+        this.textureComponent = (JButton) textureController.getView();
         //if (OperatingSystem.isMacOSX()) {
         //  this.textureComponent.putClientProperty("JButton.buttonType", "segmented");
         //  this.textureComponent.putClientProperty("JButton.segmentPosition", "only");
@@ -624,7 +625,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
                 }
               }
             });
-//          this.modelMaterialsComponent = (JComponent)modelMaterialsController.getView();
+          //this.modelMaterialsComponent = (JButton)modelMaterialsController.getView();
           //if (OperatingSystem.isMacOSX()) {
           //  this.modelMaterialsComponent.putClientProperty("JButton.buttonType", "segmented");
           //  this.modelMaterialsComponent.putClientProperty("JButton.segmentPosition", "only");
@@ -632,7 +633,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           buttonGroup.add(this.modelMaterialsRadioButton);
           boolean uniqueModel = modelMaterialsController.getModel() != null;
           this.modelMaterialsRadioButton.setEnabled(uniqueModel);
-//          this.modelMaterialsComponent.setEnabled(uniqueModel);
+          //this.modelMaterialsComponent.setEnabled(uniqueModel);
         }
       } catch (AccessControlException ex) {
         // com.eteks.sweethome3d.no3D property can't be read
@@ -1007,15 +1008,11 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
       if (this.textureComponent != null) {
 		  swapOut(this.textureRadioButton, R.id.furniture_panel_textureRadioButton);
-		  //TODO:
-		  // paintPanel.add(this.textureComponent, new GridBagConstraints(
-
+		  swapOut(this.textureComponent, R.id.furniture_panel_textureButton);
       }
       if (this.modelMaterialsComponent != null) {
 		  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
-		  //TODO:
-		  //paintPanel.add(this.modelMaterialsComponent, new GridBagConstraints(
-
+		  //TODO:  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
       }
 
       controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE, 

@@ -23,6 +23,7 @@ package com.eteks.renovations3d.android;
 
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;

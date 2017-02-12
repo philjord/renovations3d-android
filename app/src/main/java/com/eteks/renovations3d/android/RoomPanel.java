@@ -67,21 +67,21 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   private JRadioButton floorColorRadioButton;
   private ColorButton           floorColorButton;
   private JRadioButton          floorTextureRadioButton;
-  private JComponent floorTextureComponent;
+  private JButton floorTextureComponent;
   private JRadioButton          floorMattRadioButton;
   private JRadioButton          floorShinyRadioButton;
   private NullableCheckBox      ceilingVisibleCheckBox;
   private JRadioButton          ceilingColorRadioButton;
   private ColorButton           ceilingColorButton;
   private JRadioButton          ceilingTextureRadioButton;
-  private JComponent            ceilingTextureComponent;
+  private JButton            ceilingTextureComponent;
   private JRadioButton          ceilingMattRadioButton;
   private JRadioButton          ceilingShinyRadioButton;
   private JCheckBox splitSurroundingWallsCheckBox;
   private JRadioButton          wallSidesColorRadioButton;
   private ColorButton           wallSidesColorButton;
   private JRadioButton          wallSidesTextureRadioButton;
-  private JComponent            wallSidesTextureComponent;
+  private JButton            wallSidesTextureComponent;
   private JRadioButton          wallSidesMattRadioButton;
   private JRadioButton          wallSidesShinyRadioButton;
   private JComponent            wallSidesBaseboardComponent;
@@ -251,7 +251,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           }
         });
       
-//      this.floorTextureComponent = (JComponent)controller.getFloorTextureController().getView();
+      this.floorTextureComponent = (JButton)controller.getFloorTextureController().getView();
       
       ButtonGroup floorButtonColorGroup = new ButtonGroup();
       floorButtonColorGroup.add(this.floorColorRadioButton);
@@ -364,7 +364,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           }
         });
     
-//      this.ceilingTextureComponent = (JComponent)controller.getCeilingTextureController().getView();
+      this.ceilingTextureComponent = (JButton)controller.getCeilingTextureController().getView();
   
       ButtonGroup ceilingColorButtonGroup = new ButtonGroup();
       ceilingColorButtonGroup.add(this.ceilingColorRadioButton);
@@ -484,7 +484,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           }
         });
     
-//      this.wallSidesTextureComponent = (JComponent)controller.getWallSidesTextureController().getView();
+      this.wallSidesTextureComponent = (JButton)controller.getWallSidesTextureController().getView();
       controller.getWallSidesTextureController().addPropertyChangeListener(TextureChoiceController.Property.TEXTURE, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
@@ -764,7 +764,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		rootView.addView(this.floorColorRadioButton, rowInsets);
 		rootView.addView(this.floorColorButton, rowInsets);
 		rootView.addView(this.floorTextureRadioButton, rowInsets);
-//		rootView.addView(this.floorTextureComponent, rowInsets);
+		rootView.addView(this.floorTextureComponent, rowInsets);
 		rootView.addView(this.floorMattRadioButton, rowInsets);
 		rootView.addView(this.floorShinyRadioButton, rowInsets);
 
@@ -790,7 +790,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		rootView.addView(this.ceilingColorRadioButton, rowInsets);
 		rootView.addView(this.ceilingColorButton, rowInsets);
 		rootView.addView(this.ceilingTextureRadioButton, rowInsets);
-//		rootView.addView(this.ceilingTextureComponent, rowInsets);
+		rootView.addView(this.ceilingTextureComponent, rowInsets);
 		rootView.addView(this.ceilingMattRadioButton, rowInsets);
 		rootView.addView(this.ceilingShinyRadioButton, rowInsets);
 
@@ -816,7 +816,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		rootView.addView(this.wallSidesColorRadioButton, rowInsets);
 		rootView.addView(this.wallSidesColorButton, rowInsets);
 		rootView.addView(this.wallSidesTextureRadioButton, rowInsets);
-//		rootView.addView(this.wallSidesTextureComponent, rowInsets);
+		rootView.addView(this.wallSidesTextureComponent, rowInsets);
 		rootView.addView(this.wallSidesMattRadioButton, rowInsets);
 		rootView.addView(this.wallSidesShinyRadioButton, rowInsets);
 
