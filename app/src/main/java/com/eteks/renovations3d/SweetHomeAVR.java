@@ -125,7 +125,7 @@ public class SweetHomeAVR extends HomeApplication
 	/**
 	 * this is a butchery of HomeController.open(String)
 	 */
-	public void loadHome(final File homeFile)
+	public void loadHome(final File homeFile, final boolean clearName)
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "loadHome");
@@ -140,7 +140,7 @@ public class SweetHomeAVR extends HomeApplication
 			public Void call() throws RecorderException {
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
-				home.setName(homeName);// Notice this is used as the save name
+				home.setName(clearName ? null : homeName);// Notice this is used as the save name
 				homeController = new HomeController(home, SweetHomeAVR.this, viewFactory, contentManager);
 				EventQueue.invokeLater(new Runnable()
 				{

@@ -52,6 +52,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.R.attr.action;
+import static android.R.attr.path;
 import static com.mindblowing.renovations3d.R.id.pager;
 
 /**
@@ -384,42 +385,44 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private void loadSh3dFile()
 	{
-		chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-		final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder);
-		fileChooser.setExtension("sh3d");
-		//I can't get hold of the content manager from here
-		// I want to use the real filefilters so sh3x will load
-		//fileChooser.setFileFilter(sweetHomeAVR.getHomeController().getContentManager().getFileFilter(ContentManager.ContentType.SWEET_HOME_3D )[0]);
-		fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
+		if (sweetHomeAVR.getHomeController() != null)
 		{
-			@Override
-			public void fileSelected(final File file)
-			{
-				chooserStartFolder = file;
-				loadHome(file);
-			}
-		});
-		// get on the EDT
-		this.runOnUiThread(new Runnable()
-		{
-			public void run()
-			{
-				fileChooser.showDialog();
-			}
-		});
-		// this is the proper way to do it, but I don't have a home control here
-		/*Thread t2 = new Thread(){public void run(){
-			HomeController controller = sweetHomeAVR.getHomeController();
-			if(controller == null)
+			Thread t2 = new Thread(){public void run(){
+				HomeController controller = sweetHomeAVR.getHomeController();
+				if(controller == null)
 					newHome();
 				String openFileName = controller.getView().showOpenDialog();
 				if(openFileName != null) {
 					loadHome(new File(openFileName));
 				}
 			}};
-		t2.start();*/
+			t2.start();
+		}
+		else
+		{
+			// above this is the proper way to do it, but if I don't have a home control...
+			chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
+			final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder);
+			fileChooser.setExtension("sh3d");
+			fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
+			{
+				@Override
+				public void fileSelected(final File file)
+				{
+					chooserStartFolder = file;
+					loadHome(file);
+				}
+			});
+			// get on the EDT
+			this.runOnUiThread(new Runnable()
+			{
+				public void run()
+				{
+					fileChooser.showDialog();
+				}
+			});
+		}
 	}
 
 	private void newHome()
@@ -445,6 +448,11 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	public void loadHome(final File homeFile)
 	{
+		loadHome(homeFile, false);
+	}
+
+	public void loadHome(final File homeFile, final boolean clearName)
+	{
 		if (homeFile != null)
 		{
 			if (sweetHomeAVR.getHomeController() != null)
@@ -464,7 +472,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 					mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
 					mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
 
-					sweetHomeAVR.loadHome(homeFile);
+					sweetHomeAVR.loadHome(homeFile, clearName);
 
 					// force the frags to load up now
 					if(prevHomeLoaded)
@@ -703,7 +711,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			}
 		}
 
-		// do we have an unmodified home we were looking at? if not perhaps a modifed one?
+		// do we have an unmodified home we were looking at? if not perhaps a modified one?
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
 		if(unmodifiedFileName.length() > 0 )
@@ -712,26 +720,19 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 		else
 		{
+			//TODO: this should try to hold the real original name, but multiple auto saves sets it to the temp file name
 			final String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, "");
 			File outputDir = getCacheDir();
 			File homeName = new File(outputDir, "currentWork.sh3d");
 			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
 			if(homeName.exists())
 			{
-				loadHome(homeName);
-				// clear the name after load?
-				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
-						if (sweetHomeAVR.getHome() != null)
-							sweetHomeAVR.getHome().setName(tempWorkingFileRealName);
-					}
-				});
+				// set name to null so a save or save as will pen the default folder
+				loadHome(homeName, true);
 			}
 			else
 			{
-				// now just fire up a lovely clear new home
+				// or just fire up a lovely clear new home
 				newHome();
 			}
 		}
@@ -742,8 +743,8 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				{
 					public void run()
 					{
-					Toast.makeText(SweetHomeAVRActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
-					System.out.println("That was an auto save right three...");
+						//Toast.makeText(SweetHomeAVRActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
+						System.out.println("That was an auto save right three...");
 						doAutoSave();
 					}
 				});

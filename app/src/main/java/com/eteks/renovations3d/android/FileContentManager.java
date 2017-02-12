@@ -713,11 +713,16 @@ private SweetHomeAVRActivity activity;//for dialogs etc
                                  final String        path,
                                  boolean       save) {
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-		  System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+		  System.err.println("FileContentManager asked to showFileChooser on EDT thread, it MUST not be called from EDT as it is blocking!");
 	  }
 
 	  final File selectedFile[] = new File[1];
 	  final Semaphore dialogSemaphore = new Semaphore(0, true);
+
+	  String ok = save ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "saveDialog.title")
+			  : this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "openDialog.title");
+	  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
+	  final String[] okCancel = new String[]{ok,cancel};
 
 	  // just a name picker for the save as system
 	  if(save && contentType == ContentType.SWEET_HOME_3D)
@@ -735,42 +740,33 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 		  {
 			  public void run()
 			  {
-				  LayoutInflater li = LayoutInflater.from(activity);
-				  android.view.View promptsView = li.inflate(R.layout.new_file_name, null);
+				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
+				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
+				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
+															   {
+																   @Override
+																   public void onDismiss(DialogInterface dialog)
+																   {
+						   dialogSemaphore.release();
+					   }
+				   }
+				  );
 
-				  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-				  alertDialogBuilder.setView(promptsView);
-				  final EditText userInput = (EditText) promptsView.findViewById(R.id.editFileName);
-
-				  alertDialogBuilder
-						  .setCancelable(false)
-						  .setPositiveButton("OK",
-								  new DialogInterface.OnClickListener()
-								  {
-									  public void onClick(DialogInterface dialog, int id)
-									  {
-										  Editable t = userInput.getText();
-										  selectedFile[0] = new File(parent, userInput.getText().toString());
-										  dialogSemaphore.release();
-									  }
-								  })
-						  .setNegativeButton("Cancel",
-								  new DialogInterface.OnClickListener()
-								  {
-									  public void onClick(DialogInterface dialog, int id)
-									  {
-										  dialogSemaphore.release();
-									  }
-								  });
-
-				  alertDialogBuilder.setTitle(getFileDialogTitle(true));
-				  AlertDialog alertDialog = alertDialogBuilder.create();
-				  alertDialog.show();
+				  fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
+				  {
+					  @Override
+					  public void fileSelected(final File file)
+					  {
+						  selectedFile[0] = file;
+					  }
+				  });
+				  fileChooser.showDialog();
 			  }
 		  });
 
 	  }
-	  else if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY )
+	  else
 	  {
 			// in this case we want ot show a real file picker (with an extension filter of the right type
 		  //TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
@@ -782,18 +778,17 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 		  {
 			  public void run()
 			  {
-				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, chooserStartFolder);
+				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, chooserStartFolder, false, false, okCancel);
 				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
 				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
-				  fileChooser.getDialog().setCancelable(true);
 				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
 															   {
 																   @Override
 																   public void onDismiss(DialogInterface dialog)
 																   {
-																	   dialogSemaphore.release();
-																   }
-															   }
+						   dialogSemaphore.release();
+					   }
+				   }
 				  );
 
 				  fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
@@ -802,18 +797,13 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 					  public void fileSelected(final File file)
 					  {
 						  selectedFile[0] = file;
-						  dialogSemaphore.release();
 					  }
 				  });
 				  fileChooser.showDialog();
 			  }
 		  });
 	  }
-	  else
-	  {
-		  System.err.println("FileContentManager bad content type asked showFileChooser " + contentType );
-		  return null;
-	  }
+
 	  try
 	  {
 		  //NOTE: this is a reverse semphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
@@ -825,13 +815,7 @@ private SweetHomeAVRActivity activity;//for dialogs etc
 	  if( selectedFile[0] == null)
 		  return null;
 	  else
-	  {
-		  // add the original path
 		  return selectedFile[0].getAbsolutePath();
-	  }
-
-	  // modal is hard http://stackoverflow.com/questions/6120567/android-how-to-get-a-modal-dialog-or-similar-modal-behavior
-	  // but there are a few solutions so long as you are not on teh vent thread (probably true??
 
    /* final JFileChooser fileChooser;
     if (isDirectory(contentType)) {
