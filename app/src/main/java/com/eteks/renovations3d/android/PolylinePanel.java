@@ -33,6 +33,7 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.PolylineController;
+import com.mindblowing.renovations3d.R;
 
 import javaawt.BasicStroke;
 import javaawt.Color;
@@ -69,7 +70,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
   public PolylinePanel(UserPreferences preferences,
                               PolylineController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_polylinepanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -543,62 +544,19 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents() {
-  //  int labelAlignment = OperatingSystem.isMacOSX()
-  //      ? GridBagConstraints.LINE_END
-  //      : GridBagConstraints.LINE_START;
-    //Insets labelInsets = new Insets(0, 0, 5, 5);
-
-	  rootView.addView(this.thicknessLabel, rowInsets);
-	  rootView.addView(this.thicknessSpinner, rowInsets);
-	  rootView.addView(this.arrowsStyleLabel, rowInsets);
-	  rootView.addView(this.arrowsStyleComboBox, rowInsets);
-	  rootView.addView(this.joinStyleLabel, rowInsets);
-	  rootView.addView(this.joinStyleComboBox, rowInsets);
-	  rootView.addView(this.dashStyleLabel, rowInsets);
-	  rootView.addView(this.dashStyleComboBox, rowInsets);
-	  rootView.addView(this.colorLabel, rowInsets);
-	  rootView.addView(this.colorButton, rowInsets);
-
-    // First row
-/*    add(this.thicknessLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    Insets rightComponentInsets = new Insets(0, 0, 5, 0);
-    add(this.thicknessSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-    // Second row
-    add(this.arrowsStyleLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    add(this.arrowsStyleComboBox, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-    // Third row
-    add(this.joinStyleLabel, new GridBagConstraints(
-        0, 2, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    add(this.joinStyleComboBox, new GridBagConstraints(
-        1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-    // Fourth row
-    add(this.dashStyleLabel, new GridBagConstraints(
-        0, 3, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    add(this.dashStyleComboBox, new GridBagConstraints(
-        1, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
-    // Last row
-    add(this.colorLabel, new GridBagConstraints(
-        0, 4, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    add(this.colorButton, new GridBagConstraints(
-        1, 4, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, OperatingSystem.isMacOSX() ? 2  : -1, 0, OperatingSystem.isMacOSX() ? 3  : -1), 0, 0));
-        */
+	  swapOut(this.thicknessLabel, R.id.polyline_panel_thicknessLabel);
+	  swapOut(this.thicknessSpinner, R.id.polyline_panel_thicknessSpinner);
+	  swapOut(this.arrowsStyleLabel, R.id.polyline_panel_arrowsLabel);
+	  swapOut(this.arrowsStyleComboBox, R.id.polyline_panel_arrowsCombobox);
+	  swapOut(this.joinStyleLabel, R.id.polyline_panel_joinLabel);
+	  swapOut(this.joinStyleComboBox, R.id.polyline_panel_joinCombobox);
+	  swapOut(this.dashStyleLabel, R.id.polyline_panel_dashLabel);
+	  swapOut(this.dashStyleComboBox, R.id.polyline_panel_dashCombobox);
+	  swapOut(this.colorLabel, R.id.polyline_panel_colorLabel);
+	  swapOut(this.colorButton, R.id.polyline_panel_colorButton);
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.polyline_panel_closeButton);
   }
 
   /**

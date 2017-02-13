@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:padding="10dp"
+                  android:showDividers="middle"
+                  android:divider="@drawable/empty_tall_divider">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow>
+            <TextView
+                android:id="@+id/polyline_panel_thicknessLabel"
+                android:text="X (mm):"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/polyline_panel_thicknessSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+            <TextView
+                android:id="@+id/polyline_panel_arrowsLabel"
+                android:text="X (mm):"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+            <Spinner
+                android:id="@+id/polyline_panel_arrowsCombobox"
+                android:text="Y (mm):"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/polyline_panel_joinLabel"
+                    android:text="X (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Spinner
+                    android:id="@+id/polyline_panel_joinCombobox"
+                    android:text="Y (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/polyline_panel_dashLabel"
+                    android:text="X (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Spinner
+                    android:id="@+id/polyline_panel_dashCombobox"
+                    android:text="Y (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/polyline_panel_colorLabel"
+                    android:text="X (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Button
+                    android:id="@+id/polyline_panel_colorButton"
+                    android:text="Y (mm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/polyline_panel_closeButton"
+            android:text="Close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+    </LinearLayout>
+</ScrollView>
