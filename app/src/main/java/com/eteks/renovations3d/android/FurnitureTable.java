@@ -124,12 +124,15 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	private void updateTable()
 	{
 		tableLayout.removeAllViews();
+		tableLayout.setBackgroundColor(Color.WHITE);
+		//PJPJ this doesn't appear to do anyhting
+		//tableLayout.setDividerDrawable(this.getResources().getDrawable(R.drawable.empty_small_divider));
 
 		FurnitureTreeTableModel model = getModel();
 		for (int i = 0; i < model.getRowCount(); i++)
 		{
 			final HomePieceOfFurniture piece =(HomePieceOfFurniture)model.getValueAt(i,0);
-			TableRow tableRow = new TableRow(this.getContext());
+			HomePieceOfFurnitureTableRow tableRow = new HomePieceOfFurnitureTableRow(this.getContext(), piece);
 			tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
 
@@ -145,7 +148,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			{
 				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
 			}
-
+			imageView.setOnClickListener(tableSelectionListener);
 			tableRow.addView(imageView, new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
 
@@ -156,6 +159,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			tv.setGravity(Gravity.CENTER);
 			tv.setText(piece.getName());
 			tv.setWidth(widths[1]);
+			tv.setOnClickListener(tableSelectionListener);
 			tableRow.addView(tv);
 
 
@@ -166,6 +170,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			tv2.setGravity(Gravity.CENTER);
 			tv2.setText(""+piece.getWidth());
 			tv2.setWidth(widths[2]);
+			tv2.setOnClickListener(tableSelectionListener);
 			tableRow.addView(tv2);
 
 			TextView tv3 = new TextView(this.getContext());
@@ -175,6 +180,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			tv3.setGravity(Gravity.CENTER);
 			tv3.setText(""+piece.getDepth());
 			tv3.setWidth(widths[3]);
+			tv3.setOnClickListener(tableSelectionListener);
 			tableRow.addView(tv3);
 
 			TextView tv4 = new TextView(this.getContext());
@@ -184,6 +190,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			tv4.setGravity(Gravity.CENTER);
 			tv4.setText(""+piece.getHeight());
 			tv4.setWidth(widths[4]);
+			tv4.setOnClickListener(tableSelectionListener);
 			tableRow.addView(tv4);
 
 			VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
@@ -191,6 +198,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			vcb.setPadding(10, 10, 10, 10);
 			vcb.setGravity(Gravity.CENTER);
 			vcb.setWidth(widths[5]);
+			vcb.setOnClickListener(tableSelectionListener);
 			tableRow.addView(vcb);
 
 			tableLayout.addView(tableRow);
@@ -200,6 +208,15 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
 			v.setBackgroundColor(Color.rgb(51, 51, 51));
 			tableLayout.addView(v);
+		}
+	}
+	private class HomePieceOfFurnitureTableRow extends TableRow
+	{
+		public HomePieceOfFurniture homePieceOfFurniture;
+		public HomePieceOfFurnitureTableRow(Context context, HomePieceOfFurniture homePieceOfFurniture)
+		{
+			super(context);
+			this.homePieceOfFurniture = homePieceOfFurniture;
 		}
 	}
 
@@ -214,7 +231,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			setOnCheckedChangeListener(visibleCheckBoxListener);
 		}
 	}
-	private CompoundButton.OnCheckedChangeListener  visibleCheckBoxListener  = new CompoundButton.OnCheckedChangeListener()
+
+	private CompoundButton.OnCheckedChangeListener visibleCheckBoxListener = new CompoundButton.OnCheckedChangeListener()
 	{
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -291,6 +309,52 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		furnitureTableColumnModel = model;
 	}
 
+
+	//PJPJ taken basically form listener below
+	View.OnClickListener tableSelectionListener = new View.OnClickListener () {
+		@Override
+		public void onClick(View v)
+		{
+			//let's work with the entire row now
+			HomePieceOfFurnitureTableRow parentTableRow = (HomePieceOfFurnitureTableRow)v.getParent();
+			boolean isSelected = !parentTableRow.isSelected();
+			parentTableRow.setSelected(isSelected);
+			parentTableRow.setBackgroundColor(isSelected ? Color.CYAN : Color.WHITE);
+			for (int j = 0; j < parentTableRow.getChildCount(); j++)
+			{
+				View cv = parentTableRow.getChildAt(j);
+				cv.setBackgroundColor(isSelected ? Color.CYAN : Color.WHITE);
+			}
+
+			// Build the list of selected furniture
+			List<HomePieceOfFurniture> selectedFurniture = new ArrayList<HomePieceOfFurniture>();
+			List<HomePieceOfFurniture> ignoredGroupsFurniture = new ArrayList<HomePieceOfFurniture>();
+			for(int i = 0; i < tableLayout.getChildCount(); i++)
+			{
+				View rowView = tableLayout.getChildAt(i);
+				if( rowView instanceof HomePieceOfFurnitureTableRow)
+				{
+					HomePieceOfFurnitureTableRow tr = (HomePieceOfFurnitureTableRow)rowView;
+					if (tr.isSelected())
+					{
+						HomePieceOfFurniture piece = tr.homePieceOfFurniture;
+						if (!ignoredGroupsFurniture.contains(piece))
+						{
+							// Add to selectedFurniture table model value that stores piece
+							selectedFurniture.add(piece);
+							if (piece instanceof HomeFurnitureGroup)
+							{
+								ignoredGroupsFurniture.addAll(((HomeFurnitureGroup) piece).getAllFurniture());
+							}
+						}
+					}
+				}
+			}
+
+			// Set the new selection in home with controller
+			controller.setSelectedFurniture(new ArrayList<HomePieceOfFurniture>(selectedFurniture));
+		}
+	};
 	/**
 	 * Adds selection listeners to this table.
 	 */
@@ -302,6 +366,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				//storeExpandedRows(home, controller);
 			}
 		};
+
 	/*	this.tableSelectionListener = new ListSelectionListener () {
 			public void valueChanged(ListSelectionEvent ev) {
 				selectionByUser = true;
