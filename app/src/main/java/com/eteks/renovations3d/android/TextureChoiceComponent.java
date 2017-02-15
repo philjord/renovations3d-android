@@ -22,11 +22,9 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,7 +40,7 @@ import com.eteks.renovations3d.android.swingish.JList;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.CatalogTexture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -74,10 +72,6 @@ import javaawt.VMGraphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.imageio.ImageIO;
 import javaxswing.Icon;
-import javaxswing.ImageIcon;
-
-import static android.R.attr.x;
-import static android.R.attr.y;
 
 
 /**

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.eteks.renovations3d.android.utils.ChangeListener;
-
 /**
  * Created by phil on 2/1/2017.
  */

@@ -22,6 +22,7 @@ package com.eteks.renovations3d.android;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.text.Html;
 import android.view.View;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 
+import javaawt.VMImage;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
@@ -3748,14 +3750,16 @@ public class HomePane implements HomeView
 		}
 		float maxMemoryGigaByte = Math.max(0.1f, Runtime.getRuntime().maxMemory() / 1073741824f);
 		javaVersion += " / " + new DecimalFormat("#.#").format(maxMemoryGigaByte) + " GB max";
-		String message = String.format(messageFormat, aboutVersion, javaVersion);
+		//String message = String.format(messageFormat, aboutVersion, javaVersion);
+		//TODO: preloaded fully replaced
+		String message = "Version "+ aboutVersion;
+
 		//  JComponent messagePane = createEditorPane(message);
 		//  messagePane.setOpaque(false);
 
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.title");
 		title = "Renovations 3D";//activity.getString(R.string.app_name);//"Sweet Home AVR";//TODO: PJ fix
-		Icon icon = new ImageIcon(com.eteks.sweethome3d.android_props.HomePane.class.getResource(
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.icon")));
+		Icon icon = new ImageIcon(new VMImage(BitmapFactory.decodeResource(activity.getResources(), R.drawable.renovations3dicon)));
 		//try {
 		String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
     /*  String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.showLibraries");

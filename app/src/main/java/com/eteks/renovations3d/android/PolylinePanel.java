@@ -26,7 +26,7 @@ import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.Polyline.ArrowStyle;
 import com.eteks.sweethome3d.model.UserPreferences;

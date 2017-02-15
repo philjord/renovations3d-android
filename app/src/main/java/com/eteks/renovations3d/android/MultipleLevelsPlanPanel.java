@@ -17,10 +17,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.SweetHomeAVRActivity;
-import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
-import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.renovations3d.android.utils.MenuItemGroup;
 import com.eteks.sweethome3d.model.CollectionEvent;
@@ -249,19 +248,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 */
 	public boolean getIsControlKeyOn()
 	{
-		MenuItem cntlKey = mOptionsMenu.findItem(R.id.controlKeyOneTimer);
-		// might be missing if we are reloading a home
-		if( cntlKey !=null)
+		// not sure why, somethign to do with restore lifecycle?
+		if(mOptionsMenu != null)
 		{
-			boolean isChecked = cntlKey.isChecked();
-			cntlKey.setChecked(false);
-			setIconFromSelector(cntlKey, R.drawable.edit_copy_selector);
-			return isChecked;
+			MenuItem cntlKey = mOptionsMenu.findItem(R.id.controlKeyOneTimer);
+			// might be missing if we are reloading a home
+			if (cntlKey != null)
+			{
+				boolean isChecked = cntlKey.isChecked();
+				cntlKey.setChecked(false);
+				setIconFromSelector(cntlKey, R.drawable.edit_copy_selector);
+				return isChecked;
+			}
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
+
 	}
 
 	//copied from HomeController as we can't touch the EDT thread like they do
@@ -344,6 +346,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
+		mOptionsMenu = menu;
 		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
 		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
 		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);

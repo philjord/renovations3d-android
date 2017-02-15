@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,8 +65,12 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 {
 	private static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
 
+	private static int DEFAULT_ICON_HEIGHT_PX = 75;// used by imageviews
+	private static int DEFAULT_ICON_HEIGHT_DP = 75;// must realte to the layout R.id.main_grid
+
 	public FurnitureCatalogListPanel()
 	{
+
 	}
 
 	@Override
@@ -104,6 +109,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				}
 			}
 		});
+
+		// Convert the dps to pixels, based on density scale
+		final float scale = getResources().getDisplayMetrics().density;
+		DEFAULT_ICON_HEIGHT_PX = (int) (DEFAULT_ICON_HEIGHT_DP * scale + 0.5f);
 
 		return rootView;
 	}
@@ -217,12 +226,12 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				// if it's not recycled, initialize some attributes
 				imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
 
-				imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+				imageView.setLayoutParams(new GridView.LayoutParams(DEFAULT_ICON_HEIGHT_PX+10, DEFAULT_ICON_HEIGHT_PX+10));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 				imageView.setBackgroundColor(Color.WHITE);
-				int DEFAULT_ICON_HEIGHT = 80;//see below
-				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT, null);
+				//int DEFAULT_ICON_HEIGHT = 80;//see below
+				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), DEFAULT_ICON_HEIGHT_PX, null);
 				if(icon instanceof ImageIcon)
 				{
 					imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
@@ -254,7 +263,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		public void onDraw(Canvas canvas)
 		{
 			super.onDraw(canvas);
-			canvas.drawText(catalogPieceOfFurniture.getName(), 10, 85, mTextPaint);
+			mTextPaint.setTextSize(16);
+			mTextPaint.setFakeBoldText(true);
+			// note +5 because icon is smaller than grid size
+			canvas.drawText(catalogPieceOfFurniture.getName(), 10, DEFAULT_ICON_HEIGHT_PX + 5, mTextPaint);
 		}
 	};
 

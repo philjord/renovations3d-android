@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.android.utils.DrawableView;
-import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.TextureManager;
@@ -583,9 +582,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*4;
-		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*5;
-		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize)*2;
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3.5f);
+		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*4);
+		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5);
 
 		// Set JComponent default properties
 		setOpaque(true);
@@ -1564,11 +1563,11 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				//((JViewport)getParent()).setViewPosition(new Point());
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
 
-				float modeldiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
-				scrolledX += modeldiffX * newScale;
+				float modelDiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
+				scrolledX += modelDiffX * newScale;
 
-				float modeldiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
-				scrolledY += modeldiffY * newScale;
+				float modelDiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
+				scrolledY += modelDiffY * newScale;
 			}
 
 			return true;
@@ -3434,7 +3433,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     }
 
     //FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
-    Rectangle2D textBounds = getStringBounds(text, defaultFont);
+    Rectangle2D textBounds = getStringBounds(text, defaultFont); //PJ reobtained below as font is not right yet
     g2D.translate(x, y);
     g2D.rotate(angle);
     if (outlineColor != null) {
@@ -3443,20 +3442,22 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       TextStyle outlineStyle = style.deriveStyle(style.getFontSize() - stroke.getLineWidth());
       Font font = getFont(defaultFont, outlineStyle);
       g2D.setFont(font);
+		setFont(font);//PJPJ make font setting consistent
+		textBounds = getStringBounds(text, font);//PJ
       Color defaultColor = g2D.getColor();
       g2D.setColor(new Color(outlineColor));
       g2D.setStroke(stroke);
       g2D.translate(-(float)textBounds.getWidth() / 2 + stroke.getLineWidth() / 2, 0);
 
-		//PJPJPJPJ what in the hell is a TextLayout and it's outline?
-		// it's not the text itslef cos that's the draw below
-		//I thinks it the light blue box round the outside?, but isn't that just a drawRect?
+		//PJPJPJPJ what is a TextLayout and it's outline?
       //TextLayout textLayout = new TextLayout(text, font, g2D.getFontRenderContext());
-     // g2D.draw(textLayout.getOutline(null));
+      //g2D.draw(textLayout.getOutline(null));
 
       g2D.setColor(defaultColor);
     } else {
       g2D.setFont(getFont(defaultFont, style));
+		setFont(getFont(defaultFont, style));//PJPJ make font setting consistent
+		textBounds = getStringBounds(text, getFont(defaultFont, style));//PJ
 		((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
       g2D.translate(-(float)textBounds.getWidth() / 2, 0);
     }

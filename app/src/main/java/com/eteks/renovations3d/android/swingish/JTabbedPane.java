@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.eteks.renovations3d.android.utils.ChangeListener;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
 
 import java.util.ArrayList;

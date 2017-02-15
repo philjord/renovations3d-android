@@ -20,14 +20,8 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 
 import java.beans.PropertyChangeEvent;
@@ -36,12 +30,11 @@ import java.beans.PropertyChangeListener;
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.JButton;
-import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSlider;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.Home3DAttributesController;

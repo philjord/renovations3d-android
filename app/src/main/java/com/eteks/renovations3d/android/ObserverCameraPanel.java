@@ -34,7 +34,7 @@ import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.utils.ChangeListener;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.ObserverCameraController;

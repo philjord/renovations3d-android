@@ -5,8 +5,6 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import com.eteks.renovations3d.android.utils.ChangeListener;
-
 import java.text.Format;
 
 

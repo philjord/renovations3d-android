@@ -3,8 +3,6 @@ package com.eteks.renovations3d.android.swingish;
 import android.content.Context;
 import android.widget.SeekBar;
 
-import com.eteks.renovations3d.android.utils.ChangeListener;
-
 /**
  * Created by phil on 2/1/2017.
  */
