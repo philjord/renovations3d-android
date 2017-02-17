@@ -51,6 +51,7 @@
             Two fingers sliding side to side will move the plan left or right.\n
         Saved points of view can be found under the eye icon.\n
         Changing from top down to visit can be done by the icon of a man or a plan.\n
+        If you see a corrupt view, please try the deoptomize option in the menu.\n
     </string>
     <string name="search_hint">Search Furniture</string>
     <string name="exit">Exit</string>
@@ -70,5 +71,6 @@
     <string name="modify3dview">Modify 3D view</string>
     <string name="viewalllevels">View all levels</string>
     <string name="processing">Processing</string>
+    <string name="menu_deoptomize">Deoptomize 3d</string>
 
 </resources>

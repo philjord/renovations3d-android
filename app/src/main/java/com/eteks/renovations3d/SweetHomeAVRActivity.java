@@ -23,9 +23,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
@@ -51,9 +48,6 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.R.attr.action;
-import static android.R.attr.path;
-import static com.mindblowing.renovations3d.R.id.pager;
 
 /**
  * Created by phil on 11/20/2016.
@@ -207,7 +201,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	 */
 	public void setUpViews()
 	{
-		mViewPager = (ViewPager) findViewById(pager);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSweetHomeAVRPagerAdapter);
 		mViewPager.setCurrentItem(1);
 		mViewPager.setOffscreenPageLimit(4);
@@ -547,7 +541,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 						break;
 				}
 
-				Toast.makeText(SweetHomeAVRActivity.this, String.format("DownloadFailedWithErrorMessage", message), Toast.LENGTH_SHORT).show();
+				Toast.makeText(SweetHomeAVRActivity.this, "DownloadFailedWithErrorMessage: " +message, Toast.LENGTH_SHORT).show();
 
 			}
 		}

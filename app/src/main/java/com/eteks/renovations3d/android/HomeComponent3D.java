@@ -1,5 +1,6 @@
 package com.eteks.renovations3d.android;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.utils.InfoText3D;
@@ -61,6 +63,7 @@ import org.jogamp.java3d.ColoringAttributes;
 import org.jogamp.java3d.DirectionalLight;
 import org.jogamp.java3d.Geometry;
 import org.jogamp.java3d.Group;
+import org.jogamp.java3d.JoglesPipeline;
 import org.jogamp.java3d.Light;
 import org.jogamp.java3d.Link;
 import org.jogamp.java3d.Node;
@@ -108,6 +111,8 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
+import static android.R.id.message;
+import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
 import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWelcomeScreen;
 
 
@@ -120,9 +125,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
 
+	private static final String DEOPTOMIZE = "DEOPTOMIZE";
+
 	private AndyFPSCounter fpsCounter;
 	private InfoText3D onscreenInfo;
 	private int fingerCount = 0;
+	private boolean dragging = false;
 
 	private Menu mOptionsMenu;
 
@@ -133,6 +141,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
+		setDeoptomize(deoptomize);
+
 
 		caps = new GLCapabilities(GLProfile.get(GLProfile.GLES2));
 
@@ -216,7 +229,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								@Override
 								protected String getText()
 								{
-									return "F: " + fingerCount;
+									return "F: " + fingerCount + " D: " + dragging;
 								}
 							};
 							onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
@@ -254,6 +267,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		this.setHasOptionsMenu(true);
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
+
+
+
 		return rootView;
 	}
 	public void onStart() {
@@ -358,6 +374,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
 
 		createGoToPointOfViewMenu(home, preferences, SweetHomeAVRActivity.sweetHomeAVR.getHomeController(), menu.findItem(R.id.gotopov));
+
+		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
+		menu.findItem(R.id.deoptomize).setChecked(deoptomize);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -516,6 +536,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				case R.id.modify3dview:
 					controller.modifyAttributes();
 					break;
+				case R.id.deoptomize:
+					item.setChecked(!item.isChecked());
+					setDeoptomize(item.isChecked());
+					Toast.makeText(getActivity(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
+					break;
 				default:
 					return super.onOptionsItemSelected(item);
 			}
@@ -528,6 +553,19 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
 		stateListDrawable.setState(state);
 		item.setIcon(stateListDrawable.getCurrent());
+	}
+
+	public void setDeoptomize(boolean deoptomize)
+	{
+		//DEBUG to fix Nexus 5, Redmi Note 3 Pro, possibly OnePlus3 (OnePlus3)
+		JoglesPipeline.ATTEMPT_OPTIMIZED_VERTICES = !deoptomize;
+		JoglesPipeline.COMPRESS_OPTIMIZED_VERTICES = !deoptomize;
+
+		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(DEOPTOMIZE, deoptomize);
+		editor.apply();
+
 	}
 
 	private enum ActionType
@@ -1692,6 +1730,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			public void mouseReleased(com.jogamp.newt.event.MouseEvent ev)
 			{
 				fingerCount = 0;
+				dragging = false;
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				//{
 				//	if (false)
@@ -1719,6 +1758,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 			public void mouseDragged(com.jogamp.newt.event.MouseEvent ev)
 			{
+				dragging = true;
 				//System.out.println("mouseDragged ev.getPointerCount() == "+ ev.getPointerCount());
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				{
