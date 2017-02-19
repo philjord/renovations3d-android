@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
-    <string name="testad">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="lower_banner_ad_unit_id">ca-app-pub-7177705441403385/5503621354</string>
-    <string name="edit_message">Enter a message</string>
-    <string name="home_select_button">Select Home</string>
-    <string name="setting_select_button">Settings</string>
-    <string name="menu_load">Load home</string>
-    <string name="menu_save">Save home</string>
-    <string name="menu_delete">Delete home</string>
-    <string name="menu_help">Help</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="welcometextyes">OK</string>
@@ -53,24 +44,10 @@
         Changing from top down to visit can be done by the icon of a man or a plan.\n
         If you see a corrupt view, please try the deoptomize option in the menu.\n
     </string>
-    <string name="search_hint">Search Furniture</string>
-    <string name="exit">Exit</string>
-    <string name="virtualvisit">Virtual visit</string>
-    <string name="searchFurniture">search</string>
-    <string name="filterFurniture">filter</string>
-    <string name="menu_save_as">Save as&#8230;</string>
-    <string name="menu_about">About</string>
-    <string name="menu_new">New home</string>
-    <string name="menu_preferences">Preferences</string>
-    <string name="importFurnitureLib">Import furniture library&#8230;</string>
-    <string name="importTextureLib">Import texture library&#8230;</string>
-    <string name="modifyvirtualvisitor">Modify virtual visitor</string>
-    <string name="storepov">Store point of view</string>
-    <string name="gotopov">Go to point of view</string>
-    <string name="deletepov">Delete point of view</string>
-    <string name="modify3dview">Modify 3D view</string>
-    <string name="viewalllevels">View all levels</string>
-    <string name="processing">Processing</string>
+
     <string name="menu_deoptomize">Deoptomize 3d</string>
+    <string name="menu_show3dcaps">GPU info</string>
+    <string name="select_multiple">Select multiple</string>
+    <string name="select_lasso">Select lasso</string>
 
 </resources>

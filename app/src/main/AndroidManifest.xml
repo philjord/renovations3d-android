@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.renovations3d"
-  android:versionCode="157"
-  android:versionName="1.57">
+  android:versionCode="159"
+  android:versionName="1.59">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -109,5 +109,8 @@
 
           </intent-filter>
       </activity>
+
+      <activity android:label="@string/app_name"
+                android:name="com.eteks.renovations3d.utils.JoglStatusActivity"/>
   </application>
 </manifest>

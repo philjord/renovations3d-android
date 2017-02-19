@@ -70,13 +70,13 @@
         />
     <item
         android:id="@+id/planSelectLasso"
-        android:title="Select lasso"
+        android:title="@string/select_lasso"
         android:checkable="true"
         android:showAsAction="never"
         />
     <item
         android:id="@+id/planSelectMultiple"
-        android:title="Select multiple"
+        android:title="@string/select_multiple"
         android:checkable="true"
         android:showAsAction="never"
         />

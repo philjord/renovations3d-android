@@ -1,5 +1,6 @@
 package com.eteks.renovations3d.android;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.utils.InfoText3D;
+import com.eteks.renovations3d.utils.JoglStatusActivity;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -540,6 +542,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					item.setChecked(!item.isChecked());
 					setDeoptomize(item.isChecked());
 					Toast.makeText(getActivity(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
+					break;
+				case R.id.show_jogl_status:
+					Intent myIntent = new Intent(this.getActivity(), JoglStatusActivity.class);
+					this.startActivity(myIntent);
 					break;
 				default:
 					return super.onOptionsItemSelected(item);

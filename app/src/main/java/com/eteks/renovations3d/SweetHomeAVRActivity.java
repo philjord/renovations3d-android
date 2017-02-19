@@ -35,6 +35,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.eteks.renovations3d.utils.SopInterceptor;
+import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
 import java.io.File;
@@ -48,6 +49,10 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javaawt.imageio.ImageIO;
+
+import static java.lang.System.in;
+
 
 /**
  * Created by phil on 11/20/2016.
@@ -56,6 +61,10 @@ public class SweetHomeAVRActivity extends FragmentActivity
 {
 
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";
+	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
+	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
+	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
+
 
 	public static FirebaseAnalytics mFirebaseAnalytics;
 
@@ -148,14 +157,19 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		MobileAds.initialize(getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
 		setContentView(R.layout.main);
 
-		AdView mAdView = (AdView) findViewById(R.id.lowerBannerAdView);
-		AdRequest.Builder builder = new AdRequest.Builder();
-		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");
-		AdRequest adRequest = builder.build();
-		mAdView.loadAd(adRequest);
+
+
+		if(!BuildConfig.DEBUG)
+		{
+			MobileAds.initialize(getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
+			AdView mAdView = (AdView) findViewById(R.id.lowerBannerAdView);
+			AdRequest.Builder builder = new AdRequest.Builder();
+			builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");
+			AdRequest adRequest = builder.build();
+			mAdView.loadAd(adRequest);
+		}
 
 		// Obtain the FirebaseAnalytics instance.
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -164,6 +178,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		//actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
+
 
 
 		PrintStream interceptor = new SopInterceptor(System.out, "sysout");
@@ -207,6 +222,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		mViewPager.setOffscreenPageLimit(4);
 
 		invalidateOptionsMenu();
+
 	}
 
 
@@ -301,8 +317,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		}
 	}
 
-	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
-	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState)
 	{
@@ -681,26 +696,40 @@ public class SweetHomeAVRActivity extends FragmentActivity
 					"verysimple.sh3d",
 					"LucaPresidente.sh3f"};
 
-			for (int i = 0; i < urls.length; i++)
+			// only download attempt 3 times, after that consider it impossible or the user sick of it
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+			int downloadAttempts = settings.getInt(EXAMPLE_DOWNLOAD_COUNT, 0);
+			if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[0]).exists()))
 			{
-				if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
-				{
-					String url = urls[i];
-					String fileName = fileNames[i];
-					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-					request.setDescription(fileName + " download");
-					request.setTitle(fileName);
-					// in order for this if to run, you must use the android 3.2 to compile your app
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-					{
-						request.allowScanningByMediaScanner();
-						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-					}
-					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+				downloadAttempts++;
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putInt(EXAMPLE_DOWNLOAD_COUNT, downloadAttempts);
+				editor.apply();
+			}
 
-					// get download service and enqueue file
-					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-					manager.enqueue(request);
+			if (downloadAttempts < 4)
+			{
+				for (int i = 0; i < urls.length; i++)
+				{
+					if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
+					{
+						String url = urls[i];
+						String fileName = fileNames[i];
+						DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+						request.setDescription(fileName + " download");
+						request.setTitle(fileName);
+						// in order for this if to run, you must use the android 3.2 to compile your app
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+						{
+							request.allowScanningByMediaScanner();
+							request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+						}
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+						// get download service and enqueue file
+						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+						manager.enqueue(request);
+					}
 				}
 			}
 		}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rénovations 3D</string>
+    <string name="alignment">Alignement</string>
+    <string name="magnetism">Magnétisme</string>
+    <string name="welcometextyes">OK</string>
+    <string name="welcometextno">Ne plus afficher</string>
+    <string name="planview_welcometext">
+    Utilisez le geste de pincement pour effectuer un zoom avant et arrière. \n
+     Balayez avec un doigt du bord gauche de la vue en plan pour voir les meubles, du bord droit pour le catalogue de meubles, et le bord du catalogue de meubles pour la vue 3d. \n
+     Si vous désirez faire un panoramique du plan sans altérer le balayage de sélection actuel avec 2 doigts ensemble. \n
+     Si vous souhaitez sélectionner plus d\'un objet, utilisez le bouton Select laso ou sélectionnez plusieurs actions dans le menu More. \n
+     Il y aura 2 fichiers de démonstration sh3d dans votre dossier de téléchargements, sélectionnez Plus-> Ouvrir la page d\'accueil. \n
+     Vous pouvez utiliser votre navigateur pour télécharger plus de fichiers sh3d depuis Internet, ils doivent ouvrir correctement à partir d\'un touche dans le navigateur. \n
+     Lorsque vous changez de langue (dans les préférences), il y aura une très grande pause avant que l\'application ne réagisse, c\'est un bogue. \n
+     Menu-> L\'aide ne fait rien actuellement. \n
+    </string>
+    <string name="catalogview_welcometext">
+    Appuyez sur l\'icône Ajouter des meubles pour placer l\'élément de mobilier sélectionné sur la vue en plan à x = 0, y = 0. \n
+     De cette vue, vous pouvez importer plus de bibliothèques de catalogues de meubles, sélectionnez Menu-> Import furniture library &#8230; \n
+     Il y aura une démo sh3f fichier de meubles dans votre dossier de téléchargement \n
+     Vous pouvez télécharger des bibliothèques de mobilier et de texture à partir d\'Internet, vous devrez peut-être les décompresser en utilisant un explorateur de fichiers avant de les importer. \n
+    </string>
+    <string name="furnitureview_welcometext">
+    Ceci est une vue de tous les meubles actuellement placés sur votre plan. \n
+     Pour l\'instant, la seule fonction que vous pouvez faire ici est de modifier la visibilité d\'un élément. \n
+     De nombreuses autres fonctionnalités sont prévues sur cet écran. \n
+    </string>
+    <string name="component3dview_welcometext">
+        Il s\'agit d\'une vue en 3 dimensions de votre plan. \n
+        À partir de là, vous pouvez utiliser 1 ou 2 doigts pour déplacer la vue. \n
+        Veuillez noter que dans tous les cas, le concept est "glisser ce que je regarde autour de \". \n
+        Si vous regardez de haut en bas: \n
+            Un doigt glissant vers la gauche ou vers la droite fera pivoter le plan. \n
+            Un doigt glissant vers le haut ou vers le bas modifie la hauteur de la caméra et aussi le pas. \n
+            Deux doigts glissant vers le haut ou vers le bas rapprochent la caméra du centre ou plus loin. \n
+            Deux doigts glissant de chaque côté ne feront rien. \n
+        Si vous regardez du point de vue de la visite: \n
+            Un doigt glissant vers la gauche ou vers la droite fera pivoter le plan autour de vous. \n
+            Un doigt glissant vers le haut ou vers le bas modifie la direction de votre tête est pointé. \n
+            Deux doigts glissant vers le haut ou vers le bas vous permettront de déplacer le plan vers vous ou de vous éloigner. \n
+            Deux doigts glissant d'un côté à l\'autre déplaceront le plan vers la gauche ou vers la droite. \n
+        Les points de vue enregistrés se trouvent sous l\'icône de l'oeil. \n
+        Changer de haut en bas à la visite peut se faire par l'icône d'un homme ou d\'un plan. \n
+        Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu. \n
+    </string>
+    <string name="menu_deoptomize">Deoptomise 3d</string>
+    <string name="menu_show3dcaps">GPU info</string>
+    <string name="select_multiple">Sélection multiple</string>
+    <string name="select_lasso">Sélection lasso</string>
+
+</resources>
