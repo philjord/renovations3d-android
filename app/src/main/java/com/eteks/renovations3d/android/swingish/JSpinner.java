@@ -90,10 +90,10 @@ public class JSpinner extends NumberPicker
 		double stepSize = model.getStepSize().floatValue();
 
 		// as we often get very large value system I will simply limit total step to 500 in each direction
-		if( ((value - displayMin) / stepSize ) > 500)
-			displayMin = value  - (500 * stepSize);
-		if( ((displayMax - value) / stepSize ) > 500)
-			displayMax = value + (500 * stepSize);
+		if( ((value - displayMin) / stepSize ) > 50)
+			displayMin = value  - (50 * stepSize);
+		if( ((displayMax - value) / stepSize ) > 50)
+			displayMax = value + (50 * stepSize);
 
 		// only update if something has changed
 		if( displayMin != currentDisplayMin ||
@@ -107,7 +107,7 @@ public class JSpinner extends NumberPicker
 			{
 				this.setMaxValue(countOfDisplayIndices - 1); //-1 cos this is the max index not cout of indices
 
-				String[] valueDisplays = new String[1001];// we must always fill this up so we can alter the max value later without range check bugs
+				String[] valueDisplays = new String[101];// we must always fill this up so we can alter the max value later without range check bugs
 				int idx = 0;
 				for (double i = displayMin; i <= displayMax; i += stepSize)
 				{
@@ -121,7 +121,7 @@ public class JSpinner extends NumberPicker
 					valueDisplays[idx] = strVal;
 					idx++;
 				}
-				for (int i = idx; i <1001; i ++)
+				for (int i = idx; i <101; i ++)
 				{
 					valueDisplays[i] = "";
 				}

@@ -23,6 +23,7 @@ import com.eteks.sweethome3d.j3d.Object3DBranch;
 import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
 import com.eteks.sweethome3d.j3d.TextureManager;
 import com.eteks.sweethome3d.j3d.Wall3D;
+import com.eteks.sweethome3d.j3d.mouseover.HomeComponent3DMouseHandler;
 import com.eteks.sweethome3d.model.Camera;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -36,6 +37,8 @@ import com.eteks.sweethome3d.model.Label;
 import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
+import com.eteks.sweethome3d.model.SelectionEvent;
+import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
@@ -44,6 +47,7 @@ import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
+import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -113,7 +117,6 @@ import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
-import static android.R.id.message;
 import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
 import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWelcomeScreen;
 
@@ -133,6 +136,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private InfoText3D onscreenInfo;
 	private int fingerCount = 0;
 	private boolean dragging = false;
+
+	HomeComponent3DMouseHandler homeComponent3DMouseHandler;
 
 	private Menu mOptionsMenu;
 
@@ -215,6 +220,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							//wait for onscreen hint as this component is create whilst off screen
 							if (!HomeComponent3D.this.getUserVisibleHint())
 								canvas3D2D.stopRenderer();
+
+
 						}
 
 
@@ -236,6 +243,30 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							};
 							onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
 							onscreenInfo.addToCanvas(canvas3D2D);
+
+							// mouse iteraction with picking
+							homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller){
+								public void doMouseClicked(final MouseEvent e)
+								{
+									// once again dialog need to be on edt, and this guy might dialog up
+									EventQueue.invokeLater(new Runnable()
+									{
+										public void run()
+										{
+											// no selection or edits while a dialog is up
+											if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
+											{
+												edtMouseClicked(e);
+											}
+										}
+									});
+								}
+								public void edtMouseClicked(MouseEvent e)
+								{
+									super.doMouseClicked(e);
+								}
+							};
+							homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
 						}
 					}
 				});
@@ -491,7 +522,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			switch (item.getItemId())
 			{
 				case R.id.goto2Dview:
-					SweetHomeAVRActivity.mViewPager.setCurrentItem(1, true);
+					SweetHomeAVRActivity.mViewPager.setCurrentItem(1, false);// true cause no render! god knows why
 					break;
 				case R.id.virtualvisit:
 					item.setChecked(!item.isChecked());
@@ -566,6 +597,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//DEBUG to fix Nexus 5, Redmi Note 3 Pro, possibly OnePlus3 (OnePlus3)
 		JoglesPipeline.ATTEMPT_OPTIMIZED_VERTICES = !deoptomize;
 		JoglesPipeline.COMPRESS_OPTIMIZED_VERTICES = !deoptomize;
+		JoglesPipeline.LATE_RELEASE_CONTEXT = !deoptomize;
+		JoglesPipeline.MINIMISE_NATIVE_CALLS_TRANSPARENCY = !deoptomize;
+		JoglesPipeline.MINIMISE_NATIVE_CALLS_TEXTURE = !deoptomize;
 
 		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
@@ -613,6 +647,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private PropertyChangeListener roomChangeListener;
 	private CollectionListener<Label> labelListener;
 	private PropertyChangeListener labelChangeListener;
+
+	private SelectionListener selectionOutliningListener;
+
 	// Offscreen printed image cache
 	// Creating an offscreen buffer is a quite lengthy operation so we keep the last printed image in this field
 	// This image should be set to null each time the 3D view changes
@@ -715,10 +752,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			//PJ SwingTools.installFocusBorder(this);
 		}
 
-
-		//FIXME: PJ for fun, making this so in the eclipse version for fun
-		this.home.getEnvironment().setDrawingMode(HomeEnvironment.DrawingMode.FILL_AND_OUTLINE);
-
 		//GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		//if (graphicsEnvironment.getScreenDevices().length == 1)
 		{
@@ -734,6 +767,26 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// and clean up universe once its parent frame is disposed
 		//PJPJP put into gl window listener
 		//addAncestorListener(preferences, controller, displayShadowOnFloor);
+
+
+		//PJPJPJ for outlining
+		selectionOutliningListener = new SelectionOutliningListener();
+		home.addSelectionListener(selectionOutliningListener);
+	}
+
+
+	private class SelectionOutliningListener implements SelectionListener
+	{
+		@Override
+		public void selectionChanged(SelectionEvent selectionEvent)
+		{
+			for(Selectable sel : homeObjects.keySet())
+			{
+				boolean isSelected = selectionEvent.getSelectedItems().contains(sel);
+				Object3DBranch obj3D = homeObjects.get(sel);
+				obj3D.showOutline(isSelected);
+			}
+		}
 	}
 
 	private void addAncestorListener(final UserPreferences preferences, final HomeController3D controller,
@@ -1584,7 +1637,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		private Camera initialCamera;
 		private Camera finalCamera;
 
-
 		private long lenAnimationMS = 150;
 
 
@@ -2008,6 +2060,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private BranchGroup createSceneTree(boolean displayShadowOnFloor, boolean listenToHomeUpdates, boolean waitForLoading)
 	{
 		BranchGroup root = new BranchGroup();
+		root.setName("Universe Root");
+		root.setPickable(true);
+
 		// Build scene tree
 		root.addChild(createHomeTree(displayShadowOnFloor, listenToHomeUpdates, waitForLoading));
 		root.addChild(createBackgroundNode(listenToHomeUpdates, waitForLoading));
@@ -2502,9 +2557,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private Group createHomeRoot()
 	{
 		Group homeGroup = new Group();
+		homeGroup.setName("Home Root");
 		//  Allow group to have new children
 		homeGroup.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		homeGroup.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+
+		homeGroup.setPickable(true);
 		return homeGroup;
 	}
 

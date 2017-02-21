@@ -31,6 +31,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -1316,7 +1317,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 								// if we have a pending click we'd better fire it off now before moving
 								if(potentialSinglePress != null)
 								{
-									mousePressed(v,potentialSinglePress);
+									mousePressed(v, potentialSinglePress);
 									potentialSinglePress = null;
 								}
 
@@ -1390,41 +1391,74 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		public void mousePressed(View v, MotionEvent ev)
 		{
-			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-			final float x = MotionEventCompat.getX(ev, pointerIndex);
-			final float y = MotionEventCompat.getY(ev, pointerIndex);
-			this.lastMousePressedLocation = new Point((int) x, (int) y);
-			if (isEnabled())
+			// no selection or edits while a dialog is up
+			if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 			{
-				//requestFocusInWindow();
-				//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
+				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+				final float x = MotionEventCompat.getX(ev, pointerIndex);
+				final float y = MotionEventCompat.getY(ev, pointerIndex);
+				this.lastMousePressedLocation = new Point((int) x, (int) y);
+				if (isEnabled())
 				{
+					//requestFocusInWindow();
+					//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
+					{
 
-					//alignment and magnetism come from menu now
-					boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
-					//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
-					//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
-					boolean duplicationActivated = ((MultipleLevelsPlanPanel)controller.getView()).getIsControlKeyOn();
-					//OperatingSystem.isMacOSX()
-					//		? ev.isAltDown() : ev.isControlDown();
-					boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
-					//OperatingSystem.isWindows()
-					//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
-					//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
+						//alignment and magnetism come from menu now
+						boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
+						//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
+						//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
+						boolean duplicationActivated = ((MultipleLevelsPlanPanel) controller.getView()).getIsControlKeyOn();
+						//OperatingSystem.isMacOSX()
+						//		? ev.isAltDown() : ev.isControlDown();
+						boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
+						//OperatingSystem.isWindows()
+						//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
+						//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
 
-					boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && MultipleLevelsPlanPanel.selectMultiple;
+						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && MultipleLevelsPlanPanel.selectMultiple;
 
-					int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1;
+						int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1;
 
-					// if it's a double, ensure triple != double twice
-					if( clickCount == 2)
-						lastMouseReleasedTime = Long.MAX_VALUE;
+						// if it's a double, ensure triple != double twice
+						if (clickCount == 2)
+							lastMouseReleasedTime = Long.MAX_VALUE;
 
+						try
+						{
+							controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+									clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
+						}
+						catch (ArrayIndexOutOfBoundsException e)
+						{
+							// TODO this happens :
+							//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+							//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
+							//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
+							//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+							//ignore for now, investigate later
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+
+
+		public void mouseReleased(View v, MotionEvent ev)
+		{
+			if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
+			{
+				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+				final float x = MotionEventCompat.getX(ev, pointerIndex);
+				final float y = MotionEventCompat.getY(ev, pointerIndex);
+				if (isEnabled())
+				{
 					try
 					{
-						controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-								clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
-					}catch(ArrayIndexOutOfBoundsException e)
+						controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+					}
+					catch (ArrayIndexOutOfBoundsException e)
 					{
 						// TODO this happens :
 						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
@@ -1435,30 +1469,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 						e.printStackTrace();
 					}
 				}
-			}
-		}
-
-
-		public void mouseReleased(View v, MotionEvent ev)
-		{
-			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-			final float x = MotionEventCompat.getX(ev, pointerIndex);
-			final float y = MotionEventCompat.getY(ev, pointerIndex);
-			if (isEnabled())
-			{
-				try
-			{
-				controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-			}catch(ArrayIndexOutOfBoundsException e)
-			{
-				// TODO this happens :
-				//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-				//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
-				//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
-				//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
-				//ignore for now, investigate later
-				e.printStackTrace();
-			}
 			}
 		}
 

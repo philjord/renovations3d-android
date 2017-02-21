@@ -82,7 +82,6 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 {
 	private SweetHomeAVRActivity activity;
 
-	private AndroidDialogView currentDialog = null;
 	private DialogView dummy;
 
 	public AndroidViewFactory(SweetHomeAVRActivity activity)
@@ -231,10 +230,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createUserPreferencesView(UserPreferences preferences,
 												UserPreferencesController userPreferencesController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -247,10 +246,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createLevelView(UserPreferences preferences, LevelController levelController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new LevelPanel(preferences, levelController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new LevelPanel(preferences, levelController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -264,10 +263,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHomeFurnitureView(UserPreferences preferences,
 											  HomeFurnitureController homeFurnitureController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -281,10 +280,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createWallView(UserPreferences preferences,
 									 WallController wallController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new WallPanel(preferences, wallController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new WallPanel(preferences, wallController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -298,10 +297,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createRoomView(UserPreferences preferences,
 									 RoomController roomController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new RoomPanel(preferences, roomController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new RoomPanel(preferences, roomController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -315,10 +314,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createPolylineView(UserPreferences preferences,
 										 PolylineController polylineController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new PolylinePanel(preferences, polylineController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new PolylinePanel(preferences, polylineController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -333,10 +332,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  LabelController labelController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new LabelPanel(modification, preferences, labelController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new LabelPanel(modification, preferences, labelController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -350,10 +349,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createCompassView(UserPreferences preferences,
 										CompassController compassController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new CompassPanel(preferences, compassController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new CompassPanel(preferences, compassController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -367,10 +366,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHome3DAttributesView(UserPreferences preferences,
 												 Home3DAttributesController home3DAttributesController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{
@@ -384,10 +383,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createObserverCameraView(UserPreferences preferences,
 											   ObserverCameraController observerCameraController)
 	{
-		if(currentDialog == null || !currentDialog.isShowing())
+		if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
 		{
-			currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
-			return currentDialog;
+			SweetHomeAVRActivity.currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
+			return SweetHomeAVRActivity.currentDialog;
 		}
 		else
 		{

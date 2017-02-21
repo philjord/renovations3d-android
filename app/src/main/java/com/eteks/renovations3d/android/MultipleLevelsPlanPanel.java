@@ -116,17 +116,21 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public void setUserVisibleHint(boolean isVisibleToUser)
 	{
 		super.setUserVisibleHint(isVisibleToUser);
-		// this gets called heaps of time, wait until we have an activity
-		if(isVisibleToUser == true && getActivity() != null)
-			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+
+		if(isVisibleToUser)
+		{
+			// this gets called heaps of time, wait until we have an activity
+			if (getActivity() != null)
+			{
+				possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+			}
+		}
 	}
 
 	@Override
 	public void onStart()
 	{
-		// here and there because this is the first view so it's gets the visible call far to early
 		super.onStart();
-		//possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 	}
 
 	@Override
@@ -398,33 +402,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				return super.onOptionsItemSelected(item);
 		}
 	}
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-									ContextMenu.ContextMenuInfo menuInfo)
-	{
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.popup_plan_menu, menu);
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.one:
-				Toast.makeText(this.getActivity(), "One ", Toast.LENGTH_SHORT).show();
-				return true;
-			case R.id.two:
-				return true;
-			case R.id.three:
-				return true;
-			default:
-				return super.onContextItemSelected(item);
-		}
-	}
-
 
 
 	private Home home;

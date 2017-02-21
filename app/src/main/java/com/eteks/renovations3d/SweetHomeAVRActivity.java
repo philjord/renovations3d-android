@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
+import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.tools.OperatingSystem;
@@ -65,6 +66,9 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
 
+
+	// used as a modal mouse click blocker
+	public static AndroidDialogView currentDialog = null;
 
 	public static FirebaseAnalytics mFirebaseAnalytics;
 
