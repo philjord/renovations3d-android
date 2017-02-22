@@ -96,6 +96,9 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     //Dimension iconDimension = dummyLabel.getPreferredSize();
     //final int iconHeight = iconDimension.height;
 
+	  final float scale = getResources().getDisplayMetrics().density;
+	  TexturePanel.TextureIcon.sizePx = (int) (TexturePanel.TextureIcon.SIZE_DP * scale + 0.5f);
+
     controller.addPropertyChangeListener(TextureChoiceController.Property.TEXTURE, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
@@ -533,8 +536,8 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 				Graphics2D g2D = new VMGraphics2D(canvas);
 				ti.paintIcon(null, g2D, 0, 0);
 			}};
-			ret.setMinimumWidth(TextureIcon.SIZE);
-			ret.setMinimumHeight(TextureIcon.SIZE);
+			ret.setMinimumWidth(TextureIcon.sizePx);
+			ret.setMinimumHeight(TextureIcon.sizePx);
 
         //value = texture.getName();
         //value = texture.getCategory().getName() + " - " + value;
@@ -550,7 +553,8 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
      * Icon displaying a texture.
      */
     private static class TextureIcon implements Icon {
-      static final int SIZE = 96;
+      public static int SIZE_DP = 96;
+		public static int sizePx = 96;
       
       private TextureImage texture;
       private JComponent   component;
@@ -562,11 +566,11 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       }
       
       public int getIconWidth() {
-        return SIZE;
+        return sizePx;
       }
 
       public int getIconHeight() {
-        return SIZE;
+        return sizePx;
       }
 
       public void paintIcon(Object c, Graphics g, int x, int y) {
@@ -846,8 +850,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         });
       setFocusTraversalPolicyProvider(true);*/
 
-		//this.setTitle(ummm?);
-		//swapOut(closeButton, R.id.prefs_closeButton);
+		this.setTitle(controller.getDialogTitle());
 		swapOut(closeButton, R.id.texture_choice_closeButton);
     }
     

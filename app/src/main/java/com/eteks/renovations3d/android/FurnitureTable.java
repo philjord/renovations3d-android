@@ -71,7 +71,11 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 	// terrible but it'll do
 	private int[] widths = new int[]{100,200,150,150,150,150};
-	//TODO: these should be localized
+
+	private static int ICON_HEIGHT_DP = 24;
+	private int iconHeightPx = 24;
+
+
 	private HomePieceOfFurniture.SortableProperty[] headerNames = new HomePieceOfFurniture.SortableProperty[]{
 			HomePieceOfFurniture.SortableProperty.TEXTURE,HomePieceOfFurniture.SortableProperty.NAME,HomePieceOfFurniture.SortableProperty.WIDTH,
 			HomePieceOfFurniture.SortableProperty.DEPTH,HomePieceOfFurniture.SortableProperty.HEIGHT,HomePieceOfFurniture.SortableProperty.VISIBLE};
@@ -90,6 +94,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				(int)(mDisplayMetrics.densityDpi*0.40f),
 				(int)(mDisplayMetrics.densityDpi*0.40f)};
 
+		final float scale = getResources().getDisplayMetrics().density;
+		iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
 
 		View rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
 		header = (LinearLayout) rootView.findViewById(R.id.header);
@@ -143,7 +149,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			imageView.setScaleType(ImageView.ScaleType.CENTER);
 			imageView.setMinimumWidth(widths[0]);
 
-			Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), 24, null);
+			Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), iconHeightPx, null);
 			if(icon instanceof ImageIcon)
 			{
 				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));

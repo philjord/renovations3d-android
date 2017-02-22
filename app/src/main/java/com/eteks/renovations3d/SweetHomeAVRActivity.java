@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -38,6 +39,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
+
+import org.jogamp.java3d.JoglesPipeline;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -156,14 +159,11 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	// but SweetHomeAVR has one pointer to a HomeController, instead of a map of HomeFrameController
 	// and once running this tells SweetHomeAVR to load a single controller
 
-
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-
-
 
 		if(!BuildConfig.DEBUG)
 		{
@@ -175,15 +175,16 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			mAdView.loadAd(adRequest);
 		}
 
-		// Obtain the FirebaseAnalytics instance.
-		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+		if(!BuildConfig.DEBUG)
+		{
+			// Obtain the FirebaseAnalytics instance.
+			mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+		}
 
 		ActionBar actionBar = getActionBar();
 		//actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
-
-
 
 		PrintStream interceptor = new SopInterceptor(System.out, "sysout");
 		System.setOut(interceptor);
@@ -193,6 +194,19 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		OperatingSystem.activity = this;
 
 		sweetHomeAVR = new SweetHomeAVR(this);
+
+		// if we have any fragments in the manager then we are doing a restore with bundle style,
+		// so all frags will get onCreate() but not the init() and fail, let's chuck em away now
+		if(getSupportFragmentManager().getFragments() != null)
+		{
+			while(getSupportFragmentManager().getFragments().size() > 0)
+			{
+				Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+				if (fragment != null)
+					getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+			}
+		}
+
 		mSweetHomeAVRPagerAdapter = new SweetHomeAVRPagerAdapter(getSupportFragmentManager(), sweetHomeAVR);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)

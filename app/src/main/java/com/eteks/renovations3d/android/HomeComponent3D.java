@@ -54,6 +54,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
+import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
 import org.jogamp.java3d.Alpha;
@@ -162,11 +163,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		caps.setHardwareAccelerated(true);
 		//TODO: see if this works
 		//caps.setBackgroundOpaque(false);
-		//caps.setSampleBuffers(true);death! no touch!
+		//caps.setSampleBuffers(true);death! no touch! //TODO: this works in morrowind now?
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
-		// equal to addAnsecter listeners but that's too late by far
+		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
 
 	}
@@ -210,26 +211,28 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				{
 					public void run()
 					{
-						// Create component 3D only once the graphics configuration of its parent is known
-						if (canvas3D2D == null)
+					// Create component 3D only once the graphics configuration of its parent is known
+					if (canvas3D2D == null)
+					{
+						createComponent3D(null, preferences, controller);
+
+						// called here not in createComponent, just for life cycle clarity
+						canvas3D2D.addNotify();
+						//wait for onscreen hint as this component is create whilst off screen
+						if (!HomeComponent3D.this.getUserVisibleHint())
+							canvas3D2D.stopRenderer();
+
+
+					}
+
+
+					if (onscreenUniverse == null)
+					{
+						onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
+
+						onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
+						if(BuildConfig.DEBUG)
 						{
-							createComponent3D(null, preferences, controller);
-
-							// called here not in createComponent, just for life cycle clarity
-							canvas3D2D.addNotify();
-							//wait for onscreen hint as this component is create whilst off screen
-							if (!HomeComponent3D.this.getUserVisibleHint())
-								canvas3D2D.stopRenderer();
-
-
-						}
-
-
-						if (onscreenUniverse == null)
-						{
-							onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
-
-							onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
 							fpsCounter = new AndyFPSCounter();
 							onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
 							fpsCounter.addToCanvas(canvas3D2D);
@@ -243,31 +246,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							};
 							onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
 							onscreenInfo.addToCanvas(canvas3D2D);
-
-							// mouse iteraction with picking
-							homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller){
-								public void doMouseClicked(final MouseEvent e)
-								{
-									// once again dialog need to be on edt, and this guy might dialog up
-									EventQueue.invokeLater(new Runnable()
-									{
-										public void run()
-										{
-											// no selection or edits while a dialog is up
-											if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
-											{
-												edtMouseClicked(e);
-											}
-										}
-									});
-								}
-								public void edtMouseClicked(MouseEvent e)
-								{
-									super.doMouseClicked(e);
-								}
-							};
-							homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
 						}
+
+						// mouse iteraction with picking
+						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller){
+							public void doMouseClicked(final MouseEvent e)
+							{
+								// once again dialog need to be on edt, and this guy might dialog up
+								EventQueue.invokeLater(new Runnable()
+								{
+									public void run()
+									{
+										// no selection or edits while a dialog is up
+										if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
+										{
+											edtMouseClicked(e);
+										}
+									}
+								});
+							}
+							public void edtMouseClicked(MouseEvent e)
+							{
+								super.doMouseClicked(e);
+							}
+						};
+						homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
+					}
 					}
 				});
 			}
@@ -276,18 +280,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void dispose(final GLAutoDrawable drawable)
 		{
-			// taken from anscestor listener originally so get back onto EDT thread
+			if(canvas3D2D != null)
+			{
+				canvas3D2D.stopRenderer();
+				canvas3D2D.removeNotify();
+			}
+
+			PlanComponent.pauseOffScreenRendering();
+			if(onscreenUniverse != null)
+			{
+				onscreenUniverse.cleanup();
+				onscreenUniverse = null;
+			}
+			PlanComponent.unpauseOffScreenRendering();
+
+			// taken from ancestor listener originally so get back onto EDT thread
 			EventQueue.invokeLater(new Runnable()
 			{
 				public void run()
 				{
-					if (onscreenUniverse != null)
-					{
-						System.out.println("Universe clean up called, I'm gonna need a new one!");
-						onscreenUniverse.cleanup();
-						removeHomeListeners();
-						onscreenUniverse = null;
-					}
+				if (onscreenUniverse != null)
+				{
+					removeHomeListeners();
+				}
 				}
 			});
 		}
@@ -295,14 +310,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	};
 
 	@Override
-	public android.view.View onCreateView(LayoutInflater inflater,
-										  ViewGroup container, Bundle savedInstanceState)
+	public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		this.setHasOptionsMenu(true);
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
-
-
-
 		return rootView;
 	}
 	public void onStart() {
@@ -341,7 +352,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onPause() {
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
-
 		if(canvas3D2D != null)
 		{
 			canvas3D2D.stopRenderer();
@@ -349,7 +359,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		PlanComponent.pauseOffScreenRendering();
-				// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
+		// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
 		super.onPause();
 
 		PlanComponent.unpauseOffScreenRendering();
@@ -366,9 +376,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onDestroy()
 	{
 		// now we want to dump the universe as this fragment is being garbage collected shortly
-		 if(onscreenUniverse != null)
-			 onscreenUniverse.cleanup();
+		if(canvas3D2D != null)
+		{
+			canvas3D2D.stopRenderer();
+			canvas3D2D.removeNotify();
+		}
 
+		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
+		if(onscreenUniverse != null)
+		{
+			onscreenUniverse.cleanup();
+			onscreenUniverse = null;
+		}
 		super.onDestroy();
 	}
 
@@ -388,13 +407,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		}
 		// tell walls to update now
-		if (isVisibleToUser && wallChangeListener !=null)
+		if (isVisibleToUser && wallChangeListener != null)
 		{
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
 		}
 
 		if(isVisibleToUser && getActivity() != null)
 			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
+
+
 	}
 
 	@Override

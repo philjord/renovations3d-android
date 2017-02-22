@@ -27,6 +27,7 @@ import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mindblowing.renovations3d.BuildConfig;
 
 
 import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
@@ -107,10 +108,13 @@ public class SweetHomeAVR extends HomeApplication
 
 	public void newHome()
 	{
-		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "newHome");
-		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
-		SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+		if (!BuildConfig.DEBUG)
+		{
+			Bundle bundle = new Bundle();
+			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "newHome");
+			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
+			SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+		}
 
 		home = new Home();
 		home.setName(null);// ensures save does a save as
@@ -119,7 +123,6 @@ public class SweetHomeAVR extends HomeApplication
 
 		parentActivity.setUpViews();
 		parentActivity.invalidateOptionsMenu();
-
 	}
 
 	/**
@@ -127,17 +130,22 @@ public class SweetHomeAVR extends HomeApplication
 	 */
 	public void loadHome(final File homeFile, final boolean clearName)
 	{
-		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "loadHome");
-		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "loadHome");
-		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "loadHome " + homeFile );
-		SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+		if(!BuildConfig.DEBUG)
+		{
+			Bundle bundle = new Bundle();
+			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "loadHome");
+			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "loadHome");
+			bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "loadHome " + homeFile);
+			SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+		}
 
 		final String homeName = homeFile.getAbsolutePath();
 		// this guy is stolen from the HomeController.open method which does fancy stuff
 		// Read home in a threaded task
-		Callable<Void> openTask = new Callable<Void>() {
-			public Void call() throws RecorderException {
+		Callable<Void> openTask = new Callable<Void>()
+		{
+			public Void call() throws RecorderException
+			{
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
 				home.setName(clearName ? null : homeName);// Notice this is used as the save name
@@ -148,30 +156,37 @@ public class SweetHomeAVR extends HomeApplication
 					{
 						parentActivity.setUpViews();
 						parentActivity.invalidateOptionsMenu();
-					}});
+					}
+				});
 				return null;
 			}
 		};
 		ThreadedTaskController.ExceptionHandler exceptionHandler =
-				new ThreadedTaskController.ExceptionHandler() {
-					public void handleException(Exception ex) {
-						if (!(ex instanceof InterruptedRecorderException)) {
+				new ThreadedTaskController.ExceptionHandler()
+				{
+					public void handleException(Exception ex)
+					{
+						if (!(ex instanceof InterruptedRecorderException))
+						{
 							//if (ex instanceof DamagedHomeRecorderException) {
 							//	DamagedHomeRecorderException ex2 = (DamagedHomeRecorderException)ex;
 							//	openDamagedHome(homeName, ex2.getDamagedHome(), ex2.getInvalidContent());
 							//} else {
-								ex.printStackTrace();
-								if (ex instanceof RecorderException) {
-									String message = userPreferences.getLocalizedString(HomeController.class, "openError", homeName);
-									new HomePane(null,userPreferences,null,parentActivity).showError(message);
-								}
+							ex.printStackTrace();
+							if (ex instanceof RecorderException)
+							{
+								String message = userPreferences.getLocalizedString(HomeController.class, "openError", homeName);
+								new HomePane(null, userPreferences, null, parentActivity).showError(message);
+							}
 							//}
 						}
 					}
 				};
 		new ThreadedTaskController(openTask,
 				this.userPreferences.getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
-				this.userPreferences, this.viewFactory).executeTask(new View(){});
+				this.userPreferences, this.viewFactory).executeTask(new View()
+		{
+		});
 
 	}
 
@@ -180,6 +195,7 @@ public class SweetHomeAVR extends HomeApplication
 	{
 		return homeController;
 	}
+
 	//new singleton hand outerer
 	public Home getHome()
 	{
@@ -415,10 +431,10 @@ public class SweetHomeAVR extends HomeApplication
 		{
 			private boolean firstApplicationHomeAdded;
 
-					@Override
-					public void collectionChanged(CollectionEvent<Home> ev)
-					{
-						//PJPJPJPJ collection no longer listened to, the loadHome calls controller.displayView(); directly!
+			@Override
+			public void collectionChanged(CollectionEvent<Home> ev)
+			{
+				//PJPJPJPJ collection no longer listened to, the loadHome calls controller.displayView(); directly!
 				/*		switch (ev.getType())
 						{
 							 case ADD:
@@ -459,9 +475,9 @@ public class SweetHomeAVR extends HomeApplication
 							}
 							break;
 						}*/
-					}
+			}
 
-				});
+		});
 
 //		addComponent3DRenderingErrorObserver();
 
@@ -684,83 +700,81 @@ public class SweetHomeAVR extends HomeApplication
 	}
 
 
+/**
+ * A file content manager that records the last directories for each content
+ * in Java preferences.
+ */
+private static class FileContentManagerWithRecordedLastDirectories extends FileContentManager
+{
+	private static final String LAST_DIRECTORY = "lastDirectory#";
+	private static final String LAST_DEFAULT_DIRECTORY = "lastDefaultDirectory";
 
+	private final Class<? extends SweetHomeAVR> mainClass;
 
-	/**
-	 * A file content manager that records the last directories for each content
-	 * in Java preferences.
-	 */
-	private static class FileContentManagerWithRecordedLastDirectories extends FileContentManager
+	public FileContentManagerWithRecordedLastDirectories(UserPreferences preferences,
+														 Class<? extends SweetHomeAVR> mainClass,
+														 SweetHomeAVRActivity activity)
 	{
-		private static final String LAST_DIRECTORY = "lastDirectory#";
-		private static final String LAST_DEFAULT_DIRECTORY = "lastDefaultDirectory";
+		super(preferences, activity);
+		this.mainClass = mainClass;
+	}
 
-		private final Class<? extends SweetHomeAVR> mainClass;
-
-		public FileContentManagerWithRecordedLastDirectories(UserPreferences preferences,
-															 Class<? extends SweetHomeAVR> mainClass,
-															 SweetHomeAVRActivity activity)
+	@Override
+	protected File getLastDirectory(ContentType contentType)
+	{
+		Preferences preferences = Preferences.userNodeForPackage(this.mainClass);
+		String directoryPath = null;
+		if (contentType != null)
 		{
-			super(preferences, activity);
-			this.mainClass = mainClass;
+			directoryPath = preferences.get(LAST_DIRECTORY + contentType, null);
 		}
-
-		@Override
-		protected File getLastDirectory(ContentType contentType)
+		if (directoryPath == null)
 		{
-			Preferences preferences = Preferences.userNodeForPackage(this.mainClass);
-			String directoryPath = null;
+			directoryPath = preferences.get(LAST_DEFAULT_DIRECTORY, null);
+		}
+		if (directoryPath != null)
+		{
+			File directory = new File(directoryPath);
+			if (directory.isDirectory())
+			{
+				return directory;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	protected void setLastDirectory(ContentType contentType, File directory)
+	{
+		// Last directories are not recorded in user preferences since there's no need of portability
+		// from a computer to an other
+		Preferences preferences = Preferences.userNodeForPackage(this.mainClass);
+		if (directory == null)
+		{
+			preferences.remove(LAST_DIRECTORY + contentType);
+		}
+		else
+		{
+			String directoryPath = directory.getAbsolutePath();
 			if (contentType != null)
 			{
-				directoryPath = preferences.get(LAST_DIRECTORY + contentType, null);
-			}
-			if (directoryPath == null)
-			{
-				directoryPath = preferences.get(LAST_DEFAULT_DIRECTORY, null);
+				preferences.put(LAST_DIRECTORY + contentType, directoryPath);
 			}
 			if (directoryPath != null)
 			{
-				File directory = new File(directoryPath);
-				if (directory.isDirectory())
-				{
-					return directory;
-				}
+				preferences.put(LAST_DEFAULT_DIRECTORY, directoryPath);
 			}
-			return null;
 		}
-
-		@Override
-		protected void setLastDirectory(ContentType contentType, File directory)
+		try
 		{
-			// Last directories are not recorded in user preferences since there's no need of portability
-			// from a computer to an other
-			Preferences preferences = Preferences.userNodeForPackage(this.mainClass);
-			if (directory == null)
-			{
-				preferences.remove(LAST_DIRECTORY + contentType);
-			}
-			else
-			{
-				String directoryPath = directory.getAbsolutePath();
-				if (contentType != null)
-				{
-					preferences.put(LAST_DIRECTORY + contentType, directoryPath);
-				}
-				if (directoryPath != null)
-				{
-					preferences.put(LAST_DEFAULT_DIRECTORY, directoryPath);
-				}
-			}
-			try
-			{
-				preferences.flush();
-			}
-			catch (BackingStoreException ex)
-			{
-				// Ignore exception, Sweet Home 3D will work without recorded directories
-			}
+			preferences.flush();
+		}
+		catch (BackingStoreException ex)
+		{
+			// Ignore exception, Sweet Home 3D will work without recorded directories
 		}
 	}
+}
 
 
 }

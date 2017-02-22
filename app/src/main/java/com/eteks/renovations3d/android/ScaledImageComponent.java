@@ -42,7 +42,10 @@ import javaawt.image.BufferedImage;
  */
 public class ScaledImageComponent extends ImageView
 {//extends JComponent {
-  private static final int MODEL_PREFERRED_SIZE = Math.round(300 * SwingTools.getResolutionScale());
+  //private static final int MODEL_PREFERRED_SIZE = Math.round(300 * SwingTools.getResolutionScale());
+
+	private static final int MODEL_PREFERRED_SIZE_DP = 128;
+	private static int modelPreferredSizePx = 128;
   
   private BufferedImage image;
   private boolean       imageEnlargementEnabled;
@@ -73,6 +76,8 @@ public class ScaledImageComponent extends ImageView
     this.image = image;
     this.imageEnlargementEnabled = imageEnlargementEnabled;
     //setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+	  final float scale = getResources().getDisplayMetrics().density;
+	  modelPreferredSizePx = (int) (MODEL_PREFERRED_SIZE_DP * scale + 0.5f);
   }
 
   /**
@@ -84,8 +89,8 @@ public class ScaledImageComponent extends ImageView
    //   return super.getPreferredSize();
    // } else {
       Insets insets = new Insets(5,5,5,5);//getInsets();
-      final int defaultPreferredWidth  = MODEL_PREFERRED_SIZE; 
-      final int defaultPreferredHeight = MODEL_PREFERRED_SIZE; 
+      final int defaultPreferredWidth  = modelPreferredSizePx;
+      final int defaultPreferredHeight = modelPreferredSizePx;
       int insetsWidth = insets.left + insets.right;
       int insetsHeight = insets.top + insets.bottom;
       if (this.image == null) {

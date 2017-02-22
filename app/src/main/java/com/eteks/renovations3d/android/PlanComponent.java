@@ -107,6 +107,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -6630,47 +6631,62 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * A proxy for the furniture top view icon generated from its 3D model.
    */
   public static class PieceOfFurnitureModelIcon extends PieceOfFurnitureTopViewIcon {
-    public static Canvas3D        canvas3D;//PJ made public in order to wait for renderering
+	private static Canvas3D        canvas3D;
+	private static SimpleUniverse universe;
     private static BranchGroup     sceneRoot;
-    private static ExecutorService iconsCreationExecutor;
+    private static ExecutorService iconsCreationExecutor = Executors.newSingleThreadExecutor();
 
-    static {
-      // Create the universe used to compute top view icons
-      canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
-	  SimpleUniverse universe = new SimpleUniverse(canvas3D);
-      ViewingPlatform viewingPlatform = universe.getViewingPlatform();
-      // View model from top
-      TransformGroup viewPlatformTransform = viewingPlatform.getViewPlatformTransform();
-      Transform3D rotation = new Transform3D();
-      rotation.rotX(-Math.PI / 2);
-      Transform3D transform = new Transform3D();
-      transform.setTranslation(new Vector3f(0, 5, 0));
-      transform.mul(rotation);
-      viewPlatformTransform.setTransform(transform);
-      // Use parallel projection
-      Viewer viewer = viewingPlatform.getViewers() [0];
-      org.jogamp.java3d.View view = viewer.getView();
-      view.setProjectionPolicy( org.jogamp.java3d.View.PARALLEL_PROJECTION);
-      sceneRoot = new BranchGroup();
-      // Prepare scene root
-      sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-      sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-      sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-      Background background = new Background(1.1f, 1.1f, 1.1f);
-      background.setCapability(Background.ALLOW_COLOR_WRITE);
-      background.setApplicationBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
-      sceneRoot.addChild(background);
-      Light [] lights = {new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(1.5f, -0.8f, -1)),
-                         new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(-1.5f, -0.8f, -1)),
-                         new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(0, -0.8f, 1)),
-                         new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
-      for (Light light : lights) {
-        light.setInfluencingBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
-        sceneRoot.addChild(light);
-      }
-      universe.addBranchGraph(sceneRoot);
-      iconsCreationExecutor = Executors.newSingleThreadExecutor();
-
+	  public static void destroyUniverse()
+	  {
+		  if(universe != null)
+		  {
+			  PlanComponent.pauseOffScreenRendering();
+			  canvas3D.stopRenderer();
+			  canvas3D.removeNotify();
+			  canvas3D = null;
+			  universe.cleanup();
+		  }
+	  }
+    private static void ensureUniverseCreated()
+	{
+		if(canvas3D == null)
+		{
+			// Create the universe used to compute top view icons
+			canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
+			universe = new SimpleUniverse(canvas3D);
+			ViewingPlatform viewingPlatform = universe.getViewingPlatform();
+			// View model from top
+			TransformGroup viewPlatformTransform = viewingPlatform.getViewPlatformTransform();
+			Transform3D rotation = new Transform3D();
+			rotation.rotX(-Math.PI / 2);
+			Transform3D transform = new Transform3D();
+			transform.setTranslation(new Vector3f(0, 5, 0));
+			transform.mul(rotation);
+			viewPlatformTransform.setTransform(transform);
+			// Use parallel projection
+			Viewer viewer = viewingPlatform.getViewers()[0];
+			org.jogamp.java3d.View view = viewer.getView();
+			view.setProjectionPolicy(org.jogamp.java3d.View.PARALLEL_PROJECTION);
+			sceneRoot = new BranchGroup();
+			// Prepare scene root
+			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+			Background background = new Background(1.1f, 1.1f, 1.1f);
+			background.setCapability(Background.ALLOW_COLOR_WRITE);
+			background.setApplicationBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+			sceneRoot.addChild(background);
+			Light[] lights = {new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(1.5f, -0.8f, -1)),
+					new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(-1.5f, -0.8f, -1)),
+					new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(0, -0.8f, 1)),
+					new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
+			for (Light light : lights)
+			{
+				light.setInfluencingBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+				sceneRoot.addChild(light);
+			}
+			universe.addBranchGraph(sceneRoot);
+		}
     }
 
     /**
@@ -6729,6 +6745,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
      */
     private Icon createIcon(BranchGroup modelNode,
                             float pieceWidth, float pieceDepth, float pieceHeight) {
+
+		ensureUniverseCreated();
       // Add piece model scene to a normalized transform group
       Transform3D scaleTransform = new Transform3D();
       scaleTransform.setScale(new Vector3d(2 / pieceWidth, 2 / pieceHeight, 2 / pieceDepth));
@@ -6737,8 +6755,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       modelTransformGroup.addChild(modelNode);
       // Replace model textures by clones because Java 3D doesn't accept all the time
       // to share textures between offscreen and onscreen environments
-		//PJPJPJ what the hell, this can't be true anymore??
-      //cloneTexture(modelNode, new IdentityHashMap<Texture, Texture>());
+	  cloneTexture(modelNode, new IdentityHashMap<Texture, Texture>());
 
       BranchGroup model = new BranchGroup();
       model.setCapability(BranchGroup.ALLOW_DETACH);
@@ -6749,36 +6766,33 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		{
 			offScreenRenderSemaphore.acquire();
 
-      sceneRoot.addChild(model);
+		  sceneRoot.addChild(model);
+		  // Render scene with a white background
+		  Background background = (Background)sceneRoot.getChild(0);
+		  background.setColor(1, 1, 1);
+		  canvas3D.renderOffScreenBuffer();
+		  canvas3D.waitForOffScreenRendering();
+		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
+		  int [] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
+		  // Render scene with a black background
+		  background.setColor(0, 0, 0);
+		  canvas3D.renderOffScreenBuffer();
+		  canvas3D.waitForOffScreenRendering();
+		  BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+		  int [] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
+		  // Create an image with transparent pixels where model isn't drawn
+		  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
+			if (imageWithBlackBackgoundPixels [i] != imageWithWhiteBackgoundPixels [i]
+				&& imageWithBlackBackgoundPixels [i] == 0xFF000000
+				&& imageWithWhiteBackgoundPixels [i] == 0xFFFFFFFF) {
+			  imageWithWhiteBackgoundPixels [i] = 0;
+			}
+		  }
+		  sceneRoot.removeChild(model);
 
-      // Render scene with a white background
-      Background background = (Background)sceneRoot.getChild(0);
-      background.setColor(1, 1, 1);
-      canvas3D.renderOffScreenBuffer();
-      canvas3D.waitForOffScreenRendering();
-      BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
-      int [] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
-
-      // Render scene with a black background
-      background.setColor(0, 0, 0);
-      canvas3D.renderOffScreenBuffer();
-      canvas3D.waitForOffScreenRendering();
-      BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-      int [] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
-
-      // Create an image with transparent pixels where model isn't drawn
-      for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
-        if (imageWithBlackBackgoundPixels [i] != imageWithWhiteBackgoundPixels [i]
-            && imageWithBlackBackgoundPixels [i] == 0xFF000000
-            && imageWithWhiteBackgoundPixels [i] == 0xFFFFFFFF) {
-          imageWithWhiteBackgoundPixels [i] = 0;
-        }
-      }
-      sceneRoot.removeChild(model);
-
-		Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-		VMBufferedImage img = new VMBufferedImage(bm);
-		return new ImageIcon(img);
+			Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
+			VMBufferedImage img = new VMBufferedImage(bm);
+			return new ImageIcon(img);
 
 		}
 		catch (InterruptedException e)
