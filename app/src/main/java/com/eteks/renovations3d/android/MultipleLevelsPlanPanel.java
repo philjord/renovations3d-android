@@ -661,7 +661,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		//	this.oneLevelPanel = new JPanel(new BorderLayout());
 
 
-		if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6"))
+		//PJ is this always true or always false?
+		//if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6"))
 		{
 			home.addPropertyChangeListener(Home.Property.ALL_LEVELS_SELECTION, new PropertyChangeListener()
 			{

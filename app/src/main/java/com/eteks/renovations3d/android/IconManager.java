@@ -19,6 +19,8 @@ package com.eteks.renovations3d.android;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+import android.util.SparseArray;
+
 import java.util.concurrent.Executors;
 
 
@@ -53,7 +55,7 @@ public class IconManager {
 	// Icon used while an image content is loaded
 	private final Content                          waitIconContent;
 	// Map storing loaded icons
-	private final Map<Content, Map<Integer, Icon>> icons;
+	private final Map<Content, SparseArray<Icon>> icons;
 	// Executor used by IconProxy to load images
 	private ExecutorService                        iconsLoader;
 
@@ -61,7 +63,7 @@ public class IconManager {
 		// use a class from inside teh jar and inside the swing package too
 		this.errorIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/icons/tango/image-missing.png");
 		this.waitIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/icons/tango/image-loading.png");
-		this.icons = Collections.synchronizedMap(new WeakHashMap<Content, Map<Integer, Icon>>());
+		this.icons = Collections.synchronizedMap(new WeakHashMap<Content, SparseArray<Icon>>());
 	}
 
 	/**
@@ -90,40 +92,49 @@ public class IconManager {
 	 * Returns the icon displayed for wrong content resized at a given height.
 	 */
 	public Icon getErrorIcon(int height) {
-		return getIcon(this.errorIconContent, height, null);
+		Icon icon = getIcon(this.errorIconContent, height, null);
+		if(icon instanceof TypedImageIcon)
+			((TypedImageIcon)icon).isErrorIcon = true;
+		return icon;
 	}
 
 	/**
 	 * Returns the icon displayed for wrong content.
 	 */
 	public Icon getErrorIcon() {
-		return getIcon(this.errorIconContent, -1, null);
+		Icon icon = getIcon(this.errorIconContent, -1, null);
+		if(icon instanceof TypedImageIcon)
+			((TypedImageIcon)icon).isErrorIcon = true;
+		return icon;
 	}
 
 	/**
 	 * Returns <code>true</code> if the given <code>icon</code> is the error icon
 	 * used by this manager to indicate it couldn't load an icon.
 	 */
+	//PJPJPJ this was a very expensive call on android
 	public boolean isErrorIcon(Icon icon) {
-		Map<Integer, Icon> errorIcons = this.icons.get(this.errorIconContent);
-		return errorIcons != null
-				&& (errorIcons.containsValue(icon)
-				|| icon instanceof IconProxy
-				&& errorIcons.containsValue(((IconProxy)icon).getIcon()));
+		return (icon instanceof TypedImageIcon && ((TypedImageIcon)icon).isErrorIcon);
 	}
 
 	/**
 	 * Returns the icon displayed while a content is loaded resized at a given height.
 	 */
 	public Icon getWaitIcon(int height) {
-		return getIcon(this.waitIconContent, height, null);
+		Icon icon = getIcon(this.waitIconContent, height, null);
+		if(icon instanceof TypedImageIcon)
+			((TypedImageIcon)icon).isWaitIcon = true;
+		return icon;
 	}
 
 	/**
 	 * Returns the icon displayed while a content is loaded.
 	 */
 	public Icon getWaitIcon() {
-		return getIcon(this.waitIconContent, -1, null);
+		Icon icon = getIcon(this.waitIconContent, -1, null);
+		if(icon instanceof TypedImageIcon)
+			((TypedImageIcon)icon).isWaitIcon = true;
+		return icon;
 	}
 
 	/**
@@ -131,11 +142,7 @@ public class IconManager {
 	 * used by this manager to indicate it's currently loading an icon.
 	 */
 	public boolean isWaitIcon(Icon icon) {
-		Map<Integer, Icon> waitIcons = this.icons.get(this.waitIconContent);
-		return waitIcons != null
-				&& (waitIcons.containsValue(icon)
-				|| icon instanceof IconProxy
-				&& waitIcons.containsValue(((IconProxy)icon).getIcon()));
+		return (icon instanceof TypedImageIcon && ((TypedImageIcon)icon).isWaitIcon);
 	}
 
 	/**
@@ -156,9 +163,9 @@ public class IconManager {
 	 *            be read immediately in the current thread.
 	 */
 	public Icon getIcon(Content content, final int height, JComponent waitingComponent) {
-		Map<Integer, Icon> contentIcons = this.icons.get(content);
+		SparseArray<Icon> contentIcons = this.icons.get(content);
 		if (contentIcons == null) {
-			contentIcons = Collections.synchronizedMap(new HashMap<Integer, Icon>());
+			contentIcons =  new SparseArray<Icon>();
 			this.icons.put(content, contentIcons);
 		}
 		Icon icon = contentIcons.get(height);
@@ -218,9 +225,9 @@ public class IconManager {
 					Graphics g = scaledImage.getGraphics();
 					g.drawImage(image.getScaledInstance(width, height, 0), 0, 0, null);
 					g.dispose();
-					return new ImageIcon(scaledImage);
+					return new TypedImageIcon(scaledImage);
 				} else {
-					return new ImageIcon(image);
+					return new TypedImageIcon(image);
 				}
 			}
 		} catch (IOException ex) {
@@ -228,7 +235,15 @@ public class IconManager {
 		}
 		return errorIcon;
 	}
+	public static class TypedImageIcon extends ImageIcon {
+		public boolean isWaitIcon = false;
+		public boolean isErrorIcon = false;
 
+		public TypedImageIcon(BufferedImage image)
+		{
+			super(image);
+		}
+	}
 	/**
 	 * Proxy icon that displays a temporary icon while waiting
 	 * image loading completion.

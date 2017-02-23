@@ -3262,12 +3262,15 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
               if (textureImage == null
                   || textureImage == WAIT_TEXTURE_IMAGE) {
                 final boolean waitForTexture = paintMode != PaintMode.PAINT;
-                if (isTextureManagerAvailable()
+
+				  //PJPJ checks cut out for speed, always go TextureManager
+           /*     if (isTextureManagerAvailable()
                     // Don't use images managed by Java3D textures
                     // to avoid InternalError "Surface not cachable" in Graphics2D#fill call
                     // See bug at https://bugs.openjdk.java.net/browse/JDK-8072618
                     && !(OperatingSystem.isLinux()
-                          && OperatingSystem.isJavaVersionGreaterOrEqual("1.7"))) {
+                          && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")))
+				{*/
                   // Prefer to share textures images with texture manager if it's available
                   TextureManager.getInstance().loadTexture(
                       floorTexture.getImage(), floorTexture.getAngle(), waitForTexture,
@@ -3280,7 +3283,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
                           }
                         }
                       });
-                } else {
+             /*   } else {
                   // Use icon manager if texture manager should be ignored
                   Icon textureIcon = IconManager.getInstance().getIcon(floorTexture.getImage(),
                       waitForTexture ? null : this);
@@ -3312,7 +3315,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
                     this.floorTextureImagesCache.put(floorRotatedTextureKey, textureIconImage);
                   }
-                }
+                }*/
                 textureImage = this.floorTextureImagesCache.get(floorRotatedTextureKey);
               }
 
