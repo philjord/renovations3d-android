@@ -61,6 +61,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 {
 	private static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
 
+
+	// if we are not intialized then ignore onCreateViews
+	private boolean initialized = false;
+
 	private int iconHeightPx = 75;// used by imageviews
 	private static int DEFAULT_ICON_HEIGHT_DP = 75;// must relate to the layout R.id.main_grid
 
@@ -82,34 +86,39 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		this.setHasOptionsMenu(true);
+
 		View rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
+		if(initialized)
+		{
+			this.setHasOptionsMenu(true);
 
-		createComponents(catalog, preferences, controller);
-		setMnemonics(preferences);
-		layoutComponents();
+			createComponents(catalog, preferences, controller);
+			setMnemonics(preferences);
+			layoutComponents();
 
-		gridView = (GridView) rootView.findViewById(R.id.main_grid);
-		gridView.setAdapter(new ImageAdapter(this.getContext()));
+			gridView = (GridView) rootView.findViewById(R.id.main_grid);
+			gridView.setAdapter(new ImageAdapter(this.getContext()));
 
-		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+			gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
-				selectedFiv = (FurnitureImageView)v;
-				for (int j = 0; j < gridView.getChildCount(); j++) {
-					final ImageView iv = (ImageView) gridView.getChildAt(j);
-					if(iv == v)
-						iv.setBackgroundColor(Color.CYAN);
-					else
-						iv.setBackgroundColor(Color.WHITE);
+				public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+				{
+					selectedFiv = (FurnitureImageView) v;
+					for (int j = 0; j < gridView.getChildCount(); j++)
+					{
+						final ImageView iv = (ImageView) gridView.getChildAt(j);
+						if (iv == v)
+							iv.setBackgroundColor(Color.CYAN);
+						else
+							iv.setBackgroundColor(Color.WHITE);
+					}
 				}
-			}
-		});
+			});
 
-		// Convert the dps to pixels, based on density scale
-		final float scale = getResources().getDisplayMetrics().density;
-		iconHeightPx = (int) (DEFAULT_ICON_HEIGHT_DP * scale + 0.5f);
-
+			// Convert the dps to pixels, based on density scale
+			final float scale = getResources().getDisplayMetrics().density;
+			iconHeightPx = (int) (DEFAULT_ICON_HEIGHT_DP * scale + 0.5f);
+		}
 		return rootView;
 	}
 
@@ -282,6 +291,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	public void init(FurnitureCatalog catalog, UserPreferences preferences, FurnitureCatalogController controller)
 	{
+		initialized = true;
+
 		this.catalog = catalog;
 		this.preferences = preferences;
 		this.controller = controller;

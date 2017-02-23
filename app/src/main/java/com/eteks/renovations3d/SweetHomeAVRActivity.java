@@ -199,9 +199,10 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		// so all frags will get onCreate() but not the init() and fail, let's chuck em away now
 		if(getSupportFragmentManager().getFragments() != null)
 		{
-			while(getSupportFragmentManager().getFragments().size() > 0)
+			Fragment[] frags = getSupportFragmentManager().getFragments().toArray(new Fragment[0]);
+			for(int i = 0 ; i < frags.length ;i++ )
 			{
-				Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+				Fragment fragment = frags[i];
 				if (fragment != null)
 					getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 			}

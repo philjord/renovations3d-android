@@ -154,8 +154,6 @@ import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
-import static com.eteks.renovations3d.android.MultipleLevelsPlanPanel.selectMultiple;
-
 
 /**
  * A component displaying the plan of a home.
@@ -226,7 +224,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     }
   };
 
-  private static final float    MARGIN = 40;
+	private static float MARGIN_DP = 40;
+  private static float MARGIN_PX = 40;
 
 	//PJPJPJPJ fast and dirty scrolling system! needs to be more like a ViewPort
 	public int scrolledX = 0;
@@ -587,6 +586,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3.5f);
 		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*4);
 		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5);
+
+		final float scale = getDrawableView().getResources().getDisplayMetrics().density;
+		MARGIN_PX = (int) (MARGIN_DP * scale + 0.5f);
+
 
 		// Set JComponent default properties
 		setOpaque(true);
@@ -1983,9 +1986,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     Insets insets = getInsets();
       Rectangle2D planBounds = getPlanBounds();
       return new Dimension(
-          Math.round(((float)planBounds.getWidth() + MARGIN * 2)
+          Math.round(((float)planBounds.getWidth() + MARGIN_PX * 2)
                      * getScale()) + insets.left + insets.right,
-          Math.round(((float)planBounds.getHeight() + MARGIN * 2)
+          Math.round(((float)planBounds.getHeight() + MARGIN_PX * 2)
                      * getScale()) + insets.top + insets.bottom);
     }
   }*/
@@ -2339,8 +2342,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		// Change component coordinates system to plan system
 		Rectangle2D planBounds = getPlanBounds();
 		float paintScale = getScale();
-		g2D.translate(insets.left + ((MARGIN - planBounds.getMinX()) * paintScale)-scrolledX,
-				insets.top + ((MARGIN - planBounds.getMinY()) * paintScale)-scrolledY);
+		g2D.translate(insets.left + ((MARGIN_PX - planBounds.getMinX()) * paintScale)-scrolledX,
+				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale)-scrolledY);
 		g2D.scale(paintScale, paintScale);
 		setRenderingHints(g2D);
 
@@ -2878,8 +2881,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       xMax = convertXPixelToModel(viewRectangle.x + viewRectangle.width);
       yMax = convertYPixelToModel(viewRectangle.y + viewRectangle.height);
     } else {*/
-      xMin = (float)planBounds.getMinX() + (scrolledX / getScale()) - MARGIN ;
-      yMin = (float)planBounds.getMinY() + (scrolledY / getScale()) - MARGIN ;
+      xMin = (float)planBounds.getMinX() + (scrolledX / getScale()) - MARGIN_PX;
+      yMin = (float)planBounds.getMinY() + (scrolledY / getScale()) - MARGIN_PX;
       xMax = convertXPixelToModel(getWidth());
       yMax = convertYPixelToModel(getHeight());
    // }
@@ -5651,7 +5654,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public float convertXPixelToModel(int x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-   return (x + scrolledX - insets.left) / getScale() - MARGIN + (float)planBounds.getMinX();
+   return (x + scrolledX - insets.left) / getScale() - MARGIN_PX + (float)planBounds.getMinX();
 
   }
 
@@ -5661,7 +5664,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public float convertYPixelToModel(int y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (y + scrolledY - insets.top) / getScale() - MARGIN + (float)planBounds.getMinY();
+    return (y + scrolledY - insets.top) / getScale() - MARGIN_PX + (float)planBounds.getMinY();
 
   }
 
@@ -5671,7 +5674,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertXModelToPixel(float x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((x - scrolledX + insets.left) * getScale() + MARGIN - planBounds.getMinX());
+    return (int)((x - scrolledX + insets.left) * getScale() + MARGIN_PX - planBounds.getMinX());
 
   }
 
@@ -5681,7 +5684,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertYModelToPixel(float y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((y - scrolledY + insets.top) * getScale() + MARGIN - planBounds.getMinY());
+    return (int)((y - scrolledY + insets.top) * getScale() + MARGIN_PX - planBounds.getMinY());
 
   }
 
@@ -6252,12 +6255,12 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         int ruleHeight = metrics.getAscent() + 6;
         if (this.orientation == SwingConstants.HORIZONTAL) {
           return new Dimension(
-              Math.round(((float)planBounds.getWidth() + MARGIN * 2)
+              Math.round(((float)planBounds.getWidth() + MARGIN_PX * 2)
                          * getScale()) + insets.left + insets.right,
               ruleHeight);
         } else {
           return new Dimension(ruleHeight,
-              Math.round(((float)planBounds.getHeight() + MARGIN * 2)
+              Math.round(((float)planBounds.getHeight() + MARGIN_PX * 2)
                          * getScale()) + insets.top + insets.bottom);
         }
       }
@@ -6278,8 +6281,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       // Change component coordinates system to plan system
       Rectangle2D planBounds = pc.getPlanBounds();
       float paintScale = pc.getScale();
-      g2D.translate(insets.left + (MARGIN - planBounds.getMinX() ) * paintScale - pc.scrolledX,
-          insets.top + (MARGIN - planBounds.getMinY() ) * paintScale - pc.scrolledY);
+      g2D.translate(insets.left + (MARGIN_PX - planBounds.getMinX() ) * paintScale - pc.scrolledX,
+          insets.top + (MARGIN_PX - planBounds.getMinY() ) * paintScale - pc.scrolledY);
 
       g2D.scale(paintScale, paintScale);
       g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -6325,8 +6328,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
             : convertXPixelToModel(viewRectangle.x);
         yRulerBase = convertYPixelToModel(viewRectangle.y + viewRectangle.height - 1);
       } else {*/
-        xMin = (float)planBounds.getMinX() - MARGIN + (pc.scrolledX / pc.getScale());
-        yMin = (float)planBounds.getMinY() - MARGIN + (pc.scrolledY / pc.getScale());
+        xMin = (float)planBounds.getMinX() - MARGIN_PX + (pc.scrolledX / pc.getScale());
+        yMin = (float)planBounds.getMinY() - MARGIN_PX + (pc.scrolledY / pc.getScale());
         xMax = pc.convertXPixelToModel(getWidth() - 1);
         yRulerBase =
         yMax = pc.convertYPixelToModel(getHeight() - 1);
@@ -6336,7 +6339,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       FontMetrics metrics = getFontMetrics(getFont());
       int fontAscent = (int)metrics.ascent;
       float tickSize = 5 * inverseSize / rulerScale;
-      float mainTickSize = (fontAscent + 6) * inverseSize  / rulerScale;
+      float mainTickSize = (fontAscent + 1) * inverseSize  / rulerScale;// ascent is negative as it should be (6 swapped to 1 not sure why needed)
       NumberFormat format = NumberFormat.getIntegerInstance();
 
       g2D.setColor(getForeground());
@@ -6375,7 +6378,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
         if (this.orientation == HORIZONTAL) {
           for (double x = ((int)(xMin / mainGridSize) - 1) * mainGridSize; x < xMax; x += mainGridSize) {
 			  AffineTransform previousTransform = g2D.getTransform();
-            g2D.draw(new Line2D.Double(x, yMax - mainTickSize, x, yMax));
+            g2D.draw(new Line2D.Double(x, yMax + mainTickSize, x, yMax));//PJ - to + not sure why needed
             // Draw unit text
             g2D.translate(x, yMax - mainTickSize);
             g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
@@ -6388,7 +6391,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			  AffineTransform previousTransform = g2D.getTransform();
             String yText = getFormattedTickText(format, y);
             if (leftToRightOriented) {
-              g2D.draw(new Line2D.Double(xMax - mainTickSize, y, xMax, y));
+              g2D.draw(new Line2D.Double(xMax + mainTickSize, y, xMax, y));//PJ - to + not sure why needed
               // Draw unit text with a vertical orientation
               g2D.translate(xMax - mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
@@ -6397,7 +6400,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
               //PJ swapped for above g2D.drawString(yText, -metrics.stringWidth(yText) - 3, fontAscent - 1);
             } else {
-              g2D.draw(new Line2D.Double(xMin, y, xMin +  mainTickSize, y));
+              g2D.draw(new Line2D.Double(xMin, y, xMin - mainTickSize, y));//PJ + to - not sure why needed
               // Draw unit text with a vertical orientation
               g2D.translate(xMin + mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
@@ -6636,21 +6639,45 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     private static BranchGroup     sceneRoot;
     private static ExecutorService iconsCreationExecutor = Executors.newSingleThreadExecutor();
 
+	  private static Semaphore offScreenRenderSemaphore;
+	  public static void pauseOffScreenRendering()
+	  {
+		  if(offScreenRenderSemaphore != null)
+		  {
+			  try
+			  {
+				  offScreenRenderSemaphore.acquire();
+			  }
+			  catch (InterruptedException e)
+			  {
+			  }
+		  }
+	  }
+	  public static void unpauseOffScreenRendering()
+	  {
+		  if(offScreenRenderSemaphore != null)
+		  {
+			  offScreenRenderSemaphore.release();
+		  }
+	  }
+
 	  public static void destroyUniverse()
 	  {
 		  if(universe != null)
 		  {
-			  PlanComponent.pauseOffScreenRendering();
-			  canvas3D.stopRenderer();
-			  canvas3D.removeNotify();
-			  canvas3D = null;
+			  pauseOffScreenRendering();
 			  universe.cleanup();
+			  universe = null;
+			  canvas3D = null;
+			  sceneRoot = null;
+			  unpauseOffScreenRendering();
 		  }
 	  }
     private static void ensureUniverseCreated()
 	{
 		if(canvas3D == null)
 		{
+			offScreenRenderSemaphore = new Semaphore(1, true);
 			// Create the universe used to compute top view icons
 			canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
 			universe = new SimpleUniverse(canvas3D);
@@ -6765,34 +6792,40 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		try
 		{
 			offScreenRenderSemaphore.acquire();
+			// we may have been disposed of
+			if( canvas3D != null)
+			{
 
-		  sceneRoot.addChild(model);
-		  // Render scene with a white background
-		  Background background = (Background)sceneRoot.getChild(0);
-		  background.setColor(1, 1, 1);
-		  canvas3D.renderOffScreenBuffer();
-		  canvas3D.waitForOffScreenRendering();
-		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
-		  int [] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
-		  // Render scene with a black background
-		  background.setColor(0, 0, 0);
-		  canvas3D.renderOffScreenBuffer();
-		  canvas3D.waitForOffScreenRendering();
-		  BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-		  int [] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
-		  // Create an image with transparent pixels where model isn't drawn
-		  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
-			if (imageWithBlackBackgoundPixels [i] != imageWithWhiteBackgoundPixels [i]
-				&& imageWithBlackBackgoundPixels [i] == 0xFF000000
-				&& imageWithWhiteBackgoundPixels [i] == 0xFFFFFFFF) {
-			  imageWithWhiteBackgoundPixels [i] = 0;
+				sceneRoot.addChild(model);
+				// Render scene with a white background
+				Background background = (Background) sceneRoot.getChild(0);
+				background.setColor(1, 1, 1);
+				canvas3D.renderOffScreenBuffer();
+				canvas3D.waitForOffScreenRendering();
+				BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
+				int[] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
+				// Render scene with a black background
+				background.setColor(0, 0, 0);
+				canvas3D.renderOffScreenBuffer();
+				canvas3D.waitForOffScreenRendering();
+				BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+				int[] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
+				// Create an image with transparent pixels where model isn't drawn
+				for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
+				{
+					if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
+							&& imageWithBlackBackgoundPixels[i] == 0xFF000000
+							&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
+					{
+						imageWithWhiteBackgoundPixels[i] = 0;
+					}
+				}
+				sceneRoot.removeChild(model);
+
+				Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
+				VMBufferedImage img = new VMBufferedImage(bm);
+				return new ImageIcon(img);
 			}
-		  }
-		  sceneRoot.removeChild(model);
-
-			Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-			VMBufferedImage img = new VMBufferedImage(bm);
-			return new ImageIcon(img);
 
 		}
 		catch (InterruptedException e)
@@ -6854,19 +6887,5 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     }
   }
 
-	private static Semaphore offScreenRenderSemaphore = new Semaphore(1, true);
-	public static void pauseOffScreenRendering()
-	{
-		try
-		{
-			offScreenRenderSemaphore.acquire();
-		}
-		catch (InterruptedException e)
-		{
-		}
-	}
-	public static void unpauseOffScreenRendering()
-	{
-		offScreenRenderSemaphore.release();
-	}
+
 }

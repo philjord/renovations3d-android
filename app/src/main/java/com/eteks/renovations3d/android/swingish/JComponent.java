@@ -207,8 +207,10 @@ public abstract class JComponent extends Fragment implements ImageObserver
 		//PJPJPJ
 		//android.graphics.Paint.FontMetrics
 		//https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html
+		fontSizingPaint.setTextSize(f.getSize());
 		fontSizingPaint.setTypeface((Typeface) (((VMFont) f).getDelegate()));
 		Paint.FontMetrics fontMetrics = fontSizingPaint.getFontMetrics();
+
 		return fontMetrics;
 	}
 

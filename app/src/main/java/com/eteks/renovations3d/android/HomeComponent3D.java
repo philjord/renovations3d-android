@@ -133,6 +133,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private static final String DEOPTOMIZE = "DEOPTOMIZE";
 
+	// if we are not intialized then ignore onCreateViews
+	private boolean initialized = false;
+
 	private AndyFPSCounter fpsCounter;
 	private InfoText3D onscreenInfo;
 	private int fingerCount = 0;
@@ -153,7 +156,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		setDeoptomize(deoptomize);
-
+		JoglesPipeline.LATE_RELEASE_CONTEXT = false;// so the world can clean up, otherwise teh plan renderer holds onto it
 
 		caps = new GLCapabilities(GLProfile.get(GLProfile.GLES2));
 
@@ -286,23 +289,23 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				canvas3D2D.removeNotify();
 			}
 
-			PlanComponent.pauseOffScreenRendering();
+			PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
 			if(onscreenUniverse != null)
 			{
 				onscreenUniverse.cleanup();
 				onscreenUniverse = null;
 			}
-			PlanComponent.unpauseOffScreenRendering();
+			PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 
 			// taken from ancestor listener originally so get back onto EDT thread
 			EventQueue.invokeLater(new Runnable()
 			{
 				public void run()
 				{
-				if (onscreenUniverse != null)
-				{
-					removeHomeListeners();
-				}
+					if (onscreenUniverse != null)
+					{
+						removeHomeListeners();
+					}
 				}
 			});
 		}
@@ -312,7 +315,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	@Override
 	public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		this.setHasOptionsMenu(true);
+		if(initialized)
+		{
+			this.setHasOptionsMenu(true);
+		}
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
 		return rootView;
 	}
@@ -358,11 +364,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			canvas3D2D.removeNotify();
 		}
 
-		PlanComponent.pauseOffScreenRendering();
+		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
 		// note super onPause does NOT save state but marks to preserve ready for another lifecycle change like onStop
 		super.onPause();
 
-		PlanComponent.unpauseOffScreenRendering();
+		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 	}
 
 	@Override
@@ -388,7 +394,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			onscreenUniverse.cleanup();
 			onscreenUniverse = null;
 		}
+		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
 		super.onDestroy();
+		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 	}
 
 	@Override
@@ -618,7 +626,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//DEBUG to fix Nexus 5, Redmi Note 3 Pro, possibly OnePlus3 (OnePlus3)
 		JoglesPipeline.ATTEMPT_OPTIMIZED_VERTICES = !deoptomize;
 		JoglesPipeline.COMPRESS_OPTIMIZED_VERTICES = !deoptomize;
-		JoglesPipeline.LATE_RELEASE_CONTEXT = !deoptomize;
+		//JoglesPipeline.LATE_RELEASE_CONTEXT = !deoptomize;
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TRANSPARENCY = !deoptomize;
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TEXTURE = !deoptomize;
 
@@ -755,6 +763,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void init(Home home, UserPreferences preferences, Object3DFactory object3dFactory, boolean displayShadowOnFloor,
 					 HomeController3D controller)
 	{
+		initialized = true;
 		//record for init
 		this.preferences = preferences;
 		this.controller = controller;
@@ -836,10 +845,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 			public void canvas3DPreRendered(Canvas3D canvas3D)
 			{
+				//System.out.println("canvas3DPreRendered");
 			}
 
 			public void canvas3DPostRendered(Canvas3D canvas3D)
 			{
+				//System.out.println("canvas3DPostRendered");
 				// Copy reference to navigation panel image to avoid concurrency problems
 				// if it's modified in the EDT while this method draws it
 				/*	BufferedImage navigationPanelImage = HomeComponent3D.this.navigationPanelImage;

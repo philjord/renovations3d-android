@@ -62,6 +62,9 @@ import javaxswing.ImageIcon;
 public class FurnitureTable extends JTable implements com.eteks.sweethome3d.viewcontroller.View, Printable
 {
 
+	// if we are not intialized then ignore onCreateViews
+	private boolean initialized = false;
+
 	private static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
 
 	private Home home;
@@ -86,23 +89,27 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-		widths = new int[]{(int)(mDisplayMetrics.densityDpi*0.45f),
-				(int)(mDisplayMetrics.densityDpi*0.55f),
-				(int)(mDisplayMetrics.densityDpi*0.40f),
-				(int)(mDisplayMetrics.densityDpi*0.40f),
-				(int)(mDisplayMetrics.densityDpi*0.40f),
-				(int)(mDisplayMetrics.densityDpi*0.40f)};
-
-		final float scale = getResources().getDisplayMetrics().density;
-		iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
-
 		View rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
-		header = (LinearLayout) rootView.findViewById(R.id.header);
-		updateHeader();
+		if(initialized)
+		{
+			DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
+			widths = new int[]{(int) (mDisplayMetrics.densityDpi * 0.45f),
+					(int) (mDisplayMetrics.densityDpi * 0.55f),
+					(int) (mDisplayMetrics.densityDpi * 0.40f),
+					(int) (mDisplayMetrics.densityDpi * 0.40f),
+					(int) (mDisplayMetrics.densityDpi * 0.40f),
+					(int) (mDisplayMetrics.densityDpi * 0.40f)};
 
-		tableLayout = (TableLayout) rootView.findViewById(R.id.table);
-		updateTable();
+			final float scale = getResources().getDisplayMetrics().density;
+			iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
+
+
+			header = (LinearLayout) rootView.findViewById(R.id.header);
+			updateHeader();
+
+			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
+			updateTable();
+		}
 
 		return rootView;
 	}
@@ -264,6 +271,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 	public void init(Home home, UserPreferences preferences, FurnitureController controller)
 	{
+		initialized = true;
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;

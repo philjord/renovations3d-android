@@ -57,6 +57,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
 	private static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
 
+
+	// if we are not intialized then ignore onCreateViews
+	private boolean initialized = false;
+
 	//menu item options
 	public static boolean alignmentActivated = false;
 	public static boolean magnetismToggled = false;// careful toggle != checked!
@@ -74,40 +78,43 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		this.setHasOptionsMenu(true);
-
 		View rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
 
-		drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
-		drawableView.setDrawer(this);
-
-		planComponent.setDrawableView(drawableView);
-
-		RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.levelsRadioGroup);
-		this.multipleLevelsTabbedPane = new JTabbedPane(this.getContext(), rg);
-
-		// from the constructor but placed here now so views are set
-		createComponents(home, preferences, planController);
-		layoutComponents();
-		updateSelectedTab(home);
-
-		View levelPlusButton = rootView.findViewById(R.id.levelPlusButton);
-		levelPlusButton.setOnClickListener(new View.OnClickListener()
+		if(initialized)
 		{
-			public void onClick(View v)
-			{
-				planController.addLevel();
-			}
-		});
-		View goto3DView = rootView.findViewById(R.id.goto3DView);
-		goto3DView.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				SweetHomeAVRActivity.mViewPager.setCurrentItem(3,true);
-			}
-		});
+			this.setHasOptionsMenu(true);
 
+
+			drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
+			drawableView.setDrawer(this);
+
+			planComponent.setDrawableView(drawableView);
+
+			RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.levelsRadioGroup);
+			this.multipleLevelsTabbedPane = new JTabbedPane(this.getContext(), rg);
+
+			// from the constructor but placed here now so views are set
+			createComponents(home, preferences, planController);
+			layoutComponents();
+			updateSelectedTab(home);
+
+			View levelPlusButton = rootView.findViewById(R.id.levelPlusButton);
+			levelPlusButton.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					planController.addLevel();
+				}
+			});
+			View goto3DView = rootView.findViewById(R.id.goto3DView);
+			goto3DView.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					SweetHomeAVRActivity.mViewPager.setCurrentItem(3, true);
+				}
+			});
+		}
 
 		return rootView;
 	}
@@ -136,6 +143,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public void onDestroy()
 	{
+		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
 		super.onDestroy();
 	}
 
@@ -412,6 +420,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	public void init(Home home, UserPreferences preferences2, PlanController planController)
 	{
+		initialized = true;
 		this.home = home;
 		this.preferences = preferences2;
 		this.planController = planController;
