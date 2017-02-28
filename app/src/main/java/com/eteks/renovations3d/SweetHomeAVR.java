@@ -30,6 +30,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mindblowing.renovations3d.BuildConfig;
 
 
+import org.jogamp.java3d.JoglesPipeline;
 import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 
 import java.beans.PropertyChangeEvent;
@@ -81,7 +82,6 @@ public class SweetHomeAVR extends HomeApplication
 	 */
 	public SweetHomeAVR(SweetHomeAVRActivity parentActivity)
 	{
-
 		this.parentActivity = parentActivity;
 
 		System.setProperty("j3d.cacheAutoComputeBounds", "true");
@@ -90,6 +90,8 @@ public class SweetHomeAVR extends HomeApplication
 		System.setProperty("j3d.defaultNodeCollidable", "false");
 		System.setProperty("j3d.usePbuffer", "true"); // some phones have no fbo under offscreen
 		System.setProperty("j3d.noDestroyContext", "true");// don't clean up as the preserve/restore will handle it
+
+		JoglesPipeline.LATE_RELEASE_CONTEXT = false;// so the world can clean up, otherwise the plan renderer holds onto it
 
 		//PJPJPJ
 		javaawt.image.BufferedImage.installBufferedImageDelegate(VMBufferedImage.class);

@@ -134,93 +134,100 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		}
 		header.addView(headerRow);
 	}
+
+	/**
+	 * This is really expensive and is not simple an update, I need a single row updateer system , not this super expensive one
+	 */
 	private void updateTable()
 	{
-		tableLayout.removeAllViews();
-		tableLayout.setBackgroundColor(Color.WHITE);
-		//PJPJ this doesn't appear to do anyhting
-		//tableLayout.setDividerDrawable(this.getResources().getDrawable(R.drawable.empty_small_divider));
-
-		FurnitureTreeTableModel model = getModel();
-		for (int i = 0; i < model.getRowCount(); i++)
+		if(tableLayout!=null)
 		{
-			final HomePieceOfFurniture piece =(HomePieceOfFurniture)model.getValueAt(i,0);
-			HomePieceOfFurnitureTableRow tableRow = new HomePieceOfFurnitureTableRow(this.getContext(), piece);
-			tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-					TableRow.LayoutParams.WRAP_CONTENT));
+			tableLayout.removeAllViews();
+			tableLayout.setBackgroundColor(Color.WHITE);
+			//PJPJ this doesn't appear to do anyhting
+			//tableLayout.setDividerDrawable(this.getResources().getDrawable(R.drawable.empty_small_divider));
 
-			ImageView imageView = new ImageView(this.getContext());
-			imageView.setBackgroundColor(Color.WHITE);
-			imageView.setPadding(10, 10, 10, 10);
-			//imageView.setLayoutParams(new GridView.LayoutParams(48, 48));
-			imageView.setScaleType(ImageView.ScaleType.CENTER);
-			imageView.setMinimumWidth(widths[0]);
-
-			Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), iconHeightPx, null);
-			if(icon instanceof ImageIcon)
+			FurnitureTreeTableModel model = getModel();
+			for (int i = 0; i < model.getRowCount(); i++)
 			{
-				imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
+				final HomePieceOfFurniture piece = (HomePieceOfFurniture) model.getValueAt(i, 0);
+				HomePieceOfFurnitureTableRow tableRow = new HomePieceOfFurnitureTableRow(this.getContext(), piece);
+				tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+						TableRow.LayoutParams.WRAP_CONTENT));
+
+				ImageView imageView = new ImageView(this.getContext());
+				imageView.setBackgroundColor(Color.WHITE);
+				imageView.setPadding(10, 10, 10, 10);
+				//imageView.setLayoutParams(new GridView.LayoutParams(48, 48));
+				imageView.setScaleType(ImageView.ScaleType.CENTER);
+				imageView.setMinimumWidth(widths[0]);
+
+				Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), iconHeightPx, null);
+				if (icon instanceof ImageIcon)
+				{
+					imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+				}
+				imageView.setOnClickListener(tableSelectionListener);
+				tableRow.addView(imageView, new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+						TableRow.LayoutParams.WRAP_CONTENT));
+
+				TextView tv = new TextView(this.getContext());
+				tv.setBackgroundColor(Color.WHITE);
+				tv.setTextColor(Color.BLACK);
+				tv.setPadding(10, 10, 10, 10);
+				tv.setGravity(Gravity.CENTER);
+				tv.setText(piece.getName());
+				tv.setWidth(widths[1]);
+				tv.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv);
+
+
+				TextView tv2 = new TextView(this.getContext());
+				tv2.setBackgroundColor(Color.WHITE);
+				tv2.setTextColor(Color.BLACK);
+				tv2.setPadding(10, 10, 10, 10);
+				tv2.setGravity(Gravity.CENTER);
+				tv2.setText("" + piece.getWidth());
+				tv2.setWidth(widths[2]);
+				tv2.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv2);
+
+				TextView tv3 = new TextView(this.getContext());
+				tv3.setBackgroundColor(Color.WHITE);
+				tv3.setTextColor(Color.BLACK);
+				tv3.setPadding(10, 10, 10, 10);
+				tv3.setGravity(Gravity.CENTER);
+				tv3.setText("" + piece.getDepth());
+				tv3.setWidth(widths[3]);
+				tv3.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv3);
+
+				TextView tv4 = new TextView(this.getContext());
+				tv4.setBackgroundColor(Color.WHITE);
+				tv4.setTextColor(Color.BLACK);
+				tv4.setPadding(10, 10, 10, 10);
+				tv4.setGravity(Gravity.CENTER);
+				tv4.setText("" + piece.getHeight());
+				tv4.setWidth(widths[4]);
+				tv4.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv4);
+
+				VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
+				vcb.setBackgroundColor(Color.WHITE);
+				vcb.setPadding(10, 10, 10, 10);
+				vcb.setGravity(Gravity.CENTER);
+				vcb.setWidth(widths[5]);
+				vcb.setOnClickListener(tableSelectionListener);
+				tableRow.addView(vcb);
+
+				tableLayout.addView(tableRow);
+
+				// is this the separator line a guess?
+				View v = new View(this.getContext());
+				v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
+				v.setBackgroundColor(Color.rgb(51, 51, 51));
+				tableLayout.addView(v);
 			}
-			imageView.setOnClickListener(tableSelectionListener);
-			tableRow.addView(imageView, new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-					TableRow.LayoutParams.WRAP_CONTENT));
-
-			TextView tv = new TextView(this.getContext());
-			tv.setBackgroundColor(Color.WHITE);
-			tv.setTextColor(Color.BLACK);
-			tv.setPadding(10, 10, 10, 10);
-			tv.setGravity(Gravity.CENTER);
-			tv.setText(piece.getName());
-			tv.setWidth(widths[1]);
-			tv.setOnClickListener(tableSelectionListener);
-			tableRow.addView(tv);
-
-
-			TextView tv2 = new TextView(this.getContext());
-			tv2.setBackgroundColor(Color.WHITE);
-			tv2.setTextColor(Color.BLACK);
-			tv2.setPadding(10, 10, 10, 10);
-			tv2.setGravity(Gravity.CENTER);
-			tv2.setText(""+piece.getWidth());
-			tv2.setWidth(widths[2]);
-			tv2.setOnClickListener(tableSelectionListener);
-			tableRow.addView(tv2);
-
-			TextView tv3 = new TextView(this.getContext());
-			tv3.setBackgroundColor(Color.WHITE);
-			tv3.setTextColor(Color.BLACK);
-			tv3.setPadding(10, 10, 10, 10);
-			tv3.setGravity(Gravity.CENTER);
-			tv3.setText(""+piece.getDepth());
-			tv3.setWidth(widths[3]);
-			tv3.setOnClickListener(tableSelectionListener);
-			tableRow.addView(tv3);
-
-			TextView tv4 = new TextView(this.getContext());
-			tv4.setBackgroundColor(Color.WHITE);
-			tv4.setTextColor(Color.BLACK);
-			tv4.setPadding(10, 10, 10, 10);
-			tv4.setGravity(Gravity.CENTER);
-			tv4.setText(""+piece.getHeight());
-			tv4.setWidth(widths[4]);
-			tv4.setOnClickListener(tableSelectionListener);
-			tableRow.addView(tv4);
-
-			VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
-			vcb.setBackgroundColor(Color.WHITE);
-			vcb.setPadding(10, 10, 10, 10);
-			vcb.setGravity(Gravity.CENTER);
-			vcb.setWidth(widths[5]);
-			vcb.setOnClickListener(tableSelectionListener);
-			tableRow.addView(vcb);
-
-			tableLayout.addView(tableRow);
-
-			// is this the separator line a guess?
-			View v = new View(this.getContext());
-			v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
-			v.setBackgroundColor(Color.rgb(51, 51, 51));
-			tableLayout.addView(v);
 		}
 	}
 	private class HomePieceOfFurnitureTableRow extends TableRow
@@ -266,6 +273,18 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		if(isVisibleToUser && getActivity() != null)
 		{
 			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
+		}
+
+		if(isVisibleToUser && getView()!= null)
+		{
+			// As furniture properties values change may alter sort order and filter, update the whole table
+			((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
+			// Update selected rows
+			updateTableSelectedFurniture(home);
+			//storeExpandedRows(home, controller);
+			//PJPJPJ note wildly expensive, must use only the value in source and update a single row
+			updateTable();
+			getView().postInvalidate();
 		}
 	}
 
@@ -788,13 +807,17 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		final PropertyChangeListener changeListener =
 				new PropertyChangeListener () {
 					public void propertyChange(PropertyChangeEvent ev) {
-						// As furniture properties values change may alter sort order and filter, update the whole table
-						((FurnitureTreeTableModel)getModel()).filterAndSortFurniture();
-						// Update selected rows
-						updateTableSelectedFurniture(home);
-						//storeExpandedRows(home, controller);
-						updateTable();
-						getView().postInvalidate();
+						if(FurnitureTable.this.getUserVisibleHint())
+						{
+							// As furniture properties values change may alter sort order and filter, update the whole table
+							((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
+							// Update selected rows
+							updateTableSelectedFurniture(home);
+							//storeExpandedRows(home, controller);
+							//PJPJPJ note wildly expensive, must use only the value in source and update a single row
+							updateTable();
+							getView().postInvalidate();
+						}
 					}
 				};
 		for (HomePieceOfFurniture piece : home.getFurniture()) {

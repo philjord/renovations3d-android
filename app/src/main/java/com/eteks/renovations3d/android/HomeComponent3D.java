@@ -35,6 +35,7 @@ import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.HomeTexture;
 import com.eteks.sweethome3d.model.Label;
 import com.eteks.sweethome3d.model.Level;
+import com.eteks.sweethome3d.model.ObserverCamera;
 import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.SelectionEvent;
@@ -53,7 +54,6 @@ import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
@@ -129,11 +129,12 @@ import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWe
 public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweethome3d.viewcontroller.View
 {
 
+	public static boolean ENABLE_HUD = true;
 	private static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
 
 	private static final String DEOPTOMIZE = "DEOPTOMIZE";
 
-	// if we are not intialized then ignore onCreateViews
+	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
 
 	private AndyFPSCounter fpsCounter;
@@ -156,20 +157,27 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		setDeoptomize(deoptomize);
-		JoglesPipeline.LATE_RELEASE_CONTEXT = false;// so the world can clean up, otherwise teh plan renderer holds onto it
 
-		caps = new GLCapabilities(GLProfile.get(GLProfile.GLES2));
+		caps = new GLCapabilities(null);
 
 		caps.setDoubleBuffered(true);
 		caps.setDepthBits(16);
 		caps.setStencilBits(8);
 		caps.setHardwareAccelerated(true);
+		caps.setBackgroundOpaque(true);
+
+
+//caps.setRedBits(8);
+//caps.setGreenBits(8);
+//caps.setBlueBits(8);
+
 		//TODO: see if this works
 		//caps.setBackgroundOpaque(false);
-		//caps.setSampleBuffers(true);death! no touch! //TODO: this works in morrowind now?
+		//caps.setSampleBuffers(true);//death! no touch! //TODO: this works in morrowind now?
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
+
 		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
 
@@ -224,8 +232,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						//wait for onscreen hint as this component is create whilst off screen
 						if (!HomeComponent3D.this.getUserVisibleHint())
 							canvas3D2D.stopRenderer();
-
-
 					}
 
 
@@ -234,7 +240,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
 
 						onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
-						if(BuildConfig.DEBUG)
+						if(BuildConfig.DEBUG && ENABLE_HUD)
 						{
 							fpsCounter = new AndyFPSCounter();
 							onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
@@ -401,7 +407,39 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
+
+		// tell walls to update now
+		if (isVisibleToUser && wallChangeListener != null)
+		{
+			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
+		}
+
+
+		// we don't want the camera listening to update while non visible (it's expensive)
+		// so exit and enter current based on visibility
+		if( home != null )
+		{
+			if(isVisibleToUser)
+			{
+				if(cameraPriorToUpdatePause != null)
+				{
+					home.setCamera(cameraPriorToUpdatePause);
+					cameraPriorToUpdatePause = null;
+				}
+			}
+			else
+			{
+				cameraPriorToUpdatePause = home.getCamera();
+				Camera noupdate = cameraPriorToUpdatePause.clone();
+				noupdate.setFieldOfView(-1);
+				home.setCamera(noupdate);
+			}
+		}
+
+		if(isVisibleToUser && getActivity() != null)
+			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
+
+
 
 		if (canvas3D2D != null)
 		{
@@ -414,17 +452,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				canvas3D2D.stopRenderer();
 			}
 		}
-		// tell walls to update now
-		if (isVisibleToUser && wallChangeListener != null)
-		{
-			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
-		}
 
-		if(isVisibleToUser && getActivity() != null)
-			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
-
-
+		super.setUserVisibleHint(isVisibleToUser);
 	}
+
+	private Camera cameraPriorToUpdatePause = null;
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
@@ -814,7 +846,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				boolean isSelected = selectionEvent.getSelectedItems().contains(sel);
 				Object3DBranch obj3D = homeObjects.get(sel);
-				obj3D.showOutline(isSelected);
+				if(obj3D.isShowOutline()!=isSelected)
+					obj3D.showOutline(isSelected);
 			}
 		}
 	}
@@ -841,6 +874,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 			public void canvas3DSwapped(Canvas3D canvas3D)
 			{
+				//System.out.println("canvas3DSwapped");
 			}
 
 			public void canvas3DPreRendered(Canvas3D canvas3D)
@@ -2232,8 +2266,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//PJPJPJPJ
 		geometryInfo.convertToIndexedTriangles();
 
-		geometryInfo.indexify();
-		geometryInfo.compact();
+		//geometryInfo.indexify();
+		//geometryInfo.compact();
+		//new Stripifier().stripify(geometryInfo);
 		Geometry halfSphereGeometry = geometryInfo.getIndexedGeometryArray();
 		return halfSphereGeometry;
 	}

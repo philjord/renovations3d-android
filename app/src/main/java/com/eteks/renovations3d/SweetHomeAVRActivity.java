@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
@@ -39,8 +38,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
-
-import org.jogamp.java3d.JoglesPipeline;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,9 +50,6 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javaawt.imageio.ImageIO;
-
-import static java.lang.System.in;
 
 
 /**
@@ -158,6 +152,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	// This guy represents HomeFrameController, HomeFramePane and basically HomPane
 	// but SweetHomeAVR has one pointer to a HomeController, instead of a map of HomeFrameController
 	// and once running this tells SweetHomeAVR to load a single controller
+
 
 	public void onCreate(Bundle savedInstanceState)
 	{

@@ -131,6 +131,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 			}
+
+			repaint();
 		}
 	}
 
@@ -474,26 +476,29 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 */
 	public void paintComponent(Graphics g)
 	{
-		AffineTransform previousTransform = ((Graphics2D) g).getTransform();
-		planComponent.paintComponent(g);
-		((Graphics2D) g).setTransform(previousTransform);
-
-		if(rulersVisible)
+		// don't bother painting if we are on the 3d view of a table view or something else
+		if(this.getUserVisibleHint())
 		{
-			AffineTransform previousTransform2 = ((Graphics2D) g).getTransform();
-			//PJPJ rendering rulers moved from jscrollpane to here (after the plan in order to overwrite)
-			JComponent hRuler = (JComponent) this.getHorizontalRuler();
-			hRuler.setWidth(planComponent.getWidth());
-			hRuler.setHeight(30);
-			hRuler.paintComponent(g);
+			AffineTransform previousTransform = ((Graphics2D) g).getTransform();
+			planComponent.paintComponent(g);
+			((Graphics2D) g).setTransform(previousTransform);
 
-			JComponent vRuler = (JComponent) this.getVerticalRuler();
-			vRuler.setWidth(30);
-			vRuler.setHeight(planComponent.getHeight());
-			vRuler.paintComponent(g);
-			((Graphics2D) g).setTransform(previousTransform2);
+			if (rulersVisible)
+			{
+				AffineTransform previousTransform2 = ((Graphics2D) g).getTransform();
+				//PJPJ rendering rulers moved from jscrollpane to here (after the plan in order to overwrite)
+				JComponent hRuler = (JComponent) this.getHorizontalRuler();
+				hRuler.setWidth(planComponent.getWidth());
+				hRuler.setHeight(30);
+				hRuler.paintComponent(g);
+
+				JComponent vRuler = (JComponent) this.getVerticalRuler();
+				vRuler.setWidth(30);
+				vRuler.setHeight(planComponent.getHeight());
+				vRuler.paintComponent(g);
+				((Graphics2D) g).setTransform(previousTransform2);
+			}
 		}
-
 
 	}
 

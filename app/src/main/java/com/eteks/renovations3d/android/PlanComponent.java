@@ -583,9 +583,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3.5f);
-		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*4);
-		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5);
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*2.5f);
+		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3);
+		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*2.5);
 
 		final float scale = getDrawableView().getResources().getDisplayMetrics().density;
 		MARGIN_PX = (int) (MARGIN_DP * scale + 0.5f);
@@ -1234,6 +1234,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			{
 				case MotionEvent.ACTION_DOWN:
 				{
+					//System.out.println("ACTION_DOWN");
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final float x = MotionEventCompat.getX(ev, pointerIndex);
 					final float y = MotionEventCompat.getY(ev, pointerIndex);
@@ -1266,6 +1267,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 				case MotionEvent.ACTION_POINTER_DOWN:
 				{
+					//System.out.println("ACTION_POINTER_DOWN");
 					// second finger down now
 					// cancel any pending single down as we are now firmly in double finger mode
 					fingers = 2;
@@ -1275,6 +1277,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 				case MotionEvent.ACTION_MOVE:
 				{
+					//System.out.println("ACTION_MOVE");
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final float x = MotionEventCompat.getX(ev, pointerIndex);
 					final float y = MotionEventCompat.getY(ev, pointerIndex);
@@ -1303,6 +1306,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
 						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
 						{
+							// stops any double taps
+							lastMouseReleasedTime = 0;
+
 							//PJPJPJPJ this is a major divergence from the desktop function! Single finger pan during selection mode
 							if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
 							{
@@ -1315,6 +1321,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 								// we also cancel any pending press cos that's been confirmed unwanted
 								potentialSinglePress = null;
+
 							}
 							else
 							{
@@ -1327,7 +1334,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 								mouseMoved(v, ev);
 							}
-
 							fingers = 1;
 						}
 					}
@@ -1339,6 +1345,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 				case MotionEvent.ACTION_UP:
 				{
+					//System.out.println("ACTION_UP");
 					mActivePointerId = INVALID_POINTER_ID;
 					// make sure this isn't the exit of a double touch too
 					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
@@ -1351,13 +1358,13 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 						}
 
 						mouseReleased(v, ev);
-						lastMouseReleasedTime = System.currentTimeMillis();
 					}
 					break;
 				}
 
 				case MotionEvent.ACTION_CANCEL:
 				{
+					//System.out.println("ACTION_CANCEL");
 					mActivePointerId = INVALID_POINTER_ID;
 
 					// just to be safe, not really sure
@@ -1368,6 +1375,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 				case MotionEvent.ACTION_POINTER_UP:
 				{
+					//System.out.println("ACTION_POINTER_UP");
 					//second finger has been released
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
@@ -1422,11 +1430,13 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && MultipleLevelsPlanPanel.selectMultiple;
 
-						int clickCount = System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1;
+						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1);
 
 						// if it's a double, ensure triple != double twice
-						if (clickCount == 2)
-							lastMouseReleasedTime = Long.MAX_VALUE;
+						if (clickCount == 1)
+							lastMouseReleasedTime = System.currentTimeMillis();
+						else
+							lastMouseReleasedTime = 0;
 
 						try
 						{
