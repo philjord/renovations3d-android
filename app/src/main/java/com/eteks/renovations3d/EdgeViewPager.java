@@ -34,6 +34,19 @@ public class EdgeViewPager extends ViewPager
 		gripWidthMaxPix = (int)Math.min((mDisplayMetrics.densityDpi * gripWidthMaxInch), gripWidthPercent*mDisplayMetrics.widthPixels );
 	}
 
+
+	@Override
+	public boolean onTouchEvent(MotionEvent ev) {
+		//see https://github.com/chrisbanes/PhotoView/issues/31
+		try {
+			return super.onTouchEvent(ev);
+		} catch (IllegalArgumentException ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev)
 	{
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
@@ -53,6 +66,12 @@ public class EdgeViewPager extends ViewPager
 				return false;
 		}
 
-		return super.onInterceptTouchEvent(ev);
+		//see https://github.com/chrisbanes/PhotoView/issues/31
+		try {
+			return super.onInterceptTouchEvent(ev);
+		} catch (IllegalArgumentException ex) {
+			ex.printStackTrace();
+		}
+		return false;
 	}
 }
