@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -26,7 +26,7 @@ import javaawt.VMFont;
 import javaawt.geom.Rectangle2D;
 import javaawt.image.ImageObserver;
 
-import static com.eteks.renovations3d.SweetHomeAVRActivity.PREFS_NAME;
+import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 
 /**
  * Very much an assistant with various methods to be sorted out
@@ -228,9 +228,9 @@ public abstract class JComponent extends Fragment implements ImageObserver
 	public static void possiblyShowWelcomeScreen(final Activity activity, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
 	{
 		// only one per session
-		if(!SweetHomeAVRActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
+		if(!Renovations3DActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
 		{
-			SweetHomeAVRActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
+			Renovations3DActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
 			SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
 			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
 

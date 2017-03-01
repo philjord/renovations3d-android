@@ -49,6 +49,7 @@ import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JTextField;
@@ -66,7 +67,6 @@ import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController.Mode;
-import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 
@@ -120,13 +120,13 @@ public class HomePane implements HomeView
 	// private List<Action>          pluginActions;
 
 
-	private SweetHomeAVRActivity activity;
+	private Renovations3DActivity activity;
 
 	/**
 	 * Creates home view associated with its controller.
 	 */
 	public HomePane(Home home, UserPreferences preferences,
-					final HomeController controller, SweetHomeAVRActivity activity)
+					final HomeController controller, Renovations3DActivity activity)
 	{
 		this.home = home;
 		this.preferences = preferences;

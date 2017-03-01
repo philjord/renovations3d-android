@@ -31,7 +31,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -1404,7 +1404,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		public void mousePressed(View v, MotionEvent ev)
 		{
 			// no selection or edits while a dialog is up
-			if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
+			if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
 			{
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);
@@ -1461,7 +1461,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		public void mouseReleased(View v, MotionEvent ev)
 		{
-			if(SweetHomeAVRActivity.currentDialog == null || !SweetHomeAVRActivity.currentDialog.isShowing())
+			if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
 			{
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);

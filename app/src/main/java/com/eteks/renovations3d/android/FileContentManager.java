@@ -19,14 +19,11 @@
  */
 package com.eteks.renovations3d.android;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.os.Looper;
-import android.text.Editable;
-import android.view.LayoutInflater;
-import android.widget.EditText;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -34,9 +31,7 @@ import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.View;
-import com.eteks.renovations3d.SweetHomeAVRActivity;
 import com.eteks.renovations3d.android.swingish.JFileChooser;
-import com.mindblowing.renovations3d.R;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -300,9 +295,9 @@ public class FileContentManager implements ContentManager {
   private Map<ContentType, FileFilter []> fileFilters;
   private Map<ContentType, String []>     fileExtensions;
 
-private SweetHomeAVRActivity activity;//for dialogs etc
+private Renovations3DActivity activity;//for dialogs etc
 
-  public FileContentManager(final UserPreferences preferences, SweetHomeAVRActivity activity) {
+  public FileContentManager(final UserPreferences preferences, Renovations3DActivity activity) {
    this. activity = activity;
     this.preferences = preferences;
 

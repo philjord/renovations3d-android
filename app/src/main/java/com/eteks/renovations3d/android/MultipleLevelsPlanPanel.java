@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -30,7 +29,6 @@ import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
@@ -111,7 +109,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				public void onClick(View v)
 				{
-					SweetHomeAVRActivity.mViewPager.setCurrentItem(3, true);
+					Renovations3DActivity.mViewPager.setCurrentItem(3, true);
 				}
 			});
 		}
@@ -159,25 +157,20 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.editUndo:
 					try
 					{
-						((SweetHomeAVRActivity) MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().undo();
+						((Renovations3DActivity) MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().undo();
 					}catch (CannotUndoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
 					}
 					break;
 				case R.id.editRedo:
 					try
-					{((SweetHomeAVRActivity)MultipleLevelsPlanPanel.this.getActivity()).sweetHomeAVR.getHomeController().redo();
+					{((Renovations3DActivity)MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().redo();
 					}catch (CannotRedoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
 					}
 					break;
 				case R.id.delete:
 					planController.deleteSelection();
-					break;
-				case R.id.controlKeyOneTimer:
-					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
-					item.setChecked(!item.isChecked());
-					setIconFromSelector(item, R.drawable.edit_copy_selector);
 					break;
 				case R.id.planSelect:
 					item.setChecked(true);
@@ -226,7 +219,11 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					// note single tap works for this one
 					setMode(PlanController.Mode.LABEL_CREATION);
 					break;
-
+				case R.id.controlKeyOneTimer:
+					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
+					item.setChecked(!item.isChecked());
+					setIconFromSelector(item, R.drawable.edit_copy_selector);
+					break;
 				case R.id.lockCheck:
 					item.setChecked(!item.isChecked());
 
@@ -271,7 +268,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				boolean isChecked = cntlKey.isChecked();
 				cntlKey.setChecked(false);
-				setIconFromSelector(cntlKey, R.drawable.edit_copy_selector);
+				//setIconFromSelector(cntlKey, R.drawable.edit_copy_selector);
 				return isChecked;
 			}
 		}
@@ -301,7 +298,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			if(actionKey != null && !this.preferences.isActionTipIgnored(actionKey)) {
 				Thread t = new Thread(new Runnable() {
 					public void run() {
-						if(SweetHomeAVRActivity.sweetHomeAVR.getHomeController().getView().showActionTipMessage(actionKey)) {
+						if(Renovations3DActivity.renovations3D.getHomeController().getView().showActionTipMessage(actionKey)) {
 							preferences.setActionTipIgnored(actionKey);
 						}
 					}
@@ -324,6 +321,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.editUndo).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.editRedo).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
+		SpannableStringBuilder builder = new SpannableStringBuilder("* Cntl");// it will replace "*" with icon
+		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		menu.findItem(controlKeyOneTimer).setTitle(builder);
 		menu.findItem(R.id.delete).setOnMenuItemClickListener(planMenuItemActionListener);
 
 		menu.findItem(R.id.planSelect).setOnMenuItemClickListener(planMenuItemActionListener);

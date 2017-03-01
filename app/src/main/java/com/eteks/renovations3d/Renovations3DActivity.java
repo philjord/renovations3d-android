@@ -55,10 +55,10 @@ import java.util.TimerTask;
 /**
  * Created by phil on 11/20/2016.
  */
-public class SweetHomeAVRActivity extends FragmentActivity
+public class Renovations3DActivity extends FragmentActivity
 {
 
-	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";
+	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
@@ -69,19 +69,19 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	public static FirebaseAnalytics mFirebaseAnalytics;
 
-	private SweetHomeAVRPagerAdapter mSweetHomeAVRPagerAdapter;
+	private Renovations3DPagerAdapter mRenovations3DPagerAdapter;
 	public static ViewPager mViewPager; // public to allow fragmenet to move around by button
 
 	private File chooserStartFolder;
 
 	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
-	public static SweetHomeAVR sweetHomeAVR; // for plan undo redo, now for import statements too
+	public static Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
 	private boolean fileSystemAccessGranted = false;
 
 	// Description of original
-	// SweetHomeAVR|HomeApplication
+	// Renovations3D|HomeApplication
 	// this has public void main
 	// this is a singleton
 	// designed to allow many HomeFrameControllers (with HomeController) to be openable
@@ -115,7 +115,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	// What I want to do!!!!
 
-	// Activity is entry point, so it's a bit like the SweetHomeAVR is that regard
+	// Activity is entry point, so it's a bit like the Renovations3D is that regard
 	// ActivityPagerAdapter needs to hand out views, so it needs the HomeController loaded before it's talked to at all
 	// Activity is the main JFrame and ContentPane gear and will dictagte the display
 	// in the longer run it needs to rejig the display for device sizes, not major
@@ -126,7 +126,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	// notice that the Factory can happily hand out the Fragment bits
 	// so that should be possible?
 
-	//Note the HomeApplication parent of SweetHomeAVR is a multi-home interface, possibly dump for good measure?
+	//Note the HomeApplication parent of Renovations3D is a multi-home interface, possibly dump for good measure?
 
 	// key point in init method Application is listening for the open guy to change the collection
 	// and open the frame from it
@@ -144,14 +144,14 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	// this gets called because HomeController.open says open the HomeApplciation.addHome triggers the callback
 	// so HomeController public void open(final String homeName)
-	// need the open lines swapped and the addHome made a call to sweethomeAVR directly, no probs
+	// need the open lines swapped and the addHome made a call to Renovations3D directly, no probs
 	// notice open uses ThreadedTaskController for executing open task, so it can borrow the empty
 	// HomePane view for a loading bar in a dialog etc, not major
 	// I suspect the ThreadTeaskView gear can probably be ported to android views without much pain
 
 	// This guy represents HomeFrameController, HomeFramePane and basically HomPane
-	// but SweetHomeAVR has one pointer to a HomeController, instead of a map of HomeFrameController
-	// and once running this tells SweetHomeAVR to load a single controller
+	// but Renovations3D has one pointer to a HomeController, instead of a map of HomeFrameController
+	// and once running this tells Renovations3D to load a single controller
 
 
 	public void onCreate(Bundle savedInstanceState)
@@ -188,7 +188,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 		OperatingSystem.activity = this;
 
-		sweetHomeAVR = new SweetHomeAVR(this);
+		renovations3D = new Renovations3D(this);
 
 		// if we have any fragments in the manager then we are doing a restore with bundle style,
 		// so all frags will get onCreate() but not the init() and fail, let's chuck em away now
@@ -203,7 +203,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			}
 		}
 
-		mSweetHomeAVRPagerAdapter = new SweetHomeAVRPagerAdapter(getSupportFragmentManager(), sweetHomeAVR);
+		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), renovations3D);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 		{
@@ -226,12 +226,12 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 
 	/**
-	 * This must be called eventually by SweetHomeAVR
+	 * This must be called eventually by Renovations3D
 	 */
 	public void setUpViews()
 	{
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSweetHomeAVRPagerAdapter);
+		mViewPager.setAdapter(mRenovations3DPagerAdapter);
 		mViewPager.setCurrentItem(1);
 		mViewPager.setOffscreenPageLimit(4);
 
@@ -255,24 +255,24 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		{
 			menu.findItem(R.id.menu_load).setEnabled(true);
 
-			boolean homeLoaded = sweetHomeAVR.getHomeController() != null;
+			boolean homeLoaded = renovations3D.getHomeController() != null;
 			menu.findItem(R.id.menu_save).setEnabled(homeLoaded);
 			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
 		}
 
-		menu.findItem(R.id.menu_new).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_new).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
-		menu.findItem(R.id.menu_load).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_load).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name"));
-		menu.findItem(R.id.menu_save).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_save).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name"));
-		menu.findItem(R.id.menu_saveas).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_saveas).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name"));
-		menu.findItem(R.id.menu_help).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_help).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name"));
-		menu.findItem(R.id.menu_about).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_about).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name"));
-		menu.findItem(R.id.menu_preferences).setTitle(sweetHomeAVR.getUserPreferences().getLocalizedString(
+		menu.findItem(R.id.menu_preferences).setTitle(renovations3D.getUserPreferences().getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name"));
 		return true;
 	}
@@ -295,8 +295,8 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				{
 					public void run()
 					{
-						if (sweetHomeAVR.getHomeController() != null)
-							sweetHomeAVR.getHomeController().saveAndCompress();
+						if (renovations3D.getHomeController() != null)
+							renovations3D.getHomeController().saveAndCompress();
 					}
 				};
 				t.start();
@@ -307,23 +307,23 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				{
 					public void run()
 					{
-						if (sweetHomeAVR.getHomeController() != null)
-							sweetHomeAVR.getHomeController().saveAsAndCompress();
+						if (renovations3D.getHomeController() != null)
+							renovations3D.getHomeController().saveAsAndCompress();
 					}
 				};
 				t2.start();
 				return true;
 			case R.id.menu_help:
-				if (sweetHomeAVR.getHomeController() != null)
-					sweetHomeAVR.getHomeController().help();
+				if (renovations3D.getHomeController() != null)
+					renovations3D.getHomeController().help();
 				return true;
 			case R.id.menu_about:
-				if (sweetHomeAVR.getHomeController() != null)
-					sweetHomeAVR.getHomeController().about();
+				if (renovations3D.getHomeController() != null)
+					renovations3D.getHomeController().about();
 				return true;
 			case R.id.menu_preferences:
-				if (sweetHomeAVR.getHomeController() != null)
-					sweetHomeAVR.getHomeController().editPreferences();
+				if (renovations3D.getHomeController() != null)
+					renovations3D.getHomeController().editPreferences();
 				return true;
 
 			default:
@@ -338,16 +338,16 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		super.onSaveInstanceState(savedInstanceState);
 		System.out.println("onSaveInstanceState");
 
-		if(sweetHomeAVR != null && sweetHomeAVR.getHome() != null)
+		if(renovations3D != null && renovations3D.getHome() != null)
 		{
-			//if(sweetHomeAVR.getHome().isModified() )
+			//if(renovations3D.getHome().isModified() )
 			{
 				try
 				{
-					String originalName = sweetHomeAVR.getHome().getName();
+					String originalName = renovations3D.getHome().getName();
 					File outputDir = getCacheDir();
 					File homeName = new File(outputDir, "currentWork.sh3d");
-					sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
+					renovations3D.getHomeRecorder().writeHome(renovations3D.getHome(), homeName.getAbsolutePath());
 					System.out.println("onSaveInstanceState written to " + homeName.getAbsolutePath());
 					savedInstanceState.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
 					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -363,11 +363,11 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			}
 			/*else
 			{
-				savedInstanceState.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+				savedInstanceState.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
 				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
-				editor.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+				editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
 				editor.apply();
 			}*/
 		}
@@ -393,12 +393,12 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			{
 				loadHome(homeName);
 				// clear the name after load?
-				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+				Renovations3DActivity.this.runOnUiThread(new Runnable()
 				{
 					public void run()
 					{
-						if (sweetHomeAVR.getHome() != null)
-							sweetHomeAVR.getHome().setName(tempWorkingFileRealName);
+						if (renovations3D.getHome() != null)
+							renovations3D.getHome().setName(tempWorkingFileRealName);
 					}
 				});
 			}
@@ -408,10 +408,10 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private void loadSh3dFile()
 	{
-		if (sweetHomeAVR.getHomeController() != null)
+		if (renovations3D.getHomeController() != null)
 		{
 			Thread t2 = new Thread(){public void run(){
-				HomeController controller = sweetHomeAVR.getHomeController();
+				HomeController controller = renovations3D.getHomeController();
 				if(controller == null)
 					newHome();
 				String openFileName = controller.getView().showOpenDialog();
@@ -426,7 +426,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			// above this is the proper way to do it, but if I don't have a home control...
 			chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-			final JFileChooser fileChooser = new JFileChooser(SweetHomeAVRActivity.this, chooserStartFolder);
+			final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, chooserStartFolder);
 			fileChooser.setExtension("sh3d");
 			fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
 			{
@@ -450,23 +450,23 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private void newHome()
 	{
-		if (sweetHomeAVR.getHomeController() != null)
-			sweetHomeAVR.getHomeController().close();
+		if (renovations3D.getHomeController() != null)
+			renovations3D.getHomeController().close();
 
 		// must always recreate otherwise the pager hand out an IllegalStateException
-		sweetHomeAVR = new SweetHomeAVR(this);
+		renovations3D = new Renovations3D(this);
 
-		mSweetHomeAVRPagerAdapter.setSweetHomeAVR(sweetHomeAVR);
+		mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 		//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
 
 		// discard the old view first
-		mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
-		mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+		mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+		mRenovations3DPagerAdapter.notifyDataSetChanged();
 
 		// create new home and trigger the new views
-		sweetHomeAVR.newHome();
-		mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
-		mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+		renovations3D.newHome();
+		mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+		mRenovations3DPagerAdapter.notifyDataSetChanged();
 	}
 
 	public void loadHome(final File homeFile)
@@ -478,30 +478,30 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	{
 		if (homeFile != null)
 		{
-			if (sweetHomeAVR.getHomeController() != null)
-				sweetHomeAVR.getHomeController().close();
+			if (renovations3D.getHomeController() != null)
+				renovations3D.getHomeController().close();
 
 			// to be safe get this back onto the ui thread
-			SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+			Renovations3DActivity.this.runOnUiThread(new Runnable()
 			{
 				public void run()
 				{
-					boolean prevHomeLoaded = sweetHomeAVR.getHomeController() != null;
-					sweetHomeAVR = new SweetHomeAVR(SweetHomeAVRActivity.this);
-					mSweetHomeAVRPagerAdapter.setSweetHomeAVR(sweetHomeAVR);
+					boolean prevHomeLoaded = renovations3D.getHomeController() != null;
+					renovations3D = new Renovations3D(Renovations3DActivity.this);
+					mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 					//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
 
 					// discard the old view first
-					mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
-					mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+					mRenovations3DPagerAdapter.notifyDataSetChanged();
 
-					sweetHomeAVR.loadHome(homeFile, clearName);
+					renovations3D.loadHome(homeFile, clearName);
 
 					// force the frags to load up now
 					if(prevHomeLoaded)
 					{
-						mSweetHomeAVRPagerAdapter.notifyChangeInPosition(1);
-						mSweetHomeAVRPagerAdapter.notifyDataSetChanged();
+						mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+						mRenovations3DPagerAdapter.notifyDataSetChanged();
 					}
 				}
 			});
@@ -570,7 +570,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 						break;
 				}
 
-				Toast.makeText(SweetHomeAVRActivity.this, "DownloadFailedWithErrorMessage: " +message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " +message, Toast.LENGTH_SHORT).show();
 
 			}
 		}
@@ -588,7 +588,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		{
 			//TODO: not sure if this is needed? might start like this?
 			newHome();
-			HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+			HomeController controller = Renovations3DActivity.renovations3D.getHomeController();
 			if (controller != null)
 			{
 				controller.importFurnitureLibrary(inFile.getAbsolutePath());
@@ -597,7 +597,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
 		{
 			newHome();
-			HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+			HomeController controller2 = Renovations3DActivity.renovations3D.getHomeController();
 			if (controller2 != null)
 			{
 				controller2.importTexturesLibrary(inFile.getAbsolutePath());
@@ -616,7 +616,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 	{
 
 
-		//TODO: see eclipse SweetHomeAVR.protected void start(String[] args) for exactly this setup, but better
+		//TODO: see eclipse Renovations3D.protected void start(String[] args) for exactly this setup, but better
 		Intent intent = getIntent();
 		if (intent != null)
 		{
@@ -632,7 +632,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 					//Uri uri = intent.getData();
 					//String name = getContentName(resolver, uri);
 					//Log.v("tag", "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-					//Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+					//Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
 					//InputStream input = resolver.openInputStream(uri);
 					//TODO: clicking an http content fires off the http version and this one??
 					//inputStreamToFile(input, Environment.DIRECTORY_DOWNLOADS + "/" + name);
@@ -647,7 +647,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 					String name = uri.getLastPathSegment();
 
 					Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-					Toast.makeText(SweetHomeAVRActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+					Toast.makeText(Renovations3DActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
 
 					File inFile = new File(uri.getPath());
 					loadFile(inFile);
@@ -657,13 +657,13 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				}
 				else if (scheme.compareTo("http") == 0)
 				{
-					Toast.makeText(SweetHomeAVRActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+					Toast.makeText(Renovations3DActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 
 					Uri uri = intent.getData();
 					final String fileName = uri.getLastPathSegment();
 
 					Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
-					Toast.makeText(SweetHomeAVRActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
+					Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
 					DownloadManager.Request request = new DownloadManager.Request(uri);
 					request.setDescription(fileName + "_download");
 					request.setTitle(fileName);
@@ -680,13 +680,13 @@ public class SweetHomeAVRActivity extends FragmentActivity
 					manager.enqueue(request);
 					registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 					setIntent(null);
-					Toast.makeText(SweetHomeAVRActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
+					Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
 					return;
 				}
 				else if (scheme.compareTo("ftp") == 0)
 				{
 					// TODO Import from FTP!
-					Toast.makeText(SweetHomeAVRActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+					Toast.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 					setIntent(null);
 					return;
 				}
@@ -776,11 +776,11 @@ public class SweetHomeAVRActivity extends FragmentActivity
 		final TimerTask autoSaveTask = new TimerTask(){
 			public void run()
 			{
-				SweetHomeAVRActivity.this.runOnUiThread(new Runnable()
+				Renovations3DActivity.this.runOnUiThread(new Runnable()
 				{
 					public void run()
 					{
-						//Toast.makeText(SweetHomeAVRActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
+						//Toast.makeText(Renovations3DActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
 						System.out.println("That was an auto save right three...");
 						doAutoSave();
 					}
@@ -794,16 +794,16 @@ public class SweetHomeAVRActivity extends FragmentActivity
 
 	private void doAutoSave()
 	{
-		if(sweetHomeAVR != null && sweetHomeAVR.getHome() != null)
+		if(renovations3D != null && renovations3D.getHome() != null)
 		{
-			//if(sweetHomeAVR.getHome().isModified())
+			//if(renovations3D.getHome().isModified())
 			{
 				try
 				{
-					String originalName = sweetHomeAVR.getHome().getName();
+					String originalName = renovations3D.getHome().getName();
 					File outputDir = getCacheDir();
 					File homeName = new File(outputDir, "currentWork.sh3d");
-					sweetHomeAVR.getHomeRecorder().writeHome(sweetHomeAVR.getHome(), homeName.getAbsolutePath());
+					renovations3D.getHomeRecorder().writeHome(renovations3D.getHome(), homeName.getAbsolutePath());
 					System.out.println("doAutoSave written to " + homeName.getAbsolutePath());
 					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 					SharedPreferences.Editor editor = settings.edit();
@@ -820,9 +820,9 @@ public class SweetHomeAVRActivity extends FragmentActivity
 			{
 				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
-				System.out.println("doAutoSave unmodified recorded as " + sweetHomeAVR.getHome().getName());
+				System.out.println("doAutoSave unmodified recorded as " + renovations3D.getHome().getName());
 				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
-				editor.putString(STATE_CURRENT_HOME_NAME, sweetHomeAVR.getHome().getName());
+				editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
 				editor.apply();
 			}*/
 		}
@@ -880,7 +880,7 @@ public class SweetHomeAVRActivity extends FragmentActivity
 				else
 				{
 					// Permission Denied
-					Toast.makeText(SweetHomeAVRActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
+					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
 							.show();
 				}
 				break;

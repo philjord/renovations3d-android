@@ -19,7 +19,7 @@ public class SopInterceptor extends PrintStream
 	String tag;
 
 
-	private File logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SweetHomeAVR.log.txt");
+	private File logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Renovations3D.log.txt");
 
 
 	public SopInterceptor(OutputStream out, String tag)

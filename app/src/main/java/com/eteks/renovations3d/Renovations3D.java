@@ -1,7 +1,6 @@
 package com.eteks.renovations3d;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.eteks.renovations3d.android.HomePane;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
@@ -9,7 +8,6 @@ import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.io.HomeFileRecorder;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
-import com.eteks.sweethome3d.model.DamagedHomeRecorderException;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomeApplication;
 import com.eteks.sweethome3d.model.HomeRecorder;
@@ -52,7 +50,7 @@ import javaawt.image.VMBufferedImage;
 import javaawt.imageio.VMImageIO;
 
 
-public class SweetHomeAVR extends HomeApplication
+public class Renovations3D extends HomeApplication
 {
 	private static final String PREFERENCES_FOLDER = "com.eteks.sweethome3d.preferencesFolder";
 	private static final String APPLICATION_FOLDERS = "com.eteks.sweethome3d.applicationFolders";
@@ -73,14 +71,14 @@ public class SweetHomeAVR extends HomeApplication
 	private HomeController homeController;
 	private Home home;
 
-	private SweetHomeAVRActivity parentActivity;
+	private Renovations3DActivity parentActivity;
 
 	/**
 	 * Creates a home application instance. Recorders, user preferences, content
 	 * manager, view factory and plug-in manager handled by this application are
 	 * lazily instantiated to let subclasses override their creation.
 	 */
-	public SweetHomeAVR(SweetHomeAVRActivity parentActivity)
+	public Renovations3D(Renovations3DActivity parentActivity)
 	{
 		this.parentActivity = parentActivity;
 
@@ -115,13 +113,13 @@ public class SweetHomeAVR extends HomeApplication
 			Bundle bundle = new Bundle();
 			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "newHome");
 			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
-			SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+			Renovations3DActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 		}
 
 		home = new Home();
 		home.setName(null);// ensures save does a save as
 
-		homeController = new HomeController(home, SweetHomeAVR.this, SweetHomeAVR.this.viewFactory, SweetHomeAVR.this.contentManager);
+		homeController = new HomeController(home, Renovations3D.this, Renovations3D.this.viewFactory, Renovations3D.this.contentManager);
 
 		parentActivity.setUpViews();
 		parentActivity.invalidateOptionsMenu();
@@ -138,7 +136,7 @@ public class SweetHomeAVR extends HomeApplication
 			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "loadHome");
 			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "loadHome");
 			bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "loadHome " + homeFile);
-			SweetHomeAVRActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+			Renovations3DActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 		}
 
 		final String homeName = homeFile.getAbsolutePath();
@@ -151,7 +149,7 @@ public class SweetHomeAVR extends HomeApplication
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
 				home.setName(clearName ? null : homeName);// Notice this is used as the save name
-				homeController = new HomeController(home, SweetHomeAVR.this, viewFactory, contentManager);
+				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
 				EventQueue.invokeLater(new Runnable()
 				{
 					public void run()
@@ -382,7 +380,7 @@ public class SweetHomeAVR extends HomeApplication
 		{
 			try
 			{
-				return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.SweetHomeAVR.class, "applicationId");
+				return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationId");
 			}
 			catch (IllegalArgumentException ex)
 			{
@@ -397,7 +395,7 @@ public class SweetHomeAVR extends HomeApplication
 	@Override
 	public String getName()
 	{
-		return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.SweetHomeAVR.class, "applicationName");
+		return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationName");
 	}
 
 	/**
@@ -414,7 +412,7 @@ public class SweetHomeAVR extends HomeApplication
 		else
 		{
 			// note use a class from the jar, not this class, but matching simple name (so the right property is pulled form teh resource once loaded
-			return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.SweetHomeAVR.class, "applicationVersion");
+			return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationVersion");
 		}
 	}
 
@@ -426,7 +424,7 @@ public class SweetHomeAVR extends HomeApplication
 	{
 		initSystemProperties();
 
-		//SwingTools.showSplashScreenWindow(SweetHomeAVR.class.getResource("resources/splashScreen.jpg"));
+		//SwingTools.showSplashScreenWindow(Renovations3D.class.getResource("resources/splashScreen.jpg"));
 
 		// Add a listener that opens a frame when a home is added to application
 		addHomesListener(new CollectionListener<Home>()
@@ -499,7 +497,7 @@ public class SweetHomeAVR extends HomeApplication
 		//initLookAndFeel();
 
 
-		//PJPJPJ the AutoRecoveryManager has a timer that holds a reference to this SweetHomeAVR once it's been released by everythign else on a change
+		//PJPJPJ the AutoRecoveryManager has a timer that holds a reference to this Renovations3D once it's been released by everythign else on a change
 		/*try
 		{
 			this.autoRecoveryManager = new AutoRecoveryManager(this);
@@ -671,8 +669,8 @@ public class SweetHomeAVR extends HomeApplication
 	private void show3DError()
 	{
 		UserPreferences userPreferences = getUserPreferences();
-		String message = userPreferences.getLocalizedString(SweetHomeAVR.class, "3DError.message");
-		String title = userPreferences.getLocalizedString(SweetHomeAVR.class, "3DError.title");
+		String message = userPreferences.getLocalizedString(Renovations3D.class, "3DError.message");
+		String title = userPreferences.getLocalizedString(Renovations3D.class, "3DError.title");
 
 		//TODO: definitely a toast here too
 		//JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(), message,
@@ -688,10 +686,10 @@ public class SweetHomeAVR extends HomeApplication
 	private boolean confirmSaveAfter3DError()
 	{
 		UserPreferences userPreferences = getUserPreferences();
-		String message = userPreferences.getLocalizedString(SweetHomeAVR.class, "confirmSaveAfter3DError.message");
-		String title = userPreferences.getLocalizedString(SweetHomeAVR.class, "confirmSaveAfter3DError.title");
-		String save = userPreferences.getLocalizedString(SweetHomeAVR.class, "confirmSaveAfter3DError.save");
-		String doNotSave = userPreferences.getLocalizedString(SweetHomeAVR.class, "confirmSaveAfter3DError.doNotSave");
+		String message = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.message");
+		String title = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.title");
+		String save = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.save");
+		String doNotSave = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.doNotSave");
 
 
 		//TODO: More toast questions
@@ -711,11 +709,11 @@ private static class FileContentManagerWithRecordedLastDirectories extends FileC
 	private static final String LAST_DIRECTORY = "lastDirectory#";
 	private static final String LAST_DEFAULT_DIRECTORY = "lastDefaultDirectory";
 
-	private final Class<? extends SweetHomeAVR> mainClass;
+	private final Class<? extends Renovations3D> mainClass;
 
 	public FileContentManagerWithRecordedLastDirectories(UserPreferences preferences,
-														 Class<? extends SweetHomeAVR> mainClass,
-														 SweetHomeAVRActivity activity)
+														 Class<? extends Renovations3D> mainClass,
+														 Renovations3DActivity activity)
 	{
 		super(preferences, activity);
 		this.mainClass = mainClass;

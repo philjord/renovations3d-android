@@ -33,7 +33,7 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 
-import com.eteks.renovations3d.SweetHomeAVRActivity;
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.mindblowing.renovations3d.R;
 
@@ -162,14 +162,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				{
 					ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
 					al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
-					((SweetHomeAVRActivity) FurnitureCatalogListPanel.this.getActivity())
-							.sweetHomeAVR.getHomeController().getFurnitureController().addFurniture(al);
+					((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity())
+							.renovations3D.getHomeController().getFurnitureController().addFurniture(al);
 					Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			case R.id.import_furniture_lib:
 				Thread t2 = new Thread(){public void run(){
-					HomeController controller = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+					HomeController controller = Renovations3DActivity.renovations3D.getHomeController();
 					if(controller != null)
 					{
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -183,7 +183,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				return true;
 			case R.id.import_texture_lib:
 				Thread t3 = new Thread(){public void run(){
-					HomeController controller2 = SweetHomeAVRActivity.sweetHomeAVR.getHomeController();
+					HomeController controller2 = Renovations3DActivity.renovations3D.getHomeController();
 					if(controller2 != null)
 					{
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out

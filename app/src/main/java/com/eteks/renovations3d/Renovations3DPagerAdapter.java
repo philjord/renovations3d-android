@@ -18,49 +18,49 @@ import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
  * because we don't want the back stack to memory leak these fragments when we swap out for a new sweethome avr
  * which is simply putting in the call mCurTransaction.remove((Fragment) object);
  */
-public class SweetHomeAVRPagerAdapter extends FragmentPagerAdapter
+public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 {
-	private SweetHomeAVR sweetHomeAVR;
+	private Renovations3D renovations3D;
 
 	private final FragmentManager mFragmentManager;
 	private FragmentTransaction mCurTransaction = null;
 	private Fragment mCurrentPrimaryItem = null;
 
-	public SweetHomeAVRPagerAdapter(FragmentManager fm, SweetHomeAVR sweetHomeAVR)
+	public Renovations3DPagerAdapter(FragmentManager fm, Renovations3D renovations3D)
 	{
 		super(fm);
-		this.sweetHomeAVR = sweetHomeAVR;
+		this.renovations3D = renovations3D;
 		this.mFragmentManager = fm;
 	}
 
-	public void setSweetHomeAVR(SweetHomeAVR sweetHomeAVR)
+	public void setRenovations3D(Renovations3D renovations3D)
 	{
-		this.sweetHomeAVR = sweetHomeAVR;
+		this.renovations3D = renovations3D;
 	}
 
 
 	@Override
 	public Fragment getItem(int position)
 	{
-		// in case we are in an unloading phase before a new sweetHomeAVR arrives
-		if (sweetHomeAVR == null || sweetHomeAVR.getHomeController() == null)
+		// in case we are in an unloading phase before a new renovations3D arrives
+		if (renovations3D == null || renovations3D.getHomeController() == null)
 			return new Fragment();
 
 		if (position == 0)
 		{
-			return (FurnitureTable) sweetHomeAVR.getHomeController().getFurnitureController().getView();
+			return (FurnitureTable) renovations3D.getHomeController().getFurnitureController().getView();
 		}
 		else if (position == 1)
 		{
-			return (MultipleLevelsPlanPanel) sweetHomeAVR.getHomeController().getPlanController().getView();
+			return (MultipleLevelsPlanPanel) renovations3D.getHomeController().getPlanController().getView();
 		}
 		else if (position == 2)
 		{
-			return (FurnitureCatalogListPanel) sweetHomeAVR.getHomeController().getFurnitureCatalogController().getView();
+			return (FurnitureCatalogListPanel) renovations3D.getHomeController().getFurnitureCatalogController().getView();
 		}
 		else if (position == 3)
 		{
-			return (HomeComponent3D) sweetHomeAVR.getHomeController().getHomeController3D().getView();
+			return (HomeComponent3D) renovations3D.getHomeController().getHomeController3D().getView();
 		}
 		return null;
 	}

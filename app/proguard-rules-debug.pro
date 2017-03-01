@@ -44,7 +44,7 @@
 #my code
 -dontwarn com.eteks.sweethome3d.HomeFrame
 -dontwarn com.eteks.sweethome3d.HomeFramePane**
--dontwarn com.eteks.sweethome3d.SweetHomeAVR**
+-dontwarn com.eteks.sweethome3d.Renovations3D**
 -dontwarn com.eteks.sweethome3d.viewcontroller.HelpController**
 -dontwarn com.eteks.sweethome3d.model.HomeFurnitureGroup
 -dontwarn com.eteks.sweethome3d.plugin.**
