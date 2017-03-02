@@ -6,10 +6,12 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
+import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
@@ -111,6 +114,7 @@ import java.util.concurrent.TimeUnit;
 import javaawt.Color;
 import javaawt.EventQueue;
 import javaawt.GraphicsConfiguration;
+import javaawt.Point;
 import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
@@ -140,6 +144,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private InfoText3D onscreenInfo;
 	private int fingerCount = 0;
 	private boolean dragging = false;
+	private String extraInfo ="";
 
 	HomeComponent3DMouseHandler homeComponent3DMouseHandler;
 
@@ -249,7 +254,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								@Override
 								protected String getText()
 								{
-									return "F: " + fingerCount + " D: " + dragging;
+									return "F: " + fingerCount + " D: " + dragging + " " + extraInfo;
 								}
 							};
 							onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
@@ -1846,7 +1851,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// the mouse press is often well different from the drag value (possibly an averaging issue)
 					this.xLastMouseMove2 = -1;
 					this.yLastMouseMove2 = -1;
-					//System.out.println("mousePressed ev.getPointerCount() == 2");
+					System.out.println("mousePressed ev.getPointerCount() == 2 hence -1 set");
 				}
 			}
 
@@ -1882,7 +1887,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			public void mouseDragged(com.jogamp.newt.event.MouseEvent ev)
 			{
 				dragging = true;
-				//System.out.println("mouseDragged ev.getPointerCount() == "+ ev.getPointerCount());
+				System.out.println("mouseDragged ev.getPointerCount() == "+ ev.getPointerCount());
 				//if (!retargetMouseEventToNavigationPanelChildren(ev))
 				{
 					//if (isEnabled())
@@ -1933,11 +1938,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 									final float FACTOR = 0.5f;
 									float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
 									float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
+									extraInfo = "yd "+ yd;
 									controller.moveCamera(yd);
 									controller.moveCameraSideways(-xd*STRAF_REDUCTION);//note does nothing in overhead view
 								}
+								else
+								{
+									extraInfo = " this.xLastMouseMove2 == -1 || this.yLastMouseMove2 == -1 " +this.xLastMouseMove2 +" " + this.yLastMouseMove2;
+								}
 								this.xLastMouseMove2 = ev.getX();
 								this.yLastMouseMove2 = ev.getY();
+								System.out.println("mouseDragged ev.getPointerCount() == 2  " +this.xLastMouseMove2 +" " + this.yLastMouseMove2);
 							}
 
 						}
@@ -1971,6 +1982,202 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		//canvas3D.getGLWindow().addMouseMotionListener(mouseListener);
 		//canvas3D.getGLWindow().addMouseWheelListener(mouseWheelListener);
+
+		//this.getView().setOnTouchListener(new TouchyListener());
+	}
+
+	private class TouchyListener implements android.view.View.OnTouchListener
+	{
+		// what are we currently doing finger-wise
+		private int fingers = -1;
+
+		private MotionEvent potentialSinglePress = null;
+
+		//PJPJPJPJ   pinch zooming
+		private static final int INVALID_POINTER_ID = -1;
+
+		// The ‘active pointer’ is the one currently moving our object.
+		private int mActivePointerId = INVALID_POINTER_ID;
+		private float mLastTouchX;
+		private float mLastTouchY;
+
+		private final long msAllowedBetweenTouchForDouble = 100;
+		private long lastMousePressedTime = 0;
+
+
+		@Override
+		public boolean onTouch(android.view.View v, MotionEvent ev)
+		{
+			final int action = MotionEventCompat.getActionMasked(ev);
+
+			switch (action & MotionEvent.ACTION_MASK)
+			{
+				case MotionEvent.ACTION_DOWN:
+				{
+					//System.out.println("ACTION_DOWN");
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final float x = MotionEventCompat.getX(ev, pointerIndex);
+					final float y = MotionEventCompat.getY(ev, pointerIndex);
+					mLastTouchX = x;
+					mLastTouchY = y;
+					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+
+					if (ev.getPointerCount() == 1 )
+					{
+						// we need to fire off the previous now, though lord knows how this could happen
+						if(potentialSinglePress != null)
+						{
+							//mousePressed(v, potentialSinglePress);
+							potentialSinglePress = null;
+							System.out.println("potentialSinglePress != null seen during action down, look into this");
+						}
+
+						lastMousePressedTime = System.currentTimeMillis();
+
+						fingers = 1;
+
+						// this will be fired on a move or an up or another single down
+						potentialSinglePress = ev;
+						//mousePressed(v, ev);
+					}
+
+					break;
+				}
+
+				case MotionEvent.ACTION_POINTER_DOWN:
+				{
+					//System.out.println("ACTION_POINTER_DOWN");
+					// second finger down now
+					// cancel any pending single down as we are now firmly in double finger mode
+					fingers = 2;
+					potentialSinglePress = null;
+					break;
+				}
+
+				case MotionEvent.ACTION_MOVE:
+				{
+					//System.out.println("ACTION_MOVE");
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final float x = MotionEventCompat.getX(ev, pointerIndex);
+					final float y = MotionEventCompat.getY(ev, pointerIndex);
+
+					// Only move if the ScaleGestureDetector isn't processing a gesture.
+					//if (!mScaleDetector.isInProgress())
+					{
+						if (ev.getPointerCount() > 1)
+						{
+							final float dx = x - mLastTouchX;
+							final float dy = y - mLastTouchY;
+
+							//float s = getScale();
+							// pan operation wants the move to be div scale as moveview does a multiply, so...
+							//moveView(-dx/s,-dy/s);
+
+							// to be safe
+							fingers = 2;
+							potentialSinglePress = null;
+						}
+					}
+
+
+					if (ev.getPointerCount() == 1)
+					{
+						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
+						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
+						{
+							// stops any double taps
+							//lastMouseReleasedTime = 0;
+
+							//PJPJPJPJ this is a major divergence from the desktop function! Single finger pan during selection mode
+							/*if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
+							{
+								final float dx = x - mLastTouchX;
+								final float dy = y - mLastTouchY;
+
+								float s = getScale();
+								// pan operation wants the move to be div scale as moveview does a multiply, so...
+								moveView(-dx/s, -dy/s);
+
+								// we also cancel any pending press cos that's been confirmed unwanted
+								potentialSinglePress = null;
+
+							}
+							else*/
+							{
+								// if we have a pending click we'd better fire it off now before moving
+								if(potentialSinglePress != null)
+								{
+									//mousePressed(v, potentialSinglePress);
+									potentialSinglePress = null;
+								}
+
+								//mouseMoved(v, ev);
+							}
+							fingers = 1;
+						}
+					}
+
+					mLastTouchX = x;
+					mLastTouchY = y;
+					break;
+				}
+
+				case MotionEvent.ACTION_UP:
+				{
+					//System.out.println("ACTION_UP");
+					mActivePointerId = INVALID_POINTER_ID;
+					// make sure this isn't the exit of a double touch too
+					//if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
+					{
+						// all is good, fire off the down now
+						if(potentialSinglePress != null)
+						{
+							//mousePressed(v, potentialSinglePress);
+							potentialSinglePress = null;
+						}
+
+						//mouseReleased(v, ev);
+					}
+					break;
+				}
+
+				case MotionEvent.ACTION_CANCEL:
+				{
+					//System.out.println("ACTION_CANCEL");
+					mActivePointerId = INVALID_POINTER_ID;
+
+					// just to be safe, not really sure
+					fingers = -1;
+					potentialSinglePress = null;
+					break;
+				}
+
+				case MotionEvent.ACTION_POINTER_UP:
+				{
+					//System.out.println("ACTION_POINTER_UP");
+					//second finger has been released
+					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+
+					if (pointerId == mActivePointerId)
+					{
+						// This was our active pointer going up. Choose a new
+						// active pointer and adjust accordingly.
+						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+						mLastTouchX = MotionEventCompat.getX(ev, newPointerIndex);
+						mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
+						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+					}
+
+
+					break;
+				}
+
+
+			}
+
+			return true;
+		}
 	}
 
 

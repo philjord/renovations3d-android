@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="app_name">Renovaciones 3D 3D</string>
+    <string name="alignment">alineación</string>
+    <string name="magnetism">magnetismo</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">No mostrar de nuevo</string>
+    <string name="planview_welcometext">Utilizar el gesto de pellizcar para acercar y alejar.\nPara ver la tabla 1 mueble con pasar el dedo desde el borde izquierdo de la vista del mapa.\nPara ver el catálogo de muebles desliza el dedo desde el borde derecho, se puede añadir el mobiliario de allí.\nPara obtener una panorámica sin alterar el golpe selección actual con dos dedos juntos.\nPara seleccionar más de un objeto utilizar las acciones Selección de lazo Seleccione múltiple de oro en el menú Más.\nDos archivos de demostración SH3D estarán en la carpeta de descargas, seleccione más-> casa abierta.\nUtilizar el navegador para descargar más archivos SH3D de la Internet, se abrirá desde el navegador.\nMenú-> Ayuda Actualmente no hace nada.</string>
+    <string name="catalogview_welcometext">Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0.\nActualmente esta es la única manera de añadir muebles, no hay arrastrar y soltar.\nDesde este punto de vista puede importar catálogo de las bibliotecas de muebles, seleccione Menú-> Importar biblioteca de muebles ...\nHay un archivo de muebles de demostración SH3F en la carpeta de descargas.\nPuede descargar bibliotecas muebles y textura de la Internet, es necesario descomprimir em puede usar un explorador de archivos antes de importar em.</string>
+    <string name="furnitureview_welcometext">Esta es una vista de todos los muebles Actualmente Colocado en su plan.\nPor ahora la única función que puede hacer aquí es cambiar la visibilidad de los elementos.</string>
+    <string name="component3dview_welcometext">Esta es una vista en 3 dimensiones de su plan.\nDesde aquí se puede utilizar 1 o 2 dedos para mover la vista.\nPor favor, tenga en cuenta en todos los casos es el concepto de \"arrastrar lo que estoy buscando en alrededor\".\nSi usted está buscando de arriba hacia abajo:\nUn dedo deslizando hacia la izquierda o hacia la derecha hará girar el avión.\nUn dedo se deslice hacia arriba o hacia abajo va a alterar la altura de la cámara y por lo tanto el terreno de juego.\nDos dedos deslizándose hacia arriba o hacia abajo se moverá la cámara más cerca del centro o más lejos de ella.\nDos dedos laterales correderas hacia el lado no harán nada.\nSi está buscando desde el punto de vista de la visita:\nUn dedo deslizando hacia la izquierda o hacia la derecha girará el plano que le rodean.\nUn dedo se deslice hacia arriba o hacia abajo va a alterar el ángulo vertical se señaló la cabeza.\nDos dedos deslizándose hacia arriba o hacia abajo se moverá la vista hacia o domicilio de usted.\nDos dedos lado a lado de deslizamiento se moverá la vista hacia la izquierda o la derecha.\npuntos de vista guardados se pueden encontrar en el icono del ojo.\nEl cambio de arriba hacia abajo para visitar se puede hacer mediante el icono de un hombre o de un plan.\nSi ve una vista corrupta, por favor intente la opción deoptomize en el menú.</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="menu_show3dcaps">Datos de la GPU</string>
+    <string name="select_multiple">Selección múltiple</string>
+    <string name="select_lasso">Seleccionar el lazo</string>
 
 </resources>

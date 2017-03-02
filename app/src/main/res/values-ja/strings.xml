@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="app_name">リフォームの3D</string>
+    <string name="alignment">アラインメント</string>
+    <string name="magnetism">磁気</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
-    <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="welcometextno">表示しません</string>
+    <string name="planview_welcometext">"ズームイン、ズームアウトするピンチジェスチャーを使用してください。\nマップビューの左端から1本指スワイプで家具のテーブルを参照してください。\n右端から家具カタログスワイプを表示するには、そこから家具を追加することができます。\n一緒に2本の指で現在の選択スワイプを変更せずにパンします。\n複数のオブジェクトを選択するには、なげなわ選択]を使用して詳細メニューで複数の金の株式を選択します。\n二つSH3DデモファイルはMore->開くホームを選択し、あなたのダウンロードフォルダになります。\nインターネットからより多くのSH3Dファイルをダウンロードするには、ブラウザを使用して、彼らは、ブラウザから開きます。\nメニュー - >現在、何もしないのに役立ちます。 "</string>
+    <string name="catalogview_welcometext">位置0.0での平面図上に家具を選択した項目を配置する追加の家具のアイコンを押してください。\nこれには、ドラッグ＆ドロップが存在しない、現在の家具を追加している唯一の方法です。\nこのビューからは、家具ライブラリカタログをインポートするメニュー - > [インポート家具ライブラリを選択することができます...\nあなたのダウンロードフォルダ内のデモSH3F家具ファイルがあります。\nあなたは、インターネットから家具やテクスチャのライブラリをダウンロードすることができ、あなたは彼らがそれらをインポートする前に、ファイルエクスプローラを使用して可能性があり解凍する必要があります。</string>
+    <string name="furnitureview_welcometext">これは、現在、あなたの計画に置かれたすべての家具の図です。\n今のあなたはここで行うことができる唯一の機能は、項目の可視性を変更することです。</string>
+    <string name="component3dview_welcometext">これはあなたの計画の3次元図です。\nここからは、ビューを移動するには、1または2本の指を使用することができます。\nコンセプトは「私の周りで見ているものをドラッグ \"であるすべてのケースをご了承ください。\nあなたは上から見下ろしている場合：\n左または右にスライド1本の指で平面を回転します。\n一つの指がカメラの高さ、したがって、ピッチを変化させる上下にスライドしますか。\n二本の指はそこから中央寄りにまたはさらに、カメラを移動します上下にスライドしますか。\n左右にスライドする二本の指は何もしません。\nあなたは、ビューの訪問点から見ている場合：\n指一本左スライドまたは右はあなたの周りの平面を回転します。\n1本の指で頭が指摘されている垂直方向の角度を変化させる上下にスライドしますか。\n二本の指はあなたからの方のビューまたは遠かっを移動します上下にスライドしますか。\nビューを移動する左右にスライドする二本の指を左または右に。\nビューの保存されたポイントは、目のアイコンの下に見つけることができます。\n男またはプランのアイコンで行うことができます訪問する上から下に変更。\nあなたが破損しているビューが表示された場合は、メニューのdeoptomizeオプションをお試しください。</string>
+    <string name="menu_deoptomize">Deoptomize部3d</string>
+    <string name="menu_show3dcaps">GPU情報</string>
+    <string name="select_multiple">複数選択</string>
+    <string name="select_lasso">投げ縄選択</string>
 
 </resources>

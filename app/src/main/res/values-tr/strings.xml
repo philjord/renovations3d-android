@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="app_name">Tadilat 3D</string>
+    <string name="alignment">hiza</string>
+    <string name="magnetism">manyetizma</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">Tekrar gösterme</string>
+    <string name="planview_welcometext">Ve uzaklaştırmak için kıstırma hareketini kullanın.\nHarita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.\nSağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.\nBirlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.\nBirden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.\nİki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.\nInternetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.\nMenü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
+    <string name="catalogview_welcometext">Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.\nBu, şu anda mobilya eklemek için tek yol, hiçbir sürükle ve bırak vardır.\nBu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...\nSenin indirme klasöründe bir demo SH3F mobilya dosyası yok.\nEğer internetten mobilya ve doku kütüphanelerini indirebilirsiniz, onları aktarmadan önce bir dosya gezgini kullanarak Mayıs halletmek gerekir.</string>
+    <string name="furnitureview_welcometext">Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.\nŞimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.</string>
+    <string name="component3dview_welcometext">Bu planın bir 3 boyutlu görünüşüdür.\nBuradan görünümü taşımak için 1 veya 2 parmak kullanabilirsiniz.\n\"Etrafıma bakıyorum Ne sürüklemek\" kavram bütün davaları içinde unutmayınız.\nEğer yukarıdan aşağı arıyorsanız:\nBir parmağınızı sola kayar ya da sağa uçağı dönecektir.\nBir parmak kameranın yüksekliğini ve dolayısıyla adım değiştirecek aşağı yukarı kaydırarak veya.\nİki parmak ondan daha yakın merkeze ya da daha fazla kamerayı hareket edecek aşağı yukarı kaydırarak veya.\ntarafına yan sürgülü iki parmak bir şey yapmayacağım.\nEğer bakış ziyareti noktasından arıyorsanız:\nBir parmağınızı sola kayar veya sağa çevrenizdeki uçağı dönecektir.\nBir parmak başınızı işaret edilmektedir dikey açısını değiştirecek aşağı yukarı kaydırarak veya.\nİki parmak sizden doğru görünüm veya uzağa hareket edecektir aşağı yukarı kaydırarak veya.\ngörünümü hareket edecek yan yana kayar iki parmağınızı sola veya sağa.\nbakış Kaydedilen noktaları göz simgesinin altında bulunabilir.\nBir erkek veya bir planın simgesiyle yapılabilir ziyaret etmek için yukarıdan aşağıya değiştirilmesi.\nEğer bozuk bir görünüm görürseniz, menüde deoptomize seçeneği deneyin.</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="menu_show3dcaps">GPU bilgi</string>
+    <string name="select_multiple">çoklu seç</string>
+    <string name="select_lasso">kement seçin</string>
 
 </resources>

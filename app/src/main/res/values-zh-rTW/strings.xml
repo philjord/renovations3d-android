@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="app_name">装修3D</string>
+    <string name="alignment">对准</string>
+    <string name="magnetism">磁</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">不要再显示</string>
+    <string name="planview_welcometext">使用捏手势放大和缩小。\n要查看与1指轻扫家具表从地图视图左侧边缘。\n要看到右边缘的家具目录轻扫，你可以从那里添加家具。\n要平移不改变用两个手指当前选择刷卡在一起。\n要选择多个对象使用套索选择选择多黄金股在更多菜单。\n两个SH3D演示文件将在您的下载文件夹，选择更多 - >打开主页。\n使用浏览器从互联网上下载更多SH3D文件，他们会从浏览器中打开。\n菜单 - >帮助目前什么都不做。</string>
+    <string name="catalogview_welcometext">按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。\n这是目前在添加家具的唯一办法，没有拖放。\n从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...\n有一个在您的下载文件夹中的演示SH3F家具文件。\n您可以从互联网上下载的家具和纹理库，则需要在导入之前解压他们可以使用文件资源管理器。</string>
+    <string name="furnitureview_welcometext">这是当前摆在你的计划中的所有家具的景色。\n现在你可以在这里做的唯一功能是改变一个项目的知名度。</string>
+    <string name="component3dview_welcometext">这是你的计划的三维视图。\n从这里你可以使用1个或2个手指移动的观点。\n请注意，在所有情况下的概念是“拖什么，我看着周围。”\n如果你是从上往下看：\n一个手指滑动向左或向右旋转将飞机。\n一手指滑动向上或向下将改变摄像机的高度，从而桨距。\n两个手指或滑动上下将其向中间靠拢或进一步移动相机。\n两个手指滑动侧侧不会做任何事情。\n如果你是从视图访问点期待：\n一个手指滑动向左或向右旋转，将你周围的飞机。\n一个手指滑动向上或向下将改变你的头指向垂直角度。\n两个手指或滑动上下会朝视图或赠品的移动。\n两个手指滑动一边到另一边将移动视图左侧或右侧。\n的查看保存的点可以在眼睛图标下找到。\n从上往下更改访问可以通过一个人或一个计划的图标来完成。\n如果你看到一个腐败的看法，请尝试在菜单中deoptomize选项。</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="menu_show3dcaps">GPU信息</string>
+    <string name="select_multiple">选择多个</string>
+    <string name="select_lasso">选择套索</string>
 
 </resources>

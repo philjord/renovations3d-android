@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
+    <string name="app_name">Cải tạo 3D</string>
     <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="magnetism">từ tính</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">Không hiển thị lần nữa</string>
+    <string name="planview_welcometext">Sử dụng các cử chỉ pinch để phóng to ra.\nĐể xem bảng đồ nội thất với 1 ngón tay vuốt từ cạnh bên trái của bản đồ.\nĐể xem các cửa hàng đồ nội thất vuốt từ cạnh phải, bạn có thể thêm đồ nội thất từ đó.\nĐể chảo mà không thay đổi swipe lựa chọn hiện tại bằng hai ngón tay lại với nhau.\nĐể chọn nhiều đối tượng sử dụng Lasso Chọn cổ phiếu nhiều vàng trong menu Thêm.\nHai file demo SH3D sẽ nằm trong thư mục tải về của bạn, chọn thêm-> Open nhà.\nSử dụng trình duyệt để tải nhiều tập tin SH3D từ internet, Họ sẽ mở từ trình duyệt.\nMenu-> Help Hiện nay Liệu có gì.</string>
+    <string name="catalogview_welcometext">Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.\nĐây là cách duy nhất hiện nay là để thêm đồ đạc, không có kéo và thả.\nTừ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu ...\nCó một tập tin đồ bản demo SH3F trong thư mục tải về của bạn.\nBạn có thể tải về nội thất và kết cấu các thư viện từ internet, bạn cần phải giải nén chúng có thể sử dụng một tập tin thám hiểm trước khi nhập khẩu.</string>
+    <string name="furnitureview_welcometext">Đây là một quan điểm của tất cả các đồ nội thất Hiện nay Đặt trên kế hoạch của bạn.\nHiện tại chức năng duy nhất bạn có thể làm ở đây là thay đổi một tầm nhìn mục.</string>
+    <string name="component3dview_welcometext">Đây là một cái nhìn 3 chiều của kế hoạch của bạn.\nTừ đây bạn có thể sử dụng 1 hoặc 2 ngón tay để di chuyển xem.\nXin lưu ý trong tất cả các trường hợp, các khái niệm này là \"kéo những gì tôi đang nhìn xung quanh\".\nNếu bạn đang tìm kiếm từ trên xuống:\nMột ngón tay trượt sang trái hoặc phải sẽ quay mặt phẳng.\nMột ngón tay trượt lên hoặc xuống sẽ làm thay đổi chiều cao của máy ảnh và do đó sân.\nHai ngón tay trượt lên hoặc xuống sẽ di chuyển camera đến gần trung tâm hoặc thêm từ nó.\nHai ngón tay trượt bên này sang bên sẽ không làm bất cứ điều gì.\nNếu bạn đang tìm kiếm từ các điểm truy cập của xem:\nMột ngón tay trượt sang trái hoặc phải sẽ quay mặt phẳng xung quanh bạn.\nMột ngón tay trượt lên hoặc xuống sẽ làm thay đổi góc thẳng đứng đầu của bạn là chỉ.\nHai ngón tay trượt lên hoặc xuống sẽ di chuyển xem hướng hoặc aways từ bạn.\nHai ngón tay trượt bên này sang bên kia sẽ di chuyển phía trái hoặc phải.\nđiểm lưu xem có thể được tìm thấy dưới biểu tượng con mắt.\nThay đổi từ trên xuống đến thăm có thể được thực hiện bằng các biểu tượng của một người đàn ông hay một kế hoạch.\nNếu bạn nhìn thấy một cái nhìn tham nhũng, hãy thử các tùy chọn deoptomize trong menu.</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="menu_show3dcaps">Thông tin GPU</string>
+    <string name="select_multiple">chọn nhiều</string>
+    <string name="select_lasso">chọn Lasso</string>
 
 </resources>

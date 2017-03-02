@@ -1222,6 +1222,14 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		private int fingers = -1;
 
 		private MotionEvent potentialSinglePress = null;
+
+		//PJPJPJPJ   pinch zooming
+		private static final int INVALID_POINTER_ID = -1;
+
+		// The ‘active pointer’ is the one currently moving our object.
+		private int mActivePointerId = INVALID_POINTER_ID;
+		private float mLastTouchX;
+		private float mLastTouchY;
 		@Override
 		public boolean onTouch(View v, MotionEvent ev)
 		{
@@ -1529,13 +1537,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 	}
 
 
-	//PJPJPJPJ   pinch zooming
-	private static final int INVALID_POINTER_ID = -1;
 
-	// The ‘active pointer’ is the one currently moving our object.
-	private int mActivePointerId = INVALID_POINTER_ID;
-	private float mLastTouchX;
-	private float mLastTouchY;
 	private ScaleGestureDetector mScaleDetector;
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {

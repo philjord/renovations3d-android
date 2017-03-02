@@ -781,7 +781,7 @@ public class Renovations3DActivity extends FragmentActivity
 					public void run()
 					{
 						//Toast.makeText(Renovations3DActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
-						System.out.println("That was an auto save right three...");
+						System.out.println("That was an auto save right there...");
 						doAutoSave();
 					}
 				});
@@ -789,7 +789,7 @@ public class Renovations3DActivity extends FragmentActivity
 		};
 
 		final Timer autoSaveTimer = new Timer("autosave", true);
-		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 1*60*1000, 1*60*1000);
+		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 3*60*1000, 3*60*1000);
 	}
 
 	private void doAutoSave()

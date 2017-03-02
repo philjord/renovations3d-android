@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="alignment">центрування</string>
+    <string name="magnetism">магнетизм</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">Чи не показувати знову</string>
+    <string name="planview_welcometext">Використовуйте дрібкою жест, щоб збільшувати і зменшувати масштаб.\nЩоб подивитися таблицю меблів з 1 пальця від лівого краю карти.\nЩоб побачити меблі каталог проведіть пальцем від правого краю, ви можете додати меблі звідти.\nДля панорамування без зміни поточної серветки вибору з двома пальцями разом.\nЩоб вибрати більше одного об\'єкта використовуйте Lasso Select Вибрати кілька золотих акцій в меню Додатково.\nДва SH3D демо-файли будуть знаходитися у вашій папці завантаження, виберіть більше-> Відкрити будинок.\nВикористовуйте ваш браузер для завантаження додаткових SH3D файлів з Інтернету, вони будуть відкриті з браузера.\nМеню-> Допомога В даний момент нічого не робить.</string>
+    <string name="catalogview_welcometext">Натисніть на значок додавання меблів, щоб помістити вибраний елемент меблів на вигляд зверху на місці 0.0.\nЦе єдиний спосіб в даний час додати меблі, немає перетягування.\nЗ цієї точки зору ви можете імпортувати каталог меблів бібліотеки, виберіть Меню-> бібліотеку Імпорт меблів ...\nІснує демо SH3F меблі файл у вашій папці завантаження.\nВи можете завантажити меблі і текстури бібліотеки з Інтернету, вам потрібно розпакувати їх, може, використовуючи файловий менеджер, перш ніж імпортувати їх.</string>
+    <string name="furnitureview_welcometext">Це вид всіх меблів В даний час розміщені на вашому плані.\nНа даний момент єдина функція, яку ви можете зробити тут, щоб змінити видимість елементів.</string>
+    <string name="component3dview_welcometext">Це 3-мірне представлення Вашого плану.\nЗвідси ви можете використовувати 1 або 2 пальця для переміщення виду.\nЗверніть увагу, у всіх випадках поняття \"перетягнути то, що я дивлюся на навколо\".\nЯкщо ви шукаєте зверху вниз:\nОдин палець, зсунувши вліво або вправо буде обертати площину.\nОдин палець ковзання вгору або вниз призведе до зміни висоти камери і, таким чином крок.\nДва пальці ковзання вгору або вниз буде рухати камеру ближче до центру або далі від нього.\nДва пальці ковзання боку в бік не буде нічого робити.\nЯкщо ви шукаєте з точки зору відвідування:\nОдин палець, зсунувши вліво або вправо буде обертати площину навколо вас.\nОдин палець ковзання вгору або вниз буде змінювати вертикальний кут ваша голова загострена.\nДва пальці ковзання вгору або вниз рухатиметься в бік або вид сувенірної продукції від вас.\nДва пальці ковзання з боку в бік буде рухатися погляд вліво або вправо.\nЗбережені точки зору можна знайти під значком очі.\nЗміна зверху вниз, щоб відвідати можна зробити за допомогою значка людини або плану.\nЯкщо ви бачите корумпований вид, будь ласка, спробуйте опцію deoptomize в меню.</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="menu_show3dcaps">інформація про GPU</string>
+    <string name="select_multiple">вибрати кілька</string>
+    <string name="select_lasso">Виберіть ласо</string>
 
 </resources>

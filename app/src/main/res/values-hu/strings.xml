@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovations 3D</string>
-    <string name="alignment">Alignment</string>
-    <string name="magnetism">Magnetism</string>
+    <string name="app_name">Felújítások 3D</string>
+    <string name="alignment">összehangolás</string>
+    <string name="magnetism">mágnesesség</string>
     <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Don\'t show again</string>
-    <string name="planview_welcometext">
-    Use the pinch gesture to zoom in and out.\n
-    Swipe with 1 finger from the left edge of the plan view to see the furniture, from the right edge for the furniture catalog, and the edge of the furniture catalog for 3d view.\n
-    If you wish to pan the plan without altering the current selection swipe with 2 fingers together.\n
-    If you wish to select more than one object use the Select lasso or Select multiple actions in the More menu.\n
-    There will be 2 demo sh3d files in your downloads folder, select More->Open home.\n
-    You can use your browser to download more sh3d files from the internet, they should open correctly from a tap in the browser.\n
-    When changing languages (in preferences) there will be a very large pause before the app becomes responsive, this is a bug.\n
-    Menu->Help does nothing currently.\n
-    </string>
-    <string name="catalogview_welcometext">
-    Press the add furniture icon to place the selected furniture item onto the plan view at x=0,y=0.\n
-    From this view you can import more furniture catalog libraries, select Menu->Import furniture library&#8230;\n
-    There will be one demo sh3f furniture file in your downloads folder\n
-    You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.\n
-    </string>
-    <string name="furnitureview_welcometext">
-    This is a view of all the furniture currently placed on your plan.\n
-    For now the only function you can do here is to change an items visibility.\n
-    Many more features are planned on this screen.\n
-    </string>
-    <string name="component3dview_welcometext">
-        This is a 3 dimensional view of your plan. \n
-        From here you can use 1 or 2 fingers to move the view.\n
-        Please note in all cases the concept is \"drag what I\'m looking at around\".\n
-        If you are looking from the top down: \n
-            One finger sliding left or right will rotate the plan.\n
-            One finger sliding up or down will alter the height of the camera and also the pitch.\n
-            Two fingers sliding up or down will move the camera closer to the center or further from it.\n
-            Two fingers sliding side to side will not do anything.\n
-        If you are looking from the visit point of view: \n
-            One finger sliding left or right will rotate the plan around you.\n
-            One finger sliding up or down will alter the direction your head is pointed.\n
-            Two fingers sliding up or down will move the plan towards or aways from you.\n
-            Two fingers sliding side to side will move the plan left or right.\n
-        Saved points of view can be found under the eye icon.\n
-        Changing from top down to visit can be done by the icon of a man or a plan.\n
-        If you see a corrupt view, please try the deoptomize option in the menu.\n
-    </string>
+    <string name="welcometextno">Ne mutasd még egyszer</string>
+    <string name="planview_welcometext">Használja a csipet gesztus a nagyítás és kicsinyítés.\nLátni, hogy a bútor asztal 1 ujját csúsztassa a bal szélén a térkép nézet.\nLátni, hogy a bútor katalógus húzza az ujját a jobb szélén, akkor egy bútor onnan.\nA pan megváltoztatása nélkül a jelenlegi kiválasztási ellop két ujjal együtt.\nVálassza ki egynél több objektum használja a Lasso Select Select többszörös arany részvények a További menüben.\nKét SH3D demo fájl lesz a letöltések mappában válassza More> Megnyitás haza.\nA böngésző letölthető több SH3D fájlokat az interneten, akkor nyissa meg a böngészőt.\nMenü-> Help Jelenleg nem csinál semmit.</string>
+    <string name="catalogview_welcometext">Nyomja meg a Hozzáadás bútorok ikont elhelyezni a kiválasztott elemet bútorok rá a felülnézetben a helyszínen 0.0.\nEz az egyetlen módja annak, hogy Jelenleg egy bútor, nincs drag and drop.\nEbből a nézetből akkor importálni bútorok könyvtárak katalógusban válassza Menü-> Import bútorok könyvtár ...\nVan egy demo SH3F bútor fájlt a letöltések mappában.\nTudod letölt bútorok és textúra könyvtárak az interneten, meg kell, hogy csomagolja ki belőlük egy fájlkezelő importálása előtt őket.</string>
+    <string name="furnitureview_welcometext">Ez a kilátás az összes bútor Jelenleg elhelyezni a tervet.\nEgyelőre az egyetlen funkciója, amit tehetünk az, hogy változtatni egy példány látható.</string>
+    <string name="component3dview_welcometext">Ez egy 3 dimenziós nézetben a tervnek.\nInnen akkor 1 vagy 2 ujjal mozgatni a nézetet.\nFelhívjuk figyelmét, minden esetben a koncepció \"húzza amit én néztem körül\".\nHa keres felülről lefelé:\nEgy ujj csúsztatás balra vagy jobbra fog forogni a gépet.\nEgy ujj csúszott felfelé vagy lefelé módosítja a magassága a kamera, és így a pályán.\nKét ujját csúszó felfelé vagy lefelé mozgatja a kamerát közelebb a központban, vagy további belőle.\nKét ujjal csúszó egyik oldalról a másikra, nem csinál semmit.\nHa keres a látogatás szempontjából:\nEgy ujj csúsztatás balra vagy jobbra forog, a gép körül.\nEgy ujj csúszott felfelé vagy lefelé módosítja a függőleges szög a fejét csúcsos.\nKét ujját csúszó felfelé vagy lefelé mozgatja a kilátás felé, vagy szelvény tőled.\nKét ujjal csúszó oldalirányban mozog a nézetet balra vagy jobbra.\nMentett szempontok alatt található a szem ikonra.\nVáltozó fentről lefelé, hogy nézze meg lehet tenni az ikon egy férfi vagy egy terv.\nHa látsz egy korrupt nézet, próbálja a deoptomize a menüben.</string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
-    <string name="select_multiple">Select multiple</string>
-    <string name="select_lasso">Select lasso</string>
+    <string name="select_multiple">Válasszon több</string>
+    <string name="select_lasso">Válassza lasszó</string>
 
 </resources>
