@@ -20,12 +20,14 @@
 package com.eteks.renovations3d.android;
 
 
+import android.app.ActionBar;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -4605,7 +4607,10 @@ public class HomePane implements HomeView
 		camerasList.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_multiple_choice, camerasNameList));
 
 		camerasList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		camerasPanel.addView(camerasList);
+		final float scale = activity.getResources().getDisplayMetrics().density;
+		int heightPx = (int) (150 * scale + 0.5f);
+		ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
+		camerasPanel.addView(camerasList, listLP);
 
 		//String confirmMessage = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.message");
 		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.delete");

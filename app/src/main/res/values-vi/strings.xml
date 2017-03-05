@@ -3,8 +3,6 @@
     <string name="app_name">Cải tạo 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">từ tính</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Không hiển thị lần nữa</string>
     <string name="planview_welcometext">Sử dụng các cử chỉ pinch để phóng to ra.\nĐể xem bảng đồ nội thất với 1 ngón tay vuốt từ cạnh bên trái của bản đồ.\nĐể xem các cửa hàng đồ nội thất vuốt từ cạnh phải, bạn có thể thêm đồ nội thất từ đó.\nĐể chảo mà không thay đổi swipe lựa chọn hiện tại bằng hai ngón tay lại với nhau.\nĐể chọn nhiều đối tượng sử dụng Lasso Chọn cổ phiếu nhiều vàng trong menu Thêm.\nHai file demo SH3D sẽ nằm trong thư mục tải về của bạn, chọn thêm-> Open nhà.\nSử dụng trình duyệt để tải nhiều tập tin SH3D từ internet, Họ sẽ mở từ trình duyệt.\nMenu-> Help Hiện nay Liệu có gì.</string>
     <string name="catalogview_welcometext">Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.\nĐây là cách duy nhất hiện nay là để thêm đồ đạc, không có kéo và thả.\nTừ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu ...\nCó một tập tin đồ bản demo SH3F trong thư mục tải về của bạn.\nBạn có thể tải về nội thất và kết cấu các thư viện từ internet, bạn cần phải giải nén chúng có thể sử dụng một tập tin thám hiểm trước khi nhập khẩu.</string>
     <string name="furnitureview_welcometext">Đây là một quan điểm của tất cả các đồ nội thất Hiện nay Đặt trên kế hoạch của bạn.\nHiện tại chức năng duy nhất bạn có thể làm ở đây là thay đổi một tầm nhìn mục.</string>

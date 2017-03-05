@@ -2,15 +2,11 @@
 <resources>
     <string name="testad" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="lower_banner_ad_unit_id" translatable="false">ca-app-pub-7177705441403385/5503621354</string>
-    <string name="edit_message" translatable="false">Enter a message</string>
-    <string name="home_select_button" translatable="false">Select Home</string>
-    <string name="setting_select_button" translatable="false">Settings</string>
     <string name="menu_load" translatable="false">Load home</string>
     <string name="menu_save" translatable="false">Save home</string>
     <string name="menu_delete" translatable="false">Delete home</string>
     <string name="menu_help" translatable="false">Help</string>
     <string name="search_hint" translatable="false">Search Furniture</string>
-    <string name="exit" translatable="false">Exit</string>
     <string name="virtualvisit" translatable="false">Virtual visit</string>
     <string name="searchFurniture" translatable="false">search</string>
     <string name="filterFurniture" translatable="false">filter</string>
@@ -26,5 +22,4 @@
     <string name="deletepov" translatable="false">Delete point of view</string>
     <string name="modify3dview" translatable="false">Modify 3D view</string>
     <string name="viewalllevels" translatable="false">View all levels</string>
-    <string name="processing" translatable="false">Processing</string>
 </resources>

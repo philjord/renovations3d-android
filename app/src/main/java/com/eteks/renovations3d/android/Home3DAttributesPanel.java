@@ -21,6 +21,7 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 
@@ -291,100 +292,56 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-   // int labelAlignment = OperatingSystem.isMacOSX()
-   //     ? GridBagConstraints.LINE_END
-   //     : GridBagConstraints.LINE_START;
-
-    //JPanel groundPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-    //    com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundPanel.title"));
 	  JLabel groundPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundPanel.title"));
 	  rootView.addView(groundPanel, labelInsets);
 
-    // First row
-    //Insets labelInsets = new Insets(0, 0, 2, 5);
-	  rootView.addView(this.groundColorRadioButton, labelInsets);//, new GridBagConstraints(
-     //   0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-     //   GridBagConstraints.NONE, labelInsets, 0, 0));
-	rootView.addView(this.groundColorButton, labelInsets);//, new GridBagConstraints(
-    //    1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 0), 0, 0));
-    // Second row
-	rootView.addView(this.groundTextureRadioButton, labelInsets);//, new GridBagConstraints(
-    //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+	  rootView.addView(this.groundColorRadioButton, labelInsets);
+	rootView.addView(this.groundColorButton, labelInsets);
+	rootView.addView(this.groundTextureRadioButton, labelInsets);
 	rootView.addView(this.groundTextureComponent, labelInsets);
-    //    1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    //Insets rowInsets;
-   // if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-      // User smaller insets for Mac OS X 10.5
-   //   rowInsets = new Insets(0, 0, 0, 0);
-   // } else {
-   //   rowInsets = new Insets(0, 0, 5, 0);
-   // }
-   // add(groundPanel, new GridBagConstraints(
-   //     0, 1, 1, 1, 0.5, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));
-    
-  //  JPanel skyPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-  //      com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyPanel.title"));
+
 	  JLabel skyPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyPanel.title"));
 	  rootView.addView(skyPanel, labelInsets);
 
-	rootView.addView(this.skyColorRadioButton, labelInsets);//, new GridBagConstraints(
-    //    0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.NONE, labelInsets, 0, 0));
-	rootView.addView(this.skyColorButton, labelInsets);//, new GridBagConstraints(
-    //    1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 0), 0, 0));
-	  rootView.addView(this.skyTextureRadioButton, labelInsets);//, new GridBagConstraints(
-    //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+	rootView.addView(this.skyColorRadioButton, labelInsets);
+
+	rootView.addView(this.skyColorButton, labelInsets);
+	  rootView.addView(this.skyTextureRadioButton, labelInsets);
 	  rootView.addView(this.skyTextureComponent, labelInsets);
-    //    1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-   // add(skyPanel, new GridBagConstraints(
-   //     1, 1, 1, 1, 0.5, 0, GridBagConstraints.LINE_START,
-  //      GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));
-    
-  //  JPanel renderingPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-  //      com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "renderingPanel.title"));
+
 	  JLabel renderingPanel = new JLabel(activity, preferences.getLocalizedString(
 			        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "renderingPanel.title"));
 	  rootView.addView(renderingPanel, labelInsets);
-    // Third row
-	rootView.addView(this.brightnessLabel, labelInsets);//, new GridBagConstraints(
-     //   0, 0, 1, 1, 0, 0, labelAlignment,
-     //   GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	  rootView.addView(this.brightnessSlider, new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.WRAP_CONTENT));//, new GridBagConstraints(
-    //    1, 0, 3, 1, 1, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-   // JPanel brightnessLabelsPanel = new JPanel(new BorderLayout(20, 0));
-   // brightnessLabelsPanel.setOpaque(false);
-   // brightnessLabelsPanel.add(this.darkBrightnessLabel, BorderLayout.WEST);
-   // brightnessLabelsPanel.add(this.brightBrightnessLabel, BorderLayout.EAST);
-   // renderingPanel.add(brightnessLabelsPanel, new GridBagConstraints(
-   //     1, 1, 3, 1, 1, 0, GridBagConstraints.CENTER,
-   //     GridBagConstraints.HORIZONTAL, new Insets(OperatingSystem.isWindows() ? 0 : -3, 0, 3, 0), 0, 0));
-    // Last row
-	rootView.addView(this.wallsTransparencyLabel, labelInsets);//, new GridBagConstraints(
-     //   0, 2, 1, 1, 0, 0, labelAlignment,
-     //   GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	  rootView.addView(this.wallsTransparencySlider, new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.WRAP_CONTENT));//, new GridBagConstraints(
-     //   1, 2, 3, 1, 1, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-   // JPanel wallsTransparencyLabelsPanel = new JPanel(new BorderLayout(20, 0));
-   // wallsTransparencyLabelsPanel.setOpaque(false);
-   // wallsTransparencyLabelsPanel.add(this.opaqueWallsTransparencyLabel, BorderLayout.WEST);
-  //  wallsTransparencyLabelsPanel.add(this.invisibleWallsTransparencyLabel, BorderLayout.EAST);
-   // renderingPanel.add(wallsTransparencyLabelsPanel, new GridBagConstraints(
-   //     1, 3, 3, 1, 1, 0, GridBagConstraints.CENTER,
-  //      GridBagConstraints.HORIZONTAL, new Insets(OperatingSystem.isWindows() ? 0 : -3, 0, 10, 0), 0, 0));
-   // add(renderingPanel, new GridBagConstraints(
-   //     0, 2, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+
+	rootView.addView(this.brightnessLabel, labelInsets);
+
+	  LinearLayout ll = new LinearLayout(activity);
+	  ll.setOrientation(LinearLayout.HORIZONTAL);
+
+	  ll.addView(this.darkBrightnessLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  final float scale = activity.getResources().getDisplayMetrics().density;
+	  int widthPx = (int) (200 * scale + 0.5f);
+	  ll.addView(this.brightnessSlider, new LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  ll.addView(this.brightBrightnessLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  rootView.addView(ll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+	rootView.addView(this.wallsTransparencyLabel, labelInsets);
+
+	  LinearLayout ll2 = new LinearLayout(activity);
+	  ll2.setOrientation(LinearLayout.HORIZONTAL);
+
+	  ll2.addView(this.opaqueWallsTransparencyLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  ll2.addView(this.wallsTransparencySlider, new LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  ll2.addView(this.invisibleWallsTransparencyLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+	  rootView.addView(ll2, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 	  this.setTitle(dialogTitle);
 	  rootView.addView(closeButton, labelInsets);

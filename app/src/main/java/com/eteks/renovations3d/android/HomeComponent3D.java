@@ -433,10 +433,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 			else
 			{
-				cameraPriorToUpdatePause = home.getCamera();
-				Camera noupdate = cameraPriorToUpdatePause.clone();
-				noupdate.setFieldOfView(-1);
-				home.setCamera(noupdate);
+				// we may already be paused so we don't want to grab the -1 fov camera
+				if(cameraPriorToUpdatePause == null)
+				{
+					cameraPriorToUpdatePause = home.getCamera();
+					Camera noupdate = cameraPriorToUpdatePause.clone();
+					noupdate.setFieldOfView(-1);
+					home.setCamera(noupdate);
+				}
 			}
 		}
 
@@ -2357,7 +2361,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private Node createBackgroundNode(boolean listenToHomeUpdates, final boolean waitForLoading)
 	{
-		final Appearance backgroundAppearance = new SimpleShaderAppearance();
+		final SimpleShaderAppearance backgroundAppearance = new SimpleShaderAppearance();
 		ColoringAttributes backgroundColoringAttributes = new ColoringAttributes();
 		backgroundAppearance.setColoringAttributes(backgroundColoringAttributes);
 		// Allow background color and texture to change
@@ -2365,16 +2369,22 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		backgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
 		backgroundColoringAttributes.setCapability(ColoringAttributes.ALLOW_COLOR_WRITE);
 
+		//PJPJPJPJ allow updatable shader building
+		backgroundAppearance.setUpdatableCapabilities();
+
 		Geometry halfSphereGeometry = createHalfSphereGeometry(true);
 		final Shape3D halfSphere = new Shape3D(halfSphereGeometry, backgroundAppearance);
 		BranchGroup backgroundBranch = new BranchGroup();
 		backgroundBranch.addChild(halfSphere);
-		backgroundBranch.addChild(new Shape3D(createHalfSphereGeometry(false)));
+		//PJPJP what the hell was this no appearance shape doing exactly?
+		//backgroundBranch.addChild(new Shape3D(createHalfSphereGeometry(false)));
+
 
 		final Background background = new Background(backgroundBranch);
 		updateBackgroundColorAndTexture(backgroundAppearance, this.home, waitForLoading);
 		background.setImageScaleMode(Background.SCALE_FIT_ALL);
-		background.setApplicationBounds(new BoundingBox(new Point3d(-1E7, -1E7, -1E7), new Point3d(1E7, 1E7, 1E7)));
+		//PJPJ used an isInfinite version
+		background.setApplicationBounds(new BoundingSphere(new Point3d(0,0,0), Double.POSITIVE_INFINITY));
 
 		if (listenToHomeUpdates)
 		{
@@ -2475,7 +2485,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//geometryInfo.indexify();
 		//geometryInfo.compact();
 		//new Stripifier().stripify(geometryInfo);
-		Geometry halfSphereGeometry = geometryInfo.getIndexedGeometryArray();
+		Geometry halfSphereGeometry = geometryInfo.getIndexedGeometryArray(true,true,true,true,true);
+		halfSphereGeometry.setName("Sky");
 		return halfSphereGeometry;
 	}
 
@@ -2485,7 +2496,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private void updateBackgroundColorAndTexture(final Appearance backgroundAppearance, Home home, boolean waitForLoading)
 	{
 		Color c = new Color(home.getEnvironment().getSkyColor());
-		Color3f skyColor = new Color3f(c.getRed(), c.getGreen(), c.getBlue());
+		Color3f skyColor = new Color3f(c.getRed() /255f, c.getGreen() / 255f, c.getBlue() /  255f);
 		backgroundAppearance.getColoringAttributes().setColor(skyColor);
 		HomeTexture skyTexture = home.getEnvironment().getSkyTexture();
 		if (skyTexture != null)

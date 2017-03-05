@@ -3,8 +3,6 @@
     <string name="app_name">装修3D</string>
     <string name="alignment">对准</string>
     <string name="magnetism">磁</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">不要再显示</string>
     <string name="planview_welcometext">使用捏手势放大和缩小。\n要查看与1指轻扫家具表从地图视图左侧边缘。\n要看到右边缘的家具目录轻扫，你可以从那里添加家具。\n要平移不改变用两个手指当前选择刷卡在一起。\n要选择多个对象使用套索选择选择多黄金股在更多菜单。\n两个SH3D演示文件将在您的下载文件夹，选择更多 - >打开主页。\n使用浏览器从互联网上下载更多SH3D文件，他们会从浏览器中打开。\n菜单 - >帮助目前什么都不做。</string>
     <string name="catalogview_welcometext">按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。\n这是目前在添加家具的唯一办法，没有拖放。\n从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...\n有一个在您的下载文件夹中的演示SH3F家具文件。\n您可以从互联网上下载的家具和纹理库，则需要在导入之前解压他们可以使用文件资源管理器。</string>
     <string name="furnitureview_welcometext">这是当前摆在你的计划中的所有家具的景色。\n现在你可以在这里做的唯一功能是改变一个项目的知名度。</string>

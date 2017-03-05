@@ -3,8 +3,6 @@
     <string name="app_name">Ristrutturazioni 3D</string>
     <string name="alignment">allineamento</string>
     <string name="magnetism">magnetismo</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Non mostrare più</string>
     <string name="planview_welcometext">Utilizzare il gesto pizzico di zoom in e out.\nPer vedere la tabella mobili con 1 strisciare il dito dal bordo sinistro della mappa.\nPer vedere il colpo catalogo di mobili dal bordo destro, è possibile aggiungere mobili da lì.\nPer eseguire una panoramica senza alterare il colpo selezione corrente con due dita insieme.\nPer selezionare più di un oggetto usare il lazo Seleziona Seleziona azioni oro multipla nel menu Altro.\nDue file dimostrativi SH3D saranno nella cartella download, selezionare più-> Apri casa.\nUtilizzare il browser per scaricare più file SH3D da internet, si aprirà dal browser.\nMenu-> Aiuto Attualmente non fa nulla.</string>
     <string name="catalogview_welcometext">Premere l\'icona mobili metti in posizionare l\'elemento selezionato mobili sulla pianta nella posizione 0,0.\nQuesto è l\'unico modo in cui ci sono da aggiungere mobili, non c\'è il drag and drop.\nDa questo punto di vista è possibile importare catalogo biblioteche mobili, selezionare Menu-> biblioteca mobili Importa ...\nC\'è un file mobili demo SH3F nella cartella download.\nÈ possibile scaricare mobili e librerie di texture da internet, è necessario decomprimere loro possono utilizzare un esploratore di file prima di importarli.</string>
     <string name="furnitureview_welcometext">Questa è una vista di tutti i mobili attualmente messi sul vostro piano.\nPer ora l\'unica funzione che si può fare è quella di modificare un elementi di visibilità.</string>

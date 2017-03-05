@@ -3,8 +3,6 @@
     <string name="app_name">Renowacje 3D</string>
     <string name="alignment">wyrównanie</string>
     <string name="magnetism">magnetyzm</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Nie pokazuj ponownie</string>
     <string name="planview_welcometext">Użyj gestu pinch do przybliżania i oddalania.\nAby zobaczyć tabelę meble z 1 machnięcia palcem od lewej krawędzi widoku mapy.\nAller à la Meble Katalog przesuń palcem od prawej krawędzi, można dodać meble stamtąd.\nAby przesuwać bez zmiany bieżącego wyboru bezstykowa dwoma palcami razem.\nAby wybrać więcej niż jeden obiekt użyć Lasso Wybierz Wybierz akcji wielokrotnego złota w menu Więcej.\nDwa SH3D pliki demo będzie w folderze pobieranie, wybierz więcej-> Otwórz domu.\nZa pomocą przeglądarki, aby pobrać więcej plików SH3D z internetu, będą otwarte w przeglądarce.\nMenu-> Pomoc Obecnie nic nie robi.</string>
     <string name="catalogview_welcometext">Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.\nJest to jedyny sposób, aby dodać aktualnie są meble, nie ma przeciągnij i upuść.\nZ tego punktu widzenia można importować katalog biblioteki mebli, wybierz Menu-> biblioteki importu mebli ...\nJest to plik Meble SH3F demo w folderze pobierania.\nMożna pobrać bibliotek mebli i tekstury z Internetu, trzeba rozpakować nich może za pomocą eksploratora plików przed ich importem.</string>
     <string name="furnitureview_welcometext">To jest widok wszystkich mebli Obecnie umieszczone na planie.\nNa razie jedyną funkcją można zrobić o to aby zmienić widoczność przedmiotów.</string>

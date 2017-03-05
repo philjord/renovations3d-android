@@ -168,6 +168,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				}
 				return true;
 			case R.id.import_furniture_lib:
+				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3f file to import" , Toast.LENGTH_LONG).show();
 				Thread t2 = new Thread(){public void run(){
 					HomeController controller = Renovations3DActivity.renovations3D.getHomeController();
 					if(controller != null)
@@ -182,12 +183,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				t2.start();
 				return true;
 			case R.id.import_texture_lib:
+				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3t file to import" , Toast.LENGTH_LONG).show();
 				Thread t3 = new Thread(){public void run(){
 					HomeController controller2 = Renovations3DActivity.renovations3D.getHomeController();
 					if(controller2 != null)
 					{
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
 						//	controller.importTexturesLibrary();
+
 						String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
 						if(texturesLibraryName != null) {
 							controller2.importTexturesLibrary(texturesLibraryName);

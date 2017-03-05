@@ -185,13 +185,10 @@ public class JFileChooser
 	 */
 	private void refresh(File path)
 	{
-
-
 		if (path.exists())
 		{
 			if(path.isDirectory())
 			{
-				this.currentPath = path;
 				File[] dirs = path.listFiles(new FileFilter()
 				{
 					@Override
@@ -227,41 +224,53 @@ public class JFileChooser
 					}
 				});
 
-				// convert to an array
-				int i = 0;
-				String[] fileList;
-				if (path.getParentFile() == null)
-				{
-					fileList = new String[dirs.length + files.length];
-				}
-				else
-				{
-					fileList = new String[dirs.length + files.length + 1];
-					fileList[i++] = PARENT_DIR;
-				}
-				Arrays.sort(dirs);
-				Arrays.sort(files);
-				for (File dir : dirs)
-				{
-					fileList[i++] = dir.getName();
-				}
-				for (File file : files)
-				{
-					fileList[i++] = file.getName();
-				}
 
-				// refresh the user interface
-				dialog.setTitle(currentPath.getPath());
-				list.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, fileList)
+				// sometimes we are in a bad hierarchy and the new path has
+				// null files or null dirs (but should have at least the previous one)
+				if(files != null && dirs != null)
 				{
-					@Override
-					public View getView(int pos, View view, ViewGroup parent)
+					this.currentPath = path;
+
+					// convert to an array
+					int i = 0;
+					String[] fileList;
+
+					File parent = path.getParentFile();
+					// try to avoid the .. if the parent is odd
+					if (parent != null && parent.list() != null)
 					{
-						view = super.getView(pos, view, parent);
-						((TextView) view).setSingleLine(true);
-						return view;
+						fileList = new String[dirs.length + files.length + 1];
+						fileList[i++] = PARENT_DIR;
 					}
-				});
+					else
+					{
+						fileList = new String[dirs.length + files.length];
+					}
+					Arrays.sort(dirs);
+					Arrays.sort(files);
+					for (File dir : dirs)
+					{
+						fileList[i++] = dir.getName();
+					}
+					for (File file : files)
+					{
+						fileList[i++] = file.getName();
+					}
+
+					// refresh the user interface
+					// take off the useless start folders
+					dialog.setTitle(currentPath.getPath().replace("/storage/emulated/0", ""));
+					list.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, fileList)
+					{
+						@Override
+						public View getView(int pos, View view, ViewGroup parent)
+						{
+							view = super.getView(pos, view, parent);
+							((TextView) view).setSingleLine(true);
+							return view;
+						}
+					});
+				}
 			}
 			else
 			{

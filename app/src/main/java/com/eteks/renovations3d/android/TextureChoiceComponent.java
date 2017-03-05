@@ -699,27 +699,10 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
      * Layouts components in panel with their labels. 
      */
     private void layoutComponents() {
-      //int labelAlignment = OperatingSystem.isMacOSX()
-      //    ? GridBagConstraints.LINE_END
-      //    : GridBagConstraints.LINE_START;
-      //JPanel leftPanel = new JPanel(new GridBagLayout());
-      // First row
 		swapOut(this.availableTexturesLabel, R.id.texture_choice_availableLabel);
-     // leftPanel.add(this.availableTexturesLabel, new GridBagConstraints(
-      //    0, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-      // Second row
-
 		swapOut(this.availableTexturesList,R.id.texture_choice_availableTextureList);
-      //JScrollPane scrollPane = new JScrollPane(this.availableTexturesList);
-      //scrollPane.getVerticalScrollBar().addAdjustmentListener(
-      //    SwingTools.createAdjustmentListenerUpdatingScrollPaneViewToolTip(scrollPane));
-      //scrollPane.setPreferredSize(new Dimension(250, scrollPane.getPreferredSize().height));
-      //leftPanel.add(scrollPane, new GridBagConstraints(
-       //   0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER,
-       //   GridBagConstraints.BOTH, new Insets(0, 0, 3, 0), 0, 0));
-      //SwingTools.installFocusBorder(this.availableTexturesList);
-      // Third row
+
+
      /* if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
         leftPanel.add(this.searchTextField, new GridBagConstraints(
             0, 5, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
@@ -733,40 +716,22 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             GridBagConstraints.HORIZONTAL, new Insets(2, 0, 0, 0), 0, 0));
       }*/
       
-      //JPanel rightPanel = new JPanel(new GridBagLayout());
-      // First row
 		swapOut(this.chosenTextureLabel, R.id.texture_choice_chosenLabel);
-     // rightPanel.add(this.chosenTextureLabel, new GridBagConstraints(
-    //      2, 0, 4, 1, 0, 0, GridBagConstraints.LINE_START,
-     //     GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-      // Second row
 		swapOut(this.texturePreviewComponent, R.id.texture_choice_chosenView);
-      //rightPanel.add(this.texturePreviewComponent, new GridBagConstraints(
-     //     2, 1, 4, 1, 0, 0, GridBagConstraints.NORTH,
-      //    GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-      // Third row
-      if (this.controller.isRotationSupported()) {
-		  swapOut(this.angleLabel, R.id.texture_choice_angleLabel);
-		  swapOut(this.angle0DegreeRadioButton, R.id.texture_choice_angle0);
-		  swapOut(this.angle45DegreeRadioButton, R.id.texture_choice_angle45);
-		  swapOut(this.angle90DegreeRadioButton, R.id.texture_choice_angle90);
-        /*rightPanel.add(this.angleLabel, new GridBagConstraints(
-            2, 2, 1, 1, 0.1, 0, labelAlignment,
-            GridBagConstraints.NONE, new Insets(0, 0, 5, 2), 0, 0));
-        rightPanel.add(this.angle0DegreeRadioButton, new GridBagConstraints(
-            3, 2, 1, 1, 0.1, 0, GridBagConstraints.LINE_START,
-            GridBagConstraints.NONE, new Insets(0, 0, 5, 2), 0, 0));
-        rightPanel.add(this.angle45DegreeRadioButton, new GridBagConstraints(
-            4, 2, 1, 1, 0.1, 0, GridBagConstraints.LINE_START,
-            GridBagConstraints.NONE, new Insets(0, 0, 5, 2), 0, 0));
-        rightPanel.add(this.angle90DegreeRadioButton, new GridBagConstraints(
-            5, 2, 1, 1, 0.1, 0, GridBagConstraints.LINE_START,
-            GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-        // Fourth row
-        rightPanel.add(new JSeparator(), new GridBagConstraints(
-            2, 3, 4, 1, 0, 0, GridBagConstraints.LINE_START,
-            GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0));*/
-      }
+		if (this.controller.isRotationSupported()) {
+		 	swapOut(this.angleLabel, R.id.texture_choice_angleLabel);
+		 	swapOut(this.angle0DegreeRadioButton, R.id.texture_choice_angle0);
+			swapOut(this.angle45DegreeRadioButton, R.id.texture_choice_angle45);
+			swapOut(this.angle90DegreeRadioButton, R.id.texture_choice_angle90);
+		}
+		else
+		{
+			  // remove the holding views
+			removeView(inflatedView.findViewById( R.id.texture_choice_angleLabel));
+			removeView(inflatedView.findViewById(R.id.texture_choice_angle0));
+			removeView(inflatedView.findViewById( R.id.texture_choice_angle45));
+			removeView(inflatedView.findViewById( R.id.texture_choice_angle90));
+		}
       // Fifth row
       if (this.importTextureButton != null) {
        /* JPanel buttonsPanel = new JPanel(new GridLayout(3, 1, 2, 2));

@@ -3,8 +3,6 @@
     <string name="app_name">Tadilat 3D</string>
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Tekrar gösterme</string>
     <string name="planview_welcometext">Ve uzaklaştırmak için kıstırma hareketini kullanın.\nHarita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.\nSağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.\nBirlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.\nBirden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.\nİki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.\nInternetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.\nMenü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
     <string name="catalogview_welcometext">Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.\nBu, şu anda mobilya eklemek için tek yol, hiçbir sürükle ve bırak vardır.\nBu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...\nSenin indirme klasöründe bir demo SH3F mobilya dosyası yok.\nEğer internetten mobilya ve doku kütüphanelerini indirebilirsiniz, onları aktarmadan önce bir dosya gezgini kullanarak Mayıs halletmek gerekir.</string>
     <string name="furnitureview_welcometext">Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.\nŞimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.</string>

@@ -3,8 +3,6 @@
     <string name="app_name">3D rekonstrukce</string>
     <string name="alignment">zarovnání</string>
     <string name="magnetism">magnetismus</string>
-    <string name="welcometextyes">OK</string>
-    <string name="welcometextno">Znovu neukazovat</string>
     <string name="planview_welcometext">Použijte špetka gesto k přiblížení a oddálení.\nChcete-li vidět nábytek tabulku s 1 prstem švihnout z levého okraje zobrazení mapy.\nChcete-li vidět nábytek katalog přejeďte prstem od pravého okraje, můžete přidat nábytek odtamtud.\nChcete-li posunout beze změny aktuálního výběru přejeďte dvěma prsty k sobě.\nChcete-li vybrat více než jeden objekt použít laso Select vybrat více zlatých akcií v nabídce Více.\nDva SH3D demo soubory budou ve složce stahování, zvolte více-> Otevřít domů.\nPoužijte svůj prohlížeč tak, aby stahovat více SH3D souborů z internetu, budou otevírat z prohlížeče.\nMenu-> Nápověda V současné době nic nedělá.</string>
     <string name="catalogview_welcometext">Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0.\nV současné době To je jediný způsob, jak přidat nábytku, není tam žádný drag and drop.\nZ tohoto pohledu lze importovat katalog nábytek knihovny, zvolte Menu-> Importovat nábytek knihovny ...\nK dispozici je nábytek soubor demo SH3F ve složce stahování.\nZde si můžete stáhnout nábytek a textury knihovny z internetu, budete muset rozbalit em může používat prohlížeč souborů před importem em.</string>
     <string name="furnitureview_welcometext">To je pohled na veškerý nábytek v současné době umístěn na vaši plánu.\nPro tuto chvíli jediná funkce, kterou můžete udělat, je zde pro změnu položek viditelnosti.</string>
