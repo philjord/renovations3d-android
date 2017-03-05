@@ -369,9 +369,9 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             //Insets borderInsets = getBorder().getBorderInsets(this);
             //g2D.setClip(new Rectangle(borderInsets.left, borderInsets.top,
             //    getWidth() - borderInsets.right - borderInsets.left, getHeight() - borderInsets.bottom - borderInsets.top));
-            if (angle45DegreeRadioButton.isChecked()) {
+            if (angle45DegreeRadioButton.isSelected()) {
               g2D.rotate(Math.PI / 4, getWidth() / 2, getHeight() / 2);
-            } else if (angle90DegreeRadioButton.isChecked()) {
+            } else if (angle90DegreeRadioButton.isSelected()) {
               g2D.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2);
             } 
             super.paintComponent(g);

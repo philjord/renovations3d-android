@@ -327,7 +327,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "aerialViewCenteredOnSelectionCheckBox.text"), controller.isAerialViewCenteredOnSelectionEnabled());
       this.aerialViewCenteredOnSelectionCheckBox.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setAerialViewCenteredOnSelectionEnabled(aerialViewCenteredOnSelectionCheckBox.isChecked());
+            controller.setAerialViewCenteredOnSelectionEnabled(aerialViewCenteredOnSelectionCheckBox.isSelected());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED, 
@@ -346,7 +346,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "magnetismCheckBox.text"), controller.isMagnetismEnabled());
       this.magnetismCheckBox.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setMagnetismEnabled(magnetismCheckBox.isChecked());
+            controller.setMagnetismEnabled(magnetismCheckBox.isSelected());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.MAGNETISM_ENABLED, 
@@ -365,7 +365,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "rulersCheckBox.text"), controller.isRulersVisible());
       this.rulersCheckBox.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setRulersVisible(rulersCheckBox.isChecked());
+            controller.setRulersVisible(rulersCheckBox.isSelected());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.RULERS_VISIBLE, 
@@ -384,7 +384,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "gridCheckBox.text"), controller.isGridVisible());
       this.gridCheckBox.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setGridVisible(gridCheckBox.isChecked());
+            controller.setGridVisible(gridCheckBox.isSelected());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.GRID_VISIBLE, 
@@ -440,7 +440,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       
           ItemListener furnitureAppearanceChangeListener = new ItemListener() {
               public void itemStateChanged(ItemEvent ev) {
-                controller.setFurnitureViewedFromTop(topViewRadioButton.isChecked());
+                controller.setFurnitureViewedFromTop(topViewRadioButton.isSelected());
               }
             };
           this.catalogIconRadioButton.addItemListener(furnitureAppearanceChangeListener);
@@ -473,7 +473,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       roomRenderingButtonGroup.add(this.floorColorOrTextureRadioButton);
 		View.OnClickListener roomRenderingChangeListener = new View.OnClickListener() {
 		  public void onClick(View v) {
-            controller.setRoomFloorColoredOrTextured(floorColorOrTextureRadioButton.isChecked());
+            controller.setRoomFloorColoredOrTextured(floorColorOrTextureRadioButton.isSelected());
           }
         };
 
@@ -598,7 +598,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "checkUpdatesCheckBox.text"), controller.isCheckUpdatesEnabled());
       this.checkUpdatesCheckBox.addItemListener(new ItemListener() {
           public void itemStateChanged(ItemEvent ev) {
-            controller.setCheckUpdatesEnabled(checkUpdatesCheckBox.isChecked());
+            controller.setCheckUpdatesEnabled(checkUpdatesCheckBox.isSelected());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.CHECK_UPDATES_ENABLED, 
@@ -647,7 +647,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       updateAutoSaveDelayForRecoveryComponents(controller);
       this.autoSaveDelayForRecoveryCheckBox.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setAutoSaveForRecoveryEnabled(autoSaveDelayForRecoveryCheckBox.isChecked());
+            controller.setAutoSaveForRecoveryEnabled(autoSaveDelayForRecoveryCheckBox.isSelected());
           }
         });
       autoSaveDelayForRecoverySpinnerModel.addChangeListener(new ChangeListener() {

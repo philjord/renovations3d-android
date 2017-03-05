@@ -27,6 +27,17 @@ public class JCheckBox extends CheckBox
 	{
 		//ignored
 	}
+	@Override
+	public void setSelected(boolean selected)
+	{
+		//This override whatever setSelected means in textview
+		setChecked(selected);
+	}
+	@Override
+	public boolean isSelected() {
+		// this overrides isSelected, hope I never need that
+		return isChecked();
+	}
 
 	public void addChangeListener(final ChangeListener changeListener)
 	{

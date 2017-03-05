@@ -28,6 +28,11 @@ public class JRadioButton extends RadioButton
 		//This override whatever setSelected means in textview
 		setChecked(selected);
 	}
+	@Override
+	public boolean isSelected() {
+		// this overrides isSelectedd, hope I never need that
+		 return isChecked();
+	}
 	public void addChangeListener(final ChangeListener changeListener)
 	{
 		setOnClickListener(new View.OnClickListener() {

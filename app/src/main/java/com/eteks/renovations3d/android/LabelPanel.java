@@ -237,7 +237,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
           if (visibleIn3DViewCheckBox.isNullable()) {
             visibleIn3DViewCheckBox.setNullable(false);
           }
-          if (Boolean.FALSE.equals(visibleIn3DViewCheckBox.isChecked())) {
+          if (Boolean.FALSE.equals(visibleIn3DViewCheckBox.isSelected())) {
             controller.setPitch(null);
           } else if (pitch90DegreeRadioButton.isSelected()) {
             controller.setPitch((float)(Math.PI / 2));
