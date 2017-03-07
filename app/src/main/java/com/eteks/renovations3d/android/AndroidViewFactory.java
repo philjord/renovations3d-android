@@ -407,7 +407,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public View createBaseboardChoiceView(UserPreferences preferences,
 										  BaseboardChoiceController baseboardChoiceController)
 	{
-		throw new UnsupportedOperationException();//return new BaseboardChoiceComponent(preferences, baseboardChoiceController, activity);
+		return new BaseboardChoiceComponent(preferences, baseboardChoiceController, activity);
 	}
 
 	/**

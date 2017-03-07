@@ -39,6 +39,7 @@ import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.Home3DAttributesController;
+import com.mindblowing.renovations3d.R;
 
 /**
  * Home 3D attributes editing panel.
@@ -71,8 +72,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
    */
   public Home3DAttributesPanel(UserPreferences preferences,
                                Home3DAttributesController controller, Activity activity) {
-    //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_home3dattributespanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -264,28 +264,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
-/*    if (!OperatingSystem.isMacOSX()) {
-      this.groundColorRadioButton.setMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"groundColorRadioButton.mnemonic")).getKeyCode());
-      this.groundTextureRadioButton.setMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"groundTextureRadioButton.mnemonic")).getKeyCode());
-      this.skyColorRadioButton.setMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"skyColorRadioButton.mnemonic")).getKeyCode());
-      this.skyTextureRadioButton.setMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"skyTextureRadioButton.mnemonic")).getKeyCode());
-      this.brightnessLabel.setDisplayedMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"brightnessLabel.mnemonic")).getKeyCode());
-      this.brightnessLabel.setLabelFor(this.brightnessSlider);
-      this.wallsTransparencyLabel.setDisplayedMnemonic(
-          KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class,"wallsTransparencyLabel.mnemonic")).getKeyCode());
-      this.wallsTransparencyLabel.setLabelFor(this.wallsTransparencySlider);
-    }*/
+
   }
   
   /**
@@ -294,57 +273,35 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
   private void layoutComponents(UserPreferences preferences) {
 	  JLabel groundPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundPanel.title"));
-	  rootView.addView(groundPanel, labelInsets);
-
-	  rootView.addView(this.groundColorRadioButton, labelInsets);
-	rootView.addView(this.groundColorButton, labelInsets);
-	rootView.addView(this.groundTextureRadioButton, labelInsets);
-	rootView.addView(this.groundTextureComponent, labelInsets);
+	  swapOut(groundPanel, R.id.home3dattributespanel_groundPanel);
+	  swapOut(this.groundColorRadioButton, R.id.home3dattributespanel_groundColorRadioButton);
+	  swapOut(this.groundColorButton, R.id.home3dattributespanel_groundColorButton);
+	  swapOut(this.groundTextureRadioButton, R.id.home3dattributespanel_groundTextureRadioButton);
+	  swapOut(this.groundTextureComponent, R.id.home3dattributespanel_groundTextureComponent);
 
 	  JLabel skyPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyPanel.title"));
-	  rootView.addView(skyPanel, labelInsets);
-
-	rootView.addView(this.skyColorRadioButton, labelInsets);
-
-	rootView.addView(this.skyColorButton, labelInsets);
-	  rootView.addView(this.skyTextureRadioButton, labelInsets);
-	  rootView.addView(this.skyTextureComponent, labelInsets);
+	  swapOut(skyPanel, R.id.home3dattributespanel_skyPanel);
+	  swapOut(this.skyColorRadioButton, R.id.home3dattributespanel_skyColorRadioButton);
+	  swapOut(this.skyColorButton, R.id.home3dattributespanel_skyColorButton);
+	  swapOut(this.skyTextureRadioButton, R.id.home3dattributespanel_skyTextureRadioButton);
+	  swapOut(this.skyTextureComponent, R.id.home3dattributespanel_skyTextureComponent);
 
 	  JLabel renderingPanel = new JLabel(activity, preferences.getLocalizedString(
-			        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "renderingPanel.title"));
-	  rootView.addView(renderingPanel, labelInsets);
+			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "renderingPanel.title"));
+	  swapOut(renderingPanel, R.id.home3dattributespanel_renderingPanel);
+	  swapOut(this.brightnessLabel, R.id.home3dattributespanel_brightnessLabel);
+	  swapOut(this.brightnessSlider, R.id.home3dattributespanel_brightnessSlider);
+	  swapOut(this.darkBrightnessLabel, R.id.home3dattributespanel_darkBrightnessLabel);
+	  swapOut(this.brightBrightnessLabel, R.id.home3dattributespanel_brightBrightnessLabel);
+	  swapOut(this.wallsTransparencyLabel, R.id.home3dattributespanel_wallsTransparencyLabel);
+	  swapOut(this.wallsTransparencySlider, R.id.home3dattributespanel_wallsTransparencySlider);
+	  swapOut(this.opaqueWallsTransparencyLabel, R.id.home3dattributespanel_opaqueWallsTransparencyLabel);
+	  swapOut(this.invisibleWallsTransparencyLabel, R.id.home3dattributespanel_invisibleWallsTransparencyLabel);
 
-	rootView.addView(this.brightnessLabel, labelInsets);
-
-	  LinearLayout ll = new LinearLayout(activity);
-	  ll.setOrientation(LinearLayout.HORIZONTAL);
-
-	  ll.addView(this.darkBrightnessLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  final float scale = activity.getResources().getDisplayMetrics().density;
-	  int widthPx = (int) (200 * scale + 0.5f);
-	  ll.addView(this.brightnessSlider, new LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  ll.addView(this.brightBrightnessLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  rootView.addView(ll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-	rootView.addView(this.wallsTransparencyLabel, labelInsets);
-
-	  LinearLayout ll2 = new LinearLayout(activity);
-	  ll2.setOrientation(LinearLayout.HORIZONTAL);
-
-	  ll2.addView(this.opaqueWallsTransparencyLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  ll2.addView(this.wallsTransparencySlider, new LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  ll2.addView(this.invisibleWallsTransparencyLabel, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-	  rootView.addView(ll2, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.home3dattributespanel_closeButton);
   }
 
   /**

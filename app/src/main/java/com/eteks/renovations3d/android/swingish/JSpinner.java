@@ -89,11 +89,13 @@ public class JSpinner extends NumberPicker
 		double value = model.getValue();
 		double stepSize = model.getStepSize().floatValue();
 
+		int maxSteps = 72; // 72 so the compass spinner 360/5 works
+
 		// as we often get very large value system I will simply limit total step to 500 in each direction
-		if( ((value - displayMin) / stepSize ) > 50)
-			displayMin = value  - (50 * stepSize);
-		if( ((displayMax - value) / stepSize ) > 50)
-			displayMax = value + (50 * stepSize);
+		if( ((value - displayMin) / stepSize ) > maxSteps)
+			displayMin = value  - (maxSteps * stepSize);
+		if( ((displayMax - value) / stepSize ) > maxSteps)
+			displayMax = value + (maxSteps * stepSize);
 
 		// only update if something has changed
 		if( displayMin != currentDisplayMin ||
@@ -107,7 +109,7 @@ public class JSpinner extends NumberPicker
 			{
 				this.setMaxValue(countOfDisplayIndices - 1); //-1 cos this is the max index not cout of indices
 
-				String[] valueDisplays = new String[101];// we must always fill this up so we can alter the max value later without range check bugs
+				String[] valueDisplays = new String[maxSteps*2+1];// we must always fill this up so we can alter the max value later without range check bugs
 				int idx = 0;
 				for (double i = displayMin; i <= displayMax; i += stepSize)
 				{
@@ -121,7 +123,7 @@ public class JSpinner extends NumberPicker
 					valueDisplays[idx] = strVal;
 					idx++;
 				}
-				for (int i = idx; i <101; i ++)
+				for (int i = idx; i < maxSteps*2+1; i ++)
 				{
 					valueDisplays[i] = "";
 				}

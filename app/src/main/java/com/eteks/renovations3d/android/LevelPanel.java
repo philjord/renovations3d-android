@@ -40,6 +40,7 @@ import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.LevelController;
+import com.mindblowing.renovations3d.R;
 
 
 /**
@@ -71,8 +72,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
    */
   public LevelPanel(UserPreferences preferences,
                     LevelController controller, Activity activity) {
-	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity , R.layout.dialog_levelpanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -410,32 +410,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
-/*    if (!OperatingSystem.isMacOSX()) {
-      if (this.viewableCheckBox != null) {
-        this.viewableCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.LevelPanel.class, "viewableCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.nameLabel != null) {
-        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.LevelPanel.class, "nameLabel.mnemonic")).getKeyCode());
-        this.nameLabel.setLabelFor(this.nameTextField);
-      }
-      if (this.elevationLabel != null) {
-        this.elevationLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.LevelPanel.class, "elevationLabel.mnemonic")).getKeyCode());
-        this.elevationLabel.setLabelFor(this.elevationSpinner);
-      }
-      if (this.floorThicknessLabel != null) {
-        this.floorThicknessLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.LevelPanel.class, "floorThicknessLabel.mnemonic")).getKeyCode());
-        this.floorThicknessLabel.setLabelFor(this.floorThicknessSpinner);
-      }
-      if (this.heightLabel != null) {
-        this.heightLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.LevelPanel.class, "heightLabel.mnemonic")).getKeyCode());
-        this.heightLabel.setLabelFor(this.heightSpinner);
-      }
-    }*/
+
   }
   
   /**
@@ -443,82 +418,54 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
    */
   private void layoutComponents(UserPreferences preferences, 
                                 final LevelController controller) {
-  //  int labelAlignment = OperatingSystem.isMacOSX()
-   //     ? GridBagConstraints.LINE_END
-  //      : GridBagConstraints.LINE_START;
-  //  Insets labelInsets = new Insets(0, 0, 5, 5);
-  //  Insets rightComponentInsets = new Insets(0, 0, 5, 0);
-
-
     if (this.viewableCheckBox != null) {
-
-      // First row
-		rootView.addView(this.viewableCheckBox, labelInsets);
-      //add(this.viewableCheckBox, new GridBagConstraints(
-      //    1, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.NONE, new Insets(0, -4, 5, 0), 0, 0));
+		swapOut(this.viewableCheckBox, R.id.levelpanel_viewableCheckBox);
     }
+    else
+	{
+		removeView(R.id.levelpanel_viewableCheckBox);
+	}
     if (this.nameLabel != null) {
-      // Second row
-		rootView.addView(this.nameLabel, labelInsets);
-		rootView.addView(this.nameTextField, labelInsets);
+		swapOut(this.nameLabel, R.id.levelpanel_nameLabel);
+		swapOut(this.nameTextField, R.id.levelpanel_nameTextField);
 		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		//add(this.nameLabel, new GridBagConstraints(
-       //   0, 1, 1, 1, 0, 0, labelAlignment,
-       //   GridBagConstraints.NONE, labelInsets, 0, 0));
-      //add(this.nameTextField, new GridBagConstraints(
-      //    1, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-      //    GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));
     }
+    else
+	{
+		removeView(R.id.levelpanel_nameLabel);
+		removeView(R.id.levelpanel_nameTextField);
+	}
     if (this.elevationLabel != null) {
-		rootView.addView(this.elevationLabel, labelInsets);
-		rootView.addView(this.elevationSpinner, labelInsets);
-
-      // Third row
-    /*  add(this.elevationLabel, new GridBagConstraints(
-          0, 2, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      add(this.elevationSpinner, new GridBagConstraints(
-          1, 2, 1, 1, 0.1, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));
-      add(new JLabel(), new GridBagConstraints(
-          2, 2, 1, 1, 0.2, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));*/
+		swapOut(this.elevationLabel, R.id.levelpanel_elevationLabel);
+		swapOut(this.elevationSpinner, R.id.levelpanel_elevationSpinner);
     }
+    else
+	{
+		removeView(R.id.levelpanel_elevationLabel);
+		removeView(R.id.levelpanel_elevationSpinner);
+	}
     if (this.floorThicknessLabel != null) {
-		rootView.addView(this.floorThicknessLabel, labelInsets);
-		rootView.addView(this.floorThicknessSpinner, labelInsets);
-      // Forth row
-     /* add(this.floorThicknessLabel, new GridBagConstraints(
-          0, 3, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, labelInsets, 0, 0));
-      add(this.floorThicknessSpinner, new GridBagConstraints(
-          1, 3, 1, 1, 0.1, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, -15, 0));
-      add(new JLabel(), new GridBagConstraints(
-          2, 3, 1, 1, 0.2, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));*/
+		swapOut(this.floorThicknessLabel, R.id.levelpanel_floorThicknessLabel);
+		swapOut(this.floorThicknessSpinner, R.id.levelpanel_floorThicknessSpinner);
     }
+    else
+	{
+		removeView(R.id.levelpanel_floorThicknessLabel);
+		removeView(R.id.levelpanel_floorThicknessSpinner);
+	}
     if (this.heightLabel != null) {
-		rootView.addView(this.heightLabel, labelInsets);
-		rootView.addView(this.heightSpinner, labelInsets);
-      // Fifth row
-     /* add(this.heightLabel, new GridBagConstraints(
-          0, 4, 1, 1, 0, 0, labelAlignment, 
-          GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-      add(this.heightSpinner, new GridBagConstraints(
-          1, 4, 1, 1, 0.1, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), -15, 0));
-      add(new JLabel(), new GridBagConstraints(
-          2, 4, 1, 1, 0.2, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rightComponentInsets, 0, 0));*/
+		swapOut(this.heightLabel, R.id.levelpanel_heightLabel);
+		swapOut(this.heightSpinner, R.id.levelpanel_heightSpinner);
     }
-    //add(new JSeparator(), new GridBagConstraints(
-   //     0, 5, 4, 1, 0, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+    else
+	{
+		removeView(R.id.levelpanel_heightLabel);
+		removeView(R.id.levelpanel_heightSpinner);
+	}
 
-	  rootView.addView(this.levelsSummaryLabel, labelInsets);
+    //PJPJPJPJ level summary disabled
+	//  swapOut(this.levelsSummaryLabel, R.id.levelpanel_);
    // add(this.levelsSummaryLabel, new GridBagConstraints(
     //    0, 6, 3, 1, 0, 0, GridBagConstraints.LINE_START,
    //     GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
@@ -529,27 +476,11 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
         0, 7, 3, 2, 1, 1, GridBagConstraints.CENTER, 
         GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
 
-	  rootView.addView(this.increaseElevationIndexButton, labelInsets);
-	  rootView.addView(this.decreaseElevationIndexButton, labelInsets);
-    // Add elevation index buttons at right of the levels table
-   /* add(this.increaseElevationIndexButton, new GridBagConstraints(
-        3, 7, 1, 1, 0, 0.5, GridBagConstraints.SOUTH, 
-        GridBagConstraints.NONE, new Insets(0, 5, 2, 0), 0, 0));
-    add(this.decreaseElevationIndexButton, new GridBagConstraints(
-        3, 8, 1, 1, 0, 0.5, GridBagConstraints.NORTH, 
-        GridBagConstraints.NONE, new Insets(2, 5, 0, 0), 0, 0));*/
-    
-    /*if (!OperatingSystem.isMacOSX()) {
-      // Make buttons square
-      Dimension preferredSize = this.increaseElevationIndexButton.getPreferredSize();
-      preferredSize.width = 
-      preferredSize.height = preferredSize.height + 4;
-      this.increaseElevationIndexButton.setPreferredSize(preferredSize);
-      this.decreaseElevationIndexButton.setPreferredSize(preferredSize);
-    }*/
+	  swapOut(this.increaseElevationIndexButton, R.id.levelpanel_increaseElevationIndexButton);
+	  swapOut(this.decreaseElevationIndexButton, R.id.levelpanel_decreaseElevationIndexButton);
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.levelpanel_closeButton);
   }
 
   /**

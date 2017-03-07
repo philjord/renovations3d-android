@@ -44,7 +44,7 @@ import com.eteks.sweethome3d.viewcontroller.LabelController;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
-
+import com.mindblowing.renovations3d.R;
 
 
 /**
@@ -79,8 +79,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   public LabelPanel(boolean modification,
                     UserPreferences preferences,
                     LabelController controller, Activity activity) {
-	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_labelpanel);
     this.labelModification = modification;
     this.controller = controller;
     createComponents(modification, preferences, controller);
@@ -319,113 +318,48 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
- /*   if (!OperatingSystem.isMacOSX()) {
-      this.textLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          LabelPanel.class, "textLabel.mnemonic")).getKeyCode());
-      this.textLabel.setLabelFor(this.textTextField);
-      this.fontNameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          LabelPanel.class, "fontNameLabel.mnemonic")).getKeyCode());
-      this.fontNameLabel.setLabelFor(this.fontNameComboBox);
-      this.fontSizeLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(LabelPanel.class, "fontSizeLabel.mnemonic")).getKeyCode());
-      this.fontSizeLabel.setLabelFor(this.fontSizeSpinner);
-      this.visibleIn3DViewCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString( 
-          LabelPanel.class, "visibleIn3DViewCheckBox.mnemonic")).getKeyCode());
-      this.pitch0DegreeRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString( 
-          LabelPanel.class, "pitch0DegreeRadioButton.mnemonic")).getKeyCode());
-      this.pitch90DegreeRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString( 
-          LabelPanel.class, "pitch90DegreeRadioButton.mnemonic")).getKeyCode());
-      this.elevationLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          LabelPanel.class, "elevationLabel.mnemonic")).getKeyCode());
-      this.elevationLabel.setLabelFor(this.elevationSpinner);
-    }*/
+
   }
   
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(final LabelController controller, UserPreferences preferences) {
-   // int labelAlignment = OperatingSystem.isMacOSX()
-   //     ? GridBagConstraints.LINE_END
-   //     : GridBagConstraints.LINE_START;
-
-	  JLabel nameAndAreaPanel = new JLabel(activity,
+	  JLabel nameAndStylePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
-	  rootView.addView(nameAndAreaPanel, rowInsets);
-
-    //JPanel nameAndStylePanel = SwingTools.createTitledPanel(
-    //    preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
-	  rootView.addView(this.textLabel, labelInsets);//, new GridBagConstraints(
-        //0, 0, 1, 1, 0, 0, labelAlignment,
-       // GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-	  rootView.addView(this.textTextField, labelInsets);//, new GridBagConstraints(
+	  swapOut(nameAndStylePanel, R.id.labelpanel_nameAndStylePanel);
+	  swapOut(this.textLabel, R.id.labelpanel_textLabel);
+	  swapOut(this.textTextField, R.id.labelpanel_textTextField);
 	  //hide the input keyboard unless the text is blank
-	if(this.textTextField.getText().toString()!=null &&this.textTextField.getText().toString().length()>0)
+	if(this.textTextField.getText().toString() != null && this.textTextField.getText().toString().length() > 0)
 	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-       // 1, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0));
-	//  rootView.addView(this.fontNameLabel, labelInsets);//, new GridBagConstraints(
-    //    0, 1, 1, 1, 0, 0, labelAlignment,
-     //   GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
+
+
+	  //PJPJPJ no font styles on android
+	//  swapOut(this.fontNameLabel, R.id.labelpanel_);
  /*   Dimension preferredSize = this.fontNameComboBox.getPreferredSize();
     preferredSize.width = Math.min(preferredSize.width, this.textTextField.getPreferredSize().width);
     this.fontNameComboBox.setPreferredSize(preferredSize);
-    nameAndStylePanel.add(this.fontNameComboBox, new GridBagConstraints(
-        1, 1, 3, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0));*/
-	  rootView.addView(this.fontSizeLabel, labelInsets);//, new GridBagConstraints(
-       // 0, 2, 1, 1, 0, 0, labelAlignment,
-       // GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	  rootView.addView(this.fontSizeSpinner, labelInsets);//, new GridBagConstraints(
-       // 1, 2, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 5, 0));
-	  rootView.addView(this.colorLabel, labelInsets);//, new GridBagConstraints(
-       // 2, 2, 1, 1, 0, 0, labelAlignment,
-       // GridBagConstraints.NONE, new Insets(0, 10, 0, 5), 0, 0));
-	  rootView.addView(this.colorButton, labelInsets);//, new GridBagConstraints(
-   //     3, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.NONE, new Insets(0, 0, 0, OperatingSystem.isMacOSX()  ? 6  : 0), 0, 0));
-   // int rowGap = OperatingSystem.isMacOSXLeopardOrSuperior() ? 0 : 5;
-   // add(nameAndStylePanel, new GridBagConstraints(
-    //    0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-    //    GridBagConstraints.BOTH, new Insets(0, 0, rowGap, 0), 0, 0));
+    nameAndStylePanel.add(this.fontNameComboBox, */
+
+
+	  swapOut(this.fontSizeLabel, R.id.labelpanel_fontSizeLabel);
+	  swapOut(this.fontSizeSpinner, R.id.labelpanel_fontSizeSpinner);
+	  swapOut(this.colorLabel, R.id.labelpanel_colorLabel);
+	  swapOut(this.colorButton, R.id.labelpanel_colorButton);
 
 	  JLabel rendering3DPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "rendering3DPanel.title"));
-	  rootView.addView(rendering3DPanel, rowInsets);
-
-    //JPanel rendering3DPanel = SwingTools.createTitledPanel(
-   //     preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "rendering3DPanel.title"));
-
-	  View div = new View(activity);
-	  div.setMinimumHeight(1);
-	  div.setBackgroundColor(Color.GRAY);
-	  rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-    rootView.addView(this.visibleIn3DViewCheckBox, labelInsets);//, new GridBagConstraints(
-        //0, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.NONE, new Insets(0, OperatingSystem.isMacOSX() ? -8 : 0, 5, 0), 0, 0));
-	  rootView.addView(this.pitchLabel, labelInsets);//, new GridBagConstraints(
-       // 0, 1, 1, 1, 0, 0, labelAlignment,
-       // GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-	  rootView.addView(this.pitch0DegreeRadioButton, labelInsets);//, new GridBagConstraints(
-       // 1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-	  rootView.addView(this.pitch90DegreeRadioButton, labelInsets);//, new GridBagConstraints(
-       // 2, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-	  rootView.addView(this.elevationLabel, labelInsets);//, new GridBagConstraints(
-       // 0, 3, 1, 1, 0, 0, labelAlignment,
-       // GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-	  rootView.addView(this.elevationSpinner, labelInsets);//, new GridBagConstraints(
-       // 1, 3, 2, 1, 1, 0, GridBagConstraints.LINE_START,
-       // GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-   // add(rendering3DPanel, new GridBagConstraints(
-   //     0, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	  swapOut(rendering3DPanel, R.id.labelpanel_rendering3DPanel);
+	  swapOut(this.visibleIn3DViewCheckBox, R.id.labelpanel_visibleIn3DViewCheckBox);
+	  swapOut(this.pitchLabel, R.id.labelpanel_pitchLabel);
+	  swapOut(this.pitch0DegreeRadioButton, R.id.labelpanel_pitch0DegreeRadioButton);
+	  swapOut(this.pitch90DegreeRadioButton, R.id.labelpanel_pitch90DegreeRadioButton);
+	  swapOut(this.elevationLabel, R.id.labelpanel_elevationLabel);
+	  swapOut(this.elevationSpinner, R.id.labelpanel_elevationSpinner);
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.labelpanel_closeButton);
   }
 
   /**

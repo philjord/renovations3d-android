@@ -38,6 +38,7 @@ import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.ObserverCameraController;
+import com.mindblowing.renovations3d.R;
 
 /**
  * Observer camera editing panel.
@@ -69,8 +70,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
   public ObserverCameraPanel(UserPreferences preferences,
                              ObserverCameraController controller,
   								Activity activity) {
-	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_observercamera);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -147,9 +147,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     // Create yaw label and spinner bound to YAW_IN_DEGREES controller property
     this.yawLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "yawLabel.text"));
-    final SpinnerNumberModel yawSpinnerModel = new SpinnerNumberModel(0, -10000, 10000, 5);
+    final SpinnerNumberModel yawSpinnerModel = new SpinnerNumberModel(0, -360, 720, 5);
     this.yawSpinner = new AutoCommitSpinner(activity, yawSpinnerModel);
-    yawSpinnerModel.setValue(controller.getYawInDegrees());
+    yawSpinnerModel.setValue(controller.getYawInDegrees() % 360);//PJPJP added % 360
     yawSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           controller.setYawInDegrees(((Number)yawSpinnerModel.getValue()).intValue());
@@ -158,7 +158,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     controller.addPropertyChangeListener(ObserverCameraController.Property.YAW_IN_DEGREES, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            yawSpinnerModel.setValue(controller.getYawInDegrees());
+            yawSpinnerModel.setValue(controller.getYawInDegrees() % 360);
           }
         });
     
@@ -205,7 +205,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
           controller.setElevationAdjusted(adjustObserverCameraElevationCheckBox.isSelected());
         }
       });
-    controller.addPropertyChangeListener(ObserverCameraController.Property.OBSERVER_CAMERA_ELEVATION_ADJUSTED, 
+    controller.addPropertyChangeListener(ObserverCameraController.Property.OBSERVER_CAMERA_ELEVATION_ADJUSTED,
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             adjustObserverCameraElevationCheckBox.setSelected(controller.isElevationAdjusted());
@@ -230,139 +230,45 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
- /*   if (!OperatingSystem.isMacOSX()) {
-      this.xLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "xLabel.mnemonic")).getKeyCode());
-      this.xLabel.setLabelFor(this.xSpinner);
-      this.yLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "yLabel.mnemonic")).getKeyCode());
-      this.yLabel.setLabelFor(this.ySpinner);
-      this.elevationLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "elevationLabel.mnemonic")).getKeyCode());
-      this.elevationLabel.setLabelFor(this.elevationSpinner);
-      this.fieldOfViewLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "fieldOfViewLabel.mnemonic")).getKeyCode());
-      this.fieldOfViewLabel.setLabelFor(this.fieldOfViewLabel);
-      this.yawLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "yawLabel.mnemonic")).getKeyCode());
-      this.yawLabel.setLabelFor(this.yawLabel);
-      this.pitchLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "pitchLabel.mnemonic")).getKeyCode());
-      this.pitchLabel.setLabelFor(this.pitchLabel);
-      this.adjustObserverCameraElevationCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          ObserverCameraPanel.class, "adjustObserverCameraElevationCheckBox.mnemonic")).getKeyCode());
-    }*/
   }
   
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-	  // int labelAlignment = OperatingSystem.isMacOSX()
-	  //     ? GridBagConstraints.LINE_END
-	  //     : GridBagConstraints.LINE_START;
-
-
-	  //JPanel locationPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-      //  ObserverCameraPanel.class, "locationPanel.title"));
 	  JLabel rendering3DPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "locationPanel.title"));
-	  rootView.addView(rendering3DPanel, rowInsets);
+	  swapOut(rendering3DPanel, R.id.observercamera_rendering3DPanel);
 
-	  rootView.addView(this.xLabel, rowInsets);
-	  rootView.addView(this.xSpinner, rowInsets);
-	  rootView.addView(this.yLabel, rowInsets);
-	  rootView.addView(this.ySpinner, rowInsets);
-	  rootView.addView(this.elevationLabel, rowInsets);
-	  rootView.addView(this.elevationSpinner, rowInsets);
+	  swapOut(this.xLabel, R.id.observercamera_xLabel);
+	  swapOut(this.xSpinner, R.id.observercamera_xSpinner);
+	  swapOut(this.yLabel, R.id.observercamera_yLabel);
+	  swapOut(this.ySpinner, R.id.observercamera_ySpinner);
+	  swapOut(this.elevationLabel, R.id.observercamera_elevationLabel);
+	  swapOut(this.elevationSpinner, R.id.observercamera_elevationSpinner);
 
-    // First row
- /*   Insets labelInsets = new Insets(0, 0, 5, 5);
-    locationPanel.add(this.xLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    Insets componentInsets = new Insets(0, 0, 5, 0);
-    locationPanel.add(this.xSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, -15, 0));
-    // Second row
-    locationPanel.add(this.yLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    locationPanel.add(this.ySpinner, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, -15, 0));
-    // Third row
-    locationPanel.add(this.elevationLabel, new GridBagConstraints(
-        0, 2, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    locationPanel.add(this.elevationSpinner, new GridBagConstraints(
-        1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, 0, 0));
-    Insets rowInsets;
-    if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-      // User smaller insets for Mac OS X 10.5
-      rowInsets = new Insets(0, 0, 0, 0);
-    } else {
-      rowInsets = new Insets(0, 0, 5, 0);
-    }
-    add(locationPanel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
-
-	  View div = new View(activity);
-	  div.setMinimumHeight(1);
-	  div.setBackgroundColor(Color.GRAY);
-	  rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 	  JLabel anglesPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "anglesPanel.title"));
-	  rootView.addView(anglesPanel, rowInsets);
-	  rootView.addView(this.yawLabel, rowInsets);
-	  rootView.addView(this.yawSpinner, rowInsets);
-	  rootView.addView(this.pitchLabel, rowInsets);
-	  rootView.addView(this.pitchSpinner, rowInsets);
-	  rootView.addView(this.fieldOfViewLabel, rowInsets);
-	  rootView.addView(this.fieldOfViewSpinner, rowInsets);
+	  swapOut(anglesPanel, R.id.observercamera_anglesPanel);
 
-/*    JPanel anglesPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-        ObserverCameraPanel.class, "anglesPanel.title"));
-    anglesPanel.add(this.yawLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    anglesPanel.add(this.yawSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, -10, 0));
-    anglesPanel.add(this.pitchLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    anglesPanel.add(this.pitchSpinner, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, 0, 0));
-    anglesPanel.add(this.fieldOfViewLabel, new GridBagConstraints(
-        0, 2, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    anglesPanel.add(this.fieldOfViewSpinner, new GridBagConstraints(
-        1, 2, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, 0, 0));
-    add(anglesPanel, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
+	  swapOut(this.yawLabel, R.id.observercamera_yawLabel);
+	  swapOut(this.yawSpinner, R.id.observercamera_yawSpinner);
+	  swapOut(this.pitchLabel, R.id.observercamera_pitchLabel);
+	  swapOut(this.pitchSpinner, R.id.observercamera_pitchSpinner);
+	  swapOut(this.fieldOfViewLabel, R.id.observercamera_fieldOfViewLabel);
+	  swapOut(this.fieldOfViewSpinner, R.id.observercamera_fieldOfViewSpinner);
 
-
-
-    if (controller.isObserverCameraElevationAdjustedEditable()) {
-		View div2 = new View(activity);
-		div2.setMinimumHeight(1);
-		div2.setBackgroundColor(Color.GRAY);
-		rootView.addView(div2, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-		rootView.addView(this.adjustObserverCameraElevationCheckBox, rowInsets);
-   //   add(this.adjustObserverCameraElevationCheckBox, new GridBagConstraints(
-   //       0, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-   //       GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    }
+	  if (controller.isObserverCameraElevationAdjustedEditable())
+	  {
+		  swapOut(this.adjustObserverCameraElevationCheckBox, R.id.observercamera_adjustObserverCameraElevationCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.observercamera_adjustObserverCameraElevationCheckBox);
+	  }
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.observercamera_closeButton);
   }
 
   /**

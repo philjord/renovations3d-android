@@ -493,7 +493,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
       this.newWallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
-      this.newWallPatternComboBox.setAdapter( new PatternRenderer(patterns.toArray()));
+      this.newWallPatternComboBox.setAdapter( new PatternRenderer(activity, patterns.toArray()));
       TextureImage newWallPattern = controller.getNewWallPattern();
       this.newWallPatternComboBox.setSelectedItem(newWallPattern != null 
           ? newWallPattern  
@@ -516,7 +516,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "wallPatternLabel.text"));    
       List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
       this.wallPatternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
-      this.wallPatternComboBox.setAdapter( new PatternRenderer(patterns.toArray()) );
+      this.wallPatternComboBox.setAdapter( new PatternRenderer(activity, patterns.toArray()) );
       this.wallPatternComboBox.setSelectedItem(controller.getWallPattern());
       this.wallPatternComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 		  public void onNothingSelected(AdapterView<?> parent) {}
@@ -679,10 +679,13 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   /**
    * Returns a renderer for patterns combo box.
    */
-  private class PatternRenderer extends ArrayAdapter {
-	  public  PatternRenderer(Object[] images)
+  public static class PatternRenderer extends ArrayAdapter {
+
+	  private Activity activity;
+	  public  PatternRenderer(Activity activity, Object[] images)
 	  {
 			super(activity, android.R.layout.simple_list_item_1, images);
+		  this.activity = activity;
 	  }
 
 	  @Override
@@ -736,13 +739,15 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
 		  public void onDraw(Canvas canvas)
 		  {
+			  final float scale = activity.getResources().getDisplayMetrics().density * 2;//*2 cos it just needs to be a bit bigger
 			  Graphics2D g2D = new VMGraphics2D(canvas);
 			  for (int i = 0; i < 4; i++)
 			  {
-				  g2D.drawImage(patternImage, i * patternImage.getWidth(), 1, null);
+
+				  g2D.drawImage(patternImage, (int)(i * patternImage.getWidth() * scale),  1,  (int)(patternImage.getWidth() * scale),  (int)(patternImage.getHeight() * scale), null);
 			  }
 			  //g2D.setColor(getForegroundColor());
-			  g2D.drawRect(0, 0, getIconWidth() - 2, getIconHeight() - 1);
+			  g2D.drawRect(0, 0, (int)((getIconWidth() - 2) * scale), (int)((getIconHeight() - 1) * scale));
 		  }
 
 		  public int getIconWidth()

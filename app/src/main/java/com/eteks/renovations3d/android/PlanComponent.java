@@ -583,9 +583,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*2.5f);
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5f);
 		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3);
-		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*2.5);
+		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5);
 
 		final float scale = getDrawableView().getResources().getDisplayMetrics().density;
 		MARGIN_PX = (int) (MARGIN_DP * scale + 0.5f);

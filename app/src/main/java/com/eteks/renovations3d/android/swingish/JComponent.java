@@ -217,6 +217,7 @@ public abstract class JComponent extends Fragment implements ImageObserver
 	// handy util not part of JComponent
 	public static Rectangle2D getStringBounds(String text, Font f)
 	{
+		//TODO: Font now has this method and should be used
 		fontSizingPaint.setTypeface((Typeface) (((VMFont) f).getDelegate()));
 		fontSizingPaint.setTextSize(f.getSize());
 		Rect r = new Rect();

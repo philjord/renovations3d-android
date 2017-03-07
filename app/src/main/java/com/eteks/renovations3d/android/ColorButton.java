@@ -86,7 +86,7 @@ public class ColorButton extends JButton
 						  iconHeight - 4);
 			  }
 			  //g.setColor(getForeground());
-			  g.drawRect(x + 2, y + 2, iconWidth - 5, iconHeight - 5);
+			  g.drawRect(x + 2, y + 2, iconWidth - 4, iconHeight - 4);
 		  }
 
 		  @Override

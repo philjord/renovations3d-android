@@ -240,19 +240,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
             </TableRow>
+            <TextView
+                android:id="@+id/wall_panel_wallTopColorLabel"
+                android:text="Color and texture"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <TableRow>
-                <TextView
-                    android:id="@+id/wall_panel_wallTopColorLabel"
-                    android:text="Color and texture"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+
                 <CheckBox
                     android:id="@+id/wall_panel_wallTopColorDefaultRadioButton"
                     android:text="Color:"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
                 <CheckBox
                     android:id="@+id/wall_panel_wallTopColorColorRadioButton"
                     android:text="Color:"
@@ -324,16 +332,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
-                <NumberPicker
-                    android:id="@+id/wall_panel_heightStartSlopingSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
-            </TableRow>
-            <TableRow>
                 <TextView
                     android:id="@+id/wall_panel_heightEndSlopingLabel"
                     android:text="distance between end points"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+
+            </TableRow>
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/wall_panel_heightStartSlopingSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
@@ -357,16 +366,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
-                <NumberPicker
-                    android:id="@+id/wall_panel_thicknessSpinner"
+                <TextView
+                    android:id="@+id/wall_panel_ArcLabel"
+                    android:text="distance between end points"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
             <TableRow>
-                <TextView
-                    android:id="@+id/wall_panel_ArcLabel"
-                    android:text="distance between end points"
+
+                <NumberPicker
+                    android:id="@+id/wall_panel_thicknessSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>

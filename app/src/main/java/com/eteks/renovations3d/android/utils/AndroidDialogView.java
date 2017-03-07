@@ -102,6 +102,11 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 		replaceView(placeHolder, newView);
 	}
 
+	protected void removeView( int placeHolderId)
+	{
+		removeView(inflatedView.findViewById(placeHolderId));
+	}
+
 	public static ViewGroup getParent(View view) {
 		return (ViewGroup)view.getParent();
 	}

@@ -21,12 +21,15 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -41,6 +44,7 @@ import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
@@ -481,49 +485,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
       patterns.add(0, null);
     }
     this.patternComboBox = new JComboBox(activity, new DefaultComboBoxModel(patterns.toArray()));
-	  this.patternComboBox.setAdapter(new ArrayAdapter<TextureImage>(activity, android.R.layout.simple_list_item_1, patterns.toArray(new TextureImage[0]))
-	  {
-		  @Override
-		  public View getView(int position, View convertView, ViewGroup parent)
-		  {
-			  return getDropDownView(position, convertView, parent);
-		  }
-		  @Override
-		  public View getDropDownView(int position, View convertView, ViewGroup parent)
-		  {
-			  TextureImage pattern = (TextureImage)patternComboBox.getItemAtPosition(position);
-			  final BufferedImage patternImage = SwingTools.getPatternImage(
-					  pattern, Color.WHITE, Color.BLACK);//list.getBackground(), list.getForeground());
-			  ImageView imageView;
-			  if (convertView == null)
-			  {
-				  // if it's not recycled, initialize some attributes
-				  imageView = new ImageView(activity)
-				  {
-					  public void onDraw(Canvas canvas)
-					  {
-						  Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
-						  for (int i = 0; i < 4; i++) {
-							  g2D.drawImage(patternImage, x + i * patternImage.getWidth(), y + 1, null);
-						  }
-						  g2D.setColor(Color.BLACK);//list.getForeground());
-						  g2D.drawRect(x, y, getWidth() - 2, getHeight() - 1);
-					  }
-				  };
-				  imageView.setMinimumWidth(patternImage.getWidth() * 4 + 1);
-				  imageView.setMinimumHeight(patternImage.getHeight() + 2);
-				  imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				  imageView.setPadding(15, 15, 15, 15);
-				  //imageView.setBackgroundColor(android.graphics.Color.WHITE);
-			  }
-			  else
-			  {
-				  imageView = (ImageView) convertView;
-			  }
+	  //PJPJPJ notice reuse of user preferences panel
+	  this.patternComboBox.setAdapter( new UserPreferencesPanel.PatternRenderer(activity, patterns.toArray()) );
 
-			  return imageView;
-		  }
-	  });
    /* this.patternComboBox.setRenderer(new DefaultListCellRenderer() {
         @Override
         public Component getListCellRendererComponent(final JList list, 
@@ -867,99 +831,63 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     }
   }
 
+	private boolean baseBoardDialogShowing = false;
   /**
    * Edits the baseboard values in an option pane dialog.
    */
   private void editBaseboard(final JComponent parent, final String title, 
-                             BaseboardChoiceController baseboardChoiceController) {
-    Boolean visible = baseboardChoiceController.getVisible();
-    Integer color = baseboardChoiceController.getColor();
-    HomeTexture texture = baseboardChoiceController.getTextureController().getTexture();
-    BaseboardChoiceController.BaseboardPaint paint = baseboardChoiceController.getPaint();
-    Float thickness = baseboardChoiceController.getThickness();
-    Float height = baseboardChoiceController.getHeight();
-/*    JComponent view = (JComponent)baseboardChoiceController.getView();
+                             final BaseboardChoiceController baseboardChoiceController) {
+
+	  // we can't display the view in two dialog at the same time
+	  if(baseBoardDialogShowing)
+		  return;
+
+
     // Add baseboard component to a panel with a flow layout to avoid it getting too large
-    JPanel panel = new JPanel();
-    panel.add(view);
-    if (SwingTools.showConfirmDialog(parent, panel, title, (JComponent)view.getComponent(0)) != JOptionPane.OK_OPTION) {
-      // Restore initial values
-      baseboardChoiceController.setVisible(visible);
-      baseboardChoiceController.setColor(color);
-      baseboardChoiceController.getTextureController().setTexture(texture);
-      baseboardChoiceController.setPaint(paint);
-      baseboardChoiceController.setThickness(thickness);
-      baseboardChoiceController.setHeight(height);
-    }*/
+	 final LinearLayout view = (LinearLayout)baseboardChoiceController.getView();
+
+    //JPanel panel = new JPanel();
+    //panel.add(view);
+   // if (SwingTools.showConfirmDialog(parent, panel, title, (JComponent)view.getComponent(0)) != JOptionPane.OK_OPTION) {
+
+	//I must get off the EDT and ask the question in a blocking manner
+	  Thread t2 = new Thread()
+	  {
+		  public void run()
+		  {
+			  Boolean visible = baseboardChoiceController.getVisible();
+			  Integer color = baseboardChoiceController.getColor();
+			  HomeTexture texture = baseboardChoiceController.getTextureController().getTexture();
+			  BaseboardChoiceController.BaseboardPaint paint = baseboardChoiceController.getPaint();
+			  Float thickness = baseboardChoiceController.getThickness();
+			  Float height = baseboardChoiceController.getHeight();
+
+			  baseBoardDialogShowing = true;
+			  boolean confirmed = JOptionPane.showOptionDialog(activity, view, title,
+					  JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+					  null, new Object [] {"OK", "cancel"}, "cancel") == JOptionPane.OK_OPTION;
+			  baseBoardDialogShowing = false;
+			  if(!confirmed)
+			  {
+				  // Restore initial values
+				  baseboardChoiceController.setVisible(visible);
+				  baseboardChoiceController.setColor(color);
+				  baseboardChoiceController.getTextureController().setTexture(texture);
+				  baseboardChoiceController.setPaint(paint);
+				  baseboardChoiceController.setThickness(thickness);
+				  baseboardChoiceController.setHeight(height);
+			  }
+		  }
+	  };
+	  t2.start();
+
   }
   
   /**
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
- /*   if (!OperatingSystem.isMacOSX()) {
-      this.xStartLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.mnemonic")).getKeyCode());
-      this.xStartLabel.setLabelFor(this.xStartSpinner);
-      this.yStartLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.mnemonic")).getKeyCode());
-      this.yStartLabel.setLabelFor(this.yStartSpinner);
-      this.xEndLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.mnemonic")).getKeyCode());
-      this.xEndLabel.setLabelFor(this.xEndSpinner);
-      this.yEndLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.mnemonic")).getKeyCode());
-      this.yEndLabel.setLabelFor(this.yEndSpinner);
-      this.distanceToEndPointLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "distanceToEndPointLabel.mnemonic")).getKeyCode());
-      this.distanceToEndPointLabel.setLabelFor(this.distanceToEndPointSpinner);
 
-      this.leftSideColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideColorRadioButton.mnemonic")).getKeyCode());
-      this.leftSideTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideTextureRadioButton.mnemonic")).getKeyCode());
-      this.leftSideMattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideMattRadioButton.mnemonic")).getKeyCode());
-      this.leftSideShinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideShinyRadioButton.mnemonic")).getKeyCode());
-      this.rightSideColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideColorRadioButton.mnemonic")).getKeyCode());
-      this.rightSideTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideTextureRadioButton.mnemonic")).getKeyCode());
-      this.rightSideMattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideMattRadioButton.mnemonic")).getKeyCode());
-      this.rightSideShinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideShinyRadioButton.mnemonic")).getKeyCode());
-      
-      this.patternLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          com.eteks.sweethome3d.android_props.WallPanel.class, "patternLabel.mnemonic")).getKeyCode());
-      this.patternLabel.setLabelFor(this.patternComboBox);
-      this.topDefaultColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.WallPanel.class,"topDefaultColorRadioButton.mnemonic")).getKeyCode());
-      this.topColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-              com.eteks.sweethome3d.android_props.WallPanel.class,"topColorRadioButton.mnemonic")).getKeyCode());
-
-      this.rectangularWallRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallRadioButton.mnemonic")).getKeyCode());
-      this.rectangularWallHeightLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallHeightLabel.mnemonic")).getKeyCode());
-      this.rectangularWallHeightLabel.setLabelFor(this.rectangularWallHeightSpinner);
-      this.slopingWallRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallRadioButton.mnemonic")).getKeyCode());
-      this.slopingWallHeightAtStartLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtStartLabel.mnemonic")).getKeyCode());
-      this.slopingWallHeightAtStartLabel.setLabelFor(this.slopingWallHeightAtStartSpinner);
-      this.slopingWallHeightAtEndLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtEndLabel.mnemonic")).getKeyCode());
-      this.slopingWallHeightAtEndLabel.setLabelFor(this.slopingWallHeightAtEndSpinner);
-      
-      this.thicknessLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "thicknessLabel.mnemonic")).getKeyCode());
-      this.thicknessLabel.setLabelFor(this.thicknessSpinner);
-      this.arcExtentLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.mnemonic")).getKeyCode());
-      this.arcExtentLabel.setLabelFor(this.arcExtentSpinner);
-    }*/
   }
   
   /**
@@ -967,12 +895,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
    */
   private void layoutComponents(UserPreferences preferences, 
                                 final WallController controller) {
-    //int labelAlignment = OperatingSystem.isMacOSX()
-    //    ? GridBagConstraints.LINE_END
-    //    : GridBagConstraints.LINE_START;
 
-
-    // First row
 	  JLabel startPointPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "startPointPanel.title"));
 	  swapOut(startPointPanel, R.id.wall_panel_startPanel);
@@ -981,21 +904,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.yStartLabel, R.id.wall_panel_yStartLabel);
 	  swapOut(this.yStartSpinner, R.id.wall_panel_yStartSpinner);
 
-   /* final JPanel startPointPanel = createTitledPanel(
-        preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "startPointPanel.title"),
-        new JComponent [] {this.xStartLabel, this.xStartSpinner, 
-                           this.yStartLabel, this.yStartSpinner}, true);
-
-    Insets rowInsets;
-    if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-      // User smaller insets for Mac OS X 10.5
-      rowInsets = new Insets(0, 0, 0, 0);
-    } else {
-      rowInsets = new Insets(0, 0, 5, 0);
-    }
-    add(startPointPanel, new GridBagConstraints(
-        0, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
 
 	  JLabel endPointPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "endPointPanel.title"));
@@ -1008,23 +916,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.distanceToEndPointLabel, R.id.wall_panel_distanceLabel);
 	  swapOut(this.distanceToEndPointSpinner, R.id.wall_panel_distanceSpinner);
 
-	  // Second row
-   /* final JPanel endPointPanel = createTitledPanel(
-        preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "endPointPanel.title"),
-        new JComponent [] {this.xEndLabel, this.xEndSpinner, 
-                           this.yEndLabel, this.yEndSpinner}, true);
-    // Add distance label and spinner at the end of second row of endPointPanel
-    endPointPanel.add(this.distanceToEndPointLabel, new GridBagConstraints(
-        0, 1, 3, 1, 1, 0, GridBagConstraints.LINE_END, 
-        GridBagConstraints.NONE, new Insets(5, 0, 0, 5), 0, 0));
-    endPointPanel.add(this.distanceToEndPointSpinner, new GridBagConstraints(
-        3, 1, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));
-
-    add(endPointPanel, new GridBagConstraints(
-        0, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));    */
-
 	  JLabel leftSidePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSidePanel.title"));
 	  swapOut(leftSidePanel, R.id.wall_panel_leftSideLabel);
@@ -1036,26 +927,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.leftSideShinyRadioButton, R.id.wall_panel_leftSideShininessRadioButton);
 	  swapOut(this.leftSideBaseboardButton, R.id.wall_panel_leftSideModifyBaseboardButton);
 
-    // Third row
-/*    JPanel leftSidePanel = createTitledPanel(
-        preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSidePanel.title"),
-        new JComponent [] {this.leftSideColorRadioButton, this.leftSideColorButton, 
-                           this.leftSideTextureRadioButton, this.leftSideTextureComponent}, false);
-    leftSidePanel.add(new JSeparator(), new GridBagConstraints(
-        0, 2, 2, 1, 1, 0, GridBagConstraints.CENTER,
-        GridBagConstraints.HORIZONTAL, new Insets(3, 0, 3, 0), 0, 0));
-    leftSidePanel.add(this.leftSideMattRadioButton, new GridBagConstraints(
-        0, 3, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    leftSidePanel.add(this.leftSideShinyRadioButton, new GridBagConstraints(
-        1, 3, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    leftSidePanel.add(this.leftSideBaseboardButton, new GridBagConstraints(
-        0, 4, 2, 1, 1, 0, GridBagConstraints.CENTER,
-        GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
-    add(leftSidePanel, new GridBagConstraints(
-        0, 2, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
 
 	  JLabel rightSidePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSidePanel.title"));
@@ -1068,26 +939,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.rightSideShinyRadioButton, R.id.wall_panel_rightSideShininessRadioButton);
 	  swapOut(this.rightSideBaseboardButton, R.id.wall_panel_rightSideModifyBaseboardButton);
 
-/*    JPanel rightSidePanel = createTitledPanel(
-        preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSidePanel.title"),
-        new JComponent [] {this.rightSideColorRadioButton, this.rightSideColorButton, 
-                           this.rightSideTextureRadioButton, this.rightSideTextureComponent}, false);
-    rightSidePanel.add(new JSeparator(), new GridBagConstraints(
-        0, 2, 2, 1, 1, 0, GridBagConstraints.CENTER,
-        GridBagConstraints.HORIZONTAL, new Insets(3, 0, 3, 0), 0, 0));
-    rightSidePanel.add(this.rightSideMattRadioButton, new GridBagConstraints(
-        0, 3, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    rightSidePanel.add(this.rightSideShinyRadioButton, new GridBagConstraints(
-        1, 3, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    rightSidePanel.add(this.rightSideBaseboardButton, new GridBagConstraints(
-        0, 4, 2, 1, 1, 0, GridBagConstraints.CENTER,
-        GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
-    add(rightSidePanel, new GridBagConstraints(
-        1, 2, 1, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
-
 	  JLabel topPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "topPanel.title"));
 	  swapOut(topPanel, R.id.wall_panel_wallTopPanel);
@@ -1098,31 +949,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.topColorRadioButton, R.id.wall_panel_wallTopColorColorRadioButton);
 	  swapOut(this.topColorButton, R.id.wall_panel_wallTopColorButton);
 
-    // Forth row
- /*   JPanel topPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.WallPanel.class, "topPanel.title"));
-    int leftInset = new JRadioButton().getPreferredSize().width;
-    topPanel.add(this.patternLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, leftInset, 3, 5), 0, 0));
-    topPanel.add(this.patternComboBox, new GridBagConstraints(
-        1, 0, 3, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 3, 0), 0, 0));
-    topPanel.add(this.topColorLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, leftInset, 0, 5), 0, 0));
-    topPanel.add(this.topDefaultColorRadioButton, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 10), 0, 0));
-    topPanel.add(this.topColorRadioButton, new GridBagConstraints(
-        2, 1, 1, 1, 0, 0, GridBagConstraints.LINE_END, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    topPanel.add(this.topColorButton, new GridBagConstraints(
-        3, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    add(topPanel, new GridBagConstraints(
-        0, 3, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
 
 	  JLabel heightPanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "heightPanel.title"));
@@ -1136,78 +962,11 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.slopingWallHeightAtEndLabel, R.id.wall_panel_heightEndSlopingLabel);
 	  swapOut(this.slopingWallHeightAtEndSpinner, R.id.wall_panel_heightEndSlopingSpinner);
 
-/*    JPanel heightPanel = SwingTools.createTitledPanel(
-        preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "heightPanel.title"));   
-    // First row of height panel
-    heightPanel.add(this.rectangularWallRadioButton, new GridBagConstraints(
-        0, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 0), 0, 0));
-    // Second row of height panel
-    // Add a dummy label to align second and fourth row on radio buttons text
-    int spinnerPadX = OperatingSystem.isMacOSX()  ? -20  : -10;
-    heightPanel.add(new JLabel(), new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 5, 0), new JRadioButton().getPreferredSize().width, 0));
-    heightPanel.add(this.rectangularWallHeightLabel, new GridBagConstraints(
-        1, 1, 1, 1, 1, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-    heightPanel.add(this.rectangularWallHeightSpinner, new GridBagConstraints(
-        2, 1, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 5), spinnerPadX, 0));
-    // Third column of height panel
-    heightPanel.add(this.slopingWallRadioButton, new GridBagConstraints(
-        3, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 10, 2, 0), 0, 0));
-    // Second row of height panel
-    heightPanel.add(new JLabel(), new GridBagConstraints(
-        3, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 5, 0), new JRadioButton().getPreferredSize().width, 0));
-    heightPanel.add(this.slopingWallHeightAtStartLabel, new GridBagConstraints(
-        4, 1, 1, 1, 1, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-    heightPanel.add(this.slopingWallHeightAtStartSpinner, new GridBagConstraints(
-        5, 1, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), spinnerPadX, 0));
-    // Third row of height panel
-    heightPanel.add(this.slopingWallHeightAtEndLabel, new GridBagConstraints(
-        4, 2, 1, 1, 1, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    heightPanel.add(this.slopingWallHeightAtEndSpinner, new GridBagConstraints(
-        5, 2, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), spinnerPadX, 0));
-    add(heightPanel, new GridBagConstraints(
-        0, 4, 2, 1, 1, 0, GridBagConstraints.LINE_START,
-        GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));    */
 
-	 // JLabel ticknessAndArcExtentPanel =
-	 // swapOut(heightPanel, rowInsets);
 	  swapOut(this.thicknessLabel, R.id.wall_panel_thicknessLabel);
 	  swapOut(this.thicknessSpinner, R.id.wall_panel_thicknessSpinner);
 	  swapOut(this.arcExtentLabel, R.id.wall_panel_ArcLabel);
 	  swapOut(this.arcExtentSpinner, R.id.wall_panel_ArcSpinner);
-
-    // Sixth row
- /*   JPanel ticknessAndArcExtentPanel = new JPanel(new GridBagLayout());
-    ticknessAndArcExtentPanel.add(this.thicknessLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 5), 0, 0));
-    ticknessAndArcExtentPanel.add(this.thicknessSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 10), 0, 0));
-    ticknessAndArcExtentPanel.add(this.arcExtentLabel, new GridBagConstraints(
-        2, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 5), 0, 0));
-    ticknessAndArcExtentPanel.add(this.arcExtentSpinner, new GridBagConstraints(
-        3, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    add(ticknessAndArcExtentPanel, new GridBagConstraints(
-        0, 5, 2, 1, 0, 0, GridBagConstraints.CENTER, 
-        GridBagConstraints.NONE, new Insets(5, 8, 10, 8), 0, 0));
-    
-    // Last row
-    add(this.wallOrientationLabel, new GridBagConstraints(
-        0, 6, 2, 1, 0, 0, GridBagConstraints.CENTER,
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));*/
 
     // Make startPointPanel and endPointPanel visible depending on editable points property
     controller.addPropertyChangeListener(WallController.Property.EDITABLE_POINTS, 
@@ -1229,44 +988,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  this.setTitle(dialogTitle);
 	  swapOut(closeButton, R.id.wall_panel_closeButton);
   }
-  
-/*  private JPanel createTitledPanel(String title, JComponent [] components, boolean horizontal) {
-    JPanel titledPanel = SwingTools.createTitledPanel(title);    
-    
-    if (horizontal) {
-      int labelAlignment = OperatingSystem.isMacOSX() 
-          ? GridBagConstraints.LINE_END
-          : GridBagConstraints.LINE_START;
-      Insets labelInsets = new Insets(0, 0, 0, 5);
-      Insets insets = new Insets(0, 0, 0, 5);
-      for (int i = 0; i < components.length - 1; i += 2) {
-        titledPanel.add(components [i], new GridBagConstraints(
-            i, 0, 1, 1, 1, 0, labelAlignment, 
-            GridBagConstraints.NONE, labelInsets, 0, 0));
-        titledPanel.add(components [i + 1], new GridBagConstraints(
-            i + 1, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, insets, 0, 0));
-      }
-    
-      titledPanel.add(components [components.length - 1], new GridBagConstraints(
-          components.length - 1, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    } else {
-      for (int i = 0; i < components.length; i += 2) {
-        int bottomInset = i < components.length - 2  ? 2  : 0;
-        titledPanel.add(components [i], new GridBagConstraints(
-            0, i / 2, components [i + 1] != null  ? 1  : 2, 1, 1, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.NONE, 
-            new Insets(0, 0, bottomInset , 5), 0, 0));
-        if (components [i + 1] != null) {
-          titledPanel.add(components [i + 1], new GridBagConstraints(
-              1, i / 2, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-              GridBagConstraints.HORIZONTAL, new Insets(0, 0, bottomInset, 0), 0, 0));
-        }
-      }
-    }
-    return titledPanel;
-  }*/
+
   
   /**
    * Displays this panel in a modal dialog box. 

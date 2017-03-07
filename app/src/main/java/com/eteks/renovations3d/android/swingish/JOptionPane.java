@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.concurrent.Semaphore;
 
@@ -199,10 +200,12 @@ public class JOptionPane
 						switch (which){
 							case DialogInterface.BUTTON_POSITIVE:
 								selectedOption[0] = OK_OPTION;
+								((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
 							case DialogInterface.BUTTON_NEGATIVE:
 								selectedOption[0] = NO_OPTION;
+								((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
 						}

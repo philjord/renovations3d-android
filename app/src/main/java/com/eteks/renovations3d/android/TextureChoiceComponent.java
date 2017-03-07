@@ -92,7 +92,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 	  super(activity, "");
 	  this.activity = activity;
     this.preferences = preferences;
-    JLabel dummyLabel = new JLabel(activity, "Text");
+    //JLabel dummyLabel = new JLabel(activity, "Text");
     //Dimension iconDimension = dummyLabel.getPreferredSize();
     //final int iconHeight = iconDimension.height;
 
@@ -115,11 +115,12 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 		  public void draw(Canvas canvas)
 		  {
 			  int iconHeight = getHeight();
+			  int buttonWidth = getWidth();
 			  int x = 0;
 			  int y = 0;
 			  Graphics2D g = new VMGraphics2D(canvas);
 			  g.setColor(Color.BLACK);
-			  g.drawRect(x + 2, y + 2, iconHeight - 5, iconHeight - 5);
+			  g.drawRect(x + 2, y + 2, buttonWidth - 4, iconHeight - 4);
 			  HomeTexture texture = controller.getTexture();
 			  if (texture != null) {
 				  Icon icon = IconManager.getInstance().getIcon(
@@ -127,12 +128,12 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 				  if (icon.getIconWidth() != icon.getIconHeight()) {
 					  Graphics2D g2D = (Graphics2D)g;
 					  AffineTransform previousTransform = g2D.getTransform();
-					  g2D.translate(x + 3, y + 3);
+					  g2D.translate(x + 3 + ((buttonWidth/2) - (iconHeight/2)), y + 3);
 					  g2D.scale((float)icon.getIconHeight() / icon.getIconWidth(), 1);
 					  icon.paintIcon(null, g2D, 0, 0);
 					  g2D.setTransform(previousTransform);
 				  } else {
-					  icon.paintIcon(null, g, x + 3, y + 3);
+					  icon.paintIcon(null, g, x + 3 + ((buttonWidth/2) - (iconHeight/2)), y + 3);
 				  }
 			  }
 		  }
@@ -727,10 +728,10 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 		else
 		{
 			  // remove the holding views
-			removeView(inflatedView.findViewById( R.id.texture_choice_angleLabel));
-			removeView(inflatedView.findViewById(R.id.texture_choice_angle0));
-			removeView(inflatedView.findViewById( R.id.texture_choice_angle45));
-			removeView(inflatedView.findViewById( R.id.texture_choice_angle90));
+			removeView(R.id.texture_choice_angleLabel);
+			removeView(R.id.texture_choice_angle0);
+			removeView(R.id.texture_choice_angle45);
+			removeView(R.id.texture_choice_angle90);
 		}
       // Fifth row
       if (this.importTextureButton != null) {

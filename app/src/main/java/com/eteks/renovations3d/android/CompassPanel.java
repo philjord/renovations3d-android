@@ -48,6 +48,7 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.CompassController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
+import com.mindblowing.renovations3d.R;
 
 
 import javaawt.BasicStroke;
@@ -64,7 +65,8 @@ import javaawt.geom.Line2D;
  * @author Emmanuel Puybaret
  */
 public class CompassPanel extends AndroidDialogView implements DialogView {
-  private final CompassController controller;
+	private static final float DIRECTION_COMP_DP = 100;
+	private final CompassController controller;
   private JLabel xLabel;
   private JSpinner xSpinner;
   private JLabel                  yLabel;
@@ -89,10 +91,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
    * @param controller the controller of this panel
    */
   public CompassPanel(UserPreferences preferences,
-                      CompassController controller
-		  , Activity activity) {
-	  //super(new GridBagLayout());
-	  super(preferences, activity);
+                      CompassController controller,
+		  				Activity activity) {
+
+	  super(preferences, activity, R.layout.dialog_compasspanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -369,8 +371,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
           g2D.draw(needlePath);
         }
       };
-	  northDirectionComponent.setMinimumWidth(35);
-	  northDirectionComponent.setMinimumHeight(35);
+	  final float scale = activity.getResources().getDisplayMetrics().density;
+	  int iconHeightPx = (int) (DIRECTION_COMP_DP * scale + 0.5f);
+	  northDirectionComponent.setMinimumWidth(iconHeightPx);
+	  northDirectionComponent.setMinimumHeight(iconHeightPx);
     //this.northDirectionComponent.setOpaque(false);
     final PropertyChangeListener northDirectionChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -397,137 +401,39 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
-  /*  if (!OperatingSystem.isMacOSX()) {
-      this.xLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "xLabel.mnemonic")).getKeyCode());
-      this.xLabel.setLabelFor(this.xSpinner);
-      this.yLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "yLabel.mnemonic")).getKeyCode());
-      this.yLabel.setLabelFor(this.ySpinner);
-      this.diameterLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "diameterLabel.mnemonic")).getKeyCode());
-      this.diameterLabel.setLabelFor(this.diameterSpinner);
-      this.visibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "visibleCheckBox.mnemonic")).getKeyCode());
-      this.latitudeLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "latitudeLabel.mnemonic")).getKeyCode());
-      this.latitudeLabel.setLabelFor(this.latitudeSpinner);
-      this.longitudeLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "longitudeLabel.mnemonic")).getKeyCode());
-      this.longitudeLabel.setLabelFor(this.longitudeSpinner);
-      this.timeZoneLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "timeZoneLabel.mnemonic")).getKeyCode());
-      this.timeZoneLabel.setLabelFor(this.timeZoneComboBox);
-      this.northDirectionLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          CompassPanel.class, "northDirectionLabel.mnemonic")).getKeyCode());
-      this.northDirectionLabel.setLabelFor(this.northDirectionSpinner);
-    }*/
-  }
+   }
   
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-   // int labelAlignment = OperatingSystem.isMacOSX()
-    //    ? GridBagConstraints.LINE_END
-     //   : GridBagConstraints.LINE_START;
 
 	  JLabel compassRosePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.CompassPanel.class, "compassRosePanel.title"));
-	  rootView.addView(compassRosePanel, rowInsets);
-	  rootView.addView(this.xLabel, rowInsets);
-	  rootView.addView(this.xSpinner, rowInsets);
-	  rootView.addView(this.visibleCheckBox, rowInsets);
-	  rootView.addView(this.yLabel, rowInsets);
-	  rootView.addView(this.ySpinner, rowInsets);
-	  rootView.addView(this.diameterLabel, rowInsets);
-	  rootView.addView(this.diameterSpinner, rowInsets);
-
-
-    // First row
-    /*JPanel compassRosePanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-        CompassPanel.class, "compassRosePanel.title"));
-    Insets labelInsets = new Insets(0, 0, 5, 5);
-    Insets componentInsets = new Insets(0, 0, 5, 10);
-    Insets lastComponentInsets = new Insets(0, 0, 5, 0);
-    int rowGap = OperatingSystem.isMacOSXLeopardOrSuperior() ? 0 : 5;
-    compassRosePanel.add(this.xLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    compassRosePanel.add(this.xSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 20), -10, 0));
-    compassRosePanel.add(this.visibleCheckBox, new GridBagConstraints(
-        2, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, lastComponentInsets, 0, 0));
-    compassRosePanel.add(this.yLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    compassRosePanel.add(this.ySpinner, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 20), -10, 0));
-    compassRosePanel.add(this.diameterLabel, new GridBagConstraints(
-        2, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    compassRosePanel.add(this.diameterSpinner, new GridBagConstraints(
-        3, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    add(compassRosePanel, new GridBagConstraints(
-        0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, rowGap, 0), 0, 0));*/
-
+	  swapOut(compassRosePanel, R.id.compasspanel_compassRosePanel);
+	  swapOut(this.xLabel, R.id.compasspanel_xLabel);
+	  swapOut(this.xSpinner, R.id.compasspanel_xSpinner);
+	  swapOut(this.visibleCheckBox, R.id.compasspanel_visibleCheckBox);
+	  swapOut(this.yLabel, R.id.compasspanel_yLabel);
+	  swapOut(this.ySpinner, R.id.compasspanel_ySpinner);
+	  swapOut(this.diameterLabel, R.id.compasspanel_diameterLabel);
+	  swapOut(this.diameterSpinner, R.id.compasspanel_diameterSpinner);
 
 	  JLabel geographicLocationPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.CompassPanel.class, "geographicLocationPanel.title"));
-	  rootView.addView(geographicLocationPanel, rowInsets);
-	  rootView.addView(this.latitudeLabel, rowInsets);
-	  rootView.addView(this.latitudeSpinner, rowInsets);
-	  rootView.addView(this.northDirectionLabel, rowInsets);
-	  rootView.addView(this.northDirectionSpinner, rowInsets);
-	  rootView.addView(this.northDirectionComponent, rowInsets);
-	  rootView.addView(this.longitudeLabel, rowInsets);
-	  rootView.addView(this.longitudeSpinner, rowInsets);
-	  rootView.addView(this.timeZoneLabel, rowInsets);
-	  rootView.addView(this.timeZoneComboBox, rowInsets);
-
-    // Second row
-/*    JPanel geographicLocationPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-        CompassPanel.class, "geographicLocationPanel.title"));
-    geographicLocationPanel.add(this.latitudeLabel, new GridBagConstraints(
-        0, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    geographicLocationPanel.add(this.latitudeSpinner, new GridBagConstraints(
-        1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, componentInsets, 20, 0));
-    geographicLocationPanel.add(this.northDirectionLabel, new GridBagConstraints(
-        2, 0, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, labelInsets, 0, 0));
-    geographicLocationPanel.add(this.northDirectionSpinner, new GridBagConstraints(
-        3, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 5), 0, 0));
-    geographicLocationPanel.add(this.northDirectionComponent, new GridBagConstraints(
-        4, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-    geographicLocationPanel.add(this.longitudeLabel, new GridBagConstraints(
-        0, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    geographicLocationPanel.add(this.longitudeSpinner, new GridBagConstraints(
-        1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 20, 0));
-    geographicLocationPanel.add(this.timeZoneLabel, new GridBagConstraints(
-        2, 1, 1, 1, 0, 0, labelAlignment, 
-        GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-    geographicLocationPanel.add(this.timeZoneComboBox, new GridBagConstraints(
-        3, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.timeZoneComboBox.setPreferredSize(new Dimension(this.latitudeSpinner.getPreferredSize().width + 60, 
-        this.timeZoneComboBox.getPreferredSize().height));
-    add(geographicLocationPanel, new GridBagConstraints(
-        0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER, 
-        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));*/
+	  swapOut(geographicLocationPanel, R.id.compasspanel_geographicLocationPanel);
+	  swapOut(this.latitudeLabel, R.id.compasspanel_latitudeLabel);
+	  swapOut(this.latitudeSpinner, R.id.compasspanel_latitudeSpinner);
+	  swapOut(this.northDirectionLabel, R.id.compasspanel_northDirectionLabel);
+	  swapOut(this.northDirectionSpinner, R.id.compasspanel_northDirectionSpinner);
+	  swapOut(this.northDirectionComponent, R.id.compasspanel_northDirectionComponent);
+	  swapOut(this.longitudeLabel, R.id.compasspanel_longitudeLabel);
+	  swapOut(this.longitudeSpinner, R.id.compasspanel_longitudeSpinner);
+	  swapOut(this.timeZoneLabel, R.id.compasspanel_timeZoneLabel);
+	  swapOut(this.timeZoneComboBox, R.id.compasspanel_timeZoneComboBox);
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.compasspanel_closeButton);
   }
 
   /**

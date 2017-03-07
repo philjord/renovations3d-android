@@ -48,6 +48,7 @@ import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.RoomController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
+import com.mindblowing.renovations3d.R;
 
 /**
  * Room editing panel.
@@ -79,7 +80,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   private JButton            wallSidesTextureComponent;
   private JRadioButton          wallSidesMattRadioButton;
   private JRadioButton          wallSidesShinyRadioButton;
-  private JComponent            wallSidesBaseboardComponent;
+  private LinearLayout            wallSidesBaseboardComponent;
   private boolean               firstWallChange;
   private String                dialogTitle;
 
@@ -92,7 +93,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   public RoomPanel(UserPreferences preferences,
                    RoomController controller, Activity activity) {
 	  //super(new GridBagLayout());
-	  super(preferences, activity);
+	  super(preferences, activity, R.layout.dialog_roompanel);
     this.controller = controller;
     createComponents(preferences, controller);
     setMnemonics(preferences);
@@ -534,7 +535,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     }
     
     if (controller.isPropertyEditable(RoomController.Property.WALL_SIDES_BASEBOARD)) {
-//      this.wallSidesBaseboardComponent = (JComponent)controller.getWallSidesBaseboardController().getView();
+      this.wallSidesBaseboardComponent = (LinearLayout)controller.getWallSidesBaseboardController().getView();
       controller.getWallSidesBaseboardController().addPropertyChangeListener(BaseboardChoiceController.Property.VISIBLE, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
@@ -638,259 +639,124 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
    * Sets components mnemonics and label / component associations.
    */
   private void setMnemonics(UserPreferences preferences) {
-  /*  if (!OperatingSystem.isMacOSX()) {
-      if (this.nameLabel != null) {
-        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "nameLabel.mnemonic")).getKeyCode());
-        this.nameLabel.setLabelFor(this.nameTextField);
-      }
-      if (this.areaVisibleCheckBox != null) {
-        this.areaVisibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "areaVisibleCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.floorVisibleCheckBox != null) {
-        this.floorVisibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "floorVisibleCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.floorColorRadioButton != null) {
-        this.floorColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "floorColorRadioButton.mnemonic")).getKeyCode());
-        this.floorTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "floorTextureRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.floorMattRadioButton != null) {
-        this.floorMattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "floorMattRadioButton.mnemonic")).getKeyCode());
-        this.floorShinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "floorShinyRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.ceilingVisibleCheckBox != null) {
-        this.ceilingVisibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "ceilingVisibleCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.ceilingColorRadioButton != null) {
-        this.ceilingColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "ceilingColorRadioButton.mnemonic")).getKeyCode());
-        this.ceilingTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "ceilingTextureRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.ceilingMattRadioButton != null) {
-        this.ceilingMattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "ceilingMattRadioButton.mnemonic")).getKeyCode());
-        this.ceilingShinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "ceilingShinyRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.splitSurroundingWallsCheckBox != null) {
-        this.splitSurroundingWallsCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "splitSurroundingWallsCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.wallSidesColorRadioButton != null) {
-        this.wallSidesColorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "wallSidesColorRadioButton.mnemonic")).getKeyCode());
-        this.wallSidesTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "wallSidesTextureRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.wallSidesMattRadioButton != null) {
-        this.wallSidesMattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "wallSidesMattRadioButton.mnemonic")).getKeyCode());
-        this.wallSidesShinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(RoomPanel.class, "wallSidesShinyRadioButton.mnemonic")).getKeyCode());
-      }
-    }*/
+
   }
   
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-    //int labelAlignment = OperatingSystem.isMacOSX()
-    //    ? GridBagConstraints.LINE_END
-    //    : GridBagConstraints.LINE_START;
 
-    // First row
+
     if (this.nameLabel != null || this.areaVisibleCheckBox != null) {
 
 		JLabel nameAndAreaPanel = new JLabel(activity,
 				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
-		rootView.addView(nameAndAreaPanel, rowInsets);
-		rootView.addView(this.nameLabel, rowInsets);
-		rootView.addView(this.nameTextField, rowInsets);
+		swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
+		swapOut(this.nameLabel, R.id.roompanel_nameLabel);
+		swapOut(this.nameTextField, R.id.roompanel_nameTextField);
 		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		rootView.addView(this.areaVisibleCheckBox, rowInsets);
 
-/*      JPanel nameAndAreaPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-          RoomPanel.class, "nameAndAreaPanel.title"));
-      if (this.nameLabel != null) {
-        nameAndAreaPanel.add(this.nameLabel, new GridBagConstraints(
-            0, 0, 1, 1, 0, 0, labelAlignment, 
-            GridBagConstraints.HORIZONTAL, new Insets(0, 8, 0, 5), 0, 0));
-        nameAndAreaPanel.add(this.nameTextField, new GridBagConstraints(
-            1, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));
-      }
-      if (this.areaVisibleCheckBox != null) {
-        nameAndAreaPanel.add(this.areaVisibleCheckBox, new GridBagConstraints(
-            2, 0, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-      }
-      Insets rowInsets;
-      if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-        // User smaller insets for Mac OS X 10.5
-        rowInsets = new Insets(0, 0, 0, 0);
-      } else {
-        rowInsets = new Insets(0, 0, 5, 0);
-      }
-      add(nameAndAreaPanel, new GridBagConstraints(
-          0, 0, 3, 1, 0, 0, GridBagConstraints.LINE_START, 
-          GridBagConstraints.HORIZONTAL, rowInsets, 0, 0));*/
-    }
-    // Last row
-    if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null) {
+		swapOut(this.areaVisibleCheckBox, R.id.roompanel_areaVisibleCheckBox);
+	}
+	else
+	{
+		removeView(R.id.roompanel_nameAndAreaPanel);
+		removeView(R.id.roompanel_nameLabel);
+		removeView(R.id.roompanel_nameTextField);
+		removeView(R.id.roompanel_areaVisibleCheckBox);
+	}
 
-		View div = new View(activity);
-		div.setMinimumHeight(1);
-		div.setBackgroundColor(Color.GRAY);
-		rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null)
+	{
 		JLabel floorPanel = new JLabel(activity,
 				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "floorPanel.title"));
-		rootView.addView(floorPanel, rowInsets);
-		rootView.addView(this.floorVisibleCheckBox, rowInsets);
-		rootView.addView(this.floorColorRadioButton, rowInsets);
-		rootView.addView(this.floorColorButton, rowInsets);
-		rootView.addView(this.floorTextureRadioButton, rowInsets);
-		rootView.addView(this.floorTextureComponent, rowInsets);
-		rootView.addView(this.floorMattRadioButton, rowInsets);
-		rootView.addView(this.floorShinyRadioButton, rowInsets);
-
-    /*  JPanel floorPanel = createVerticalTitledPanel(preferences.getLocalizedString(
-          RoomPanel.class, "floorPanel.title"),
-          new JComponent [][] {{this.floorVisibleCheckBox, null,
-                                this.floorColorRadioButton, this.floorColorButton, 
-                                this.floorTextureRadioButton, this.floorTextureComponent},
-                                {this.floorMattRadioButton, this.floorShinyRadioButton}});
-      add(floorPanel, new GridBagConstraints(
-          0, 1, 1, 1, 1, 0, GridBagConstraints.NORTH,
-          GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
-    }      
-    if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null) {
-		View div = new View(activity);
-		div.setMinimumHeight(1);
-		div.setBackgroundColor(Color.GRAY);
-		rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		swapOut(floorPanel, R.id.roompanel_floorPanel);
+		swapOut(this.floorVisibleCheckBox, R.id.roompanel_floorVisibleCheckBox);
+		swapOut(this.floorColorRadioButton, R.id.roompanel_floorColorRadioButton);
+		swapOut(this.floorColorButton, R.id.roompanel_floorColorButton);
+		swapOut(this.floorTextureRadioButton, R.id.roompanel_floorTextureRadioButton);
+		swapOut(this.floorTextureComponent, R.id.roompanel_floorTextureComponent);
+		swapOut(this.floorMattRadioButton, R.id.roompanel_floorMattRadioButton);
+		swapOut(this.floorShinyRadioButton, R.id.roompanel_floorShinyRadioButton);
+    }
+	else
+	{
+		removeView(R.id.roompanel_floorPanel);
+		removeView(R.id.roompanel_floorVisibleCheckBox);
+		removeView(R.id.roompanel_floorColorRadioButton);
+		removeView(R.id.roompanel_floorColorButton);
+		removeView(R.id.roompanel_floorTextureRadioButton);
+		removeView(R.id.roompanel_floorTextureComponent);
+		removeView(R.id.roompanel_floorMattRadioButton);
+		removeView(R.id.roompanel_floorShinyRadioButton);
+	}
+    if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null)
+	{
 		JLabel ceilingPanel = new JLabel(activity,
 				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingPanel.title"));
-		rootView.addView(ceilingPanel, rowInsets);
-		rootView.addView(this.ceilingVisibleCheckBox, rowInsets);
-		rootView.addView(this.ceilingColorRadioButton, rowInsets);
-		rootView.addView(this.ceilingColorButton, rowInsets);
-		rootView.addView(this.ceilingTextureRadioButton, rowInsets);
-		rootView.addView(this.ceilingTextureComponent, rowInsets);
-		rootView.addView(this.ceilingMattRadioButton, rowInsets);
-		rootView.addView(this.ceilingShinyRadioButton, rowInsets);
-
-/*      JPanel ceilingPanel = createVerticalTitledPanel(preferences.getLocalizedString(
-          RoomPanel.class, "ceilingPanel.title"),
-          new JComponent [][] {{this.ceilingVisibleCheckBox, null,
-                                this.ceilingColorRadioButton, this.ceilingColorButton, 
-                                this.ceilingTextureRadioButton, this.ceilingTextureComponent},
-                                {this.ceilingMattRadioButton, this.ceilingShinyRadioButton}});
-      add(ceilingPanel, new GridBagConstraints(
-          1, 1, 1, 1, 1, 0, GridBagConstraints.NORTH,
-          GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
-    }  
-    if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null) {
-		View div = new View(activity);
-		div.setMinimumHeight(1);
-		div.setBackgroundColor(Color.GRAY);
-		rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		swapOut(ceilingPanel, R.id.roompanel_ceilingPanel);
+		swapOut(this.ceilingVisibleCheckBox, R.id.roompanel_ceilingVisibleCheckBox);
+		swapOut(this.ceilingColorRadioButton, R.id.roompanel_ceilingColorRadioButton);
+		swapOut(this.ceilingColorButton, R.id.roompanel_ceilingColorButton);
+		swapOut(this.ceilingTextureRadioButton, R.id.roompanel_ceilingTextureRadioButton);
+		swapOut(this.ceilingTextureComponent, R.id.roompanel_ceilingTextureComponent);
+		swapOut(this.ceilingMattRadioButton, R.id.roompanel_ceilingMattRadioButton);
+		swapOut(this.ceilingShinyRadioButton, R.id.roompanel_ceilingShinyRadioButton);
+    }
+	else
+	{
+		removeView(R.id.roompanel_ceilingPanel);
+		removeView(R.id.roompanel_ceilingVisibleCheckBox);
+		removeView(R.id.roompanel_ceilingColorRadioButton);
+		removeView(R.id.roompanel_ceilingColorButton);
+		removeView(R.id.roompanel_ceilingTextureRadioButton);
+		removeView(R.id.roompanel_ceilingTextureComponent);
+		removeView(R.id.roompanel_ceilingMattRadioButton);
+		removeView(R.id.roompanel_ceilingShinyRadioButton);
+	}
+    if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null)
+	{
 		JLabel wallSidesPanel = new JLabel(activity,
 				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesPanel.title"));
-		rootView.addView(wallSidesPanel, rowInsets);
-		rootView.addView(this.splitSurroundingWallsCheckBox, rowInsets);
-		rootView.addView(this.wallSidesColorRadioButton, rowInsets);
-		rootView.addView(this.wallSidesColorButton, rowInsets);
-		rootView.addView(this.wallSidesTextureRadioButton, rowInsets);
-		rootView.addView(this.wallSidesTextureComponent, rowInsets);
-		rootView.addView(this.wallSidesMattRadioButton, rowInsets);
-		rootView.addView(this.wallSidesShinyRadioButton, rowInsets);
-
-/*      JPanel wallSidesPanel = createVerticalTitledPanel(preferences.getLocalizedString(
-          RoomPanel.class, "wallSidesPanel.title"),
-          new JComponent [][] {{this.splitSurroundingWallsCheckBox, null,
-                               this.wallSidesColorRadioButton, this.wallSidesColorButton, 
-                               this.wallSidesTextureRadioButton, this.wallSidesTextureComponent},
-                               {this.wallSidesMattRadioButton, this.wallSidesShinyRadioButton}});
-      add(wallSidesPanel, new GridBagConstraints(
-          2, 1, 1, 1, 1, 0, GridBagConstraints.NORTH,
-          GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
+		swapOut(wallSidesPanel, R.id.roompanel_wallSidesPanel);
+		swapOut(this.splitSurroundingWallsCheckBox, R.id.roompanel_splitSurroundingWallsCheckBox);
+		swapOut(this.wallSidesColorRadioButton, R.id.roompanel_wallSidesColorRadioButton);
+		swapOut(this.wallSidesColorButton, R.id.roompanel_wallSidesColorButton);
+		swapOut(this.wallSidesTextureRadioButton, R.id.roompanel_wallSidesTextureRadioButton);
+		swapOut(this.wallSidesTextureComponent, R.id.roompanel_wallSidesTextureComponent);
+		swapOut(this.wallSidesMattRadioButton, R.id.roompanel_wallSidesMattRadioButton);
+		swapOut(this.wallSidesShinyRadioButton, R.id.roompanel_wallSidesShinyRadioButton);
     }
-    if (this.wallSidesBaseboardComponent != null) {
-		View div = new View(activity);
-		div.setMinimumHeight(1);
-		div.setBackgroundColor(Color.GRAY);
-		rootView.addView(div, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+	else
+	{
+		removeView(R.id.roompanel_wallSidesPanel);
+		removeView(R.id.roompanel_splitSurroundingWallsCheckBox);
+		removeView(R.id.roompanel_wallSidesColorRadioButton);
+		removeView(R.id.roompanel_wallSidesColorButton);
+		removeView(R.id.roompanel_wallSidesTextureRadioButton);
+		removeView(R.id.roompanel_wallSidesTextureComponent);
+		removeView(R.id.roompanel_wallSidesMattRadioButton);
+		removeView(R.id.roompanel_wallSidesShinyRadioButton);
+	}
+    if (this.wallSidesBaseboardComponent != null)
+	{
 		JLabel wallSidesBaseboardPanel = new JLabel(activity,
 				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesBaseboardPanel.title"));
-		rootView.addView(wallSidesBaseboardPanel, rowInsets);
-//		rootView.addView(this.wallSidesBaseboardComponent, rowInsets);
-
-
-/*      JPanel wallSidesBaseboardPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-          RoomPanel.class, "wallSidesBaseboardPanel.title"));
-      wallSidesBaseboardPanel.add(this.wallSidesBaseboardComponent, new GridBagConstraints(
-          0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER,
-          GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-      add(wallSidesBaseboardPanel, new GridBagConstraints(
-          3, 0, 1, 2, 0, 1, GridBagConstraints.NORTH,
-          GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
+		swapOut(wallSidesBaseboardPanel, R.id.roompanel_wallSidesBaseboardPanel);
+		swapOut(this.wallSidesBaseboardComponent, R.id.roompanel_wallSidesBaseboardComponent);
     }
+	else
+	{
+		removeView(R.id.roompanel_wallSidesBaseboardPanel);
+		removeView(R.id.roompanel_wallSidesBaseboardComponent);
+	}
 
 	  this.setTitle(dialogTitle);
-	  rootView.addView(closeButton, labelInsets);
+	  swapOut(closeButton, R.id.roompanel_closeButton);
   }
-  
-/*  private JPanel createVerticalTitledPanel(String title, JComponent [][] componentGroups) {
-    JPanel titledPanel = SwingTools.createTitledPanel(title);    
-    
-    int row = 0;
-    for (int i = 0; i < componentGroups.length; i++) {
-      JComponent [] components = componentGroups [i];
-      for (int j = 0; j < components.length; j += 2) {
-        int bottomInset = j < components.length - 2  ? 2  : 0;      
-        JComponent component = components [j];
-        JComponent nextComponent = components [j + 1];
-        if (component != null) {
-          if (nextComponent != null) {
-            titledPanel.add(component, new GridBagConstraints(
-                0, row, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-                GridBagConstraints.NONE,  new Insets(0, 0, bottomInset, 5), 0, 0));
-            titledPanel.add(nextComponent, new GridBagConstraints(
-                1, row++, 1, 1, 1, 0, GridBagConstraints.LINE_START, 
-                GridBagConstraints.HORIZONTAL, new Insets(0, 0, bottomInset, 0), 0, 0));
-          } else {
-            titledPanel.add(component, new GridBagConstraints(
-                0, row++, 2, 1, 1, 0, GridBagConstraints.LINE_START, 
-                GridBagConstraints.HORIZONTAL, new Insets(0, 0, bottomInset, 0), 0, 0));
-          }
-        }
-      }
-      
-      if (i < componentGroups.length - 1) {
-        // Add a separator between groups
-        for (JComponent otherComponent : componentGroups [i + 1]) {
-          if (otherComponent != null) {
-            titledPanel.add(new JSeparator(), new GridBagConstraints(
-                0, row++, 2, 1, 1, 0, GridBagConstraints.CENTER,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 0, 3, 0), 0, 0));
-            break;
-          }
-        }
-      }
-    }
-    
-    return titledPanel;
-  }*/
+
   
   /**
    * Displays this panel in a modal dialog box. 
