@@ -2342,7 +2342,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// Build scene tree
 		root.addChild(createHomeTree(displayShadowOnFloor, listenToHomeUpdates, waitForLoading));
 		root.addChild(createBackgroundNode(listenToHomeUpdates, waitForLoading));
-		Node groundNode = createGroundNode(-0.5E7f, -0.5E7f, 1E7f, 1E7f, listenToHomeUpdates, waitForLoading);
+		//PJPJPJ a 100km seems big enough and reduces rounding issues on small devices
+		Node groundNode = createGroundNode(-0.5E5f, -0.5E5f, 1E5f, 1E5f, listenToHomeUpdates, waitForLoading);
 		root.addChild(groundNode);
 
 		this.defaultLights = createLights(groundNode, listenToHomeUpdates);

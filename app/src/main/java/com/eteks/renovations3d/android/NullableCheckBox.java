@@ -40,7 +40,14 @@ public class NullableCheckBox extends JCheckBox
 
 	public Boolean getValue()
 	{
-		return new Boolean(this.isChecked());
+		//NOTE!!!! this class can ONLY return Boolean.TRUE Bollean.FALSE and null never new Boolean(b)
+		// as all checks are b == Boolean.TRUE etc and the "new Boolean" version will not equal
+		if (this.isChecked()) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+
 	}
 
 
