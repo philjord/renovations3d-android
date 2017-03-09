@@ -62,16 +62,13 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 	/**
 	 * return true if this handler handled the event
+	 *
 	 * @param ev
 	 * @return
 	 */
 	public boolean onTouch(android.view.View v, MotionEvent ev)
 	{
-		//TODO: sometimes once a thing is selected I can only get the edit to come up on a new thing? camera select related?
-		//TODO: I get unselect on a long drag? I'm getting action ups?
-
-
-		if(ev.getPointerCount() == 1)
+		if (ev.getPointerCount() == 1)
 		{
 			final int action = MotionEventCompat.getActionMasked(ev);
 
@@ -139,7 +136,12 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 						pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
 
 						pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
+
+						long start = System.currentTimeMillis();
 						PickInfo pickInfo = pickCanvas.pickClosest();
+						System.out.println("time to pick closest = " + (System.currentTimeMillis() - start) + " If this number is greater than " + DOUBLE_TAP_MAX + ", trouble ");
+						//PJPJP desperate attempt to allow double taps on complex gear
+						lastUpTime += (System.currentTimeMillis() - start) / 2;
 						if (pickInfo != null)
 						{
 							SceneGraphPath sg = pickInfo.getSceneGraphPath();
@@ -152,8 +154,10 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 								ArrayList<Selectable> items = new ArrayList<Selectable>();
 								items.add(clickedSelectable);
 
+								// this can be a very slow process let's get off the edt shall we?
 								this.home.setSelectedItems(items);
 								this.home.setAllLevelsSelection(true);
+
 								if (tapCount == 2)
 								{
 									// Modify selected item on a double click

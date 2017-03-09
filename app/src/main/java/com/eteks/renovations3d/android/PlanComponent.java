@@ -1388,6 +1388,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
 
+					fingers = ev.getPointerCount();
+
 					if (pointerId == mActivePointerId)
 					{
 						// This was our active pointer going up. Choose a new
@@ -1404,7 +1406,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 			return true;
 		}
 
-		private final long msAllowedBetweenTouchForDouble = 100;
+		private final long msAllowedBetweenTouchForDouble = 200;
 		private long lastMousePressedTime = 0;
 		private long lastMouseReleasedTime = 0;
 		private Point lastMousePressedLocation = null;

@@ -349,7 +349,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "angleLabel.text"));
       final NullableSpinner.NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinner.NullableSpinnerModuloNumberModel(
-          0, 0, 360, 1);
+          0, 0, 360, 5);//PJPJPJ changed t 5 so it'll fit in the spinner 72 limit
       this.angleSpinner = new NullableSpinner(activity, angleSpinnerModel);
       Integer angle = controller.getAngleInDegrees();
       angleSpinnerModel.setNullable(angle == null);
