@@ -25,7 +25,7 @@ import com.eteks.sweethome3d.j3d.Object3DBranch;
 import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
 import com.eteks.sweethome3d.j3d.TextureManager;
 import com.eteks.sweethome3d.j3d.Wall3D;
-import com.eteks.sweethome3d.j3d.mouseover.HomeComponent3DMouseHandler;
+import com.eteks.renovations3d.j3d.mouseover.HomeComponent3DMouseHandler;
 import com.eteks.sweethome3d.model.Camera;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -49,7 +49,6 @@ import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
-import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
@@ -261,8 +260,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							onscreenInfo.addToCanvas(canvas3D2D);
 						}
 
-						// mouse iteraction with picking
-						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller){
+						// mouse interaction with picking
+						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, getActivity());
+						/*{
 							public void doMouseClicked(final MouseEvent e)
 							{
 								// once again dialog need to be on edt, and this guy might dialog up
@@ -282,7 +282,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							{
 								super.doMouseClicked(e);
 							}
-						};
+						};*/
 						homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
 					}
 					}
@@ -1830,219 +1830,66 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void addMouseListeners(final HomeController3D controller, final Canvas3D component3D)
 	{
-		//PJPJPJPJP///////////////////////////////////////////////////////////////////////////////////////
-		MouseListener mouseListener2 = new MouseListener()
-		{
-			private int xLastMouseMove1;
-			private int yLastMouseMove1;
-
-			private int xLastMouseMove2;
-			private int yLastMouseMove2;
-
-
-			public void mousePressed(com.jogamp.newt.event.MouseEvent ev)
-			{
-				if( ev.getPointerCount() == 1 )
-				{
-					fingerCount = 1;
-					this.xLastMouseMove1 = ev.getX();
-					this.yLastMouseMove1 = ev.getY();
-					//System.out.println("mousePressed ev.getPointerCount() == 1");
-				}
-				else if( ev.getPointerCount() == 2 )
-				{
-					fingerCount = 2;
-					// the mouse press is often well different from the drag value (possibly an averaging issue)
-					this.xLastMouseMove2 = -1;
-					this.yLastMouseMove2 = -1;
-					System.out.println("mousePressed ev.getPointerCount() == 2 hence -1 set");
-				}
-			}
-
-			public void mouseReleased(com.jogamp.newt.event.MouseEvent ev)
-			{
-				fingerCount = 0;
-				dragging = false;
-				//if (!retargetMouseEventToNavigationPanelChildren(ev))
-				//{
-				//	if (false)
-				//	{//ev.isPopupTrigger()) {
-				//		JPopupMenu componentPopupMenu = getComponentPopupMenu();
-				//		if (componentPopupMenu != null)
-				//		{
-				//			componentPopupMenu.show(HomeComponent3D.this, ev.getX(), ev.getY());
-				//		}
-				//	}
-				//}
-
-				//System.out.println("mouseReleased ev.getPointerCount() == "+ ev.getPointerCount());
-			}
-
-			public void mouseClicked(com.jogamp.newt.event.MouseEvent ev)
-			{
-				//retargetMouseEventToNavigationPanelChildren(ev);
-			}
-
-			public void mouseMoved(com.jogamp.newt.event.MouseEvent ev)
-			{
-				//retargetMouseEventToNavigationPanelChildren(ev);
-			}
-
-			public void mouseDragged(com.jogamp.newt.event.MouseEvent ev)
-			{
-				dragging = true;
-				System.out.println("mouseDragged ev.getPointerCount() == "+ ev.getPointerCount());
-				//if (!retargetMouseEventToNavigationPanelChildren(ev))
-				{
-					//if (isEnabled())
-					{
-						/*if (ev.isAltDown())
-						{
-							// Mouse move along Y axis while alt is down changes camera location
-							float delta = 1.25f * (this.yLastMouseMove - ev.getY());
-							// Multiply delta by 5 if shift is down
-							if (ev.isShiftDown())
-							{
-								delta *= 5;
-							}
-							controller.moveCamera(delta);
-						}
-						else*/
-						{
-							if (ev.getPointerCount() == 1)
-							{
-								fingerCount = 1;
-								final float PITCH_REDUCTION = 0.4f; // pitch is across 180 only, and is less "wanted"
-								final float ANGLE_FACTOR = 0.0025f;
-								// Mouse move along X axis changes camera yaw
-								float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove1);
-								// Multiply yaw delta by 5 if shift is down
-								//if (ev.isShiftDown())
-								//{
-								//	yawDelta *= 5;
-								//}
-
-								// inside is made into a slower drag
-								float factor = home.getCamera() == home.getObserverCamera() ? -0.5f : 1f;
-
-								controller.rotateCameraYaw(factor*yawDelta);
-
-								// Mouse move along Y axis changes camera pitch
-								float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1) * PITCH_REDUCTION;
-								controller.rotateCameraPitch(factor*pitchDelta);
-								this.xLastMouseMove1 = ev.getX();
-								this.yLastMouseMove1 = ev.getY();
-							}
-							else if (ev.getPointerCount() == 2)
-							{
-								fingerCount = 2;
-								if(this.xLastMouseMove2 != -1 && this.yLastMouseMove2 != -1)
-								{
-									final float STRAF_REDUCTION = 0.5f; // stafing is less "wanted"
-									final float FACTOR = 0.5f;
-									float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
-									float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
-									extraInfo = "yd "+ yd;
-									controller.moveCamera(yd);
-									controller.moveCameraSideways(-xd*STRAF_REDUCTION);//note does nothing in overhead view
-								}
-								else
-								{
-									extraInfo = " this.xLastMouseMove2 == -1 || this.yLastMouseMove2 == -1 " +this.xLastMouseMove2 +" " + this.yLastMouseMove2;
-								}
-								this.xLastMouseMove2 = ev.getX();
-								this.yLastMouseMove2 = ev.getY();
-								System.out.println("mouseDragged ev.getPointerCount() == 2  " +this.xLastMouseMove2 +" " + this.yLastMouseMove2);
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-			public void mouseEntered(com.jogamp.newt.event.MouseEvent ev){}
-
-			public void mouseExited(com.jogamp.newt.event.MouseEvent ev){}
-
-			public void mouseWheelMoved(com.jogamp.newt.event.MouseEvent ev)
-			{
-				//if (isEnabled())
-				/*{
-					// Mouse wheel changes camera location
-					float delta = -2.5f * -ev.getRotation()[1];//ev.getWheelRotation();
-					// Multiply delta by 5 if shift is down
-					if (ev.isShiftDown())
-					{
-						delta *= 5;
-					}
-					controller.moveCamera(delta);
-				}*/
-			}
-		};
-
-		canvas3D2D.getGLWindow().addMouseListener(mouseListener2);
-
-		//canvas3D.getGLWindow().addMouseMotionListener(mouseListener);
-		//canvas3D.getGLWindow().addMouseWheelListener(mouseWheelListener);
-
-		//this.getView().setOnTouchListener(new TouchyListener());
+		this.getView().setOnTouchListener(new TouchyListener());
 	}
 
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
-		// what are we currently doing finger-wise
-		private int fingers = -1;
-
-		private MotionEvent potentialSinglePress = null;
-
-		//PJPJPJPJ   pinch zooming
 		private static final int INVALID_POINTER_ID = -1;
 
 		// The ‘active pointer’ is the one currently moving our object.
 		private int mActivePointerId = INVALID_POINTER_ID;
-		private float mLastTouchX;
-		private float mLastTouchY;
+		private float xLastMouseMove1 = -1;
+		private float yLastMouseMove1 = -1;
 
-		private final long msAllowedBetweenTouchForDouble = 100;
-		private long lastMousePressedTime = 0;
+		private float xLastMouseMove2 = -1;
+		private float yLastMouseMove2 = -1;
+
 
 
 		@Override
 		public boolean onTouch(android.view.View v, MotionEvent ev)
 		{
+			// let the selection handler have a go first, if it's working then stop there
+			// note it has a tiny waver factor, it returns false on any down ever though it will use it later
+			if(homeComponent3DMouseHandler.onTouch(v,  ev))
+				return true;
+
+			//TODO:
+			// for long hold I will only get a mouse down and nothing after it, so on a mouse donw (before even teh tapper)
+			// I need to start a timer waiting for a mouse up, and after waiting for 600ms say
+			// it should just start firing off move events
+
+			//TODO:
+			// now let the pinch listener move us forward/backward
+
+
+			// otherwise a single finger up/down left right are pitch/pan
+			// a single finger long hold is forward
+			// a 2+ finger drag is forward/backward straf left/right
+
+			dragging = false;
+			extraInfo = " pc = "+ev.getPointerCount();
 			final int action = MotionEventCompat.getActionMasked(ev);
 
 			switch (action & MotionEvent.ACTION_MASK)
 			{
 				case MotionEvent.ACTION_DOWN:
 				{
-					//System.out.println("ACTION_DOWN");
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final float x = MotionEventCompat.getX(ev, pointerIndex);
-					final float y = MotionEventCompat.getY(ev, pointerIndex);
-					mLastTouchX = x;
-					mLastTouchY = y;
-					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-
-					if (ev.getPointerCount() == 1 )
+					if( ev.getPointerCount() == 1 )
 					{
-						// we need to fire off the previous now, though lord knows how this could happen
-						if(potentialSinglePress != null)
-						{
-							//mousePressed(v, potentialSinglePress);
-							potentialSinglePress = null;
-							System.out.println("potentialSinglePress != null seen during action down, look into this");
-						}
+						fingerCount = 1;
+						this.xLastMouseMove1 = ev.getX();
+						this.yLastMouseMove1 = ev.getY();
 
-						lastMousePressedTime = System.currentTimeMillis();
-
-						fingers = 1;
-
-						// this will be fired on a move or an up or another single down
-						potentialSinglePress = ev;
-						//mousePressed(v, ev);
+						this.xLastMouseMove2 = -1;
+						this.yLastMouseMove2 = -1;
+					}
+					else if( ev.getPointerCount() > 1 )
+					{
+						fingerCount = ev.getPointerCount();
+						this.xLastMouseMove2 = -1;
+						this.yLastMouseMove2 = -1;
 					}
 
 					break;
@@ -2050,115 +1897,98 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 				case MotionEvent.ACTION_POINTER_DOWN:
 				{
-					//System.out.println("ACTION_POINTER_DOWN");
-					// second finger down now
-					// cancel any pending single down as we are now firmly in double finger mode
-					fingers = 2;
-					potentialSinglePress = null;
+					fingerCount = 2;
+					dragging = false;
 					break;
 				}
 
 				case MotionEvent.ACTION_MOVE:
 				{
-					//System.out.println("ACTION_MOVE");
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final float x = MotionEventCompat.getX(ev, pointerIndex);
-					final float y = MotionEventCompat.getY(ev, pointerIndex);
-
-					// Only move if the ScaleGestureDetector isn't processing a gesture.
-					//if (!mScaleDetector.isInProgress())
-					{
-						if (ev.getPointerCount() > 1)
-						{
-							final float dx = x - mLastTouchX;
-							final float dy = y - mLastTouchY;
-
-							//float s = getScale();
-							// pan operation wants the move to be div scale as moveview does a multiply, so...
-							//moveView(-dx/s,-dy/s);
-
-							// to be safe
-							fingers = 2;
-							potentialSinglePress = null;
-						}
-					}
-
-
+					dragging = true;
 					if (ev.getPointerCount() == 1)
 					{
-						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
-						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
+						fingerCount = 1;
+						if(this.xLastMouseMove1 != -1 && this.yLastMouseMove1 != -1)
 						{
-							// stops any double taps
-							//lastMouseReleasedTime = 0;
+							final float PITCH_REDUCTION = 0.4f; // pitch is across 180 only, and is less "wanted"
+							final float ANGLE_FACTOR = 0.0025f;
+							// Mouse move along X axis changes camera yaw
+							float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove1);
 
-							//PJPJPJPJ this is a major divergence from the desktop function! Single finger pan during selection mode
-							/*if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
-							{
-								final float dx = x - mLastTouchX;
-								final float dy = y - mLastTouchY;
+							// inside is made into a slower drag
+							float factor = home.getCamera() == home.getObserverCamera() ? -0.5f : 1f;
 
-								float s = getScale();
-								// pan operation wants the move to be div scale as moveview does a multiply, so...
-								moveView(-dx/s, -dy/s);
+							controller.rotateCameraYaw(factor * yawDelta);
 
-								// we also cancel any pending press cos that's been confirmed unwanted
-								potentialSinglePress = null;
-
-							}
-							else*/
-							{
-								// if we have a pending click we'd better fire it off now before moving
-								if(potentialSinglePress != null)
-								{
-									//mousePressed(v, potentialSinglePress);
-									potentialSinglePress = null;
-								}
-
-								//mouseMoved(v, ev);
-							}
-							fingers = 1;
+							// Mouse move along Y axis changes camera pitch
+							float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1) * PITCH_REDUCTION;
+							controller.rotateCameraPitch(factor * pitchDelta);
 						}
+						this.xLastMouseMove1 = ev.getX();
+						this.yLastMouseMove1 = ev.getY();
 					}
+					else if (ev.getPointerCount() > 1)
+					{
+						fingerCount = ev.getPointerCount();
 
-					mLastTouchX = x;
-					mLastTouchY = y;
+						extraInfo = " x " +this.xLastMouseMove2 + " y " + this.yLastMouseMove2;
+
+						if(this.xLastMouseMove2 != -1 && this.yLastMouseMove2 != -1)
+						{
+							final float STRAF_REDUCTION = 0.5f; // stafing is less "wanted"
+							final float FACTOR = 0.5f;
+							float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
+							float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
+							extraInfo += " yd "+yd;
+							controller.moveCamera(yd);
+							controller.moveCameraSideways(-xd*STRAF_REDUCTION);//note does nothing in overhead view
+						}
+
+						this.xLastMouseMove2 = ev.getX();
+						this.yLastMouseMove2 = ev.getY();
+
+
+					}
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:
 				{
-					//System.out.println("ACTION_UP");
+					fingerCount = 0;
+					dragging = false;
 					mActivePointerId = INVALID_POINTER_ID;
 					// make sure this isn't the exit of a double touch too
 					//if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
 					{
-						// all is good, fire off the down now
-						if(potentialSinglePress != null)
-						{
-							//mousePressed(v, potentialSinglePress);
-							potentialSinglePress = null;
-						}
+						this.xLastMouseMove1 = -1;
+						this.yLastMouseMove1 = -1;
 
-						//mouseReleased(v, ev);
+						this.xLastMouseMove2 = -1;
+						this.yLastMouseMove2 = -1;
 					}
 					break;
 				}
 
 				case MotionEvent.ACTION_CANCEL:
 				{
-					//System.out.println("ACTION_CANCEL");
+					fingerCount = 0;
+					dragging = false;
+
 					mActivePointerId = INVALID_POINTER_ID;
 
-					// just to be safe, not really sure
-					fingers = -1;
-					potentialSinglePress = null;
+					this.xLastMouseMove1 = -1;
+					this.yLastMouseMove1 = -1;
+
+					this.xLastMouseMove2 = -1;
+					this.yLastMouseMove2 = -1;
 					break;
 				}
 
 				case MotionEvent.ACTION_POINTER_UP:
 				{
-					//System.out.println("ACTION_POINTER_UP");
+					fingerCount = 1;
+					dragging = false;
+
 					//second finger has been released
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
@@ -2168,16 +1998,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						// This was our active pointer going up. Choose a new
 						// active pointer and adjust accordingly.
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-						mLastTouchX = MotionEventCompat.getX(ev, newPointerIndex);
-						mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
+						this.xLastMouseMove1 = MotionEventCompat.getX(ev, newPointerIndex);
+						this.yLastMouseMove1 = MotionEventCompat.getY(ev, newPointerIndex);
+
+						this.xLastMouseMove2 = -1;
+						this.yLastMouseMove2 = -1;
 						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
 					}
-
-
 					break;
 				}
-
-
 			}
 
 			return true;
