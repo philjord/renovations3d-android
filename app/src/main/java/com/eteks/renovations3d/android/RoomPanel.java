@@ -662,10 +662,8 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	}
 	else
 	{
-		removeView(R.id.roompanel_nameAndAreaPanel);
-		removeView(R.id.roompanel_nameLabel);
-		removeView(R.id.roompanel_nameTextField);
-		removeView(R.id.roompanel_areaVisibleCheckBox);
+		// no empty table must remove teh whole thing
+		removeView(R.id.roompanel_nameAndAreaTable);
 	}
 
     if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null)
@@ -683,14 +681,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     }
 	else
 	{
-		removeView(R.id.roompanel_floorPanel);
-		removeView(R.id.roompanel_floorVisibleCheckBox);
-		removeView(R.id.roompanel_floorColorRadioButton);
-		removeView(R.id.roompanel_floorColorButton);
-		removeView(R.id.roompanel_floorTextureRadioButton);
-		removeView(R.id.roompanel_floorTextureComponent);
-		removeView(R.id.roompanel_floorMattRadioButton);
-		removeView(R.id.roompanel_floorShinyRadioButton);
+		removeView(R.id.roompanel_floorPanelTable);
 	}
     if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null)
 	{
@@ -707,14 +698,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     }
 	else
 	{
-		removeView(R.id.roompanel_ceilingPanel);
-		removeView(R.id.roompanel_ceilingVisibleCheckBox);
-		removeView(R.id.roompanel_ceilingColorRadioButton);
-		removeView(R.id.roompanel_ceilingColorButton);
-		removeView(R.id.roompanel_ceilingTextureRadioButton);
-		removeView(R.id.roompanel_ceilingTextureComponent);
-		removeView(R.id.roompanel_ceilingMattRadioButton);
-		removeView(R.id.roompanel_ceilingShinyRadioButton);
+		removeView(R.id.roompanel_ceilingPanelTable);
 	}
     if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null)
 	{
@@ -731,14 +715,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     }
 	else
 	{
-		removeView(R.id.roompanel_wallSidesPanel);
-		removeView(R.id.roompanel_splitSurroundingWallsCheckBox);
-		removeView(R.id.roompanel_wallSidesColorRadioButton);
-		removeView(R.id.roompanel_wallSidesColorButton);
-		removeView(R.id.roompanel_wallSidesTextureRadioButton);
-		removeView(R.id.roompanel_wallSidesTextureComponent);
-		removeView(R.id.roompanel_wallSidesMattRadioButton);
-		removeView(R.id.roompanel_wallSidesShinyRadioButton);
+		removeView(R.id.roompanel_wallSidesPanelTable);
 	}
     if (this.wallSidesBaseboardComponent != null)
 	{

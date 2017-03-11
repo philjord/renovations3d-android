@@ -140,7 +140,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 						long start = System.currentTimeMillis();
 						PickInfo pickInfo = pickCanvas.pickClosest();
 						System.out.println("time to pick closest = " + (System.currentTimeMillis() - start) + " If this number is greater than " + DOUBLE_TAP_MAX + ", trouble ");
-						//PJPJP desperate attempt to allow double taps on complex gear
+						//PJPJP desperate attempt to allow double taps on complex gear, anything over 1200 will still fail to edit, like chandelier in mezz
 						lastUpTime += (System.currentTimeMillis() - start) / 2;
 						if (pickInfo != null)
 						{

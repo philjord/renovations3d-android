@@ -90,6 +90,7 @@ import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
+import org.jogamp.vecmath.Point2f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
@@ -1213,9 +1214,18 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       });*/
 
 	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
-	  this.getDrawableView().setOnTouchListener(new TouchyListener());
+	  this.getDrawableView().setOnTouchListener(touchyListener);
   }
 
+	/**
+	 * used to simulate a final press when changing plancontroller state
+	 * @return
+	 */
+	public Point2f getLastDragLocation()
+  {
+	  return touchyListener.getLastDragLocation();
+  }
+	TouchyListener touchyListener = new TouchyListener();
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
 		// what are we currently doing finger-wise
@@ -1230,6 +1240,12 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		private int mActivePointerId = INVALID_POINTER_ID;
 		private float mLastTouchX;
 		private float mLastTouchY;
+
+		public Point2f getLastDragLocation()
+		{
+			return new Point2f(mLastTouchX, mLastTouchY);
+		}
+
 		@Override
 		public boolean onTouch(View v, MotionEvent ev)
 		{

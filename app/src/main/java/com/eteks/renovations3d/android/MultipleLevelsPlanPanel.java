@@ -35,6 +35,8 @@ import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.mindblowing.renovations3d.R;
 
+import org.jogamp.vecmath.Point2f;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
@@ -175,47 +177,47 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.planSelect:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();// in case we are doing a create now
+					finishCurrentMode();
 					setMode(PlanController.Mode.SELECTION);
 					break;
 				case R.id.planPan:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();// in case we are doing a create now
+					finishCurrentMode();
 					setMode(PlanController.Mode.PANNING);
 					break;
 				case R.id.createWalls:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();// in case we are doing a create now
+					finishCurrentMode();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.WALL_CREATION);
 					break;
 				case R.id.createRooms:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();
+					finishCurrentMode();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.ROOM_CREATION);
 					break;
 				case R.id.createPolyLines:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();
+					finishCurrentMode();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 					break;
 				case R.id.createDimensions:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();
+					finishCurrentMode();
 					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case R.id.createText:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
-					planController.escape();
+					finishCurrentMode();
 					// note single tap works for this one
 					setMode(PlanController.Mode.LABEL_CREATION);
 					break;
@@ -253,6 +255,34 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		item.setIcon(stateListDrawable.getCurrent());
 	}
 
+
+	private void finishCurrentMode()
+	{
+
+		PlanController.Mode currentMode = planController.getMode();
+
+		if(currentMode != PlanController.Mode.LABEL_CREATION)
+		{
+			if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION )
+			{
+				//TODO:  the below does not set the current dim line in place for some reason, nor a mouse release
+			}
+			else
+			{
+				// need to simulate a press on the last dragged position to make it stick
+				Point2f lastDrag = planComponent.getLastDragLocation();
+				if (lastDrag.x > 0 && lastDrag.y > 0)
+				{
+					planController.pressMouse(lastDrag.x, lastDrag.y, 2, false, false, false, false);
+				}
+			}
+		}
+
+		//planController.escape();// in case we are doing a create now
+		// need special handling if current
+		//setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
+		//setMode(PlanController.Mode.LABEL_CREATION);
+	}
 	/**
 	 * This return the state of teh control key and resets it to off, so it is a one time use button (an auto popper)
 	 * @return

@@ -11,6 +11,7 @@
                   android:showDividers="middle"
                   android:divider="@drawable/empty_tall_divider">
         <TableLayout
+            android:id="@+id/roompanel_nameAndAreaTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -41,9 +42,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"/>
+            <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         </TableLayout>
-        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+
         <TableLayout
+            android:id="@+id/roompanel_floorPanelTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -102,9 +105,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"/>
             </TableRow>
+            <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         </TableLayout>
-        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+
         <TableLayout
+            android:id="@+id/roompanel_ceilingPanelTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -163,9 +168,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"/>
             </TableRow>
+            <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         </TableLayout>
-        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+
         <TableLayout
+            android:id="@+id/roompanel_wallSidesPanelTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -224,8 +231,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"/>
             </TableRow>
+            <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         </TableLayout>
-        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+
         <TextView
             android:id="@+id/roompanel_wallSidesBaseboardPanel"
             android:text="wallSidesBaseboardPanel"
