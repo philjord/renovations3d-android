@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mindblowing.renovations3d.R;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -116,8 +120,7 @@ public class JFileChooser
 
 	private void buildView()
 	{
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 0, 1.0f);
 		list = new ListView(context);
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
@@ -146,6 +149,7 @@ public class JFileChooser
 				}
 			}
 		});
+
 		rootView = new LinearLayout(context);
 		rootView.setOrientation(LinearLayout.VERTICAL);
 		rootView.setPadding(10,10,10,10);
@@ -153,13 +157,19 @@ public class JFileChooser
 
 		if(allowNewName)
 		{
+			LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			LinearLayout linearLayout2 = new LinearLayout(context);
+			linearLayout2.setOrientation(LinearLayout.VERTICAL);
+			linearLayout2.setPadding(10,10,10,10);
 			TextView nameInputLabel = new TextView(context);
-			nameInputLabel.setText("New name");
+			nameInputLabel.setText("Save file name");
 			nameInputLabel.setTextAppearance(context, android.R.style.TextAppearance_Medium);
 			nameInput = new EditText(context);
 			nameInput.setMaxLines(1);
-			rootView.addView(nameInputLabel, lp);
-			rootView.addView(nameInput, lp);
+			nameInput.setSingleLine(true);
+
+			rootView.addView(nameInputLabel, lp2);
+			rootView.addView(nameInput, lp2);
 		}
 
 	}
@@ -270,6 +280,12 @@ public class JFileChooser
 							return view;
 						}
 					});
+
+					list.requestLayout();;
+					list.invalidate();
+					rootView.requestLayout();
+					rootView.invalidate();
+
 				}
 			}
 			else
