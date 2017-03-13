@@ -5570,12 +5570,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     }
   }
 
-	//PJPJPJP taken from JComponent down here to have a go at scroll on this call
-	protected void scrollRectToVisible(Rectangle shapePixelBounds)
-	{
-		//TODO: not really wat I want I suspect
-		//System.out.println("JComponent  scrollRectToVisible(Rectangle shapePixelBounds)" + shapePixelBounds);
-	}
+
 
   /**
    * Returns the bounds of the selected items.
@@ -5595,10 +5590,112 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * moving scroll bars if needed.
    */
   public void makePointVisible(float x, float y) {
-    scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
+	  //PJPJP note this does nothing now
+	  //why is the view panning upwards tehn??? the upwards isn't even the moveView below??
+
+	  // with all scrollX and scrollY taken out I still scrolls upwards???
+	  // I have to implement the visible->move view AND
+	  // get rid of the mad upwards scroll thing
+
+	  // so scrolls to teh left and p can happen now, but not scrolls to the right and down
+
+
+
+	// PJPJPJP this accounts for the plan sahpe min x and y being the actual underlying view size
+	// but this is not true in this version
+    //scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
+	scrollRectToVisible(new Rectangle((int)x, (int)y, 1 , 1 ));
   }
 
 
+	/* Taken from JViewport
+	 Used by the scrollRectToVisible method to determine the
+		  *  proper direction and amount to move by. The integer variables are named
+		  *  width, but this method is applicable to height also. The code assumes that
+		  *  parentWidth/childWidth are positive and childAt can be negative.
+		  */
+	private float positionAdjustment(float parentWidth, float childWidth, float childAt)    {
+		System.out.println("parentWidth  " +parentWidth + " childWidth " +childWidth + " childAt " +childAt);
+		//   +-----+
+		//   | --- |     No Change
+		//   +-----+
+		if (childAt >= 0 && childWidth + childAt <= parentWidth)    {
+			return 0;
+		}
+
+		//   +-----+
+		//  ---------   No Change
+		//   +-----+
+		if (childAt <= 0 && childWidth + childAt >= parentWidth) {
+			return 0;
+		}
+
+		//   +-----+          +-----+
+		//   |   ----    ->   | ----|
+		//   +-----+          +-----+
+		if (childAt > 0 && childWidth <= parentWidth)    {
+			return -childAt + parentWidth - childWidth;
+		}
+
+		//   +-----+             +-----+
+		//   |  --------  ->     |--------
+		//   +-----+             +-----+
+		if (childAt >= 0 && childWidth >= parentWidth)   {
+			return -childAt;
+		}
+
+		//   +-----+          +-----+
+		// ----    |     ->   |---- |
+		//   +-----+          +-----+
+		if (childAt <= 0 && childWidth <= parentWidth)   {
+			return -childAt;
+		}
+
+		//   +-----+             +-----+
+		//-------- |      ->   --------|
+		//   +-----+             +-----+
+		if (childAt < 0 && childWidth >= parentWidth)    {
+			return -childAt + parentWidth - childWidth;
+		}
+
+		return 0;
+	}
+	//PJPJPJP taken from JComponent down here to have a go at scroll on this call
+	protected void scrollRectToVisible(Rectangle shapePixelBounds)
+	{
+		// thoughts, plan bounds only include the features on it, so zoom, pan don't change it, so plan bounds are not in thei world
+		// test it all at 1 scale
+
+		//TODO: should all this be dp for small phones?
+		//TODO: test zoomed
+		// take margin off both sides as the scrolling zone
+/*		System.out.println("planbounds " +this.getPlanBounds());
+		System.out.println("scrollRectToVisible " +shapePixelBounds);
+		System.out.println("scrolledX " +scrolledX + " scrolledY " +scrolledY );
+		System.out.println("getScale() " + getScale() + " getWidth() "+getWidth()+ " getHeight() "+ getHeight());
+
+		// works well at scale of .3
+		//float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
+		//float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
+		//at scale 0.83 y works but positive x doesn't
+
+		float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
+		float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
+
+
+
+		System.out.println("dx  " +dx + " dy " +dy);
+		if (dx != 0 || dy != 0)
+		{
+			float m = 100f * getScale();
+			dx = dx > m ? m : dx < -m ? -m : dx;
+			dy = dy > m ? m : dy < -m ? -m : dy;
+
+			moveView(-dx/getScale(), -dy/getScale());
+		}
+
+		System.out.println("new scrolledX " +scrolledX + " new scrolledY " +scrolledY );*/
+	}
 
 	/**
    * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.

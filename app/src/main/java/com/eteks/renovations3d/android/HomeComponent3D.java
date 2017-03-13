@@ -670,6 +670,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TRANSPARENCY = !deoptomize;
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TEXTURE = !deoptomize;
 
+		SimpleShaderAppearance.setDISABLE_LIGHTS(deoptomize);
+
 		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(DEOPTOMIZE, deoptomize);
