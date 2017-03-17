@@ -117,8 +117,11 @@ public class JOptionPane
 	public static int showOptionDialog(final Context context, final String message, final String title, final int options, final int type,
 									   final Icon icon, final Object [] optionsText, Object defaultText)
 	{
-		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-			System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+		if(Looper.getMainLooper().getThread() == Thread.currentThread())
+		{
+			new Throwable().printStackTrace();
+			System.err.println("JOptionPane asked to showOptionDialog (Strng message) on EDT thread you MUST not as I will block!");
+			return NO_OPTION;
 		}
 
 		final int[] selectedOption = new int[]{CANCEL_OPTION};
@@ -181,8 +184,11 @@ public class JOptionPane
 	public static int showOptionDialog(final Context context, final View root, final String title, final int options, final int type,
 									   final Icon icon, final Object [] optionsText, Object defaultText)
 	{
-		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-			System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+		if(Looper.getMainLooper().getThread() == Thread.currentThread())
+		{
+			new Throwable().printStackTrace();
+			System.err.println("JOptionPane asked to showOptionDialog (View root) on EDT thread you MUST not as I will block!");
+			return NO_OPTION;
 		}
 
 		final int[] selectedOption = new int[]{CANCEL_OPTION};

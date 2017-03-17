@@ -3591,7 +3591,9 @@ public class HomePane implements HomeView
 	{
 		if (Looper.getMainLooper().getThread() == Thread.currentThread())
 		{
-			System.err.println("FileContentManager asked to showFileChooser on EDT thread you MUST not as I will block!");
+			new Throwable().printStackTrace();
+			System.err.println("HomePane asked to showActionTipMessage on EDT thread you MUST not as I will block!");
+			return false;
 		}
 
 		final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipTitle");

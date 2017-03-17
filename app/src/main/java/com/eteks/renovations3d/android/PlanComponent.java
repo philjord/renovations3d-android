@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.android.swingish.JViewPort;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -173,7 +174,7 @@ import javaxswing.ImageIcon;
  *
  *
  */
-public class PlanComponent extends JComponent implements PlanView,   Printable {
+public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 	static int HORIZONTAL =0;
 	static int VERTICAL=1;
@@ -225,14 +226,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     }
   };
 
-	private static float MARGIN_DP = 40;
+  private static float MARGIN_DP = 40;
   private static float MARGIN_PX = 40;
-
-	//PJPJPJPJ fast and dirty scrolling system! needs to be more like a ViewPort
-	public int scrolledX = 0;
-	public int scrolledY = 0;
 	
-	private static float inverseSize = 2;// for some reason things are very small on screen
+  private static float inverseSize = 2;// for some reason things are very small on screen
 
   private  Home            home;
   private  UserPreferences preferences;
@@ -596,12 +593,12 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		setOpaque(true);
 		// Add listeners
 		addModelListeners(home, preferences, controller);
-		createToolTipTextFields(preferences, controller);
+		//createToolTipTextFields(preferences, controller);
 		if (controller != null) {
 			addMouseListeners(controller);
-			addFocusListener(controller);
-			createActions(controller);
-			installDefaultKeyboardActions();
+			//addFocusListener(controller);
+			//createActions(controller);
+			//installDefaultKeyboardActions();
 			setFocusable(true);
 			setAutoscrolls(true);
 		}
@@ -646,9 +643,9 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
 	  //PJ taken from HomePane
 	Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
-	scrolledX = viewportX != null ?  viewportX.intValue() : 0;
+	setScrolledX(viewportX != null ?  viewportX.intValue() : 0);
 	Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
-	scrolledY = viewportY != null? viewportY.intValue(): 0;
+	setScrolledY(viewportY != null? viewportY.intValue(): 0);
 
   }
 
@@ -1117,103 +1114,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
    * Adds AWT mouse listeners to this component that calls back <code>controller</code> methods.
    */
   private void addMouseListeners(final PlanController controller) {
-	  //PJPJ replaced with below
- /*   MouseInputAdapter mouseListener = new MouseInputAdapter() {
-      private Point lastMousePressedLocation;
-
-      @Override
-      public void mousePressed(MouseEvent ev) {
-        this.lastMousePressedLocation = ev.getPoint();
-        if (isEnabled() && !ev.isPopupTrigger()) {
-          //requestFocusInWindow();
-          if (ev.getButton() == MouseEvent.BUTTON1) {
-            boolean alignmentActivated = OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
-                ? ev.isShiftDown()
-                : ev.isShiftDown() && !ev.isAltDown();
-            boolean duplicationActivated = OperatingSystem.isMacOSX()
-                ? ev.isAltDown()
-                : ev.isControlDown();
-            boolean magnetismToggled = OperatingSystem.isWindows()
-                ? ev.isAltDown()
-                : (OperatingSystem.isMacOSX()
-                       ? ev.isMetaDown()
-                       : ev.isShiftDown() && ev.isAltDown());
-            controller.pressMouse(convertXPixelToModel(ev.getX()), convertYPixelToModel(ev.getY()),
-                ev.getClickCount(), ev.isShiftDown() && !ev.isControlDown() && !ev.isAltDown() && !ev.isMetaDown(),
-                alignmentActivated, duplicationActivated, magnetismToggled);
-          }
-        }
-      }
-
-      @Override
-      public void mouseReleased(MouseEvent ev) {
-        if (isEnabled() && !ev.isPopupTrigger() && ev.getButton() == MouseEvent.BUTTON1) {
-          controller.releaseMouse(convertXPixelToModel(ev.getX()), convertYPixelToModel(ev.getY()));
-        }
-      }
-
-      @Override
-      public void mouseMoved(MouseEvent ev) {
-        // Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
-        if (this.lastMousePressedLocation != null
-            && !this.lastMousePressedLocation.equals(ev.getPoint())) {
-          this.lastMousePressedLocation = null;
-        }
-        if (this.lastMousePressedLocation == null) {
-          if (isEnabled()) {
-            controller.moveMouse(convertXPixelToModel(ev.getX()), convertYPixelToModel(ev.getY()));
-          }
-        }
-      }
-
-      @Override
-      public void mouseDragged(MouseEvent ev) {
-        if (isEnabled()) {
-          mouseMoved(ev);
-        }
-      }
-    };
-    addMouseListener(mouseListener);
-    addMouseMotionListener(mouseListener);
-    addMouseWheelListener(new MouseWheelListener() {
-        public void mouseWheelMoved(MouseWheelEvent ev) {
-          if (ev.getModifiers() == getToolkit().getMenuShortcutKeyMask()) {
-            float mouseX = 0;
-            float mouseY = 0;
-            int deltaX = 0;
-            int deltaY = 0;
-            if (getParent() instanceof JViewport) {
-              mouseX = convertXPixelToModel(ev.getX());
-              mouseY = convertYPixelToModel(ev.getY());
-              Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
-              deltaX = ev.getX() - viewRectangle.x;
-              deltaY = ev.getY() - viewRectangle.y;
-            }
-
-            float oldScale = getScale();
-            controller.zoom((float)(ev.getWheelRotation() < 0
-                ? Math.pow(1.05, -ev.getWheelRotation())
-                : Math.pow(0.95, ev.getWheelRotation())));
-
-            if (getScale() != oldScale && getParent() instanceof JViewport) {
-              // If scale changed, update viewport position to keep the same coordinates under mouse cursor
-              ((JViewport)getParent()).setViewPosition(new Point());
-              moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
-            }
-          } else if (getMouseWheelListeners().length == 1) {
-            // If this listener is the only one registered on this component
-            // redispatch event to its parent (for default scroll bar management)
-            getParent().dispatchEvent(
-              new MouseWheelEvent(getParent(), ev.getID(), ev.getWhen(),
-                  ev.getModifiersEx() | ev.getModifiers(),
-                  ev.getX() - getX(), ev.getY() - getY(),
-                  ev.getClickCount(), ev.isPopupTrigger(), ev.getScrollType(),
-                  ev.getScrollAmount(), ev.getWheelRotation()));
-          }
-        }
-      });*/
-
-	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
+		  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
 	  this.getDrawableView().setOnTouchListener(touchyListener);
   }
 
@@ -1608,10 +1509,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
 
 				float modelDiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
-				scrolledX += modelDiffX * newScale;
+				moveScrolledX(modelDiffX * newScale);
 
 				float modelDiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
-				scrolledY += modelDiffY * newScale;
+				moveScrolledY(modelDiffY * newScale);
 			}
 
 			return true;
@@ -1640,369 +1541,38 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 	}
 	//PJPJP pinch support above here
 
-  /**
-   * Adds AWT focus listener to this component that calls back <code>controller</code>
-   * escape method on focus lost event.
-   */
-  private void addFocusListener(final PlanController controller) {
-	  //PJPJPJ
-   /* addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusLost(FocusEvent ev) {
-          controller.escape();
-        }
-      });
 
-    if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-      addPropertyChangeListener("Frame.active", new PropertyChangeListener() {
-          public void propertyChange(PropertyChangeEvent ev) {
-            if (!home.getSelectedItems().isEmpty()) {
-              // Repaint to update selection color
-              repaint();
-            }
-          }
-        });
-    }*/
-  }
+	protected void moveScrolledX(float deltaScrolledX)
+	{
 
-  /**
-   * Installs default keys bound to actions.
-   */
-  private void installDefaultKeyboardActions() {
-	  //PJPJ
-	  /*
-    InputMap inputMap = getInputMap(WHEN_FOCUSED);
-    inputMap.clear();
-    inputMap.put(KeyStroke.getKeyStroke("DELETE"), ActionType.DELETE_SELECTION);
-    inputMap.put(KeyStroke.getKeyStroke("BACK_SPACE"), ActionType.DELETE_SELECTION);
-    inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), ActionType.ESCAPE);
-    inputMap.put(KeyStroke.getKeyStroke("shift ESCAPE"), ActionType.ESCAPE);
-    inputMap.put(KeyStroke.getKeyStroke("LEFT"), ActionType.MOVE_SELECTION_LEFT);
-    inputMap.put(KeyStroke.getKeyStroke("shift LEFT"), ActionType.MOVE_SELECTION_FAST_LEFT);
-    inputMap.put(KeyStroke.getKeyStroke("UP"), ActionType.MOVE_SELECTION_UP);
-    inputMap.put(KeyStroke.getKeyStroke("shift UP"), ActionType.MOVE_SELECTION_FAST_UP);
-    inputMap.put(KeyStroke.getKeyStroke("DOWN"), ActionType.MOVE_SELECTION_DOWN);
-    inputMap.put(KeyStroke.getKeyStroke("shift DOWN"), ActionType.MOVE_SELECTION_FAST_DOWN);
-    inputMap.put(KeyStroke.getKeyStroke("RIGHT"), ActionType.MOVE_SELECTION_RIGHT);
-    inputMap.put(KeyStroke.getKeyStroke("shift RIGHT"), ActionType.MOVE_SELECTION_FAST_RIGHT);
-    inputMap.put(KeyStroke.getKeyStroke("ENTER"), ActionType.ACTIVATE_EDITIION);
-    inputMap.put(KeyStroke.getKeyStroke("shift ENTER"), ActionType.ACTIVATE_EDITIION);
+		System.out.println("scrolled X was " + getScrolledX() + " will be " + (getScrolledX() + deltaScrolledX)   + " with scale currently at " +getScale());
+		System.out.println("plan bounds are " + this.getPlanBounds());
+		System.out.println("0x in pix to mod " + this.convertXPixelToModel(0));
+		System.out.println("0x in mod to pix " + this.convertXModelToPixel(0));
 
-    if (OperatingSystem.isMacOSX()) {
-      // Under Mac OS X, duplication with Alt key
-      inputMap.put(KeyStroke.getKeyStroke("alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("meta alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("meta released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift meta alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift meta released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("alt ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), ActionType.ACTIVATE_EDITIION);
-    } else {
-      // Under other systems, duplication with Ctrl key
-      inputMap.put(KeyStroke.getKeyStroke("control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("meta control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("meta released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift meta control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift meta released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("control ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("control ENTER"), ActionType.ACTIVATE_EDITIION);
-    }
+		super.moveScrolledX(deltaScrolledX);
+	}
+	protected void moveScrolledY(float deltaScrolledY)
+	{
+		super.moveScrolledY(deltaScrolledY);
+	}
+	protected void setScrolledX(float scrolledX)
+	{
+		System.out.println("set scrolled X was " + this.getScrolledX() + " now " + scrolledX   + " with scale currently at " +getScale());
+		System.out.println("plan bounds are " + this.getPlanBounds());
+		System.out.println("0x in pix to mod " + this.convertXPixelToModel(0));
+		System.out.println("0x in mod to pix " + this.convertXModelToPixel(0));
 
-    if (OperatingSystem.isWindows()) {
-      // Under Windows, magnetism toggled with Alt key
-      inputMap.put(KeyStroke.getKeyStroke("alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("control alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("control released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("shift control alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("shift control released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("alt ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), ActionType.ACTIVATE_EDITIION);
-    } else if (OperatingSystem.isMacOSX()) {
-      // Under Windows, magnetism toggled with cmd key
-      inputMap.put(KeyStroke.getKeyStroke("meta pressed META"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("released META"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("shift meta pressed META"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("shift released META"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("alt meta pressed META"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("alt released META"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("shift alt meta pressed META"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("shift alt released META"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("meta ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("meta ENTER"), ActionType.ACTIVATE_EDITIION);
-    } else {
-      // Under other Unix systems, magnetism toggled with Alt + Shift key
-      inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("alt shift pressed SHIFT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("alt released SHIFT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("control shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("control alt shift pressed SHIFT"), ActionType.TOGGLE_MAGNETISM_ON);
-      inputMap.put(KeyStroke.getKeyStroke("control alt released SHIFT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("control shift released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
-      inputMap.put(KeyStroke.getKeyStroke("alt shift ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("alt shift  ENTER"), ActionType.ACTIVATE_EDITIION);
-      inputMap.put(KeyStroke.getKeyStroke("control alt shift ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("control alt shift  ENTER"), ActionType.ACTIVATE_EDITIION);
-    }
+		super.setScrolledX(scrolledX);
+	}
+	protected void setScrolledY(float scrolledY)
+	{
+		super.setScrolledX(scrolledY);
+	}
 
-    inputMap.put(KeyStroke.getKeyStroke("shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-    inputMap.put(KeyStroke.getKeyStroke("released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
-    if (OperatingSystem.isWindows()) {
-      inputMap.put(KeyStroke.getKeyStroke("control shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("control released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("alt shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("alt released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
 
-    } else if (OperatingSystem.isMacOSX()) {
-      inputMap.put(KeyStroke.getKeyStroke("alt shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("alt released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("meta shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("meta released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
-    } else {
-      inputMap.put(KeyStroke.getKeyStroke("control shift pressed SHIFT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("control released SHIFT"), ActionType.DEACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.ACTIVATE_ALIGNMENT);
-      inputMap.put(KeyStroke.getKeyStroke("control shift released ALT"), ActionType.ACTIVATE_ALIGNMENT);
-    }*/
-  }
 
-  /**
-   * Installs keys bound to actions during edition.
-   */
-  private void installEditionKeyboardActions() {
-	  //PJPJ
-/*    InputMap inputMap = getInputMap(WHEN_FOCUSED);
-    inputMap.clear();
-    inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), ActionType.ESCAPE);
-    inputMap.put(KeyStroke.getKeyStroke("shift ESCAPE"), ActionType.ESCAPE);
-    inputMap.put(KeyStroke.getKeyStroke("ENTER"), ActionType.DEACTIVATE_EDITIION);
-    inputMap.put(KeyStroke.getKeyStroke("shift ENTER"), ActionType.DEACTIVATE_EDITIION);
-    if (OperatingSystem.isMacOSX()) {
-      // Under Mac OS X, duplication with Alt key
-      inputMap.put(KeyStroke.getKeyStroke("alt ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), ActionType.DEACTIVATE_EDITIION);
-      inputMap.put(KeyStroke.getKeyStroke("alt shift ENTER"), ActionType.DEACTIVATE_EDITIION);
-      inputMap.put(KeyStroke.getKeyStroke("alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.DEACTIVATE_DUPLICATION);
-    } else {
-      // Under other systems, duplication with Ctrl key
-      inputMap.put(KeyStroke.getKeyStroke("control ESCAPE"), ActionType.ESCAPE);
-      inputMap.put(KeyStroke.getKeyStroke("control ENTER"), ActionType.DEACTIVATE_EDITIION);
-      inputMap.put(KeyStroke.getKeyStroke("control shift ENTER"), ActionType.DEACTIVATE_EDITIION);
-      inputMap.put(KeyStroke.getKeyStroke("control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift control pressed CONTROL"), ActionType.ACTIVATE_DUPLICATION);
-      inputMap.put(KeyStroke.getKeyStroke("shift released CONTROL"), ActionType.DEACTIVATE_DUPLICATION);
-    }*/
-  }
 
-  /**
-   * Creates actions that calls back <code>controller</code> methods.
-   */
-  private void createActions(final PlanController controller) {
-
-	  //PJPJPJPJ
- /*   // Delete selection action
-    Action deleteSelectionAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent ev) {
-        controller.deleteSelection();
-      }
-    };
-    // Escape action
-    Action escapeAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent ev) {
-        controller.escape();
-      }
-    };
-    // Move selection action
-    class MoveSelectionAction extends AbstractAction {
-      private final int dx;
-      private final int dy;
-
-      public MoveSelectionAction(int dx, int dy) {
-        this.dx = dx;
-        this.dy = dy;
-      }
-
-      public void actionPerformed(ActionEvent ev) {
-        controller.moveSelection(this.dx / getScale(), this.dy / getScale());
-      }
-    }
-    // Toggle magnetism action
-    class ToggleMagnetismAction extends AbstractAction {
-      private final boolean toggle;
-
-      public ToggleMagnetismAction(boolean toggle) {
-        this.toggle = toggle;
-      }
-
-      public void actionPerformed(ActionEvent ev) {
-        controller.toggleMagnetism(this.toggle);
-      }
-    }
-    // Alignment action
-    class SetAlignmentActivatedAction extends AbstractAction {
-      private final boolean alignmentActivated;
-
-      public SetAlignmentActivatedAction(boolean alignmentActivated) {
-        this.alignmentActivated = alignmentActivated;
-      }
-
-      public void actionPerformed(ActionEvent ev) {
-        controller.setAlignmentActivated(this.alignmentActivated);
-      }
-    }
-    // Duplication action
-    class SetDuplicationActivatedAction extends AbstractAction {
-      private final boolean duplicationActivated;
-
-      public SetDuplicationActivatedAction(boolean duplicationActivated) {
-        this.duplicationActivated = duplicationActivated;
-      }
-
-      public void actionPerformed(ActionEvent ev) {
-        controller.setDuplicationActivated(this.duplicationActivated);
-      }
-    }
-    // Edition action
-    class SetEditionActivatedAction extends AbstractAction {
-      private final boolean editionActivated;
-
-      public SetEditionActivatedAction(boolean editionActivated) {
-        this.editionActivated = editionActivated;
-      }
-
-      public void actionPerformed(ActionEvent ev) {
-        controller.setEditionActivated(this.editionActivated);
-      }
-    }
-    ActionMap actionMap = getActionMap();
-    actionMap.put(ActionType.DELETE_SELECTION, deleteSelectionAction);
-    actionMap.put(ActionType.ESCAPE, escapeAction);
-    actionMap.put(ActionType.MOVE_SELECTION_LEFT, new MoveSelectionAction(-1, 0));
-    actionMap.put(ActionType.MOVE_SELECTION_FAST_LEFT, new MoveSelectionAction(-10, 0));
-    actionMap.put(ActionType.MOVE_SELECTION_UP, new MoveSelectionAction(0, -1));
-    actionMap.put(ActionType.MOVE_SELECTION_FAST_UP, new MoveSelectionAction(0, -10));
-    actionMap.put(ActionType.MOVE_SELECTION_DOWN, new MoveSelectionAction(0, 1));
-    actionMap.put(ActionType.MOVE_SELECTION_FAST_DOWN, new MoveSelectionAction(0, 10));
-    actionMap.put(ActionType.MOVE_SELECTION_RIGHT, new MoveSelectionAction(1, 0));
-    actionMap.put(ActionType.MOVE_SELECTION_FAST_RIGHT, new MoveSelectionAction(10, 0));
-    actionMap.put(ActionType.TOGGLE_MAGNETISM_ON, new ToggleMagnetismAction(true));
-    actionMap.put(ActionType.TOGGLE_MAGNETISM_OFF, new ToggleMagnetismAction(false));
-    actionMap.put(ActionType.ACTIVATE_ALIGNMENT, new SetAlignmentActivatedAction(true));
-    actionMap.put(ActionType.DEACTIVATE_ALIGNMENT, new SetAlignmentActivatedAction(false));
-    actionMap.put(ActionType.ACTIVATE_DUPLICATION, new SetDuplicationActivatedAction(true));
-    actionMap.put(ActionType.DEACTIVATE_DUPLICATION, new SetDuplicationActivatedAction(false));
-    actionMap.put(ActionType.ACTIVATE_EDITIION, new SetEditionActivatedAction(true));
-    actionMap.put(ActionType.DEACTIVATE_EDITIION, new SetEditionActivatedAction(false));*/
-  }
-
-  /**
-   * Creates the text fields used in tool tip and their label.
-   */
-  private void createToolTipTextFields(UserPreferences preferences,
-                                       final PlanController controller) {
-	  //PJPJ tooltips removed
- /*   this.toolTipEditableTextFields = new HashMap<PlanController.EditableProperty, JFormattedTextField>();
-    Font toolTipFont = UIManager.getFont("ToolTip.font");
-    for (final PlanController.EditableProperty editableProperty : PlanController.EditableProperty.values()) {
-      final JFormattedTextField textField = new JFormattedTextField() {
-          @Override
-          public Dimension getPreferredSize() {
-            // Enlarge preferred size of one pixel
-            Dimension preferredSize = super.getPreferredSize();
-            return new Dimension(preferredSize.width + 1, preferredSize.height);
-          }
-        };
-      updateToolTipTextFieldFormatterFactory(textField, editableProperty, preferences);
-      textField.setFont(toolTipFont);
-      textField.setOpaque(false);
-      textField.setBorder(null);
-      if (controller != null) {
-        // Add a listener to notify changes to controller
-        textField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent ev) {
-              try {
-                textField.commitEdit();
-                controller.updateEditableProperty(editableProperty, textField.getValue());
-              } catch (ParseException ex) {
-                controller.updateEditableProperty(editableProperty, null);
-              }
-            }
-
-            public void insertUpdate(DocumentEvent ev) {
-              changedUpdate(ev);
-            }
-
-            public void removeUpdate(DocumentEvent ev) {
-              changedUpdate(ev);
-            }
-          });
-      }
-
-      this.toolTipEditableTextFields.put(editableProperty, textField);
-    }*/
-  }
-
-  private static void updateToolTipTextFieldFormatterFactory(//JFormattedTextField textField,
-                                                             PlanController.EditableProperty editableProperty,
-                                                             UserPreferences preferences) {
-	  //PJPJ tooltips removed
- /*   InternationalFormatter formatter;
-    if (editableProperty == PlanController.EditableProperty.ANGLE) {
-      formatter = new NumberFormatter(NumberFormat.getNumberInstance());
-    } else {
-      Format lengthFormat = preferences.getLengthUnit().getFormat();
-      if (lengthFormat instanceof NumberFormat) {
-        formatter = new NumberFormatter((NumberFormat)lengthFormat);
-      } else {
-        formatter = new InternationalFormatter(lengthFormat);
-      }
-    }
-    textField.setFormatterFactory(new DefaultFormatterFactory(formatter));*/
-  }
-
-  /**
-   * Returns a custom cursor with a hot spot point at center of cursor.
-   */
-	//PJPJ cursors removed
-/*  private Cursor createCustomCursor(String smallCursorImageResource,
-                                    String largeCursorImageResource,
-                                    String cursorName,
-                                    int    defaultCursor) {
-    if (OperatingSystem.isMacOSX()) {
-      smallCursorImageResource = smallCursorImageResource.replace(".png", "-macosx.png");
-    }
-    return createCustomCursor(PlanComponent.class.getResource(smallCursorImageResource),
-        PlanComponent.class.getResource(largeCursorImageResource),
-        0.5f, 0.5f, cursorName,
-        Cursor.getPredefinedCursor(defaultCursor));
-  }*/
-
-  /**
-   * Returns a custom cursor created from images in parameters.
-   */
-	//PJPJ cursors removed
-/*  protected Cursor createCustomCursor(URL smallCursorImageUrl,
-                                      URL largeCursorImageUrl,
-                                      float xCursorHotSpot,
-                                      float yCursorHotSpot,
-                                      String cursorName,
-                                      Cursor defaultCursor) {
-    return SwingTools.createCustomCursor(smallCursorImageUrl, largeCursorImageUrl,
-        xCursorHotSpot, yCursorHotSpot, cursorName, defaultCursor);
-  }*/
 
   /**
    * Returns the preferred size of this component.
@@ -2372,8 +1942,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 		// Change component coordinates system to plan system
 		Rectangle2D planBounds = getPlanBounds();
 		float paintScale = getScale();
-		g2D.translate(insets.left + ((MARGIN_PX - planBounds.getMinX()) * paintScale)-scrolledX,
-				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale)-scrolledY);
+		g2D.translate(insets.left + ((MARGIN_PX - planBounds.getMinX()) * paintScale)-getScrolledX(),
+				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale)-getScrolledY());
 		g2D.scale(paintScale, paintScale);
 		setRenderingHints(g2D);
 
@@ -2904,15 +2474,15 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
     float yMax;
     Rectangle2D planBounds = getPlanBounds();
 	  //PJPJ
-   /* if (getParent() instanceof JViewport) {
-      Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
+   /* if (this instanceof JViewport) {
+      Rectangle viewRectangle = ((JViewport)this).getViewRect();
       xMin = convertXPixelToModel(viewRectangle.x - 1);
       yMin = convertYPixelToModel(viewRectangle.y - 1);
       xMax = convertXPixelToModel(viewRectangle.x + viewRectangle.width);
       yMax = convertYPixelToModel(viewRectangle.y + viewRectangle.height);
     } else {*/
-      xMin = (float)planBounds.getMinX() + (scrolledX / getScale()) - MARGIN_PX;
-      yMin = (float)planBounds.getMinY() + (scrolledY / getScale()) - MARGIN_PX;
+      xMin = (float)planBounds.getMinX() + (getScrolledX() / getScale()) - MARGIN_PX;
+      yMin = (float)planBounds.getMinY() + (getScrolledY() / getScale()) - MARGIN_PX;
       xMax = convertXPixelToModel(getWidth());
       yMax = convertYPixelToModel(getHeight());
    // }
@@ -5608,94 +5178,6 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   }
 
 
-	/* Taken from JViewport
-	 Used by the scrollRectToVisible method to determine the
-		  *  proper direction and amount to move by. The integer variables are named
-		  *  width, but this method is applicable to height also. The code assumes that
-		  *  parentWidth/childWidth are positive and childAt can be negative.
-		  */
-	private float positionAdjustment(float parentWidth, float childWidth, float childAt)    {
-		System.out.println("parentWidth  " +parentWidth + " childWidth " +childWidth + " childAt " +childAt);
-		//   +-----+
-		//   | --- |     No Change
-		//   +-----+
-		if (childAt >= 0 && childWidth + childAt <= parentWidth)    {
-			return 0;
-		}
-
-		//   +-----+
-		//  ---------   No Change
-		//   +-----+
-		if (childAt <= 0 && childWidth + childAt >= parentWidth) {
-			return 0;
-		}
-
-		//   +-----+          +-----+
-		//   |   ----    ->   | ----|
-		//   +-----+          +-----+
-		if (childAt > 0 && childWidth <= parentWidth)    {
-			return -childAt + parentWidth - childWidth;
-		}
-
-		//   +-----+             +-----+
-		//   |  --------  ->     |--------
-		//   +-----+             +-----+
-		if (childAt >= 0 && childWidth >= parentWidth)   {
-			return -childAt;
-		}
-
-		//   +-----+          +-----+
-		// ----    |     ->   |---- |
-		//   +-----+          +-----+
-		if (childAt <= 0 && childWidth <= parentWidth)   {
-			return -childAt;
-		}
-
-		//   +-----+             +-----+
-		//-------- |      ->   --------|
-		//   +-----+             +-----+
-		if (childAt < 0 && childWidth >= parentWidth)    {
-			return -childAt + parentWidth - childWidth;
-		}
-
-		return 0;
-	}
-	//PJPJPJP taken from JComponent down here to have a go at scroll on this call
-	protected void scrollRectToVisible(Rectangle shapePixelBounds)
-	{
-		// thoughts, plan bounds only include the features on it, so zoom, pan don't change it, so plan bounds are not in thei world
-		// test it all at 1 scale
-
-		//TODO: should all this be dp for small phones?
-		//TODO: test zoomed
-		// take margin off both sides as the scrolling zone
-/*		System.out.println("planbounds " +this.getPlanBounds());
-		System.out.println("scrollRectToVisible " +shapePixelBounds);
-		System.out.println("scrolledX " +scrolledX + " scrolledY " +scrolledY );
-		System.out.println("getScale() " + getScale() + " getWidth() "+getWidth()+ " getHeight() "+ getHeight());
-
-		// works well at scale of .3
-		//float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
-		//float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
-		//at scale 0.83 y works but positive x doesn't
-
-		float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
-		float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
-
-
-
-		System.out.println("dx  " +dx + " dy " +dy);
-		if (dx != 0 || dy != 0)
-		{
-			float m = 100f * getScale();
-			dx = dx > m ? m : dx < -m ? -m : dx;
-			dy = dy > m ? m : dy < -m ? -m : dy;
-
-			moveView(-dx/getScale(), -dy/getScale());
-		}
-
-		System.out.println("new scrolledX " +scrolledX + " new scrolledY " +scrolledY );*/
-	}
 
 	/**
    * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.
@@ -5703,7 +5185,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public void moveView(float dx, float dy) {
 
 	  //PJPJ
-   /* if (getParent() instanceof JViewport) {
+   /* if (this instanceof JViewport) {
       JViewport viewport = (JViewport)getParent();
       Rectangle viewRectangle = viewport.getViewRect();
       viewRectangle.translate(Math.round(dx * getScale()), Math.round(dy * getScale()));
@@ -5712,10 +5194,10 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       viewport.setViewPosition(viewRectangle.getLocation());
     }*/
 	  //my scrolled are -ve versus the viewport location x,y
-	  this.scrolledX +=  dx * getScale();
-	  this.scrolledY +=  dy * getScale();
-	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(scrolledX));
-	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(scrolledY));
+	  moveScrolledX(dx * getScale());
+	  moveScrolledY(dy * getScale());
+	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(getScrolledX()));
+	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(getScrolledY()));
 	  PlanComponent.this.revalidate();
   }
 
@@ -5738,7 +5220,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       float xViewCenterPosition = 0;
       float yViewCenterPosition = 0;
 		//PJPJ
-  /*    if (getParent() instanceof JViewport) {
+  /*    if (this instanceof JViewport) {
         parent = (JViewport)getParent();
         viewRectangle = parent.getViewRect();
         xViewCenterPosition = convertXPixelToModel(viewRectangle.x + viewRectangle.width / 2);
@@ -5753,7 +5235,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       //revalidate(false);
 
 		//PJPJ
-  //    if (parent instanceof JViewport) {
+  //    if (this instanceof JViewport) {
         //Dimension viewSize = parent.getViewSize();
  /*       float viewWidth = convertXPixelToModel(getDrawableView().getWidth());
         int xViewLocation = (int) convertXModelToPixel(xViewCenterPosition - viewWidth / 2);
@@ -5784,7 +5266,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public float convertXPixelToModel(int x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-   return (x + scrolledX - insets.left) / getScale() - MARGIN_PX + (float)planBounds.getMinX();
+   return (x + getScrolledX() - insets.left) / getScale() - MARGIN_PX + (float)planBounds.getMinX();
 
   }
 
@@ -5794,7 +5276,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   public float convertYPixelToModel(int y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (y + scrolledY - insets.top) / getScale() - MARGIN_PX + (float)planBounds.getMinY();
+    return (y + getScrolledY() - insets.top) / getScale() - MARGIN_PX + (float)planBounds.getMinY();
 
   }
 
@@ -5804,7 +5286,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertXModelToPixel(float x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((x - scrolledX + insets.left) * getScale() + MARGIN_PX - planBounds.getMinX());
+    return (int)((x - getScrolledX() + insets.left) * getScale() + MARGIN_PX - planBounds.getMinX());
 
   }
 
@@ -5814,7 +5296,7 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
   private int convertYModelToPixel(float y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((y - scrolledY + insets.top) * getScale() + MARGIN_PX - planBounds.getMinY());
+    return (int)((y - getScrolledY() + insets.top) * getScale() + MARGIN_PX - planBounds.getMinY());
 
   }
 
@@ -6252,14 +5734,14 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
 
   public boolean getScrollableTracksViewportHeight() {
     // Return true if the plan's preferred height is smaller than the viewport height
-    return getParent() instanceof JViewport
-        && getPreferredSize().height < ((JViewport)getParent()).getHeight();
+    return this instanceof JViewport
+        && getPreferredSize().height < ((JViewport)this).getHeight();
   }
 
   public boolean getScrollableTracksViewportWidth() {
     // Return true if the plan's preferred width is smaller than the viewport width
-    return getParent() instanceof JViewport
-        && getPreferredSize().width < ((JViewport)getParent()).getWidth();
+    return this instanceof JViewport
+        && getPreferredSize().width < ((JViewport)this).getWidth();
   }
 
   public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
@@ -6411,8 +5893,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
       // Change component coordinates system to plan system
       Rectangle2D planBounds = pc.getPlanBounds();
       float paintScale = pc.getScale();
-      g2D.translate(insets.left + (MARGIN_PX - planBounds.getMinX() ) * paintScale - pc.scrolledX,
-          insets.top + (MARGIN_PX - planBounds.getMinY() ) * paintScale - pc.scrolledY);
+      g2D.translate(insets.left + (MARGIN_PX - planBounds.getMinX() ) * paintScale - pc.getScrolledX(),
+          insets.top + (MARGIN_PX - planBounds.getMinY() ) * paintScale - pc.getScrolledY());
 
       g2D.scale(paintScale, paintScale);
       g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -6458,8 +5940,8 @@ public class PlanComponent extends JComponent implements PlanView,   Printable {
             : convertXPixelToModel(viewRectangle.x);
         yRulerBase = convertYPixelToModel(viewRectangle.y + viewRectangle.height - 1);
       } else {*/
-        xMin = (float)planBounds.getMinX() - MARGIN_PX + (pc.scrolledX / pc.getScale());
-        yMin = (float)planBounds.getMinY() - MARGIN_PX + (pc.scrolledY / pc.getScale());
+        xMin = (float)planBounds.getMinX() - MARGIN_PX + (pc.getScrolledX() / pc.getScale());
+        yMin = (float)planBounds.getMinY() - MARGIN_PX + (pc.getScrolledY() / pc.getScale());
         xMax = pc.convertXPixelToModel(getWidth() - 1);
         yRulerBase =
         yMax = pc.convertYPixelToModel(getHeight() - 1);

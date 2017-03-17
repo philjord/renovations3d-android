@@ -708,7 +708,9 @@ private Renovations3DActivity activity;//for dialogs etc
                                  final String        path,
                                  boolean       save) {
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
+		  new Throwable().printStackTrace();
 		  System.err.println("FileContentManager asked to showFileChooser on EDT thread, it MUST not be called from EDT as it is blocking!");
+		  return null;
 	  }
 
 	  final File selectedFile[] = new File[1];
