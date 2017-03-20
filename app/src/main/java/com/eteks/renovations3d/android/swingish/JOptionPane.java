@@ -7,9 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.xml.sax.XMLReader;
 
 import java.util.concurrent.Semaphore;
 
@@ -105,7 +108,8 @@ public class JOptionPane
 					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
 					dialog.setIcon(bmd);
 				}
-				dialog.setMessage(Html.fromHtml(message));
+				String messageLessStyle = message.replaceAll("<style([\\s\\S]+?)</style>", "");
+				dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
@@ -156,7 +160,10 @@ public class JOptionPane
 								 BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
 								 dialog.setIcon(bmd);
 							 }
-							 dialog.setMessage(Html.fromHtml(message));
+
+							 // remove the style tags
+							 String messageLessStyle = message.replaceAll("<style([\\s\\S]+?)</style>", "");
+							 dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
 
 							 dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
 							 dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
@@ -246,4 +253,40 @@ public class JOptionPane
 
 	}
 
+
+	public static class ListTagHandler implements Html.TagHandler
+	{
+		boolean first= true;
+		String parent=null;
+		int index=1;
+		@Override
+		public void handleTag(boolean opening, String tag, Editable output,
+							  XMLReader xmlReader) {
+
+			if(tag.equals("ul"))
+				parent="ul";
+			else if(tag.equals("ol"))
+				parent="ol";
+
+			if(tag.equals("li")){
+				if(parent.equals("ul")){
+					if(first){
+						output.append("\n\t•");
+						first= false;
+					}else{
+						first = true;
+					}
+				}
+				else{
+					if(first){
+						output.append("\n\t"+index+". ");
+						first= false;
+						index++;
+					}else{
+						first = true;
+					}
+				}
+			}
+		}
+	}
 }
