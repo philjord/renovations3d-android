@@ -107,7 +107,6 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  super(preferences, activity, R.layout.dialog_homefurniturepanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences, controller);
   }
 
@@ -817,107 +816,6 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
     this.mirroredModelCheckBox.setEnabled(editableSize);
   }
   
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-  /*  if (!OperatingSystem.isMacOSX()) {
-      if (this.nameLabel != null) {
-        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "nameLabel.mnemonic")).getKeyCode());
-        this.nameLabel.setLabelFor(this.nameTextField);
-      }
-      if (this.nameVisibleCheckBox != null) {
-        this.nameVisibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "nameVisibleCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.descriptionLabel != null) {
-        this.descriptionLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "descriptionLabel.mnemonic")).getKeyCode());
-        this.descriptionLabel.setLabelFor(this.descriptionTextField);
-      }
-      if (this.priceLabel != null) {
-        this.priceLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "priceLabel.mnemonic")).getKeyCode());
-        this.priceLabel.setLabelFor(this.priceSpinner);
-      }
-      if (this.xLabel != null) {
-        this.xLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.mnemonic")).getKeyCode());
-        this.xLabel.setLabelFor(this.xSpinner);
-      }
-      if (this.yLabel != null) {
-        this.yLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.mnemonic")).getKeyCode());
-        this.yLabel.setLabelFor(this.ySpinner);
-      }
-      if (this.elevationLabel != null) {
-        this.elevationLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "elevationLabel.mnemonic")).getKeyCode());
-        this.elevationLabel.setLabelFor(this.elevationSpinner);
-      }
-      if (this.angleLabel != null) {
-        this.angleLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "angleLabel.mnemonic")).getKeyCode());
-        this.angleLabel.setLabelFor(this.angleSpinner);
-      }
-      if (this.keepProportionsCheckBox != null) {
-        this.keepProportionsCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "keepProportionsCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.widthLabel != null) {
-        this.widthLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "widthLabel.mnemonic")).getKeyCode());
-        this.widthLabel.setLabelFor(this.widthSpinner);
-      }
-      if (this.depthLabel != null) {
-        this.depthLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "depthLabel.mnemonic")).getKeyCode());
-        this.depthLabel.setLabelFor(this.depthSpinner);
-      }
-      if (this.heightLabel != null) {
-        this.heightLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "heightLabel.mnemonic")).getKeyCode());
-        this.heightLabel.setLabelFor(this.heightSpinner);
-      }
-      if (this.basePlanItemCheckBox != null) {
-        this.basePlanItemCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "basePlanItemCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.mirroredModelCheckBox != null) {
-        this.mirroredModelCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "mirroredModelCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.defaultColorAndTextureRadioButton != null) {
-        this.defaultColorAndTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "defaultColorAndTextureRadioButton.mnemonic"))
-            .getKeyCode());
-        this.colorRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorRadioButton.mnemonic")).getKeyCode());
-        this.textureRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "textureRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.defaultShininessRadioButton != null) {
-        this.defaultShininessRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "defaultShininessRadioButton.mnemonic"))
-            .getKeyCode());
-        this.mattRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "mattRadioButton.mnemonic")).getKeyCode());
-        this.shinyRadioButton.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shinyRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.visibleCheckBox != null) {
-        this.visibleCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "visibleCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.lightPowerLabel != null) {
-        this.lightPowerLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "lightPowerLabel.mnemonic")).getKeyCode());
-        this.lightPowerLabel.setLabelFor(this.lightPowerSpinner);
-      }
-    }*/
-  }
-
 
 
 
@@ -926,144 +824,278 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
    */
   private void layoutComponents(UserPreferences preferences, 
                                 final HomeFurnitureController controller) {
-    boolean priceDisplayed = this.priceLabel != null;
+	  boolean priceDisplayed = this.priceLabel != null;
 
 	  JLabel namePanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed  ?  "nameAndPricePanel.title"  : "namePanel.title"));
+			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed ? "nameAndPricePanel.title" : "namePanel.title"));
 	  swapOut(namePanel, R.id.furniture_panel_namePanel);
 
-    if (this.nameLabel != null) {
-		swapOut(this.nameLabel, R.id.furniture_panel_nameLabel);
-		swapOut(this.nameTextField, R.id.furniture_panel_nameTextField);
-		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
-    if (this.nameVisibleCheckBox != null) {
-		swapOut(this.nameVisibleCheckBox, R.id.furniture_panel_nameVisibleCheckBox);
-    }
-    if (this.descriptionLabel != null) {
-		//TODO:
-		//inflatedView.addView(this.descriptionLabel, rowInsets);
-		//inflatedView.addView(this.descriptionTextField, rowInsets);
-    }
-    if (priceDisplayed) {
-		//TODO:
-		//inflatedView.addView(this.priceLabel, rowInsets);
-		//inflatedView.addView(this.priceSpinner, rowInsets);
-    }
+	  if (this.nameLabel != null)
+	  {
+		  swapOut(this.nameLabel, R.id.furniture_panel_nameLabel);
+		  swapOut(this.nameTextField, R.id.furniture_panel_nameTextField);
+		  if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
+			  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_nameLabel);
+		  removeView(R.id.furniture_panel_nameTextField);
+	  }
+	  if (this.nameVisibleCheckBox != null)
+	  {
+		  swapOut(this.nameVisibleCheckBox, R.id.furniture_panel_nameVisibleCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_nameVisibleCheckBox);
+	  }
+	  if (this.descriptionLabel != null)
+	  {
+		  swapOut(this.nameLabel, R.id.furniture_panel_descriptionLabel);
+		  swapOut(this.nameTextField, R.id.furniture_panel_descriptionTextField);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_descriptionLabel);
+		  removeView(R.id.furniture_panel_descriptionTextField);
+	  }
+	  if (priceDisplayed)
+	  {
+		  swapOut(this.nameLabel, R.id.furniture_panel_priceLabel);
+		  swapOut(this.nameTextField, R.id.furniture_panel_priceSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_priceLabel);
+		  removeView(R.id.furniture_panel_priceSpinner);
+	  }
 
 	  JLabel locationPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "locationPanel.title"));
 	  swapOut(locationPanel, R.id.furniture_panel_locationPanel);
-     if (this.xLabel != null) {
-		swapOut(this.xLabel, R.id.furniture_panel_xLabel);
-		swapOut(this.xSpinner, R.id.furniture_panel_xSpinner);
-    }
-    if (this.yLabel != null) {
-		swapOut(this.yLabel, R.id.furniture_panel_yLabel);
-		swapOut(this.ySpinner, R.id.furniture_panel_ySpinner);
-    }
-    if (this.elevationLabel != null) {
-		swapOut(this.elevationLabel, R.id.furniture_panel_elevationLabel);
-		swapOut(this.elevationSpinner, R.id.furniture_panel_elevationSpinner);
-    }
-    if (this.angleLabel != null) {
-		swapOut(this.angleLabel, R.id.furniture_panel_angleLabel);
-		swapOut(this.angleSpinner, R.id.furniture_panel_angleSpinner);
-    }
-    if (this.basePlanItemCheckBox != null) {
-		swapOut(this.basePlanItemCheckBox, R.id.furniture_panel_basePlanItemCheckBox);
-    }
+	  if (this.xLabel != null)
+	  {
+		  swapOut(this.xLabel, R.id.furniture_panel_xLabel);
+		  swapOut(this.xSpinner, R.id.furniture_panel_xSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_xLabel);
+		  removeView(R.id.furniture_panel_xSpinner);
+	  }
+
+	  if (this.yLabel != null)
+	  {
+		  swapOut(this.yLabel, R.id.furniture_panel_yLabel);
+		  swapOut(this.ySpinner, R.id.furniture_panel_ySpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_yLabel);
+		  removeView(R.id.furniture_panel_ySpinner);
+	  }
+
+	  if (this.elevationLabel != null)
+	  {
+		  swapOut(this.elevationLabel, R.id.furniture_panel_elevationLabel);
+		  swapOut(this.elevationSpinner, R.id.furniture_panel_elevationSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_elevationLabel);
+		  removeView(R.id.furniture_panel_elevationSpinner);
+	  }
+
+	  if (this.angleLabel != null)
+	  {
+		  swapOut(this.angleLabel, R.id.furniture_panel_angleLabel);
+		  swapOut(this.angleSpinner, R.id.furniture_panel_angleSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_angleLabel);
+		  removeView(R.id.furniture_panel_angleSpinner);
+	  }
+
+	  if (this.basePlanItemCheckBox != null)
+	  {
+		  swapOut(this.basePlanItemCheckBox, R.id.furniture_panel_basePlanItemCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_basePlanItemCheckBox);
+	  }
 
 	  JLabel sizePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "sizePanel.title"));
 	  swapOut(sizePanel, R.id.furniture_panel_sizePanel);
-     if (this.widthLabel != null) {
-		swapOut(this.widthLabel, R.id.furniture_panel_widthLabel);
-		swapOut(this.widthSpinner, R.id.furniture_panel_widthSpinner);
-    }
-    if (this.depthLabel != null) {
-		swapOut(this.depthLabel, R.id.furniture_panel_depthLabel);
-		swapOut(this.depthSpinner, R.id.furniture_panel_depthSpinner);
-    }
-    if (this.heightLabel != null) {
-		swapOut(this.heightLabel, R.id.furniture_panel_heightLabel);
-		swapOut(this.heightSpinner, R.id.furniture_panel_heightSpinner);
-    }
-    if (this.keepProportionsCheckBox != null) {
-		swapOut(this.keepProportionsCheckBox, R.id.furniture_panel_keepProportionsCheckBox);
-    }
-    if (this.mirroredModelCheckBox != null) {
-		swapOut(this.mirroredModelCheckBox, R.id.furniture_panel_mirroredModelCheckBox);
-    }
+	  if (this.widthLabel != null)
+	  {
+		  swapOut(this.widthLabel, R.id.furniture_panel_widthLabel);
+		  swapOut(this.widthSpinner, R.id.furniture_panel_widthSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_widthLabel);
+		  removeView(R.id.furniture_panel_widthSpinner);
+	  }
+
+	  if (this.depthLabel != null)
+	  {
+		  swapOut(this.depthLabel, R.id.furniture_panel_depthLabel);
+		  swapOut(this.depthSpinner, R.id.furniture_panel_depthSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_depthLabel);
+		  removeView(R.id.furniture_panel_depthSpinner);
+	  }
+
+	  if (this.heightLabel != null)
+	  {
+		  swapOut(this.heightLabel, R.id.furniture_panel_heightLabel);
+		  swapOut(this.heightSpinner, R.id.furniture_panel_heightSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_heightLabel);
+		  removeView(R.id.furniture_panel_heightSpinner);
+	  }
+
+	  if (this.keepProportionsCheckBox != null)
+	  {
+		  swapOut(this.keepProportionsCheckBox, R.id.furniture_panel_keepProportionsCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_keepProportionsCheckBox);
+	  }
+
+	  if (this.mirroredModelCheckBox != null)
+	  {
+		  swapOut(this.mirroredModelCheckBox, R.id.furniture_panel_mirroredModelCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_mirroredModelCheckBox);
+	  }
 
 	  JLabel paintPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
 	  swapOut(paintPanel, R.id.furniture_panel_paintPanel);
-    if (this.defaultColorAndTextureRadioButton != null) {
-		swapOut(this.defaultColorAndTextureRadioButton, R.id.furniture_panel_defaultColorAndTextureRadioButton);
-		swapOut(this.colorRadioButton, R.id.furniture_panel_colorRadioButton);
-		swapOut(this.colorButton, R.id.furniture_panel_colorButton);
+	  if (this.defaultColorAndTextureRadioButton != null)
+	  {
+		  swapOut(this.defaultColorAndTextureRadioButton, R.id.furniture_panel_defaultColorAndTextureRadioButton);
+		  swapOut(this.colorRadioButton, R.id.furniture_panel_colorRadioButton);
+		  swapOut(this.colorButton, R.id.furniture_panel_colorButton);
+		  if (this.textureComponent != null)
+		  {
+			  swapOut(this.textureRadioButton, R.id.furniture_panel_textureRadioButton);
+			  swapOut(this.textureComponent, R.id.furniture_panel_textureButton);
+		  }
+		  else
+		  {
+			  removeView(R.id.furniture_panel_textureRadioButton);
+			  removeView(R.id.furniture_panel_textureButton);
+		  }
 
-      if (this.textureComponent != null) {
-		  swapOut(this.textureRadioButton, R.id.furniture_panel_textureRadioButton);
-		  swapOut(this.textureComponent, R.id.furniture_panel_textureButton);
-      }
-      if (this.modelMaterialsComponent != null) {
-		  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
-		  //TODO:  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
-      }
+		  if (this.modelMaterialsComponent != null)
+		  {
+			  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
+			  //TODO:  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
+		  }
+		  else
+		  {
+			  removeView(R.id.furniture_panel_modelMaterialsRadioButton);
+			  //TODO:  removeView(R.id.furniture_panel_modelMaterialsButton);
+		  }
 
-      controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE, 
-          new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent ev) {
+		  controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE,
+				  new PropertyChangeListener()
+				  {
+					  public void propertyChange(PropertyChangeEvent ev)
+					  {
 
-              //paintPanel.setVisible(controller.isTexturable());
-				defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
-				colorRadioButton.setEnabled(controller.isTexturable());
-				colorButton.setEnabled(controller.isTexturable());
-				textureRadioButton.setEnabled(controller.isTexturable());
-				modelMaterialsRadioButton.setEnabled(controller.isTexturable());
-            }
-          });
-      //paintPanel.setVisible(controller.isTexturable());
-		this.defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
-		this.colorRadioButton.setEnabled(controller.isTexturable());
-		this.colorButton.setEnabled(controller.isTexturable());
-		this.textureRadioButton.setEnabled(controller.isTexturable());
-		this.modelMaterialsRadioButton.setEnabled(controller.isTexturable());
-    }
-    if (this.defaultShininessRadioButton != null) {
-		JLabel shininessPanel = new JLabel(activity, preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shininessPanel.title"));
-		swapOut(shininessPanel, R.id.furniture_panel_shininessPanel);
-		swapOut(this.defaultShininessRadioButton, R.id.furniture_panel_defaultShininessRadioButton);
-		swapOut(this.mattRadioButton, R.id.furniture_panel_mattRadioButton);
-		swapOut(this.shinyRadioButton, R.id.furniture_panel_shinyRadioButton);
+						  //paintPanel.setVisible(controller.isTexturable());
+						  defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
+						  colorRadioButton.setEnabled(controller.isTexturable());
+						  colorButton.setEnabled(controller.isTexturable());
+						  textureRadioButton.setEnabled(controller.isTexturable());
+						  modelMaterialsRadioButton.setEnabled(controller.isTexturable());
+					  }
+				  });
+		  //paintPanel.setVisible(controller.isTexturable());
+		  this.defaultColorAndTextureRadioButton.setEnabled(controller.isTexturable());
+		  this.colorRadioButton.setEnabled(controller.isTexturable());
+		  this.colorButton.setEnabled(controller.isTexturable());
+		  this.textureRadioButton.setEnabled(controller.isTexturable());
+		  this.modelMaterialsRadioButton.setEnabled(controller.isTexturable());
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_defaultColorAndTextureRadioButton);
+		  removeView(R.id.furniture_panel_colorRadioButton);
+		  removeView(R.id.furniture_panel_colorButton);
+		  removeView(R.id.furniture_panel_textureRadioButton);
+		  removeView(R.id.furniture_panel_textureButton);
+		  removeView(R.id.furniture_panel_modelMaterialsRadioButton);
+		  //TODO:  removeView(R.id.furniture_panel_modelMaterialsButton);
+	  }
 
-      controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE, 
-          new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent ev) {
-				//shininessPanel.setVisible(controller.isTexturable());
-				defaultShininessRadioButton.setEnabled(controller.isTexturable());
-				mattRadioButton.setEnabled(controller.isTexturable());
-				shinyRadioButton.setEnabled(controller.isTexturable());
-            }
-          });
-      //shininessPanel.setVisible(controller.isTexturable());
-		this.defaultShininessRadioButton.setEnabled(controller.isTexturable());
-		this.mattRadioButton.setEnabled(controller.isTexturable());
-		this.shinyRadioButton.setEnabled(controller.isTexturable());
-    }
+	  if (this.defaultShininessRadioButton != null)
+	  {
+		  JLabel shininessPanel = new JLabel(activity, preferences.getLocalizedString(
+				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shininessPanel.title"));
+		  swapOut(shininessPanel, R.id.furniture_panel_shininessPanel);
+		  swapOut(this.defaultShininessRadioButton, R.id.furniture_panel_defaultShininessRadioButton);
+		  swapOut(this.mattRadioButton, R.id.furniture_panel_mattRadioButton);
+		  swapOut(this.shinyRadioButton, R.id.furniture_panel_shinyRadioButton);
 
-    if (this.visibleCheckBox != null) {
-		swapOut(this.visibleCheckBox, R.id.furniture_panel_visibleCheckBox);
-    }
-    if (this.lightPowerLabel != null) {
-		//TODO:
-		//inflatedView.addView(this.lightPowerLabel, rowInsets);
-		//inflatedView.addView(this.lightPowerSpinner, rowInsets);
-    }
+		  controller.addPropertyChangeListener(HomeFurnitureController.Property.TEXTURABLE,
+				  new PropertyChangeListener()
+				  {
+					  public void propertyChange(PropertyChangeEvent ev)
+					  {
+						  //shininessPanel.setVisible(controller.isTexturable());
+						  defaultShininessRadioButton.setEnabled(controller.isTexturable());
+						  mattRadioButton.setEnabled(controller.isTexturable());
+						  shinyRadioButton.setEnabled(controller.isTexturable());
+					  }
+				  });
+		  //shininessPanel.setVisible(controller.isTexturable());
+		  this.defaultShininessRadioButton.setEnabled(controller.isTexturable());
+		  this.mattRadioButton.setEnabled(controller.isTexturable());
+		  this.shinyRadioButton.setEnabled(controller.isTexturable());
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_defaultShininessRadioButton);
+		  removeView(R.id.furniture_panel_mattRadioButton);
+		  removeView(R.id.furniture_panel_shinyRadioButton);
+	  }
+
+	  if (this.visibleCheckBox != null)
+	  {
+		  swapOut(this.visibleCheckBox, R.id.furniture_panel_visibleCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.furniture_panel_visibleCheckBox);
+	  }
+
+	  if (this.lightPowerLabel != null)
+	  {
+		  swapOut(this.lightPowerLabel, R.id.furniture_panel_lightPowerLabel);
+		  swapOut(this.lightPowerSpinner, R.id.furniture_panel_lightPowerSpinner);
+	  }
+	  else
+	  {
+		  // no empty tables, remove it
+		  removeView(R.id.furniture_panel_lightPowerTable);
+	  }
+
+
 	  this.setTitle(dialogTitle);
 	  swapOut(this.closeButton, R.id.furniture_panel_closeButton);
   }

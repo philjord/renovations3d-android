@@ -21,25 +21,21 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSlider;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.Home3DAttributesController;
 import com.mindblowing.renovations3d.R;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Home 3D attributes editing panel.
@@ -75,7 +71,6 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
 	  super(preferences, activity, R.layout.dialog_home3dattributespanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences);
   }
 
@@ -260,13 +255,6 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
     } 
   }
 
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-
-  }
-  
   /**
    * Layouts panel components in panel with their labels. 
    */

@@ -40,6 +40,35 @@
                     android:text="Display name in plan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_descriptionLabel"
+                    android:text="Description"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <EditText
+                    android:id="@+id/furniture_panel_descriptionTextField"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_priceLabel"
+                    android:text="Description"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_priceSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
 
@@ -281,6 +310,25 @@
             </TableRow>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+        <TableLayout
+            android:id="@+id/furniture_panel_lightPowerTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_lightPowerLabel"
+                    android:text="lightPower"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_lightPowerSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+        </TableLayout>
         <CheckBox
             android:id="@+id/furniture_panel_visibleCheckBox"
             android:text="Visible"

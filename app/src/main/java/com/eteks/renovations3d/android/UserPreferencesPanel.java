@@ -123,11 +123,9 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
    */
   public UserPreferencesPanel(UserPreferences preferences,
                               UserPreferencesController controller, Activity activity) {
-    //super(new GridBagLayout());
 	  super(preferences, activity, R.layout.dialog_preferences);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents();
   }
   
@@ -722,7 +720,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  return imageView;
 	  }
 
-	  private class WideImageView extends ImageView
+	  private class WideImageView extends android.support.v7.widget.AppCompatImageView
 	  {
 		  private VMBufferedImage patternImage;
 
@@ -805,259 +803,197 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       this.autoSaveDelayForRecoverySpinner.setValue(autoSaveDelayForRecoveryInMinutes);
     }
   }
-  
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-   /* if (!OperatingSystem.isMacOSX()) {
-      if (this.languageLabel != null) {
-        this.languageLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "languageLabel.mnemonic")).getKeyCode());
-        this.languageLabel.setLabelFor(this.languageComboBox);
-      }
-      if (this.unitLabel != null) {
-        this.unitLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "unitLabel.mnemonic")).getKeyCode());
-        this.unitLabel.setLabelFor(this.unitComboBox);
-      }
-      if (this.furnitureCatalogViewLabel != null) {
-        this.treeRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "treeRadioButton.mnemonic")).getKeyCode());
-        this.listRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "listRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.navigationPanelLabel != null) {
-        this.navigationPanelCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "navigationPanelCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.magnetismLabel != null) {
-        this.magnetismCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "magnetismCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.aerialViewCenteredOnSelectionLabel != null) {
-        this.aerialViewCenteredOnSelectionCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "aerialViewCenteredOnSelectionCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.rulersLabel != null) {
-        this.rulersCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "rulersCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.gridLabel != null) {
-        this.gridCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "gridCheckBox.mnemonic")).getKeyCode());
-      }
-      if (this.defaultFontNameLabel != null) {
-        this.defaultFontNameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "defaultFontNameLabel.mnemonic")).getKeyCode());
-        this.defaultFontNameLabel.setLabelFor(this.defaultFontNameComboBox);
-      }
-      if (this.furnitureIconLabel != null) {
-        this.catalogIconRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "catalogIconRadioButton.mnemonic")).getKeyCode());
-        this.topViewRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "topViewRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.roomRenderingLabel != null) {
-        this.monochromeRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "monochromeRadioButton.mnemonic")).getKeyCode());
-        this.floorColorOrTextureRadioButton.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "floorColorOrTextureRadioButton.mnemonic")).getKeyCode());
-      }
-      if (this.newWallPatternLabel != null) {
-        this.newWallPatternLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallPatternLabel.mnemonic")).getKeyCode());
-        this.newWallPatternLabel.setLabelFor(this.newWallPatternComboBox);
-      } else if (this.wallPatternLabel != null) {
-        this.wallPatternLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "wallPatternLabel.mnemonic")).getKeyCode());
-        this.wallPatternLabel.setLabelFor(this.wallPatternComboBox);
-      } 
-      if (this.newWallThicknessLabel != null) {
-        this.newWallThicknessLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallThicknessLabel.mnemonic")).getKeyCode());
-        this.newWallThicknessLabel.setLabelFor(this.newWallThicknessSpinner);
-      }
-      if (this.newWallHeightLabel != null) {
-        this.newWallHeightLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newWallHeightLabel.mnemonic")).getKeyCode());
-        this.newWallHeightLabel.setLabelFor(this.newWallHeightSpinner);
-      }      
-      if (this.newFloorThicknessLabel != null) {
-        this.newFloorThicknessLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "newFloorThicknessLabel.mnemonic")).getKeyCode());
-        this.newFloorThicknessLabel.setLabelFor(this.newFloorThicknessSpinner);
-      }
-      if (this.checkUpdatesCheckBox != null) {
-        this.checkUpdatesCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "checkUpdatesCheckBox.mnemonic")).getKeyCode());
-      }      
-      if (this.autoSaveDelayForRecoveryCheckBox != null) {
-        this.autoSaveDelayForRecoveryCheckBox.setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryCheckBox.mnemonic")).getKeyCode());
-      }      
-    }*/
-  }
-  
-  /**
-   * Layouts panel components in panel with their labels. 
-   */
-  private void layoutComponents() {
-   /* int labelAlignment = OperatingSystem.isMacOSX()
-        ? GridBagConstraints.LINE_END
-        : GridBagConstraints.LINE_START;
-    Insets labelInsets = new Insets(0, 0, 5, 5);
-    Insets labelInsetsWithSpace = new Insets(0, 0, 10, 5);
-    Insets rightComponentInsets = new Insets(0, 0, 5, 0);
-    Insets rightComponentInsetsWithSpace = new Insets(0, 0, 10, 0);*/
 
 
-    if (this.languageLabel != null) {
-      // First row
-      	swapOut(this.languageLabel, R.id.prefs_languageLabel);
-		swapOut(this.languageComboBox, R.id.prefs_languageSpinner);
+	/**
+	 * Layouts panel components in panel with their labels.
+	 */
+	private void layoutComponents()
+	{
+		if (this.languageLabel != null)
+		{
+			swapOut(this.languageLabel, R.id.prefs_languageLabel);
+			swapOut(this.languageComboBox, R.id.prefs_languageSpinner);
 
-      /*if (this.languageLibraryImportButton != null) {
-        rootView.addView(this.languageLibraryImportButton, labelInsets);//, params);//, new GridBagConstraints(
-           2, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-            GridBagConstraints.NONE, new Insets(0, 5, 5, 0), 0, 0));
-      }*/
-    }
-    if (this.unitLabel != null) {
-      // Second row
-		swapOut(this.unitLabel, R.id.prefs_unitLabel);
-		swapOut(this.unitComboBox, R.id.prefs_unitSpinner);
-    }
-   /* if (this.furnitureCatalogViewLabel != null) {
-      // Fourth row
-      rootView.addView(this.furnitureCatalogViewLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 3, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.treeRadioButton, labelInsets);//, new GridBagConstraints(
-      //    1, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.listRadioButton, rightComponentInsets);//, new GridBagConstraints(
-      //    2, 3, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }*/
-   /* if (this.navigationPanelLabel != null) {
-      // Fifth row
-      rootView.addView(this.navigationPanelLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 4, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);//, new GridBagConstraints(
-       //   1, 4, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-       //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }*/
-    if (this.aerialViewCenteredOnSelectionLabel != null) {
-      // Sixth row
-		swapOut(this.aerialViewCenteredOnSelectionLabel, R.id.prefs_arialCenterLabel);
-		swapOut(this.aerialViewCenteredOnSelectionCheckBox, R.id.prefs_arialCenterRadioButton);
-    }
-    if (this.magnetismLabel != null) {
-      // Seventh row
-		swapOut(this.magnetismLabel, R.id.prefs_magnetismLabel);
-		swapOut(this.magnetismCheckBox, R.id.prefs_magnetismRadioButton);
-    }
-    if (this.rulersLabel != null) {
-      // Eighth row
-		swapOut(this.rulersLabel, R.id.prefs_rulersLabel);
-		swapOut(this.rulersCheckBox, R.id.prefs_rulersRadioButton);
-    }
-    if (this.gridLabel != null) {
-      // Ninth row
-		swapOut(this.gridLabel, R.id.prefs_gridLabel);
-		swapOut(this.gridCheckBox, R.id.prefs_gridRadioButton);
-    }
-    /*if (this.defaultFontNameLabel != null) {
-      // Tenth row
-      rootView.addView(this.defaultFontNameLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 9, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
-      if (this.unitComboBox != null 
-          && this.floorColorOrTextureRadioButton != null) {
-        preferredSize.width = Math.min(preferredSize.width, 
-            this.unitComboBox.getPreferredSize().width + 5 + this.floorColorOrTextureRadioButton.getPreferredSize().width);
-      } else {
-        preferredSize.width = Math.min(preferredSize.width, 250); 
-      }
-      this.defaultFontNameComboBox.setPreferredSize(preferredSize);
-      rootView.addView(this.defaultFontNameComboBox, rightComponentInsets);//, new GridBagConstraints(
-       //   1, 9, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-       //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }*/
-    /*if (this.furnitureIconLabel != null) {
-      // Eleventh row
-      rootView.addView(this.furnitureIconLabel, labelInsets);//, new GridBagConstraints(
-      //    0, 10, 1, 1, 0, 0, labelAlignment, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.catalogIconRadioButton, labelInsets);//, new GridBagConstraints(
-      //    1, 10, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, labelInsets, 0, 0));
-      rootView.addView(this.topViewRadioButton, rightComponentInsets);//, new GridBagConstraints(
-      //    2, 10, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-      //    GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-    }*/
-    if (this.roomRenderingLabel != null) {
-      // Twelfth row
-		swapOut(this.roomRenderingLabel, R.id.prefs_roomRenderLabel);
-		swapOut(this.monochromeRadioButton, R.id.prefs_roomRenderMonoRadioButton);
-		swapOut(this.floorColorOrTextureRadioButton, R.id.prefs_roomRenderColorRadioButton);
-    }
-    if (this.newWallPatternLabel != null) {
-      // Thirteenth row
-		swapOut(this.newWallPatternLabel, R.id.prefs_newWallsTextureLabel);
-		swapOut(this.newWallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
-    } else if (this.wallPatternLabel != null) {
-		swapOut(this.wallPatternLabel, R.id.prefs_newWallsTextureLabel);
-		swapOut(this.wallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
-    } 
-    if (this.newWallThicknessLabel != null) {
-      // Fourteenth row
-		swapOut(this.newWallThicknessLabel, R.id.prefs_newWallsThicknessLabel);
-		swapOut(this.newWallThicknessSpinner, R.id.prefs_newWallsThicknessSpinner);
-    }
-    if (this.newWallHeightLabel != null) {
-      // Fifteenth row
-		swapOut(this.newWallHeightLabel, R.id.prefs_newWallsHeightLabel);
-		swapOut(this.newWallHeightSpinner, R.id.prefs_newWallsHeightSpinner);
-    }
-    if (this.newFloorThicknessLabel != null) {
-      // Sixteenth row
-		swapOut(this.newFloorThicknessLabel, R.id.prefs_newLevelFloorThicknessLabel);
-   		swapOut(this.newFloorThicknessSpinner, R.id.prefs_newLevelFloorThicknessSpinner);
-    }
-/*    if (this.checkUpdatesCheckBox != null
-        || this.autoSaveDelayForRecoveryCheckBox != null) {
-      // Seventeenth row
-      JPanel updatesAndAutoSaveDelayForRecoveryPanel = new JPanel(new GridBagLayout());
-      if (this.checkUpdatesCheckBox != null) {
-        updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesCheckBox,
-            new GridBagConstraints(
-             //   0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-             //   GridBagConstraints.NONE, labelInsets, 0, 0));
-        updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesNowButton,
-            new GridBagConstraints(
-             //   1, 0, 2, 1, 0, 0, GridBagConstraints.LINE_START, 
-             //   GridBagConstraints.NONE, rightComponentInsets, 0, 0));
-      }*/
-      if (this.autoSaveDelayForRecoveryCheckBox != null) {
-		  swapOut(this.autoSaveDelayForRecoveryCheckBox, R.id.prefs_autoSaveRadioButton);
+			/*if (this.languageLibraryImportButton != null) {
+				rootView.addView(this.languageLibraryImportButton, labelInsets);//, params);
+			}*/
+		}
+		else
+		{
+			removeView(R.id.prefs_languageLabel);
+			removeView(R.id.prefs_languageSpinner);
+		}
+
+		if (this.unitLabel != null)
+		{
+			swapOut(this.unitLabel, R.id.prefs_unitLabel);
+			swapOut(this.unitComboBox, R.id.prefs_unitSpinner);
+		}
+		else
+		{
+			removeView(R.id.prefs_unitLabel);
+			removeView(R.id.prefs_unitSpinner);
+		}
+		/* if (this.furnitureCatalogViewLabel != null) {
+		  rootView.addView(this.furnitureCatalogViewLabel, labelInsets);
+		  rootView.addView(this.treeRadioButton, labelInsets);
+		  rootView.addView(this.listRadioButton, rightComponentInsets);
+		}*/
+	   /* if (this.navigationPanelLabel != null) {
+		  rootView.addView(this.navigationPanelLabel, labelInsets);
+		  rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);
+		}*/
+		if (this.aerialViewCenteredOnSelectionLabel != null)
+		{
+			swapOut(this.aerialViewCenteredOnSelectionLabel, R.id.prefs_arialCenterLabel);
+			swapOut(this.aerialViewCenteredOnSelectionCheckBox, R.id.prefs_arialCenterRadioButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_arialCenterLabel);
+			removeView(R.id.prefs_arialCenterRadioButton);
+		}
+		if (this.magnetismLabel != null)
+		{
+			swapOut(this.magnetismLabel, R.id.prefs_magnetismLabel);
+			swapOut(this.magnetismCheckBox, R.id.prefs_magnetismRadioButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_magnetismLabel);
+			removeView(R.id.prefs_magnetismRadioButton);
+		}
+		if (this.rulersLabel != null)
+		{
+			swapOut(this.rulersLabel, R.id.prefs_rulersLabel);
+			swapOut(this.rulersCheckBox, R.id.prefs_rulersRadioButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_rulersLabel);
+			removeView(R.id.prefs_rulersRadioButton);
+		}
+		if (this.gridLabel != null)
+		{
+			swapOut(this.gridLabel, R.id.prefs_gridLabel);
+			swapOut(this.gridCheckBox, R.id.prefs_gridRadioButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_gridLabel);
+			removeView(R.id.prefs_gridRadioButton);
+		}
+		/*if (this.defaultFontNameLabel != null) {
+		  rootView.addView(this.defaultFontNameLabel, labelInsets);
+		  Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
+		  if (this.unitComboBox != null
+			  && this.floorColorOrTextureRadioButton != null) {
+			preferredSize.width = Math.min(preferredSize.width,
+				this.unitComboBox.getPreferredSize().width + 5 + this.floorColorOrTextureRadioButton.getPreferredSize().width);
+		  } else {
+			preferredSize.width = Math.min(preferredSize.width, 250);
+		  }
+		  this.defaultFontNameComboBox.setPreferredSize(preferredSize);
+		  rootView.addView(this.defaultFontNameComboBox, rightComponentInsets);
+		}*/
+		/*if (this.furnitureIconLabel != null) {
+		  rootView.addView(this.furnitureIconLabel, labelInsets);
+		  rootView.addView(this.catalogIconRadioButton, labelInsets);
+		  rootView.addView(this.topViewRadioButton, rightComponentInsets);
+		}*/
+		if (this.roomRenderingLabel != null)
+		{
+			swapOut(this.roomRenderingLabel, R.id.prefs_roomRenderLabel);
+			swapOut(this.monochromeRadioButton, R.id.prefs_roomRenderMonoRadioButton);
+			swapOut(this.floorColorOrTextureRadioButton, R.id.prefs_roomRenderColorRadioButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_roomRenderLabel);
+			removeView(R.id.prefs_roomRenderMonoRadioButton);
+			removeView(R.id.prefs_roomRenderColorRadioButton);
+		}
+		if (this.newWallPatternLabel != null)
+		{
+			swapOut(this.newWallPatternLabel, R.id.prefs_newWallsTextureLabel);
+			swapOut(this.newWallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
+		}
+		else if (this.wallPatternLabel != null)
+		{
+			swapOut(this.wallPatternLabel, R.id.prefs_newWallsTextureLabel);
+			swapOut(this.wallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
+		}
+		else
+		{
+			removeView(R.id.prefs_newWallsTextureLabel);
+			removeView(R.id.prefs_newWallsTextureSpinner);
+		}
+
+		if (this.newWallThicknessLabel != null)
+		{
+			swapOut(this.newWallThicknessLabel, R.id.prefs_newWallsThicknessLabel);
+			swapOut(this.newWallThicknessSpinner, R.id.prefs_newWallsThicknessSpinner);
+		}
+		else
+		{
+			removeView(R.id.prefs_newWallsThicknessLabel);
+			removeView(R.id.prefs_newWallsThicknessSpinner);
+		}
+		if (this.newWallHeightLabel != null)
+		{
+			swapOut(this.newWallHeightLabel, R.id.prefs_newWallsHeightLabel);
+			swapOut(this.newWallHeightSpinner, R.id.prefs_newWallsHeightSpinner);
+		}
+		else
+		{
+			removeView(R.id.prefs_newWallsHeightLabel);
+			removeView(R.id.prefs_newWallsHeightSpinner);
+		}
+		if (this.newFloorThicknessLabel != null)
+		{
+			swapOut(this.newFloorThicknessLabel, R.id.prefs_newLevelFloorThicknessLabel);
+			swapOut(this.newFloorThicknessSpinner, R.id.prefs_newLevelFloorThicknessSpinner);
+		}
+		else
+		{
+			removeView(R.id.prefs_newLevelFloorThicknessLabel);
+			removeView(R.id.prefs_newLevelFloorThicknessSpinner);
+		}
+		/*if (this.checkUpdatesCheckBox != null
+			|| this.autoSaveDelayForRecoveryCheckBox != null) {
+			  JPanel updatesAndAutoSaveDelayForRecoveryPanel = new JPanel(new GridBagLayout());
+			  if (this.checkUpdatesCheckBox != null) {
+					updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesCheckBox,
+					updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesNowButton,
+		  }*/
+		if (this.autoSaveDelayForRecoveryCheckBox != null)
+		{
+			swapOut(this.autoSaveDelayForRecoveryCheckBox, R.id.prefs_autoSaveRadioButton);
 			swapOut(this.autoSaveDelayForRecoverySpinner, R.id.prefs_autoSaveSpinner);
-			swapOut(this.autoSaveDelayForRecoveryUnitLabel,R.id.prefs_autoSaveUnitLabel);
-      }
+			swapOut(this.autoSaveDelayForRecoveryUnitLabel, R.id.prefs_autoSaveUnitLabel);
+		}
+		else
+		{
+			removeView(R.id.prefs_autoSaveRadioButton);
+			removeView(R.id.prefs_autoSaveSpinner);
+			removeView(R.id.prefs_autoSaveUnitLabel);
+		}
 
-    // Last row
-    if (this.resetDisplayedActionTipsButton.getText() != null
-        && this.resetDisplayedActionTipsButton.getText().length() > 0) {
-      // Display reset button only if its text isn't empty 
-		swapOut(this.resetDisplayedActionTipsButton, R.id.prefs_resetTipsButton);
-    }
+		if (this.resetDisplayedActionTipsButton.getText() != null
+				&& this.resetDisplayedActionTipsButton.getText().length() > 0)
+		{
+			// Display reset button only if its text isn't empty
+			swapOut(this.resetDisplayedActionTipsButton, R.id.prefs_resetTipsButton);
+		}
+		else
+		{
+			removeView(R.id.prefs_resetTipsButton);
+		}
 
-	  this.setTitle(dialogTitle);
-	  swapOut(closeButton, R.id.prefs_closeButton);
-  }
+		this.setTitle(dialogTitle);
+		swapOut(closeButton, R.id.prefs_closeButton);
+	}
 
   /**
    * Displays this panel in a dialog box. 

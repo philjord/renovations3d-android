@@ -73,7 +73,6 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 	  super(preferences, activity, R.layout.dialog_polylinepanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents();
   }
   
@@ -129,7 +128,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new ImageView(activity)
+				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
 				  {
 					  public void onDraw(Canvas canvas)
 					  {
@@ -307,7 +306,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new ImageView(activity)
+				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
 				  {
 					  public void onDraw(Canvas canvas)
 					  {
@@ -419,7 +418,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new ImageView(activity)
+				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
 				  {
 					  public void onDraw(Canvas canvas)
 					  {
@@ -516,29 +515,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PolylinePanel.class, "polyline.title");
   }
-  
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-  /*  if (!OperatingSystem.isMacOSX()) {
-      this.thicknessLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          PolylinePanel.class, "thicknessLabel.mnemonic")).getKeyCode());
-      this.thicknessLabel.setLabelFor(this.thicknessSpinner);
-      this.arrowsStyleLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          PolylinePanel.class, "arrowsStyleLabel.mnemonic")).getKeyCode());
-      this.arrowsStyleLabel.setLabelFor(this.arrowsStyleComboBox);
-      this.joinStyleLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          PolylinePanel.class, "joinStyleLabel.mnemonic")).getKeyCode());
-      this.joinStyleLabel.setLabelFor(this.joinStyleComboBox);
-      this.dashStyleLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          PolylinePanel.class, "dashStyleLabel.mnemonic")).getKeyCode());
-      this.dashStyleLabel.setLabelFor(this.dashStyleComboBox);
-      this.colorLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-          PolylinePanel.class, "colorLabel.mnemonic")).getKeyCode());
-      this.colorLabel.setLabelFor(this.colorButton);
-    }*/
-  }
+
   
   /**
    * Layouts panel components in panel with their labels. 

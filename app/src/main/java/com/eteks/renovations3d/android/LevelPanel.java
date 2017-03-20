@@ -75,7 +75,6 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
 	  super(preferences, activity , R.layout.dialog_levelpanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences, controller);
   }
 
@@ -407,72 +406,71 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
   }
 
   /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-
-  }
-  
-  /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences, 
-                                final LevelController controller) {
-    if (this.viewableCheckBox != null) {
-		swapOut(this.viewableCheckBox, R.id.levelpanel_viewableCheckBox);
-    }
-    else
-	{
-		removeView(R.id.levelpanel_viewableCheckBox);
-	}
-    if (this.nameLabel != null) {
-		swapOut(this.nameLabel, R.id.levelpanel_nameLabel);
-		swapOut(this.nameTextField, R.id.levelpanel_nameTextField);
-		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
-    else
-	{
-		removeView(R.id.levelpanel_nameLabel);
-		removeView(R.id.levelpanel_nameTextField);
-	}
-    if (this.elevationLabel != null) {
-		swapOut(this.elevationLabel, R.id.levelpanel_elevationLabel);
-		swapOut(this.elevationSpinner, R.id.levelpanel_elevationSpinner);
-    }
-    else
-	{
-		removeView(R.id.levelpanel_elevationLabel);
-		removeView(R.id.levelpanel_elevationSpinner);
-	}
-    if (this.floorThicknessLabel != null) {
-		swapOut(this.floorThicknessLabel, R.id.levelpanel_floorThicknessLabel);
-		swapOut(this.floorThicknessSpinner, R.id.levelpanel_floorThicknessSpinner);
-    }
-    else
-	{
-		removeView(R.id.levelpanel_floorThicknessLabel);
-		removeView(R.id.levelpanel_floorThicknessSpinner);
-	}
-    if (this.heightLabel != null) {
-		swapOut(this.heightLabel, R.id.levelpanel_heightLabel);
-		swapOut(this.heightSpinner, R.id.levelpanel_heightSpinner);
-    }
-    else
-	{
-		removeView(R.id.levelpanel_heightLabel);
-		removeView(R.id.levelpanel_heightSpinner);
-	}
+                                final LevelController controller)
+  {
+	  if (this.viewableCheckBox != null)
+	  {
+		  swapOut(this.viewableCheckBox, R.id.levelpanel_viewableCheckBox);
+	  }
+	  else
+	  {
+		  removeView(R.id.levelpanel_viewableCheckBox);
+	  }
+	  if (this.nameLabel != null)
+	  {
+		  swapOut(this.nameLabel, R.id.levelpanel_nameLabel);
+		  swapOut(this.nameTextField, R.id.levelpanel_nameTextField);
+		  if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
+			  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	  }
+	  else
+	  {
+		  removeView(R.id.levelpanel_nameLabel);
+		  removeView(R.id.levelpanel_nameTextField);
+	  }
+	  if (this.elevationLabel != null)
+	  {
+		  swapOut(this.elevationLabel, R.id.levelpanel_elevationLabel);
+		  swapOut(this.elevationSpinner, R.id.levelpanel_elevationSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.levelpanel_elevationLabel);
+		  removeView(R.id.levelpanel_elevationSpinner);
+	  }
+	  if (this.floorThicknessLabel != null)
+	  {
+		  swapOut(this.floorThicknessLabel, R.id.levelpanel_floorThicknessLabel);
+		  swapOut(this.floorThicknessSpinner, R.id.levelpanel_floorThicknessSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.levelpanel_floorThicknessLabel);
+		  removeView(R.id.levelpanel_floorThicknessSpinner);
+	  }
+	  if (this.heightLabel != null)
+	  {
+		  swapOut(this.heightLabel, R.id.levelpanel_heightLabel);
+		  swapOut(this.heightSpinner, R.id.levelpanel_heightSpinner);
+	  }
+	  else
+	  {
+		  removeView(R.id.levelpanel_heightLabel);
+		  removeView(R.id.levelpanel_heightSpinner);
+	  }
 
-    //PJPJPJPJ level summary disabled
-	//  swapOut(this.levelsSummaryLabel, R.id.levelpanel_);
-   // add(this.levelsSummaryLabel, new GridBagConstraints(
-    //    0, 6, 3, 1, 0, 0, GridBagConstraints.LINE_START,
-   //     GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
-  /*  JScrollPane levelsSummaryPane = new JScrollPane(this.levelsSummaryTable);
-    levelsSummaryPane.setPreferredSize(new Dimension(Math.round(320 * SwingTools.getResolutionScale()), 
+	  //PJPJPJPJ level summary disabled
+	  //  swapOut(this.levelsSummaryLabel, R.id.levelpanel_);
+	  // add(this.levelsSummaryLabel, new GridBagConstraints(
+	  //    0, 6, 3, 1, 0, 0, GridBagConstraints.LINE_START,
+	  //     GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
+  		/*  JScrollPane levelsSummaryPane = new JScrollPane(this.levelsSummaryTable);
+		levelsSummaryPane.setPreferredSize(new Dimension(Math.round(320 * SwingTools.getResolutionScale()),
         this.levelsSummaryTable.getTableHeader().getPreferredSize().height + this.levelsSummaryTable.getRowHeight() * 8 + 1));
-    add(levelsSummaryPane, new GridBagConstraints(
+    	add(levelsSummaryPane, new GridBagConstraints(
         0, 7, 3, 2, 1, 1, GridBagConstraints.CENTER, 
         GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));*/
 

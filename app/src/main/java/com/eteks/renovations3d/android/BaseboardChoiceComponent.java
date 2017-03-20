@@ -20,14 +20,8 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.content.res.Resources;
-import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -40,6 +34,9 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.View;
 import com.mindblowing.renovations3d.R;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Baseboard editing panel.
@@ -79,11 +76,7 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
 	  this.addView(rootView);
 
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences);
-
-
-
   }
 
   /**
@@ -279,22 +272,11 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
     }
   }
   
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-  }
-  
+
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-  	  LinearLayout.LayoutParams rowInsets;
-	  rowInsets = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	  Resources r = activity.getResources();
-	  int px10dp = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
-	  rowInsets.setMargins(px10dp,px10dp,px10dp,px10dp);
-
 	  swapOut(this.visibleCheckBox, R.id.baseboardview_visibleCheckBox);
 	  swapOut(this.sameColorAsWallRadioButton, R.id.baseboardview_sameColorAsWallRadioButton);
 	  swapOut(this.colorRadioButton, R.id.baseboardview_colorRadioButton);

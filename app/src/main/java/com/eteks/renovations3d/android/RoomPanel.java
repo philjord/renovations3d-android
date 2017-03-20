@@ -22,33 +22,29 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-
 import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
-import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.RoomController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
 import com.mindblowing.renovations3d.R;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Room editing panel.
@@ -92,11 +88,9 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
    */
   public RoomPanel(UserPreferences preferences,
                    RoomController controller, Activity activity) {
-	  //super(new GridBagLayout());
 	  super(preferences, activity, R.layout.dialog_roompanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences);
     this.firstWallChange = true;
   }
@@ -636,99 +630,91 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   }
 
   /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-
-  }
-  
-  /**
    * Layouts panel components in panel with their labels. 
    */
-  private void layoutComponents(UserPreferences preferences) {
+  private void layoutComponents(UserPreferences preferences)
+  {
+	  if (this.nameLabel != null || this.areaVisibleCheckBox != null)
+	  {
+		  JLabel nameAndAreaPanel = new JLabel(activity,
+				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
+		  swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
+		  swapOut(this.nameLabel, R.id.roompanel_nameLabel);
+		  swapOut(this.nameTextField, R.id.roompanel_nameTextField);
+		  if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
+			  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+		  swapOut(this.areaVisibleCheckBox, R.id.roompanel_areaVisibleCheckBox);
+	  }
+	  else
+	  {
+		  // no empty table must remove the whole thing
+		  removeView(R.id.roompanel_nameAndAreaTable);
+	  }
 
-    if (this.nameLabel != null || this.areaVisibleCheckBox != null) {
-
-		JLabel nameAndAreaPanel = new JLabel(activity,
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
-		swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
-		swapOut(this.nameLabel, R.id.roompanel_nameLabel);
-		swapOut(this.nameTextField, R.id.roompanel_nameTextField);
-		if(this.nameTextField.getText().toString()!=null &&this.nameTextField.getText().toString().length()>0)
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-		swapOut(this.areaVisibleCheckBox, R.id.roompanel_areaVisibleCheckBox);
-	}
-	else
-	{
-		// no empty table must remove teh whole thing
-		removeView(R.id.roompanel_nameAndAreaTable);
-	}
-
-    if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null)
-	{
-		JLabel floorPanel = new JLabel(activity,
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "floorPanel.title"));
-		swapOut(floorPanel, R.id.roompanel_floorPanel);
-		swapOut(this.floorVisibleCheckBox, R.id.roompanel_floorVisibleCheckBox);
-		swapOut(this.floorColorRadioButton, R.id.roompanel_floorColorRadioButton);
-		swapOut(this.floorColorButton, R.id.roompanel_floorColorButton);
-		swapOut(this.floorTextureRadioButton, R.id.roompanel_floorTextureRadioButton);
-		swapOut(this.floorTextureComponent, R.id.roompanel_floorTextureComponent);
-		swapOut(this.floorMattRadioButton, R.id.roompanel_floorMattRadioButton);
-		swapOut(this.floorShinyRadioButton, R.id.roompanel_floorShinyRadioButton);
-    }
-	else
-	{
-		removeView(R.id.roompanel_floorPanelTable);
-	}
-    if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null)
-	{
-		JLabel ceilingPanel = new JLabel(activity,
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingPanel.title"));
-		swapOut(ceilingPanel, R.id.roompanel_ceilingPanel);
-		swapOut(this.ceilingVisibleCheckBox, R.id.roompanel_ceilingVisibleCheckBox);
-		swapOut(this.ceilingColorRadioButton, R.id.roompanel_ceilingColorRadioButton);
-		swapOut(this.ceilingColorButton, R.id.roompanel_ceilingColorButton);
-		swapOut(this.ceilingTextureRadioButton, R.id.roompanel_ceilingTextureRadioButton);
-		swapOut(this.ceilingTextureComponent, R.id.roompanel_ceilingTextureComponent);
-		swapOut(this.ceilingMattRadioButton, R.id.roompanel_ceilingMattRadioButton);
-		swapOut(this.ceilingShinyRadioButton, R.id.roompanel_ceilingShinyRadioButton);
-    }
-	else
-	{
-		removeView(R.id.roompanel_ceilingPanelTable);
-	}
-    if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null)
-	{
-		JLabel wallSidesPanel = new JLabel(activity,
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesPanel.title"));
-		swapOut(wallSidesPanel, R.id.roompanel_wallSidesPanel);
-		swapOut(this.splitSurroundingWallsCheckBox, R.id.roompanel_splitSurroundingWallsCheckBox);
-		swapOut(this.wallSidesColorRadioButton, R.id.roompanel_wallSidesColorRadioButton);
-		swapOut(this.wallSidesColorButton, R.id.roompanel_wallSidesColorButton);
-		swapOut(this.wallSidesTextureRadioButton, R.id.roompanel_wallSidesTextureRadioButton);
-		swapOut(this.wallSidesTextureComponent, R.id.roompanel_wallSidesTextureComponent);
-		swapOut(this.wallSidesMattRadioButton, R.id.roompanel_wallSidesMattRadioButton);
-		swapOut(this.wallSidesShinyRadioButton, R.id.roompanel_wallSidesShinyRadioButton);
-    }
-	else
-	{
-		removeView(R.id.roompanel_wallSidesPanelTable);
-	}
-    if (this.wallSidesBaseboardComponent != null)
-	{
-		JLabel wallSidesBaseboardPanel = new JLabel(activity,
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesBaseboardPanel.title"));
-		swapOut(wallSidesBaseboardPanel, R.id.roompanel_wallSidesBaseboardPanel);
-		swapOut(this.wallSidesBaseboardComponent, R.id.roompanel_wallSidesBaseboardComponent);
-    }
-	else
-	{
-		removeView(R.id.roompanel_wallSidesBaseboardPanel);
-		removeView(R.id.roompanel_wallSidesBaseboardComponent);
-	}
+	  if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null)
+	  {
+		  JLabel floorPanel = new JLabel(activity,
+				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "floorPanel.title"));
+		  swapOut(floorPanel, R.id.roompanel_floorPanel);
+		  swapOut(this.floorVisibleCheckBox, R.id.roompanel_floorVisibleCheckBox);
+		  swapOut(this.floorColorRadioButton, R.id.roompanel_floorColorRadioButton);
+		  swapOut(this.floorColorButton, R.id.roompanel_floorColorButton);
+		  swapOut(this.floorTextureRadioButton, R.id.roompanel_floorTextureRadioButton);
+		  swapOut(this.floorTextureComponent, R.id.roompanel_floorTextureComponent);
+		  swapOut(this.floorMattRadioButton, R.id.roompanel_floorMattRadioButton);
+		  swapOut(this.floorShinyRadioButton, R.id.roompanel_floorShinyRadioButton);
+	  }
+	  else
+	  {
+		  removeView(R.id.roompanel_floorPanelTable);
+	  }
+	  if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null)
+	  {
+		  JLabel ceilingPanel = new JLabel(activity,
+				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingPanel.title"));
+		  swapOut(ceilingPanel, R.id.roompanel_ceilingPanel);
+		  swapOut(this.ceilingVisibleCheckBox, R.id.roompanel_ceilingVisibleCheckBox);
+		  swapOut(this.ceilingColorRadioButton, R.id.roompanel_ceilingColorRadioButton);
+		  swapOut(this.ceilingColorButton, R.id.roompanel_ceilingColorButton);
+		  swapOut(this.ceilingTextureRadioButton, R.id.roompanel_ceilingTextureRadioButton);
+		  swapOut(this.ceilingTextureComponent, R.id.roompanel_ceilingTextureComponent);
+		  swapOut(this.ceilingMattRadioButton, R.id.roompanel_ceilingMattRadioButton);
+		  swapOut(this.ceilingShinyRadioButton, R.id.roompanel_ceilingShinyRadioButton);
+	  }
+	  else
+	  {
+		  removeView(R.id.roompanel_ceilingPanelTable);
+	  }
+	  if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null)
+	  {
+		  JLabel wallSidesPanel = new JLabel(activity,
+				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesPanel.title"));
+		  swapOut(wallSidesPanel, R.id.roompanel_wallSidesPanel);
+		  swapOut(this.splitSurroundingWallsCheckBox, R.id.roompanel_splitSurroundingWallsCheckBox);
+		  swapOut(this.wallSidesColorRadioButton, R.id.roompanel_wallSidesColorRadioButton);
+		  swapOut(this.wallSidesColorButton, R.id.roompanel_wallSidesColorButton);
+		  swapOut(this.wallSidesTextureRadioButton, R.id.roompanel_wallSidesTextureRadioButton);
+		  swapOut(this.wallSidesTextureComponent, R.id.roompanel_wallSidesTextureComponent);
+		  swapOut(this.wallSidesMattRadioButton, R.id.roompanel_wallSidesMattRadioButton);
+		  swapOut(this.wallSidesShinyRadioButton, R.id.roompanel_wallSidesShinyRadioButton);
+	  }
+	  else
+	  {
+		  removeView(R.id.roompanel_wallSidesPanelTable);
+	  }
+	  if (this.wallSidesBaseboardComponent != null)
+	  {
+		  JLabel wallSidesBaseboardPanel = new JLabel(activity,
+				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesBaseboardPanel.title"));
+		  swapOut(wallSidesBaseboardPanel, R.id.roompanel_wallSidesBaseboardPanel);
+		  swapOut(this.wallSidesBaseboardComponent, R.id.roompanel_wallSidesBaseboardComponent);
+	  }
+	  else
+	  {
+		  removeView(R.id.roompanel_wallSidesBaseboardPanel);
+		  removeView(R.id.roompanel_wallSidesBaseboardComponent);
+	  }
 
 	  this.setTitle(dialogTitle);
 	  swapOut(closeButton, R.id.roompanel_closeButton);

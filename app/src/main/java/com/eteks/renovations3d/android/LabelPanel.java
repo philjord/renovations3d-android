@@ -21,30 +21,27 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
+import com.eteks.renovations3d.android.swingish.ButtonGroup;
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.JTextField;
+import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.LabelController;
-import com.eteks.renovations3d.android.swingish.ButtonGroup;
-
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.mindblowing.renovations3d.R;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
 /**
@@ -83,7 +80,6 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     this.labelModification = modification;
     this.controller = controller;
     createComponents(modification, preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(controller, preferences);
   }
 
@@ -314,25 +310,20 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     }
   }
   
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
 
-  }
-  
   /**
    * Layouts panel components in panel with their labels. 
    */
-  private void layoutComponents(final LabelController controller, UserPreferences preferences) {
+  private void layoutComponents(final LabelController controller, UserPreferences preferences)
+  {
 	  JLabel nameAndStylePanel = new JLabel(activity,
 			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
 	  swapOut(nameAndStylePanel, R.id.labelpanel_nameAndStylePanel);
 	  swapOut(this.textLabel, R.id.labelpanel_textLabel);
 	  swapOut(this.textTextField, R.id.labelpanel_textTextField);
 	  //hide the input keyboard unless the text is blank
-	if(this.textTextField.getText().toString() != null && this.textTextField.getText().toString().length() > 0)
-	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	  if(this.textTextField.getText().toString() != null && this.textTextField.getText().toString().length() > 0)
+	  		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 
 	  //PJPJPJ no font styles on android

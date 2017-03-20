@@ -21,24 +21,21 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.view.View;
-import android.widget.LinearLayout;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
+import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.ObserverCameraController;
 import com.mindblowing.renovations3d.R;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Observer camera editing panel.
@@ -73,7 +70,6 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 	  super(preferences, activity, R.layout.dialog_observercamera);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences);
   }
 
@@ -226,12 +222,6 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "observerCamera.title");
   }
 
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-  }
-  
   /**
    * Layouts panel components in panel with their labels. 
    */

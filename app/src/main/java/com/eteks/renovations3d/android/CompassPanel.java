@@ -97,7 +97,6 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 	  super(preferences, activity, R.layout.dialog_compasspanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences);
   }
 
@@ -397,12 +396,6 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
   }
 
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
-   }
-  
   /**
    * Layouts panel components in panel with their labels. 
    */

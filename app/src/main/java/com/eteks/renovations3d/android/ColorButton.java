@@ -32,7 +32,6 @@ import com.eteks.sweethome3d.model.UserPreferences;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.Locale;
 
 import javaawt.Color;
 import javaawt.Graphics2D;
@@ -106,8 +105,8 @@ public class ColorButton extends JButton
 		  }
 	  });
 
-// initialColor is the initially-selected color to be shown in the rectangle on the left of the arrow.
-// for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
+	// initialColor is the initially-selected color to be shown in the rectangle on the left of the arrow.
+	// for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
 
 	  addActionListener(new ActionListener() {
 		  public void actionPerformed(ActionEvent ev) {

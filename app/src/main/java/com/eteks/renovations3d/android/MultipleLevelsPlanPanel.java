@@ -74,48 +74,53 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	private Menu mOptionsMenu;
 
+	private View rootView;// recorded to prevent double view creates from fragment manager
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		View rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
-
-		if(initialized)
+		// TODO: find out why a new home gets a doube onViewCreate
+		if( rootView == null )
 		{
-			this.setHasOptionsMenu(true);
+			rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
 
-
-			drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
-			drawableView.setDrawer(this);
-
-			planComponent.setDrawableView(drawableView);
-
-			RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.levelsRadioGroup);
-			this.multipleLevelsTabbedPane = new JTabbedPane(this.getContext(), rg);
-
-			// from the constructor but placed here now so views are set
-			createComponents(home, preferences, planController);
-			layoutComponents();
-			updateSelectedTab(home);
-
-			View levelPlusButton = rootView.findViewById(R.id.levelPlusButton);
-			levelPlusButton.setOnClickListener(new View.OnClickListener()
+			if (initialized)
 			{
-				public void onClick(View v)
+				this.setHasOptionsMenu(true);
+
+
+				drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
+				drawableView.setDrawer(this);
+
+				planComponent.setDrawableView(drawableView);
+
+				RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.levelsRadioGroup);
+				this.multipleLevelsTabbedPane = new JTabbedPane(this.getContext(), rg);
+
+				// from the constructor but placed here now so views are set
+				createComponents(home, preferences, planController);
+				layoutComponents();
+				updateSelectedTab(home);
+
+				View levelPlusButton = rootView.findViewById(R.id.levelPlusButton);
+				levelPlusButton.setOnClickListener(new View.OnClickListener()
 				{
-					planController.addLevel();
-				}
-			});
-			View goto3DView = rootView.findViewById(R.id.goto3DView);
-			goto3DView.setOnClickListener(new View.OnClickListener()
-			{
-				public void onClick(View v)
+					public void onClick(View v)
+					{
+						planController.addLevel();
+					}
+				});
+				View goto3DView = rootView.findViewById(R.id.goto3DView);
+				goto3DView.setOnClickListener(new View.OnClickListener()
 				{
-					Renovations3DActivity.mViewPager.setCurrentItem(3, true);
-				}
-			});
+					public void onClick(View v)
+					{
+						Renovations3DActivity.mViewPager.setCurrentItem(3, true);
+					}
+				});
+			}
 		}
-
 		return rootView;
 	}
 
