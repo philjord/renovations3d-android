@@ -26,6 +26,7 @@ import android.widget.NumberPicker;
 
 
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 
 
@@ -159,31 +160,5 @@ public class AutoCommitSpinner extends JSpinner
 
 
 
-	/**
-	 * A spinner number model that will reset to minimum when maximum is reached.
-	 */
-	public static class SpinnerModuloNumberModel extends SpinnerNumberModel {
-		public SpinnerModuloNumberModel(int value, int minimum, int maximum, int stepSize) {
-			super(value, minimum, maximum, stepSize);
-		}
-
-		@Override
-		public Object getNextValue() {
-			if (getNumber().intValue() + getStepSize().intValue() < ((Number)getMaximum()).intValue()) {
-				return ((Number)super.getNextValue()).intValue();
-			} else {
-				return getNumber().intValue() + getStepSize().intValue() - ((Number)getMaximum()).intValue() + ((Number)getMinimum()).intValue();
-			}
-		}
-
-		@Override
-		public Object getPreviousValue() {
-			if (getNumber().intValue() - getStepSize().intValue() >= ((Number)getMinimum()).intValue()) {
-				return ((Number)super.getPreviousValue()).intValue();
-			} else {
-				return getNumber().intValue() - getStepSize().intValue() - ((Number)getMinimum()).intValue() + ((Number)getMaximum()).intValue();
-			}
-		}
-	}
 
 }

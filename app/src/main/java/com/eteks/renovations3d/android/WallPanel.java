@@ -47,6 +47,7 @@ import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.HomeTexture;
@@ -73,15 +74,15 @@ import static android.R.attr.y;
 public class WallPanel extends AndroidDialogView implements DialogView {
   private final WallController controller;
   private JLabel               xStartLabel;
-  private JSpinner             xStartSpinner;
+  private JSpinner2 xStartSpinner;
   private JLabel               yStartLabel;
-  private JSpinner             yStartSpinner;
+  private JSpinner2             yStartSpinner;
   private JLabel               xEndLabel;
-  private JSpinner             xEndSpinner;
+  private JSpinner2             xEndSpinner;
   private JLabel               yEndLabel;
-  private JSpinner             yEndSpinner;
+  private JSpinner2             yEndSpinner;
   private JLabel               distanceToEndPointLabel;
-  private JSpinner             distanceToEndPointSpinner;
+  private JSpinner2             distanceToEndPointSpinner;
   private JRadioButton         leftSideColorRadioButton;
   private ColorButton          leftSideColorButton;
   private JRadioButton         leftSideTextureRadioButton;
@@ -104,14 +105,14 @@ public class WallPanel extends AndroidDialogView implements DialogView {
   private ColorButton          topColorButton;
   private JRadioButton         rectangularWallRadioButton;
   private JLabel               rectangularWallHeightLabel;
-  private JSpinner             rectangularWallHeightSpinner;
+  private JSpinner2             rectangularWallHeightSpinner;
   private JRadioButton         slopingWallRadioButton;
   private JLabel               slopingWallHeightAtStartLabel;
-  private JSpinner             slopingWallHeightAtStartSpinner;
+  private JSpinner2             slopingWallHeightAtStartSpinner;
   private JLabel               slopingWallHeightAtEndLabel;
-  private JSpinner             slopingWallHeightAtEndSpinner;
+  private JSpinner2             slopingWallHeightAtEndSpinner;
   private JLabel               thicknessLabel;
-  private JSpinner             thicknessSpinner;
+  private JSpinner2             thicknessSpinner;
   private JLabel               arcExtentLabel;
   private JSpinner             arcExtentSpinner;
   private JLabel               wallOrientationLabel;
@@ -146,9 +147,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     this.xStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.text", unitName));
     final float maximumLength = preferences.getLengthUnit().getMaximumLength();
-    final NullableSpinner.NullableSpinnerLengthModel xStartSpinnerModel =
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xStartSpinner = new NullableSpinner(activity, xStartSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel xStartSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.xStartSpinner = new NullableSpinner2(activity, xStartSpinnerModel);
     xStartSpinnerModel.setNullable(controller.getXStart() == null);
     xStartSpinnerModel.setLength(controller.getXStart());
     final PropertyChangeListener xStartChangeListener = new PropertyChangeListener() {
@@ -169,9 +170,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create Y start label and its spinner bound to Y_START controller property
     this.yStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel yStartSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.yStartSpinner = new NullableSpinner(activity, yStartSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel yStartSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.yStartSpinner = new NullableSpinner2(activity, yStartSpinnerModel);
     yStartSpinnerModel.setNullable(controller.getYStart() == null);
     yStartSpinnerModel.setLength(controller.getYStart());
     final PropertyChangeListener yStartChangeListener = new PropertyChangeListener() {
@@ -192,9 +193,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create X end label and its spinner bound to X_END controller property
     this.xEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel xEndSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xEndSpinner = new NullableSpinner(activity, xEndSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel xEndSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.xEndSpinner = new NullableSpinner2(activity, xEndSpinnerModel);
     xEndSpinnerModel.setNullable(controller.getXEnd() == null);
     xEndSpinnerModel.setLength(controller.getXEnd());
     final PropertyChangeListener xEndChangeListener = new PropertyChangeListener() {
@@ -215,9 +216,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create Y end label and its spinner bound to Y_END controller property
     this.yEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel yEndSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.yEndSpinner = new NullableSpinner(activity, yEndSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel yEndSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.yEndSpinner = new NullableSpinner2(activity, yEndSpinnerModel);
     yEndSpinnerModel.setNullable(controller.getYEnd() == null);
     yEndSpinnerModel.setLength(controller.getYEnd());
     final PropertyChangeListener yEndChangeListener = new PropertyChangeListener() {
@@ -239,9 +240,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     this.distanceToEndPointLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "distanceToEndPointLabel.text", unitName));
     float minimumLength = preferences.getLengthUnit().getMinimumLength();
-    final NullableSpinner.NullableSpinnerLengthModel distanceToEndPointSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, 2 * maximumLength * (float)Math.sqrt(2));
-    this.distanceToEndPointSpinner = new NullableSpinner(activity, distanceToEndPointSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel distanceToEndPointSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2 * maximumLength * (float)Math.sqrt(2));
+    this.distanceToEndPointSpinner = new NullableSpinner2(activity, distanceToEndPointSpinnerModel);
     distanceToEndPointSpinnerModel.setNullable(controller.getLength() == null);
     distanceToEndPointSpinnerModel.setLength(controller.getDistanceToEndPoint());
     final PropertyChangeListener distanceToEndPointChangeListener = new PropertyChangeListener() {
@@ -601,9 +602,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     this.rectangularWallHeightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
             com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallHeightLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel rectangularWallHeightSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.rectangularWallHeightSpinner = new NullableSpinner(activity, rectangularWallHeightSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel rectangularWallHeightSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
+    this.rectangularWallHeightSpinner = new NullableSpinner2(activity, rectangularWallHeightSpinnerModel);
     rectangularWallHeightSpinnerModel.setNullable(controller.getRectangularWallHeight() == null);
     rectangularWallHeightSpinnerModel.setLength(controller.getRectangularWallHeight());
     final PropertyChangeListener rectangularWallHeightChangeListener = new PropertyChangeListener() {
@@ -641,9 +642,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create height at start label and its spinner bound to SLOPING_WALL_HEIGHT_AT_START controller property
     this.slopingWallHeightAtStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtStartLabel.text"));
-    final NullableSpinner.NullableSpinnerLengthModel slopingWallHeightAtStartSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.slopingWallHeightAtStartSpinner = new NullableSpinner(activity, slopingWallHeightAtStartSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtStartSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
+    this.slopingWallHeightAtStartSpinner = new NullableSpinner2(activity, slopingWallHeightAtStartSpinnerModel);
     slopingWallHeightAtStartSpinnerModel.setNullable(controller.getSlopingWallHeightAtStart() == null);
     slopingWallHeightAtStartSpinnerModel.setLength(controller.getSlopingWallHeightAtStart());
     final PropertyChangeListener slopingWallHeightAtStartChangeListener = new PropertyChangeListener() {
@@ -667,9 +668,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create height at end label and its spinner bound to SLOPING_WALL_HEIGHT_AT_END controller property
     this.slopingWallHeightAtEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtEndLabel.text"));
-    final NullableSpinner.NullableSpinnerLengthModel slopingWallHeightAtEndSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.slopingWallHeightAtEndSpinner = new NullableSpinner(activity, slopingWallHeightAtEndSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtEndSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
+    this.slopingWallHeightAtEndSpinner = new NullableSpinner2(activity, slopingWallHeightAtEndSpinnerModel);
     slopingWallHeightAtEndSpinnerModel.setNullable(controller.getSlopingWallHeightAtEnd() == null);
     slopingWallHeightAtEndSpinnerModel.setLength(controller.getSlopingWallHeightAtEnd());
     final PropertyChangeListener slopingWallHeightAtEndChangeListener = new PropertyChangeListener() {
@@ -693,9 +694,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create thickness label and its spinner bound to THICKNESS controller property
     this.thicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "thicknessLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel thicknessSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
-    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
+    this.thicknessSpinner = new NullableSpinner2(activity, thicknessSpinnerModel);
     thicknessSpinnerModel.setNullable(controller.getThickness() == null);
     thicknessSpinnerModel.setLength(controller.getThickness());
     final PropertyChangeListener thicknessChangeListener = new PropertyChangeListener() {
@@ -719,8 +720,8 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Create arc extent label and its spinner bound to ARC_EXTENT_IN_DEGREES controller property
     this.arcExtentLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerNumberModel arcExtentSpinnerModel = 
-        new NullableSpinner.NullableSpinnerNumberModel(new Float(0), new Float(-270), new Float(270), new Float(5));
+    final NullableSpinnerNumberModel arcExtentSpinnerModel =
+        new NullableSpinnerNumberModel(new Float(0), new Float(-270), new Float(270), new Float(5));
     this.arcExtentSpinner = new NullableSpinner(activity, arcExtentSpinnerModel);
     arcExtentSpinnerModel.setNullable(controller.getArcExtentInDegrees() == null);
     arcExtentSpinnerModel.setValue(controller.getArcExtentInDegrees());

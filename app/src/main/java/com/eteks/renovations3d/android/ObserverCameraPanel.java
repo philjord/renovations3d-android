@@ -27,6 +27,7 @@ import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -44,11 +45,11 @@ import java.beans.PropertyChangeListener;
 public class ObserverCameraPanel extends AndroidDialogView implements DialogView {
   private final ObserverCameraController controller;
   private JLabel xLabel;
-  private JSpinner      xSpinner;
+  private JSpinner2 xSpinner;
   private JLabel        yLabel;
-  private JSpinner ySpinner;
+  private JSpinner2 ySpinner;
   private JLabel        elevationLabel;
-  private JSpinner      elevationSpinner;
+  private JSpinner2      elevationSpinner;
   private JLabel        yawLabel;
   private JSpinner      yawSpinner;
   private JLabel        pitchLabel;
@@ -85,9 +86,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
     final float maximumLength = 5E5f;
-    final NullableSpinner.NullableSpinnerLengthModel xSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.xSpinner = new NullableSpinner2(activity, xSpinnerModel);
     xSpinnerModel.setLength(controller.getX());
     final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -104,9 +105,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     // Create Y label and its spinner bound to Y controller property
     this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel ySpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.ySpinner = new NullableSpinner2(activity, ySpinnerModel);
     ySpinnerModel.setLength(controller.getY());
     final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -124,9 +125,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.elevationLabel = new JLabel(activity, String.format(SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "elevationLabel.text"), unitName));
     float maximumElevation = preferences.getLengthUnit().getMaximumElevation();
-    final NullableSpinner.NullableSpinnerLengthModel elevationSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, controller.getMinimumElevation(), maximumElevation);
-    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, controller.getMinimumElevation(), maximumElevation);
+    this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
     elevationSpinnerModel.setLength(controller.getElevation());
     elevationSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {

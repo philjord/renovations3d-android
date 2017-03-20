@@ -31,6 +31,7 @@ import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
@@ -56,7 +57,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   //private JLabel                fontNameLabel;//there are only 4 fonts on android!http://stackoverflow.com/questions/12128331/how-to-change-fontfamily-of-textview-in-android/13329907#13329907
   //private FontNameComboBox      fontNameComboBox;
   private JLabel                fontSizeLabel;
-  private JSpinner fontSizeSpinner;
+  private JSpinner2 fontSizeSpinner;
   private JLabel                colorLabel;
   private ColorButton           colorButton;
   private NullableCheckBox visibleIn3DViewCheckBox;
@@ -64,7 +65,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   private JRadioButton pitch0DegreeRadioButton;
   private JRadioButton pitch90DegreeRadioButton;
   private JLabel                elevationLabel;
-  private JSpinner elevationSpinner;
+  private JSpinner2 elevationSpinner;
   private String                dialogTitle;
 
   /**
@@ -168,9 +169,9 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     String unitName = preferences.getLengthUnit().getName();
     this.fontSizeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LabelPanel.class,
         "fontSizeLabel.text", unitName));
-    final SpinnerLengthModel fontSizeSpinnerModel = new SpinnerLengthModel(
-        preferences, 5, 999);
-    this.fontSizeSpinner = new NullableSpinner(activity, fontSizeSpinnerModel);
+	final NullableSpinnerNumberModel.NullableSpinnerLengthModel fontSizeSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
+			  preferences, 5, 999);
+    this.fontSizeSpinner = new NullableSpinner2(activity, fontSizeSpinnerModel);
     final PropertyChangeListener fontSizeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           Float fontSize = controller.getFontSize();
@@ -267,9 +268,10 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     // Create elevation label and its spinner bound to ELEVATION controller property
     this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "elevationLabel.text", unitName));
-    final SpinnerLengthModel elevationSpinnerModel = new SpinnerLengthModel(
-        preferences, 0f, preferences.getLengthUnit().getMaximumElevation()/20);//PJPJP 10k is too much
-    this.elevationSpinner = new AutoCommitSpinner(activity, elevationSpinnerModel);
+
+	  final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
+			  preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
+    this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
     elevationSpinnerModel.setNullable(controller.getElevation() == null);
     elevationSpinnerModel.setValue(controller.getElevation());
     final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
@@ -381,50 +383,4 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
 	  });
 	  this.show();
   }
-
-
-
-
-	/**
-	 * Nullable spinner model displaying length values matching preferences unit.
-	 */
-	public static class SpinnerLengthModel extends SpinnerNumberModel
-	{
-		private final UserPreferences preferences;
-
-		/**
-		 * Creates a model managing lengths between the given <code>minimum</code> and <code>maximum</code> values in centimeter.
-		 */
-		public SpinnerLengthModel(UserPreferences preferences, float minimum, float maximum)
-		{
-			this(preferences, minimum, minimum, maximum);
-		}
-
-		/**
-		 * Creates a model managing lengths between the given <code>minimum</code> and <code>maximum</code> values in centimeter.
-		 */
-		public SpinnerLengthModel(UserPreferences preferences, float value, float minimum, float maximum)
-		{
-			super(value, minimum, maximum,
-					preferences.getLengthUnit() == LengthUnit.INCH
-							|| preferences.getLengthUnit() == LengthUnit.INCH_DECIMALS
-							? LengthUnit.inchToCentimeter(0.125f) : 0.5f);
-			this.preferences = preferences;
-		}
-
-		/**
-		 * Returns the displayed value in centimeter.
-		 */
-		public Float getLength()
-		{
-			return Float.valueOf(((Number) getValue()).floatValue());
-		}
-
-		public void setNullable(boolean nullable)
-		{
-			//ignored this.nullable = nullable;
-		}
-	}
-
-
 }

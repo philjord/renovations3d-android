@@ -53,7 +53,6 @@ public class SpinnerNumberModel
 
 	public void setStepSize(float stepSize)
 	{
-
 		// value has to be a multiple of the stepSize or we have terrible trouble
 		this.value = stepSize * (Math.round(value / stepSize));
 		fireStateChanged();
@@ -100,15 +99,23 @@ public class SpinnerNumberModel
 	}
 
 
-	//TODO: it's be nice if I could get this to work somehow, good for modulo
 	public Object getNextValue()
 	{
-		throw new UnsupportedOperationException();
+		if ( value + stepSize <= maximum) {
+			return value + stepSize;
+		} else {
+			return value;
+		}
 	}
+
 
 	public Object getPreviousValue()
 	{
-		throw new UnsupportedOperationException();
+		if ( value - stepSize >= minimum) {
+			return value - stepSize;
+		} else {
+			return value;
+		}
 	}
 
 }

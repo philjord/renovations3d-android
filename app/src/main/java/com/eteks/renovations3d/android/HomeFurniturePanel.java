@@ -38,6 +38,7 @@ import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -61,22 +62,22 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JTextField              descriptionTextField;
   private NullableCheckBox nameVisibleCheckBox;
   private JLabel                  priceLabel;
-  private JSpinner priceSpinner;
+  private JSpinner2 			  priceSpinner;
   private JLabel                  xLabel;
-  private JSpinner                xSpinner;
+  private JSpinner2                xSpinner;
   private JLabel                  yLabel;
-  private JSpinner                ySpinner;
+  private JSpinner2                ySpinner;
   private JLabel                  elevationLabel;
-  private JSpinner                elevationSpinner;
+  private JSpinner2                elevationSpinner;
   private JLabel                  angleLabel;
   private JSpinner                angleSpinner;
   private NullableCheckBox        basePlanItemCheckBox;
   private JLabel                  widthLabel;
-  private JSpinner                widthSpinner;
+  private JSpinner2                widthSpinner;
   private JLabel                  depthLabel;
-  private JSpinner                depthSpinner;
+  private JSpinner2                depthSpinner;
   private JLabel                  heightLabel;
-  private JSpinner                heightSpinner;
+  private JSpinner2                heightSpinner;
   private JCheckBox keepProportionsCheckBox;
   private NullableCheckBox        mirroredModelCheckBox;
   private JRadioButton defaultColorAndTextureRadioButton;
@@ -244,9 +245,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create Price label and its spinner bound to PRICE controller property
       this.priceLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "priceLabel.text"));
-      final NullableSpinner.NullableSpinnerNumberModel priceSpinnerModel = 
-          new NullableSpinner.NullableSpinnerNumberModel(0, 0, 10000, 1f);
-      this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel);
+      final NullableSpinnerNumberModel priceSpinnerModel =
+          new NullableSpinnerNumberModel(0, 0, 10000, 1f);
+      this.priceSpinner = new NullableSpinner2(activity, priceSpinnerModel);
       BigDecimal price = controller.getPrice();
       priceSpinnerModel.setNullable(price == null);
       priceSpinnerModel.setValue(price == null  ? null  : price.floatValue());
@@ -272,9 +273,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create X label and its spinner bound to X controller property
       this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerLengthModel xSpinnerModel =
-          new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-      this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
+          new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+      this.xSpinner = new NullableSpinner2(activity, xSpinnerModel);
       xSpinnerModel.setNullable(controller.getX() == null);
       xSpinnerModel.setLength(controller.getX());
       final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
@@ -297,9 +298,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create Y label and its spinner bound to Y controller property
       this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text",
           unitName));
-      final NullableSpinner.NullableSpinnerLengthModel ySpinnerModel = new NullableSpinner.NullableSpinnerLengthModel(
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, -maximumLength, maximumLength);
-      this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+      this.ySpinner = new NullableSpinner2(activity, ySpinnerModel);
       ySpinnerModel.setNullable(controller.getY() == null);
       ySpinnerModel.setLength(controller.getY());
       final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
@@ -322,9 +323,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create elevation label and its spinner bound to ELEVATION controller property
       this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "elevationLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinner.NullableSpinnerLengthModel(
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
-      this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
+      this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
       elevationSpinnerModel.setNullable(controller.getElevation() == null);
       elevationSpinnerModel.setLength(controller.getElevation());
       final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
@@ -347,8 +348,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create angle label and its spinner bound to ANGLE_IN_DEGREES controller property
       this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "angleLabel.text"));
-      final NullableSpinner.NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinner.NullableSpinnerModuloNumberModel(
-          0, 0, 360, 5);//PJPJPJ changed t 5 so it'll fit in the spinner 72 limit
+      final NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
+          0, 0, 360, 1);
       this.angleSpinner = new NullableSpinner(activity, angleSpinnerModel);
       Integer angle = controller.getAngleInDegrees();
       angleSpinnerModel.setNullable(angle == null);
@@ -413,9 +414,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create width label and its spinner bound to WIDTH controller property
       this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "widthLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerLengthModel widthSpinnerModel = new NullableSpinner.NullableSpinnerLengthModel(
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel);
+      this.widthSpinner = new NullableSpinner2(activity, widthSpinnerModel);
       final PropertyChangeListener widthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float width = controller.getWidth();
@@ -441,9 +442,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create depth label and its spinner bound to DEPTH controller property
       this.depthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "depthLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerLengthModel depthSpinnerModel = new NullableSpinner.NullableSpinnerLengthModel(
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel);
+      this.depthSpinner = new NullableSpinner2(activity, depthSpinnerModel);
       final PropertyChangeListener depthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float depth = controller.getDepth();
@@ -469,9 +470,9 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create height label and its spinner bound to HEIGHT controller property
       this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "heightLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerLengthModel heightSpinnerModel = new NullableSpinner.NullableSpinnerLengthModel(
+      final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
+      this.heightSpinner = new NullableSpinner2(activity, heightSpinnerModel);
       final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float height = controller.getHeight();
@@ -709,7 +710,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
       // Create power label and its spinner bound to POWER controller property
       this.lightPowerLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
           "lightPowerLabel.text", unitName));
-      final NullableSpinner.NullableSpinnerNumberModel lightPowerSpinnerModel = new NullableSpinner.NullableSpinnerNumberModel(
+      final NullableSpinnerNumberModel lightPowerSpinnerModel = new NullableSpinnerNumberModel(
           0, 0, 100, 5);
       this.lightPowerSpinner = new NullableSpinner(activity, lightPowerSpinnerModel);
       lightPowerSpinnerModel.setNullable(controller.getLightPower() == null);
@@ -852,8 +853,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  }
 	  if (this.descriptionLabel != null)
 	  {
-		  swapOut(this.nameLabel, R.id.furniture_panel_descriptionLabel);
-		  swapOut(this.nameTextField, R.id.furniture_panel_descriptionTextField);
+		  swapOut(this.descriptionLabel, R.id.furniture_panel_descriptionLabel);
+		  swapOut(this.descriptionTextField, R.id.furniture_panel_descriptionTextField);
 	  }
 	  else
 	  {
@@ -862,8 +863,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  }
 	  if (priceDisplayed)
 	  {
-		  swapOut(this.nameLabel, R.id.furniture_panel_priceLabel);
-		  swapOut(this.nameTextField, R.id.furniture_panel_priceSpinner);
+		  swapOut(this.priceLabel, R.id.furniture_panel_priceLabel);
+		  swapOut(this.priceSpinner, R.id.furniture_panel_priceSpinner);
 	  }
 	  else
 	  {

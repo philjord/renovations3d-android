@@ -41,6 +41,7 @@ import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -68,17 +69,17 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 	private static final float DIRECTION_COMP_DP = 100;
 	private final CompassController controller;
   private JLabel xLabel;
-  private JSpinner xSpinner;
+  private JSpinner2 xSpinner;
   private JLabel                  yLabel;
-  private JSpinner                ySpinner;
+  private JSpinner2                ySpinner;
   private JLabel                  diameterLabel;
-  private JSpinner                diameterSpinner;
+  private JSpinner2                diameterSpinner;
   private JCheckBox visibleCheckBox;
   private ImageView northDirectionComponent;
   private JLabel                  longitudeLabel;
   private JSpinner                longitudeSpinner;
   private JLabel                  latitudeLabel;
-  private JSpinner                latitudeSpinner;
+  private JSpinner               latitudeSpinner;
   private JLabel                  timeZoneLabel;
   private JComboBox timeZoneComboBox;
   private JLabel                  northDirectionLabel;
@@ -112,9 +113,9 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
         com.eteks.sweethome3d.android_props.CompassPanel.class, "xLabel.text", unitName));
     float maximumLength = preferences.getLengthUnit().getMaximumLength();
-    final NullableSpinner.NullableSpinnerLengthModel xSpinnerModel =
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.xSpinner = new NullableSpinner2(activity, xSpinnerModel);
     xSpinnerModel.setLength(controller.getX());
     final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -133,9 +134,9 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     // Create Y label and its spinner bound to Y controller property
     this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.CompassPanel.class, "yLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel ySpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
+    this.ySpinner = new NullableSpinner2(activity, ySpinnerModel);
     ySpinnerModel.setLength(controller.getY());
     final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -154,10 +155,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     // Create diameter label and its spinner bound to DIAMETER controller property
     this.diameterLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.CompassPanel.class, "diameterLabel.text", unitName));
-    final NullableSpinner.NullableSpinnerLengthModel diameterSpinnerModel = 
-        new NullableSpinner.NullableSpinnerLengthModel(preferences, 
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel diameterSpinnerModel =
+        new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences,
             preferences.getLengthUnit().getMinimumLength(), preferences.getLengthUnit().getMaximumLength()  / 10);
-    this.diameterSpinner = new NullableSpinner(activity, diameterSpinnerModel);
+    this.diameterSpinner = new NullableSpinner2(activity, diameterSpinnerModel);
     diameterSpinnerModel.setLength(controller.getDiameter());
     final PropertyChangeListener diameterChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -329,10 +330,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     
     this.northDirectionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "northDirectionLabel.text"));
     // Create a spinner model able to choose an angle modulo 360
-    final SpinnerNumberModel northDirectionSpinnerModel = new AutoCommitSpinner.SpinnerModuloNumberModel(0, 0, 360, 5);
+    final SpinnerNumberModel northDirectionSpinnerModel = new SpinnerModuloNumberModel(0, 0, 360, 5);
     this.northDirectionSpinner = new AutoCommitSpinner(activity, northDirectionSpinnerModel);
     northDirectionSpinnerModel.setValue(new Integer(Math.round(controller.getNorthDirectionInDegrees())));
-    this.northDirectionComponent = new ImageView(activity){//JComponent() {
+    this.northDirectionComponent = new android.support.v7.widget.AppCompatImageView(activity){//JComponent() {
 		public void onDraw(Canvas canvas)
 		{
 

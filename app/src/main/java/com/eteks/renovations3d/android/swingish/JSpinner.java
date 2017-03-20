@@ -89,7 +89,7 @@ public class JSpinner extends NumberPicker
 		double value = model.getValue();
 		double stepSize = model.getStepSize().floatValue();
 
-		int maxSteps = 72; // 72 so the compass spinner 360/5 works
+		int maxSteps = 500; // cos anything big should actually be jspinner2 now
 
 		// as we often get very large value system I will simply limit total step to 500 in each direction
 		if( ((value - displayMin) / stepSize ) > maxSteps)
