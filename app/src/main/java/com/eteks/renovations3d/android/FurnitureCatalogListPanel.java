@@ -165,6 +165,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity())
 							.renovations3D.getHomeController().getFurnitureController().addFurniture(al);
 					Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
+					Renovations3DActivity.mViewPager.setCurrentItem(1, true);
 				}
 				return true;
 			case R.id.import_furniture_lib:
