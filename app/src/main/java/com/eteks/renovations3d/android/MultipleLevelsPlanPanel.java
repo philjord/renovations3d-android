@@ -80,8 +80,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		// TODO: find out why a new home gets a doube onViewCreate
-		if( rootView == null )
+		// TODO: find out why a new home gets a double onViewCreate
+		if (rootView == null)
 		{
 			rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
 
@@ -129,14 +129,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	{
 		super.setUserVisibleHint(isVisibleToUser);
 
-		if(isVisibleToUser)
+		if (isVisibleToUser)
 		{
 			// this gets called heaps of time, wait until we have an activity
 			if (getActivity() != null)
 			{
 				possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 			}
-
 			repaint();
 		}
 	}
@@ -154,7 +153,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		super.onDestroy();
 	}
 
-	MenuItem.OnMenuItemClickListener planMenuItemActionListener = new MenuItem.OnMenuItemClickListener() {
+	MenuItem.OnMenuItemClickListener planMenuItemActionListener = new MenuItem.OnMenuItemClickListener()
+	{
 
 		@Override
 		public boolean onMenuItemClick(MenuItem item)
@@ -165,14 +165,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					try
 					{
 						((Renovations3DActivity) MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().undo();
-					}catch (CannotUndoException e)
+					}
+					catch (CannotUndoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
 					}
 					break;
 				case R.id.editRedo:
 					try
-					{((Renovations3DActivity)MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().redo();
-					}catch (CannotRedoException e)
+					{
+						((Renovations3DActivity) MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().redo();
+					}
+					catch (CannotRedoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
 					}
 					break;
@@ -252,6 +255,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 
 	};
+
 	private void setIconFromSelector(MenuItem item, int resId)
 	{
 		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
@@ -266,9 +270,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		PlanController.Mode currentMode = planController.getMode();
 
-		if(currentMode != PlanController.Mode.LABEL_CREATION)
+		if (currentMode != PlanController.Mode.LABEL_CREATION)
 		{
-			if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION )
+			if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION)
 			{
 				//TODO:  the below does not set the current dim line in place for some reason, nor a mouse release
 			}
@@ -288,14 +292,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		//setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 		//setMode(PlanController.Mode.LABEL_CREATION);
 	}
+
 	/**
 	 * This return the state of teh control key and resets it to off, so it is a one time use button (an auto popper)
+	 *
 	 * @return
 	 */
 	public boolean getIsControlKeyOn()
 	{
-		// not sure why, somethign to do with restore lifecycle?
-		if(mOptionsMenu != null)
+		// not sure why, something to do with restore lifecycle?
+		if (mOptionsMenu != null)
 		{
 			MenuItem cntlKey = mOptionsMenu.findItem(R.id.controlKeyOneTimer);
 			// might be missing if we are reloading a home
@@ -309,31 +315,47 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 
 		return false;
-
 	}
 
 	//copied from HomeController as we can't touch the EDT thread like they do
-	public void setMode(PlanController.Mode mode) {
-		if(planController.getMode() != mode) {
+	public void setMode(PlanController.Mode mode)
+	{
+		if (planController.getMode() != mode)
+		{
 			final String actionKey;
-			if(mode == PlanController.Mode.WALL_CREATION) {
+			if (mode == PlanController.Mode.WALL_CREATION)
+			{
 				actionKey = HomeView.ActionType.CREATE_WALLS.name();
-			} else if(mode == PlanController.Mode.ROOM_CREATION) {
+			}
+			else if (mode == PlanController.Mode.ROOM_CREATION)
+			{
 				actionKey = HomeView.ActionType.CREATE_ROOMS.name();
-			} else if(mode == PlanController.Mode.POLYLINE_CREATION) {
+			}
+			else if (mode == PlanController.Mode.POLYLINE_CREATION)
+			{
 				actionKey = HomeView.ActionType.CREATE_POLYLINES.name();
-			} else if(mode == PlanController.Mode.DIMENSION_LINE_CREATION) {
+			}
+			else if (mode == PlanController.Mode.DIMENSION_LINE_CREATION)
+			{
 				actionKey = HomeView.ActionType.CREATE_DIMENSION_LINES.name();
-			} else if(mode == PlanController.Mode.LABEL_CREATION) {
+			}
+			else if (mode == PlanController.Mode.LABEL_CREATION)
+			{
 				actionKey = HomeView.ActionType.CREATE_LABELS.name();
-			} else {
+			}
+			else
+			{
 				actionKey = null;
 			}
 
-			if(actionKey != null && !this.preferences.isActionTipIgnored(actionKey)) {
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						if(Renovations3DActivity.renovations3D.getHomeController().getView().showActionTipMessage(actionKey)) {
+			if (actionKey != null && !this.preferences.isActionTipIgnored(actionKey))
+			{
+				Thread t = new Thread(new Runnable()
+				{
+					public void run()
+					{
+						if (Renovations3DActivity.renovations3D.getHomeController().getView().showActionTipMessage(actionKey))
+						{
 							preferences.setActionTipIgnored(actionKey);
 						}
 					}
@@ -417,6 +439,25 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planSelectLasso).setChecked(this.selectLasso);
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.selectMultiple);
 
+
+		PlanController.Mode mode = planController.getMode();
+
+		if (mode == PlanController.Mode.PANNING)
+		{
+			mOptionsMenu.findItem(R.id.planPan).setChecked(true);
+			selectionGroup.onMenuItemClick(mOptionsMenu.findItem(R.id.planPan));
+		}
+		else
+		{
+			// it is best to set the tool back to the select tool if it's on one of the create tools (leave it as pan if already pan)
+			MenuItem selectTool = mOptionsMenu.findItem(R.id.planSelect);
+			selectTool.setChecked(true);
+			selectionGroup.onMenuItemClick(selectTool);
+			finishCurrentMode();
+			setMode(PlanController.Mode.SELECTION);
+		}
+
+
 		super.onPrepareOptionsMenu(menu);
 	}
 
@@ -474,7 +515,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		// taken from HomePane
 		rulersVisible = preferences.isRulersVisible();
 		preferences.addPropertyChangeListener(UserPreferences.Property.RULERS_VISIBLE,
-				new PropertyChangeListener(){
+				new PropertyChangeListener()
+				{
 					public void propertyChange(PropertyChangeEvent event)
 					{
 						rulersVisible = preferences.isRulersVisible();
@@ -484,7 +526,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				});
 
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
-				new PropertyChangeListener(){
+				new PropertyChangeListener()
+				{
 					public void propertyChange(PropertyChangeEvent event)
 					{
 						//TODO: this should set teh names of the menu optons just once now
@@ -512,7 +555,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public void paintComponent(Graphics g)
 	{
 		// don't bother painting if we are on the 3d view of a table view or something else
-		if(this.getUserVisibleHint())
+		if (this.getUserVisibleHint())
 		{
 			AffineTransform previousTransform = ((Graphics2D) g).getTransform();
 			planComponent.paintComponent(g);
@@ -593,8 +636,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		};
 		this.multipleLevelsTabbedPane.addChangeListener(changeListener);
-
-
 
 
 		// Add a mouse listener that will give focus to plan component only if a change in tabbed pane comes from the mouse
@@ -854,7 +895,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			updateTabComponent(home, i);
 		}
 
-	//PJPJPJ this is just a button on the JTabbedPane now
+		//PJPJPJ this is just a button on the JTabbedPane now
 	/*	String createNewLevelIcon = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.SmallIcon");
 		String createNewLevelTooltip = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.ShortDescription");
 
@@ -1283,7 +1324,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 
 	}
-
 
 
 }
