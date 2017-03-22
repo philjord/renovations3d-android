@@ -1183,7 +1183,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 						fingers = 1;
 
 						// this will be fired on a move or an up or another single down
-						potentialSinglePress = ev;
+						potentialSinglePress = MotionEvent.obtain(ev);
 						//mousePressed(v, ev);
 					}
 
@@ -1942,8 +1942,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		// Change component coordinates system to plan system
 		Rectangle2D planBounds = getPlanBounds();
 		float paintScale = getScale();
-		g2D.translate(insets.left + ((MARGIN_PX - planBounds.getMinX()) * paintScale)-getScrolledX(),
-				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale)-getScrolledY());
+		g2D.translate(insets.left + ((MARGIN_PX - planBounds.getMinX()) * paintScale) - getScrolledX(),
+				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale) - getScrolledY());
 		g2D.scale(paintScale, paintScale);
 		setRenderingHints(g2D);
 
@@ -2481,8 +2481,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       xMax = convertXPixelToModel(viewRectangle.x + viewRectangle.width);
       yMax = convertYPixelToModel(viewRectangle.y + viewRectangle.height);
     } else {*/
-      xMin = (float)planBounds.getMinX() + (getScrolledX() / getScale()) - MARGIN_PX;
-      yMin = (float)planBounds.getMinY() + (getScrolledY() / getScale()) - MARGIN_PX;
+	  xMin = (float)planBounds.getMinX() - MARGIN_PX + (getScrolledX() / getScale());
+	  yMin = (float)planBounds.getMinY() - MARGIN_PX + (getScrolledY() / getScale());
       xMax = convertXPixelToModel(getWidth());
       yMax = convertYPixelToModel(getHeight());
    // }
