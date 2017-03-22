@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:state_checked="true">
+            <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+                <item android:drawable="@android:color/holo_green_dark" />
+                <item android:drawable="@drawable/plan_pan"/>
+            </layer-list>
+        </item>
+        <item android:state_checked="false" >
+            <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+                <item android:drawable="@android:color/transparent" />
+                <item android:drawable="@drawable/plan_pan"/>
+            </layer-list>
+        </item>
+</selector>
