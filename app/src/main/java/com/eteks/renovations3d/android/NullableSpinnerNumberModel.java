@@ -114,7 +114,7 @@ public class NullableSpinnerNumberModel extends SpinnerNumberModel
 	{
 		this.nullable = nullable;
 		//if (!nullable && getValue() == null) {
-		setValue(getMinimum());
+		//setValue(getMinimum());
 		//}
 	}
 

@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -107,6 +109,8 @@ public class JFileChooser
 		builder.setCancelable(true);
 		dialog = builder.create();
 
+
+
 		if (startFolder == null)
 		{
 			startFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -183,6 +187,34 @@ public class JFileChooser
 	{
 		refresh();
 		dialog.show();
+
+		// this can only be done after the dialog has had show called!!!
+		if(allowNewName)
+		{
+			nameInput.addTextChangedListener(new TextWatcher()
+			{
+
+				@Override
+				public void afterTextChanged(Editable s)
+				{
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence s, int start,
+											  int count, int after)
+				{
+				}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start,
+										  int before, int count)
+				{
+					((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(s.length() != 0);
+				}
+			});
+
+			((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+		}
 	}
 
 	public void refresh()

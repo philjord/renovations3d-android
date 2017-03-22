@@ -115,6 +115,33 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				}
 			});
 
+			gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+			{
+				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
+				{
+					selectedFiv = (FurnitureImageView) v;
+					//highlight it so we can tell what we just did
+					for (int j = 0; j < gridView.getChildCount(); j++)
+					{
+						final ImageView iv = (ImageView) gridView.getChildAt(j);
+						if (iv == v)
+							iv.setBackgroundColor(Color.CYAN);
+						else
+							iv.setBackgroundColor(Color.WHITE);
+					}
+					if (selectedFiv != null)
+					{
+						ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
+						al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
+						((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity())
+								.renovations3D.getHomeController().getFurnitureController().addFurniture(al);
+						Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
+						Renovations3DActivity.mViewPager.setCurrentItem(1, true);
+					}
+					return true;
+				}
+			});
+
 			// Convert the dps to pixels, based on density scale
 			final float scale = getResources().getDisplayMetrics().density;
 			iconHeightPx = (int) (DEFAULT_ICON_HEIGHT_DP * scale + 0.5f);
@@ -255,7 +282,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	}
 
-	class FurnitureImageView extends ImageView
+	class FurnitureImageView extends android.support.v7.widget.AppCompatImageView
 	{
 		private CatalogPieceOfFurniture catalogPieceOfFurniture;
 		public FurnitureImageView(Context c,  CatalogPieceOfFurniture catalogPieceOfFurniture )

@@ -18,16 +18,16 @@ public class SpinnerNumberModel
 					this.minimum + " max=" + this.maximum + " step=" + this.stepSize);
 
 		// value has to be a multiple of the stepSize or we have terrible trouble
-		this.value = stepSize * (Math.round(value / stepSize));
-		this.minimum = stepSize * (Math.round(minimum / stepSize));
-		this.maximum = stepSize * (Math.round(maximum / stepSize));
+		this.value = value;
+		this.minimum = minimum;
+		this.maximum = maximum;
 		this.stepSize = stepSize;
 	}
 
 
 	public void setMinimum(double minimum)
 	{
-		this.minimum = stepSize * (Math.round(minimum / stepSize));
+		this.minimum = minimum;
 		fireStateChanged();
 	}
 
@@ -40,7 +40,7 @@ public class SpinnerNumberModel
 
 	public void setMaximum(double maximum)
 	{
-		this.maximum = stepSize * (Math.round(maximum / stepSize));
+		this.maximum = maximum;
 		fireStateChanged();
 	}
 
@@ -53,8 +53,7 @@ public class SpinnerNumberModel
 
 	public void setStepSize(float stepSize)
 	{
-		// value has to be a multiple of the stepSize or we have terrible trouble
-		this.value = stepSize * (Math.round(value / stepSize));
+		this.stepSize = stepSize;
 		fireStateChanged();
 	}
 
@@ -75,8 +74,7 @@ public class SpinnerNumberModel
 
 	public void setValue(double value)
 	{
-		// value has to be a multiple of the stepSize or we have terrible trouble
-		this.value = stepSize * (Math.round(value / stepSize));
+		this.value = value;
 		fireStateChanged();
 	}
 
