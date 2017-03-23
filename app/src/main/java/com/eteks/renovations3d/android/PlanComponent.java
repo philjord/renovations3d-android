@@ -1134,7 +1134,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		private MotionEvent potentialSinglePress = null;
 
-		//PJPJPJPJ   pinch zooming
 		private static final int INVALID_POINTER_ID = -1;
 
 		// The ‘active pointer’ is the one currently moving our object.
@@ -1429,8 +1428,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 			{
 				if (isEnabled())
 				{
-					try
-				{
+					try{
+
 					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 				}catch(ArrayIndexOutOfBoundsException e)
 				{
@@ -1539,38 +1538,25 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 			}
 		}
 	}
-	//PJPJP pinch support above here
 
-
-	protected void moveScrolledX(float deltaScrolledX)
+	protected void scrollRectToVisible(Rectangle shapePixelBounds)
 	{
+		//so the shape that arrives here start x and y as mouse moved, and both are passed through convertXPixelToModel
+		// eg at scale 1 scrollxy 0,0 plan min -160,-22 margin 60 : a move 331,208 gets here as 110,125
+		// eg at scale 1 scrollxy 102,5 plan min -160,-22 margin 60 : a move 351,258 gets here as 232,180
+		// eg at scale 0.5 scrollxy -494,-239 plan min -160,-22 margin 60 : a move 730,362 gets here as 249,161
+		// eg at scale 0.5 scrollxy 78,9 plan min -160,-22 margin 60 : a move 178,210 gets here as 293,356 (this guy zoomed out and at 0,0 on ruler)
 
-		System.out.println("scrolled X was " + getScrolledX() + " will be " + (getScrolledX() + deltaScrolledX)   + " with scale currently at " +getScale());
-		System.out.println("plan bounds are " + this.getPlanBounds());
-		System.out.println("0x in pix to mod " + this.convertXPixelToModel(0));
-		System.out.println("0x in mod to pix " + this.convertXModelToPixel(0));
+		//convertXPixelToModel = (x + getScrolledX() - insets.left) / getScale() - MARGIN_PX + (float)planBounds.getMinX();
 
-		super.moveScrolledX(deltaScrolledX);
+		//convertXModelToPixel= ((x - getScrolledX() + insets.left) * getScale() + MARGIN_PX - planBounds.getMinX());
+
+		// key concepts, scrolled is relative to plan min, so 0 can be -160, and scrolled include the scale factor
+
+		// use the margin to push on the edges a bit to make a bumper
+		shapePixelBounds.grow((int)MARGIN_PX,(int)MARGIN_PX);
+		super.scrollRectToVisible(shapePixelBounds);
 	}
-	protected void moveScrolledY(float deltaScrolledY)
-	{
-		super.moveScrolledY(deltaScrolledY);
-	}
-	protected void setScrolledX(float scrolledX)
-	{
-		System.out.println("set scrolled X was " + this.getScrolledX() + " now " + scrolledX   + " with scale currently at " +getScale());
-		System.out.println("plan bounds are " + this.getPlanBounds());
-		System.out.println("0x in pix to mod " + this.convertXPixelToModel(0));
-		System.out.println("0x in mod to pix " + this.convertXModelToPixel(0));
-
-		super.setScrolledX(scrolledX);
-	}
-	protected void setScrolledY(float scrolledY)
-	{
-		super.setScrolledX(scrolledY);
-	}
-
-
 
 
 
@@ -5160,21 +5146,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    * moving scroll bars if needed.
    */
   public void makePointVisible(float x, float y) {
-	  //PJPJP note this does nothing now
-	  //why is the view panning upwards tehn??? the upwards isn't even the moveView below??
-
-	  // with all scrollX and scrollY taken out I still scrolls upwards???
-	  // I have to implement the visible->move view AND
-	  // get rid of the mad upwards scroll thing
-
-	  // so scrolls to teh left and p can happen now, but not scrolls to the right and down
-
-
-
-	// PJPJPJP this accounts for the plan sahpe min x and y being the actual underlying view size
-	// but this is not true in this version
-    //scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
-	scrollRectToVisible(new Rectangle((int)x, (int)y, 1 , 1 ));
+    scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
   }
 
 
@@ -5251,7 +5223,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		//System.out.println("scrolledX " +scrolledX + " getDrawableView().getWidth() " +getDrawableView().getWidth());
 		//System.out.println("newxViewCenterPosition " +newxViewCenterPosition + " xViewCenterPosition " +xViewCenterPosition);
-		//TODO: I'd love for this to work
+		//TODO: this may work now I understand teh scrollign and converting better
 		//scrolledX += convertYModelToPixel(newxViewCenterPosition-xViewCenterPosition);
 		//scrolledY += convertYModelToPixel(newyViewCenterPosition-yViewCenterPosition);
 */
@@ -5286,8 +5258,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private int convertXModelToPixel(float x) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((x - getScrolledX() + insets.left) * getScale() + MARGIN_PX - planBounds.getMinX());
-
+	return (int)Math.round((x - planBounds.getMinX() + MARGIN_PX ) * getScale() + insets.left - getScrolledX());
   }
 
   /**
@@ -5296,7 +5267,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private int convertYModelToPixel(float y) {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (int)((y - getScrolledY() + insets.top) * getScale() + MARGIN_PX - planBounds.getMinY());
+	return (int)Math.round((y - planBounds.getMinY() + MARGIN_PX ) * getScale() + insets.top - getScrolledY());
 
   }
 

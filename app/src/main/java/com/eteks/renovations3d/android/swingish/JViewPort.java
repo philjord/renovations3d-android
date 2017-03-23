@@ -22,30 +22,31 @@ public abstract class JViewPort extends JComponent
 		return scrolledY;
 	}
 
+	// turns out the scrolling in this class is actually after scaling so I need to have this here,
+	// one day I should ponder making it without scale so it's more natural, but then? who can say
+
 	protected void moveScrolledX(float deltaScrolledX)
 	{
 		this.scrolledX += deltaScrolledX;
 		//clamp for safety
-		this.scrolledX = scrolledX < -3000 ? -3000 : scrolledX > 3000 ? 3000 : scrolledX;
+		//ok so my scrolledX and Y are infact after scaling, so I need to clamp multiplied by scale!
+		// but because scrolling also includes the plan min value I can't do it here
+
 	}
 
 	protected void moveScrolledY(float deltaScrolledY)
 	{
 		this.scrolledY += deltaScrolledY;
-		//clamp for safety
-		this.scrolledY = scrolledY < -3000 ? -3000 : scrolledY > 3000 ? 3000 : scrolledY;
 	}
 
 	protected void setScrolledX(float scrolledX)
 	{
-		//clamp for safety
-		this.scrolledX = scrolledX < -3000 ? -3000 : scrolledX > 3000 ? 3000 : scrolledX;
+		this.scrolledX = scrolledX;
 	}
 
 	protected void setScrolledY(float scrolledY)
 	{
-		//clamp for safety
-		this.scrolledY = scrolledY < -3000 ? -3000 : scrolledY > 3000 ? 3000 : scrolledY;
+		this.scrolledY = scrolledY;
 	}
 
 	public void setViewPosition(Point p)
@@ -55,47 +56,22 @@ public abstract class JViewPort extends JComponent
 	}
 
 
-	public Rectangle getViewRect()
+	private Rectangle getViewRect()
 	{
-		//TODO: this is probably a good start right here, search in the plan component
+		//TODO: this is way wrong as scrolling includes scale and plan min, set convertModelXToPixel
 		return new Rectangle((int) scrolledX, (int) scrolledY, getWidth(), getHeight());
 	}
 
 	protected void scrollRectToVisible(Rectangle shapePixelBounds)
 	{
-		// should be able to do this without using the move view somehow
-		// thoughts, plan bounds only include the features on it, so zoom, pan don't change it, so plan bounds are not in thei world
-		// test it all at 1 scale
+		float dx = positionAdjustment(getWidth(), shapePixelBounds.width, shapePixelBounds.x);
+		float dy = positionAdjustment(getHeight(), shapePixelBounds.height, shapePixelBounds.y);
 
-		//TODO: should all this be dp for small phones?
-		//TODO: test zoomed
-		// take margin off both sides as the scrolling zone
-/*		System.out.println("planbounds " +this.getPlanBounds());
-		System.out.println("scrollRectToVisible " +shapePixelBounds);
-		System.out.println("scrolledX " +scrolledX + " scrolledY " +scrolledY );
-		System.out.println("getScale() " + getScale() + " getWidth() "+getWidth()+ " getHeight() "+ getHeight());
-
-		// works well at scale of .3
-		//float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
-		//float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
-		//at scale 0.83 y works but positive x doesn't
-
-		float dx = positionAdjustment(getWidth() - (MARGIN_PX*2), shapePixelBounds.width, (shapePixelBounds.x*getScale() - scrolledX));
-		float dy = positionAdjustment(getHeight() - (MARGIN_PX*2), shapePixelBounds.height, (shapePixelBounds.y*getScale() - scrolledY));
-
-
-
-		System.out.println("dx  " +dx + " dy " +dy);
 		if (dx != 0 || dy != 0)
 		{
-			float m = 100f * getScale();
-			dx = dx > m ? m : dx < -m ? -m : dx;
-			dy = dy > m ? m : dy < -m ? -m : dy;
-
-			moveView(-dx/getScale(), -dy/getScale());
+			moveScrolledX(-dx);
+			moveScrolledY(-dy);
 		}
-
-		System.out.println("new scrolledX " +scrolledX + " new scrolledY " +scrolledY );*/
 	}
 
 	/* Taken from JViewport
@@ -104,9 +80,8 @@ public abstract class JViewPort extends JComponent
 		  *  width, but this method is applicable to height also. The code assumes that
 		  *  parentWidth/childWidth are positive and childAt can be negative.
 		  */
-	private float positionAdjustment(float parentWidth, float childWidth, float childAt)
+	protected float positionAdjustment(float parentWidth, float childWidth, float childAt)
 	{
-		System.out.println("parentWidth  " + parentWidth + " childWidth " + childWidth + " childAt " + childAt);
 		//   +-----+
 		//   | --- |     No Change
 		//   +-----+
