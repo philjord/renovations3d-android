@@ -75,6 +75,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	private Menu mOptionsMenu;
 
 	private View rootView;// recorded to prevent double view creates from fragment manager
+	private boolean resetToSelectTool = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -136,6 +137,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 			}
+
+			resetToSelectTool = true;
+
 			repaint();
 		}
 	}
@@ -437,21 +441,25 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.selectMultiple);
 
 
-		PlanController.Mode mode = planController.getMode();
+		if(resetToSelectTool)
+		{
+			PlanController.Mode mode = planController.getMode();
 
-		if (mode == PlanController.Mode.PANNING)
-		{
-			mOptionsMenu.findItem(R.id.planPan).setChecked(true);
-			selectionGroup.onMenuItemClick(mOptionsMenu.findItem(R.id.planPan));
-		}
-		else
-		{
-			// it is best to set the tool back to the select tool if it's on one of the create tools (leave it as pan if already pan)
-			MenuItem selectTool = mOptionsMenu.findItem(R.id.planSelect);
-			selectTool.setChecked(true);
-			selectionGroup.onMenuItemClick(selectTool);
-			finishCurrentMode();
-			setMode(PlanController.Mode.SELECTION);
+			if (mode == PlanController.Mode.PANNING)
+			{
+				mOptionsMenu.findItem(R.id.planPan).setChecked(true);
+				selectionGroup.onMenuItemClick(mOptionsMenu.findItem(R.id.planPan));
+			}
+			else
+			{
+				// it is best to set the tool back to the select tool if it's on one of the create tools (leave it as pan if already pan)
+				MenuItem selectTool = mOptionsMenu.findItem(R.id.planSelect);
+				selectTool.setChecked(true);
+				selectionGroup.onMenuItemClick(selectTool);
+				finishCurrentMode();
+				setMode(PlanController.Mode.SELECTION);
+			}
+			resetToSelectTool = false;
 		}
 
 		selectionGroup.refreshIcons();
