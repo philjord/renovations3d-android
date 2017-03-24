@@ -132,7 +132,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 {
 
 	public static boolean ENABLE_HUD = true;
-	private static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
+	public static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
 
 	private static final String DEOPTOMIZE = "DEOPTOMIZE";
 

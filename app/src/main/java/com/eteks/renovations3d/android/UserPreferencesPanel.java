@@ -22,6 +22,7 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.View;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
@@ -669,6 +671,18 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  public void onClick(View view)
 		  {
 			  controller.resetDisplayedActionTips();
+
+			  //PJPJPJPJ
+			  // remind again for the welcome screens
+			  SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
+			  SharedPreferences.Editor editor = settings.edit();
+
+			  editor.putBoolean(MultipleLevelsPlanPanel.WELCOME_SCREEN_UNWANTED, false);
+			  editor.putBoolean(HomeComponent3D.WELCOME_SCREEN_UNWANTED, false);
+			  editor.putBoolean(FurnitureCatalogListPanel.WELCOME_SCREEN_UNWANTED, false);
+			  editor.putBoolean(FurnitureTable.WELCOME_SCREEN_UNWANTED, false);
+			  editor.apply();
+			  Renovations3DActivity.welcomeScreensShownThisSession.clear();
           }
         });
     

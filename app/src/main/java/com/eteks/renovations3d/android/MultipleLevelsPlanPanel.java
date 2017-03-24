@@ -55,7 +55,7 @@ import static com.mindblowing.renovations3d.R.id.controlKeyOneTimer;
 
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
-	private static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
+	public static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
 
 
 	// if we are not intialized then ignore onCreateViews

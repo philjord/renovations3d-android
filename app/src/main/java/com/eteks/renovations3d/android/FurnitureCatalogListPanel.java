@@ -59,7 +59,7 @@ import javaxswing.ImageIcon;
 
 public class FurnitureCatalogListPanel extends JComponent implements com.eteks.sweethome3d.viewcontroller.View
 {
-	private static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
+	public static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
 
 
 	// if we are not intialized then ignore onCreateViews

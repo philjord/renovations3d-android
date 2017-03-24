@@ -65,7 +65,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	// if we are not intialized then ignore onCreateViews
 	private boolean initialized = false;
 
-	private static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
+	public static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
 
 	private Home home;
 	private UserPreferences preferences;
