@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/goto2Dview"
-          android:title="2D"
-          android:showAsAction="always"/>
+
     <item android:id="@+id/virtualvisit"
           android:title="@string/virtualvisit"
           android:icon="@drawable/view3d_view_from_observer"
@@ -19,6 +17,10 @@
                 android:title="Default" />
         </menu>
     </item>
+    <item android:id="@+id/goto2Dview"
+          android:title="2D"
+          android:icon="@drawable/view3d_goto_2d"
+          android:showAsAction="always"/>
     <item android:id="@+id/modifyvirtualvisitor"
           android:title="@string/modifyvirtualvisitor"
           />

@@ -9,7 +9,7 @@
     <item android:id="@+id/editRedo"
             android:title="redo"
             android:icon="@drawable/edit_redo"
-            android:showAsAction="always"
+          android:showAsAction="@integer/menuShowAsAction"
         />
     <item
         android:id="@+id/delete"
@@ -61,6 +61,12 @@
         android:icon="@drawable/plan_create_labels_selector"
         android:checkable="true"
         android:showAsAction="@integer/menuShowAsAction"
+        />
+    <item
+        android:id="@+id/planGoto3D"
+        android:title="3D"
+        android:icon="@drawable/plan_goto_3d"
+        android:showAsAction="always"
         />
     <item
         android:id="@+id/controlKeyOneTimer"

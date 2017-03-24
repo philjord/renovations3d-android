@@ -112,14 +112,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 						planController.addLevel();
 					}
 				});
-				View goto3DView = rootView.findViewById(R.id.goto3DView);
-				goto3DView.setOnClickListener(new View.OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Renovations3DActivity.mViewPager.setCurrentItem(3, true);
-					}
-				});
 			}
 		}
 		return rootView;
@@ -185,6 +177,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case R.id.delete:
 					planController.deleteSelection();
+					break;
+				case R.id.planGoto3D:
+					Renovations3DActivity.mViewPager.setCurrentItem(3, true);
 					break;
 				case R.id.planSelect:
 					item.setChecked(true);
@@ -381,11 +376,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.lockCheck).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.editUndo).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.editRedo).setOnMenuItemClickListener(planMenuItemActionListener);
-		menu.findItem(controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
-		SpannableStringBuilder builder = new SpannableStringBuilder("* Cntl");// it will replace "*" with icon
-		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menu.findItem(controlKeyOneTimer).setTitle(builder);
 		menu.findItem(R.id.delete).setOnMenuItemClickListener(planMenuItemActionListener);
+		menu.findItem(R.id.planGoto3D).setOnMenuItemClickListener(planMenuItemActionListener);
 
 		menu.findItem(R.id.planSelect).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.planSelect).setChecked(true);// not sure why this isn't coming off the xml?
@@ -402,6 +394,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		selectionGroup.add(menu.findItem(R.id.createDimensions));
 		menu.findItem(R.id.createText).setOnMenuItemClickListener(planMenuItemActionListener);
 		selectionGroup.add(menu.findItem(R.id.createText));
+		menu.findItem(controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
+		SpannableStringBuilder builder = new SpannableStringBuilder("* Cntl");// it will replace "*" with icon
+		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		menu.findItem(controlKeyOneTimer).setTitle(builder);
+		menu.findItem(R.id.editRedo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name"));
+		menu.findItem(R.id.editUndo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "UNDO.Name"));
+		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
 		menu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
 		menu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
 		menu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));

@@ -32,16 +32,6 @@
                         android:minWidth="@dimen/button_dp"
                     />
             </com.eteks.renovations3d.utils.HorizontalFlowLayout>
-            <Button
-                android:id="@+id/goto3DView"
-                android:text="3D"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:minHeight="@dimen/button_dp"
-                android:minWidth="@dimen/button_dp"/>
         </TableRow>
     </TableLayout>
 
