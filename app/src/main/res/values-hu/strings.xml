@@ -11,5 +11,18 @@
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">Válasszon több</string>
     <string name="select_lasso">Válassza lasszó</string>
+    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+              <br><b>Verzió: %1$s</b>
+              <br><font size="-1">Java verzió: %2$s</font>
+              <br><font size="-1">A PDF exportot az <a href="http://www.lowagie.com/iText/">iText</a> készítette</font>
+              <br><font size="-1">Az SVG export a <a href="http://java.freehep.org/">FreeHEP</a> tulajdona</font>
+              <br><font size="-1">A fotórenderelést a <a href="http://sunflow.sourceforge.net/">SunFlow</a> készítette</font>
+              <p>Magyarra fordította Viktor Miklosi
+              </p><p>Kérem, látogasson el a <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+			  <br>és <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>további információért.
+              </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+              </p><p><font size="-2">Épül a nyílt forráskód © Copyright 2006-2017 eTeks
+              </font>]]></string>
 
 </resources>

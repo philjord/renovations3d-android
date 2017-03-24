@@ -117,6 +117,36 @@ public class JOptionPane
 		}	});
 	}
 
+	/**
+	 *
+	 * @param context
+	 * @param root a text view
+	 * @param title
+	 * @param type ignored
+	 * @param icon must be an ImageIcon
+	 */
+	public static void showMessageDialog(final Context context, final View root, final String title, final int type, final Icon icon, final String closeText)
+	{
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.post(new Runnable()
+		{
+			public void run()
+			{
+				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+				dialog.setTitle(title);
+				if (icon != null && icon instanceof ImageIcon)
+				{
+					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
+					dialog.setIcon(bmd);
+				}
+				dialog.setView(root);
+				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
+				dialog.create().show();
+			}	});
+	}
+
 
 	public static int showOptionDialog(final Context context, final String message, final String title, final int options, final int type,
 									   final Icon icon, final Object [] optionsText, Object defaultText)
@@ -124,7 +154,7 @@ public class JOptionPane
 		if(Looper.getMainLooper().getThread() == Thread.currentThread())
 		{
 			new Throwable().printStackTrace();
-			System.err.println("JOptionPane asked to showOptionDialog (Strng message) on EDT thread you MUST not as I will block!");
+			System.err.println("JOptionPane asked to showOptionDialog (String message) on EDT thread you MUST not as I will block!");
 			return NO_OPTION;
 		}
 

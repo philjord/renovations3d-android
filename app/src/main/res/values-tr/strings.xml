@@ -11,5 +11,19 @@
     <string name="menu_show3dcaps">GPU bilgi</string>
     <string name="select_multiple">çoklu seç</string>
     <string name="select_lasso">kement seçin</string>
+    <string name="help_about"><![CDATA[<html><font face="sans-sherif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+	<br><b>Versyionu %1$s</b>
+	<br><font size="-1">Java versiyonu %2$s</font>
+	<br><font size="-1">Java 3D versiyonu %3$s</font>
+	<br>PDF yazdırması <a href="http://www.lowagie.com/iText/">iText</a> tarafından sağlanmaktadır
+	<br>SVG çıkartması <a href="http://java.freehep.org/">FreeHEP</a> tarafından sağlanmaktadır
+	<br>Fotoğraf yorumlaması <a href="http://sunflow.sourceforge.net/">SunFlow</a> tarafından sağlanmaktadır</font>
+	<p>Türkçeye Mücahit BAYDAR tarafından çevrilmiştir.
+	<p>Lütfen, <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+	<br>ve <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a> adresini
+	<br>daha fazla bilgi için.
+	</p><p><font size="-2">© Telif hakları 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+	</p><p><font size="-2">© Telif hakları 2006-2017 eTeks
+	</font>]]></string>
 
 </resources>

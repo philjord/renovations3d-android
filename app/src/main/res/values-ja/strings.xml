@@ -11,5 +11,18 @@
     <string name="menu_show3dcaps">GPU情報</string>
     <string name="select_multiple">複数選択</string>
     <string name="select_lasso">投げ縄選択</string>
+    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+    <br><b>バージョン %1$s</b>
+    <br><font size="-1">Java バージョン %2$s</font>
+    <br><font size="-1">PDF保存の提供は<a href="http://www.lowagie.com/iText/">iText</a>、</font>
+    <br><font size="-1">SVGエクスポートの提供は<a href="http://java.freehep.org/">FreeHEP</a>、</font>
+    <br><font size="-1">写真・画像レンダリングの提供は<a href="http://sunflow.sourceforge.net/">SunFlow</a>、</font>
+    <p>日本語の翻訳はtakahiro sato氏、<br>chiyoko miklasevich氏 にご協力頂きました。</p>
+    <p>ソフトウエアの更新および不具合の報告は
+    <br><a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+	<br>そして <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a> 詳細については。
+    </p><p><font size="-2">© 著作権 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+    </p><p><font size="-2">オープンソースコード上に構築 © 著作権 2006-2017 eTeks
+    </font>]]></string>
 
 </resources>

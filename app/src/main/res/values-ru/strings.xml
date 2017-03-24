@@ -11,5 +11,19 @@
     <string name="menu_show3dcaps">Информация о GPU</string>
     <string name="select_multiple">Выбрать несколько</string>
     <string name="select_lasso">Выберите лассо</string>
+    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+              <br><b>Версия %1$s</b>
+              <br><font size="-1">Версия Java %2$s</font>
+              <br><font size="-1">PDF предоставлен <a href="http://www.lowagie.com/iText/">iText</a></font>
+              <br><font size="-1">Экспорт в SVG предоставлен <a href="http://java.freehep.org/">FreeHEP</a></font>
+              <br><font size="-1">Фотореалистичная визуализация обеспечена <a href="http://sunflow.sourceforge.net/">SunFlow</a></font>
+              <p>Перевод на русский: Ильгиз Басимов, Валентин Казимиров,
+              <br>Андрей Прищенко, Андрей Суржиков.
+              <p>Чтобы получить больше информации
+              <br>посетите <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+			  <br>а также <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+              </p><p><font size="-2">Построен на открытом исходном коде© Copyright 2006-2017 eTeks
+              </font>]]></string>
 
 </resources>

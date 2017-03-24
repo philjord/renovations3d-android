@@ -11,5 +11,20 @@
     <string name="menu_show3dcaps">Datos de la GPU</string>
     <string name="select_multiple">Selección múltiple</string>
     <string name="select_lasso">Seleccionar el lazo</string>
+    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+              <br><b>Version %1$s</b>
+              <br><font size="-1">Java versión %2$s</font>
+              <br><font size="-1">PDF impresión proporcionada por <a href="http://www.lowagie.com/iText/">iText</a></font>
+              <br><font size="-1">Exportación SVG proporcionada por <a href="http://java.freehep.org/">FreeHEP</a></font>
+              <br><font size="-1">SVG path compilation proveniente de <a href="http://xmlgraphics.apache.org/batik/">Batik</a></font>
+              <br><font size="-1">Foto renderizada proveniente de <a href="http://sunflow.sourceforge.net/">SunFlow</a></font>
+              <p>Traducido al Español<br>por Pablo Mayordomo y Paco.
+              <p>Visita  <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+			  <br>y <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>para más información.
+              </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+              </p><p><font size="-2">Construido sobre código fuente abierto © Copyright 2006-2017 eTeks
+              </font>
+              <br>&nbsp;]]></string>
 
 </resources>

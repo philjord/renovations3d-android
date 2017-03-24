@@ -21,11 +21,13 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import javaawt.EventQueue;
 
@@ -3724,10 +3727,9 @@ public class HomePane implements HomeView
 	 */
 	public void showAboutDialog()
 	{
-		String messageFormat = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.message");
-		messageFormat = messageFormat.replace("Copyrights", "Portions copyright");
-		messageFormat = messageFormat.replace("Distributed", "Portions distributed");
-		messageFormat = messageFormat.replace("for software updates and bug report.", "");
+		//String messageFormat = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.message");
+		String aboutMessageHtml = activity.getString(R.string.help_about);
+
 		String aboutVersion = this.controller.getVersion();
 		try
 		{
@@ -3754,15 +3756,14 @@ public class HomePane implements HomeView
 		}
 		float maxMemoryGigaByte = Math.max(0.1f, Runtime.getRuntime().maxMemory() / 1073741824f);
 		javaVersion += " / " + new DecimalFormat("#.#").format(maxMemoryGigaByte) + " GB max";
-		//String message = String.format(messageFormat, aboutVersion, javaVersion);
-		//TODO: preloaded fully replaced
-		String message = "Version "+ aboutVersion;
+		String messageHtml = String.format(aboutMessageHtml, aboutVersion, javaVersion);
+
 
 		//  JComponent messagePane = createEditorPane(message);
 		//  messagePane.setOpaque(false);
 
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.title");
-		title = "Renovations 3D";//activity.getString(R.string.app_name);//"Sweet Home AVR";//TODO: PJ fix
+		//String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.title");
+		String title = activity.getString(R.string.app_name);
 		Icon icon = new ImageIcon(new VMImage(BitmapFactory.decodeResource(activity.getResources(), R.drawable.renovations3dicon)));
 		//try {
 		String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
@@ -3782,9 +3783,14 @@ public class HomePane implements HomeView
       // Unknown about.close or about.libraries libraries
     }*/
 		//JOptionPane.showMessageDialog(this, messagePane, title, JOptionPane.INFORMATION_MESSAGE, icon);
-		JOptionPane.showMessageDialog(activity, message, title, JOptionPane.INFORMATION_MESSAGE, icon, close);
 
 
+		TextView textView = new TextView(activity);
+		textView.setPadding(10,10,10,10);
+		textView.setText(Html.fromHtml(messageHtml));
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+		JOptionPane.showMessageDialog(activity, textView, title, JOptionPane.INFORMATION_MESSAGE, icon, close);
 	}
 
 	/**

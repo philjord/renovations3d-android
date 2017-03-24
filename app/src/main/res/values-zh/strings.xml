@@ -11,5 +11,18 @@
     <string name="menu_show3dcaps">GPU信息</string>
     <string name="select_multiple">选择多个</string>
     <string name="select_lasso">选择套索</string>
+    <string name="help_about"><![CDATA[<html><center><font face="sans-serif"><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+    <br><b>版本 %1$s</b>
+    <br><font size="-1">Java 版本 %2$s</font>
+    <br><font size="-1">PDF 打印由 <a href="http://www.lowagie.com/iText/">iText</a> 提供</font>
+    <br><font size="-1">SVG 导出由 <a href="http://java.freehep.org/">FreeHEP</a> 提供</font>
+    <br><font size="-1">照相渲染由 <a href="http://sunflow.sourceforge.net/">SunFlow</a> 提供</font>
+    <p>简体中文语言由<a href="mailto:lonely.ibm@gmail.com">赵斯聪</a>制作
+    <p>请访问 <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+	<br>和 <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    <br>了解更多信息。
+    </p><p><font size="-2">© 版权所有 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+    </p><p><font size="-2">建立在开源代码的基础上 © 版权所有 2006-2017 eTeks
+	</font>]]></string>
 
 </resources>
