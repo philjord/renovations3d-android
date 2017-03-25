@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.mindblowing.renovations3d.R;
 
 import javaawt.Color;
+import javaawt.EventQueue;
 import javaawt.Graphics2D;
 import javaawt.VMGraphics2D;
 import javaawt.image.BufferedImage;
@@ -77,7 +79,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   private final UserPreferencesController controller;
 	private JLabel           languageLabel;
 	private JComboBox        languageComboBox;
-	//private JButton          languageLibraryImportButton;
+	private JButton          languageLibraryImportButton;
 	private JLabel           unitLabel;
 	private JComboBox        unitComboBox;
 	//private JLabel           furnitureCatalogViewLabel;
@@ -189,15 +191,16 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           new SupportedLanguagesChangeListener(this));
     }
     
-    /*if (controller.mayImportLanguageLibrary()) {
-      this.languageLibraryImportButton = new Button(activity);languageLibraryImportButton.setText("Import lanaguage library not enabled");
+  /*  if (controller.mayImportLanguageLibrary()) {
+      this.languageLibraryImportButton = new JButton(activity, "Import lanaguage");
 		//TODO: note this has an icon, not a text
-				 new ResourceAction(
-          preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY", true) {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-              controller.importLanguageLibrary();
-            }
+		//		 new ResourceAction(
+        //  preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY", true) {
+		languageLibraryImportButton.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View view)
+			{
+				controller.importLanguageLibrary();
+			}
           });
      // this.languageLibraryImportButton.setToolTipText(preferences.getLocalizedString(
       //    com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
@@ -623,7 +626,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       this.autoSaveDelayForRecoveryCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryCheckBox.text"));
 		// PJ min number altered to 5 cos my spinner needs exact maths!
-      final SpinnerNumberModel autoSaveDelayForRecoverySpinnerModel = new SpinnerNumberModel(10, 5, 60, 5);/* {
+      final SpinnerNumberModel autoSaveDelayForRecoverySpinnerModel = new SpinnerNumberModel(3, 1, 20, 1);/* {
           @Override
           public Object getNextValue() {
             if (((Number)getValue()).intValue() == ((Number)getMinimum()).intValue()) {
@@ -786,13 +789,15 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       this.userPreferencesPanel = new WeakReference<UserPreferencesPanel>(userPreferencesPanel);
     }
     
-    public void propertyChange(PropertyChangeEvent ev) {
+    public void propertyChange(final PropertyChangeEvent ev) {
       // If panel was garbage collected, remove this listener from preferences
-      UserPreferencesPanel userPreferencesPanel = this.userPreferencesPanel.get();
+      final UserPreferencesPanel userPreferencesPanel = this.userPreferencesPanel.get();
       if (userPreferencesPanel == null) {
         ((UserPreferences)ev.getSource()).removePropertyChangeListener(
             UserPreferences.Property.SUPPORTED_LANGUAGES, this);
       } else {
+
+		  EventQueue.invokeLater(new Runnable(){public void run(){
 		  JComboBox languageComboBox = userPreferencesPanel.languageComboBox;
         List<String> oldSupportedLanguages = Arrays.asList((String [])ev.getOldValue());
         String [] supportedLanguages = (String [])ev.getNewValue();
@@ -804,7 +809,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             return;
           }
         }
-        languageComboBox.setSelectedItem(userPreferencesPanel.controller.getLanguage());
+        languageComboBox.setSelectedItem(userPreferencesPanel.controller.getLanguage());}});
       }
     }
   }
@@ -830,14 +835,19 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			swapOut(this.languageLabel, R.id.prefs_languageLabel);
 			swapOut(this.languageComboBox, R.id.prefs_languageSpinner);
 
-			/*if (this.languageLibraryImportButton != null) {
-				rootView.addView(this.languageLibraryImportButton, labelInsets);//, params);
+		/*	if (this.languageLibraryImportButton != null) {
+				swapOut(this.languageLibraryImportButton, R.id.prefs_languageLibraryImportButton);
+			}
+			else
+			{
+				removeView(R.id.prefs_languageLibraryImportButton);
 			}*/
 		}
 		else
 		{
 			removeView(R.id.prefs_languageLabel);
 			removeView(R.id.prefs_languageSpinner);
+			//removeView(R.id.prefs_languageLibraryImportButton);
 		}
 
 		if (this.unitLabel != null)

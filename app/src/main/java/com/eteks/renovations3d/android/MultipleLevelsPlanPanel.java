@@ -876,13 +876,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				//planPanel.multipleLevelsTabbedPane.setToolTipTextAt(planPanel.multipleLevelsTabbedPane.getTabCount() - 1, createNewLevelTooltip);
 
 				//PJ
-				planPanel.mOptionsMenu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
-				planPanel.mOptionsMenu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
+				if(planPanel.getUserVisibleHint())
+				{
+					planPanel.mOptionsMenu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
+					planPanel.mOptionsMenu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
+				}
 			}
 		}
 	}

@@ -4796,9 +4796,17 @@ public class HomePane implements HomeView
 	 * Execute <code>runnable</code> asynchronously in the thread
 	 * that manages toolkit events.
 	 */
+
+	//PJPJPJPJ this guy is used by the 3 import methods (furniture texture adn language)
+	// along wiht the open dialog
+	// and the set mode, so possibly if I make it non EDT they can all go back to using the controller method
+	// rather than teh version pulled out to the Renovations3D object
 	public void invokeLater(Runnable runnable)
 	{
-		EventQueue.invokeLater(runnable);
+		// These methods generally invoke blocking dialogs, so on Android I must explicitly NOT be EDT
+		//EventQueue.invokeLater(runnable);
+		Thread t2 = new Thread(runnable);
+		t2.start();
 	}
 
 
