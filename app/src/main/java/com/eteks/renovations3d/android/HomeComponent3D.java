@@ -131,6 +131,12 @@ import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWe
 public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweethome3d.viewcontroller.View
 {
 
+	private static final String RUN_UPDATES = "RUN_UPDATES";
+	private boolean fullRoomUpdateRequired = false;
+	private boolean fullWallUpdateRequired = false;
+
+
+
 	public static boolean ENABLE_HUD = true;
 	public static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
 
@@ -415,7 +421,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// tell walls to update now
 		if (isVisibleToUser && wallChangeListener != null)
 		{
-			wallChangeListener.propertyChange(new PropertyChangeEvent(this, "RUN_UPDATES", null, null));
+			wallChangeListener.propertyChange(new PropertyChangeEvent(this, RUN_UPDATES, null, null));
 		}
 
 
@@ -2741,21 +2747,40 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void addWallListener(final Group group)
 	{
+
+		//Wait no, I just need a single
+		//updateObjects(home.getRooms());
+		// and
+		//updateObjects(home.getWalls());
+		// fired on 3d made visible!
 		this.wallChangeListener = new PropertyChangeListener()
 		{
 			private ArrayList<Wall> wallsNeedingUpdate = new ArrayList<Wall>();
 			public void propertyChange(PropertyChangeEvent ev)
 			{
 				String propertyName = ev.getPropertyName();
-				if( "RUN_UPDATES".equals(propertyName))
+				if( RUN_UPDATES.equals(propertyName))
 				{
 					for( Wall updatedWall: wallsNeedingUpdate )
 					{
 						updateWall(updatedWall);
 					}
 					wallsNeedingUpdate.clear();
-				}else
-				if (!Wall.Property.PATTERN.name().equals(propertyName))
+
+					// all uses of this removed and called one time here
+					if(fullRoomUpdateRequired)
+					{
+						updateObjects(home.getRooms());
+						fullRoomUpdateRequired = false;
+
+					}
+					if(fullWallUpdateRequired)
+					{
+						updateObjects(home.getWalls());
+						fullRoomUpdateRequired = false;
+					}
+				}
+				else if (!Wall.Property.PATTERN.name().equals(propertyName))
 				{
 					Wall updatedWall = (Wall) ev.getSource();
 					//PJ updating walls is crazy expensive, lots of geometry create and normal creates (too many some might say)
@@ -2770,7 +2795,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							wallsNeedingUpdate.add(updatedWall);
 					}
 
-					updateObjects(home.getRooms());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
 					if (updatedWall.getLevel() != null && updatedWall.getLevel().getElevation() < 0)
 					{
 						groundChangeListener.propertyChange(null);
@@ -2811,7 +2836,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						break;
 				}
 				lightScopeOutsideWallsAreaCache = null;
-				updateObjects(home.getRooms());
+				// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+				fullRoomUpdateRequired = true;
 				groundChangeListener.propertyChange(null);
 				updateObjectsLightScope(null);
 			}
@@ -2827,6 +2853,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		this.furnitureChangeListener = new PropertyChangeListener()
 		{
+			private ArrayList<HomePieceOfFurniture> furnitureNeedingUpdate = new ArrayList<HomePieceOfFurniture>();
 			public void propertyChange(PropertyChangeEvent ev)
 			{
 				HomePieceOfFurniture updatedPiece = (HomePieceOfFurniture) ev.getSource();
@@ -2864,11 +2891,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				// If piece is or contains a door or a window, update walls that intersect with piece
 				if (containsDoorsAndWindows(piece))
 				{
-					updateObjects(home.getWalls());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getWalls());
+					fullWallUpdateRequired = true;
 				}
 				else if (containsStaircases(piece))
 				{
-					updateObjects(home.getRooms());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+					fullRoomUpdateRequired = true;
 				}
 				if (piece.getLevel() != null && piece.getLevel().getElevation() < 0)
 				{
@@ -2937,11 +2966,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				// If piece is or contains a door or a window, update walls that intersect with piece
 				if (containsDoorsAndWindows(piece))
 				{
-					updateObjects(home.getWalls());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getWalls());
+					fullWallUpdateRequired = true;
 				}
 				else if (containsStaircases(piece))
 				{
-					updateObjects(home.getRooms());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+					fullRoomUpdateRequired = true;
 				}
 				groundChangeListener.propertyChange(null);
 				updateObjectsLightScope(Arrays.asList(new HomePieceOfFurniture[]{piece}));
@@ -3018,7 +3049,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				else if (Room.Property.FLOOR_VISIBLE.name().equals(propertyName)
 						|| Room.Property.CEILING_VISIBLE.name().equals(propertyName) || Room.Property.LEVEL.name().equals(propertyName))
 				{
-					updateObjects(home.getRooms());
+					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+					fullRoomUpdateRequired = true;
 					groundChangeListener.propertyChange(null);
 				}
 				else if (Room.Property.POINTS.name().equals(propertyName))
@@ -3026,7 +3058,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					if (homeObjectsToUpdate != null)
 					{
 						// Don't try to optimize if more than one room to update
-						updateObjects(home.getRooms());
+						// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+						fullRoomUpdateRequired = true;
 					}
 					else
 					{
@@ -3091,7 +3124,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						room.removePropertyChangeListener(roomChangeListener);
 						break;
 				}
-				updateObjects(home.getRooms());
+				// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
+				fullRoomUpdateRequired = true;
 				groundChangeListener.propertyChange(null);
 				updateObjectsLightScope(Arrays.asList(new Room[]{room}));
 				updateObjectsLightScope(getHomeObjects(HomeLight.class));

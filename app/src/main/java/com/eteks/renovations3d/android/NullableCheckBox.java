@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 
-import static android.R.attr.value;
-
 /**
  * Created by phil on 2/1/2017.
  */
@@ -35,7 +33,7 @@ public class NullableCheckBox extends JCheckBox
 
 	public void setValue(Boolean value)
 	{
-		this.setChecked(value);
+		this.setChecked(value == null ? Boolean.FALSE : value);
 	}
 
 	public Boolean getValue()

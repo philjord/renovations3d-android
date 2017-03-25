@@ -1429,9 +1429,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 				if (isEnabled())
 				{
 					try{
-System.out.println("a");
 					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-System.out.println("b");
 				}catch(ArrayIndexOutOfBoundsException e)
 				{
 					// TODO this happens :
