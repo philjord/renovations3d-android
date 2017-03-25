@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
@@ -60,6 +61,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
+	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
 
@@ -345,6 +347,7 @@ public class Renovations3DActivity extends FragmentActivity
 				try
 				{
 					String originalName = renovations3D.getHome().getName();
+					boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
 					File outputDir = getCacheDir();
 					File homeName = new File(outputDir, "currentWork.sh3d");
 					renovations3D.getHomeRecorder().writeHome(renovations3D.getHome(), homeName.getAbsolutePath());
@@ -353,6 +356,7 @@ public class Renovations3DActivity extends FragmentActivity
 					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 					SharedPreferences.Editor editor = settings.edit();
 					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+					editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
 					editor.putString(STATE_CURRENT_HOME_NAME, "");
 					editor.apply();
 				}
@@ -385,22 +389,14 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 		else
 		{
-			final String tempWorkingFileRealName = savedInstanceState.getString(STATE_TEMP_HOME_REAL_NAME, "");
+			String tempWorkingFileRealName = savedInstanceState.getString(STATE_TEMP_HOME_REAL_NAME, "");
+			boolean isModifiedOverrideValue = savedInstanceState.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 			File outputDir = getCacheDir();
 			File homeName = new File(outputDir, "currentWork.sh3d");
 			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
 			if (homeName.exists())
 			{
-				loadHome(homeName);
-				// clear the name after load?
-				Renovations3DActivity.this.runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
-						if (renovations3D.getHome() != null)
-							renovations3D.getHome().setName(tempWorkingFileRealName);
-					}
-				});
+				loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue);
 			}
 		}
 	}
@@ -434,7 +430,9 @@ public class Renovations3DActivity extends FragmentActivity
 				public void fileSelected(final File file)
 				{
 					chooserStartFolder = file;
-					loadHome(file);
+					Thread t2 = new Thread(){public void run(){
+					loadHome(file);}};
+					t2.start();
 				}
 			});
 			// get on the EDT
@@ -448,33 +446,57 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
+	/**
+	 * Only call when not on EDT as blocking save question may arise
+	 */
 	private void newHome()
 	{
-		if (renovations3D.getHomeController() != null)
-			renovations3D.getHomeController().close();
+		// must get off the EDT thread as the close may ask for a save
+		Thread t2 = new Thread(){public void run(){
+			if (renovations3D.getHomeController() != null)
+				renovations3D.getHomeController().close();
 
-		// must always recreate otherwise the pager hand out an IllegalStateException
-		renovations3D = new Renovations3D(this);
+			// to be safe get this back onto the ui thread
+			Renovations3DActivity.this.runOnUiThread(new Runnable()
+			{
+				public void run()
+				{
+				// must always recreate otherwise the pager hand out an IllegalStateException
+				renovations3D = new Renovations3D(Renovations3DActivity.this);
 
-		mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
-		//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+				mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
+				//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
 
-		// discard the old view first
-		mRenovations3DPagerAdapter.notifyChangeInPosition(1);
-		mRenovations3DPagerAdapter.notifyDataSetChanged();
+				// discard the old view first
+				mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+				mRenovations3DPagerAdapter.notifyDataSetChanged();
 
-		// create new home and trigger the new views
-		renovations3D.newHome();
-		mRenovations3DPagerAdapter.notifyChangeInPosition(1);
-		mRenovations3DPagerAdapter.notifyDataSetChanged();
+				// create new home and trigger the new views
+				renovations3D.newHome();
+				mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+				mRenovations3DPagerAdapter.notifyDataSetChanged();
+				}
+			});
+		}};
+		t2.start();
+
+
 	}
 
+	/**
+	 * Only call when not on EDT as blocking save question may arise
+	 * @param homeFile
+	 */
 	public void loadHome(final File homeFile)
 	{
-		loadHome(homeFile, false);
+		loadHome(homeFile, null, false);
 	}
 
-	public void loadHome(final File homeFile, final boolean clearName)
+	/**
+	 * Only call when not on EDT as blocking save question may arise
+	 * @param homeFile
+	 */
+	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue)
 	{
 		if (homeFile != null)
 		{
@@ -495,7 +517,7 @@ public class Renovations3DActivity extends FragmentActivity
 					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
 
-					renovations3D.loadHome(homeFile, clearName);
+					renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue);
 
 					// force the frags to load up now
 					if(prevHomeLoaded)
@@ -748,7 +770,7 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 		}
 
-		// do we have an unmodified home we were looking at? if not perhaps a modified one?
+		// do we have a temp home we were working on
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
 		if(unmodifiedFileName.length() > 0 )
@@ -757,15 +779,15 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 		else
 		{
-			//TODO: this should try to hold the real original name, but multiple auto saves sets it to the temp file name
-			final String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, "");
+			String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
+			boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 			File outputDir = getCacheDir();
 			File homeName = new File(outputDir, "currentWork.sh3d");
-			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
+			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists() + " original name = " + tempWorkingFileRealName);
 			if(homeName.exists())
 			{
 				// set name to null so a save or save as will pen the default folder
-				loadHome(homeName, true);
+				loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue);
 			}
 			else
 			{
@@ -781,7 +803,7 @@ public class Renovations3DActivity extends FragmentActivity
 					public void run()
 					{
 						//Toast.makeText(Renovations3DActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
-						System.out.println("That was an auto save right there...");
+						System.out.println("Possibly auto save");
 						doAutoSave();
 					}
 				});
@@ -796,18 +818,23 @@ public class Renovations3DActivity extends FragmentActivity
 	{
 		if(renovations3D != null && renovations3D.getHome() != null)
 		{
-			//if(renovations3D.getHome().isModified())
+			System.out.println("renovations3D.getHome().isModified() "+ renovations3D.getHome().isModified());
+			if(renovations3D.getHome().isModified())
 			{
 				try
 				{
-					String originalName = renovations3D.getHome().getName();
+					//clone so original modified flag is not changed
+					Home autoSaveHome = renovations3D.getHome().clone();
+					boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
+					String originalName = autoSaveHome.getName();
 					File outputDir = getCacheDir();
 					File homeName = new File(outputDir, "currentWork.sh3d");
-					renovations3D.getHomeRecorder().writeHome(renovations3D.getHome(), homeName.getAbsolutePath());
-					System.out.println("doAutoSave written to " + homeName.getAbsolutePath());
+					renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
+					System.out.println("Auto save written to " + homeName.getAbsolutePath() + " with original name of " + originalName );
 					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 					SharedPreferences.Editor editor = settings.edit();
 					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+					editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
 					editor.putString(STATE_CURRENT_HOME_NAME, "");
 					editor.apply();
 				}
@@ -816,15 +843,6 @@ public class Renovations3DActivity extends FragmentActivity
 					e.printStackTrace();
 				}
 			}
-			/*else
-			{
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				SharedPreferences.Editor editor = settings.edit();
-				System.out.println("doAutoSave unmodified recorded as " + renovations3D.getHome().getName());
-				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
-				editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
-				editor.apply();
-			}*/
 		}
 	}
 	private String getContentName(ContentResolver resolver, Uri uri)

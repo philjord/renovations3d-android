@@ -120,15 +120,17 @@ public class Renovations3D extends HomeApplication
 		home.setName(null);// ensures save does a save as
 
 		homeController = new HomeController(home, Renovations3D.this, Renovations3D.this.viewFactory, Renovations3D.this.contentManager);
-
+		homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
 		parentActivity.setUpViews();
 		parentActivity.invalidateOptionsMenu();
 	}
 
+
+
 	/**
 	 * this is a butchery of HomeController.open(String)
 	 */
-	public void loadHome(final File homeFile, final boolean clearName)
+	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue)
 	{
 		if(!BuildConfig.DEBUG)
 		{
@@ -148,8 +150,17 @@ public class Renovations3D extends HomeApplication
 			{
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
-				home.setName(clearName ? null : homeName);// Notice this is used as the save name
+				if(overrideName != null)
+				{
+					home.setName(overrideName);// Notice this is used as the save name
+					home.setModified(isModifiedOverrideValue);
+				}
+				else
+				{
+					home.setName(homeName);
+				}
 				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
+				homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
 				EventQueue.invokeLater(new Runnable()
 				{
 					public void run()
@@ -189,6 +200,8 @@ public class Renovations3D extends HomeApplication
 		});
 
 	}
+
+
 
 	//new singleton hand outerer
 	public HomeController getHomeController()
