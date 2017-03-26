@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JComponent;
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
@@ -127,7 +128,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			// this gets called heaps of time, wait until we have an activity
 			if (getActivity() != null)
 			{
-				possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+				JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
 			}
 
 			resetToSelectTool = true;

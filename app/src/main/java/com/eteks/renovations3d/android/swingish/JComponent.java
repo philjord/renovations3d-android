@@ -30,8 +30,6 @@ import javaawt.VMFont;
 import javaawt.geom.Rectangle2D;
 import javaawt.image.ImageObserver;
 
-import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
-
 /**
  * Very much an assistant with various methods to be sorted out
  * Note the Fragment part is not always employed, if this is just used to paint itself on other components
@@ -230,53 +228,5 @@ public abstract class JComponent extends Fragment implements ImageObserver
 		return textBounds;
 	}
 
-	public static void possiblyShowWelcomeScreen(final Activity activity, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
-	{
-		// only one per session
-		if(!Renovations3DActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
-		{
-			Renovations3DActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
-			SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
-			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
 
-			if (!welcomeScreenUnwanted)
-			{
-				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
-				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-				// Add the buttons
-				builder.setPositiveButton(close, new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id)
-					{
-						// do remind again so no prefs
-					}
-				});
-				builder.setNegativeButton(closeAndNoShow, new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id)
-					{
-						// don't remind again
-						SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putBoolean(welcomeScreenName, true);
-						editor.apply();
-
-					}
-				});
-
-				String welcomeMessage = activity.getString(welcomeTextId);
-				TextView textView = new TextView(activity);
-				textView.setPadding(10,10,10,10);
-				textView.setText(Html.fromHtml(welcomeMessage));
-				textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-				builder.setView(textView);
-
-				// Create the AlertDialog
-				AlertDialog dialog = builder.create();
-				dialog.show();
-			}
-		}
-	}
 }

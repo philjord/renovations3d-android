@@ -17,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.Home;
@@ -272,7 +273,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		// this gets called heaps of time, wait until we have an activity
 		if(isVisibleToUser && getActivity() != null)
 		{
-			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
+			JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
 		}
 
 		if(isVisibleToUser && getView()!= null)

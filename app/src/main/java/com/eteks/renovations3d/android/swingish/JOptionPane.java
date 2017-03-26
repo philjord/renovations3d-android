@@ -1,16 +1,24 @@
 package com.eteks.renovations3d.android.swingish;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.android.SwingTools;
+import com.eteks.sweethome3d.model.UserPreferences;
 
 import org.xml.sax.XMLReader;
 
@@ -18,6 +26,8 @@ import java.util.concurrent.Semaphore;
 
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
+
+import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 
 
 /**
@@ -316,6 +326,57 @@ public class JOptionPane
 						first = true;
 					}
 				}
+			}
+		}
+	}
+
+
+	public static void possiblyShowWelcomeScreen(final Activity activity, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
+	{
+		// only one per session
+		if(!Renovations3DActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
+		{
+			Renovations3DActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
+			SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
+
+			if (!welcomeScreenUnwanted)
+			{
+				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				// Add the buttons
+				builder.setPositiveButton(close, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+						// do remind again so no prefs
+					}
+				});
+				builder.setNegativeButton(closeAndNoShow, new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+						// don't remind again
+						SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putBoolean(welcomeScreenName, true);
+						editor.apply();
+
+					}
+				});
+
+				String welcomeMessage = activity.getString(welcomeTextId);
+				TextView textView = new TextView(activity);
+				textView.setPadding(10,10,10,10);
+				textView.setText(Html.fromHtml(welcomeMessage));
+				textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+				builder.setView(textView);
+
+				// Create the AlertDialog
+				AlertDialog dialog = builder.create();
+				dialog.show();
 			}
 		}
 	}

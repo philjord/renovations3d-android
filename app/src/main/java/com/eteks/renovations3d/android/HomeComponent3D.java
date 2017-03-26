@@ -121,7 +121,7 @@ import javaawt.image.BufferedImage;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
-import static com.eteks.renovations3d.android.swingish.JComponent.possiblyShowWelcomeScreen;
+import static com.eteks.renovations3d.android.swingish.JOptionPane.possiblyShowWelcomeScreen;
 
 
 /**

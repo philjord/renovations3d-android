@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -155,7 +156,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wat until we have an activity
 		if(isVisibleToUser && getActivity() != null)
-			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
+			JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
 	}
 
 	@Override
