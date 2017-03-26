@@ -3,10 +3,47 @@
     <string name="app_name">Renovaciones 3D 3D</string>
     <string name="alignment">alineación</string>
     <string name="magnetism">magnetismo</string>
-    <string name="planview_welcometext">Utilizar el gesto de pellizcar para acercar y alejar.\nPara ver la tabla 1 mueble con pasar el dedo desde el borde izquierdo de la vista del mapa.\nPara ver el catálogo de muebles desliza el dedo desde el borde derecho, se puede añadir el mobiliario de allí.\nPara obtener una panorámica sin alterar el golpe selección actual con dos dedos juntos.\nPara seleccionar más de un objeto utilizar las acciones Selección de lazo Seleccione múltiple de oro en el menú Más.\nDos archivos de demostración SH3D estarán en la carpeta de descargas, seleccione más-> casa abierta.\nUtilizar el navegador para descargar más archivos SH3D de la Internet, se abrirá desde el navegador.\nMenú-> Ayuda Actualmente no hace nada.</string>
-    <string name="catalogview_welcometext">Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0. Alternativamente, puede presionar largo sobre el elemento (no hay arrastrar y soltar).\nDesde este punto de vista puede importar catálogo de las bibliotecas de muebles, seleccione Menú-> Importar biblioteca de muebles ...\nHay un archivo de muebles de demostración SH3F en la carpeta de descargas.\nPuede descargar bibliotecas muebles y textura de la Internet, es necesario descomprimir em puede usar un explorador de archivos antes de importar em.</string>
-    <string name="furnitureview_welcometext">Esta es una vista de todos los muebles Actualmente Colocado en su plan.\nPor ahora la única función que puede hacer aquí es cambiar la visibilidad de los elementos.</string>
-    <string name="component3dview_welcometext">Esta es una vista en 3 dimensiones de su plan.\nDesde aquí se puede utilizar 1 o 2 dedos para mover la vista.\nPor favor, tenga en cuenta en todos los casos es el concepto de \"arrastrar lo que estoy buscando en alrededor\".\nSi usted está buscando de arriba hacia abajo:\nUn dedo deslizando hacia la izquierda o hacia la derecha hará girar el avión.\nUn dedo se deslice hacia arriba o hacia abajo va a alterar la altura de la cámara y por lo tanto el terreno de juego.\nDos dedos deslizándose hacia arriba o hacia abajo se moverá la cámara más cerca del centro o más lejos de ella.\nDos dedos laterales correderas hacia el lado no harán nada.\nSi está buscando desde el punto de vista de la visita:\nUn dedo deslizando hacia la izquierda o hacia la derecha girará el plano que le rodean.\nUn dedo se deslice hacia arriba o hacia abajo va a alterar el ángulo vertical se señaló la cabeza.\nDos dedos deslizándose hacia arriba o hacia abajo se moverá la vista hacia o domicilio de usted.\nDos dedos lado a lado de deslizamiento se moverá la vista hacia la izquierda o la derecha.\npuntos de vista guardados se pueden encontrar en el icono del ojo.\nEl cambio de arriba hacia abajo para visitar se puede hacer mediante el icono de un hombre o de un plan.\nSi ve una vista corrupta, por favor intente la opción deoptomize en el menú.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Utilizar el gesto de pellizcar para acercar y alejar.<br>
+Para ver la tabla 1 mueble con pasar el dedo desde el borde izquierdo de la vista del mapa.<br>
+Para ver el catálogo de muebles desliza el dedo desde el borde derecho, se puede añadir el mobiliario de allí.<br>
+Para obtener una panorámica sin alterar el golpe selección actual con dos dedos juntos.<br>
+Para seleccionar más de un objeto utilizar las acciones Selección de lazo Seleccione múltiple de oro en el menú Más.<br>
+Dos archivos de demostración SH3D estarán en la carpeta de descargas, seleccione más-> casa abierta.<br>
+Utilizar el navegador para descargar más archivos SH3D de la Internet, se abrirá desde el navegador.<br>
+<p>Visita  <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			  <br>y <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>para más información.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0.<br>
+Alternativamente, puede presionar largo sobre el elemento (no hay arrastrar y soltar).<br>
+Desde este punto de vista puede importar catálogo de las bibliotecas de muebles, seleccione Menú-> Importar biblioteca de muebles ...<br>
+Puede descargar bibliotecas muebles y textura de la Internet, es necesario descomprimir em puede usar un explorador de archivos antes de importar em.<br>
+<p>Visita  <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			  <br>y <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+			     ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Esta es una vista de todos los muebles Actualmente Colocado en su plan.<br>
+Por ahora la única función que puede hacer aquí es cambiar la visibilidad de los elementos.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Esta es una vista en 3 dimensiones de su plan.<br>
+Desde aquí se puede utilizar 1 o 2 dedos para mover la vista.<br>
+Por favor, tenga en cuenta en todos los casos es el concepto de "arrastrar lo que estoy buscando en alrededor".<br>
+Si usted está buscando de arriba hacia abajo:<br>
+Un dedo deslizando hacia la izquierda o hacia la derecha hará girar el avión.<br>
+Un dedo se deslice hacia arriba o hacia abajo va a alterar la altura de la cámara y por lo tanto el terreno de juego.<br>
+Dos dedos deslizándose hacia arriba o hacia abajo se moverá la cámara más cerca del centro o más lejos de ella.<br>
+Dos dedos laterales correderas hacia el lado no harán nada.<br>
+Si está buscando desde el punto de vista de la visita:<br>
+Un dedo deslizando hacia la izquierda o hacia la derecha girará el plano que le rodean.<br>
+Un dedo se deslice hacia arriba o hacia abajo va a alterar el ángulo vertical se señaló la cabeza.<br>
+Dos dedos deslizándose hacia arriba o hacia abajo se moverá la vista hacia o domicilio de usted.<br>
+Dos dedos lado a lado de deslizamiento se moverá la vista hacia la izquierda o la derecha.<br>
+puntos de vista guardados se pueden encontrar en el icono del ojo.<br>
+El cambio de arriba hacia abajo para visitar se puede hacer mediante el icono de un hombre o de un plan.<br>
+Si ve una vista corrupta, por favor intente la opción deoptomize en el menú.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Datos de la GPU</string>
     <string name="select_multiple">Selección múltiple</string>
@@ -26,5 +63,6 @@
               </p><p><font size="-2">Construido sobre código fuente abierto © Copyright 2006-2017 eTeks
               </font>
               <br>&nbsp;]]></string>
+    <string name="helpmenu_no_work">Menú-> Ayuda Actualmente no hace nada.</string>
 
 </resources>

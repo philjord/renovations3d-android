@@ -3,10 +3,44 @@
     <string name="app_name">Rénovations 3D</string>
     <string name="alignment">Alignement</string>
     <string name="magnetism">Magnétisme</string>
-    <string name="planview_welcometext">Pincer l\'écran pour zoomer et dézoomer.\nPour voir la liste des meubles, balayez l\'écran à partir du bord gauche.\nPour voir le catalogue de meubles et ajouter des meubles au plan, balayez l\'écran à partir du bord droit.\nPour déplacer la zone visible du plan, déplacez deux doigts ensemble.\nPour sélectionner plus d\'un objet à la fois, choisissez Sélection lasso ou Sélection multiple dans le menu.\nDeux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir... dans le menu.\nUtilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, ils s\'ouvriront du navigateur.\nLe menu Aide ne fait actuellement rien.</string>
-    <string name="catalogview_welcometext">Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0, ou appuyez plus longuement sur ce meuble (il n\'y a de possibilité de glisser déposer les meubles dans le plan).\nVous pouvez importer des bibliothèques de meubles catalogue à partir de cette vue, sélectionnez Importer bibliothèque de meubles&#8230; dans le menu.\nIl y a un fichier démo de meubles sh3f dans votre dossier de téléchargement.\nVous pouvez aussi télécharger des bibliothèques de meubles et de textures à partir d\'Internet, et devrez éventuellement les décompresser en utilisant un explorateur de fichiers avant de les importer.</string>
-    <string name="furnitureview_welcometext">Cette vue liste tous les meubles actuellement placés dans votre plan.\nPour l\'instant la seule fonction disponible permet de changer la visibilité des éléments.</string>
-    <string name="component3dview_welcometext">Ceci est une vue en 3D de votre plan.\nDans cette vue, vous pouvez utiliser 1 ou 2 doigts pour déplacer la vue.\nLa navigation dans la 3D s\'effectue en déplaçant les doigts à l\'écran.\nSi vous êtes en vue de haut :\nLe déplacement du doigt vers la gauche ou la droite fait tourner la scène autour d\'elle même.\nLe déplacement du doigt vers le haut ou le bas modifie la hauteur du point de vue.\nLe déplacement de deux doigts vers le haut ou le bas approche ou éloigne le point du vue du centre.\nSi vous êtes en visite virtuelle :\nLe déplacement du doigt fait pivoter votre point de vue autour de vous sans le déplacer.\nLe déplacement de deux doigts déplace votre point de vue latéralement ou d\'avant en arrière.\nLes points de vue enregistrés sont listés sous l\'icône représentant un œoeil.\nLe passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan.\nSi vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Pincer l\'écran pour zoomer et dézoomer.<br>
+Pour voir la liste des meubles, balayez l\'écran à partir du bord gauche.<br>
+Pour voir le catalogue de meubles et ajouter des meubles au plan, balayez l\'écran à partir du bord droit.<br>
+Pour déplacer la zone visible du plan, déplacez deux doigts ensemble.<br>
+Pour sélectionner plus d\'un objet à la fois, choisissez Sélection lasso ou Sélection multiple dans le menu.<br>
+Deux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir... dans le menu.<br>
+Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, ils s\'ouvriront du navigateur.<br>
+<p>Rendez-vous sur <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			  <br>et <a href="http://www.sweethome3d.com/fr/">http://www.sweethome3d.com/fr/</a>
+              <br>pour plus d\'informations.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
+ou appuyez plus longuement sur ce meuble (il n\'y a de possibilité de glisser déposer les meubles dans le plan).<br>
+Vous pouvez importer des bibliothèques de meubles catalogue à partir de cette vue, sélectionnez Importer bibliothèque de meubles&#8230; dans le menu.<br>
+Vous pouvez aussi télécharger des bibliothèques de meubles et de textures à partir d\'Internet, et devrez éventuellement les décompresser en utilisant un explorateur de fichiers avant de les importer.<br>
+</p><p>Rendez-vous sur <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			  <br>et <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+			     ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Cette vue liste tous les meubles actuellement placés dans votre plan.<br>
+Pour l\'instant la seule fonction disponible permet de changer la visibilité des éléments.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Ceci est une vue en 3D de votre plan.<br>
+Dans cette vue, vous pouvez utiliser 1 ou 2 doigts pour déplacer la vue.<br>
+La navigation dans la 3D s\'effectue en déplaçant les doigts à l\'écran.<br>
+Si vous êtes en vue de haut :<br>
+Le déplacement du doigt vers la gauche ou la droite fait tourner la scène autour d\'elle même.<br>
+Le déplacement du doigt vers le haut ou le bas modifie la hauteur du point de vue.<br>
+Le déplacement de deux doigts vers le haut ou le bas approche ou éloigne le point du vue du centre.<br>
+Si vous êtes en visite virtuelle :<br>
+Le déplacement du doigt fait pivoter votre point de vue autour de vous sans le déplacer.<br>
+Le déplacement de deux doigts déplace votre point de vue latéralement ou d\'avant en arrière.<br>
+Les points de vue enregistrés sont listés sous l\'icône représentant un œoeil.<br>
+Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan.<br>
+Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomise 3d</string>
     <string name="menu_show3dcaps">infos GPU</string>
     <string name="select_multiple">Sélection multiple</string>
@@ -24,5 +58,6 @@
               </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
               </p><p><font size="-2">Construit sur le code source ouvert © Copyright 2006-2017 eTeks
               </font>]]></string>
+    <string name="helpmenu_no_work">Le menu Aide ne fait actuellement rien.</string>
 
 </resources>

@@ -3,10 +3,47 @@
     <string name="app_name">Tadilat 3D</string>
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
-    <string name="planview_welcometext">Ve uzaklaştırmak için kıstırma hareketini kullanın.\nHarita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.\nSağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.\nBirlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.\nBirden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.\nİki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.\nInternetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.\nMenü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
-    <string name="catalogview_welcometext">Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın. Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).\nBu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...\nSenin indirme klasöründe bir demo SH3F mobilya dosyası yok.\nEğer internetten mobilya ve doku kütüphanelerini indirebilirsiniz, onları aktarmadan önce bir dosya gezgini kullanarak Mayıs halletmek gerekir.</string>
-    <string name="furnitureview_welcometext">Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.\nŞimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.</string>
-    <string name="component3dview_welcometext">Bu planın bir 3 boyutlu görünüşüdür.\nBuradan görünümü taşımak için 1 veya 2 parmak kullanabilirsiniz.\n\"Etrafıma bakıyorum Ne sürüklemek\" kavram bütün davaları içinde unutmayınız.\nEğer yukarıdan aşağı arıyorsanız:\nBir parmağınızı sola kayar ya da sağa uçağı dönecektir.\nBir parmak kameranın yüksekliğini ve dolayısıyla adım değiştirecek aşağı yukarı kaydırarak veya.\nİki parmak ondan daha yakın merkeze ya da daha fazla kamerayı hareket edecek aşağı yukarı kaydırarak veya.\ntarafına yan sürgülü iki parmak bir şey yapmayacağım.\nEğer bakış ziyareti noktasından arıyorsanız:\nBir parmağınızı sola kayar veya sağa çevrenizdeki uçağı dönecektir.\nBir parmak başınızı işaret edilmektedir dikey açısını değiştirecek aşağı yukarı kaydırarak veya.\nİki parmak sizden doğru görünüm veya uzağa hareket edecektir aşağı yukarı kaydırarak veya.\ngörünümü hareket edecek yan yana kayar iki parmağınızı sola veya sağa.\nbakış Kaydedilen noktaları göz simgesinin altında bulunabilir.\nBir erkek veya bir planın simgesiyle yapılabilir ziyaret etmek için yukarıdan aşağıya değiştirilmesi.\nEğer bozuk bir görünüm görürseniz, menüde deoptomize seçeneği deneyin.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Ve uzaklaştırmak için kıstırma hareketini kullanın.<br>
+Harita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.<br>
+Sağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.<br>
+Birlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.<br>
+Birden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.<br>
+İki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.<br>
+Internetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.<br>
+<p>Lütfen, <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+	<br>ve <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a> adresini
+	<br>daha fazla bilgi için.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
+Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).<br>
+Bu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...<br>
+Eğer internetten mobilya ve doku kütüphanelerini indirebilirsiniz, onları aktarmadan önce bir dosya gezgini kullanarak Mayıs halletmek gerekir.<br>
+<p>Lütfen, <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+	<br>ve <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a> adresini
+	   ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.<br>
+Şimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Bu planın bir 3 boyutlu görünüşüdür.<br>
+Buradan görünümü taşımak için 1 veya 2 parmak kullanabilirsiniz.<br>
+"Etrafıma bakıyorum Ne sürüklemek" kavram bütün davaları içinde unutmayınız.<br>
+Eğer yukarıdan aşağı arıyorsanız:<br>
+Bir parmağınızı sola kayar ya da sağa uçağı dönecektir.<br>
+Bir parmak kameranın yüksekliğini ve dolayısıyla adım değiştirecek aşağı yukarı kaydırarak veya.<br>
+İki parmak ondan daha yakın merkeze ya da daha fazla kamerayı hareket edecek aşağı yukarı kaydırarak veya.<br>
+tarafına yan sürgülü iki parmak bir şey yapmayacağım.<br>
+Eğer bakış ziyareti noktasından arıyorsanız:<br>
+Bir parmağınızı sola kayar veya sağa çevrenizdeki uçağı dönecektir.<br>
+Bir parmak başınızı işaret edilmektedir dikey açısını değiştirecek aşağı yukarı kaydırarak veya.<br>
+İki parmak sizden doğru görünüm veya uzağa hareket edecektir aşağı yukarı kaydırarak veya.<br>
+görünümü hareket edecek yan yana kayar iki parmağınızı sola veya sağa.<br>
+bakış Kaydedilen noktaları göz simgesinin altında bulunabilir.<br>
+Bir erkek veya bir planın simgesiyle yapılabilir ziyaret etmek için yukarıdan aşağıya değiştirilmesi.<br>
+Eğer bozuk bir görünüm görürseniz, menüde deoptomize seçeneği deneyin.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU bilgi</string>
     <string name="select_multiple">çoklu seç</string>
@@ -25,5 +62,6 @@
 	</p><p><font size="-2">© Telif hakları 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
 	</p><p><font size="-2">© Telif hakları 2006-2017 eTeks
 	</font>]]></string>
+    <string name="helpmenu_no_work">Menü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
 
 </resources>

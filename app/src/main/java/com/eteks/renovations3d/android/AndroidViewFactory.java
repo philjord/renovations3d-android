@@ -68,6 +68,7 @@ import com.eteks.sweethome3d.viewcontroller.VideoController;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.eteks.sweethome3d.viewcontroller.WallController;
 import com.eteks.sweethome3d.viewcontroller.WizardController;
+import com.mindblowing.renovations3d.R;
 
 import java.security.AccessControlException;
 
@@ -474,7 +475,8 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public HelpView createHelpView(UserPreferences preferences,
 								   HelpController helpController)
 	{
-		Toast.makeText(this.activity, "createHelpView", Toast.LENGTH_SHORT).show();
+		String helpMessage = activity.getString(R.string.helpmenu_no_work);
+		Toast.makeText(this.activity, helpMessage, Toast.LENGTH_LONG).show();
 		return new HelpView(){public void displayView(){}};
 		//return new HelpPane(preferences, helpController);
 	}

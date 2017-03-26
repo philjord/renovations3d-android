@@ -3,10 +3,49 @@
     <string name="app_name">Renovações 3D</string>
     <string name="alignment">alinhamento</string>
     <string name="magnetism">magnetismo</string>
-    <string name="planview_welcometext">Use o gesto de pinça para zoom in e out.\nPara ver a tabela de mobiliário com um dedo deslize a partir da borda esquerda da visualização do mapa.\nPara ver o furto catálogo de móveis a partir da borda direita, você pode adicionar uma parede de lá.\nPara deslocar sem alterar o furto seleção atual com dois dedos juntos.\nPara selecionar mais de um objeto usar os Lasso Select Select ações múltipla de ouro no menu Mais.\nDois arquivos de demonstração SH3D estará na sua pasta de downloads, selecione Mais-> Open casa.\nUse o seu navegador para baixar mais arquivos SH3D da internet, eles vão abrir a partir do browser.\nMenu-> Ajuda Actualmente não faz nada.</string>
-    <string name="catalogview_welcometext">Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0. Alternativamente, você pode pressionar longamente o item (não há arrastar e soltar).\nDesde este ponto de vista que você pode importar catálogo bibliotecas móveis, selecione Menu-> biblioteca de móveis de importação ...\nHá um arquivo móveis demonstração SH3F na sua pasta de downloads.\nVocê pode baixar móveis e textura bibliotecas a partir da Internet, você precisa descompactá-los Maio usando um explorador de arquivos antes de importá-los.</string>
-    <string name="furnitureview_welcometext">Esta é uma visão de todo o mobiliário Atualmente Colocado em seu plano.\nPor agora a única função que você pode fazer aqui é para mudar uma visibilidade itens.</string>
-    <string name="component3dview_welcometext">Esta é uma visão dimensional 3 do seu plano.\nA partir daqui você pode usar 1 ou 2 dedos para mover a vista.\nPor favor, note em todos os casos o conceito é \"arrastar o que eu estou olhando ao redor.\"\nSe você estiver olhando de cima para baixo:\nUm dedo deslizando para a esquerda ou para a direita irá girar o plano.\nUm dedo desliza para cima ou para baixo irá alterar a altura da câmera e, assim, o terreno de jogo.\nDois dedos deslizando para cima ou para baixo irá mover a câmera para mais perto do centro ou mais a partir dele.\nDois dedos de correr lado a lado não vai fazer nada.\nSe você está procurando a partir do ponto de visita de vista:\nUm dedo deslizando para a esquerda ou para a direita irá girar o plano em torno de você.\nUm dedo desliza para cima ou para baixo irá alterar o ângulo vertical sua cabeça está apontado.\nDois dedos deslizando para cima ou para baixo irá mover a vista para ou recortes de você.\nDois dedos laterais deslizantes para o outro irá mover a vista para a esquerda ou direita.\nOs pontos de vista salvos podem ser encontrados sob o ícone do olho.\nMudando de cima para baixo para visitar pode ser feito pelo ícone de um homem ou de um plano.\nSe você ver uma vista corrupto, por favor tente a opção deoptomize no menu.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Use o gesto de pinça para zoom in e out.<br>
+Para ver a tabela de mobiliário com um dedo deslize a partir da borda esquerda da visualização do mapa.<br>
+Para ver o furto catálogo de móveis a partir da borda direita, você pode adicionar uma parede de lá.<br>
+Para deslocar sem alterar o furto seleção atual com dois dedos juntos.<br>
+Para selecionar mais de um objeto usar os Lasso Select Select ações múltipla de ouro no menu Mais.<br>
+Dois arquivos de demonstração SH3D estará na sua pasta de downloads, selecione Mais-> Open casa.<br>
+Use o seu navegador para baixar mais arquivos SH3D da internet, eles vão abrir a partir do browser.<br>
+<p>Por favor, visite
+              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			  <br>e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>para maiores informações.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
+Alternativamente, você pode pressionar longamente o item (não há arrastar e soltar).<br>
+Desde este ponto de vista que você pode importar catálogo bibliotecas móveis, selecione Menu-> biblioteca de móveis de importação ...<br>
+Você pode baixar móveis e textura bibliotecas a partir da Internet, você precisa descompactá-los Maio usando um explorador de arquivos antes de importá-los.<br>
+</p><p>Por favor, visite
+              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			  <br>e <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+			     ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Esta é uma visão de todo o mobiliário Atualmente Colocado em seu plano.<br>
+Por agora a única função que você pode fazer aqui é para mudar uma visibilidade itens.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Esta é uma visão dimensional 3 do seu plano.<br>
+A partir daqui você pode usar 1 ou 2 dedos para mover a vista.<br>
+Por favor, note em todos os casos o conceito é "arrastar o que eu estou olhando ao redor."<br>
+Se você estiver olhando de cima para baixo:<br>
+Um dedo deslizando para a esquerda ou para a direita irá girar o plano.<br>
+Um dedo desliza para cima ou para baixo irá alterar a altura da câmera e, assim, o terreno de jogo.<br>
+Dois dedos deslizando para cima ou para baixo irá mover a câmera para mais perto do centro ou mais a partir dele.<br>
+Dois dedos de correr lado a lado não vai fazer nada.<br>
+Se você está procurando a partir do ponto de visita de vista:<br>
+Um dedo deslizando para a esquerda ou para a direita irá girar o plano em torno de você.<br>
+Um dedo desliza para cima ou para baixo irá alterar o ângulo vertical sua cabeça está apontado.<br>
+Dois dedos deslizando para cima ou para baixo irá mover a vista para ou recortes de você.<br>
+Dois dedos laterais deslizantes para o outro irá mover a vista para a esquerda ou direita.<br>
+Os pontos de vista salvos podem ser encontrados sob o ícone do olho.<br>
+Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem ou de um plano.<br>
+Se você ver uma vista corrupto, por favor tente a opção deoptomize no menu.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Informação GPU</string>
     <string name="select_multiple">Escolha múltipla</string>
@@ -27,5 +66,6 @@
               </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
               </p><p><font size="-2">Construído em código aberto © Copyright 2006-2017 eTeks
               </font>]]></string>
+    <string name="helpmenu_no_work">Menu-> Ajuda Actualmente não faz nada.</string>
 
 </resources>

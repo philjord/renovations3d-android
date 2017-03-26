@@ -3,10 +3,47 @@
     <string name="app_name">Renovaties 3D</string>
     <string name="alignment">opstelling</string>
     <string name="magnetism">magnetisme</string>
-    <string name="planview_welcometext">Gebruik de pinch gebaar om in en uit te zoomen.\nOm de meubels tafel met 1 vingerbeweging zien vanaf de linkerrand van de kaartweergave.\nOm de meubels catalogus swipe van de rechterrand ziet, kun je meubels toevoegen vanaf daar.\nPan zonder elkaar wijziging van de huidige selectie vegen met twee vingers.\nOm te selecteren meer dan één object gebruik maken van de Lasso selecteren meerdere gouden aandelen in het menu Meer.\nTwee SH3D demo bestanden in de map downloads, selecteert Meer-> Open huis.\nGebruik uw browser om meer SH3D bestanden te downloaden van het internet, zullen ze openen vanuit de browser.\nMenu-> Hulp Op dit moment doet niets.</string>
-    <string name="catalogview_welcometext">Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0. Als alternatief kun je lang op het artikel (er is geen drag and drop).\nVanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek ...\nEr is een demo SH3F meubels bestand in de map downloads.\nU kunt meubels en textuur bibliotheken downloaden van het internet, moet je uit te pakken hen met behulp van een file explorer voordat u ze importeert.</string>
-    <string name="furnitureview_welcometext">Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.\nVoor nu de enige functie die u hier kunt doen is om een items zichtbaarheid te wijzigen.</string>
-    <string name="component3dview_welcometext">Dit is een 3-dimensionale weergave van uw plan.\nVanaf hier kunt u gebruik maken van 1 of 2 vingers om de weergave te verplaatsen.\nLet op: in alle gevallen het concept is \"slepen wat ik ben op zoek naar rond\".\nAls u op zoek bent van boven naar beneden:\nEén vinger schuiven naar links of rechts zal het vliegtuig te roteren.\nEen vinger schuiven op of beneden de hoogte van de camera en dus de toonhoogte veranderen.\nTwee vingers schuiven omhoog of omlaag zal de camera dichter bij het centrum of verder van het.\nTwee vingers glijden kant naar de andere kant zal niets doen.\nAls u op zoek bent vanaf het bezoek oogpunt:\nEén vinger schuiven naar links of rechts zal het vliegtuig draaien om je heen.\nEén vinger glijden omhoog of omlaag zal de verticale hoek je hoofd is gericht te veranderen.\nTwee vingers glijden omhoog of omlaag zal het zicht op of aways verplaatsen van je.\nTwee vingers glijden van links naar rechts zal het uitzicht naar links of rechts.\nOpgeslagen standpunten kan worden gevonden onder het pictogram oog.\nVeranderen van boven naar beneden te doen kan door het pictogram van een mens of een plan.\nAls je een corrupte uitzicht, probeer dan de optie deoptomize in het menu.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Gebruik de pinch gebaar om in en uit te zoomen.<br>
+Om de meubels tafel met 1 vingerbeweging zien vanaf de linkerrand van de kaartweergave.<br>
+Om de meubels catalogus swipe van de rechterrand ziet, kun je meubels toevoegen vanaf daar.<br>
+Pan zonder elkaar wijziging van de huidige selectie vegen met twee vingers.<br>
+Om te selecteren meer dan één object gebruik maken van de Lasso selecteren meerdere gouden aandelen in het menu Meer.<br>
+Twee SH3D demo bestanden in de map downloads, selecteert Meer-> Open huis.<br>
+Gebruik uw browser om meer SH3D bestanden te downloaden van het internet, zullen ze openen vanuit de browser.<br>
+</p><p>Bezoek <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+	<br>en <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    <br>voor meer informatie.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
+Als alternatief kun je lang op het artikel (er is geen drag and drop).<br>
+Vanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek ...<br>
+U kunt meubels en textuur bibliotheken downloaden van het internet, moet je uit te pakken hen met behulp van een file explorer voordat u ze importeert.<br>
+</p><p>Bezoek <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+	<br>en <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+	   ]]>\n</string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.<br>
+Voor nu de enige functie die u hier kunt doen is om een items zichtbaarheid te wijzigen.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Dit is een 3-dimensionale weergave van uw plan.<br>
+Vanaf hier kunt u gebruik maken van 1 of 2 vingers om de weergave te verplaatsen.<br>
+Let op: in alle gevallen het concept is "slepen wat ik ben op zoek naar rond".<br>
+Als u op zoek bent van boven naar beneden:<br>
+Eén vinger schuiven naar links of rechts zal het vliegtuig te roteren.<br>
+Een vinger schuiven op of beneden de hoogte van de camera en dus de toonhoogte veranderen.<br>
+Twee vingers schuiven omhoog of omlaag zal de camera dichter bij het centrum of verder van het.<br>
+Twee vingers glijden kant naar de andere kant zal niets doen.<br>
+Als u op zoek bent vanaf het bezoek oogpunt:<br>
+Eén vinger schuiven naar links of rechts zal het vliegtuig draaien om je heen.<br>
+Eén vinger glijden omhoog of omlaag zal de verticale hoek je hoofd is gericht te veranderen.<br>
+Twee vingers glijden omhoog of omlaag zal het zicht op of aways verplaatsen van je.<br>
+Twee vingers glijden van links naar rechts zal het uitzicht naar links of rechts.<br>
+Opgeslagen standpunten kan worden gevonden onder het pictogram oog.<br>
+Veranderen van boven naar beneden te doen kan door het pictogram van een mens of een plan.<br>
+Als je een corrupte uitzicht, probeer dan de optie deoptomize in het menu.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">selecteer meerdere</string>
@@ -24,5 +61,6 @@
     </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
     </p><p><font size="-2">Gebouwd op open source-code © Copyright 2006-2017 eTeks
     </font>]]></string>
+    <string name="helpmenu_no_work">Menu-> Hulp Op dit moment doet niets.</string>
 
 </resources>

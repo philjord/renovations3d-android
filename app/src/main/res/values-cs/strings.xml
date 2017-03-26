@@ -3,10 +3,48 @@
     <string name="app_name">3D rekonstrukce</string>
     <string name="alignment">zarovnání</string>
     <string name="magnetism">magnetismus</string>
-    <string name="planview_welcometext">Použijte špetka gesto k přiblížení a oddálení.\nChcete-li vidět nábytek tabulku s 1 prstem švihnout z levého okraje zobrazení mapy.\nChcete-li vidět nábytek katalog přejeďte prstem od pravého okraje, můžete přidat nábytek odtamtud.\nChcete-li posunout beze změny aktuálního výběru přejeďte dvěma prsty k sobě.\nChcete-li vybrat více než jeden objekt použít laso Select vybrat více zlatých akcií v nabídce Více.\nDva SH3D demo soubory budou ve složce stahování, zvolte více-> Otevřít domů.\nPoužijte svůj prohlížeč tak, aby stahovat více SH3D souborů z internetu, budou otevírat z prohlížeče.\nMenu-> Nápověda V současné době nic nedělá.</string>
-    <string name="catalogview_welcometext">Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0. Případně si můžete dlouho tlačit na položku (není drag and drop).\nZ tohoto pohledu lze importovat katalog nábytek knihovny, zvolte Menu-> Importovat nábytek knihovny ...\nK dispozici je nábytek soubor demo SH3F ve složce stahování.\nZde si můžete stáhnout nábytek a textury knihovny z internetu, budete muset rozbalit em může používat prohlížeč souborů před importem em.</string>
-    <string name="furnitureview_welcometext">To je pohled na veškerý nábytek v současné době umístěn na vaši plánu.\nPro tuto chvíli jediná funkce, kterou můžete udělat, je zde pro změnu položek viditelnosti.</string>
-    <string name="component3dview_welcometext">Jedná se o tři trojrozměrný pohled vašeho plánu.\nOdtud můžete použít 1 nebo 2 prsty přesunout pohled.\nUpozorňujeme, ve všech případech je tento koncept \"přetáhnout co se dívám kolem\".\nPokud hledáte odshora dolů:\nJeden prst posuvné doleva nebo doprava se budou střídat plánu.\nJeden prst posuvné nahoru nebo dolů bude měnit výšku kamery a také hřiště.\nDva prsty posuvné nahoru nebo dolů bude pohybovat fotoaparátem blíže ke středu nebo dále od ní.\nDva prsty posuvných strany na stranu nebude dělat nic.\nPokud hledáte z hlediska návštěvy:\nJeden prst posuvné doleva nebo doprava se budou střídat plán kolem sebe.\nJeden prst posuvné nahoru nebo dolů změní vzpřímený úhel vaše hlava je špičatá.\nDva prsty posuvné nahoru nebo dolů posune výhled směrem nebo aways od vás.\nDva prsty posuvné ze strany na stranu bude pohybovat názor, doleva nebo doprava.\nUložené úhly pohledu lze nalézt pod ikonou oka.\nZměna odshora dolů k návštěvě lze provést pomocí ikony člověka nebo jako plán.\nPokud vidíte poškozený pohled, zkuste volbu deoptomize v nabídce.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Použijte špetka gesto k přiblížení a oddálení.<br>
+Chcete-li vidět nábytek tabulku s 1 prstem švihnout z levého okraje zobrazení mapy.<br>
+Chcete-li vidět nábytek katalog přejeďte prstem od pravého okraje, můžete přidat nábytek odtamtud.<br>
+Chcete-li posunout beze změny aktuálního výběru přejeďte dvěma prsty k sobě.<br>
+Chcete-li vybrat více než jeden objekt použít laso Select vybrat více zlatých akcií v nabídce Více.<br>
+Dva SH3D demo soubory budou ve složce stahování, zvolte více-> Otevřít domů.<br>
+Použijte svůj prohlížeč tak, aby stahovat více SH3D souborů z internetu, budou otevírat z prohlížeče.<br>
+<p>Pro více informací:
+              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+		<br>a 	<a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0.<br>
+Případně si můžete dlouho tlačit na položku (není drag and drop).<br>
+Z tohoto pohledu lze importovat katalog nábytek knihovny, zvolte Menu-> Importovat nábytek knihovny ...<br>
+Zde si můžete stáhnout nábytek a textury knihovny z internetu, budete muset rozbalit em může používat prohlížeč souborů před importem em.<br>
+<p>Pro více informací:
+              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+		<br>a <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+    ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+To je pohled na veškerý nábytek v současné době umístěn na vaši plánu.<br>
+Pro tuto chvíli jediná funkce, kterou můžete udělat, je zde pro změnu položek viditelnosti.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Jedná se o tři trojrozměrný pohled vašeho plánu.<br>
+Odtud můžete použít 1 nebo 2 prsty přesunout pohled.<br>
+Upozorňujeme, ve všech případech je tento koncept "přetáhnout co se dívám kolem".<br>
+Pokud hledáte odshora dolů:<br>
+Jeden prst posuvné doleva nebo doprava se budou střídat plánu.<br>
+Jeden prst posuvné nahoru nebo dolů bude měnit výšku kamery a také hřiště.<br>
+Dva prsty posuvné nahoru nebo dolů bude pohybovat fotoaparátem blíže ke středu nebo dále od ní.<br>
+Dva prsty posuvných strany na stranu nebude dělat nic.<br>
+Pokud hledáte z hlediska návštěvy:<br>
+Jeden prst posuvné doleva nebo doprava se budou střídat plán kolem sebe.<br>
+Jeden prst posuvné nahoru nebo dolů změní vzpřímený úhel vaše hlava je špičatá.<br>
+Dva prsty posuvné nahoru nebo dolů posune výhled směrem nebo aways od vás.<br>
+Dva prsty posuvné ze strany na stranu bude pohybovat názor, doleva nebo doprava.<br>
+Uložené úhly pohledu lze nalézt pod ikonou oka.<br>
+Změna odshora dolů k návštěvě lze provést pomocí ikony člověka nebo jako plán.<br>
+Pokud vidíte poškozený pohled, zkuste volbu deoptomize v nabídce.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">vybrat několik</string>
@@ -27,5 +65,6 @@
 		</p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>></p>
               <p><font size="-2">Postaven na otevřeném zdrojovém kódu © Copyright 2006-2017 eTeks
              </font>]]></string>
+    <string name="helpmenu_no_work">Menu-> Nápověda V současné době nic nedělá.</string>
 
 </resources>

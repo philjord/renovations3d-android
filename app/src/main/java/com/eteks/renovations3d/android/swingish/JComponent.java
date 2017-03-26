@@ -9,12 +9,16 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.widget.TextView;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.mindblowing.renovations3d.R;
 
 import javaawt.Color;
 import javaawt.Font;
@@ -260,7 +264,14 @@ public abstract class JComponent extends Fragment implements ImageObserver
 
 					}
 				});
-				builder.setMessage(welcomeTextId);
+
+				String welcomeMessage = activity.getString(welcomeTextId);
+				TextView textView = new TextView(activity);
+				textView.setPadding(10,10,10,10);
+				textView.setText(Html.fromHtml(welcomeMessage));
+				textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+				builder.setView(textView);
 
 				// Create the AlertDialog
 				AlertDialog dialog = builder.create();

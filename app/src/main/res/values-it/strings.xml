@@ -3,10 +3,47 @@
     <string name="app_name">Ristrutturazioni 3D</string>
     <string name="alignment">allineamento</string>
     <string name="magnetism">magnetismo</string>
-    <string name="planview_welcometext">Utilizzare il gesto pizzico di zoom in e out.\nPer vedere la tabella mobili con 1 strisciare il dito dal bordo sinistro della mappa.\nPer vedere il colpo catalogo di mobili dal bordo destro, è possibile aggiungere mobili da lì.\nPer eseguire una panoramica senza alterare il colpo selezione corrente con due dita insieme.\nPer selezionare più di un oggetto usare il lazo Seleziona Seleziona azioni oro multipla nel menu Altro.\nDue file dimostrativi SH3D saranno nella cartella download, selezionare più-> Apri casa.\nUtilizzare il browser per scaricare più file SH3D da internet, si aprirà dal browser.\nMenu-> Aiuto Attualmente non fa nulla.</string>
-    <string name="catalogview_welcometext">Premere l\'icona mobili metti in posizionare l\'elemento selezionato mobili sulla pianta nella posizione 0,0. In alternativa è possibile premere a lungo la voce (non c\'è il drag and drop).\nDa questo punto di vista è possibile importare catalogo biblioteche mobili, selezionare Menu-> biblioteca mobili Importa ...\nC\'è un file mobili demo SH3F nella cartella download.\nÈ possibile scaricare mobili e librerie di texture da internet, è necessario decomprimere loro possono utilizzare un esploratore di file prima di importarli.</string>
-    <string name="furnitureview_welcometext">Questa è una vista di tutti i mobili attualmente messi sul vostro piano.\nPer ora l\'unica funzione che si può fare è quella di modificare un elementi di visibilità.</string>
-    <string name="component3dview_welcometext">Questa è una vista dimensionale 3 del piano.\nDa qui è possibile utilizzare 1 o 2 dita per spostare la vista.\nSi prega di notare in tutti i casi il concetto è \"trascinare quello che sto guardando in giro\".\nSe siete alla ricerca dall\'alto verso il basso:\nUn dito scorrevole verso sinistra o destra ruoterà l\'aereo.\nUn dito di scorrimento verso l\'alto o verso il basso cambierà l\'altezza della fotocamera e quindi il campo.\nDue dita scorrere verso l\'alto o verso il basso si avvicinare la fotocamera al centro o altre da esso.\nDue dita laterale scorrevole a lato non farà nulla.\nSe siete alla ricerca dal punto di vista visita:\nUn dito scorrevole verso sinistra o destra ruoterà l\'aereo intorno a voi.\nUn dito di scorrimento verso l\'alto o verso il basso cambierà l\'angolo verticale la testa è puntato.\nDue dita di scorrimento verso l\'alto o verso il basso si muoverà la vista verso o away da voi.\nDue dita laterale scorrevole a lato si muoverà la vista a sinistra oa destra.\npunti di vista salvati possono essere trovati sotto l\'icona occhio.\nCambiare dall\'alto verso il basso per visitare può essere fatto per l\'icona di un uomo o di un piano.\nSe vedete una corrotta, prova l\'opzione deoptomize nel menu.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Utilizzare il gesto pizzico di zoom in e out.<br>
+Per vedere la tabella mobili con 1 strisciare il dito dal bordo sinistro della mappa.<br>
+Per vedere il colpo catalogo di mobili dal bordo destro, è possibile aggiungere mobili da lì.<br>
+Per eseguire una panoramica senza alterare il colpo selezione corrente con due dita insieme.<br>
+Per selezionare più di un oggetto usare il lazo Seleziona Seleziona azioni oro multipla nel menu Altro.<br>
+Due file dimostrativi SH3D saranno nella cartella download, selezionare più-> Apri casa.<br>
+Utilizzare il browser per scaricare più file SH3D da internet, si aprirà dal browser.<br>
+<p>Visita <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			  <br>e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>per maggiori informazioni.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Premere l\'icona mobili metti in posizionare l\'elemento selezionato mobili sulla pianta nella posizione 0,0.<br>
+In alternativa è possibile premere a lungo la voce (non c\'è il drag and drop).<br>
+Da questo punto di vista è possibile importare catalogo biblioteche mobili, selezionare Menu-> biblioteca mobili Importa ...<br>
+È possibile scaricare mobili e librerie di texture da internet, è necessario decomprimere loro possono utilizzare un esploratore di file prima di importarli.<br>
+</p><p>Visita <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			  <br>e <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+			     ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Questa è una vista di tutti i mobili attualmente messi sul vostro piano.<br>
+Per ora l\'unica funzione che si può fare è quella di modificare un elementi di visibilità.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Questa è una vista dimensionale 3 del piano.<br>
+Da qui è possibile utilizzare 1 o 2 dita per spostare la vista.<br>
+Si prega di notare in tutti i casi il concetto è "trascinare quello che sto guardando in giro".<br>
+Se siete alla ricerca dall\'alto verso il basso:<br>
+Un dito scorrevole verso sinistra o destra ruoterà l\'aereo.<br>
+Un dito di scorrimento verso l\'alto o verso il basso cambierà l\'altezza della fotocamera e quindi il campo.<br>
+Due dita scorrere verso l\'alto o verso il basso si avvicinare la fotocamera al centro o altre da esso.<br>
+Due dita laterale scorrevole a lato non farà nulla.<br>
+Se siete alla ricerca dal punto di vista visita:<br>
+Un dito scorrevole verso sinistra o destra ruoterà l\'aereo intorno a voi.<br>
+Un dito di scorrimento verso l\'alto o verso il basso cambierà l\'angolo verticale la testa è puntato.<br>
+Due dita di scorrimento verso l\'alto o verso il basso si muoverà la vista verso o away da voi.<br>
+Due dita laterale scorrevole a lato si muoverà la vista a sinistra oa destra.<br>
+punti di vista salvati possono essere trovati sotto l\'icona occhio.<br>
+Cambiare dall\'alto verso il basso per visitare può essere fatto per l\'icona di un uomo o di un piano.<br>
+Se vedete una corrotta, prova l\'opzione deoptomize nel menu.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">informazioni GPU</string>
     <string name="select_multiple">selezionare più</string>
@@ -26,5 +63,6 @@
               </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
               </p><p><font size="-2">Costruito su codice open source © Copyright 2006-2017 eTeks
               </font>]]></string>
+    <string name="helpmenu_no_work">Menu-> Aiuto Attualmente non fa nulla.</string>
 
 </resources>

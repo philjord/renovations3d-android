@@ -3,13 +3,47 @@
     <string name="app_name">Sanierungen 3D</string>
     <string name="alignment">Ausrichtung</string>
     <string name="magnetism">Magnetismus</string>
-    <string name="planview_welcometext">Verwenden Sie die Pinch-Geste in und heraus zu zoomen.\nUm zu sehen, die Möbel Tisch mit 1 Bewegung des Fingers von der linken Rand der Kartenansicht.\nUm den Möbelkatalog Swipe vom rechten Rand sehen, können Sie Möbel von dort hinzufügen.\nMit zwei Fingern zusammen ohne Änderung der aktuellen Auswahl Swipe zu schwenken.\nUm mehr als ein Objekt mehrere Goldaktien im Menü Mehr die Lasso Select Select verwenden.\nZwei SH3D Demo-Dateien werden in Ihrem Download-Ordner sein, wählen Sie More-> Öffnen nach Hause.\nBenutzen Sie Ihren Browser mehr SH3D Dateien aus dem Internet herunterladen, diese werden vom Browser öffnen.\nMenü-> Hilfe Zur Zeit nichts tut.</string>
-    <string name="catalogview_welcometext">Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0. Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).
-Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren ...
-Es ist eine Demo SH3F Möbel-Datei in Ihrem Download-Ordner.
-Sie können Möbel und Textur-Bibliotheken aus dem Internet herunterladen, müssen Sie entpacken em vor dem Import em einen Datei-Explorer verwenden, können.</string>
-    <string name="furnitureview_welcometext">Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.\nDenn nun ist die einzige Funktion, die Sie hier tun können, ist ein Artikel Sichtbarkeit zu ändern.</string>
-    <string name="component3dview_welcometext">Dies ist eine 3-dimensionale Ansicht des Plans.\nVon hier aus können Sie 1 oder 2 Finger verwenden, um die Ansicht zu bewegen.\nBitte beachten Sie in allen Fällen ist das Konzept \"ziehen, was bei etwa ich bin auf der Suche\".\nWenn Sie schauen, von oben nach unten:\nEin Finger Gleiten nach links oder rechts wird den Plan drehen.\nEin Finger Gleiten nach oben oder unten wird die Höhe der Kamera verändern und auch die Tonhöhe.\nZwei Finger Gleiten nach oben oder unten wird die Kamera näher an der Mitte oder weiter von ihm zu bewegen.\nZwei Finger von Seite zu Seite abgleitet, nicht alles tun.\nWenn Sie aus der Sicht Besuch suchen:\nEin Finger Gleiten nach links oder rechts wird den Plan um Sie herum drehen.\nEin Finger Gleiten nach oben oder unten wird die aufrechte Winkel ändern, um Ihren Kopf gerichtet ist.\nZwei Finger Gleiten nach oben oder unten wird der Blick in Richtung oder aways von Ihnen bewegen.\nZwei Finger und her bewegt wird der Blick nach links oder rechts bewegen.\nGespeichert Standpunkte unter dem Augensymbol zu finden.\nDer Wechsel von oben nach unten besuchen kann durch das Symbol eines Mannes oder eines Plans erfolgen.\nWenn Sie eine beschädigte Ansicht zu sehen, versuchen Sie bitte die deoptomize Option im Menü.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Verwenden Sie die Pinch-Geste in und heraus zu zoomen.<br>
+Um zu sehen, die Möbel Tisch mit 1 Bewegung des Fingers von der linken Rand der Kartenansicht.<br>
+Um den Möbelkatalog Swipe vom rechten Rand sehen, können Sie Möbel von dort hinzufügen.<br>
+Mit zwei Fingern zusammen ohne Änderung der aktuellen Auswahl Swipe zu schwenken.<br>
+Um mehr als ein Objekt mehrere Goldaktien im Menü Mehr die Lasso Select Select verwenden.<br>
+Zwei SH3D Demo-Dateien werden in Ihrem Download-Ordner sein, wählen Sie More-> Öffnen nach Hause.<br>
+Benutzen Sie Ihren Browser mehr SH3D Dateien aus dem Internet herunterladen, diese werden vom Browser öffnen.<br>
+</p><p>Besuchen Sie <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			<br>und <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>für mehr Informationen.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
+Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).<br>
+Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren ...<br>
+Sie können Möbel und Textur-Bibliotheken aus dem Internet herunterladen, müssen Sie entpacken em vor dem Import em einen Datei-Explorer verwenden, können.<br>
+</p><p>Besuchen Sie <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			<br>und <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+   ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.<br>
+Denn nun ist die einzige Funktion, die Sie hier tun können, ist ein Artikel Sichtbarkeit zu ändern.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Dies ist eine 3-dimensionale Ansicht des Plans.<br>
+Von hier aus können Sie 1 oder 2 Finger verwenden, um die Ansicht zu bewegen.<br>
+Bitte beachten Sie in allen Fällen ist das Konzept "ziehen, was bei etwa ich bin auf der Suche".<br>
+Wenn Sie schauen, von oben nach unten:<br>
+Ein Finger Gleiten nach links oder rechts wird den Plan drehen.<br>
+Ein Finger Gleiten nach oben oder unten wird die Höhe der Kamera verändern und auch die Tonhöhe.<br>
+Zwei Finger Gleiten nach oben oder unten wird die Kamera näher an der Mitte oder weiter von ihm zu bewegen.<br>
+Zwei Finger von Seite zu Seite abgleitet, nicht alles tun.<br>
+Wenn Sie aus der Sicht Besuch suchen:<br>
+Ein Finger Gleiten nach links oder rechts wird den Plan um Sie herum drehen.<br>
+Ein Finger Gleiten nach oben oder unten wird die aufrechte Winkel ändern, um Ihren Kopf gerichtet ist.<br>
+Zwei Finger Gleiten nach oben oder unten wird der Blick in Richtung oder aways von Ihnen bewegen.<br>
+Zwei Finger und her bewegt wird der Blick nach links oder rechts bewegen.<br>
+Gespeichert Standpunkte unter dem Augensymbol zu finden.<br>
+Der Wechsel von oben nach unten besuchen kann durch das Symbol eines Mannes oder eines Plans erfolgen.<br>
+Wenn Sie eine beschädigte Ansicht zu sehen, versuchen Sie bitte die deoptomize Option im Menü.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">Wählen Sie mehrere</string>
@@ -28,5 +62,6 @@ Sie können Möbel und Textur-Bibliotheken aus dem Internet herunterladen, müss
               </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
               </p><p><font size="-2">Errichtet auf Open Source Code © Copyright 2006-2017 by eTeks
               </font>]]></string>
+    <string name="helpmenu_no_work">Menü-> Hilfe Zur Zeit nichts tut.</string>
 
 </resources>

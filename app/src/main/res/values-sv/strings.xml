@@ -3,10 +3,49 @@
     <string name="app_name">Renoveringar 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
-    <string name="planview_welcometext">Använd nypa gest för att zooma in och ut.\nAtt se möbler bord med en fingrar från vänster kant av kartvyn.\nAtt se möbler katalogen svepa från den högra kanten, kan du lägga till möbler därifrån .\nAtt panorera utan att ändra den aktuella markeringen svepa med två fingrar tillsammans.\nOm du vill markera mer än ett objekt använder Lasso Välj Markera flera guld aktier på menyn Mer.\nTvå SH3D demofiler kommer att vara i din nedladdningar mapp väljer mer-> Öppna hem.\nAnvänd din webbläsare för att ladda ner fler SH3D filer från Internet, kommer de att öppna från webbläsaren.\nMeny-> Hjälp närvarande ingenting.</string>
-    <string name="catalogview_welcometext">Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0. Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).\nFrån denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek ...\nDet finns en demo SH3F möbler fil i mappen Hämtade filer.\nDu kan ladda ner möbler och textur bibliotek från Internet, måste du packa upp dem Kan med hjälp av en filhanterare innan du importerar dem.</string>
-    <string name="furnitureview_welcometext">Detta är en bild av alla möbler närvarande Placerad på din plan.\nFör nu den enda funktion du kan göra här är att ändra ett objekt synlighet.</string>
-    <string name="component3dview_welcometext">Detta är en 3 dimensionell bild av din plan.\nHärifrån kan du använda 1 eller 2 fingrar för att flytta vyn.\nObservera I samtliga fall begreppet är \"dra vad jag tittar på runt\".\nOm du letar uppifrån:\nEtt finger glidning åt vänster eller höger roterar planet.\nEtt finger glida uppåt eller nedåt kommer att ändra höjden av kameran och därmed planen.\nTvå fingrar glida uppåt eller nedåt kommer att flytta kameran närmare centrum eller längre bort från den.\nTvå fingrar glider från sida till sida kommer inte att göra någonting.\nOm du letar från besöket synvinkel:\nEtt finger glidning åt vänster eller höger kommer att rotera planet omkring dig.\nEtt finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln huvudet pekar.\nTvå fingrar glida uppåt eller nedåt kommer att flytta vyn mot eller aways från dig.\nTvå fingrar glider i sidled flyttar vyn åt vänster eller höger.\nSparade synpunkter kan hittas under ögonikonen.\nByte från uppifrån och ned för att besöka kan göras genom en symbol för en man eller en plan.\nOm du ser en korrumperad vy, försök alternativet deoptomize i menyn.</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+Använd nypa gest för att zooma in och ut.<br>
+Att se möbler bord med en fingrar från vänster kant av kartvyn.<br>
+Att se möbler katalogen svepa från den högra kanten, kan du lägga till möbler därifrån .<br>
+Att panorera utan att ändra den aktuella markeringen svepa med två fingrar tillsammans.<br>
+Om du vill markera mer än ett objekt använder Lasso Välj Markera flera guld aktier på menyn Mer.<br>
+Två SH3D demofiler kommer att vara i din nedladdningar mapp väljer mer-> Öppna hem.<br>
+Använd din webbläsare för att ladda ner fler SH3D filer från Internet, kommer de att öppna från webbläsaren.<br>
+ </p><p>Vänligen besök
+              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
+			  <br>och <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+              <br>för mer information.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
+Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).<br>
+Från denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek ...<br>
+Du kan ladda ner möbler och textur bibliotek från Internet, måste du packa upp dem Kan med hjälp av en filhanterare innan du importerar dem.<br>
+</p><p>Vänligen besök
+              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+			  <br>och <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+			     ]]>\n</string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+Detta är en bild av alla möbler närvarande Placerad på din plan.<br>
+För nu den enda funktion du kan göra här är att ändra ett objekt synlighet.<br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html>
+Detta är en 3 dimensionell bild av din plan.<br>
+Härifrån kan du använda 1 eller 2 fingrar för att flytta vyn.<br>
+Observera I samtliga fall begreppet är "dra vad jag tittar på runt".<br>
+Om du letar uppifrån:<br>
+Ett finger glidning åt vänster eller höger roterar planet.<br>
+Ett finger glida uppåt eller nedåt kommer att ändra höjden av kameran och därmed planen.<br>
+Två fingrar glida uppåt eller nedåt kommer att flytta kameran närmare centrum eller längre bort från den.<br>
+Två fingrar glider från sida till sida kommer inte att göra någonting.<br>
+Om du letar från besöket synvinkel:<br>
+Ett finger glidning åt vänster eller höger kommer att rotera planet omkring dig.<br>
+Ett finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln huvudet pekar.<br>
+Två fingrar glida uppåt eller nedåt kommer att flytta vyn mot eller aways från dig.<br>
+Två fingrar glider i sidled flyttar vyn åt vänster eller höger.<br>
+Sparade synpunkter kan hittas under ögonikonen.<br>
+Byte från uppifrån och ned för att besöka kan göras genom en symbol för en man eller en plan.<br>
+Om du ser en korrumperad vy, försök alternativet deoptomize i menyn.<br>
+]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">välja flera</string>
@@ -26,5 +65,6 @@
               </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
               </p><p><font size="-2">Byggd på öppen källkod © Copyright 2006-2017 eTeks
               </font>]]></string>
+    <string name="helpmenu_no_work">Meny-> Hjälp närvarande ingenting.</string>
 
 </resources>
