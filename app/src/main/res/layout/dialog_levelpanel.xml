@@ -26,13 +26,15 @@
                 android:text="nameLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"/>
             <EditText
                 android:id="@+id/levelpanel_nameTextField"
                 android:text="nameTextField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"/>
             </TableRow>
             <TableRow>
                 <TextView
