@@ -86,6 +86,8 @@
 
 
 
+-keep class com.google.android.gms.internal.** { *; }
+
 # Don't obfuscate any NDK/SDK code. This makes the debugging of stack traces in
 # in release builds easier.
 -keepnames class com.google.vr.ndk.** { *; }

@@ -2,7 +2,9 @@ package com.eteks.renovations3d.android.swingish;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,7 +34,7 @@ public class JTabbedPane
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId)
 			{
-				if(changeListener!=null)
+				if (changeListener != null)
 				{
 					changeListener.stateChanged(new ChangeListener.ChangeEvent());
 				}
@@ -51,6 +53,7 @@ public class JTabbedPane
 	{
 		this.changeListener = changeListener;
 	}
+
 	public void addOnLongClickListener(View.OnLongClickListener onLongClickListener)
 	{
 		this.onLongClickListener = onLongClickListener;
@@ -66,6 +69,7 @@ public class JTabbedPane
 	{
 		this.changeListener = null;
 	}
+
 	public void removeOnLongClickListener(View.OnLongClickListener onLongClickListener)
 	{
 		this.onLongClickListener = null;
@@ -97,10 +101,59 @@ public class JTabbedPane
 		radioButton.setTextColor(Color.BLACK);// cos my sexy white background
 		radioButton.setId(index);
 		radioButton.setOnLongClickListener(onLongClickListener);
+		radioButton.setOnTouchListener(new View.OnTouchListener()
+		{
+			private View lastTouchView = null;
+			private long lastTouchTime = 0;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent ev)
+			{
+				final int action = MotionEventCompat.getActionMasked(ev);
+
+				switch (action & MotionEvent.ACTION_MASK)
+				{
+					case MotionEvent.ACTION_DOWN:
+					{
+						RadioButton rb = (RadioButton) v;
+						if (!rb.isChecked())
+							rb.setChecked(true);
+						break;
+					}
+					case MotionEvent.ACTION_UP:
+					{
+						if (onLongClickListener != null)
+						{
+							if (lastTouchTime == 0 || lastTouchView != v || System.currentTimeMillis() - lastTouchTime > 500)
+							{
+								lastTouchTime = System.currentTimeMillis();
+								lastTouchView = v;
+							}
+							else
+							{
+								if (lastTouchView == v && System.currentTimeMillis() - lastTouchTime < 500)
+									onLongClickListener.onLongClick(v);
+
+								// either way on a second touch clear the record
+								lastTouchTime = 0;
+								lastTouchView = null;
+							}
+						}
+						break;
+					}
+				}
+				return true;
+			}
+		});
 		radioGrp.addView(radioButton, index, lParams);
 
 		buttons.add(index, radioButton);
 		levelLabels.add(index, levelLabel);
+
+		// the setselected come through too late, so let's just auto selct anything that is added
+		// I don;t know why the listeners in multilevel are set in proper order.
+		radioButton.setChecked(true);
+
 		return radioButton;
 	}
 
@@ -121,6 +174,15 @@ public class JTabbedPane
 
 	public void setSelectedIndex(int i)
 	{
-		radioGrp.check(i);
+		if( i < buttons.size())
+		{
+			RadioButton rb = buttons.get(i);
+			if (rb != null)
+				rb.setChecked(true);
+		}
+		else
+		{
+			// I could record this desire and select it when the level is added after
+		}
 	}
 }

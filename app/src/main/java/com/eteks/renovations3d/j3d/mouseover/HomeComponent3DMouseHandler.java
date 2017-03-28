@@ -46,6 +46,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 	private Point2f lastDownLocation = null;
 	private long lastUpTime = 0;
 	private Point2f lastUpLocation = null;// do I need this
+	private Selectable lastDownObject = null;
 
 	private Point2f currentLocation = new Point2f();
 
@@ -158,7 +159,8 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 								this.home.setSelectedItems(items);
 								this.home.setAllLevelsSelection(true);
 
-								if (tapCount == 2)
+								// double tap on the same object
+								if (tapCount == 2 && lastDownObject == clickedSelectable)
 								{
 									// Modify selected item on a double click
 									if (clickedSelectable instanceof Wall)
@@ -181,6 +183,8 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 									//TODO: you know the ground could be selectable and editable, but just not have an outline?
 									// and it could bring up the 3d attributes window
 								}
+
+								lastDownObject = clickedSelectable;
 							}
 						}
 					}
