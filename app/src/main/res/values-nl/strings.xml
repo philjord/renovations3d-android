@@ -27,22 +27,18 @@ Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.<br>
 Voor nu de enige functie die u hier kunt doen is om een items zichtbaarheid te wijzigen.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Dit is een 3-dimensionale weergave van uw plan.<br>
-Vanaf hier kunt u gebruik maken van 1 of 2 vingers om de weergave te verplaatsen.<br>
-Let op: in alle gevallen het concept is "slepen wat ik ben op zoek naar rond".<br>
-Als u op zoek bent van boven naar beneden:<br>
-Eén vinger schuiven naar links of rechts zal het vliegtuig te roteren.<br>
-Een vinger schuiven op of beneden de hoogte van de camera en dus de toonhoogte veranderen.<br>
-Twee vingers schuiven omhoog of omlaag zal de camera dichter bij het centrum of verder van het.<br>
-Twee vingers glijden kant naar de andere kant zal niets doen.<br>
-Als u op zoek bent vanaf het bezoek oogpunt:<br>
-Eén vinger schuiven naar links of rechts zal het vliegtuig draaien om je heen.<br>
-Eén vinger glijden omhoog of omlaag zal de verticale hoek je hoofd is gericht te veranderen.<br>
-Twee vingers glijden omhoog of omlaag zal het zicht op of aways verplaatsen van je.<br>
-Twee vingers glijden van links naar rechts zal het uitzicht naar links of rechts.<br>
-Opgeslagen standpunten kan worden gevonden onder het pictogram oog.<br>
-Veranderen van boven naar beneden te doen kan door het pictogram van een mens of een plan.<br>
-Als je een corrupte uitzicht, probeer dan de optie deoptomize in het menu.<br>
+Dit is een 3-dimensionale weergave van uw plan. <br>
+Als u op zoek bent van boven naar beneden: <br>
+Eén vinger schuiven naar links of rechts zal het plan te draaien. <br>
+Eén vinger glijden omhoog of omlaag zal de hoogte van de camera en ook de toonhoogte te veranderen. <br>
+Pinch zal de camera dichter bij het centrum of verder van het. <br>
+Als u op zoek bent vanaf het bezoek oogpunt: <br>
+Eén vinger schuiven naar links of rechts zal het plan om je heen draaien. <br>
+Eén vinger glijden omhoog of omlaag zal de verticale hoek je hoofd is gericht te veranderen. <br>
+Pinch zal je vooruit of achteruit. <br>
+Saved standpunten is te vinden onder het pictogram oog. <br>
+Het veranderen van boven naar beneden om te bezoeken kan worden gedaan door het icoon van een man of het pictogram van een plan. <br>
+Als u een corrupte uitzicht, probeer dan de optie deoptomize in het menu. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

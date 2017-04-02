@@ -27,22 +27,18 @@ Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.<br>
 Denn nun ist die einzige Funktion, die Sie hier tun können, ist ein Artikel Sichtbarkeit zu ändern.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Dies ist eine 3-dimensionale Ansicht des Plans.<br>
-Von hier aus können Sie 1 oder 2 Finger verwenden, um die Ansicht zu bewegen.<br>
-Bitte beachten Sie in allen Fällen ist das Konzept "ziehen, was bei etwa ich bin auf der Suche".<br>
-Wenn Sie schauen, von oben nach unten:<br>
-Ein Finger Gleiten nach links oder rechts wird den Plan drehen.<br>
-Ein Finger Gleiten nach oben oder unten wird die Höhe der Kamera verändern und auch die Tonhöhe.<br>
-Zwei Finger Gleiten nach oben oder unten wird die Kamera näher an der Mitte oder weiter von ihm zu bewegen.<br>
-Zwei Finger von Seite zu Seite abgleitet, nicht alles tun.<br>
-Wenn Sie aus der Sicht Besuch suchen:<br>
-Ein Finger Gleiten nach links oder rechts wird den Plan um Sie herum drehen.<br>
-Ein Finger Gleiten nach oben oder unten wird die aufrechte Winkel ändern, um Ihren Kopf gerichtet ist.<br>
-Zwei Finger Gleiten nach oben oder unten wird der Blick in Richtung oder aways von Ihnen bewegen.<br>
-Zwei Finger und her bewegt wird der Blick nach links oder rechts bewegen.<br>
-Gespeichert Standpunkte unter dem Augensymbol zu finden.<br>
-Der Wechsel von oben nach unten besuchen kann durch das Symbol eines Mannes oder eines Plans erfolgen.<br>
-Wenn Sie eine beschädigte Ansicht zu sehen, versuchen Sie bitte die deoptomize Option im Menü.<br>
+Dies ist eine dreidimensionale Ansicht Ihres Planes. <br>
+Wenn Sie von oben nach unten schauen: <br>
+Ein Finger, der nach links oder rechts schiebt, dreht den Plan<br>
+Ein Finger, der nach oben oder unten gleitet, ändert die Höhe der Kamera und auch die Tonhöhe<br>
+Pinch bewegt die Kamera näher an die Mitte oder weiter davon<br>
+Wenn Sie von der Besuchssicht aussehen: <br>
+Ein Finger, der nach links oder rechts schiebt, dreht den Plan um dich herum<br>
+Ein Finger, der nach oben oder unten gleitet, ändert den senkrechten Winkel, den Ihr Kopf zeigt<br>
+Pinch bewegt dich vorwärts oder rückwärts<br>
+Gespeicherte Standpunkte können unter dem Augensymbol gefunden werden<br>
+Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikone eines Plans erfolgen<br>
+Wenn Sie eine korrupte Ansicht sehen, versuchen Sie bitte die Option deoptomize im Menü<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

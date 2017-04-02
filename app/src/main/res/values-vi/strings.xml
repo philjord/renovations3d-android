@@ -27,22 +27,18 @@ Bạn có thể tải về nội thất và kết cấu các thư viện từ in
 Hiện tại chức năng duy nhất bạn có thể làm ở đây là thay đổi một tầm nhìn mục.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Đây là một cái nhìn 3 chiều của kế hoạch của bạn.<br>
-Từ đây bạn có thể sử dụng 1 hoặc 2 ngón tay để di chuyển xem.<br>
-Xin lưu ý trong tất cả các trường hợp, các khái niệm này là "kéo những gì tôi đang nhìn xung quanh".<br>
-Nếu bạn đang tìm kiếm từ trên xuống:<br>
-Một ngón tay trượt sang trái hoặc phải sẽ quay mặt phẳng.<br>
-Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi chiều cao của máy ảnh và do đó sân.<br>
-Hai ngón tay trượt lên hoặc xuống sẽ di chuyển camera đến gần trung tâm hoặc thêm từ nó.<br>
-Hai ngón tay trượt bên này sang bên sẽ không làm bất cứ điều gì.<br>
-Nếu bạn đang tìm kiếm từ các điểm truy cập của xem:<br>
-Một ngón tay trượt sang trái hoặc phải sẽ quay mặt phẳng xung quanh bạn.<br>
-Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi góc thẳng đứng đầu của bạn là chỉ.<br>
-Hai ngón tay trượt lên hoặc xuống sẽ di chuyển xem hướng hoặc aways từ bạn.<br>
-Hai ngón tay trượt bên này sang bên kia sẽ di chuyển phía trái hoặc phải.<br>
-điểm lưu xem có thể được tìm thấy dưới biểu tượng con mắt.<br>
-Thay đổi từ trên xuống đến thăm có thể được thực hiện bằng các biểu tượng của một người đàn ông hay một kế hoạch.<br>
-Nếu bạn nhìn thấy một cái nhìn tham nhũng, hãy thử các tùy chọn deoptomize trong menu.<br>
+Đây là một cái nhìn 3 chiều về kế hoạch của bạn. <br>
+Nếu bạn đang tìm kiếm từ trên xuống dưới: <br>
+Một ngón tay trượt trái hoặc phải sẽ xoay kế hoạch <br> <br>
+Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi chiều cao của máy ảnh cũng như mức độ. <br>
+Chụm sẽ di chuyển máy ảnh gần trung tâm hoặc xa hơn từ nó. <br>
+Nếu bạn đang tìm kiếm từ điểm truy cập của xem: <br>
+Một ngón tay trượt trái hoặc phải sẽ xoay kế hoạch xung quanh bạn. <br>
+Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi góc thẳng đứng đầu của bạn được trỏ. <br>
+Pinch sẽ di chuyển bạn về phía trước hoặc ngược lại. <br>
+Bạn có thể tìm thấy các điểm được lưu trên biểu tượng mắt. <br>
+Thay đổi từ trên xuống dưới để truy cập có thể được thực hiện bằng biểu tượng của một người đàn ông hoặc biểu tượng của một kế hoạch <br>
+Nếu bạn thấy một chế độ xem hỏng, vui lòng thử tùy chọn deoptomize trong trình đơn <br> <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Thông tin GPU</string>

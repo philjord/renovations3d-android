@@ -27,22 +27,18 @@ Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.<br>
 Şimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Bu planın bir 3 boyutlu görünüşüdür.<br>
-Buradan görünümü taşımak için 1 veya 2 parmak kullanabilirsiniz.<br>
-"Etrafıma bakıyorum Ne sürüklemek" kavram bütün davaları içinde unutmayınız.<br>
-Eğer yukarıdan aşağı arıyorsanız:<br>
-Bir parmağınızı sola kayar ya da sağa uçağı dönecektir.<br>
-Bir parmak kameranın yüksekliğini ve dolayısıyla adım değiştirecek aşağı yukarı kaydırarak veya.<br>
-İki parmak ondan daha yakın merkeze ya da daha fazla kamerayı hareket edecek aşağı yukarı kaydırarak veya.<br>
-tarafına yan sürgülü iki parmak bir şey yapmayacağım.<br>
-Eğer bakış ziyareti noktasından arıyorsanız:<br>
-Bir parmağınızı sola kayar veya sağa çevrenizdeki uçağı dönecektir.<br>
-Bir parmak başınızı işaret edilmektedir dikey açısını değiştirecek aşağı yukarı kaydırarak veya.<br>
-İki parmak sizden doğru görünüm veya uzağa hareket edecektir aşağı yukarı kaydırarak veya.<br>
-görünümü hareket edecek yan yana kayar iki parmağınızı sola veya sağa.<br>
-bakış Kaydedilen noktaları göz simgesinin altında bulunabilir.<br>
-Bir erkek veya bir planın simgesiyle yapılabilir ziyaret etmek için yukarıdan aşağıya değiştirilmesi.<br>
-Eğer bozuk bir görünüm görürseniz, menüde deoptomize seçeneği deneyin.<br>
+Bu, planınızın 3 boyutlu bir görünümdür. <br>
+Yukarıdan aşağıya doğru arıyorsanız: <br>
+Sola veya sağa kayan bir parmak planı döndürür. <br>
+Bir parmağınız yukarı veya aşağı doğru kayar fotoğraf makinesinin yüksekliğini ve tonunu da değiştirir. <br>
+Çimdik kamera merkeze daha da yakınlaştıracaktır. <br>
+Ziyaret açısından baktıysanız: <br>
+Sola veya sağa kayan bir parmak etrafınızdaki planı döndürecektir. <br>
+Bir parmak yukarı veya aşağıya doğru kaymak, başınızın üzerinde durduğu dikey açıyı değiştirir. <br>
+Pinch seni ileri geri hareket ettirecek. <br>
+Kayıt simgeleri göz simgesinin altında bulunabilir. <br>
+Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir planın simgesi ile yapılabilir. <br>
+Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini deneyin. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU bilgi</string>

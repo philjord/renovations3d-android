@@ -27,22 +27,18 @@ Questa è una vista di tutti i mobili attualmente messi sul vostro piano.<br>
 Per ora l\'unica funzione che si può fare è quella di modificare un elementi di visibilità.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Questa è una vista dimensionale 3 del piano.<br>
-Da qui è possibile utilizzare 1 o 2 dita per spostare la vista.<br>
-Si prega di notare in tutti i casi il concetto è "trascinare quello che sto guardando in giro".<br>
-Se siete alla ricerca dall\'alto verso il basso:<br>
-Un dito scorrevole verso sinistra o destra ruoterà l\'aereo.<br>
-Un dito di scorrimento verso l\'alto o verso il basso cambierà l\'altezza della fotocamera e quindi il campo.<br>
-Due dita scorrere verso l\'alto o verso il basso si avvicinare la fotocamera al centro o altre da esso.<br>
-Due dita laterale scorrevole a lato non farà nulla.<br>
-Se siete alla ricerca dal punto di vista visita:<br>
-Un dito scorrevole verso sinistra o destra ruoterà l\'aereo intorno a voi.<br>
-Un dito di scorrimento verso l\'alto o verso il basso cambierà l\'angolo verticale la testa è puntato.<br>
-Due dita di scorrimento verso l\'alto o verso il basso si muoverà la vista verso o away da voi.<br>
-Due dita laterale scorrevole a lato si muoverà la vista a sinistra oa destra.<br>
-punti di vista salvati possono essere trovati sotto l\'icona occhio.<br>
-Cambiare dall\'alto verso il basso per visitare può essere fatto per l\'icona di un uomo o di un piano.<br>
-Se vedete una corrotta, prova l\'opzione deoptomize nel menu.<br>
+Questa è una vista dimensionale 3 del piano. <br>
+Se siete alla ricerca dall'alto verso il basso: <br>
+Un dito scorrevole verso sinistra o destra ruoterà il piano. <br>
+Un dito di scorrimento verso l'alto o verso il basso altererà l'altezza della fotocamera e anche in campo. <br>
+Pinch si sposterà la telecamera più vicina al centro o ulteriori da esso. <br>
+Se siete alla ricerca dal punto di vista visita: <br>
+Un dito scorrevole verso sinistra o destra ruoterà il piano intorno a voi. <br>
+Un dito di scorrimento verso l'alto o verso il basso altererà l'angolo verticale la testa è puntato. <br>
+Pinch si sposta in avanti o indietro. <br>
+Salvati i punti di vista possono essere trovati sotto l'icona occhio. <br>
+Cambiare dall'alto verso il basso per visitare può essere fatto per l'icona di un uomo o l'icona di un piano. <br>
+Se vedete una corrotta, prova l'opzione deoptomize nel menu. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">informazioni GPU</string>

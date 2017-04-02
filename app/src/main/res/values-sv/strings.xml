@@ -29,22 +29,18 @@ Detta är en bild av alla möbler närvarande Placerad på din plan.<br>
 För nu den enda funktion du kan göra här är att ändra ett objekt synlighet.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Detta är en 3 dimensionell bild av din plan.<br>
-Härifrån kan du använda 1 eller 2 fingrar för att flytta vyn.<br>
-Observera I samtliga fall begreppet är "dra vad jag tittar på runt".<br>
-Om du letar uppifrån:<br>
-Ett finger glidning åt vänster eller höger roterar planet.<br>
-Ett finger glida uppåt eller nedåt kommer att ändra höjden av kameran och därmed planen.<br>
-Två fingrar glida uppåt eller nedåt kommer att flytta kameran närmare centrum eller längre bort från den.<br>
-Två fingrar glider från sida till sida kommer inte att göra någonting.<br>
-Om du letar från besöket synvinkel:<br>
-Ett finger glidning åt vänster eller höger kommer att rotera planet omkring dig.<br>
-Ett finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln huvudet pekar.<br>
-Två fingrar glida uppåt eller nedåt kommer att flytta vyn mot eller aways från dig.<br>
-Två fingrar glider i sidled flyttar vyn åt vänster eller höger.<br>
-Sparade synpunkter kan hittas under ögonikonen.<br>
-Byte från uppifrån och ned för att besöka kan göras genom en symbol för en man eller en plan.<br>
-Om du ser en korrumperad vy, försök alternativet deoptomize i menyn.<br>
+Detta är en 3-dimensionell bild av din plan. <br>
+Om du letar uppifrån och ned: <br>
+Ett finger glidning åt vänster eller höger roterar planen. <br>
+Ett finger glida uppåt eller nedåt kommer att ändra höjden på kameran och även planen. <br>
+Nypa kommer att flytta kameran närmare centrum eller längre bort från den. <br>
+Om du letar från besöket synvinkel: <br>
+Ett finger glidning åt vänster eller höger roterar planen omkring dig. <br>
+Ett finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln huvudet pekar. <br>
+Nypa kommer att flytta dig framåt eller bakåt. <br>
+Sparade synpunkter kan hittas under ögonikonen . <br>
+Byte från toppen och nedåt för att besöka kan göras genom ikonen för en man eller ikonen för en plan. <br>
+Om du ser en korrumperad syn, försök alternativet deoptomize i menyn. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

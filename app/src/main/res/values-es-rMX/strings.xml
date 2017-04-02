@@ -27,22 +27,18 @@ Esta es una vista de todos los muebles Actualmente Colocado en su plan.<br>
 Por ahora la única función que puede hacer aquí es cambiar la visibilidad de los elementos.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
-Esta es una vista en 3 dimensiones de su plan.<br>
-Desde aquí se puede utilizar 1 o 2 dedos para mover la vista.<br>
-Por favor, tenga en cuenta en todos los casos es el concepto de "arrastrar lo que estoy buscando en alrededor".<br>
-Si usted está buscando de arriba hacia abajo:<br>
-Un dedo deslizando hacia la izquierda o hacia la derecha hará girar el avión.<br>
-Un dedo se deslice hacia arriba o hacia abajo va a alterar la altura de la cámara y por lo tanto el terreno de juego.<br>
-Dos dedos deslizándose hacia arriba o hacia abajo se moverá la cámara más cerca del centro o más lejos de ella.<br>
-Dos dedos laterales correderas hacia el lado no harán nada.<br>
-Si está buscando desde el punto de vista de la visita:<br>
-Un dedo deslizando hacia la izquierda o hacia la derecha girará el plano que le rodean.<br>
-Un dedo se deslice hacia arriba o hacia abajo va a alterar el ángulo vertical se señaló la cabeza.<br>
-Dos dedos deslizándose hacia arriba o hacia abajo se moverá la vista hacia o domicilio de usted.<br>
-Dos dedos lado a lado de deslizamiento se moverá la vista hacia la izquierda o la derecha.<br>
-puntos de vista guardados se pueden encontrar en el icono del ojo.<br>
-El cambio de arriba hacia abajo para visitar se puede hacer mediante el icono de un hombre o de un plan.<br>
-Si ve una vista corrupta, por favor intente la opción deoptomize en el menú.<br>
+Esta es una vista tridimensional de su plan. <br>
+Si usted está mirando de arriba abajo: <br>
+Un dedo que se desliza hacia la izquierda o hacia la derecha hará girar el plan.<br>
+Un dedo que se deslice hacia arriba o hacia abajo alterará la altura de la cámara y también el tono.<br>
+Pinch moverá la cámara más cerca del centro o más lejos de ella.<br>
+Si está buscando desde el punto de vista de la visita: <br>
+Un dedo que se desliza hacia la izquierda o hacia la derecha hará girar el plan alrededor de usted.<br>
+Un dedo que se desliza hacia arriba o hacia abajo alterará el ángulo vertical de la cabeza.<br>
+El pellizco lo moverá hacia delante o hacia atrás.<br>
+Los puntos de vista guardados se pueden encontrar bajo el icono de ojo. <br>
+Cambiar de arriba abajo a la visita se puede hacer por el icono de un hombre o el icono de un plan.<br>
+Si ves una vista corrupta, prueba la opción deoptomize en el menú. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Datos de la GPU</string>

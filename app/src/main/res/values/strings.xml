@@ -28,20 +28,16 @@ For now the only function you can do here is to change an items visibility.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html><p>
 This is a 3 dimensional view of your plan. <br>
-From here you can use 1 or 2 fingers to move the view.<br>
-Please note in all cases the concept is "drag what I'm looking at around".<br>
 If you are looking from the top down:<br>
 One finger sliding left or right will rotate the plan.<br>
 One finger sliding up or down will alter the height of the camera and also the pitch.<br>
-Two fingers sliding up or down will move the camera closer to the center or further from it.<br>
-Two fingers sliding side to side will not do anything.<br>
+Pinch will move the camera closer to the center or further from it.<br>
 If you are looking from the visit point of view:<br>
 One finger sliding left or right will rotate the plan around you.<br>
 One finger sliding up or down will alter the vertical angle your head is pointed.<br>
-Two fingers sliding up or down will move the view towards or away from you.<br>
-Two fingers sliding side to side will move the view left or right.<br>
+Pinch will move you forward or backward.<br>
 Saved points of view can be found under the eye icon.<br>
-Changing from top down to visit can be done by the icon of a man or a plan.<br>
+Changing from top down to visit can be done by the icon of a man or the icon of a plan.<br>
 If you see a corrupt view, please try the deoptomize option in the menu.<br>
 ]]></string>
 
