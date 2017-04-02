@@ -2814,7 +2814,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						for (Room room : home.getRooms())
 						{
 							Level roomLevel = room.getLevel();
-							if (room != updatedRoom && (roomLevel == null
+							//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/656a58a5?duration=2592000000
+							// added || updatedRoomLevel == null
+							if (room != updatedRoom && (roomLevel == null || updatedRoomLevel == null
 									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight()
 									- (roomLevel.getElevation() + roomLevel.getHeight())) < 1E-5
 									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight()

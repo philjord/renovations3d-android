@@ -19,6 +19,7 @@
  */
 package com.eteks.renovations3d.android;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -196,7 +197,15 @@ public class ThreadedTaskPanel extends LinearLayout//extends JPanel
 					  // Ensure modifications are done in EDT
 					  invokeLater(new Runnable() {
 						  public void run() {
-					  dialog.show();}});
+							  // very rare crash if renovs is dispaose by now
+							  //https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/2fea2349?duration=2592000000
+							  // can't reporduce by give this a whorl
+							  //http://stackoverflow.com/questions/7811993/error-binderproxy45d459c0-is-not-valid-is-your-activity-running
+							 if(!(context instanceof Activity) || !((Activity) context).isFinishing())
+							  {
+								  dialog.show();
+							  }
+					  }});
 					  // moved up to cancel button
 					 /* if (ThreadedTaskPanel.this.taskRunning
 							  && (cancelButton == optionPane.getValue()
