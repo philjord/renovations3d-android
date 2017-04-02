@@ -270,22 +270,25 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		PlanController.Mode currentMode = planController.getMode();
 
-		if (currentMode != PlanController.Mode.LABEL_CREATION)
+
+		if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION)
 		{
-			if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION)
+			//TODO:  the below does not set the current dim line in place for some reason, nor a mouse release
+		}
+		else if (currentMode == PlanController.Mode.WALL_CREATION
+				|| currentMode == PlanController.Mode.ROOM_CREATION
+				|| currentMode == PlanController.Mode.POLYLINE_CREATION)
+		{
+			// need to simulate a press on the last dragged position to make it stick
+			Point2f lastDrag = planComponent.getLastDragLocation();
+			if (lastDrag.x > 0 && lastDrag.y > 0)
 			{
-				//TODO:  the below does not set the current dim line in place for some reason, nor a mouse release
-			}
-			else
-			{
-				// need to simulate a press on the last dragged position to make it stick
-				Point2f lastDrag = planComponent.getLastDragLocation();
-				if (lastDrag.x > 0 && lastDrag.y > 0)
-				{
-					planController.pressMouse(lastDrag.x, lastDrag.y, 2, false, false, false, false);
-				}
+				planController.pressMouse(lastDrag.x, lastDrag.y, 2, false, false, false, false);
 			}
 		}
+
+		// pan, selection and labels do nothing
+
 
 		//planController.escape();// in case we are doing a create now
 		// need special handling if current

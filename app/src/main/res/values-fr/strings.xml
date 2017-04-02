@@ -28,17 +28,17 @@ Pour l\'instant la seule fonction disponible permet de changer la visibilité de
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
 Ceci est une vue en 3D de votre plan.<br>
-La navigation dans la 3D s'effectue en déplaçant les doigts à l'écran.<br>
+La navigation dans la 3D s\'effectue en déplaçant les doigts à l\'écran.<br>
 Si vous êtes en vue de haut :<br>
-Le déplacement du doigt vers la gauche ou la droite fait tourner la scène autour d'elle même.<br>
+Le déplacement du doigt vers la gauche ou la droite fait tourner la scène autour d\'elle même.<br>
 Le déplacement du doigt vers le haut ou le bas modifie la hauteur du point de vue.<br>
 Pincer vers le haut ou le bas approche ou éloigne le point du vue du centre.<br>
 Si vous êtes en visite virtuelle :<br>
 Le déplacement du doigt fait pivoter votre point de vue autour de vous sans le déplacer.<br>
-Pincer déplace votre point de vue d'avant en arrière.<br>
-Les points de vue enregistrés sont listés sous l'icône représentant un œoeil.<br>
-Le passage de la vue de haut à la visite virtuelle s'effectue avec l'icône représentant un visiteur ou un plan.<br>
-Si vous voyez une vue corrompue, essayez l'option deoptomize dans le menu.<br>
+Pincer déplace votre point de vue d\'avant en arrière.<br>
+Les points de vue enregistrés sont listés sous l\'icône représentant un œoeil.<br>
+Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan.<br>
+Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomise 3d</string>
     <string name="menu_show3dcaps">infos GPU</string>

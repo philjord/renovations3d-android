@@ -28,17 +28,17 @@ Per ora l\'unica funzione che si può fare è quella di modificare un elementi d
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html>
 Questa è una vista dimensionale 3 del piano. <br>
-Se siete alla ricerca dall'alto verso il basso: <br>
+Se siete alla ricerca dall\'alto verso il basso: <br>
 Un dito scorrevole verso sinistra o destra ruoterà il piano. <br>
-Un dito di scorrimento verso l'alto o verso il basso altererà l'altezza della fotocamera e anche in campo. <br>
+Un dito di scorrimento verso l\'alto o verso il basso altererà l\'altezza della fotocamera e anche in campo. <br>
 Pinch si sposterà la telecamera più vicina al centro o ulteriori da esso. <br>
 Se siete alla ricerca dal punto di vista visita: <br>
 Un dito scorrevole verso sinistra o destra ruoterà il piano intorno a voi. <br>
-Un dito di scorrimento verso l'alto o verso il basso altererà l'angolo verticale la testa è puntato. <br>
+Un dito di scorrimento verso l\'alto o verso il basso altererà l\'angolo verticale la testa è puntato. <br>
 Pinch si sposta in avanti o indietro. <br>
-Salvati i punti di vista possono essere trovati sotto l'icona occhio. <br>
-Cambiare dall'alto verso il basso per visitare può essere fatto per l'icona di un uomo o l'icona di un piano. <br>
-Se vedete una corrotta, prova l'opzione deoptomize nel menu. <br>
+Salvati i punti di vista possono essere trovati sotto l\'icona occhio. <br>
+Cambiare dall\'alto verso il basso per visitare può essere fatto per l\'icona di un uomo o l\'icona di un piano. <br>
+Se vedete una corrotta, prova l\'opzione deoptomize nel menu. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">informazioni GPU</string>
