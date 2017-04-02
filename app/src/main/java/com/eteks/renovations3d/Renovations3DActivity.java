@@ -3,15 +3,19 @@ package com.eteks.renovations3d;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +24,13 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
@@ -47,9 +54,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javaxswing.ImageIcon;
 
 
 /**
@@ -316,8 +326,24 @@ public class Renovations3DActivity extends FragmentActivity
 				t2.start();
 				return true;
 			case R.id.menu_help:
-				if (renovations3D.getHomeController() != null)
-					renovations3D.getHomeController().help();
+				//if (renovations3D.getHomeController() != null)
+				//	renovations3D.getHomeController().help();
+
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setTitle("Notice");
+				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D User Interface"));
+				dialog.setPositiveButton("Ok",  new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						//TODO: this is a short term fix, I need to make a Renovations 3D branded version of this site
+						Uri webpage = Uri.parse("http://www.sweethome3d.com/userGuide.jsp#drawingWalls");
+						Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+						if (intent.resolveActivity(getPackageManager()) != null) {
+							startActivity(intent);
+						}}});
+				dialog.create().show();
+
 				return true;
 			case R.id.menu_about:
 				if (renovations3D.getHomeController() != null)

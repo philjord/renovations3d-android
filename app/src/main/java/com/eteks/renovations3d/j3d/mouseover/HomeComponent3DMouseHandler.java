@@ -12,6 +12,7 @@ import org.jogamp.java3d.SceneGraphPath;
 import org.jogamp.vecmath.Point2d;
 import org.jogamp.vecmath.Point2f;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.Label;
@@ -99,8 +100,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 				case MotionEvent.ACTION_DOWN:
 				{
 					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-
-					lastDownTime = System.currentTimeMillis();
+					lastDownTime = ev.getEventTime();
 					lastDownLocation = new Point2f(currentLocation);
 					// tell the caller they can have te event if they want too
 					return false;
@@ -112,79 +112,80 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 					if (lastDownTime == 0)
 						return cancel();
 
+
 					// single tap is a down then up in 200 ms, double tap is a up then up in 600ms?
 
 					// are we fast enough to be a tap not a hold?
-					if ((System.currentTimeMillis() - lastDownTime) < SINGLE_TAP_MAX)
+					if ((ev.getEventTime() - lastDownTime) < SINGLE_TAP_MAX)
 					{
-						int tapCount = 1;
-
-						// are we close enough to any previous tap to be a double tap?
-						if (lastUpTime != 0 && (System.currentTimeMillis() - lastUpTime) < DOUBLE_TAP_MAX)
+						// don't allow any selection or editing whilst a dialog is up
+						if (Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
 						{
-							tapCount = 2;
-							// try to avoid triples
-							lastUpTime = 0;
-							//lastUpLocation = null;
-						}
-						else
-						{
-							// remember the up times for the next time around
-							lastUpTime = System.currentTimeMillis();
-							//lastUpLocation = new Point2f(currentLocation);
-						}
+							int tapCount = 1;
 
-						pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
-
-						pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
-
-						long start = System.currentTimeMillis();
-						PickInfo pickInfo = pickCanvas.pickClosest();
-						System.out.println("time to pick closest = " + (System.currentTimeMillis() - start) + " If this number is greater than " + DOUBLE_TAP_MAX + ", trouble ");
-						//PJPJP desperate attempt to allow double taps on complex gear, anything over 1200 will still fail to edit, like chandelier in mezz
-						lastUpTime += (System.currentTimeMillis() - start) / 2;
-						if (pickInfo != null)
-						{
-							SceneGraphPath sg = pickInfo.getSceneGraphPath();
-							Node pickedParent = sg.getNode(sg.nodeCount() - 1);
-							Object userData = pickedParent.getUserData();
-
-							if (userData instanceof Selectable)
+							// are we close enough to any previous tap to be a double tap?
+							if (lastUpTime != 0 && (ev.getEventTime() - lastUpTime) < DOUBLE_TAP_MAX)
 							{
-								Selectable clickedSelectable = (Selectable) userData;
-								ArrayList<Selectable> items = new ArrayList<Selectable>();
-								items.add(clickedSelectable);
+								tapCount = 2;
+								// try to avoid triples
+								lastUpTime = 0;
+								//lastUpLocation = null;
+							}
+							else
+							{
+								// remember the up times for the next time around
+								lastUpTime = ev.getEventTime();
+								//lastUpLocation = new Point2f(currentLocation);
+							}
 
-								// this can be a very slow process let's get off the edt shall we?
-								this.home.setSelectedItems(items);
-								this.home.setAllLevelsSelection(true);
+							pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
 
-								// double tap on the same object
-								if (tapCount == 2 && lastDownObject == clickedSelectable)
+							pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
+
+							PickInfo pickInfo = pickCanvas.pickClosest();
+							if (pickInfo != null)
+							{
+								SceneGraphPath sg = pickInfo.getSceneGraphPath();
+								Node pickedParent = sg.getNode(sg.nodeCount() - 1);
+								Object userData = pickedParent.getUserData();
+
+								if (userData instanceof Selectable)
 								{
-									// Modify selected item on a double click
-									if (clickedSelectable instanceof Wall)
+									Selectable clickedSelectable = (Selectable) userData;
+									ArrayList<Selectable> items = new ArrayList<Selectable>();
+									items.add(clickedSelectable);
+
+									// this can be a very slow process let's get off the edt shall we?
+									this.home.setSelectedItems(items);
+									this.home.setAllLevelsSelection(true);
+
+									// double tap on the same object
+									if (tapCount == 2 && lastDownObject == clickedSelectable)
 									{
-										controller.modifySelectedWalls();
-									}
-									else if (clickedSelectable instanceof HomePieceOfFurniture)
-									{
-										controller.modifySelectedFurniture();
-									}
-									else if (clickedSelectable instanceof Room)
-									{
-										controller.modifySelectedRooms();
-									}
-									else if (clickedSelectable instanceof Label)
-									{
-										controller.modifySelectedLabels();
+										// Modify selected item on a double click
+										if (clickedSelectable instanceof Wall)
+										{
+											controller.modifySelectedWalls();
+										}
+										else if (clickedSelectable instanceof HomePieceOfFurniture)
+										{
+											controller.modifySelectedFurniture();
+										}
+										else if (clickedSelectable instanceof Room)
+										{
+											controller.modifySelectedRooms();
+										}
+										else if (clickedSelectable instanceof Label)
+										{
+											controller.modifySelectedLabels();
+										}
+
+										//TODO: you know the ground could be selectable and editable, but just not have an outline?
+										// and it could bring up the 3d attributes window
 									}
 
-									//TODO: you know the ground could be selectable and editable, but just not have an outline?
-									// and it could bring up the 3d attributes window
+									lastDownObject = clickedSelectable;
 								}
-
-								lastDownObject = clickedSelectable;
 							}
 						}
 					}

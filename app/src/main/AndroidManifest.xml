@@ -2,8 +2,10 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.renovations3d"
-  android:versionCode="180"
-  android:versionName="1.80">
+  android:versionCode="182"
+  android:versionName="1.82
+
+">
 
     <uses-sdk
         android:minSdkVersion="15"

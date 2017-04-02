@@ -1149,6 +1149,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		@Override
 		public boolean onTouch(View v, MotionEvent ev)
 		{
+			// I should use this as the previous tap time, not my time grab I reckon
+			//ev.getEventTime()
+
+
 			// Let the ScaleGestureDetector inspect all events.
 			mScaleDetector.onTouchEvent(ev);
 

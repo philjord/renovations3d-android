@@ -5,13 +5,17 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -124,6 +128,7 @@ import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 import static com.eteks.renovations3d.android.swingish.JOptionPane.possiblyShowWelcomeScreen;
 
 
+
 /**
  * Created by phil on 11/22/2016.
  */
@@ -151,12 +156,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private boolean dragging = false;
 	private String extraInfo ="";
 
-	HomeComponent3DMouseHandler homeComponent3DMouseHandler;
+	private HomeComponent3DMouseHandler homeComponent3DMouseHandler;
+	private ScaleGestureDetector mScaleDetector;
+	private LongHoldHandler longHoldHandler;
 
 	private Menu mOptionsMenu;
 
 	private GLCapabilities caps;
 	private GLWindow gl_window;
+
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -209,7 +218,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void display(final GLAutoDrawable drawable)
 		{
-			// this has come from a onResume state restore, if canvas3D2D already exists, so just get rendering again
+			//odd createComponent3D calls addMouseListenr which attaches this listener to the view
+			// that view is being destroyed and I'm getting back here so I have to re-add the mouse listener now
+			// so instead I just always add the mouse listener here now
+
+			getView().setOnTouchListener(new TouchyListener());
+
+
 			if (canvas3D2D != null)
 			{
 				// must call this as onPause has called removeNotify
@@ -734,13 +749,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private BoundingBox approximateHomeBoundsCache;
 	private SimpleUniverse offscreenUniverse;
 
-	//ANDY private JComponent navigationPanel;
-	//ANDY private ComponentListener navigationPanelListener;
-	//ANDY private BufferedImage navigationPanelImage;
+	//PJ private JComponent navigationPanel;
+	//PJ private ComponentListener navigationPanelListener;
+	//PJ private BufferedImage navigationPanelImage;
 	private Area lightScopeOutsideWallsAreaCache;
 
 
-	//PJPJPJ recorder from inti to gl window init calls
+	//PJPJPJ record from the init call to gl window init call
 	private UserPreferences preferences;
 	private HomeController3D controller;
 
@@ -881,7 +896,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void createComponent3D(GraphicsConfiguration configuration, UserPreferences preferences, HomeController3D controller)
 	{
-
 		//PJPJPJPJ
 		canvas3D2D = Component3DManager.getInstance().getOnscreenCanvas3D(gl_window, new Component3DManager.RenderingObserver()
 		{
@@ -901,61 +915,26 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			public void canvas3DPostRendered(Canvas3D canvas3D)
 			{
 				//System.out.println("canvas3DPostRendered");
-				// Copy reference to navigation panel image to avoid concurrency problems
-				// if it's modified in the EDT while this method draws it
-				/*	BufferedImage navigationPanelImage = HomeComponent3D.this.navigationPanelImage;
-					// Render navigation panel upon canvas 3D if it exists
-					if (navigationPanelImage != null)
-					{
-					/*	J3DGraphics2D g2D = canvas3D.getGraphics2D();
-						g2D.drawImage(new VMBufferedImage(navigationPanelImage), null, 0, 0);
-						g2D.flush(true);
-					}*/
 			}
 		});
 
-		//moved into diplay call for life cycle clarity
+		//moved into gl_window display call for life cycle clarity
 		//canvas3D2D.addNotify();
 
 
 		if (controller != null)
 		{
 			addMouseListeners(controller, this.canvas3D2D);
-			/*if (preferences != null && (!OperatingSystem.isMacOSX() || OperatingSystem.isMacOSXLeopardOrSuperior()))
-			{
-				// No support for navigation panel under Mac OS X Tiger
-				// (too unstable, may crash system at 3D view resizing)
-				this.navigationPanel = createNavigationPanel(this.home, preferences, controller);
-				setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible());
-				preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,
-						new NavigationPanelChangeListener(this));
-			}*/
-			createActions(controller);
-			installKeyboardActions();
+
+			//createActions(controller);
+			//installKeyboardActions();
 			// Let this component manage focus
 			//setFocusable(true);
 			//SwingTools.installFocusBorder(this);
 		}
 	}
 
-	/**
-	 * A <code>JCanvas</code> canvas that displays the navigation panel of a home component 3D upon it.
-	 */
-	//PJPJPJPJ
-	/*  private static class JCanvas3DWithNavigationPanel extends JCanvas3D {
-	private final HomeComponent3D homeComponent3D;
 
-	public JCanvas3DWithNavigationPanel(HomeComponent3D homeComponent3D,
-	                                    GraphicsConfigTemplate3D template) {
-	  super(template);
-	  this.homeComponent3D = homeComponent3D;
-	}
-
-	public void paintComponent(Graphics g) {
-	  super.paintComponent(g);
-	  g.drawImage(this.homeComponent3D.navigationPanelImage, 0, 0, this);
-	}
-	  }*/
 
 //	@Override
 /*	public void setVisible(boolean visible)
@@ -970,278 +949,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}*/
 
-	/**
-	 * Preferences property listener bound to this component with a weak reference to avoid
-	 * strong link between preferences and this component.
-	 */
-/*	private static class NavigationPanelChangeListener implements PropertyChangeListener
-	{
-		private final WeakReference<HomeComponent3D> homeComponent3D;
 
-		public NavigationPanelChangeListener(HomeComponent3D homeComponent3D)
-		{
-			this.homeComponent3D = new WeakReference<HomeComponent3D>(homeComponent3D);
-		}
-
-		public void propertyChange(PropertyChangeEvent ev)
-		{
-			// If home pane was garbage collected, remove this listener from preferences
-			HomeComponent3D homeComponent3D = this.homeComponent3D.get();
-			if (homeComponent3D == null)
-			{
-				((UserPreferences) ev.getSource()).removePropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, this);
-			}
-			else
-			{
-				homeComponent3D.setNavigationPanelVisible((Boolean) ev.getNewValue() && homeComponent3D.isVisible());
-			}
-		}
-	}*/
-
-	/**
-	 * Returns the component displayed as navigation panel by this 3D view.
-	 */
-/*	private JComponent createNavigationPanel(Home home, UserPreferences preferences, HomeController3D controller)
-	{
-		JPanel navigationPanel = new JPanel(new GridBagLayout()) {
-			@Override
-			public void applyComponentOrientation(ComponentOrientation o)
-			{
-				// Ignore orientation
-			}
-		};
-		String navigationPanelIconPath = preferences.getLocalizedString(HomeComponent3D.class, "navigationPanel.icon");
-		final ImageIcon nagivationPanelIcon = navigationPanelIconPath.length() > 0
-				? new ImageIcon(HomeComponent3D.class.getResource(navigationPanelIconPath)) : null;
-		navigationPanel.setBorder(new Border() {
-			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
-			{
-				if (nagivationPanelIcon != null)
-				{
-					nagivationPanelIcon.paintIcon(c, g, x, y);
-				}
-				else
-				{
-					// Draw a surrounding oval if no navigation panel icon is defined
-					Graphics2D g2D = (Graphics2D) g;
-					g2D.setColor(Color.BLACK);
-					g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					g2D.drawOval(x + 3, y + 3, width - 6, height - 6);
-				}
-			}
-
-			public Insets getBorderInsets(Component c)
-			{
-				return new Insets(2, 2, 2, 2);
-			}
-
-			public boolean isBorderOpaque()
-			{
-				return false;
-			}
-		});
-		navigationPanel.setOpaque(false);
-		navigationPanel.add(new NavigationButton(0, -(float) Math.PI / 36, 0, "TURN_LEFT", preferences, controller),
-				new GridBagConstraints(0, 1, 1, 2, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 3, 0, 0), 0, 0));
-		navigationPanel.add(new NavigationButton(12.5f, 0, 0, "GO_FORWARD", preferences, controller),
-				new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(3, 0, 0, 0), 0, 0));
-		navigationPanel.add(new NavigationButton(0, (float) Math.PI / 36, 0, "TURN_RIGHT", preferences, controller),
-				new GridBagConstraints(2, 1, 1, 2, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 0));
-		navigationPanel.add(new NavigationButton(-12.5f, 0, 0, "GO_BACKWARD", preferences, controller),
-				new GridBagConstraints(1, 3, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
-		navigationPanel.add(new NavigationButton(0, 0, -(float) Math.PI / 100, "TURN_UP", preferences, controller),
-				new GridBagConstraints(1, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
-		navigationPanel.add(new NavigationButton(0, 0, (float) Math.PI / 100, "TURN_DOWN", preferences, controller),
-				new GridBagConstraints(1, 2, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 1, 0), 0, 0));
-		return navigationPanel;
-	}*/
-
-	/**
-	 * An icon button that changes camera location and angles when pressed.
-	 */
-/*	private static class NavigationButton extends JButton
-	{
-		private boolean shiftDown;
-
-		public NavigationButton(final float moveDelta, final float yawDelta, final float pitchDelta, String actionName,
-								UserPreferences preferences, final HomeController3D controller)
-		{
-			super(new ResourceAction(preferences, HomeComponent3D.class, actionName, true) {
-				@Override
-				public void actionPerformed(ActionEvent ev)
-				{
-					// Manage auto repeat button with mouse listener
-				}
-			});
-			// Create a darker press icon
-			setPressedIcon(
-					new ImageIcon(createImage(new FilteredImageSource(((ImageIcon) getIcon()).getImage().getSource(), new RGBImageFilter() {
-						{
-							canFilterIndexColorModel = true;
-						}
-
-						public int filterRGB(int x, int y, int rgb)
-						{
-							// Return darker color
-							int alpha = rgb & 0xFF000000;
-							int darkerRed = ((rgb & 0xFF0000) >> 1) & 0xFF0000;
-							int darkerGreen = ((rgb & 0x00FF00) >> 1) & 0x00FF00;
-							int darkerBlue = (rgb & 0x0000FF) >> 1;
-							return alpha | darkerRed | darkerGreen | darkerBlue;
-						}
-					}))));
-
-			// Track shift key press
-			addMouseMotionListener(new MouseMotionAdapter() {
-				@Override
-				public void mouseDragged(MouseEvent ev)
-				{
-					shiftDown = ev.isShiftDown();
-				}
-			});
-			addMouseListener(new MouseAdapter() {
-				@Override
-				public void mousePressed(MouseEvent ev)
-				{
-					shiftDown = ev.isShiftDown();
-					SwingUtilities.getAncestorOfClass(HomeComponent3D.class, NavigationButton.this).requestFocusInWindow();
-				}
-			});
-
-			// Create a timer that will update camera angles and location
-			final Timer timer = new Timer(50, new ActionListener() {
-				public void actionPerformed(ActionEvent ev)
-				{
-					controller.moveCamera(shiftDown ? moveDelta : moveDelta / 5);
-					controller.rotateCameraYaw(shiftDown ? yawDelta : yawDelta / 5);
-					controller.rotateCameraPitch(pitchDelta);
-				}
-			});
-			timer.setInitialDelay(0);
-
-			// Update camera when button is armed
-			addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent ev)
-				{
-					if (getModel().isArmed() && !timer.isRunning())
-					{
-						timer.restart();
-					}
-					else if (!getModel().isArmed() && timer.isRunning())
-					{
-						timer.stop();
-					}
-				}
-			});
-			setFocusable(false);
-			setBorder(null);
-			setContentAreaFilled(false);
-			// Force preferred size to ensure button isn't larger
-			setPreferredSize(new Dimension(getIcon().getIconWidth(), getIcon().getIconHeight()));
-			addPropertyChangeListener(JButton.ICON_CHANGED_PROPERTY, new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent ev)
-				{
-					// Reset border when icon is reset after a resource action change
-					setBorder(null);
-				}
-			});
-		}
-	}*/
-
-	/**
-	 * Sets the component that will be drawn upon the heavyweight 3D component shown by this component.
-	 * Mouse events will targeted to the navigation panel when needed.
-	 * Supports transparent components.
-	 */
-/*	private void setNavigationPanelVisible(boolean visible)
-	{
-		if (this.navigationPanel != null)
-		{
-			this.navigationPanel.setVisible(visible);
-			if (visible)
-			{
-				// Add a component listener that updates navigation panel image
-				this.navigationPanelListener = new ComponentAdapter() {
-					@Override
-					public void componentResized(ComponentEvent ev)
-					{
-						updateNavigationPanelImage();
-					}
-
-					@Override
-					public void componentMoved(ComponentEvent e)
-					{
-						updateNavigationPanelImage();
-					}
-				};
-				this.navigationPanel.addComponentListener(this.navigationPanelListener);
-				// Add the navigation panel to this component to be able to paint it
-				// but show it behind canvas 3D
-				this.component3D.getParent().add(this.navigationPanel);
-			}
-			else
-			{
-				this.navigationPanel.removeComponentListener(this.navigationPanelListener);
-				if (this.navigationPanel.getParent() != null)
-				{
-					this.navigationPanel.getParent().remove(this.navigationPanel);
-				}
-			}
-			revalidate();
-			updateNavigationPanelImage();
-			this.component3D.repaint();
-		}
-	}*/
-
-	/**
-	 * Updates the image of the components that may overlap canvas 3D
-	 * (with a Z order smaller than the one of the canvas 3D).
-	 */
-/*	private void updateNavigationPanelImage()
-	{
-		if (this.navigationPanel != null && this.navigationPanel.isVisible())
-		{
-			java.awt.Rectangle componentBounds = this.navigationPanel.getBounds();
-			Rectangle imageSize = new Rectangle(this.component3D.getX(), this.component3D.getY());
-			imageSize.add(componentBounds.x + componentBounds.width, componentBounds.y + componentBounds.height);
-			if (!imageSize.isEmpty())
-			{
-				BufferedImage updatedImage = this.navigationPanelImage;
-				// Consider that no navigation panel image is available
-				// while it's updated
-				this.navigationPanelImage = null;
-				Graphics2D g2D;
-				if (updatedImage == null || updatedImage.getWidth() != imageSize.width || updatedImage.getHeight() != imageSize.height)
-				{
-					updatedImage = new BufferedImage(imageSize.width, imageSize.height, BufferedImage.TYPE_INT_ARGB);
-					g2D = (Graphics2D) updatedImage.getGraphics();
-				}
-				else
-				{
-					// Clear image
-					g2D = (Graphics2D) updatedImage.getGraphics();
-					Composite oldComposite = g2D.getComposite();
-					g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0));
-					g2D.fill(new Rectangle2D.Double(0, 0, imageSize.width, imageSize.height));
-					g2D.setComposite(oldComposite);
-				}
-				this.navigationPanel.paintAll(g2D);
-				g2D.dispose();
-				// Navigation panel image ready to be displayed
-				this.navigationPanelImage = updatedImage;
-				return;
-			}
-		}
-		this.navigationPanelImage = null;
-	}*/
 
 	/**
 	 * Returns a new 3D universe that displays <code>home</code> objects.
 	 */
 	private SimpleUniverse createUniverse(boolean displayShadowOnFloor, boolean listenToHomeUpdates, boolean waitForLoading)
 	{
-
-
 		// Create a universe bound to no canvas 3D
 		ViewingPlatform viewingPlatform = new ViewingPlatform();
 		// Add an interpolator to view transform to get smooth transition
@@ -1742,6 +1456,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					|| this.finalCamera.getZ() != finalCamera.getZ() || this.finalCamera.getYaw() != finalCamera.getYaw()
 					|| this.finalCamera.getPitch() != finalCamera.getPitch())
 			{
+				//System.out.println("new finalCamera " +finalCamera.getX() + " " +finalCamera.getY() +" " +finalCamera.getZ());
+				if(this.finalCamera!= null )
+				{
+					//System.out.println("current finalCamera " + this.finalCamera.getX() + " " + this.finalCamera.getY() + " " + this.finalCamera.getZ());
+
+					// ummm?
+				}
+
+
+
+
+
 				synchronized (this)
 				{
 					Alpha alpha = getAlpha();
@@ -1838,9 +1564,114 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void addMouseListeners(final HomeController3D controller, final Canvas3D component3D)
 	{
-		this.getView().setOnTouchListener(new TouchyListener());
+		// This has been moved to the GLWindow display method as the HomeComponent3D doesn't get a recreate
+		// call on a resume, but needs these listeners re-added
+		//this.getView().setOnTouchListener(new TouchyListener());
+
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.post(new Runnable()
+		{
+			public void run()
+			{
+				mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getActivity(), new ScaleListener());
+			}
+		});
+
+		longHoldHandler = new LongHoldHandler(getView().getResources().getDisplayMetrics());
 	}
 
+
+
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+	{
+		/**
+		 * @param detector
+		 * @return
+		 */
+		@Override
+		public boolean onScaleBegin(ScaleGestureDetector detector)
+		{
+			DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
+			float mDPI = (float) mDisplayMetrics.densityDpi;
+			float measurement = mScaleDetector.getCurrentSpan() / mDPI;
+			return measurement > MultipleLevelsPlanPanel.dpiMinSpanForZoom;
+		}
+
+		@Override
+		public boolean onScale(ScaleGestureDetector detector)
+		{
+			float yd = (mScaleDetector.getCurrentSpan() - mScaleDetector.getPreviousSpan());
+			controller.moveCamera(yd);
+			return true;
+		}
+	}
+	private class LongHoldHandler implements android.view.View.OnTouchListener
+	{
+		private int JITTER_DP = 10;
+		private int maxJitter = 10;
+		private Handler handler = new Handler();
+		public boolean pushingDown = false;
+		private float xFirstMouseDown = -1;
+		private float yFirstMouseDown = -1;
+
+		public LongHoldHandler(DisplayMetrics mDisplayMetrics)
+		{
+			final float scale = mDisplayMetrics.density;
+			maxJitter = (int) (JITTER_DP * scale + 0.5f);
+		}
+		private Runnable repeater = new Runnable() {
+			@Override
+			public void run() {
+				// make sure the long hold is still running
+				if (pushingDown) {
+					controller.moveCamera(10);
+					handler.postDelayed(this, 100);
+				}
+			}
+		};
+		@Override
+		public boolean onTouch(android.view.View v, MotionEvent ev)
+		{
+			final int action = MotionEventCompat.getActionMasked(ev);
+
+			switch (action & MotionEvent.ACTION_MASK)
+			{
+				case MotionEvent.ACTION_DOWN:
+				{
+					if (ev.getPointerCount() == 1)
+					{
+						if(!pushingDown)
+						{
+							pushingDown = true;
+							xFirstMouseDown = ev.getX();
+							yFirstMouseDown = ev.getY();
+							handler.postDelayed(repeater, 750);// real long to get out of single and double tap times
+
+							// don't consume the event as taps etc need it as well.
+							return false;
+						}
+					}
+				}
+				case MotionEvent.ACTION_MOVE:
+				{
+					// we want to consume jitters as we are running
+					if (ev.getPointerCount() == 1)
+					{
+						if(pushingDown)
+						{
+							if( Math.abs(xFirstMouseDown - ev.getX()) < maxJitter
+								&& Math.abs(yFirstMouseDown - ev.getY()) < maxJitter)
+							return true;
+
+							// other wise fall through to stop teh long hold repeats
+						}
+					}
+				}
+			}
+			pushingDown = false;
+			return false;
+		}
+	}
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
 		private static final int INVALID_POINTER_ID = -1;
@@ -1853,24 +1684,30 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		private float xLastMouseMove2 = -1;
 		private float yLastMouseMove2 = -1;
 
-
-
 		@Override
 		public boolean onTouch(android.view.View v, MotionEvent ev)
 		{
+			// Let the ScaleGestureDetector inspect all events, it will do move camera if it likes
+			if(mScaleDetector != null )
+			{
+				mScaleDetector.onTouchEvent(ev);
+				if (mScaleDetector.isInProgress())
+					return true;
+			}
+
+
+			//allow the long down hold to inspect it, it might consume jitters
+			if(longHoldHandler.onTouch(v,  ev))
+				return true;
+
 			// let the selection handler have a go first, if it's working then stop there
 			// note it has a tiny waver factor, it returns false on any down ever though it will use it later
 			if(homeComponent3DMouseHandler.onTouch(v,  ev))
 				return true;
 
-			//TODO:
 			// for long hold I will only get a mouse down and nothing after it, so on a mouse donw (before even teh tapper)
 			// I need to start a timer waiting for a mouse up, and after waiting for 600ms say
 			// it should just start firing off move events
-
-			//TODO:
-			// now let the pinch listener move us forward/backward
-
 
 			// otherwise a single finger up/down left right are pitch/pan
 			// a single finger long hold is forward
@@ -1994,7 +1831,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 				case MotionEvent.ACTION_POINTER_UP:
 				{
-					fingerCount = 1;
 					dragging = false;
 
 					//second finger has been released
@@ -2006,13 +1842,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						// This was our active pointer going up. Choose a new
 						// active pointer and adjust accordingly.
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-						this.xLastMouseMove1 = MotionEventCompat.getX(ev, newPointerIndex);
-						this.yLastMouseMove1 = MotionEventCompat.getY(ev, newPointerIndex);
-
 						this.xLastMouseMove2 = -1;
 						this.yLastMouseMove2 = -1;
 						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
 					}
+
+					// reduce the jitter when leaving 2 finger mode
+					this.xLastMouseMove1 = -1;
+					this.yLastMouseMove1 = -1;
+
+					fingerCount = ev.getPointerCount() - 1;
 					break;
 				}
 			}
@@ -2069,102 +1908,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void createActions(final HomeController3D controller)
 	{
-		// Move camera action mapped to arrow keys
-		/*class MoveCameraAction extends AbstractAction
-		{
-			private final float delta;
-
-			public MoveCameraAction(float delta)
-			{
-				this.delta = delta;
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.moveCamera(this.delta);
-			}
-		}
-		// Move camera sideways action mapped to arrow keys
-		class MoveCameraSidewaysAction extends AbstractAction
-		{
-			private final float delta;
-
-			public MoveCameraSidewaysAction(float delta)
-			{
-				this.delta = delta;
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.moveCameraSideways(this.delta);
-			}
-		}
-		// Elevate camera action mapped to arrow keys
-		class ElevateCameraAction extends AbstractAction
-		{
-			private final float delta;
-
-			public ElevateCameraAction(float delta)
-			{
-				this.delta = delta;
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.elevateCamera(this.delta);
-			}
-		}
-		// Rotate camera yaw action mapped to arrow keys
-		class RotateCameraYawAction extends AbstractAction
-		{
-			private final float delta;
-
-			public RotateCameraYawAction(float delta)
-			{
-				this.delta = delta;
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.rotateCameraYaw(this.delta);
-			}
-		}
-		// Rotate camera pitch action mapped to arrow keys
-		class RotateCameraPitchAction extends AbstractAction
-		{
-			private final float delta;
-
-			public RotateCameraPitchAction(float delta)
-			{
-				this.delta = delta;
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.rotateCameraPitch(this.delta);
-			}
-		}
-		ActionMap actionMap = getActionMap();
-		actionMap.put(ActionType.MOVE_CAMERA_FORWARD, new MoveCameraAction(6.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_FAST_FORWARD, new MoveCameraAction(32.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_BACKWARD, new MoveCameraAction(-6.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_FAST_BACKWARD, new MoveCameraAction(-32.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_LEFT, new MoveCameraSidewaysAction(-2.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_FAST_LEFT, new MoveCameraSidewaysAction(-10f));
-		actionMap.put(ActionType.MOVE_CAMERA_RIGHT, new MoveCameraSidewaysAction(2.5f));
-		actionMap.put(ActionType.MOVE_CAMERA_FAST_RIGHT, new MoveCameraSidewaysAction(10f));
-		actionMap.put(ActionType.ELEVATE_CAMERA_DOWN, new ElevateCameraAction(-2.5f));
-		actionMap.put(ActionType.ELEVATE_CAMERA_FAST_DOWN, new ElevateCameraAction(-10f));
-		actionMap.put(ActionType.ELEVATE_CAMERA_UP, new ElevateCameraAction(2.5f));
-		actionMap.put(ActionType.ELEVATE_CAMERA_FAST_UP, new ElevateCameraAction(10f));
-		actionMap.put(ActionType.ROTATE_CAMERA_YAW_LEFT, new RotateCameraYawAction(-(float) Math.PI / 60));
-		actionMap.put(ActionType.ROTATE_CAMERA_YAW_FAST_LEFT, new RotateCameraYawAction(-(float) Math.PI / 12));
-		actionMap.put(ActionType.ROTATE_CAMERA_YAW_RIGHT, new RotateCameraYawAction((float) Math.PI / 60));
-		actionMap.put(ActionType.ROTATE_CAMERA_YAW_FAST_RIGHT, new RotateCameraYawAction((float) Math.PI / 12));
-		actionMap.put(ActionType.ROTATE_CAMERA_PITCH_UP, new RotateCameraPitchAction(-(float) Math.PI / 120));
-		actionMap.put(ActionType.ROTATE_CAMERA_PITCH_FAST_UP, new RotateCameraPitchAction(-(float) Math.PI / 24));
-		actionMap.put(ActionType.ROTATE_CAMERA_PITCH_DOWN, new RotateCameraPitchAction((float) Math.PI / 120));
-		actionMap.put(ActionType.ROTATE_CAMERA_PITCH_FAST_DOWN, new RotateCameraPitchAction((float) Math.PI / 24));*/
 	}
 
 	/**
@@ -2216,7 +1959,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		backgroundBranch.addChild(halfSphere);
 		//PJPJP what the hell was this no appearance shape doing exactly?
 		//backgroundBranch.addChild(new Shape3D(createHalfSphereGeometry(false)));
-
 
 		final Background background = new Background(backgroundBranch);
 		updateBackgroundColorAndTexture(backgroundAppearance, this.home, waitForLoading);
