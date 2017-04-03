@@ -130,15 +130,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 						else
 							iv.setBackgroundColor(Color.WHITE);
 					}
-					if (selectedFiv != null)
-					{
-						ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
-						al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
-						((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity())
-								.renovations3D.getHomeController().getFurnitureController().addFurniture(al);
-						Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
-						Renovations3DActivity.mViewPager.setCurrentItem(1, true);
-					}
+					addFurniture();
 					return true;
 				}
 			});
@@ -186,15 +178,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.furnitureAdd:
-				if (selectedFiv != null)
-				{
-					ArrayList<HomePieceOfFurniture> al = new ArrayList<HomePieceOfFurniture>();
-					al.add(new HomePieceOfFurniture(selectedFiv.getCatalogPieceOfFurniture()));
-					((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity())
-							.renovations3D.getHomeController().getFurnitureController().addFurniture(al);
-					Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
-					Renovations3DActivity.mViewPager.setCurrentItem(1, true);
-				}
+					addFurniture();
 				return true;
 			case R.id.import_furniture_lib:
 				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3f file to import" , Toast.LENGTH_LONG).show();
@@ -232,6 +216,22 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				return super.onOptionsItemSelected(item);
 		}
 	}
+
+	private void addFurniture()
+	{
+		if (selectedFiv != null)
+		{
+			ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
+			al.add(selectedFiv.getCatalogPieceOfFurniture());
+			HomeController homeController = ((Renovations3DActivity)this.getActivity()).renovations3D.getHomeController();
+			homeController.getFurnitureCatalogController().setSelectedFurniture(al);
+			homeController.addHomeFurniture();
+
+			Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
+			Renovations3DActivity.mViewPager.setCurrentItem(1, true);
+		}
+	}
+
 	private Paint mTextPaint = new Paint();
 
 	public class ImageAdapter extends BaseAdapter
