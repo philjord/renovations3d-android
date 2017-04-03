@@ -1213,7 +1213,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					public void run()
 					{
 						updateView(view, home.getCamera(), home.getTopCamera() == home.getCamera());
-						updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true);
+						updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), false);//PJPJ treu made fale, which removed a jitter effect
 					}
 				});
 			}
@@ -1456,24 +1456,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					|| this.finalCamera.getZ() != finalCamera.getZ() || this.finalCamera.getYaw() != finalCamera.getYaw()
 					|| this.finalCamera.getPitch() != finalCamera.getPitch())
 			{
-				//System.out.println("new finalCamera " +finalCamera.getX() + " " +finalCamera.getY() +" " +finalCamera.getZ());
-				if(this.finalCamera!= null )
-				{
-					//System.out.println("current finalCamera " + this.finalCamera.getX() + " " + this.finalCamera.getY() + " " + this.finalCamera.getZ());
-
-					// ummm?
-				}
-
-
-
-
-
 				synchronized (this)
 				{
+					//PJ note mod 2pi added to stopp crazy spins as camera values are not wrapped
 					Alpha alpha = getAlpha();
 					if (alpha == null || alpha.finished())
 					{
-						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw(), camera.getPitch(),
+						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw() % ((float)Math.PI * 2f), camera.getPitch(),
 								camera.getFieldOfView());
 					}
 					else if (alpha.value() < 0.1)
@@ -1481,7 +1470,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						Transform3D finalTransformation = new Transform3D();
 						// Jump directly to final location
 						updateViewPlatformTransform(finalTransformation, this.finalCamera.getX(), this.finalCamera.getY(),
-								this.finalCamera.getZ(), this.finalCamera.getYaw(), this.finalCamera.getPitch());
+								this.finalCamera.getZ(), this.finalCamera.getYaw()% ((float)Math.PI * 2f), this.finalCamera.getPitch());
 						getTarget().setTransform(finalTransformation);
 						this.initialCamera = this.finalCamera;
 					}
@@ -1492,12 +1481,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha.value(),
 								this.initialCamera.getY() + (this.finalCamera.getY() - this.initialCamera.getY()) * alpha.value(),
 								this.initialCamera.getZ() + (this.finalCamera.getZ() - this.initialCamera.getZ()) * alpha.value(),
-								this.initialCamera.getYaw() + (this.finalCamera.getYaw() - this.initialCamera.getYaw()) * alpha.value(),
+								this.initialCamera.getYaw() + ((this.finalCamera.getYaw() - this.initialCamera.getYaw()) * alpha.value())% ((float)Math.PI * 2f),
 								this.initialCamera.getPitch()
 										+ (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha.value(),
 								finalCamera.getFieldOfView());
 					}
-					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(), finalCamera.getYaw(),
+					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(), finalCamera.getYaw()% ((float)Math.PI * 2f),
 							finalCamera.getPitch(), finalCamera.getFieldOfView());
 
 					// Create an animation that will interpolate camera location
