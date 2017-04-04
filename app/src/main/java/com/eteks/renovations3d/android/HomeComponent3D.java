@@ -172,7 +172,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		super.onCreate(savedInstanceState);
 
-		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		setDeoptomize(deoptomize);
 
@@ -282,7 +282,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 
 						// mouse interaction with picking
-						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, getActivity());
+						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, getContext());
 						/*{
 							public void doMouseClicked(final MouseEvent e)
 							{
@@ -465,8 +465,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		}
 
-		if(isVisibleToUser && getActivity() != null)
-			possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
+		if(isVisibleToUser && getContext() != null)
+			possiblyShowWelcomeScreen(getContext(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
 
 
 
@@ -498,7 +498,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		createGoToPointOfViewMenu(home, preferences, Renovations3DActivity.renovations3D.getHomeController(), menu.findItem(R.id.gotopov));
 
-		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		menu.findItem(R.id.deoptomize).setChecked(deoptomize);
 
@@ -540,7 +540,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent ev) {
 						// need to do this on the EDT
-						Handler mainHandler = new Handler(getActivity().getMainLooper());
+						Handler mainHandler = new Handler(getContext().getMainLooper());
 						Runnable myRunnable = new Runnable() {
 							@Override
 							public void run() {
@@ -662,10 +662,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				case R.id.deoptomize:
 					item.setChecked(!item.isChecked());
 					setDeoptomize(item.isChecked());
-					Toast.makeText(getActivity(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
 					break;
 				case R.id.show_jogl_status:
-					Intent myIntent = new Intent(this.getActivity(), JoglStatusActivity.class);
+					Intent myIntent = new Intent(this.getContext(), JoglStatusActivity.class);
 					this.startActivity(myIntent);
 					break;
 				default:
@@ -676,7 +676,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 	private void setIconFromSelector(MenuItem item, int resId)
 	{
-		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
+		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getContext(), resId);
 		int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
 		stateListDrawable.setState(state);
 		item.setIcon(stateListDrawable.getCurrent());
@@ -693,7 +693,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		// PJ mnot needed now the shaders are per vert SimpleShaderAppearance.setDISABLE_LIGHTS(deoptomize);
 
-		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(DEOPTOMIZE, deoptomize);
 		editor.apply();
@@ -1569,7 +1569,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		{
 			public void run()
 			{
-				mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getActivity(), new ScaleListener());
+				mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
 			}
 		});
 

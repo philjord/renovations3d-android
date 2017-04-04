@@ -331,20 +331,20 @@ public class JOptionPane
 	}
 
 
-	public static void possiblyShowWelcomeScreen(final Activity activity, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
+	public static void possiblyShowWelcomeScreen(final Context context, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
 	{
 		// only one per session
 		if(!Renovations3DActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
 		{
 			Renovations3DActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
-			SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+			SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
 
 			if (!welcomeScreenUnwanted)
 			{
 				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
 				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
-				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				// Add the buttons
 				builder.setPositiveButton(close, new DialogInterface.OnClickListener()
 				{
@@ -358,7 +358,7 @@ public class JOptionPane
 					public void onClick(DialogInterface dialog, int id)
 					{
 						// don't remind again
-						SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putBoolean(welcomeScreenName, true);
 						editor.apply();
@@ -366,8 +366,8 @@ public class JOptionPane
 					}
 				});
 
-				String welcomeMessage = activity.getString(welcomeTextId);
-				TextView textView = new TextView(activity);
+				String welcomeMessage = context.getString(welcomeTextId);
+				TextView textView = new TextView(context);
 				textView.setPadding(10,10,10,10);
 				textView.setText(Html.fromHtml(welcomeMessage));
 				textView.setMovementMethod(LinkMovementMethod.getInstance());

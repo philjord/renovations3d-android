@@ -1,6 +1,7 @@
 package com.eteks.renovations3d.j3d.mouseover;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 
@@ -35,8 +36,6 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 	private final Home home;
 	private final UserPreferences preferences;
 	private final HomeController3D controller;
-	private Activity activity;
-
 
 	private static final int INVALID_POINTER_ID = -1;
 
@@ -51,14 +50,13 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 	private Point2f currentLocation = new Point2f();
 
-	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller, Activity activity)
+	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller, Context context)
 	{
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;
-		this.activity = activity;
 
-		final float scale = activity.getResources().getDisplayMetrics().density;
+		final float scale = context.getResources().getDisplayMetrics().density;
 		allowableWaverPx = (int) (ALLOWABLE_WAVER_DP * scale + 0.5f);
 	}
 

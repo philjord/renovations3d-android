@@ -447,9 +447,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 //		this.categoryFilterLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences,
 //				FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
-		List<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
-		categories.add(null);
-		categories.addAll(catalog.getCategories());
+//		List<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
+//		categories.add(null);
+//		categories.addAll(catalog.getCategories());
 /*		this.categoryFilterComboBox = new JComboBox(new DefaultComboBoxModel(categories.toArray())) {
 			@Override
 			public Dimension getMinimumSize() {
