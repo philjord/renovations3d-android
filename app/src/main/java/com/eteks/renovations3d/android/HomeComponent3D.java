@@ -1590,7 +1590,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
 			float mDPI = (float) mDisplayMetrics.densityDpi;
 			float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-			return measurement > MultipleLevelsPlanPanel.dpiMinSpanForZoom;
+			return measurement > PlanComponent.dpiMinSpanForZoom;
 		}
 
 		@Override

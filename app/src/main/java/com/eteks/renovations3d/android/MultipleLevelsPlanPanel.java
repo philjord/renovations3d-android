@@ -67,8 +67,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public static boolean magnetismToggled = false;// careful toggle != checked!
 	public static boolean selectLasso = false;
 	public static boolean selectMultiple = false;
-	public static float dpiMinSpanForZoom = 1.0f;
-	public static float dpiIndicatorTouchSize = 0.04f;
 	private DrawableView drawableView;
 
 	private MenuItemGroup selectionGroup = new MenuItemGroup();

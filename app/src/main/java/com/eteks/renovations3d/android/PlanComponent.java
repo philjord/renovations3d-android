@@ -327,6 +327,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private static final BufferedImage ERROR_TEXTURE_IMAGE;
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
 
+
+	public static float dpiMinSpanForZoom = 1.0f;
+	public static float dpiIndicatorTouchSize = 0.04f;
+
   static {
     POINT_INDICATOR = new Ellipse2D.Float(-1.5f, -1.5f, 3, 3);
 
@@ -581,13 +585,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		// Now determine a fat fingers size for the indicators
 		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5f);
-		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*3);
-		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*MultipleLevelsPlanPanel.dpiIndicatorTouchSize*1.5);
+		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*1.5f);// for things to be selected or touch each other
+		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*3);// for selection handle touching
+		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*4);// just for wall start or end weld
 
 		final float scale = getDrawableView().getResources().getDisplayMetrics().density;
 		MARGIN_PX = (int) (MARGIN_DP * scale + 0.5f);
-
 
 		// Set JComponent default properties
 		setOpaque(true);
@@ -1475,7 +1478,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 			DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
 			float mDPI = (float) mDisplayMetrics.densityDpi;
 			float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-			return measurement > MultipleLevelsPlanPanel.dpiMinSpanForZoom;
+			return measurement > dpiMinSpanForZoom;
 		}
 
 		@Override
