@@ -409,7 +409,7 @@ public class FileUserPreferences extends UserPreferences {
                 DefaultLibrary languageLibrary;
                 try {
                   languageLibrary = new DefaultLibrary(pluginLanguageLibraryFile.getCanonicalPath(), LANGUAGE_LIBRARY_TYPE,
-                      ResourceBundle.getBundle(PLUGIN_LANGUAGE_LIBRARY_FAMILY, Locale.getDefault(), classLoader));
+                      ResourceBundle.getBundle(PLUGIN_LANGUAGE_LIBRARY_FAMILY, Locale.getDefault(), classLoader, new ISO8859FileControl()));
                 } catch (MissingResourceException ex) {
                   languageLibrary = new DefaultLibrary(pluginLanguageLibraryFile.getCanonicalPath(), LANGUAGE_LIBRARY_TYPE, 
                       null, getLanguageLibraryDefaultName(languages), null, getDefaultVersion(pluginLanguageLibraryFile), null, null);
