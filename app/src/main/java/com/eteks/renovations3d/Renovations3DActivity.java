@@ -166,6 +166,30 @@ public class Renovations3DActivity extends FragmentActivity
 	// and once running this tells Renovations3D to load a single controller
 
 
+	//TODO: why is this not being called!!
+	public void onNewIntent(Intent intent)
+	{
+		OperatingSystem.activity = this;
+
+		renovations3D = new Renovations3D(this);
+
+		// if we have any fragments in the manager then we are doing a restore with bundle style,
+		// so all frags will get onCreate() but not the init() and fail, let's chuck em away now
+		if (getSupportFragmentManager().getFragments() != null)
+		{
+			Fragment[] frags = getSupportFragmentManager().getFragments().toArray(new Fragment[0]);
+			for (int i = 0; i < frags.length; i++)
+			{
+				Fragment fragment = frags[i];
+				if (fragment != null)
+					getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+			}
+		}
+
+		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), renovations3D);
+		permissionGranted();
+	}
+
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -644,6 +668,13 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void loadFile(File inFile)
 	{
+		/*
+		 I think I need to clean up any exisiting loading file now? don't I, coming in from a tap on teh internet
+		 seems to leave teh old home in place some how? wooooahh hold on
+
+		 If I come to a home form teh interenet I'm not reusing my curent Activity at all!!!
+		 I've now got 2 activities running at the same tiem!!
+		 */
 		if (inFile.getName().toLowerCase().endsWith(".sh3d"))
 		{
 			loadHome(inFile);
