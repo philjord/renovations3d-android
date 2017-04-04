@@ -1721,7 +1721,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         lengthStyle = this.preferences.getDefaultTextStyle(dimensionLine.getClass());
       }
       FontMetrics lengthFontMetrics = getFontMetrics(componentFont, lengthStyle);
-      Rectangle2D lengthTextBounds = getStringBounds(lengthText, componentFont);
+      Rectangle2D lengthTextBounds = componentFont.getStringBounds(lengthText);
       // Transform length text bounding rectangle corners to their real location
       double angle = Math.atan2(dimensionLine.getYEnd() - dimensionLine.getYStart(),
           dimensionLine.getXEnd() - dimensionLine.getXStart());
@@ -1729,10 +1729,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           dimensionLine.getXStart(), dimensionLine.getYStart());
       transform.rotate(angle);
       transform.translate(0, dimensionLine.getOffset());
+		//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
       transform.translate((dimensionLineLength - lengthTextBounds.getWidth()) / 2,
           dimensionLine.getOffset() <= 0
-              ? -lengthFontMetrics.descent - 1
-              : lengthFontMetrics.ascent + 1);
+              ? lengthFontMetrics.descent + 1
+              : -lengthFontMetrics.ascent - 1);
       GeneralPath lengthTextBoundsPath = new GeneralPath(lengthTextBounds);
       for (PathIterator it = lengthTextBoundsPath.getPathIterator(transform); !it.isDone(); it.next()) {
         float [] pathPoint = new float[2];
@@ -1767,7 +1768,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       AffineTransform transform = AffineTransform.getTranslateInstance(compass.getX(), compass.getY());
       transform.scale(compass.getDiameter(), compass.getDiameter());
       transform.rotate(compass.getNorthDirection());
-		//TODO: PJ I think this is broken now? transform shape will be using a bum affine
       return COMPASS.createTransformedShape(transform).getBounds2D();
     }
     return itemBounds;
@@ -1794,8 +1794,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    */
   public float [][] getTextBounds(String text, TextStyle style,
                                   float x, float y, float angle) {
-    FontMetrics fontMetrics = getFontMetrics(getFont(), style);
-    Rectangle2D textBounds = getStringBounds(text, getFont());
+    //FontMetrics fontMetrics = getFontMetrics(getFont(), style);
+    Rectangle2D textBounds = getFont().getStringBounds(text);
     float halfTextLength = (float)textBounds.getWidth() / 2;
     if (angle == 0) {
       float minY = (float)(y + textBounds.getY());
@@ -1813,20 +1813,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       transform.translate(-halfTextLength, 0);
       GeneralPath textBoundsPath = new GeneralPath(textBounds);
       List<float []> textPoints = new ArrayList<float[]>(4);
-		//PJ possibly untranslated text does not add all 4 points? see crash report jan 13
-		PathIterator it = textBoundsPath.getPathIterator(transform);
-		while(!it.isDone())
-		{
-			it.next();
-			float[] pathPoint = new float[2];
-			if (it.currentSegment(pathPoint) != PathIterator.SEG_CLOSE)
-			{
-				textPoints.add(pathPoint);
-			}
+	  for (PathIterator it = textBoundsPath.getPathIterator(transform); !it.isDone(); it.next()) {
+	  	float [] pathPoint = new float[2];
+		if (it.currentSegment(pathPoint) != PathIterator.SEG_CLOSE) {
+			textPoints.add(pathPoint);
 		}
-		for(int i = textPoints.size(); i<4;i++)
-			textPoints.add(new float[]{0,0});
-
+	  }
       return textPoints.toArray(new float [textPoints.size()][]);
     }
   }
@@ -3039,7 +3031,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
 
     //FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
-    Rectangle2D textBounds = getStringBounds(text, defaultFont); //PJ reobtained below as font is not right yet
+    Rectangle2D textBounds;// = defaultFont.getStringBounds(text); //PJ reobtained below as font is not right yet
     g2D.translate(x, y);
     g2D.rotate(angle);
     if (outlineColor != null) {
@@ -3049,7 +3041,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       Font font = getFont(defaultFont, outlineStyle);
       g2D.setFont(font);
 		setFont(font);//PJPJ make font setting consistent
-		textBounds = getStringBounds(text, font);//PJ
+		textBounds = font.getStringBounds(text);//PJ
       Color defaultColor = g2D.getColor();
       g2D.setColor(new Color(outlineColor));
       g2D.setStroke(stroke);
@@ -3063,7 +3055,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     } else {
       g2D.setFont(getFont(defaultFont, style));
 		setFont(getFont(defaultFont, style));//PJPJ make font setting consistent
-		textBounds = getStringBounds(text, getFont(defaultFont, style));//PJ
+		textBounds = getFont(defaultFont, style).getStringBounds(text);//PJ
 		((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
       g2D.translate(-(float)textBounds.getWidth() / 2, 0);
     }
@@ -3279,7 +3271,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       float scaleInverse = inverseSize / planScale;
       g2D.translate(x, y);
       g2D.rotate(angle);
-      //g2D.scale(scaleInverse, scaleInverse);
+     //PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
       if (Label.class.isAssignableFrom(selectableClass)) {
 		  ((VMGraphics2D)g2D).draw(LABEL_CENTER_INDICATOR, scaleInverse);
       } else {
@@ -3293,8 +3285,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		AffineTransform previousTransform2 = g2D.getTransform();
       g2D.translate(x, y);
       g2D.rotate(angle);
-      g2D.translate(0, -fontMetrics.ascent * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
-      //g2D.scale(scaleInverse, scaleInverse);
+		//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
+      g2D.translate(0, fontMetrics.ascent * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
+		//PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
 		((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.ROTATE_TEXT), scaleInverse);
       g2D.setTransform(previousTransform2);
     }
@@ -4311,12 +4304,14 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         }
         Font font = getFont(previousFont, lengthStyle);
         FontMetrics lengthFontMetrics = getFontMetrics(font, lengthStyle);
-        Rectangle2D lengthTextBounds = getStringBounds(lengthText, font);
+        Rectangle2D lengthTextBounds = font.getStringBounds(lengthText);
+
         int fontAscent = (int)lengthFontMetrics.ascent;
+		  //PJ the ascent in fontMetrics is already -ve so fontMetrics.ascent swapped to -fontMetrics.ascent
         g2D.translate((dimensionLineLength - (float)lengthTextBounds.getWidth()) / 2,
             dimensionLine.getOffset() <= 0
-                ? -lengthFontMetrics.descent- 1
-                : fontAscent + 1);
+                ? lengthFontMetrics.descent- 1
+                : -fontAscent + 1);
 
 		  //TODO: feedback outline thingy disabled for now, but should be put back
     /*    if (feedback) {
