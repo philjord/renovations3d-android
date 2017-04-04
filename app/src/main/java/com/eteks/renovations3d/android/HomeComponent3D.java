@@ -1435,6 +1435,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		private long lenAnimationMS = 150;
 
+		public static final float onepi = (float)Math.PI * 1f;
+		public static final float twopi = (float)Math.PI * 2f;
+		public static final float fivepi = (float)Math.PI * 5f;
+
 
 		public CameraInterpolator(TransformGroup transformGroup)
 		{
@@ -1462,7 +1466,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					Alpha alpha = getAlpha();
 					if (alpha == null || alpha.finished())
 					{
-						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw() % ((float)Math.PI * 2f), camera.getPitch(),
+						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw() % twopi, camera.getPitch(),
 								camera.getFieldOfView());
 					}
 					else if (alpha.value() < 0.1)
@@ -1470,23 +1474,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						Transform3D finalTransformation = new Transform3D();
 						// Jump directly to final location
 						updateViewPlatformTransform(finalTransformation, this.finalCamera.getX(), this.finalCamera.getY(),
-								this.finalCamera.getZ(), this.finalCamera.getYaw()% ((float)Math.PI * 2f), this.finalCamera.getPitch());
+								this.finalCamera.getZ(), this.finalCamera.getYaw() % twopi, this.finalCamera.getPitch());
 						getTarget().setTransform(finalTransformation);
 						this.initialCamera = this.finalCamera;
 					}
 					else
 					{
 						// Compute initial location from current alpha value
+						float shortest_angle=((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
 						this.initialCamera = new Camera(
 								this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha.value(),
 								this.initialCamera.getY() + (this.finalCamera.getY() - this.initialCamera.getY()) * alpha.value(),
 								this.initialCamera.getZ() + (this.finalCamera.getZ() - this.initialCamera.getZ()) * alpha.value(),
-								this.initialCamera.getYaw() + ((this.finalCamera.getYaw() - this.initialCamera.getYaw()) * alpha.value())% ((float)Math.PI * 2f),
+								this.initialCamera.getYaw() % twopi + (shortest_angle * alpha.value()),
 								this.initialCamera.getPitch()
 										+ (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha.value(),
 								finalCamera.getFieldOfView());
 					}
-					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(), finalCamera.getYaw()% ((float)Math.PI * 2f),
+					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(), finalCamera.getYaw() % twopi,
 							finalCamera.getPitch(), finalCamera.getFieldOfView());
 
 					// Create an animation that will interpolate camera location
@@ -1519,11 +1524,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public synchronized void computeTransform(float alpha, Transform3D transform)
 		{
+
+			float shortest_angle=((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
 			updateViewPlatformTransform(transform,
 					this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha,
 					this.initialCamera.getY() + (this.finalCamera.getY() - this.initialCamera.getY()) * alpha,
 					this.initialCamera.getZ() + (this.finalCamera.getZ() - this.initialCamera.getZ()) * alpha,
-					this.initialCamera.getYaw() + (this.finalCamera.getYaw() - this.initialCamera.getYaw()) * alpha,
+					this.initialCamera.getYaw() % ((float)Math.PI * 2f) + shortest_angle * alpha,
 					this.initialCamera.getPitch() + (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha);
 		}
 	}
