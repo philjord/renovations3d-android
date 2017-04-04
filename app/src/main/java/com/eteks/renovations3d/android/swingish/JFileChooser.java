@@ -227,7 +227,14 @@ public class JFileChooser
 	 */
 	private void refresh(File path)
 	{
-		if (path.exists())
+		// in case of a locked up situation just attempt to go back to the downloads folder
+		if (currentPath == null)
+		{
+			currentPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		}
+
+		// note downloads might be returning null
+		if (currentPath != null && path.exists())
 		{
 			if(path.isDirectory())
 			{
