@@ -1572,8 +1572,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
 			}
 		});
-
-		longHoldHandler = new LongHoldHandler(getView().getResources().getDisplayMetrics());
+		if(getView() != null)
+		{
+			longHoldHandler = new LongHoldHandler(getView().getResources().getDisplayMetrics());
+		}
 	}
 
 
@@ -1587,10 +1589,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector)
 		{
-			DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
-			float mDPI = (float) mDisplayMetrics.densityDpi;
-			float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-			return measurement > PlanComponent.dpiMinSpanForZoom;
+			if(getView() != null)
+			{
+				DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
+				float mDPI = (float) mDisplayMetrics.densityDpi;
+				float measurement = mScaleDetector.getCurrentSpan() / mDPI;
+				return measurement > PlanComponent.dpiMinSpanForZoom;
+			}
+			return false;
 		}
 
 		@Override
@@ -1693,12 +1699,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 
 			//allow the long down hold to inspect it, it might consume jitters
-			if(longHoldHandler.onTouch(v,  ev))
+			if(longHoldHandler!=null && longHoldHandler.onTouch(v,  ev))
 				return true;
 
 			// let the selection handler have a go first, if it's working then stop there
 			// note it has a tiny waver factor, it returns false on any down ever though it will use it later
-			if(homeComponent3DMouseHandler.onTouch(v,  ev))
+			if(homeComponent3DMouseHandler != null && homeComponent3DMouseHandler.onTouch(v,  ev))
 				return true;
 
 			// for long hold I will only get a mouse down and nothing after it, so on a mouse donw (before even teh tapper)
