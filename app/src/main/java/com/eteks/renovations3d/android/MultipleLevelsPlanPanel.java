@@ -159,7 +159,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.editUndo:
 					try
 					{
-						((Renovations3DActivity) MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().undo();
+
+						if(((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().undo();
 					}
 					catch (CannotUndoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
@@ -168,7 +170,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.editRedo:
 					try
 					{
-						((Renovations3DActivity) MultipleLevelsPlanPanel.this.getActivity()).renovations3D.getHomeController().redo();
+						if(((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().redo();
 					}
 					catch (CannotRedoException e)
 					{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
