@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renowacje 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">wyrównanie</string>
     <string name="magnetism">magnetyzm</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Użyj gestu pinch do przybliżania i oddalania.<br>
 Aby zobaczyć tabelę meble z 1 machnięcia palcem od lewej krawędzi widoku mapy.<br>
 Aller à la Meble Katalog przesuń palcem od prawej krawędzi, można dodać meble stamtąd.<br>
 Aby przesuwać bez zmiany bieżącego wyboru bezstykowa dwoma palcami razem.<br>
+Aby edytować dowolny obiekt, kliknij go dwukrotnie. <br>
 Aby wybrać więcej niż jeden obiekt użyć Lasso Wybierz Wybierz akcji wielokrotnego złota w menu Więcej.<br>
 Dwa SH3D pliki demo będzie w folderze pobieranie, wybierz więcej-> Otwórz domu.<br>
 Za pomocą przeglądarki, aby pobrać więcej plików SH3D z internetu, będą otwarte w przeglądarce.<br>
@@ -59,5 +60,10 @@ Jeśli widzisz uszkodzony widok, spróbuj skorzystać z opcji deoptomize w menu.
               </p><p><font size="-2">Zbudowany na otwartym kodzie źródłowym © Prawa autorskie 2006-2017 eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Menu-> Pomoc Obecnie nic nie robi.</string>
+    <string name="large_home_question_title">Potencjalny problem</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Ten dom ma rozmiar%1, rozmiar ten może być za duży, aby mógł być płynnie edytowany w programie Renowacje 3D, czy chcesz zacząć od widocznego ustawienia nie wybranego poziomu? (Zalecane) <br>
+     Aby wyświetlić te poziomy, musisz dwukrotnie dotknąć nazwy poziomu i zaznaczyć opcję Wyświetlaj, pamiętaj, że w przypadku dużych domów wskazane jest, aby minimalny poziom widocznych wyświetleń był minimalny. <br>
+     ]]></string>
 
 </resources>

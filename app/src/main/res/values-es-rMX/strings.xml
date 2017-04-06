@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovaciones 3D 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">alineación</string>
     <string name="magnetism">magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Utilizar el gesto de pellizcar para acercar y alejar.<br>
 Para ver la tabla 1 mueble con pasar el dedo desde el borde izquierdo de la vista del mapa.<br>
 Para ver el catálogo de muebles desliza el dedo desde el borde derecho, se puede añadir el mobiliario de allí.<br>
 Para obtener una panorámica sin alterar el golpe selección actual con dos dedos juntos.<br>
+Para editar cualquier objeto, pulse dos veces sobre él.<br>
 Para seleccionar más de un objeto utilizar las acciones Selección de lazo Seleccione múltiple de oro en el menú Más.<br>
 Dos archivos de demostración SH3D estarán en la carpeta de descargas, seleccione más-> casa abierta.<br>
 Utilizar el navegador para descargar más archivos SH3D de la Internet, se abrirá desde el navegador.<br>
@@ -60,5 +61,10 @@ Si ves una vista corrupta, prueba la opción deoptomize en el menú. <br>
               </font>
               <br>&nbsp;]]></string>
     <string name="helpmenu_no_work">Menú-> Ayuda Actualmente no hace nada.</string>
+    <string name="large_home_question_title">Problema potencial</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Esta casa tiene un tamaño de% 1, este tamaño puede ser demasiado grande para ser editado con suavidad en Renovations 3D.  ¿Desea comenzar con el ajuste visible para niveles no seleccionados? (Recomendado) <br>
+     Para ver esos niveles necesitará doblar el nombre del nivel y marcar en la opción visible, tenga en cuenta que es recomendable mantener el número de niveles visibles como mínimo para grandes hogares como este.<br>
+]]></string>
 
 </resources>

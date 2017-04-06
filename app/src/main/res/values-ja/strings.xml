@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">リフォームの3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">アラインメント</string>
     <string name="magnetism">磁気</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@
 マップビューの左端から1本指スワイプで家具のテーブルを参照してください。<br>
 右端から家具カタログスワイプを表示するには、そこから家具を追加することができます。<br>
 一緒に2本の指で現在の選択スワイプを変更せずにパンします。<br>
+任意のオブジェクトを編集するには、そのオブジェクトをダブルタップします。<br>
 複数のオブジェクトを選択するには、なげなわ選択]を使用して詳細メニューで複数の金の株式を選択します。<br>
 二つSH3DデモファイルはMore->開くホームを選択し、あなたのダウンロードフォルダになります。<br>
 インターネットからより多くのSH3Dファイルをダウンロードするには、ブラウザを使用して、彼らは、ブラウザから開きます。<br>
@@ -59,5 +60,10 @@
     </p><p><font size="-2">オープンソースコード上に構築 © 著作権 2006-2017 eTeks
     </font>]]></string>
     <string name="helpmenu_no_work">"メニュー - >現在、何もしないのに役立ちます。 "</string>
+    <string name="large_home_question_title">潜在的な問題</string>
+    <string name="large_home_question"><![CDATA[<html>
+     この家はサイズが ％1 ですが、このサイズが大きすぎてRenovations 3Dでスムーズに編集できない場合は、非選択レベルの表示可能な設定をオフにしますか？ （推奨）<br>
+     これらのレベルを表示するには、レベル名をダブルタップして[表示可能]オプションをオンにする必要があります。このような大規模な家庭では、表示可能なレベルの数を最小限に抑えることが推奨されます。<br>
+     ]]></string>
 
 </resources>

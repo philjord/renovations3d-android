@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renoveringar 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Använd nypa gest för att zooma in och ut.<br>
 Att se möbler bord med en fingrar från vänster kant av kartvyn.<br>
 Att se möbler katalogen svepa från den högra kanten, kan du lägga till möbler därifrån .<br>
 Att panorera utan att ändra den aktuella markeringen svepa med två fingrar tillsammans.<br>
+Om du vill redigera ett objekt dubbeltryck på den. <br>
 Om du vill markera mer än ett objekt använder Lasso Välj Markera flera guld aktier på menyn Mer.<br>
 Två SH3D demofiler kommer att vara i din nedladdningar mapp väljer mer-> Öppna hem.<br>
 Använd din webbläsare för att ladda ner fler SH3D filer från Internet, kommer de att öppna från webbläsaren.<br>
@@ -62,5 +63,10 @@ Om du ser en korrumperad syn, försök alternativet deoptomize i menyn. <br>
               </p><p><font size="-2">Byggd på öppen källkod © Copyright 2006-2017 eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Meny-> Hjälp närvarande ingenting.</string>
+    <string name="large_home_question_title">Potentiellt problem</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Detta hem är %1 i storlek, kan denna storlek vara för stor för att smidigt redigeras i Renoveringar 3D, skulle du vilja börja med den synliga inställningen för icke-valda planar ut? (Rekommenderas) <br>
+     För att se dessa nivåer måste du dubbeltrycka nivån namn och kryssa på den synliga alternativet notera att det är lämpligt att hålla antalet visningsbara nivåer till ett minimum för stora hem som denna. <br>
+     ]]></string>
 
 </resources>

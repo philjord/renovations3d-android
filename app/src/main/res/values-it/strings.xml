@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ristrutturazioni 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">allineamento</string>
     <string name="magnetism">magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Utilizzare il gesto pizzico di zoom in e out.<br>
 Per vedere la tabella mobili con 1 strisciare il dito dal bordo sinistro della mappa.<br>
 Per vedere il colpo catalogo di mobili dal bordo destro, è possibile aggiungere mobili da lì.<br>
 Per eseguire una panoramica senza alterare il colpo selezione corrente con due dita insieme.<br>
+Per modificare ogni oggetto doppio tap su di esso. <br>
 Per selezionare più di un oggetto usare il lazo Seleziona Seleziona azioni oro multipla nel menu Altro.<br>
 Due file dimostrativi SH3D saranno nella cartella download, selezionare più-> Apri casa.<br>
 Utilizzare il browser per scaricare più file SH3D da internet, si aprirà dal browser.<br>
@@ -60,5 +61,10 @@ Se vedete una corrotta, prova l\'opzione deoptomize nel menu. <br>
               </p><p><font size="-2">Costruito su codice open source © Copyright 2006-2017 eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Menu-> Aiuto Attualmente non fa nulla.</string>
+    <string name="large_home_question_title">Potenziale problema</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Questa casa è %1 in termini di dimensioni, queste dimensioni può essere troppo grandi per essere agevolmente modificato nelle ristrutturazioni 3D, ti piacerebbe iniziare con l\'impostazione del visibile per i livelli non selezionati off? (Consigliata) <br>
+     Per visualizzare quei livelli è necessario toccare due volte il nome del livello e selezionare l\'opzione visibile, notare che è consigliabile mantenere il numero di livelli visualizzabili al minimo per le grandi case come questo. <br>
+     ]]></string>
 
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">装修3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">对准</string>
     <string name="magnetism">磁</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@
 要查看与1指轻扫家具表从地图视图左侧边缘。<br>
 要看到右边缘的家具目录轻扫，你可以从那里添加家具。<br>
 要平移不改变用两个手指当前选择刷卡在一起。<br>
+要编辑任何对象，双击它<br>
 要选择多个对象使用套索选择选择多黄金股在更多菜单。<br>
 两个SH3D演示文件将在您的下载文件夹，选择更多 - >打开主页。<br>
 使用浏览器从互联网上下载更多SH3D文件，他们会从浏览器中打开。<br>
@@ -58,5 +59,10 @@
     </p><p><font size="-2">建立在开源代码的基础上 © 版权所有 2006-2017 eTeks
 	</font>]]></string>
     <string name="helpmenu_no_work">菜单 - >帮助目前什么都不做。</string>
+    <string name="large_home_question_title">潜在的问题</string>
+    <string name="large_home_question"><![CDATA[<html>
+     这个家庭的大小是 ％1，这个大小可能太大，无法在装修3D中顺利编辑，你想从非选择级别的可视设置开始吗？ （推荐）<br>
+     要查看这些级别，您需要双击级别名称并在“可见”选项上勾选，请注意，建议将可见级别的数量保持在最低限度，以满足大型家庭的需求。<br>
+     ]]></string>
 
 </resources>

@@ -8,6 +8,7 @@ Pincer l\'écran pour zoomer et dézoomer.<br>
 Pour voir la liste des meubles, balayez l\'écran à partir du bord gauche.<br>
 Pour voir le catalogue de meubles et ajouter des meubles au plan, balayez l\'écran à partir du bord droit.<br>
 Pour déplacer la zone visible du plan, déplacez deux doigts ensemble.<br>
+Pour modifier n\'importe quel objet, double-cliquez.<br>
 Pour sélectionner plus d\'un objet à la fois, choisissez Sélection lasso ou Sélection multiple dans le menu.<br>
 Deux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir... dans le menu.<br>
 Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, ils s\'ouvriront du navigateur.<br>
@@ -58,5 +59,10 @@ Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
               </p><p><font size="-2">Construit sur le code source ouvert © Copyright 2006-2017 eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Le menu Aide ne fait actuellement rien.</string>
+    <string name="large_home_question_title">Problème potentiel</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Cette maison a une taille de% 1, cette taille peut être trop grande pour être modifiée en douceur dans Renovations 3D, souhaitez-vous commencer par le réglage visible des niveaux non sélectionnés? (Recommandé) <br>
+     Pour voir ces niveaux, vous devrez doubler le nom du niveau et cocher l\'option Viewable, notez qu\'il est conseillé de garder au minimum le nombre de niveaux visibles pour les grandes maisons comme celle-ci.<br>
+     ]]></string>
 
 </resources>

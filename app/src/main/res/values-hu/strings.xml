@@ -8,6 +8,7 @@ Használja a csipet gesztus a nagyítás és kicsinyítés.<br>
 Látni, hogy a bútor asztal 1 ujját csúsztassa a bal szélén a térkép nézet.<br>
 Látni, hogy a bútor katalógus húzza az ujját a jobb szélén, akkor egy bútor onnan.<br>
 A pan megváltoztatása nélkül a jelenlegi kiválasztási ellop két ujjal együtt.<br>
+Szerkeszteni bármilyen tárgy dupla csap rajta. <br>
 Válassza ki egynél több objektum használja a Lasso Select Select többszörös arany részvények a További menüben.<br>
 Két SH3D demo fájl lesz a letöltések mappában válassza More> Megnyitás haza.<br>
 A böngésző letölthető több SH3D fájlokat az interneten, akkor nyissa meg a böngészőt.<br>
@@ -58,5 +59,10 @@ Ha látsz egy korrupt véli, próbálkozz az deoptomize lehetőséget a menübő
               </p><p><font size="-2">Épül a nyílt forráskód © Copyright 2006-2017 eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Menü-> Help Jelenleg nem csinál semmit.</string>
+    <string name="large_home_question_title">Potenciális probléma</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Ez az otthon %1 méretben, ez a méret túl nagy lehet, hogy simán szerkeszthető Felújítások 3D szeretne kezdeni a látható beállítás nem kiválasztott szint off? (Ajánlott) <br>
+     Megtekintéséhez ezen a szinten meg kell érintse meg duplán a szint neve és jelölje be a Látható opciót, vegye figyelembe, hogy célszerű minél kevesebb látható szintet a legkisebb nagy otthonok, mint ez. <br>
+     ]]></string>
 
 </resources>

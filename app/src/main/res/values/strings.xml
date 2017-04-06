@@ -8,6 +8,7 @@ Use the pinch gesture to zoom in and out.<br>
 To see the furniture table swipe with 1 finger from the left edge of the plan view.<br>
 To see the furniture catalog swipe from the right edge, you can add furniture from there.<br>
 To pan without altering the current selection swipe with 2 fingers together.<br>
+To edit any object double tap on it.<br>
 To select more than one object use the Select lasso or Select multiple actions in the More menu.<br>
 Two demo sh3d files will be in your downloads folder, select More->Open home.<br>
 Use your browser to download more sh3d files from the internet, they will open from the browser.<br>
@@ -15,12 +16,13 @@ Use your browser to download more sh3d files from the internet, they will open f
     <br> and <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
     <br>for more information.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Press the add furniture icon to place the selected furniture item onto the plan view at the location 0,0.<br>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>
+Press the add furniture icon to place the selected furniture item onto the plan view at the location 0,0.<br>
 Alternatively you can long press on the item (there is no drag and drop).<br>
 From this view you can import furniture catalog libraries, select Menu->Import furniture library&#8230;<br>
 You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.<br>
 </p><p>Please visit <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-    <br> and <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+<br> and <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 This is a view of all the furniture currently placed on your plan.<br>
@@ -46,7 +48,8 @@ If you see a corrupt view, please try the deoptomize option in the menu.<br>
     <string name="select_multiple">Select multiple</string>
     <string name="select_lasso">Select lasso</string>
 
-    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+    <string name="help_about"><![CDATA[<html>
+    <font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
     <br><b>Version %1$s</b>
     <br><font size="-1">Java version %2$s</font>
     <br><font size="-1">PDF print provided by <a href="http://www.lowagie.com/iText/">iText</a></font>
@@ -58,7 +61,13 @@ If you see a corrupt view, please try the deoptomize option in the menu.<br>
     <br>for more information.
     </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
     </p><p><font size="-2">Built on open source code © Copyright 2006-2017 eTeks
-  </font>]]></string>
+    </font>
+    ]]></string>
     <string name="helpmenu_no_work">Menu->Help does nothing currently.</string>
+    <string name="large_home_question_title">Potential issue</string>
+    <string name="large_home_question"><![CDATA[<html>
+    This home is %1 in size, this size may be too large to be smoothly edited in Renovations 3D, would you like to start with the viewable setting for non-selected levels off? (Recommended)<br>
+    To view those levels you will need to double tap the level name and tick on the Viewable option, note that it is advisable to keep the number of viewable levels to a minimum for large homes like this.<br>
+    ]]></string>
 
 </resources>

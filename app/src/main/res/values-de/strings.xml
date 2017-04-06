@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sanierungen 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">Ausrichtung</string>
     <string name="magnetism">Magnetismus</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Verwenden Sie die Pinch-Geste in und heraus zu zoomen.<br>
 Um zu sehen, die Möbel Tisch mit 1 Bewegung des Fingers von der linken Rand der Kartenansicht.<br>
 Um den Möbelkatalog Swipe vom rechten Rand sehen, können Sie Möbel von dort hinzufügen.<br>
 Mit zwei Fingern zusammen ohne Änderung der aktuellen Auswahl Swipe zu schwenken.<br>
+Um ein beliebiges Objekt zu bearbeiten, tippen Sie darauf
 Um mehr als ein Objekt mehrere Goldaktien im Menü Mehr die Lasso Select Select verwenden.<br>
 Zwei SH3D Demo-Dateien werden in Ihrem Download-Ordner sein, wählen Sie More-> Öffnen nach Hause.<br>
 Benutzen Sie Ihren Browser mehr SH3D Dateien aus dem Internet herunterladen, diese werden vom Browser öffnen.<br>
@@ -59,5 +60,10 @@ Wenn Sie eine korrupte Ansicht sehen, versuchen Sie bitte die Option deoptomize 
               </p><p><font size="-2">Errichtet auf Open Source Code © Copyright 2006-2017 by eTeks
               </font>]]></string>
     <string name="helpmenu_no_work">Menü-> Hilfe Zur Zeit nichts tut.</string>
+    <string name="large_home_question_title">Potenzielle Frage</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Dieses Haus ist %1 in Größe, diese Größe kann zu groß sein, um reibungslos in Renovations 3D bearbeitet zu werden, möchten Sie mit der sichtbaren Einstellung für nicht ausgewählte Levels beginnen? (Empfohlen) <br>
+     Um diese Ebenen zu sehen, musst du doppelt auf den Levelnamen tippen und auf die Option Viewable ticken, beachten Sie, dass es ratsam ist, die Anzahl der sichtbaren Levels auf ein Minimum für große Häuser wie diese zu halten
+     ]]></string>
 
 </resources>

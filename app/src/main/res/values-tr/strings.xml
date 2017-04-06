@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tadilat 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Ve uzaklaştırmak için kıstırma hareketini kullanın.<br>
 Harita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.<br>
 Sağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.<br>
 Birlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.<br>
+Herhangi bir nesneyi düzenlemek için üzerine iki kez dokunun. <br>
 Birden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.<br>
 İki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.<br>
 Internetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.<br>
@@ -47,7 +48,6 @@ Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini d
     <string name="help_about"><![CDATA[<html><font face="sans-sherif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
 	<br><b>Versyionu %1$s</b>
 	<br><font size="-1">Java versiyonu %2$s</font>
-	<br><font size="-1">Java 3D versiyonu %3$s</font>
 	<br>PDF yazdırması <a href="http://www.lowagie.com/iText/">iText</a> tarafından sağlanmaktadır
 	<br>SVG çıkartması <a href="http://java.freehep.org/">FreeHEP</a> tarafından sağlanmaktadır
 	<br>Fotoğraf yorumlaması <a href="http://sunflow.sourceforge.net/">SunFlow</a> tarafından sağlanmaktadır</font>
@@ -59,5 +59,10 @@ Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini d
 	</p><p><font size="-2">© Telif hakları 2006-2017 eTeks
 	</font>]]></string>
     <string name="helpmenu_no_work">Menü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
+    <string name="large_home_question_title">Olası sorun</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Bu evin boyutu %1, bu boyut Renovations 3D'de düzgün şekilde düzenlenemeyecek kadar büyük olabilir, seçili olmayan seviyeler için görüntülenebilir ayarını kapatmak mı istiyorsunuz? (Önerilen) <br>
+     Bu düzeyleri görüntülemek için, düzey adını çift tıklamanız ve Görüntülenebilir seçeneği işaretlemek zorunda kalmanız gerekir; bunun gibi büyük evler için görüntülenebilir düzeylerin sayısını en az seviyede tutmanız önerilir. <br>
+     ]]></string>
 
 </resources>

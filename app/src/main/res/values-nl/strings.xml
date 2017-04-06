@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Renovaties 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">opstelling</string>
     <string name="magnetism">magnetisme</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Gebruik de pinch gebaar om in en uit te zoomen.<br>
 Om de meubels tafel met 1 vingerbeweging zien vanaf de linkerrand van de kaartweergave.<br>
 Om de meubels catalogus swipe van de rechterrand ziet, kun je meubels toevoegen vanaf daar.<br>
 Pan zonder elkaar wijziging van de huidige selectie vegen met twee vingers.<br>
+Om een object dubbele tik op het te bewerken. <br>
 Om te selecteren meer dan één object gebruik maken van de Lasso selecteren meerdere gouden aandelen in het menu Meer.<br>
 Twee SH3D demo bestanden in de map downloads, selecteert Meer-> Open huis.<br>
 Gebruik uw browser om meer SH3D bestanden te downloaden van het internet, zullen ze openen vanuit de browser.<br>
@@ -58,5 +59,10 @@ Als u een corrupte uitzicht, probeer dan de optie deoptomize in het menu. <br>
     </p><p><font size="-2">Gebouwd op open source-code © Copyright 2006-2017 eTeks
     </font>]]></string>
     <string name="helpmenu_no_work">Menu-> Hulp Op dit moment doet niets.</string>
+    <string name="large_home_question_title">Potentiële probleem</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Dit huis is %1 in omvang, kan deze grootte te groot zijn om soepel worden bewerkt in Renovaties 3D zijn, zou u willen beginnen met het zichtbare instelling voor niet-geselecteerde levels uit? (Aanbevolen) <br>
+     Om deze niveaus te bekijken, moet u het dubbele tik op de naam niveau en vink op het zichtbare optie, er rekening mee dat het raadzaam is om het aantal zichtbare niveaus tot een minimum voor grote huizen als deze te houden. <br>
+     ]]></string>
 
 </resources>

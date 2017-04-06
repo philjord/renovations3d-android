@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cải tạo 3D</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">từ tính</string>
     <string name="planview_welcometext"><![CDATA[<html>
@@ -8,6 +8,7 @@ Sử dụng các cử chỉ pinch để phóng to ra.<br>
 Để xem bảng đồ nội thất với 1 ngón tay vuốt từ cạnh bên trái của bản đồ.<br>
 Để xem các cửa hàng đồ nội thất vuốt từ cạnh phải, bạn có thể thêm đồ nội thất từ đó.<br>
 Để chảo mà không thay đổi swipe lựa chọn hiện tại bằng hai ngón tay lại với nhau.<br>
+Để chỉnh sửa bất kỳ đối tượng nào, nhấn đúp vào nó. <br>
 Để chọn nhiều đối tượng sử dụng Lasso Chọn cổ phiếu nhiều vàng trong menu Thêm.<br>
 Hai file demo SH3D sẽ nằm trong thư mục tải về của bạn, chọn thêm-> Open nhà.<br>
 Sử dụng trình duyệt để tải nhiều tập tin SH3D từ internet, Họ sẽ mở từ trình duyệt.<br>
@@ -59,5 +60,10 @@ Nếu bạn thấy một chế độ xem hỏng, vui lòng thử tùy chọn deo
     </p><p><font size="-2">Được xây dựng trên mã nguồn mở © Copyright 2006-2017 eTeks
     </font>]]></string>
     <string name="helpmenu_no_work">Menu-> Help Hiện nay Liệu có gì.</string>
+    <string name="large_home_question_title">Vấn đề tiềm ẩn</string>
+    <string name="large_home_question"><![CDATA[<html>
+     Nhà này có kích thước %1, kích thước này có thể quá lớn để được chỉnh sửa mượt mà trong Renovations 3D, bạn có muốn bắt đầu với cài đặt có thể xem đối với các cấp không được chọn không? (Đề nghị) <br>
+     Để xem các cấp độ đó, bạn sẽ cần nhấn đúp vào tên cấp và đánh dấu vào tùy chọn Chế độ xem được, lưu ý rằng bạn nên giữ số lượng cấp độ có thể xem ở mức tối thiểu cho những ngôi nhà lớn như thế này <br>
+     ]]></string>
 
 </resources>
