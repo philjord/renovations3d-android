@@ -725,12 +725,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				{
 					case ADD:
 						multipleLevelsTabbedPane.insertTab(ev.getItem().getName(), null, new LevelLabel(ev.getItem()), null, ev.getIndex());
+						Renovations3DActivity.logFireBaseLevelUp("AddLevel" , "Add Level", ev.getItem().getName());
 						updateTabComponent(home, ev.getIndex());
 						ev.getItem().addPropertyChangeListener(levelChangeListener);
 						break;
 					case DELETE:
 						ev.getItem().removePropertyChangeListener(levelChangeListener);
 						multipleLevelsTabbedPane.remove(ev.getIndex());
+						Renovations3DActivity.logFireBaseLevelUp("DeleteLevel" , "Delete Level", "Idx: "+ ev.getIndex());
 						break;
 				}
 				updateLayout(home);

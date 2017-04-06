@@ -14,8 +14,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,12 +27,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.tools.OperatingSystem;
@@ -43,7 +40,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.eteks.renovations3d.utils.SopInterceptor;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
@@ -54,12 +50,9 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javaxswing.ImageIcon;
 
 
 /**
@@ -79,7 +72,7 @@ public class Renovations3DActivity extends FragmentActivity
 	// used as a modal mouse click blocker
 	public static AndroidDialogView currentDialog = null;
 
-	public static FirebaseAnalytics mFirebaseAnalytics;
+	private static FirebaseAnalytics mFirebaseAnalytics;
 
 	private Renovations3DPagerAdapter mRenovations3DPagerAdapter;
 	public static ViewPager mViewPager; // public to allow fragmenet to move around by button
@@ -165,6 +158,60 @@ public class Renovations3DActivity extends FragmentActivity
 	// but Renovations3D has one pointer to a HomeController, instead of a map of HomeFrameController
 	// and once running this tells Renovations3D to load a single controller
 
+
+	/**
+	 * For generally doing day to day things
+	 *
+	 * @param id    short id (method name?)
+	 * @param name  nicer description
+	 * @param value optional value
+	 */
+	public static void logFireBaseContent(String id, String name, String value)
+	{
+		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, name, value);
+	}
+
+	/**
+	 * For generally doing day to day things, name will be id repeated
+	 *
+	 * @param id    short id (method name?)
+	 * @param value optional value
+	 */
+	public static void logFireBaseContent(String id, String value)
+	{
+		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, id, value);
+	}
+
+	/**
+	 * For more unusual event that represent exploring/exploiting the system
+	 *
+	 * @param id    short id (method name?)
+	 * @param name  nicer description
+	 * @param value optional value
+	 */
+	public static void logFireBaseLevelUp(String id, String name, String value)
+	{
+		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, name, value);
+	}
+
+	/**
+	 * @param event Event MUST be FirebaseAnalytics.Event.*
+	 * @param id    short id (method name?)
+	 * @param name  nicer description
+	 * @param value optional value
+	 */
+	public static void logFireBase(String event, String id, String name, String value)
+	{
+		if (!BuildConfig.DEBUG && mFirebaseAnalytics != null)
+		{
+			Bundle bundle = new Bundle();
+			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
+			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+			if (value != null && value.length() > 0)
+				bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, value);
+			Renovations3DActivity.mFirebaseAnalytics.logEvent(event, bundle);
+		}
+	}
 
 	//TODO: why is this not being called!!
 	public void onNewIntent(Intent intent)
@@ -272,7 +319,6 @@ public class Renovations3DActivity extends FragmentActivity
 		mViewPager.setOffscreenPageLimit(4);
 
 		invalidateOptionsMenu();
-
 	}
 
 
@@ -332,19 +378,26 @@ public class Renovations3DActivity extends FragmentActivity
 					public void run()
 					{
 						if (renovations3D.getHomeController() != null)
+						{
+							Renovations3DActivity.logFireBaseContent("menu_save", renovations3D.getHome().getName());
 							renovations3D.getHomeController().saveAndCompress();
+						}
 					}
 				};
 				t.start();
 				return true;
 			case R.id.menu_saveas:
+
 				//I must get off the EDT and ask the question in a blocking manner
 				Thread t2 = new Thread()
 				{
 					public void run()
 					{
 						if (renovations3D.getHomeController() != null)
+						{
+							Renovations3DActivity.logFireBaseContent("menu_saveas", renovations3D.getHome().getName());
 							renovations3D.getHomeController().saveAsAndCompress();
+						}
 					}
 				};
 				t2.start();
@@ -353,27 +406,35 @@ public class Renovations3DActivity extends FragmentActivity
 				//if (renovations3D.getHomeController() != null)
 				//	renovations3D.getHomeController().help();
 
+				Renovations3DActivity.logFireBaseLevelUp("menu_help", "menu_help", null);
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 				dialog.setTitle("Notice");
 				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D User Interface"));
-				dialog.setPositiveButton("Ok",  new DialogInterface.OnClickListener() {
+				dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+				{
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(DialogInterface dialog, int which)
+					{
 						dialog.dismiss();
 						//TODO: this is a short term fix, I need to make a Renovations 3D branded version of this site
 						Uri webpage = Uri.parse("http://www.sweethome3d.com/userGuide.jsp#drawingWalls");
 						Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-						if (intent.resolveActivity(getPackageManager()) != null) {
+						if (intent.resolveActivity(getPackageManager()) != null)
+						{
 							startActivity(intent);
-						}}});
+						}
+					}
+				});
 				dialog.create().show();
 
 				return true;
 			case R.id.menu_about:
+				Renovations3DActivity.logFireBaseLevelUp("menu_about", "menu_about", null);
 				if (renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().about();
 				return true;
 			case R.id.menu_preferences:
+				Renovations3DActivity.logFireBaseLevelUp("menu_preferences", "menu_preferences", null);
 				if (renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().editPreferences();
 				return true;
@@ -388,67 +449,15 @@ public class Renovations3DActivity extends FragmentActivity
 	public void onSaveInstanceState(Bundle savedInstanceState)
 	{
 		super.onSaveInstanceState(savedInstanceState);
-		System.out.println("onSaveInstanceState");
-
-		if (renovations3D != null && renovations3D.getHome() != null)
-		{
-			//if(renovations3D.getHome().isModified() )
-			{
-				try
-				{
-					String originalName = renovations3D.getHome().getName();
-					boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
-					File outputDir = getCacheDir();
-					File homeName = new File(outputDir, "currentWork.sh3d");
-					renovations3D.getHomeRecorder().writeHome(renovations3D.getHome(), homeName.getAbsolutePath());
-					System.out.println("onSaveInstanceState written to " + homeName.getAbsolutePath());
-					savedInstanceState.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
-					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-					SharedPreferences.Editor editor = settings.edit();
-					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
-					editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
-					editor.putString(STATE_CURRENT_HOME_NAME, "");
-					editor.apply();
-				}
-				catch (RecorderException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			/*else
-			{
-				savedInstanceState.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
-				editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
-				editor.apply();
-			}*/
-		}
+		System.out.println("onSaveInstanceState - auto saving");
+		doAutoSave();
 	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		super.onRestoreInstanceState(savedInstanceState);
-		System.out.println("onRestoreInstanceState");
-		String unmodifiedFileName = savedInstanceState.getString(STATE_CURRENT_HOME_NAME, "");
-		if (unmodifiedFileName.length() > 0)
-		{
-			loadHome(new File(unmodifiedFileName));
-		}
-		else
-		{
-			String tempWorkingFileRealName = savedInstanceState.getString(STATE_TEMP_HOME_REAL_NAME, "");
-			boolean isModifiedOverrideValue = savedInstanceState.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
-			File outputDir = getCacheDir();
-			File homeName = new File(outputDir, "currentWork.sh3d");
-			System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists());
-			if (homeName.exists())
-			{
-				loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue);
-			}
-		}
+		System.out.println("onRestoreInstanceState - ignored now as onCreate does the job");
 	}
 
 
@@ -627,7 +636,9 @@ public class Renovations3DActivity extends FragmentActivity
 					String localUri = cursor.getString(localUriIndex);
 					try
 					{
-						loadFile(new File(new URI(localUri).getPath()));
+						File file = new File(new URI(localUri).getPath());
+						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", "onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
+						loadFile(file);
 					}
 					catch (URISyntaxException e)
 					{
@@ -659,7 +670,7 @@ public class Renovations3DActivity extends FragmentActivity
 					}
 
 					Toast.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
-
+					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", "onCompleteHTTPIntent.OnReceiveError", message);
 				}
 			}
 		}
@@ -669,11 +680,11 @@ public class Renovations3DActivity extends FragmentActivity
 	private void loadFile(File inFile)
 	{
 		/*
-		 I think I need to clean up any exisiting loading file now? don't I, coming in from a tap on teh internet
+		 I think I need to clean up any existing loading file now? don't I, coming in from a tap on teh internet
 		 seems to leave teh old home in place some how? wooooahh hold on
 
-		 If I come to a home form teh interenet I'm not reusing my curent Activity at all!!!
-		 I've now got 2 activities running at the same tiem!!
+		 If I come to a home form the internet I'm not reusing my current Activity at all!!!
+		 I've now got 2 activities running at the same time!!
 		 */
 		if (inFile.getName().toLowerCase().endsWith(".sh3d"))
 		{
@@ -766,6 +777,7 @@ public class Renovations3DActivity extends FragmentActivity
 					loadFile(inFile);
 
 					setIntent(null);
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", "ImportFromFile", intent.getDataString());
 					return;
 				}
 				else if (scheme.compareTo("http") == 0)
@@ -794,10 +806,12 @@ public class Renovations3DActivity extends FragmentActivity
 					registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 					setIntent(null);
 					Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", "ImportFromHttp.enqueue", intent.getDataString());
 					return;
 				}
 				else if (scheme.compareTo("ftp") == 0)
 				{
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", "ImportFromFtp.enqueue", intent.getDataString());
 					// TODO Import from FTP!
 					Toast.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 					setIntent(null);
@@ -866,7 +880,7 @@ public class Renovations3DActivity extends FragmentActivity
 						// get download service and enqueue file
 						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 						manager.enqueue(request);
-
+						Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
 
 						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
 						if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
@@ -885,7 +899,9 @@ public class Renovations3DActivity extends FragmentActivity
 			String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
 			if (unmodifiedFileName.length() > 0)
 			{
-				loadHome(new File(unmodifiedFileName));
+				File homeName = new File(unmodifiedFileName);
+				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "temp: " + homeName.getAbsolutePath());
+				loadHome(homeName);
 			}
 			else
 			{
@@ -896,11 +912,12 @@ public class Renovations3DActivity extends FragmentActivity
 				System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists() + " original name = " + tempWorkingFileRealName);
 				if (homeName.exists())
 				{
-					// set name to null so a save or save as will pen the default folder
+					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getAbsolutePath() + " original: " + tempWorkingFileRealName);
 					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue);
 				}
 				else
 				{
+					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWorkNoFile", "original: " + tempWorkingFileRealName);
 					// or just fire up a lovely clear new home
 					newHome();
 				}
@@ -911,9 +928,15 @@ public class Renovations3DActivity extends FragmentActivity
 			String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
 			File autoOpenFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), autoOpenFirstOpen);
 			if (autoOpenFile.exists())
+			{
+				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getAbsolutePath());
 				loadHome(autoOpenFile);
+			}
 			else
+			{
+				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile", null);
 				newHome();
+			}
 		}
 
 
@@ -923,29 +946,35 @@ public class Renovations3DActivity extends FragmentActivity
 	{
 		if (renovations3D != null && renovations3D.getHome() != null)
 		{
-			System.out.println("renovations3D.getHome().isModified() " + renovations3D.getHome().isModified());
-			if (renovations3D.getHome().isModified())
+			// synch so auto save thread and onsavesate don't walk all over each other
+			synchronized (renovations3D)
 			{
-				try
+				System.out.println("renovations3D.getHome().isModified() " + renovations3D.getHome().isModified());
+				if (renovations3D.getHome().isModified())
 				{
-					//clone so original modified flag is not changed
-					Home autoSaveHome = renovations3D.getHome().clone();
-					boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
-					String originalName = autoSaveHome.getName();
-					File outputDir = getCacheDir();
-					File homeName = new File(outputDir, "currentWork.sh3d");
-					renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
-					System.out.println("Auto save written to " + homeName.getAbsolutePath() + " with original name of " + originalName);
-					SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-					SharedPreferences.Editor editor = settings.edit();
-					editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
-					editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
-					editor.putString(STATE_CURRENT_HOME_NAME, "");
-					editor.apply();
-				}
-				catch (RecorderException e)
-				{
-					e.printStackTrace();
+					try
+					{
+						//clone so original modified flag is not changed
+						Home autoSaveHome = renovations3D.getHome().clone();
+						boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
+						String originalName = autoSaveHome.getName();
+						File outputDir = getCacheDir();
+						File homeName = new File(outputDir, "currentWork.sh3d");
+						renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());// not using HomeRecorder.Type.COMPRESSED possibly real slow?
+						System.out.println("Auto save written to " + homeName.getAbsolutePath() + " with original name of " + originalName);
+						SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+						editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
+						editor.putString(STATE_CURRENT_HOME_NAME, "");
+						editor.apply();
+
+						Renovations3DActivity.logFireBaseContent("doAutoSave", "Do Auto Save", "temp: " + homeName.getAbsolutePath() + " original: " + originalName);
+					}
+					catch (RecorderException e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 		}

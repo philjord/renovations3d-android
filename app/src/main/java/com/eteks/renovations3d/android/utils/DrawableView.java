@@ -2,6 +2,8 @@ package com.eteks.renovations3d.android.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -50,6 +52,8 @@ public class DrawableView extends SurfaceView implements SurfaceHolder.Callback
 		drawer = c;
 	}
 
+	private Canvas previousCanvas = null;
+	private VMGraphics2D previousVMGraphics2D = null;
 	@Override
 	protected void onDraw(Canvas canvas)
 	{

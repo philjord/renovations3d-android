@@ -809,6 +809,9 @@ private Renovations3DActivity activity;//for dialogs etc
 	  catch (InterruptedException e)
 	  {
 	  }
+
+	  Renovations3DActivity.logFireBaseContent("showFileChooser" +(save ? "Save" : "Open"), "Selected file " + selectedFile[0]);
+
 	  if( selectedFile[0] == null)
 		  return null;
 	  else
@@ -904,6 +907,7 @@ private Renovations3DActivity activity;//for dialogs etc
 
 
 	  System.err.println("FileContentManager asked to confirmOverwrite ");
+	  Renovations3DActivity.logFireBaseContent("confirmOverwrite", path);
 	  return true;
 
    /*

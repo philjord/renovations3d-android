@@ -179,6 +179,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  public void onNothingSelected(AdapterView<?> parent) {}
 			  public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             controller.setLanguage((String)languageComboBox.getSelectedItem());
+				  Renovations3DActivity.logFireBaseLevelUp("setLanguage" , "Set Language", (String)languageComboBox.getSelectedItem());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.LANGUAGE, 

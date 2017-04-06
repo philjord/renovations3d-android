@@ -61,7 +61,7 @@ Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini d
     <string name="helpmenu_no_work">Menü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
     <string name="large_home_question_title">Olası sorun</string>
     <string name="large_home_question"><![CDATA[<html>
-     Bu evin boyutu %1, bu boyut Renovations 3D'de düzgün şekilde düzenlenemeyecek kadar büyük olabilir, seçili olmayan seviyeler için görüntülenebilir ayarını kapatmak mı istiyorsunuz? (Önerilen) <br>
+     Bu evin boyutu %1, bu boyut Renovations 3D\'de düzgün şekilde düzenlenemeyecek kadar büyük olabilir, seçili olmayan seviyeler için görüntülenebilir ayarını kapatmak mı istiyorsunuz? (Önerilen) <br>
      Bu düzeyleri görüntülemek için, düzey adını çift tıklamanız ve Görüntülenebilir seçeneği işaretlemek zorunda kalmanız gerekir; bunun gibi büyük evler için görüntülenebilir düzeylerin sayısını en az seviyede tutmanız önerilir. <br>
      ]]></string>
 

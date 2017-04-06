@@ -693,7 +693,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(DEOPTOMIZE, deoptomize);
 		editor.apply();
-
+		Renovations3DActivity.logFireBaseLevelUp("setDeoptomize" , "Set Deoptomize", "deoptomize " +deoptomize);
 	}
 
 	private enum ActionType

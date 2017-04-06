@@ -1,8 +1,9 @@
 package com.eteks.renovations3d;
 
-import android.os.Bundle;
-
+import com.eteks.renovations3d.android.AndroidViewFactory;
+import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.android.HomePane;
+import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.io.HomeFileRecorder;
@@ -21,12 +22,7 @@ import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
-import com.eteks.renovations3d.android.AndroidViewFactory;
-import com.eteks.renovations3d.android.FileContentManager;
-import com.eteks.renovations3d.j3d.Component3DManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.mindblowing.renovations3d.BuildConfig;
-
 
 import org.jogamp.java3d.JoglesPipeline;
 import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
@@ -55,6 +51,8 @@ public class Renovations3D extends HomeApplication
 	private static final String PREFERENCES_FOLDER = "com.eteks.sweethome3d.preferencesFolder";
 	private static final String APPLICATION_FOLDERS = "com.eteks.sweethome3d.applicationFolders";
 	private static final String APPLICATION_PLUGINS_SUB_FOLDER = "plugins";
+
+	public static final float LARGE_HOME_MIN_BYTES_RATIO = 0.05f;//512 max = 25.5 is large 256 = 12.75
 
 	private HomeRecorder homeRecorder;
 	private HomeRecorder compressedHomeRecorder;
@@ -108,13 +106,7 @@ public class Renovations3D extends HomeApplication
 
 	public void newHome()
 	{
-		if (!BuildConfig.DEBUG)
-		{
-			Bundle bundle = new Bundle();
-			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "newHome");
-			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "newHome");
-			Renovations3DActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-		}
+		Renovations3DActivity.logFireBaseContent("newHome" , "New home", null);
 
 		home = new Home();
 		home.setName(null);// ensures save does a save as
@@ -132,20 +124,16 @@ public class Renovations3D extends HomeApplication
 	 */
 	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue)
 	{
-		if(!BuildConfig.DEBUG)
-		{
-			Bundle bundle = new Bundle();
-			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "loadHome");
-			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "loadHome");
-			bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "loadHome " + homeFile);
-			Renovations3DActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-		}
+		Renovations3DActivity.logFireBaseContent("loadHome" , "Load home", homeFile.getAbsolutePath());
+		Renovations3DActivity.logFireBaseContent("loadHomeFile" , "Load home file", homeFile.getName());
 
 		final String homeName = homeFile.getAbsolutePath();
 		// this guy is stolen from the HomeController.open method which does fancy stuff
 		// Read home in a threaded task
 		Callable<Void> openTask = new Callable<Void>()
 		{
+
+
 			public Void call() throws RecorderException
 			{
 				// Read home with application recorder
@@ -160,6 +148,32 @@ public class Renovations3D extends HomeApplication
 					home.setName(homeName);
 				}
 				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
+
+				//Experiment in large homeage
+/*				if(homeFile.length() > LARGE_HOME_MIN_BYTES_RATIO * Runtime.getRuntime().maxMemory())
+				{
+					String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
+					String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
+					String messageHtml =  warningMessageHtml.replace("%1", size);
+
+					int result = JOptionPane.showOptionDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
+							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,	null, new String[]{"Ok", "No"}, "OK");
+
+					if(result == JOptionPane.OK_OPTION)
+					{
+						List<Level> levels = home.getLevels();
+						for(int i =0 ; i < levels.size();i++)
+						{
+							Level l = levels.get(i);
+							// only true is already viewable and the current selection
+							l.setViewable(l.isViewable() && l == home.getSelectedLevel());
+							//note the visible is for the 3d all levels visible setting so don't play with it
+						}
+					}
+
+				}*/
+
+
 				homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
 				EventQueue.invokeLater(new Runnable()
 				{
@@ -618,6 +632,7 @@ public class Renovations3D extends HomeApplication
 	 */
 	private void exitAfter3DError()
 	{
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.UNLOCK_ACHIEVEMENT , "exitAfter3DError", "exitAfter3DError", null);
 		// Check if there are modified homes
 		boolean modifiedHomes = false;
 		for (Home home : getHomes())
