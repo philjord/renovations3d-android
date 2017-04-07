@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -4498,49 +4499,59 @@ public class HomePane implements HomeView
 	 *
 	 * @return the chosen name or <code>null</code> if the user canceled.
 	 */
-	public String showStoreCameraDialog(String cameraName)
+	public String showStoreCameraDialog(final String cameraName)
 	{
+
 		// Retrieve displayed text in dialog
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.title");
 
-		LinearLayout cameraNamePanel = new LinearLayout(activity);
+		final LinearLayout cameraNamePanel = new LinearLayout(activity);
 		cameraNamePanel.setOrientation(LinearLayout.VERTICAL);
 		cameraNamePanel.setPadding(10,10,10,10);
 		cameraNamePanel.addView(new JLabel(activity, Html.fromHtml(message)));
 
-		List<Camera> storedCameras = this.home.getStoredCameras();
+		final List<Camera> storedCameras = home.getStoredCameras();
 
 		final JTextField cameraNameTextComponent = new JTextField(activity, cameraName);
 		cameraNamePanel.addView(cameraNameTextComponent);
 
 		if (!storedCameras.isEmpty())
 		{
-			// If cameras are already stored in home propose an editable combo box to user
-			// to let him choose more easily an existing one if he want to overwrite it
-			String[] storedCameraNames = new String[storedCameras.size() + 1];
-			storedCameraNames[0] = cameraName;
-			for (int i = 1; i < storedCameraNames.length; i++)
+			// fill the JCombox box a bit later on a looper thread
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(new Runnable()
 			{
-				storedCameraNames[i] = storedCameras.get(i-1).getName();
-			}
-			final JComboBox cameraNameComboBox = new JComboBox(activity, storedCameraNames);
-			cameraNameComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-			{
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+				public void run()
 				{
-					cameraNameTextComponent.setText((String) cameraNameComboBox.getSelectedItem());
-				}
+					// If cameras are already stored in home propose an editable combo box to user
+					// to let him choose more easily an existing one if he want to overwrite it
+					String[] storedCameraNames = new String[storedCameras.size() + 1];
+					storedCameraNames[0] = cameraName;
+					for (int i = 1; i < storedCameraNames.length; i++)
+					{
+						storedCameraNames[i] = storedCameras.get(i - 1).getName();
+					}
+					final JComboBox cameraNameComboBox = new JComboBox(activity, storedCameraNames);
+					cameraNameComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+					{
+						@Override
+						public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+						{
+							cameraNameTextComponent.setText((String) cameraNameComboBox.getSelectedItem());
+						}
 
-				@Override
-				public void onNothingSelected(AdapterView<?> parent)
-				{
+						@Override
+						public void onNothingSelected(AdapterView<?> parent)
+						{
 
+						}
+					});
+					cameraNamePanel.addView(cameraNameComboBox);
 				}
 			});
-			cameraNamePanel.addView(cameraNameComboBox);
 		}
+
 
 		boolean confirmed = showOptionDialog(activity,
 				cameraNamePanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
