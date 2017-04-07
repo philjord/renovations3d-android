@@ -53,6 +53,7 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 
 /**
@@ -84,6 +85,8 @@ public class Renovations3DActivity extends FragmentActivity
 	public static Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
 	private boolean fileSystemAccessGranted = false;
+
+	private final Timer autoSaveTimer = new Timer("autosave", true);
 
 	// Description of original
 	// Renovations3D|HomeApplication
@@ -202,6 +205,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 */
 	public static void logFireBase(String event, String id, String name, String value)
 	{
+		System.out.println("logFireBase : " + id + "[" + value + "]");
 		if (!BuildConfig.DEBUG && mFirebaseAnalytics != null)
 		{
 			Bundle bundle = new Bundle();
@@ -380,6 +384,13 @@ public class Renovations3DActivity extends FragmentActivity
 						if (renovations3D.getHomeController() != null)
 						{
 							Renovations3DActivity.logFireBaseContent("menu_save", renovations3D.getHome().getName());
+
+							//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
+							// this may not be truely needed but better to be safe
+							if(renovations3D.getHome().getName().contains("currentWork.sh3d"))
+								renovations3D.getHome().setName(null);
+
+
 							renovations3D.getHomeController().saveAndCompress();
 						}
 					}
@@ -446,20 +457,13 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState)
+	public void onPause()
 	{
-		super.onSaveInstanceState(savedInstanceState);
-		System.out.println("onSaveInstanceState - auto saving");
+		//This is where we do an extra auto save to ensure content always can be loaded back up
+		System.out.println("onPause - auto saving");
 		doAutoSave();
+		super.onPause();
 	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState)
-	{
-		super.onRestoreInstanceState(savedInstanceState);
-		System.out.println("onRestoreInstanceState - ignored now as onCreate does the job");
-	}
-
 
 	private void loadSh3dFile()
 	{
@@ -720,24 +724,16 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void loadUpContent()
 	{
-		// set up the auto save system
+		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()
 		{
 			public void run()
 			{
-				Renovations3DActivity.this.runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
-						//Toast.makeText(Renovations3DActivity.this, "That was an auto save right three...", Toast.LENGTH_LONG).show();
-						System.out.println("Possibly auto save");
-						doAutoSave();
-					}
-				});
+				System.out.println("Possibly auto save");
+				doAutoSave();
 			}
 		};
-
-		final Timer autoSaveTimer = new Timer("autosave", true);
+		autoSaveTimer.purge();// in case of restart we don't want 2 tasks running
 		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 3 * 60 * 1000, 3 * 60 * 1000);
 
 		//TODO: see eclipse Renovations3D.protected void start(String[] args) for exactly this setup, but better
@@ -942,43 +938,61 @@ public class Renovations3DActivity extends FragmentActivity
 
 	}
 
+	final Semaphore dialogSemaphore = new Semaphore(1, true);
 	private void doAutoSave()
 	{
 		if (renovations3D != null && renovations3D.getHome() != null)
 		{
-			// synch so auto save thread and onsavesate don't walk all over each other
-			synchronized (renovations3D)
+			// get off the caller in case this is an onPause
+			Thread t = new Thread(new Runnable()
 			{
-				System.out.println("renovations3D.getHome().isModified() " + renovations3D.getHome().isModified());
-				if (renovations3D.getHome().isModified())
+				public void run()
 				{
 					try
 					{
-						//clone so original modified flag is not changed
-						Home autoSaveHome = renovations3D.getHome().clone();
-						boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
-						String originalName = autoSaveHome.getName();
-						File outputDir = getCacheDir();
-						File homeName = new File(outputDir, "currentWork.sh3d");
-						renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());// not using HomeRecorder.Type.COMPRESSED possibly real slow?
-						System.out.println("Auto save written to " + homeName.getAbsolutePath() + " with original name of " + originalName);
-						SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
-						editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
-						editor.putString(STATE_CURRENT_HOME_NAME, "");
-						editor.apply();
-
-						Renovations3DActivity.logFireBaseContent("doAutoSave", "Do Auto Save", "temp: " + homeName.getAbsolutePath() + " original: " + originalName);
+						// all synchro-meshed and sexy
+						dialogSemaphore.acquire();
 					}
-					catch (RecorderException e)
+					catch (InterruptedException e)
 					{
-						e.printStackTrace();
 					}
+					System.out.println("renovations3D.getHome().isModified() " + renovations3D.getHome().isModified());
+					if (renovations3D.getHome().isModified())
+					{
+						try
+						{
+							//clone so original modified flag is not changed
+							Home autoSaveHome = renovations3D.getHome().clone();
+							boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
+							String originalName = autoSaveHome.getName();
+							File outputDir = getCacheDir();
+							File homeName = new File(outputDir, "currentWork.sh3d");
+							// not using HomeRecorder.Type.COMPRESSED I feel it is super slow, compare a normal save press
+							renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
+							SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
+							editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
+							editor.putString(STATE_CURRENT_HOME_NAME, "");
+							editor.apply();
+
+							Renovations3DActivity.logFireBaseContent("doAutoSave", "Do Auto Save", "temp: " + homeName.getAbsolutePath() + " original: " + originalName);
+
+						}
+						catch (RecorderException e)
+						{
+							e.printStackTrace();
+						}
+					}
+					dialogSemaphore.release();
 				}
-			}
+			});
+			t.start();
+
 		}
 	}
+
+
 
 	private String getContentName(ContentResolver resolver, Uri uri)
 	{

@@ -905,8 +905,6 @@ private Renovations3DActivity activity;//for dialogs etc
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.overwrite");
     String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
 
-
-	  System.err.println("FileContentManager asked to confirmOverwrite ");
 	  Renovations3DActivity.logFireBaseContent("confirmOverwrite", path);
 	  return true;
 
