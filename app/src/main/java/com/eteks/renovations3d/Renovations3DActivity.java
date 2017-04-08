@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Region;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,7 +62,6 @@ import java.util.concurrent.Semaphore;
  */
 public class Renovations3DActivity extends FragmentActivity
 {
-
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
 	private static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
@@ -166,53 +166,58 @@ public class Renovations3DActivity extends FragmentActivity
 	 * For generally doing day to day things
 	 *
 	 * @param id    short id (method name?)
-	 * @param name  nicer description
 	 * @param value optional value
 	 */
-	public static void logFireBaseContent(String id, String name, String value)
+	public static void logFireBaseContent(String id, String value)
 	{
-		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, name, value);
+		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, value);
 	}
 
 	/**
 	 * For generally doing day to day things, name will be id repeated
 	 *
 	 * @param id    short id (method name?)
-	 * @param value optional value
 	 */
-	public static void logFireBaseContent(String id, String value)
+	public static void logFireBaseContent(String id)
 	{
-		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, id, value);
+		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, null);
 	}
 
 	/**
 	 * For more unusual event that represent exploring/exploiting the system
 	 *
 	 * @param id    short id (method name?)
-	 * @param name  nicer description
 	 * @param value optional value
 	 */
-	public static void logFireBaseLevelUp(String id, String name, String value)
+	public static void logFireBaseLevelUp(String id, String value)
 	{
-		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, name, value);
+		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, value);
+	}
+
+	/**
+	 * For more unusual event that represent exploring/exploiting the system
+	 *
+	 * @param id    short id (method name?)
+	 */
+	public static void logFireBaseLevelUp(String id)
+	{
+		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, null);
 	}
 
 	/**
 	 * @param event Event MUST be FirebaseAnalytics.Event.*
 	 * @param id    short id (method name?)
-	 * @param name  nicer description
 	 * @param value optional value
 	 */
-	public static void logFireBase(String event, String id, String name, String value)
+	public static void logFireBase(String event, String id, String value)
 	{
 		System.out.println("logFireBase : " + id + "[" + value + "]");
-		if (!BuildConfig.DEBUG && mFirebaseAnalytics != null)
+		if ( mFirebaseAnalytics != null && !BuildConfig.DEBUG )
 		{
 			Bundle bundle = new Bundle();
 			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
-			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
 			if (value != null && value.length() > 0)
-				bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, value);
+				bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, value);
 			Renovations3DActivity.mFirebaseAnalytics.logEvent(event, bundle);
 		}
 	}
@@ -417,7 +422,7 @@ public class Renovations3DActivity extends FragmentActivity
 				//if (renovations3D.getHomeController() != null)
 				//	renovations3D.getHomeController().help();
 
-				Renovations3DActivity.logFireBaseLevelUp("menu_help", "menu_help", null);
+				Renovations3DActivity.logFireBaseLevelUp("menu_help");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 				dialog.setTitle("Notice");
 				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D User Interface"));
@@ -440,12 +445,12 @@ public class Renovations3DActivity extends FragmentActivity
 
 				return true;
 			case R.id.menu_about:
-				Renovations3DActivity.logFireBaseLevelUp("menu_about", "menu_about", null);
+				Renovations3DActivity.logFireBaseLevelUp("menu_about");
 				if (renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().about();
 				return true;
 			case R.id.menu_preferences:
-				Renovations3DActivity.logFireBaseLevelUp("menu_preferences", "menu_preferences", null);
+				Renovations3DActivity.logFireBaseLevelUp("menu_preferences");
 				if (renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().editPreferences();
 				return true;
@@ -567,15 +572,16 @@ public class Renovations3DActivity extends FragmentActivity
 	 */
 	public void loadHome(final File homeFile)
 	{
-		loadHome(homeFile, null, false);
+		loadHome(homeFile, null, false, false);
 	}
 
 	/**
 	 * Only call when not on EDT as blocking save question may arise
 	 *
 	 * @param homeFile
+	 * @param loadedFromTemp
 	 */
-	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue)
+	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
 	{
 		if (homeFile != null)
 		{
@@ -596,7 +602,7 @@ public class Renovations3DActivity extends FragmentActivity
 					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
 
-					renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue);
+					renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
 
 					// force the frags to load up now
 					if (prevHomeLoaded)
@@ -641,7 +647,7 @@ public class Renovations3DActivity extends FragmentActivity
 					try
 					{
 						File file = new File(new URI(localUri).getPath());
-						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", "onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
+						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
 						loadFile(file);
 					}
 					catch (URISyntaxException e)
@@ -674,7 +680,7 @@ public class Renovations3DActivity extends FragmentActivity
 					}
 
 					Toast.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
-					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", "onCompleteHTTPIntent.OnReceiveError", message);
+					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
 				}
 			}
 		}
@@ -773,7 +779,7 @@ public class Renovations3DActivity extends FragmentActivity
 					loadFile(inFile);
 
 					setIntent(null);
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", "ImportFromFile", intent.getDataString());
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", intent.getDataString());
 					return;
 				}
 				else if (scheme.compareTo("http") == 0)
@@ -802,12 +808,12 @@ public class Renovations3DActivity extends FragmentActivity
 					registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 					setIntent(null);
 					Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", "ImportFromHttp.enqueue", intent.getDataString());
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
 					return;
 				}
 				else if (scheme.compareTo("ftp") == 0)
 				{
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", "ImportFromFtp.enqueue", intent.getDataString());
+					Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", intent.getDataString());
 					// TODO Import from FTP!
 					Toast.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 					setIntent(null);
@@ -896,20 +902,23 @@ public class Renovations3DActivity extends FragmentActivity
 			if (unmodifiedFileName.length() > 0)
 			{
 				File homeName = new File(unmodifiedFileName);
-				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "temp: " + homeName.getAbsolutePath());
+				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getAbsolutePath());
 				loadHome(homeName);
 			}
 			else
 			{
+				Region r;
+				//This is where we open the temp file that was last used
 				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
 				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 				File outputDir = getCacheDir();
 				File homeName = new File(outputDir, "currentWork.sh3d");
-				System.out.println("" + homeName.getAbsolutePath() + " exists " + homeName.exists() + " original name = " + tempWorkingFileRealName);
 				if (homeName.exists())
 				{
-					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getAbsolutePath() + " original: " + tempWorkingFileRealName);
-					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue);
+					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getAbsolutePath() + " original: " + tempWorkingFileRealName
+							+ " isModifiedOverrideValue: " +isModifiedOverrideValue);
+
+					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
 				}
 				else
 				{
@@ -930,7 +939,7 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 			else
 			{
-				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile", null);
+				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile");
 				newHome();
 			}
 		}
@@ -956,7 +965,7 @@ public class Renovations3DActivity extends FragmentActivity
 					catch (InterruptedException e)
 					{
 					}
-					System.out.println("renovations3D.getHome().isModified() " + renovations3D.getHome().isModified());
+
 					if (renovations3D.getHome().isModified())
 					{
 						try
@@ -973,10 +982,13 @@ public class Renovations3DActivity extends FragmentActivity
 							SharedPreferences.Editor editor = settings.edit();
 							editor.putString(STATE_TEMP_HOME_REAL_NAME, originalName);
 							editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, isModifiedOverrideValue);
+
+							// clear out the indicator of a cleanly opened unaltered file
 							editor.putString(STATE_CURRENT_HOME_NAME, "");
 							editor.apply();
 
-							Renovations3DActivity.logFireBaseContent("doAutoSave", "Do Auto Save", "temp: " + homeName.getAbsolutePath() + " original: " + originalName);
+							Renovations3DActivity.logFireBaseContent("doAutoSave", "temp: " + homeName.getAbsolutePath() + " original: " + originalName
+									+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
 						}
 						catch (RecorderException e)

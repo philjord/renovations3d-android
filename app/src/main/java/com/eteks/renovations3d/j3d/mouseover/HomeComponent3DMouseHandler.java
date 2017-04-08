@@ -140,50 +140,57 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 							pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
 
-							PickInfo pickInfo = pickCanvas.pickClosest();
-							if (pickInfo != null)
+							try
 							{
-								SceneGraphPath sg = pickInfo.getSceneGraphPath();
-								Node pickedParent = sg.getNode(sg.nodeCount() - 1);
-								Object userData = pickedParent.getUserData();
-
-								if (userData instanceof Selectable)
+								PickInfo pickInfo = pickCanvas.pickClosest();
+								if (pickInfo != null)
 								{
-									Selectable clickedSelectable = (Selectable) userData;
-									ArrayList<Selectable> items = new ArrayList<Selectable>();
-									items.add(clickedSelectable);
+									SceneGraphPath sg = pickInfo.getSceneGraphPath();
+									Node pickedParent = sg.getNode(sg.nodeCount() - 1);
+									Object userData = pickedParent.getUserData();
 
-									// this can be a very slow process let's get off the edt shall we?
-									this.home.setSelectedItems(items);
-									this.home.setAllLevelsSelection(true);
-
-									// double tap on the same object
-									if (tapCount == 2 && lastDownObject == clickedSelectable)
+									if (userData instanceof Selectable)
 									{
-										// Modify selected item on a double click
-										if (clickedSelectable instanceof Wall)
+										Selectable clickedSelectable = (Selectable) userData;
+										ArrayList<Selectable> items = new ArrayList<Selectable>();
+										items.add(clickedSelectable);
+
+										// this can be a very slow process let's get off the edt shall we?
+										this.home.setSelectedItems(items);
+										this.home.setAllLevelsSelection(true);
+
+										// double tap on the same object
+										if (tapCount == 2 && lastDownObject == clickedSelectable)
 										{
-											controller.modifySelectedWalls();
-										}
-										else if (clickedSelectable instanceof HomePieceOfFurniture)
-										{
-											controller.modifySelectedFurniture();
-										}
-										else if (clickedSelectable instanceof Room)
-										{
-											controller.modifySelectedRooms();
-										}
-										else if (clickedSelectable instanceof Label)
-										{
-											controller.modifySelectedLabels();
+											// Modify selected item on a double click
+											if (clickedSelectable instanceof Wall)
+											{
+												controller.modifySelectedWalls();
+											}
+											else if (clickedSelectable instanceof HomePieceOfFurniture)
+											{
+												controller.modifySelectedFurniture();
+											}
+											else if (clickedSelectable instanceof Room)
+											{
+												controller.modifySelectedRooms();
+											}
+											else if (clickedSelectable instanceof Label)
+											{
+												controller.modifySelectedLabels();
+											}
+
+											//TODO: you know the ground could be selectable and editable, but just not have an outline?
+											// and it could bring up the 3d attributes window
 										}
 
-										//TODO: you know the ground could be selectable and editable, but just not have an outline?
-										// and it could bring up the 3d attributes window
+										lastDownObject = clickedSelectable;
 									}
-
-									lastDownObject = clickedSelectable;
 								}
+							}
+							catch (IllegalStateException e)
+							{
+								e.printStackTrace();
 							}
 						}
 					}

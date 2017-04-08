@@ -1,8 +1,11 @@
 package com.eteks.renovations3d;
 
+import android.text.format.Formatter;
+
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.android.HomePane;
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
 import com.eteks.sweethome3d.io.FileUserPreferences;
@@ -13,6 +16,7 @@ import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomeApplication;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.eteks.sweethome3d.model.InterruptedRecorderException;
+import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -23,6 +27,7 @@ import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mindblowing.renovations3d.R;
 
 import org.jogamp.java3d.JoglesPipeline;
 import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
@@ -52,7 +57,7 @@ public class Renovations3D extends HomeApplication
 	private static final String APPLICATION_FOLDERS = "com.eteks.sweethome3d.applicationFolders";
 	private static final String APPLICATION_PLUGINS_SUB_FOLDER = "plugins";
 
-	public static final float LARGE_HOME_MIN_BYTES_RATIO = 0.05f;//512 max = 25.5 is large 256 = 12.75
+	public static final float LARGE_HOME_MIN_BYTES_RATIO = 0.05f;//512 max = 25.5mb is large, for 256 max = 12.75mb is large
 
 	private HomeRecorder homeRecorder;
 	private HomeRecorder compressedHomeRecorder;
@@ -70,6 +75,7 @@ public class Renovations3D extends HomeApplication
 	private Home home;
 
 	private Renovations3DActivity parentActivity;
+	public boolean currentHomeReduceVisible = false;
 
 	/**
 	 * Creates a home application instance. Recorders, user preferences, content
@@ -106,8 +112,8 @@ public class Renovations3D extends HomeApplication
 
 	public void newHome()
 	{
-		Renovations3DActivity.logFireBaseContent("newHome" , "New home", null);
-
+		Renovations3DActivity.logFireBaseContent("newHome");
+		currentHomeReduceVisible = false;
 		home = new Home();
 		home.setName(null);// ensures save does a save as
 
@@ -122,10 +128,10 @@ public class Renovations3D extends HomeApplication
 	/**
 	 * this is a butchery of HomeController.open(String)
 	 */
-	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue)
+	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
 	{
-		Renovations3DActivity.logFireBaseContent("loadHome" , "Load home", homeFile.getAbsolutePath());
-		Renovations3DActivity.logFireBaseContent("loadHomeFile" , "Load home file", homeFile.getName());
+		Renovations3DActivity.logFireBaseContent("loadHome", homeFile.getAbsolutePath());
+		Renovations3DActivity.logFireBaseContent("loadHomeFile", homeFile.getName());
 
 		final String homeName = homeFile.getAbsolutePath();
 		// this guy is stolen from the HomeController.open method which does fancy stuff
@@ -136,6 +142,7 @@ public class Renovations3D extends HomeApplication
 
 			public Void call() throws RecorderException
 			{
+				currentHomeReduceVisible = false;
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
 				if(overrideName != null)
@@ -149,8 +156,8 @@ public class Renovations3D extends HomeApplication
 				}
 				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
 
-				//Experiment in large homeage
-/*				if(homeFile.length() > LARGE_HOME_MIN_BYTES_RATIO * Runtime.getRuntime().maxMemory())
+				//temp saves already have the reduce visibility choices in them inherently
+				if(!loadedFromTemp && homeFile.length() > LARGE_HOME_MIN_BYTES_RATIO * Runtime.getRuntime().maxMemory())
 				{
 					String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
 					String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
@@ -159,19 +166,20 @@ public class Renovations3D extends HomeApplication
 					int result = JOptionPane.showOptionDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,	null, new String[]{"Ok", "No"}, "OK");
 
-					if(result == JOptionPane.OK_OPTION)
-					{
-						List<Level> levels = home.getLevels();
-						for(int i =0 ; i < levels.size();i++)
-						{
-							Level l = levels.get(i);
-							// only true is already viewable and the current selection
-							l.setViewable(l.isViewable() && l == home.getSelectedLevel());
-							//note the visible is for the 3d all levels visible setting so don't play with it
-						}
-					}
+					currentHomeReduceVisible = result == JOptionPane.OK_OPTION;
+				}
 
-				}*/
+				if(currentHomeReduceVisible == true)
+				{
+					List<Level> levels = home.getLevels();
+					for(int i =0 ; i < levels.size();i++)
+					{
+						Level l = levels.get(i);
+						// only true is already viewable and the current selection
+						l.setViewable(l.isViewable() && l == home.getSelectedLevel());
+						//note the visible is for the 3d all levels visible setting so don't play with it
+					}
+				}
 
 
 				homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
@@ -632,7 +640,7 @@ public class Renovations3D extends HomeApplication
 	 */
 	private void exitAfter3DError()
 	{
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.UNLOCK_ACHIEVEMENT , "exitAfter3DError", "exitAfter3DError", null);
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.UNLOCK_ACHIEVEMENT , "exitAfter3DError", null);
 		// Check if there are modified homes
 		boolean modifiedHomes = false;
 		for (Home home : getHomes())
