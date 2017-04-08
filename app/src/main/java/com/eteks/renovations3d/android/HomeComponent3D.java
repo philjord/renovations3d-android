@@ -658,6 +658,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				case R.id.deoptomize:
 					item.setChecked(!item.isChecked());
 					setDeoptomize(item.isChecked());
+					Renovations3DActivity.logFireBaseLevelUp("setDeoptomizeMenu", "deoptomize " + item.isChecked());
 					Toast.makeText(getContext(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
 					break;
 				case R.id.show_jogl_status:
@@ -693,7 +694,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(DEOPTOMIZE, deoptomize);
 		editor.apply();
-		Renovations3DActivity.logFireBaseLevelUp("setDeoptomize" , "Set Deoptomize", "deoptomize " +deoptomize);
+
 	}
 
 	private enum ActionType

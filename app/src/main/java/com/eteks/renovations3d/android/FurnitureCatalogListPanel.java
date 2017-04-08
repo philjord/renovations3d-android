@@ -191,7 +191,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 						String furnitureLibraryName = controller.getView().showImportFurnitureLibraryDialog();
 						if(furnitureLibraryName != null) {
 							controller.importFurnitureLibrary(furnitureLibraryName);
-							Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary" , "Import Furniture Library", furnitureLibraryName);
+							Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", furnitureLibraryName);
 						}
 					}}};
 				t2.start();
@@ -208,7 +208,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 						String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
 						if(texturesLibraryName != null) {
 							controller2.importTexturesLibrary(texturesLibraryName);
-							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary" , "Import Texture Library", texturesLibraryName);
+							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", texturesLibraryName);
 						}
 					}
 				}};
@@ -229,7 +229,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			homeController.getFurnitureCatalogController().setSelectedFurniture(al);
 			homeController.addHomeFurniture();
 
-			Renovations3DActivity.logFireBaseContent("addFurniture" , "Add Furniture", selectedFiv.getCatalogPieceOfFurniture().getName());
+			Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
 
 			Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
 			Renovations3DActivity.mViewPager.setCurrentItem(1, true);
