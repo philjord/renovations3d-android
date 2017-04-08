@@ -174,7 +174,7 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 	/**
-	 * For generally doing day to day things, name will be id repeated
+	 * For generally doing day to day things
 	 *
 	 * @param id    short id (method name?)
 	 */
@@ -392,7 +392,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 							//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
 							// this may not be truely needed but better to be safe
-							if(renovations3D.getHome().getName().contains("currentWork.sh3d"))
+							if(renovations3D.getHome().getName() != null && renovations3D.getHome().getName().contains("currentWork.sh3d"))
 								renovations3D.getHome().setName(null);
 
 
