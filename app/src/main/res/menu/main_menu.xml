@@ -14,9 +14,12 @@
           android:title="@string/menu_save_as"
           android:enabled="false"/>
     <item android:id="@+id/menu_preferences"
-          android:title="@string/menu_preferences" />
+          android:title="@string/menu_preferences"
+          android:orderInCategory = "990"/>
     <item android:id="@+id/menu_help"
-          android:title="@string/menu_help" />
+          android:title="@string/menu_help"
+          android:orderInCategory = "991"/>
     <item android:id="@+id/menu_about"
-          android:title="@string/menu_about" />
+          android:title="@string/menu_about"
+          android:orderInCategory = "992"/>
 </menu>
