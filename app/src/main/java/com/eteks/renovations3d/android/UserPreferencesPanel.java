@@ -546,7 +546,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       newWallThicknessSpinnerModel.setValue(controller.getNewWallThickness());
       newWallThicknessSpinnerModel.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setNewWallThickness((float)newWallThicknessSpinnerModel.getValue());
+            controller.setNewWallThickness(((Number)newWallThicknessSpinnerModel.getValue()).floatValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_WALL_THICKNESS, 
@@ -566,7 +566,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       newWallHeightSpinnerModel.setValue(controller.getNewWallHeight());
       newWallHeightSpinnerModel.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setNewWallHeight((float)newWallHeightSpinnerModel.getValue());
+            controller.setNewWallHeight(((Number)newWallHeightSpinnerModel.getValue()).floatValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_WALL_HEIGHT, 
@@ -586,7 +586,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       newFloorThicknessSpinnerModel.setValue(controller.getNewFloorThickness());
       newFloorThicknessSpinnerModel.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setNewFloorThickness((float)newFloorThicknessSpinnerModel.getValue());
+            controller.setNewFloorThickness(((Number)newFloorThicknessSpinnerModel.getValue()).floatValue());
           }
         });
       controller.addPropertyChangeListener(UserPreferencesController.Property.NEW_FLOOR_THICKNESS, 
@@ -657,7 +657,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
         });
       autoSaveDelayForRecoverySpinnerModel.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
-            controller.setAutoSaveDelayForRecovery((int)(autoSaveDelayForRecoverySpinnerModel.getValue() * 60000));
+            controller.setAutoSaveDelayForRecovery(((Number)autoSaveDelayForRecoverySpinnerModel.getValue()).intValue() * 60000);
           }
         });
       PropertyChangeListener listener = new PropertyChangeListener() {

@@ -65,7 +65,7 @@ public class JSpinner extends NumberPicker
 
 	private int valueToDisplayIndex()
 	{
-		return valueToDisplayIndex(getModel().getValue());
+		return valueToDisplayIndex(((Number)getModel().getValue()).doubleValue());
 	}
 
 	private int valueToDisplayIndex(double v)
@@ -86,8 +86,8 @@ public class JSpinner extends NumberPicker
 	{
 		double displayMin = model.getMinimum();
 		double displayMax = model.getMaximum();
-		double value = model.getValue();
-		double stepSize = model.getStepSize().floatValue();
+		double value = ((Number)model.getValue()).doubleValue();
+		double stepSize = model.getStepSize().doubleValue();
 
 		int maxSteps = 500; // cos anything big should actually be jspinner2 now
 

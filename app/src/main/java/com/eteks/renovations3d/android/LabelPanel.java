@@ -184,7 +184,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     fontSizeSpinnerModel.addChangeListener(new ChangeListener() {
 		public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(LabelController.Property.FONT_SIZE, fontSizeChangeListener);
-          controller.setFontSize((float)fontSizeSpinnerModel.getValue());
+          controller.setFontSize(((Number)fontSizeSpinnerModel.getValue()).floatValue());
           controller.addPropertyChangeListener(LabelController.Property.FONT_SIZE, fontSizeChangeListener);
         }
       });
@@ -284,7 +284,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     elevationSpinnerModel.addChangeListener(new ChangeListener() {
 		public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(LabelController.Property.ELEVATION, elevationChangeListener);
-          controller.setElevation((float)elevationSpinnerModel.getValue());
+          controller.setElevation(((Number)elevationSpinnerModel.getValue()).floatValue());
           controller.addPropertyChangeListener(LabelController.Property.ELEVATION, elevationChangeListener);
         }
       });

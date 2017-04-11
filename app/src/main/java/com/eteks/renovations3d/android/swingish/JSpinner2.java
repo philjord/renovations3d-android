@@ -14,32 +14,31 @@ import java.text.Format;
 
 /**
  * Created by phil on 2/1/2017.
- * A JSpinner that works like teh java desktop version, with the min/max able to be any values.
+ * A JSpinner that works like the java desktop version
  */
 
 public class JSpinner2 extends LinearLayout
 {
-	protected SpinnerNumberModel model;
+	protected AbstractSpinnerModel model;
 	protected Format currentFormat;
 
-	private TextView output;
+	protected TextView output;
 	private Button upButton;
 	private Button downButton;
 
-	public JSpinner2(Context context, SpinnerNumberModel model)
+	public JSpinner2(Context context, AbstractSpinnerModel model)
 	{
 		this(context, model, null);
 	}
 
-	public JSpinner2(Context context, final SpinnerNumberModel model, Format format)
+	public JSpinner2(Context context, final AbstractSpinnerModel model, Format format)
 	{
 		super(context);
 		this.model = model;
 
-		setFormat(format);
-
 		this.setOrientation(LinearLayout.VERTICAL);
 		output = new TextView(context);
+		setFormat(format);
 
 
 		output.setTextAppearance(context, android.R.style.TextAppearance_Large);
@@ -55,17 +54,23 @@ public class JSpinner2 extends LinearLayout
 				if(currentFormat != null)
 					output.setText(currentFormat.format(model.getValue()));
 				else
-					output.setText(""+model.getValue());
+					output.setText("" + model.getValue());
 			}
 		};
 		model.addChangeListener(changerListener);
 
 		upButton = new Button(context);
-		upButton.setText("  +  ");
+		upButton.setText("+");
+		upButton.setPadding(0,0,0,0);
 		downButton = new Button(context);
-		downButton.setText("  -  ");
+		downButton.setText("-");
+		downButton.setPadding(0,0,0,0);
 
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1f);
+
+		final float scale = getResources().getDisplayMetrics().density;
+		int heightSizePx = (int) (30 * scale + 0.5f);
+
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, heightSizePx, 0);
 		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
 		this.addView(upButton, lp);
@@ -75,24 +80,33 @@ public class JSpinner2 extends LinearLayout
 		upButton.setOnTouchListener(new RepeatListener(400, 75, new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				setValue((double)model.getNextValue());
+				setValue(model.getNextValue());
 			}
 		}));
 
 		downButton.setOnTouchListener(new RepeatListener(400, 75, new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				setValue((double)model.getPreviousValue());
+				setValue(model.getPreviousValue());
 			}
 		}));
+
+		this.setValue(model.getValue());
 	}
 
-	public SpinnerNumberModel getModel()
+	public void setEnabled(boolean enabled)
+	{
+		upButton.setEnabled(enabled);
+		output.setEnabled(enabled);
+		downButton.setEnabled(enabled);
+	}
+
+	public AbstractSpinnerModel getModel()
 	{
 		return model;
 	}
 
-	public void setValue(double value)
+	public void setValue(Object value)
 	{
 		model.setValue(value);
 	}
@@ -100,6 +114,10 @@ public class JSpinner2 extends LinearLayout
 	public void setFormat(Format format)
 	{
 		this.currentFormat = format;
+		if(currentFormat != null)
+			output.setText(currentFormat.format(model.getValue()));
+		else
+			output.setText("" + model.getValue());
 	}
 
 

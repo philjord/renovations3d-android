@@ -1,12 +1,7 @@
 package com.eteks.renovations3d.android.swingish;
 
-
-import java.util.ArrayList;
-
-public class SpinnerNumberModel
+public class SpinnerNumberModel extends AbstractSpinnerModel
 {
-	protected ArrayList<ChangeListener> listenerList = new ArrayList<ChangeListener>();
-
 	private double stepSize, value;
 	private double minimum, maximum;
 
@@ -62,39 +57,22 @@ public class SpinnerNumberModel
 		return stepSize;
 	}
 
-	public double getValue()
+	public Object getValue()
 	{
 		return value;
 	}
 
 	public Number getNumber()
 	{
-		return getValue();
+		return (Number)getValue();
 	}
 
-	public void setValue(double value)
+	public void setValue(Object value)
 	{
-		this.value = value;
+		this.value =  ((Number)value).doubleValue();
 		fireStateChanged();
 	}
 
-	public void addChangeListener(ChangeListener l)
-	{
-		listenerList.add(l);
-	}
-
-	public void removeChangeListener(ChangeListener l)
-	{
-		listenerList.remove(l);
-	}
-
-	protected void fireStateChanged()
-	{
-		for (ChangeListener cl : listenerList)
-		{
-			cl.stateChanged(null);
-		}
-	}
 
 
 	public Object getNextValue()

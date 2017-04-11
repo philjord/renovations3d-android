@@ -37,6 +37,17 @@ public class JSlider extends SeekBar
 			System.out.println("JSlider with non 0 min, needs serious looking at!");
 	}
 
+	// just to match the core version
+	public int getMinimum()
+	{
+		return min;
+	}
+
+	public int getMaximum()
+	{
+		return getMax();
+	}
+
 	public int getValue()
 	{
 		int value = getProgress();
@@ -80,4 +91,12 @@ public class JSlider extends SeekBar
 	{
 		//ignored for now
 	}
+
+
+
+	public void setSnapToTicks(boolean b)
+	{
+		//PJ TODO: should I use a incrementProgressBy call?
+	}
+
 }

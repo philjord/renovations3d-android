@@ -57,7 +57,7 @@ public class NullableSpinnerNumberModel extends SpinnerNumberModel
 	}
 
 	@Override
-	public double getValue()
+	public Object getValue()
 	{
 		//if (this.isNull) {
 		//	return null;
@@ -71,7 +71,7 @@ public class NullableSpinnerNumberModel extends SpinnerNumberModel
 	 * or not (super class <code>setValue</code> doesn't accept <code>null</code> value).
 	 */
 	@Override
-	public void setValue(double value)
+	public void setValue(Object value)
 	{
 			/*if (value == null && isNullable()) {
 				if (!this.isNull) {
@@ -199,7 +199,7 @@ public class NullableSpinnerNumberModel extends SpinnerNumberModel
 			} else {
 				return Float.valueOf(((Number)getValue()).floatValue());
 			}*/
-			return (float) getValue();
+			return ((Number)getValue()).floatValue();
 		}
 
 		/**
