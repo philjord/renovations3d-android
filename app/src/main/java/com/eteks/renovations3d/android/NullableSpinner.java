@@ -3,8 +3,6 @@ package com.eteks.renovations3d.android;
 import android.content.Context;
 
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
-import com.eteks.sweethome3d.model.LengthUnit;
-import com.eteks.sweethome3d.model.UserPreferences;
 
 /**
  * Spinner that accepts empty string values. In this case the returned value is <code>null</code>.
@@ -24,5 +22,4 @@ public class NullableSpinner extends AutoCommitSpinner
 						? ((NullableSpinnerNumberModel.NullableSpinnerLengthModel) model).getLengthUnit().getFormat()
 						: null);
 	}
-
 }

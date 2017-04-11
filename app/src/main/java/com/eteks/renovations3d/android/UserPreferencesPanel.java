@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,7 +49,6 @@ import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.LengthUnit;
@@ -109,15 +107,15 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JLabel           newWallPatternLabel;
 	private JComboBox        newWallPatternComboBox;
 	private JLabel           newWallThicknessLabel;
-	private JSpinner2 newWallThicknessSpinner;
+	private JSpinner newWallThicknessSpinner;
 	private JLabel           newWallHeightLabel;
-	private JSpinner2 newWallHeightSpinner;
+	private JSpinner newWallHeightSpinner;
 	private JLabel           newFloorThicknessLabel;
-	private JSpinner2         newFloorThicknessSpinner;
+	private JSpinner newFloorThicknessSpinner;
 	//private JCheckBox        checkUpdatesCheckBox;
 	//private JButton checkUpdatesNowButton;
 	private JCheckBox        autoSaveDelayForRecoveryCheckBox;
-	private JSpinner2         autoSaveDelayForRecoverySpinner;
+	private JSpinner autoSaveDelayForRecoverySpinner;
 	private JLabel           autoSaveDelayForRecoveryUnitLabel;
 	private JButton          resetDisplayedActionTipsButton;
 	private String           dialogTitle;
@@ -646,7 +644,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             }
           }
         };*/
-      this.autoSaveDelayForRecoverySpinner = new AutoCommitSpinner2(activity, autoSaveDelayForRecoverySpinnerModel);
+      this.autoSaveDelayForRecoverySpinner = new AutoCommitSpinner(activity, autoSaveDelayForRecoverySpinnerModel);
       this.autoSaveDelayForRecoveryUnitLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryUnitLabel.text"));
       updateAutoSaveDelayForRecoveryComponents(controller);
@@ -1071,7 +1069,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     }
   }
 
-  private class AutoCommitLengthSpinner extends AutoCommitSpinner2 {
+  private class AutoCommitLengthSpinner extends AutoCommitSpinner
+  {
     public AutoCommitLengthSpinner(SpinnerNumberModel model,
                                    final UserPreferencesController controller) {
       super(activity, model, controller.getUnit().getFormat());

@@ -26,8 +26,8 @@ import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JSpinnerJogDial;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -45,17 +45,17 @@ import java.beans.PropertyChangeListener;
 public class ObserverCameraPanel extends AndroidDialogView implements DialogView {
   private final ObserverCameraController controller;
   private JLabel xLabel;
-  private JSpinner2 xSpinner;
+  private JSpinner xSpinner;
   private JLabel        yLabel;
-  private JSpinner2 ySpinner;
+  private JSpinner ySpinner;
   private JLabel        elevationLabel;
-  private JSpinner2      elevationSpinner;
+  private JSpinner elevationSpinner;
   private JLabel        yawLabel;
-  private JSpinner      yawSpinner;
+  private JSpinnerJogDial yawSpinner;
   private JLabel        pitchLabel;
-  private JSpinner      pitchSpinner;
+  private JSpinnerJogDial pitchSpinner;
   private JLabel        fieldOfViewLabel;
-  private JSpinner      fieldOfViewSpinner;
+  private JSpinnerJogDial fieldOfViewSpinner;
   private JCheckBox adjustObserverCameraElevationCheckBox;
   private String        dialogTitle;
 
@@ -88,7 +88,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     final float maximumLength = 5E5f;
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xSpinner = new NullableSpinner2(activity, xSpinnerModel);
+    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
     xSpinnerModel.setLength(controller.getX());
     final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -107,7 +107,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 			com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.ySpinner = new NullableSpinner2(activity, ySpinnerModel);
+    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
     ySpinnerModel.setLength(controller.getY());
     final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -127,7 +127,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     float maximumElevation = preferences.getLengthUnit().getMaximumElevation();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, controller.getMinimumElevation(), maximumElevation);
-    this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
+    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
     elevationSpinnerModel.setLength(controller.getElevation());
     elevationSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
@@ -145,7 +145,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.yawLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "yawLabel.text"));
     final SpinnerNumberModel yawSpinnerModel = new SpinnerNumberModel(0, -360, 720, 5);
-    this.yawSpinner = new AutoCommitSpinner(activity, yawSpinnerModel);
+    this.yawSpinner = new AutoCommitSpinnerJogDial(activity, yawSpinnerModel);
     yawSpinnerModel.setValue(controller.getYawInDegrees() % 360);//PJPJP added % 360
     yawSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
@@ -163,7 +163,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.pitchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "pitchLabel.text"));
     final SpinnerNumberModel pitchSpinnerModel = new SpinnerNumberModel(0, -90, 90, 5);
-    this.pitchSpinner = new AutoCommitSpinner(activity, pitchSpinnerModel);
+    this.pitchSpinner = new AutoCommitSpinnerJogDial(activity, pitchSpinnerModel);
     pitchSpinnerModel.setValue(controller.getPitchInDegrees());
     pitchSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
@@ -181,7 +181,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.fieldOfViewLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "fieldOfViewLabel.text"));
     final SpinnerNumberModel fieldOfViewSpinnerModel = new SpinnerNumberModel(10, 10, 120, 1);
-    this.fieldOfViewSpinner = new AutoCommitSpinner(activity, fieldOfViewSpinnerModel);
+    this.fieldOfViewSpinner = new AutoCommitSpinnerJogDial(activity, fieldOfViewSpinnerModel);
     fieldOfViewSpinnerModel.setValue(controller.getFieldOfViewInDegrees());
     fieldOfViewSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {

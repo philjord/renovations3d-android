@@ -37,11 +37,9 @@ import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComboBox;
-import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSlider;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.j3d.Component3DManager;
@@ -60,9 +58,9 @@ import com.mindblowing.renovations3d.R;
 public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.sweethome3d.viewcontroller.View
 {
   private JLabel                        widthLabel;
-  private JSpinner2 widthSpinner;
+  private JSpinner widthSpinner;
   private JLabel                        heightLabel;
-  private JSpinner2                      heightSpinner;
+  private JSpinner heightSpinner;
   private JCheckBox                     applyProportionsCheckBox;
   private JComboBox                     aspectRatioComboBox;
   private JLabel                        qualityLabel;
@@ -101,7 +99,7 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     // Create width label and spinner bound to WIDTH controller property
     this.widthLabel = new JLabel(activity, "");
     final SpinnerNumberModel widthSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
-    this.widthSpinner = new AutoCommitSpinner2(activity, widthSpinnerModel);
+    this.widthSpinner = new AutoCommitSpinner(activity, widthSpinnerModel);
     //PJ contrller width is coming back enourmous value but on desktop a nice 400
 	  // widthSpinnerModel.setValue(controller.getWidth());
     widthSpinnerModel.addChangeListener(new ChangeListener() {
@@ -120,7 +118,7 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     // Create height label and spinner bound to HEIGHT controller property
     this.heightLabel = new JLabel(activity, "");
     final SpinnerNumberModel heightSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
-    this.heightSpinner = new AutoCommitSpinner2(activity, heightSpinnerModel);
+    this.heightSpinner = new AutoCommitSpinner(activity, heightSpinnerModel);
     //heightSpinnerModel.setValue(controller.getHeight());
     heightSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {

@@ -37,8 +37,8 @@ import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
+import com.eteks.renovations3d.android.swingish.JSpinnerJogDial;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -62,22 +62,22 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JTextField              descriptionTextField;
   private NullableCheckBox nameVisibleCheckBox;
   private JLabel                  priceLabel;
-  private JSpinner2 			  priceSpinner;
+  private JSpinner priceSpinner;
   private JLabel                  xLabel;
-  private JSpinner2                xSpinner;
+  private JSpinner xSpinner;
   private JLabel                  yLabel;
-  private JSpinner2                ySpinner;
+  private JSpinner ySpinner;
   private JLabel                  elevationLabel;
-  private JSpinner2                elevationSpinner;
+  private JSpinner elevationSpinner;
   private JLabel                  angleLabel;
-  private JSpinner                angleSpinner;
+  private JSpinnerJogDial angleSpinner;
   private NullableCheckBox        basePlanItemCheckBox;
   private JLabel                  widthLabel;
-  private JSpinner2                widthSpinner;
+  private JSpinner widthSpinner;
   private JLabel                  depthLabel;
-  private JSpinner2                depthSpinner;
+  private JSpinner depthSpinner;
   private JLabel                  heightLabel;
-  private JSpinner2                heightSpinner;
+  private JSpinner heightSpinner;
   private JCheckBox keepProportionsCheckBox;
   private NullableCheckBox        mirroredModelCheckBox;
   private JRadioButton defaultColorAndTextureRadioButton;
@@ -92,7 +92,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JRadioButton            shinyRadioButton;
   private NullableCheckBox        visibleCheckBox;
   private JLabel                  lightPowerLabel;
-  private JSpinner                lightPowerSpinner;
+  private JSpinnerJogDial lightPowerSpinner;
   private String                  dialogTitle;
 
   /**
@@ -247,7 +247,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "priceLabel.text"));
       final NullableSpinnerNumberModel priceSpinnerModel =
           new NullableSpinnerNumberModel(0, 0, 10000, 1f);
-      this.priceSpinner = new NullableSpinner2(activity, priceSpinnerModel);
+      this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel);
       BigDecimal price = controller.getPrice();
       priceSpinnerModel.setNullable(price == null);
       priceSpinnerModel.setValue(price == null  ? null  : price.floatValue());
@@ -275,7 +275,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-      this.xSpinner = new NullableSpinner2(activity, xSpinnerModel);
+      this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
       xSpinnerModel.setNullable(controller.getX() == null);
       xSpinnerModel.setLength(controller.getX());
       final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
@@ -300,7 +300,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, -maximumLength, maximumLength);
-      this.ySpinner = new NullableSpinner2(activity, ySpinnerModel);
+      this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
       ySpinnerModel.setNullable(controller.getY() == null);
       ySpinnerModel.setLength(controller.getY());
       final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
@@ -325,7 +325,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "elevationLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
-      this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
+      this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
       elevationSpinnerModel.setNullable(controller.getElevation() == null);
       elevationSpinnerModel.setLength(controller.getElevation());
       final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
@@ -350,7 +350,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "angleLabel.text"));
       final NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
           0, 0, 360, 1);
-      this.angleSpinner = new NullableSpinner(activity, angleSpinnerModel);
+      this.angleSpinner = new NullableSpinnerJogDial(activity, angleSpinnerModel);
       Integer angle = controller.getAngleInDegrees();
       angleSpinnerModel.setNullable(angle == null);
       angleSpinnerModel.setValue(angle);
@@ -416,7 +416,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "widthLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.widthSpinner = new NullableSpinner2(activity, widthSpinnerModel);
+      this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel);
       final PropertyChangeListener widthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float width = controller.getWidth();
@@ -444,7 +444,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "depthLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.depthSpinner = new NullableSpinner2(activity, depthSpinnerModel);
+      this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel);
       final PropertyChangeListener depthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float depth = controller.getDepth();
@@ -472,7 +472,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "heightLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.heightSpinner = new NullableSpinner2(activity, heightSpinnerModel);
+      this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
       final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float height = controller.getHeight();
@@ -712,7 +712,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "lightPowerLabel.text", unitName));
       final NullableSpinnerNumberModel lightPowerSpinnerModel = new NullableSpinnerNumberModel(
           0, 0, 100, 5);
-      this.lightPowerSpinner = new NullableSpinner(activity, lightPowerSpinnerModel);
+      this.lightPowerSpinner = new NullableSpinnerJogDial(activity, lightPowerSpinnerModel);
       lightPowerSpinnerModel.setNullable(controller.getLightPower() == null);
       lightPowerSpinnerModel.setValue(controller.getLightPower() != null
           ? Math.round(controller.getLightPower() * 100)

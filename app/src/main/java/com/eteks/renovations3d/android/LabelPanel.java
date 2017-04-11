@@ -31,11 +31,8 @@ import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.JTextField;
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.LabelController;
@@ -57,7 +54,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   //private JLabel                fontNameLabel;//there are only 4 fonts on android!http://stackoverflow.com/questions/12128331/how-to-change-fontfamily-of-textview-in-android/13329907#13329907
   //private FontNameComboBox      fontNameComboBox;
   private JLabel                fontSizeLabel;
-  private JSpinner2 fontSizeSpinner;
+  private JSpinner fontSizeSpinner;
   private JLabel                colorLabel;
   private ColorButton           colorButton;
   private NullableCheckBox visibleIn3DViewCheckBox;
@@ -65,7 +62,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
   private JRadioButton pitch0DegreeRadioButton;
   private JRadioButton pitch90DegreeRadioButton;
   private JLabel                elevationLabel;
-  private JSpinner2 elevationSpinner;
+  private JSpinner elevationSpinner;
   private String                dialogTitle;
 
   /**
@@ -171,7 +168,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
         "fontSizeLabel.text", unitName));
 	final NullableSpinnerNumberModel.NullableSpinnerLengthModel fontSizeSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 			  preferences, 5, 999);
-    this.fontSizeSpinner = new NullableSpinner2(activity, fontSizeSpinnerModel);
+    this.fontSizeSpinner = new NullableSpinner(activity, fontSizeSpinnerModel);
     final PropertyChangeListener fontSizeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           Float fontSize = controller.getFontSize();
@@ -271,7 +268,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
 
 	  final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 			  preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
-    this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
+    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
     elevationSpinnerModel.setNullable(controller.getElevation() == null);
     elevationSpinnerModel.setValue(controller.getElevation());
     final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {

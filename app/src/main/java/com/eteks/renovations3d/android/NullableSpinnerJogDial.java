@@ -7,19 +7,20 @@ import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
 /**
  * Spinner that accepts empty string values. In this case the returned value is <code>null</code>.
  */
-public class NullableSpinner2 extends AutoCommitSpinner2
+public class NullableSpinnerJogDial extends AutoCommitSpinnerJogDial
 {
 
-	public NullableSpinner2(Context context)
+	public NullableSpinnerJogDial(Context context)
 	{
 		this(context, new NullableSpinnerNumberModel(0, 0, 100, 1));
 	}
 
-	public NullableSpinner2(Context context, SpinnerNumberModel model)
+	public NullableSpinnerJogDial(Context context, SpinnerNumberModel model)
 	{
 		super(context, model,
 				model instanceof NullableSpinnerNumberModel.NullableSpinnerLengthModel
 						? ((NullableSpinnerNumberModel.NullableSpinnerLengthModel) model).getLengthUnit().getFormat()
 						: null);
 	}
+
 }

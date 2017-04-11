@@ -20,16 +20,9 @@
 package com.eteks.renovations3d.android;
 
 import android.content.Context;
-import android.text.InputType;
-import android.widget.EditText;
-import android.widget.NumberPicker;
-
 
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
-
-
 
 import java.text.Format;
 
@@ -47,12 +40,12 @@ public class AutoCommitSpinner extends JSpinner
   public AutoCommitSpinner(Context context, SpinnerNumberModel model) {
     this(context, model, null);
   }
-  
+
   /**
    * Creates a spinner with a given <code>model</code> and <code>format</code>.
    */
   public AutoCommitSpinner(Context context, SpinnerNumberModel model,
-                           Format format) {
+						   Format format) {
 	super(context, model, format);
 
 	  //TODO: this has no more function a than a spinner? what's autocommit mean?
@@ -157,8 +150,4 @@ public class AutoCommitSpinner extends JSpinner
       setFormat(format);
     }*/
   }
-
-
-
-
 }

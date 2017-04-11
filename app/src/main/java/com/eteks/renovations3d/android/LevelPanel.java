@@ -32,7 +32,6 @@ import java.beans.PropertyChangeListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.swingish.JTable;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
@@ -54,11 +53,11 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
   private JLabel nameLabel;
   private JTextField nameTextField;
   private JLabel                elevationLabel;
-  private JSpinner2 elevationSpinner;
+  private JSpinner elevationSpinner;
   private JLabel                floorThicknessLabel;
-  private JSpinner2              floorThicknessSpinner;
+  private JSpinner floorThicknessSpinner;
   private JLabel                heightLabel;
-  private JSpinner2              heightSpinner;
+  private JSpinner heightSpinner;
   private JButton increaseElevationIndexButton;
   private JButton               decreaseElevationIndexButton;
   private JLabel                levelsSummaryLabel;
@@ -163,7 +162,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
           com.eteks.sweethome3d.android_props.LevelPanel.class, "elevationLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -1000f, preferences.getLengthUnit().getMaximumElevation());
-      this.elevationSpinner = new NullableSpinner2(activity, elevationSpinnerModel);
+      this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
       elevationSpinnerModel.setNullable(controller.getElevation() == null);
       elevationSpinnerModel.setLength(controller.getElevation());
       final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
@@ -194,7 +193,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
           com.eteks.sweethome3d.android_props.LevelPanel.class, "floorThicknessLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel floorThicknessSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
-      this.floorThicknessSpinner = new NullableSpinner2(activity, floorThicknessSpinnerModel);
+      this.floorThicknessSpinner = new NullableSpinner(activity, floorThicknessSpinnerModel);
       final PropertyChangeListener floorThicknessChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float floorThickness = controller.getFloorThickness();
@@ -220,7 +219,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
           com.eteks.sweethome3d.android_props.LevelPanel.class, "heightLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-      this.heightSpinner = new NullableSpinner2(activity, heightSpinnerModel);
+      this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
       final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float height = controller.getHeight();

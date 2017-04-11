@@ -29,7 +29,6 @@ import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
@@ -51,9 +50,9 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
   private JRadioButton          textureRadioButton;
   private JButton textureComponent;
   private JLabel heightLabel;
-  private JSpinner2 heightSpinner;
+  private JSpinner heightSpinner;
   private JLabel                thicknessLabel;
-  private JSpinner2             thicknessSpinner;
+  private JSpinner thicknessSpinner;
 
 
 	private final UserPreferences preferences;
@@ -191,7 +190,7 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
             controller.getMaxHeight() == null
                 ? preferences.getLengthUnit().getMaximumLength() / 10
                 : controller.getMaxHeight());
-    this.heightSpinner = new NullableSpinner2(activity, heightSpinnerModel);
+    this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
     heightSpinnerModel.setNullable(controller.getHeight() == null);
     final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -233,7 +232,7 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
 			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "thicknessLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2);
-    this.thicknessSpinner = new NullableSpinner2(activity, thicknessSpinnerModel);
+    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
     thicknessSpinnerModel.setNullable(controller.getThickness() == null);
     thicknessSpinnerModel.setLength(controller.getThickness());
     final PropertyChangeListener thicknessChangeListener = new PropertyChangeListener() {

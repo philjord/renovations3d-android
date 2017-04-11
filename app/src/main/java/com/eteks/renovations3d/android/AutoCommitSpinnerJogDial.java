@@ -21,8 +21,11 @@ package com.eteks.renovations3d.android;
 
 import android.content.Context;
 
-import com.eteks.renovations3d.android.swingish.JSpinner2;
+
+import com.eteks.renovations3d.android.swingish.JSpinnerJogDial;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+
+
 
 import java.text.Format;
 
@@ -32,20 +35,20 @@ import java.text.Format;
  * the value displayed in its editor when it gains focus.
  * @author Emmanuel Puybaret
  */
-public class AutoCommitSpinner2 extends JSpinner2
+public class AutoCommitSpinnerJogDial extends JSpinnerJogDial
 {
   /**
    * Creates a spinner with a given <code>model</code>.
    */
-  public AutoCommitSpinner2(Context context, SpinnerNumberModel model) {
+  public AutoCommitSpinnerJogDial(Context context, SpinnerNumberModel model) {
     this(context, model, null);
   }
-
+  
   /**
    * Creates a spinner with a given <code>model</code> and <code>format</code>.
    */
-  public AutoCommitSpinner2(Context context, SpinnerNumberModel model,
-							Format format) {
+  public AutoCommitSpinnerJogDial(Context context, SpinnerNumberModel model,
+								  Format format) {
 	super(context, model, format);
 
 	  //TODO: this has no more function a than a spinner? what's autocommit mean?
@@ -150,4 +153,8 @@ public class AutoCommitSpinner2 extends JSpinner2
       setFormat(format);
     }*/
   }
+
+
+
+
 }

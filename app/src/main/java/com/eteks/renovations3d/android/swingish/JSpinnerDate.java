@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 
-public class JSpinnerDate extends JSpinner2
+public class JSpinnerDate extends JSpinner
 {
 	public JSpinnerDate(Context context, SpinnerDateModel model)
 	{

@@ -25,7 +25,6 @@ import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JSpinner2;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.sweethome3d.model.Polyline;
@@ -53,7 +52,7 @@ import javaawt.geom.GeneralPath;
 public class PolylinePanel extends AndroidDialogView implements DialogView {
   private final PolylineController controller;
   private JLabel thicknessLabel;
-  private JSpinner2 thicknessSpinner;
+  private JSpinner thicknessSpinner;
   private JLabel         arrowsStyleLabel;
   private JComboBox arrowsStyleComboBox;
   private JLabel         joinStyleLabel;
@@ -87,7 +86,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			com.eteks.sweethome3d.android_props.PolylinePanel.class, "thicknessLabel.text", preferences.getLengthUnit().getName()));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, preferences.getLengthUnit().getMinimumLength(), 20f);
-    this.thicknessSpinner = new NullableSpinner2(activity, thicknessSpinnerModel);
+    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
     thicknessSpinnerModel.setNullable(controller.getThickness() == null);
     thicknessSpinnerModel.setLength(controller.getThickness());
     thicknessSpinnerModel.addChangeListener(new ChangeListener() {
