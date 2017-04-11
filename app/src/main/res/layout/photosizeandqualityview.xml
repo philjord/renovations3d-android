@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:padding="10dp"
+                  android:showDividers="middle"
+                  android:divider="@drawable/empty_tall_divider">
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow>
+                <TextView
+                    android:id="@+id/photosizeandqualityview_widthLabel"
+                    android:text="widthLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/photosizeandqualityview_widthSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/photosizeandqualityview_heightLabel"
+                    android:text="heightLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/photosizeandqualityview_heightSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+        <TableRow>
+                <CheckBox
+                    android:id="@+id/photosizeandqualityview_applyProportionsCheckBox"
+                    android:text="applyProportionsCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/photosizeandqualityview_aspectRatioComboBox"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+
+        </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow>
+                <TextView
+                    android:id="@+id/photosizeandqualityview_fastQualityLabel"
+                    android:text="fastQualityLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"/>
+                <SeekBar
+                    android:id="@+id/photosizeandqualityview_qualitySlider"
+                    android:text="photosizeandqualityview_qualitySlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4"/>
+                <TextView
+                    android:id="@+id/photosizeandqualityview_bestQualityLabel"
+                    android:text="bestQualityLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|left"/>
+            </TableRow>
+        </TableLayout>
+        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+    </LinearLayout>
+</ScrollView>
