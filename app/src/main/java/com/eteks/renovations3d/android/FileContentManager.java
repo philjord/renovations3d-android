@@ -722,7 +722,7 @@ private Renovations3DActivity activity;//for dialogs etc
 	  final String[] okCancel = new String[]{ok,cancel};
 
 	  // just a name picker for the save as system
-	  if(save && contentType == ContentType.SWEET_HOME_3D)
+	  if(save)
 	  {
 		  final File parent;
 		  if(path == null || path.length() == 0)

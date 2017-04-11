@@ -45,7 +45,7 @@ public class ScaledImageComponent extends ImageView
   //private static final int MODEL_PREFERRED_SIZE = Math.round(300 * SwingTools.getResolutionScale());
 
 	private static final int MODEL_PREFERRED_SIZE_DP = 128;
-	private static int modelPreferredSizePx = 128;
+	private int modelPreferredSizePx = 128;
   
   private BufferedImage image;
   private boolean       imageEnlargementEnabled;
@@ -83,6 +83,12 @@ public class ScaledImageComponent extends ImageView
   /**
    * Returns the preferred size of this component.
    */
+
+
+  public void setPreferredSize(int sizeInDp) {
+	  final float scale = getResources().getDisplayMetrics().density;
+	  modelPreferredSizePx = (int) (sizeInDp * scale + 0.5f);
+  }
 
   public Dimension getPreferredSize() {
    // if (isPreferredSizeSet()) {

@@ -37,6 +37,9 @@
     <item android:id="@+id/modify3dview"
           android:title="@string/modify3dview"
         />
+    <item android:id="@+id/createPhoto"
+          android:title="@string/menu_createPhoto"
+        />
     <item android:id="@+id/deoptomize"
           android:title="@string/menu_deoptomize"
           android:checkable="true"

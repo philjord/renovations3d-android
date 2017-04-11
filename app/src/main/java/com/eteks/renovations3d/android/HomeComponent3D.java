@@ -520,6 +520,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			com.eteks.sweethome3d.android_props.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
 		menu.findItem(R.id.modify3dview).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
+		menu.findItem(R.id.createPhoto).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name"));
 
 		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, Renovations3DActivity.renovations3D.getHomeController());
 
@@ -654,6 +656,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					break;
 				case R.id.modify3dview:
 					controller.modifyAttributes();
+					break;
+				case R.id.createPhoto:
+					//Thread t4 = new Thread()
+					//{
+					//	public void run()
+						{
+							Renovations3DActivity.renovations3D.getHomeController().createPhoto();
+						}
+					//};
+					//t4.start();
 					break;
 				case R.id.deoptomize:
 					item.setChecked(!item.isChecked());
@@ -1116,11 +1128,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				view = offScreenImageUniverse.getViewer().getView();
 				// Replace textures by clones because Java 3D doesn't accept all the time
 				// to share textures between offscreen and onscreen environments
-				Map<Texture, Texture> replacedTextures = new HashMap<Texture, Texture>();
+
+				//PJPJPJ this does not appear necessary on android
+
+				/*Map<Texture, Texture> replacedTextures = new HashMap<Texture, Texture>();
 				for (Iterator<BranchGroup> it = offScreenImageUniverse.getLocale().getAllBranchGraphs(); it.hasNext(); )
 				{
 					cloneTexture(it.next(), replacedTextures);
-				}
+				}*/
 			}
 			else
 			{
@@ -1131,7 +1146,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			List<Selectable> emptySelection = Collections.emptyList();
 			this.home.setSelectedItems(emptySelection);
 			//PJPJPJ
-			return (BufferedImage) Component3DManager.getInstance().getOffScreenImage(view, width, height).getDelegate();
+			return Component3DManager.getInstance().getOffScreenImage(view, width, height);
 		}
 		finally
 		{

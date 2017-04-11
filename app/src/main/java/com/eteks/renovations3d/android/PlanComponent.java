@@ -6456,20 +6456,20 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       }
     }
 
-    /**
-     * Returns the pixels of the given <code>image</code>.
-     */
-    private int [] getImagePixels(BufferedImage image) {
-      if (image.getType() == BufferedImage.TYPE_INT_RGB
-          || image.getType() == BufferedImage.TYPE_INT_ARGB) {
-        // Use a faster way to get pixels
-        return (int [])image.getRaster().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
-      } else {
-        return image.getRGB(0, 0, image.getWidth(), image.getHeight(), null,
-            0, image.getWidth());
-      }
-    }
-  }
 
+  }
+	/**
+	 * Returns the pixels of the given <code>image</code>.
+	 */
+	public static int [] getImagePixels(BufferedImage image) {
+		if (image.getType() == BufferedImage.TYPE_INT_RGB
+				|| image.getType() == BufferedImage.TYPE_INT_ARGB) {
+			// Use a faster way to get pixels
+			return (int [])image.getRaster().getDataElements(0, 0, image.getWidth(), image.getHeight(), null);
+		} else {
+			return image.getRGB(0, 0, image.getWidth(), image.getHeight(), null,
+					0, image.getWidth());
+		}
+	}
 
 }

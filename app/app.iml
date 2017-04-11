@@ -100,6 +100,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="firebase-analytics-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="sweethome3D-tools" level="project" />
+    <orderEntry type="library" exported="" name="sunflow-0.07.3pj" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="sweethome3D-android" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-10.0.1" level="project" />

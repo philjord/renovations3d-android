@@ -199,28 +199,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.WALL_CREATION);
 					break;
 				case R.id.createRooms:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.ROOM_CREATION);
 					break;
 				case R.id.createPolyLines:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 					break;
 				case R.id.createDimensions:
 					item.setChecked(true);
 					selectionGroup.onMenuItemClick(item);
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), "Double tap to finish", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case R.id.createText:

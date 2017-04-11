@@ -456,7 +456,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  PhotoController photoController)
 	{
-		throw new UnsupportedOperationException();//return new PhotoPanel(home, preferences, photoController);
+		return new PhotoPanel(home, preferences, photoController, activity);
 	}
 
 	/**
@@ -475,6 +475,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public HelpView createHelpView(UserPreferences preferences,
 								   HelpController helpController)
 	{
+		//NOTE this method is not linked to the help button, that buttons opens the sweethome3d.com help page
 		String helpMessage = activity.getString(R.string.helpmenu_no_work);
 		Toast.makeText(this.activity, helpMessage, Toast.LENGTH_LONG).show();
 		return new HelpView(){public void displayView(){}};

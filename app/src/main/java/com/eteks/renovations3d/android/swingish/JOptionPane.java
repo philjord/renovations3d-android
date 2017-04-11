@@ -157,6 +157,11 @@ public class JOptionPane
 			}	});
 	}
 
+	public static int showConfirmDialog(final Context context, final String message, final String title, final int options, final int type)
+	{
+		//TODO: for teh null case I should use those real localized proeprty file values
+		return showOptionDialog(context, message, title, options, type, null, null, null);
+	}
 
 	public static int showOptionDialog(final Context context, final String message, final String title, final int options, final int type,
 									   final Icon icon, final Object [] optionsText, Object defaultText)
@@ -205,6 +210,7 @@ public class JOptionPane
 							 String messageLessStyle = message.replaceAll("<style([\\s\\S]+?)</style>", "");
 							 dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
 
+								//TODO: for the null case I should use those real localized proeprty file values
 							 dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
 							 dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
 							 dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
@@ -292,6 +298,8 @@ public class JOptionPane
 		return selectedOption[0] ;
 
 	}
+
+
 
 
 	public static class ListTagHandler implements Html.TagHandler
