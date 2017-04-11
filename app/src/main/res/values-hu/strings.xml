@@ -64,5 +64,8 @@ Ha látsz egy korrupt véli, próbálkozz az deoptomize lehetőséget a menübő
      Ez az otthon %1 méretben, ez a méret túl nagy lehet, hogy simán szerkeszthető Felújítások 3D szeretne kezdeni a látható beállítás nem kiválasztott szint off? (Ajánlott) <br>
      Megtekintéséhez ezen a szinten meg kell érintse meg duplán a szint neve és jelölje be a Látható opciót, vegye figyelembe, hogy célszerű minél kevesebb látható szintet a legkisebb nagy otthonok, mint ez. <br>
      ]]></string>
+    <string name="double_tap_finish">Koppintson duplán, hogy befejezze</string>
+    <string name="long_process_title">Hosszú futó folyamat</string>
+    <string name="high_quality_photo_notice">Kiváló minőségű renderelés fotó is hosszú időt vesz igénybe, hogy kiszámítható, esetenként több mint egy óra, kérjük ennek tudatában.</string>
 
 </resources>

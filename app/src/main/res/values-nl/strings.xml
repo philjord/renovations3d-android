@@ -64,5 +64,8 @@ Als u een corrupte uitzicht, probeer dan de optie deoptomize in het menu. <br>
      Dit huis is %1 in omvang, kan deze grootte te groot zijn om soepel worden bewerkt in Renovaties 3D zijn, zou u willen beginnen met het zichtbare instelling voor niet-geselecteerde levels uit? (Aanbevolen) <br>
      Om deze niveaus te bekijken, moet u het dubbele tik op de naam niveau en vink op het zichtbare optie, er rekening mee dat het raadzaam is om het aantal zichtbare niveaus tot een minimum voor grote huizen als deze te houden. <br>
      ]]></string>
+    <string name="double_tap_finish">Double tap om te voltooien</string>
+    <string name="long_process_title">Lang lopend proces</string>
+    <string name="high_quality_photo_notice">Hoge kwaliteit foto renderen kan een lange tijd in beslag nemen om te berekenen, in sommige gevallen meer dan een uur, dan kunt u zich bewust zijn van dit.</string>
 
 </resources>

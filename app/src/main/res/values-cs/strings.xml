@@ -68,5 +68,8 @@ Pokud vidíte poškozený pohled, zkuste volbu deoptomize v nabídce. <br>
      Tento dům je %1 ve velikosti, tato velikost může být příliš velký, aby se bez problémů upravovat ve 3D rekonstrukci byste chtěli začít s viditelná nastavení pro non-zvolen úrovní off? (Doporučeno) <br>
      Chcete-li zobrazit tyto úrovně, budete muset zdvojnásobit klepnout na název úrovně a klíště na viditelném volby, na vědomí, že je vhodné, aby počet viditelných úrovní na minimum velkých domech, jako je tento. <br>
      ]]></string>
+    <string name="double_tap_finish">Dvojitým poklepáním na dokončení</string>
+    <string name="long_process_title">Дълъг процес бягане...</string>
+    <string name="high_quality_photo_notice">Vysoce kvalitní fotografie rendering může trvat dlouhou dobu pro výpočet, v některých případech více než hodinu, prosím, vědomi.</string>
 
 </resources>

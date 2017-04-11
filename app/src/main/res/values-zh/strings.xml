@@ -64,5 +64,8 @@
      这个家庭的大小是 ％1，这个大小可能太大，无法在装修3D中顺利编辑，你想从非选择级别的可视设置开始吗？ （推荐）<br>
      要查看这些级别，您需要双击级别名称并在“可见”选项上勾选，请注意，建议将可见级别的数量保持在最低限度，以满足大型家庭的需求。<br>
      ]]></string>
+    <string name="double_tap_finish">双击完成</string>
+    <string name="long_process_title">长时间运行的过程</string>
+    <string name="high_quality_photo_notice">高品质的照片渲染可能需要很长时间来计算，在某些情况下超过一个小时，请注意这一点。</string>
 
 </resources>

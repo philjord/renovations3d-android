@@ -70,4 +70,8 @@ If you see a corrupt view, please try the deoptomize option in the menu.<br>
     To view those levels you will need to double tap the level name and tick on the Viewable option, note that it is advisable to keep the number of viewable levels to a minimum for large homes like this.<br>
     ]]></string>
 
+    <string name="double_tap_finish">Double tap to finish</string>
+    <string name="long_process_title">Long running process</string>
+    <string name="high_quality_photo_notice">High quality photo rendering can take a long time to calculate, in some cases more than an hour, please be aware of this.</string>
+
 </resources>

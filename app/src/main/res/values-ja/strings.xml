@@ -65,5 +65,8 @@
      この家はサイズが ％1 ですが、このサイズが大きすぎてRenovations 3Dでスムーズに編集できない場合は、非選択レベルの表示可能な設定をオフにしますか？ （推奨）<br>
      これらのレベルを表示するには、レベル名をダブルタップして[表示可能]オプションをオンにする必要があります。このような大規模な家庭では、表示可能なレベルの数を最小限に抑えることが推奨されます。<br>
      ]]></string>
+    <string name="double_tap_finish">ダブルタップして終了</string>
+    <string name="long_process_title">長期実行プロセス</string>
+    <string name="high_quality_photo_notice">高品質の写真のレンダリングには時間がかかりますが、場合によっては1時間以上かかることもありますので、ご注意ください。</string>
 
 </resources>

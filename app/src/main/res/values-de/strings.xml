@@ -65,5 +65,8 @@ Wenn Sie eine korrupte Ansicht sehen, versuchen Sie bitte die Option deoptomize 
      Dieses Haus ist %1 in Größe, diese Größe kann zu groß sein, um reibungslos in Renovations 3D bearbeitet zu werden, möchten Sie mit der sichtbaren Einstellung für nicht ausgewählte Levels beginnen? (Empfohlen) <br>
      Um diese Ebenen zu sehen, musst du doppelt auf den Levelnamen tippen und auf die Option Viewable ticken, beachten Sie, dass es ratsam ist, die Anzahl der sichtbaren Levels auf ein Minimum für große Häuser wie diese zu halten
      ]]></string>
+    <string name="double_tap_finish">Doppeltippen, um zu beenden</string>
+    <string name="long_process_title">Lange Laufzeit</string>
+    <string name="high_quality_photo_notice">Hochwertige Foto-Rendering kann eine lange Zeit zu berechnen, in einigen Fällen mehr als eine Stunde, bitte beachten Sie diese.</string>
 
 </resources>

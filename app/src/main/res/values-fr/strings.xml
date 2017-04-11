@@ -64,5 +64,8 @@ Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
      Cette maison a une taille de% 1, cette taille peut être trop grande pour être modifiée en douceur dans Renovations 3D, souhaitez-vous commencer par le réglage visible des niveaux non sélectionnés? (Recommandé) <br>
      Pour voir ces niveaux, vous devrez doubler le nom du niveau et cocher l\'option Viewable, notez qu\'il est conseillé de garder au minimum le nombre de niveaux visibles pour les grandes maisons comme celle-ci.<br>
      ]]></string>
+    <string name="double_tap_finish">Double toucher pour terminer</string>
+    <string name="long_process_title">Processus à long terme</string>
+    <string name="high_quality_photo_notice">Un rendu photo de haute qualité peut prendre beaucoup de temps pour calculer, dans certains cas, plus d\'une heure, soyez conscient de cela.</string>
 
 </resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Renovations 3D</string>
+    <string name="alignment">정렬</string>
+    <string name="magnetism">자성</string>
+    <string name="planview_welcometext"><![CDATA[<html>
+집기 동작을 사용하여 확대 및 축소합니다. <br>
+평면도의 왼쪽 가장자리에서 1 개의 손가락으로 가구 테이블을 스 와이프합니다. <br>
+오른쪽 가장자리에서 가구 카탈로그를 스 와이프하려면 가구를 추가 할 수 있습니다. <br>
+현재 선택을 변경하지 않고 화면 이동하려면 두 손가락으로 함께 스 와이프하십시오. <br>
+개체를 편집하려면 두 번 탭합니다. <br>
+두 개 이상의 객체를 선택하려면 [더] 메뉴에서 [올가미 선택] 또는 [여러 작업 선택]을 사용하십시오. <br>
+데모 sh3d 파일 두 개를 다운로드 폴더에 추가하려면 More-> Open home을 선택하십시오. <br>
+인터넷을 통해 브라우저를 사용하여 더 많은 sh3d 파일을 다운로드하면 브라우저에서 열립니다. <br>
+<p> <a href="http://www.sweethome3d.com/gallery.jsp"> http://www.sweethome3d.com/gallery </a>를 방문하십시오.
+    <br> 및 <a href="http://www.sweethome3d.com/"> http://www.sweethome3d.com/ </a>
+    자세한 내용은 <br>.
+]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>
+가구 추가 아이콘을 눌러 선택한 가구 항목을 평면 뷰의 위치 0,0에 배치합니다. <br>
+또는 항목을 길게 누를 수 있습니다 (드래그 앤 드롭이 없습니다). <br>
+이보기에서 가구 카탈로그 라이브러리를 가져오고 메뉴 -> 가구 라이브러리 가져 오기 ...를 선택합니다. <br>
+인터넷에서 가구 및 텍스처 라이브러리를 다운로드 할 수 있습니다. 가져 오기 전에 파일 탐색기를 사용하여 압축을 풀어야 할 수도 있습니다. <br>
+</ p> <p> <a href="http://www.sweethome3d.com/importModels.jsp"> http://www.sweethome3d.com/importModels </a>를 방문하십시오.
+<br> 및 <a href="http://www.sweethome3d.com/importTextures.jsp"> http://www.sweethome3d.com/importTextures </a>
+   ]]></string>
+    <string name="furnitureview_welcometext"><![CDATA[<html>
+이것은 현재 귀하의 계획에 배치 된 모든 가구를 보여줍니다. <br>
+지금 당신이 할 수있는 유일한 기능은 항목의 가시성을 변경하는 것입니다. <br>
+]]></string>
+    <string name="component3dview_welcometext"><![CDATA[<html><p>
+이것은 당신의 계획을 3 차원 적으로 보여줍니다. <br>
+위에서 내려다 본 경우 : <br>
+한 손가락이 왼쪽 또는 오른쪽으로 밀면 계획이 회전합니다. <br>
+손가락 하나를 위아래로 움직이면 카메라의 높이와 피치가 변경됩니다. <br>
+핀치는 카메라를 중심 가까이로 이동시킵니다. <br>
+방문의 견지에서 보면 : <br>
+손가락 하나가 왼쪽 또는 오른쪽으로 밀면 손가락이 당신 주위로 회전합니다. <br>
+한 손가락으로 위 또는 아래로 움직이면 머리가 가리키는 수직 각도가 변경됩니다. <br>
+핀치가 앞으로 또는 뒤로 이동합니다. <br>
+저장 한 시점은 눈 아이콘 아래에 있습니다. <br>
+위에서 아래로 변경하는 것은 사람의 아이콘이나 계획의 아이콘으로 수행 할 수 있습니다. <br>
+보기가 손상된 경우 메뉴에서 deoptomize 옵션을 사용해보세요. <br>
+]]></string>
+    <string name="menu_deoptomize">3D 구현 해제</string>
+    <string name="menu_show3dcaps">GPU 정보</string>
+    <string name="select_multiple">복수 선택</string>
+    <string name="select_lasso">올가미를 선택하십시오.</string>
+
+    <string name="help_about"><![CDATA[<html>
+    <font face="sans-serif"><center><font size="+2"> <b> Renovations 3D </b></font><sup>&reg;</sup>
+    <br><b>버전 %1$s</b>
+    <br><font size="-1">자바 버전 %2$s</font>
+    <br><font size="-1"><a href="http://www.lowagie.com/iText/">iText</a>에서 제공하는 PDF 인쇄물</font>
+    <br><font size="-1"><a href="http://java.freehep.org/">FreeHEP</a>에서 제공하는 SVG 내보내기</font>
+    <br><font size="-1"><a href="http://xmlgraphics.apache.org/batik/">Batik</a>에서 제공하는 SVG 경로 편집</font>
+    <br><font size="-1"><a href="http://sunflow.sourceforge.net/">SunFlow</a>에서 제공하는 사진 렌더링</font>
+    <p>백호석님이 번역 하였습니다
+    <p>소프트웨어 업데이트와 버그 리포트를 위해
+    <p><a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>을 방문하십시오.
+    <br>및<a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    자세한 내용은<br>
+    </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com"> support@renovations3d.com </a>>
+    </p><p><font size="-2">오픈 소스 코드 작성 © Copyright 2006-2017 eTeks
+    </font>
+    ]]></string>
+    <string name="helpmenu_no_work">메뉴 -> 도움말은 현재 아무 것도하지 않습니다.</string>
+    <string name="large_home_question_title">잠재적 인 문제</string>
+    <string name="large_home_question"><![CDATA[<html>
+     이 집의 크기는 % 1입니다.이 크기가 너무 커서 Renovations 3D에서 부드럽게 편집 할 수없는 경우 선택되지 않은 레벨에 대한 가시적 인 설정으로 시작하겠습니까? (권장) <br>
+     레벨을 보려면 레벨 이름을 두 번 탭하고 볼 수있는 옵션을 선택해야합니다. 이렇게 큰 집에서는 볼 수있는 레벨의 수를 최소한으로 유지하는 것이 좋습니다. <br>
+     ]]></string>
+
+    <string name="double_tap_finish">완료하려면 두 번 탭하십시오.</string>
+    <string name="long_process_title">장기 실행 프로세스</string>
+    <string name="high_quality_photo_notice">고화질 사진 렌더링을 계산하는 데 시간이 오래 걸릴 수 있으며, 경우에 따라 1 시간 이상 걸릴 수도 있습니다.</string>
+
+
+
+
+</resources>

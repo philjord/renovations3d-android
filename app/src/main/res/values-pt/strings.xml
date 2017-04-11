@@ -69,5 +69,8 @@ Se você ver uma exibição corrompida, tente a opção deoptomize no menu.<br>
      Esta casa tem um tamanho de %1, este tamanho pode ser muito grande para ser editado suavemente em Renovations 3D, você gostaria de começar com a configuração visível para níveis não selecionados? (Recomendado) <br>
      Para exibir esses níveis, você precisará tocar duas vezes no nome do nível e marcar na opção Visível, observe que é aconselhável manter o número de níveis visíveis no mínimo para grandes casas como esta.<br>
 ]]></string>
+    <string name="double_tap_finish">Toque duas vezes para terminar</string>
+    <string name="long_process_title">Processo de longa duração</string>
+    <string name="high_quality_photo_notice">Alta qualidade de processamento de fotos pode levar muito tempo para calcular, em alguns casos, mais de uma hora, por favor, esteja ciente disso.</string>
 
 </resources>

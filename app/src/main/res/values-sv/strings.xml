@@ -68,5 +68,8 @@ Om du ser en korrumperad syn, försök alternativet deoptomize i menyn. <br>
      Detta hem är %1 i storlek, kan denna storlek vara för stor för att smidigt redigeras i Renoveringar 3D, skulle du vilja börja med den synliga inställningen för icke-valda planar ut? (Rekommenderas) <br>
      För att se dessa nivåer måste du dubbeltrycka nivån namn och kryssa på den synliga alternativet notera att det är lämpligt att hålla antalet visningsbara nivåer till ett minimum för stora hem som denna. <br>
      ]]></string>
+    <string name="double_tap_finish">Dubbeltryck för att avsluta</string>
+    <string name="long_process_title">Långdragna process</string>
+    <string name="high_quality_photo_notice">Hög kvalitet foto rendering kan ta lång tid att beräkna, i vissa fall mer än en timme, du vara medveten om detta.</string>
 
 </resources>

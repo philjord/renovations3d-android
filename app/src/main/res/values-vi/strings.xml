@@ -65,5 +65,8 @@ Nếu bạn thấy một chế độ xem hỏng, vui lòng thử tùy chọn deo
      Nhà này có kích thước %1, kích thước này có thể quá lớn để được chỉnh sửa mượt mà trong Renovations 3D, bạn có muốn bắt đầu với cài đặt có thể xem đối với các cấp không được chọn không? (Đề nghị) <br>
      Để xem các cấp độ đó, bạn sẽ cần nhấn đúp vào tên cấp và đánh dấu vào tùy chọn Chế độ xem được, lưu ý rằng bạn nên giữ số lượng cấp độ có thể xem ở mức tối thiểu cho những ngôi nhà lớn như thế này <br>
      ]]></string>
+    <string name="double_tap_finish">Nhấn đúp để kết thúc</string>
+    <string name="long_process_title">Quá trình chạy dài</string>
+    <string name="high_quality_photo_notice">Việc hiển thị hình ảnh chất lượng cao có thể mất một thời gian dài để tính toán, trong một số trường hợp hơn một giờ, hãy chú ý đến việc này.</string>
 
 </resources>

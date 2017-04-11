@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
-    <string name="alignment">allineamento</string>
-    <string name="magnetism">magnetismo</string>
+    <string name="alignment">Allineamento</string>
+    <string name="magnetism">Magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Utilizzare il gesto pizzico di zoom in e out.<br>
-Per vedere la tabella mobili con 1 strisciare il dito dal bordo sinistro della mappa.<br>
-Per vedere il colpo catalogo di mobili dal bordo destro, è possibile aggiungere mobili da lì.<br>
-Per eseguire una panoramica senza alterare il colpo selezione corrente con due dita insieme.<br>
-Per modificare ogni oggetto doppio tap su di esso. <br>
-Per selezionare più di un oggetto usare il lazo Seleziona Seleziona azioni oro multipla nel menu Altro.<br>
-Due file dimostrativi SH3D saranno nella cartella download, selezionare più-> Apri casa.<br>
-Utilizzare il browser per scaricare più file SH3D da internet, si aprirà dal browser.<br>
+Usa la gesture di Pinch(pizzico) per effettuare uno zoom.<br>
+Per vedere la lista degli arredi aggiunti, scorri il dito da sinistra dello schermo.<br>
+Per vedere gli arredi disponibili, scorri il dito da destra, potrai aggiungere gli arredi da li. <br>
+Per scorrere lungo la mappa senza modificare la selezione attuale, scorri con due dita.<br>
+Per selezionare più di un oggetto contemporaneamente, utilizza la Selezione con lazo o la Selezione Multipla nel menu aggiuntivo.<br>
+Due file demo di sh3d verranno scaricati nella tua cartella dei downloads, seleziona Menu->Apri .<br>
+Utilizza il tuo browser per scaricare più file sh3d da internet, verranno aperti direttamente da li.<br>
 <p>Visita <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>per maggiori informazioni.
+    <br> e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    <br>per ulteriori informazioni.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Premere l\'icona mobili metti in posizionare l\'elemento selezionato mobili sulla pianta nella posizione 0,0.<br>
-In alternativa è possibile premere a lungo la voce (non c\'è il drag and drop).<br>
-Da questo punto di vista è possibile importare catalogo biblioteche mobili, selezionare Menu-> biblioteca mobili Importa ...<br>
-È possibile scaricare mobili e librerie di texture da internet, è necessario decomprimere loro possono utilizzare un esploratore di file prima di importarli.<br>
-</p><p>Visita <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>e <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
-			     ]]></string>
+    <string name="catalogview_welcometext"><![CDATA[<html><p>
+        Premendo l\'icona di aggiunta mobili, puoi aggiungere l\'oggetto selezionato sulla piantina in posizione 0,0.<br>
+        In alternativa puoi premere a lungo sull\'oggetto (non è possibile trascinarlo sulla mappa).<br>
+        Da questa vista puoi importare cataloghi di arredamento, premi su Menu->Importa Libreria di Arredamento&#8230;<br>
+        Puoi scaricare arredamento e textures da internet, potresti doverli decomprimere prima di importarli.<br> 
+</p><p>Visita i siti <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
+<br> e <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
+   ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
-Questa è una vista di tutti i mobili attualmente messi sul vostro piano.<br>
-Per ora l\'unica funzione che si può fare è quella di modificare un elementi di visibilità.<br>
+Questa è una vista della mobilia attualmente inserita nel progetto.<br>
+Per ora la sola funzione disponibile è il cambio di visibilità.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Questa è una vista dimensionale 3 del piano. <br>
-Se siete alla ricerca dall\'alto verso il basso: <br>
-Un dito scorrevole verso sinistra o destra ruoterà il piano. <br>
-Un dito di scorrimento verso l\'alto o verso il basso altererà l\'altezza della fotocamera e anche in campo. <br>
-Pinch si sposterà la telecamera più vicina al centro o ulteriori da esso. <br>
-Se siete alla ricerca dal punto di vista visita: <br>
-Un dito scorrevole verso sinistra o destra ruoterà il piano intorno a voi. <br>
-Un dito di scorrimento verso l\'alto o verso il basso altererà l\'angolo verticale la testa è puntato. <br>
-Pinch si sposta in avanti o indietro. <br>
-Salvati i punti di vista possono essere trovati sotto l\'icona occhio. <br>
-Cambiare dall\'alto verso il basso per visitare può essere fatto per l\'icona di un uomo o l\'icona di un piano. <br>
-Se vedete una corrotta, prova l\'opzione deoptomize nel menu. <br>
+    <string name="component3dview_welcometext"><![CDATA[<html><p>
+Questa è una vista in tre dimensioni. <br>
+Se sei in visualizzazione aerea:<br>
+Trascina il dito a destra o sinistra per ruotare la vista.<br>
+Trascina il dito in alto o in basso per modificare l\'altezza e l\'inclinazione del punto di vista.<br>
+La gesture di Pinch (pizzico) avvicinerà o allontanerà la camera dal centro dell\'immagine.<br>
+Se sei in visualizzazione in prima persona:<br>
+Trascina un dito a destra o sinistra per ruotare la vista attorno a te.<br>
+Trascina un dito in alto o in basso per inclinare la vista in verticale.<br>
+Il Pinch (pizzico) muoverà il punto di vista avanti o indietro.<br>
+I punti di vista salvati possono essere richiamati tramite l\'icona a forma di occhio.<br>
+Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma di omino o su quella a forma di piano.<br>
+Se vedi una vista corrotta, prova a cambiare l\'impostazione "Deottimizzazione 3d" dal menu.<br>
 ]]></string>
-    <string name="menu_deoptomize">Deoptomize 3d</string>
-    <string name="menu_show3dcaps">informazioni GPU</string>
-    <string name="select_multiple">selezionare più</string>
-    <string name="select_lasso">selezionare lazo</string>
-    <string name="help_about"><![CDATA[<html><font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
-              <br><b>Versione %1$s</b>
-              <br><font size="-1">Versione Java %2$s</font>
-              <br><font size="-1">Stampa PDF fornita da <a href="http://www.lowagie.com/iText/">iText</a></font>
-              <br><font size="-1">Esportazione SVG fornita da <a href="http://java.freehep.org/">FreeHEP</a></font>
-              <br><font size="-1">SVG path compilation fornito da <a href="http://xmlgraphics.apache.org/batik/">Batik</a></font>
-              <br><font size="-1">Rendering fotografico fornito da <a href="http://sunflow.sourceforge.net/">SunFlow</a></font>
-              <p>Tradotto in Italiano da
-              <br>Simone Bufalino e Alberto Della Salandra
-              <p>Visita <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
-			  <br>e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>per maggiori informazioni.
-              </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
-              </p><p><font size="-2">Costruito su codice open source © Copyright 2006-2017 eTeks
-              </font>]]></string>
-    <string name="helpmenu_no_work">Menu-> Aiuto Attualmente non fa nulla.</string>
-    <string name="large_home_question_title">Potenziale problema</string>
+
+    <string name="menu_deoptomize">Deottimizzazione 3d</string>
+    <string name="menu_show3dcaps">Informazioni GPU</string>
+    <string name="select_multiple">Selezione multipla</string>
+    <string name="select_lasso">Selezione lazo</string>
+
+    <string name="help_about"><![CDATA[<html>
+    <font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
+    <br><b>Versione %1$s</b>
+    <br><font size="-1">Versione Java %2$s</font>
+    <br><font size="-1">Stampa in PDF fornita da <a href="http://www.lowagie.com/iText/">iText</a></font>
+    <br><font size="-1">Export in SVG fornito da <a href="http://java.freehep.org/">FreeHEP</a></font>
+    <br><font size="-1">Compilazione path SVG fornito da <a href="http://xmlgraphics.apache.org/batik/">Batik</a></font>
+    <br><font size="-1">Rendering fotografico fornito da <a href="http://sunflow.sourceforge.net/">SunFlow</a></font>
+    <p>Visita <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+    <br> e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    <br>per maggiori informazioni.
+    </p><p><font size="-2">© Copyright 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+    </p><p><font size="-2">Sviluppato su base open source, codice © Copyright 2006-2017 eTeks
+    </font>
+    ]]></string>
+    <string name="helpmenu_no_work">Menu->Help è attualmente vuoto.</string>
+    <string name="large_home_question_title">File di grandi dimensioni</string>
     <string name="large_home_question"><![CDATA[<html>
-     Questa casa è %1 in termini di dimensioni, queste dimensioni può essere troppo grandi per essere agevolmente modificato nelle ristrutturazioni 3D, ti piacerebbe iniziare con l\'impostazione del visibile per i livelli non selezionati off? (Consigliata) <br>
-     Per visualizzare quei livelli è necessario toccare due volte il nome del livello e selezionare l\'opzione visibile, notare che è consigliabile mantenere il numero di livelli visualizzabili al minimo per le grandi case come questo. <br>
-     ]]></string>
+    Questa casa è %1, questa dimensione potrebbe essere troppo grande per essere modificata senza rallentamenti da Renovations 3D, vuoi iniziare con il disabilitare i livelli non selezionati? (Consigliato)<br>
+    Per vedere quei livelli dovrai premere due volte sul nome del livello ed attivarlo, nota che è consigliato tenere il numero dei livelli visibli al minimo per case di grandi dimensioni.<br>
+    ]]></string>
+    <string name="double_tap_finish">Doppio tap per finire</string>
+    <string name="long_process_title">processo in esecuzione lungo</string>
+    <string name="high_quality_photo_notice">foto di rendering di alta qualità può richiedere molto tempo per calcolare, in alcuni casi più di un\'ora, si prega di essere consapevoli di questo.</string>
+
 
 </resources>

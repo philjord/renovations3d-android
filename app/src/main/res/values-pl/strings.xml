@@ -65,5 +65,8 @@ Jeśli widzisz uszkodzony widok, spróbuj skorzystać z opcji deoptomize w menu.
      Ten dom ma rozmiar%1, rozmiar ten może być za duży, aby mógł być płynnie edytowany w programie Renowacje 3D, czy chcesz zacząć od widocznego ustawienia nie wybranego poziomu? (Zalecane) <br>
      Aby wyświetlić te poziomy, musisz dwukrotnie dotknąć nazwy poziomu i zaznaczyć opcję Wyświetlaj, pamiętaj, że w przypadku dużych domów wskazane jest, aby minimalny poziom widocznych wyświetleń był minimalny. <br>
      ]]></string>
+    <string name="double_tap_finish">Kliknij dwukrotnie, aby zakończyć</string>
+    <string name="long_process_title">Długi proces</string>
+    <string name="high_quality_photo_notice">Wysoka jakość renderowania zdjęć może zająć dużo czasu, aby obliczyć, w niektórych przypadkach ponad godzinę, pamiętaj o tym.</string>
 
 </resources>

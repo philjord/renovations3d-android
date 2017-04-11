@@ -20,4 +20,5 @@
     <string name="deletepov" translatable="false">Delete point of view</string>
     <string name="modify3dview" translatable="false">Modify 3D view</string>
     <string name="viewalllevels" translatable="false">View all levels</string>
+    <string name="menu_createPhoto" translatable="false">createPhoto</string>
 </resources>
