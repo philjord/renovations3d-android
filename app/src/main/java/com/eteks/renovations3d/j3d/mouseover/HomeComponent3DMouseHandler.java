@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
+import org.jogamp.java3d.CapabilityNotSetException;
 import org.jogamp.java3d.Node;
 import org.jogamp.java3d.PickInfo;
 import org.jogamp.java3d.SceneGraphPath;
@@ -190,6 +191,14 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 							}
 							catch (IllegalStateException e)
 							{
+								//PJ when does this get thrown I wonder
+								e.printStackTrace();
+							}
+							catch (CapabilityNotSetException e)
+							{
+								// seen on firebase crash
+								//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/3fb14576?duration=2592000000
+								//Exception org.jogamp.java3d.CapabilityNotSetException: PickInfo: PICK_GEOMETRY mode - no capability to ALLOW_COORDINATE_READ
 								e.printStackTrace();
 							}
 						}
