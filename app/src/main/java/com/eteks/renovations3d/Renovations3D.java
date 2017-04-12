@@ -130,7 +130,6 @@ public class Renovations3D extends HomeApplication
 	 */
 	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
 	{
-		Renovations3DActivity.logFireBaseContent("loadHome", homeFile.getAbsolutePath());
 		Renovations3DActivity.logFireBaseContent("loadHomeFile", homeFile.getName());
 
 		final String homeName = homeFile.getAbsolutePath();
