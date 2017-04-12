@@ -922,7 +922,7 @@ public class Renovations3DActivity extends FragmentActivity
 			if (unmodifiedFileName.length() > 0)
 			{
 				File homeName = new File(unmodifiedFileName);
-				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getAbsolutePath());
+				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getName());
 				loadHome(homeName);
 			}
 			else
@@ -935,7 +935,7 @@ public class Renovations3DActivity extends FragmentActivity
 				File homeName = new File(outputDir, "currentWork.sh3d");
 				if (homeName.exists())
 				{
-					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getAbsolutePath() + " original: " + tempWorkingFileRealName
+					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
 							+ " isModifiedOverrideValue: " +isModifiedOverrideValue);
 
 					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
@@ -954,7 +954,7 @@ public class Renovations3DActivity extends FragmentActivity
 			File autoOpenFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), autoOpenFirstOpen);
 			if (autoOpenFile.exists())
 			{
-				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getAbsolutePath());
+				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getName());
 				loadHome(autoOpenFile);
 			}
 			else
@@ -1007,7 +1007,7 @@ public class Renovations3DActivity extends FragmentActivity
 							editor.putString(STATE_CURRENT_HOME_NAME, "");
 							editor.apply();
 
-							Renovations3DActivity.logFireBaseContent("doAutoSave", "temp: " + homeName.getAbsolutePath() + " original: " + originalName
+							Renovations3DActivity.logFireBaseContent("doAutoSave", "temp: " + homeName.getName() + " original: " + originalName
 									+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
 						}
