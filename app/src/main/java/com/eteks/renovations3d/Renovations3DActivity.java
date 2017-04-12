@@ -51,10 +51,15 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+
+import javaawt.EventQueue;
 
 
 /**
@@ -831,7 +836,22 @@ public class Renovations3DActivity extends FragmentActivity
 		editor.putInt(APP_OPENED_COUNT, appOpenedCount);
 		editor.apply();
 
-		boolean firstOpening = appOpenedCount <= 1;
+		boolean firstOpening =  appOpenedCount <= 1;
+		if (firstOpening)
+		{
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					String language = Locale.getDefault().getLanguage();
+					List<String> supportedLanguages = Arrays.asList(renovations3D.getUserPreferences().getSupportedLanguages());
+					if (supportedLanguages.contains(language))
+					{
+						renovations3D.getUserPreferences().setLanguage(language);
+					}
+				}
+			});
+		}
 
 
 		// download managers only appeared in ginger bread
