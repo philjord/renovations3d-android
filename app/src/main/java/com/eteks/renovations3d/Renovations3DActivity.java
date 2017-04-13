@@ -35,6 +35,7 @@ import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
+import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.google.android.gms.ads.AdRequest;
@@ -44,6 +45,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -181,7 +184,7 @@ public class Renovations3DActivity extends FragmentActivity
 	/**
 	 * For generally doing day to day things
 	 *
-	 * @param id    short id (method name?)
+	 * @param id short id (method name?)
 	 */
 	public static void logFireBaseContent(String id)
 	{
@@ -202,7 +205,7 @@ public class Renovations3DActivity extends FragmentActivity
 	/**
 	 * For more unusual event that represent exploring/exploiting the system
 	 *
-	 * @param id    short id (method name?)
+	 * @param id short id (method name?)
 	 */
 	public static void logFireBaseLevelUp(String id)
 	{
@@ -217,7 +220,7 @@ public class Renovations3DActivity extends FragmentActivity
 	public static void logFireBase(String event, String id, String value)
 	{
 		System.out.println("logFireBase : " + id + "[" + value + "]");
-		if ( mFirebaseAnalytics != null && !BuildConfig.DEBUG )
+		if (mFirebaseAnalytics != null && !BuildConfig.DEBUG)
 		{
 			Bundle bundle = new Bundle();
 			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
@@ -386,42 +389,11 @@ public class Renovations3DActivity extends FragmentActivity
 				loadSh3dFile();
 				return true;
 			case R.id.menu_save:
-				//I must get off the EDT as it may ask the question in a blocking manner
-				Thread t = new Thread()
-				{
-					public void run()
-					{
-						if (renovations3D.getHomeController() != null)
-						{
-							Renovations3DActivity.logFireBaseContent("menu_save", renovations3D.getHome().getName());
-
-							//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
-							// this may not be truely needed but better to be safe
-							if(renovations3D.getHome().getName() != null && renovations3D.getHome().getName().contains("currentWork.sh3d"))
-								renovations3D.getHome().setName(null);
-
-
-							renovations3D.getHomeController().saveAndCompress();
-						}
-					}
-				};
-				t.start();
+				saveSh3dFile();
 				return true;
 			case R.id.menu_saveas:
+				saveAsSh3dFile();
 
-				//I must get off the EDT and ask the question in a blocking manner
-				Thread t2 = new Thread()
-				{
-					public void run()
-					{
-						if (renovations3D.getHomeController() != null)
-						{
-							Renovations3DActivity.logFireBaseContent("menu_saveas", renovations3D.getHome().getName());
-							renovations3D.getHomeController().saveAsAndCompress();
-						}
-					}
-				};
-				t2.start();
 				return true;
 			case R.id.menu_help:
 				//if (renovations3D.getHomeController() != null)
@@ -473,6 +445,100 @@ public class Renovations3DActivity extends FragmentActivity
 		System.out.println("onPause - auto saving");
 		doAutoSave();
 		super.onPause();
+	}
+
+	private void saveSh3dFile()
+	{
+		//I must get off the EDT as it may ask the question in a blocking manner
+		Thread t = new Thread()
+		{
+			public void run()
+			{
+				if (renovations3D.getHomeController() != null)
+				{
+					Renovations3DActivity.logFireBaseContent("menu_save", renovations3D.getHome().getName());
+
+					//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
+					//this may not be truly needed but better to be safe
+					if (renovations3D.getHome().getName() != null && renovations3D.getHome().getName().contains("currentWork.sh3d"))
+						renovations3D.getHome().setName(null);
+
+
+					if(renovations3D.getHome().getName() != null && !renovations3D.getHome().isRepaired())
+					{
+						// we have a name already so record it
+						SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+						editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+						editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
+						editor.apply();
+					}
+					else
+					{
+						// no current name will get a modified homes change
+						// record the name into prefs after it is changed
+						PropertyChangeListener newNameListener = new PropertyChangeListener()
+						{
+							@Override
+							public void propertyChange(PropertyChangeEvent evt)
+							{
+								SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+								SharedPreferences.Editor editor = settings.edit();
+								editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+								editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+								editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
+								editor.apply();
+								// only once
+								renovations3D.getUserPreferences().removePropertyChangeListener(UserPreferences.Property.RECENT_HOMES, this);
+							}
+						};
+
+						renovations3D.getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener);
+					}
+
+					renovations3D.getHomeController().saveAndCompress();
+				}
+			}
+		};
+		t.start();
+	}
+
+	private void saveAsSh3dFile()
+	{
+		//I must get off the EDT and ask the question in a blocking manner
+		Thread t2 = new Thread()
+		{
+			public void run()
+			{
+				if (renovations3D.getHomeController() != null)
+				{
+					Renovations3DActivity.logFireBaseContent("menu_saveas", renovations3D.getHome().getName());
+
+					// record the name into prefs after it is changed
+					PropertyChangeListener newNameListener = new PropertyChangeListener(){
+						@Override
+						public void propertyChange(PropertyChangeEvent evt)
+						{
+							SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+							editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+							editor.putString(STATE_CURRENT_HOME_NAME, renovations3D.getHome().getName());
+							editor.apply();
+
+							// only once
+							renovations3D.getUserPreferences().removePropertyChangeListener(UserPreferences.Property.RECENT_HOMES, this);
+						}
+					};
+
+					renovations3D.getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener );
+					renovations3D.getHomeController().saveAsAndCompress();
+				}
+			}
+		};
+		t2.start();
+
 	}
 
 	private void loadSh3dFile()
@@ -561,6 +627,13 @@ public class Renovations3DActivity extends FragmentActivity
 						renovations3D.newHome();
 						mRenovations3DPagerAdapter.notifyChangeInPosition(1);
 						mRenovations3DPagerAdapter.notifyDataSetChanged();
+
+						SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+						editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+						editor.putString(STATE_CURRENT_HOME_NAME, "");
+						editor.apply();
 					}
 				});
 			}
@@ -578,6 +651,12 @@ public class Renovations3DActivity extends FragmentActivity
 	public void loadHome(final File homeFile)
 	{
 		loadHome(homeFile, null, false, false);
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(STATE_TEMP_HOME_REAL_NAME, "");
+		editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+		editor.putString(STATE_CURRENT_HOME_NAME, homeFile.getAbsolutePath());
+		editor.apply();
 	}
 
 	/**
@@ -836,10 +915,11 @@ public class Renovations3DActivity extends FragmentActivity
 		editor.putInt(APP_OPENED_COUNT, appOpenedCount);
 		editor.apply();
 
-		boolean firstOpening =  appOpenedCount <= 1;
+		boolean firstOpening = appOpenedCount <= 1;
 		if (firstOpening)
 		{
-			EventQueue.invokeLater(new Runnable() {
+			EventQueue.invokeLater(new Runnable()
+			{
 				@Override
 				public void run()
 				{
@@ -936,7 +1016,7 @@ public class Renovations3DActivity extends FragmentActivity
 				if (homeName.exists())
 				{
 					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
-							+ " isModifiedOverrideValue: " +isModifiedOverrideValue);
+							+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
 					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
 				}
@@ -968,6 +1048,7 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 	final Semaphore dialogSemaphore = new Semaphore(1, true);
+
 	private void doAutoSave()
 	{
 		if (renovations3D != null && renovations3D.getHome() != null)
@@ -1023,7 +1104,6 @@ public class Renovations3DActivity extends FragmentActivity
 
 		}
 	}
-
 
 
 	private String getContentName(ContentResolver resolver, Uri uri)
