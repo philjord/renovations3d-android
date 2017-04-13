@@ -24,6 +24,8 @@ import android.os.Environment;
 import android.os.Looper;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.android.swingish.JComponent;
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -905,13 +907,11 @@ private Renovations3DActivity activity;//for dialogs etc
     String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.overwrite");
     String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
 
-	  Renovations3DActivity.logFireBaseContent("confirmOverwrite", path);
-	  return true;
+    boolean replaceAnswer =  JOptionPane.showOptionDialog(activity, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+			null, new Object[]{replace, cancel}, replace) == JOptionPane.OK_OPTION;
 
-   /*
-    return JOptionPane.showOptionDialog(SwingUtilities.getRootPane((JComponent)parentView), 
-        message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-        null, new Object [] {replace, cancel}, cancel) == JOptionPane.OK_OPTION;*/
+	  Renovations3DActivity.logFireBaseContent("confirmOverwrite-"+replaceAnswer, path);
+	  return replaceAnswer;
   }
   
   /**
