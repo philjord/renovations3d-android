@@ -219,7 +219,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 */
 	public static void logFireBase(String event, String id, String value)
 	{
-		System.out.println("logFireBase : " + id + "[" + value + "]");
+		System.out.println("logFireBase : " + id + (value != null ? (" [" + value + "]") : ""));
 		if (mFirebaseAnalytics != null && !BuildConfig.DEBUG)
 		{
 			Bundle bundle = new Bundle();

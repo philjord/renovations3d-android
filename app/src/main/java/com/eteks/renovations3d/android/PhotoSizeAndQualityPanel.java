@@ -100,8 +100,12 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     this.widthLabel = new JLabel(activity, "");
     final SpinnerNumberModel widthSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
     this.widthSpinner = new AutoCommitSpinner(activity, widthSpinnerModel);
-    //PJ contrller width is coming back enourmous value but on desktop a nice 400
-	  // widthSpinnerModel.setValue(controller.getWidth());
+    //PJ controller width sometimes comes back with over large value
+	  System.out.println(" controller.getWidth()  "+ controller.getWidth() );
+	  if(controller.getWidth() < 2048 )
+	  	widthSpinnerModel.setValue(controller.getWidth());
+	  else
+		  widthSpinnerModel.setValue(480);
     widthSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           controller.setWidth(((Number)widthSpinnerModel.getValue()).intValue());
@@ -119,7 +123,11 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     this.heightLabel = new JLabel(activity, "");
     final SpinnerNumberModel heightSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
     this.heightSpinner = new AutoCommitSpinner(activity, heightSpinnerModel);
-    //heightSpinnerModel.setValue(controller.getHeight());
+	  //PJ controller width sometimes comes back with over large value
+	  if(controller.getHeight() < 2048 )
+    	heightSpinnerModel.setValue(controller.getHeight());
+	  else
+		  heightSpinnerModel.setValue(480);
     heightSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           controller.setHeight(((Number)heightSpinnerModel.getValue()).intValue());
@@ -128,7 +136,7 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     controller.addPropertyChangeListener(AbstractPhotoController.Property.HEIGHT, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            heightSpinnerModel.setValue(controller.getHeight());
+			  heightSpinnerModel.setValue(controller.getHeight());
           }
         });
 
@@ -194,51 +202,9 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
 		  }
 	  });
 
-
-    /*this.aspectRatioComboBox = new JComboBox(new Object [] {
-        AspectRatio.VIEW_3D_RATIO,
-        AspectRatio.SQUARE_RATIO,
-        AspectRatio.RATIO_4_3,
-        AspectRatio.RATIO_3_2,
-        AspectRatio.RATIO_16_9,
-        AspectRatio.RATIO_2_1});
-    this.aspectRatioComboBox.setRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value,
-													  int index, boolean isSelected, boolean cellHasFocus) {
-          AspectRatio aspectRatio = (AspectRatio)value;
-          String displayedValue = "";
-          if (aspectRatio != AspectRatio.FREE_RATIO) {
-            switch (aspectRatio) {
-              case VIEW_3D_RATIO :
-                displayedValue = preferences.getLocalizedString(
-                    com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.view3DRatio.text");
-                break;
-              case SQUARE_RATIO :
-                displayedValue = preferences.getLocalizedString(
-                    com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.squareRatio.text");
-                break;
-              case RATIO_4_3 :
-                displayedValue = "4/3";
-                break;
-              case RATIO_3_2 :
-                displayedValue = "3/2";
-                break;
-              case RATIO_16_9 :
-                displayedValue = "16/9";
-                break;
-              case RATIO_2_1 :
-                displayedValue = "2/1";
-                break;
-            }
-          } 
-          return super.getListCellRendererComponent(list, displayedValue, index, isSelected,
-              cellHasFocus);
-        }
-      });*/
     this.aspectRatioComboBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
-          controller.setAspectRatio((AspectRatio)aspectRatioComboBox.getSelectedItem());
+       		controller.setAspectRatio((AspectRatio)aspectRatioComboBox.getSelectedItem());
         }
       });
     this.aspectRatioComboBox.setEnabled(notFreeAspectRatio);

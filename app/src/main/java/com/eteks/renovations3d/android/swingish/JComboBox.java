@@ -56,11 +56,13 @@ public class JComboBox extends Spinner
 	{
 		this.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			public void onNothingSelected(AdapterView<?> parent) {
-				il.itemStateChanged(new ItemListener.ItemEvent());
+				if(isEnabled())
+					il.itemStateChanged(new ItemListener.ItemEvent());
 			}
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
 			{
-				il.itemStateChanged(new ItemListener.ItemEvent());
+				if(isEnabled())
+					il.itemStateChanged(new ItemListener.ItemEvent());
 			}
 		});
 	}

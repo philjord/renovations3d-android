@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,9 +78,9 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
   private JCheckBox visibleCheckBox;
   private ImageView northDirectionComponent;
   private JLabel                  longitudeLabel;
-  private JSpinnerJogDial longitudeSpinner;
+  private AutoCommitSpinner longitudeSpinner;
   private JLabel                  latitudeLabel;
-  private JSpinnerJogDial latitudeSpinner;
+  private AutoCommitSpinner latitudeSpinner;
   private JLabel                  timeZoneLabel;
   private JComboBox timeZoneComboBox;
   private JLabel                  northDirectionLabel;
@@ -197,7 +198,8 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 
     this.latitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "latitudeLabel.text"));
     final SpinnerNumberModel latitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-90), new Float(90), new Float(5));
-    this.latitudeSpinner = new AutoCommitSpinnerJogDial(activity, latitudeSpinnerModel);
+    this.latitudeSpinner = new AutoCommitSpinner(activity, latitudeSpinnerModel);
+	  latitudeSpinner.setFormat(new DecimalFormat("N ##0;S ##0"));
     // Change positive / negative notation by North / South
 //    JFormattedTextField textField = ((DefaultEditor)this.latitudeSpinner.getEditor()).getTextField();
 //    NumberFormatter numberFormatter = (NumberFormatter)((DefaultFormatterFactory)textField.getFormatterFactory()).getDefaultFormatter();
@@ -207,7 +209,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     latitudeSpinnerModel.setValue(controller.getLatitudeInDegrees());
     final PropertyChangeListener latitudeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          latitudeSpinnerModel.setValue((Float)ev.getNewValue());
+          latitudeSpinnerModel.setValue(ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.LATITUDE_IN_DEGREES, latitudeChangeListener);
@@ -221,7 +223,8 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     
     this.longitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "longitudeLabel.text"));
     final SpinnerNumberModel longitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-180), new Float(180), new Float(5));
-    this.longitudeSpinner = new AutoCommitSpinnerJogDial(activity, longitudeSpinnerModel);
+    this.longitudeSpinner = new AutoCommitSpinner(activity, longitudeSpinnerModel);
+	  longitudeSpinner.setFormat(new DecimalFormat("E ##0;W ##0"));
     // Change positive / negative notation by East / West
 //    textField = ((DefaultEditor)this.longitudeSpinner.getEditor()).getTextField();
 //    numberFormatter = (NumberFormatter)((DefaultFormatterFactory)textField.getFormatterFactory()).getDefaultFormatter();
@@ -231,7 +234,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     longitudeSpinnerModel.setValue(controller.getLongitudeInDegrees());
     final PropertyChangeListener longitudeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          longitudeSpinnerModel.setValue((Float)ev.getNewValue());
+          longitudeSpinnerModel.setValue(ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.LONGITUDE_IN_DEGREES, longitudeChangeListener);
@@ -261,10 +264,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     String [] timeZoneIdsArray = timeZoneIds.toArray(new String [timeZoneIds.size()]);
     Arrays.sort(timeZoneIdsArray);
     this.timeZoneComboBox = new JComboBox(activity, timeZoneIdsArray);
-    this.timeZoneComboBox.setSelectedItem(controller.getTimeZone());
+
     final PropertyChangeListener timeZoneChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          timeZoneComboBox.setSelectedItem(ev.getNewValue());
+			timeZoneComboBox.setSelectedItem(ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
@@ -280,23 +283,26 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 		  {
 			  String timeZoneId = (String)timeZoneComboBox.getItemAtPosition(position);
 			  if (timeZoneId.startsWith("GMT")) {
-				  if (!OperatingSystem.isMacOSX()) {
+				  //if (!OperatingSystem.isMacOSX()) {
 					  //setToolTipText(timeZoneId);
-				  }
+				  //}
 			  } else {
 				  String timeZoneDisplayName = TimeZone.getTimeZone(timeZoneId).getDisplayName();
-				  if (OperatingSystem.isMacOSX()) {
+				  //if (OperatingSystem.isMacOSX()) {
 					  timeZoneId = timeZoneId + " - " + timeZoneDisplayName;
-				  } else {
+				  //} else {
 					  // Use tool tip do display the complete time zone information
 					  //setToolTipText(timeZoneId + " - " + timeZoneDisplayName);
-				  }
+				  //}
 			  }
 			  TextView ret = new TextView(activity);
 			  ret.setText(timeZoneId);
 			  return ret;
 		  }
 	  });
+
+	  // moved to after the adpater is set, as the android adapter is both model and renderer
+	  this.timeZoneComboBox.setSelectedItem(controller.getTimeZone());
     /*this.timeZoneComboBox.setRenderer(new DefaultListCellRenderer() {
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
