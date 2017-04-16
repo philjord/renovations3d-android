@@ -1067,7 +1067,7 @@ public class Renovations3DActivity extends FragmentActivity
 					{
 					}
 
-					if (renovations3D.getHome().isModified())
+					if (renovations3D.getHome() != null && renovations3D.getHome().isModified())
 					{
 						try
 						{
