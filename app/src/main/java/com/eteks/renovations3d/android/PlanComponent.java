@@ -6377,7 +6377,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		{
 			offScreenRenderSemaphore.acquire();
 			// we may have been disposed of
-			if( canvas3D != null)
+			if(canvas3D != null && sceneRoot !=null)
 			{
 
 				sceneRoot.addChild(model);
@@ -6410,7 +6410,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 				VMBufferedImage img = new VMBufferedImage(bm);
 				return new ImageIcon(img);
 			}
-
 		}
 		catch (InterruptedException e)
 		{
