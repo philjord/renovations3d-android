@@ -620,6 +620,7 @@ public class Renovations3D extends HomeApplication
 				public void errorOccured(int errorCode, String errorMessage)
 				{
 					System.err.print("Error in Java 3D : " + errorCode + " " + errorMessage);
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "Error in Java 3D", "" + errorCode + " " + errorMessage);
 					EventQueue.invokeLater(new Runnable()
 					{
 						@Override

@@ -52,6 +52,7 @@ import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -191,7 +192,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
-
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", ""+caps );
 		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
 
@@ -214,6 +215,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void display(final GLAutoDrawable drawable)
 		{
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "display", null );
+
 			//odd createComponent3D calls addMouseListenr which attaches this listener to the view
 			// that view is being destroyed and I'm getting back here so I have to re-add the mouse listener now
 			// so instead I just always add the mouse listener here now
@@ -247,8 +250,22 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						createComponent3D(null, preferences, controller);
 
-						// called here not in createComponent, just for life cycle clarity
-						canvas3D2D.addNotify();
+						try
+						{
+							// called here not in createComponent, just for life cycle clarity
+							canvas3D2D.addNotify();
+						}catch(NullPointerException e)
+						{
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 0", "drawable: " + drawable);
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
+							if(gl_window != null)
+							{
+								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+							}
+
+							throw e;
+						}
 						//wait for onscreen hint as this component is create whilst off screen
 						if (!HomeComponent3D.this.getUserVisibleHint())
 							canvas3D2D.stopRenderer();
@@ -351,9 +368,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 	public void onStart() {
 		super.onStart();
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStart", null );
 	}
 	public void onResume() {
 		super.onResume();
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume", null );
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
 		// B/ we've onPaused (possible onStop too) and GLStateKeeper saved state
@@ -366,12 +385,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			if(!canvas3D2D.getGLWindow().isNativeValid())
 			{
 				gl_window = GLWindow.create(caps);
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "recreate", null );
 				// equal to addAnsecter listeners but that's too late by far
 				gl_window.addGLEventListener(glWindowInitListener);
 			}
 			else
 			{
 				canvas3D2D.addNotify();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "addNotify", null );
 			}
 
 			if (HomeComponent3D.this.getUserVisibleHint())
@@ -383,12 +404,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	@Override
 	public void onPause() {
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause", null );
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
 		if(canvas3D2D != null)
 		{
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
@@ -403,6 +426,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		// MUST output GLStatePreserved on console, or it won't restart
 		super.onStop();
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStop", null );
 	}
 
 	@Override
@@ -424,6 +448,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
 		super.onDestroy();
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
+
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy", null );
 	}
 
 	@Override
@@ -700,7 +726,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TRANSPARENCY = !deoptomize;
 		JoglesPipeline.MINIMISE_NATIVE_CALLS_TEXTURE = !deoptomize;
 
-		// PJ mnot needed now the shaders are per vert SimpleShaderAppearance.setDISABLE_LIGHTS(deoptomize);
+		// PJ not needed now the shaders are per vert SimpleShaderAppearance.setDISABLE_LIGHTS(deoptomize);
 
 		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
