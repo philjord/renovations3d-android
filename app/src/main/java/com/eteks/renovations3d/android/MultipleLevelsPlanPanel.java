@@ -238,12 +238,18 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.lockCheck:
 					item.setChecked(!item.isChecked());
 
+					// this crash
+					//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
+					//http://stackoverflow.com/questions/7658725/android-java-lang-illegalargumentexception-invalid-payload-item-type
+					//hence menuItem.setTitleCondensed(rawTitle);
+
 					int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
 					String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
 					String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
 					SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
 					builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					item.setTitle(builder);
+					item.setTitleCondensed(lockedText);
 					item.setIcon(iconId);
 
 					if (item.isChecked())
@@ -403,6 +409,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		SpannableStringBuilder builder = new SpannableStringBuilder("* Cntl");// it will replace "*" with icon
 		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		menu.findItem(controlKeyOneTimer).setTitle(builder);
+		menu.findItem(controlKeyOneTimer).setTitleCondensed("Cntl");
 		menu.findItem(R.id.editRedo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name"));
 		menu.findItem(R.id.editUndo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "UNDO.Name"));
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
@@ -439,6 +446,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
 		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		item.setTitle(builder);
+		item.setTitleCondensed(lockedText);
 		item.setIcon(iconId);
 
 		menu.findItem(R.id.planSelectLasso).setChecked(this.selectLasso);
