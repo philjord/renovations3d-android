@@ -422,6 +422,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	@Override
 	public void onPause() {
+
+
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause", null );
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
@@ -1622,14 +1624,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// call on a resume, but needs these listeners re-added
 		//this.getView().setOnTouchListener(new TouchyListener());
 
-		Handler handler = new Handler(Looper.getMainLooper());
-		handler.post(new Runnable()
+		//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/c11efe44?duration=2592000000&appVersions=192
+		if(getContext() != null)
 		{
-			public void run()
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(new Runnable()
 			{
-				mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
-			}
-		});
+				public void run()
+				{
+					mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
+				}
+			});
+		}
 		if(getView() != null)
 		{
 			longHoldHandler = new LongHoldHandler(getView().getResources().getDisplayMetrics());
