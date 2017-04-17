@@ -119,6 +119,7 @@ import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
+import jogamp.common.os.android.StaticContext;
 import jogamp.newt.driver.android.NewtBaseFragment;
 
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
@@ -371,8 +372,21 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStart", null );
 	}
 	public void onResume() {
-		super.onResume();
+
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume", null );
+		// if we have multiple apps running sometimes the static context can be null if the other app has been destroyed
+		if(StaticContext.getContext() == null)
+		{
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "StaticContext.init(getContext());", null );
+			StaticContext.init(getContext());
+		}
+
+		super.onResume();
+
+
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "super.onResume finished", null );
+
+
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
 		// B/ we've onPaused (possible onStop too) and GLStateKeeper saved state
