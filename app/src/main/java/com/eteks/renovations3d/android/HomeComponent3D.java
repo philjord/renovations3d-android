@@ -378,6 +378,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if(StaticContext.getContext() == null)
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "StaticContext.init(getContext());", null );
+
+			if(getContext() == null)
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getContext() == null !!!", null );
+
 			StaticContext.init(getContext());
 		}
 
@@ -451,12 +455,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		{
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
 		if(onscreenUniverse != null)
 		{
 			onscreenUniverse.cleanup();
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onscreenUniverse.cleanup();", null );
 			onscreenUniverse = null;
 		}
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
