@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         multiDexEnabled = true
 
