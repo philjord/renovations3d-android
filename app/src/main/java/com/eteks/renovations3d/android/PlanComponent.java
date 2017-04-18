@@ -331,6 +331,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	public static float dpiMinSpanForZoom = 1.0f;
 	public static float dpiIndicatorTouchSize = 0.04f;
 
+	//menu item options
+	public boolean alignmentActivated = false;
+	public boolean magnetismToggled = false;// careful toggle != checked!
+	public boolean selectLasso = false;
+	public boolean selectMultiple = false;
+
   static {
     POINT_INDICATOR = new Ellipse2D.Float(-1.5f, -1.5f, 3, 3);
 
@@ -1241,7 +1247,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 							lastMouseReleasedTime = 0;
 
 							//PJPJPJPJ this is a major divergence from the desktop function! Single finger pan during selection mode
-							if(!MultipleLevelsPlanPanel.selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
+							if(!selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
 							{
 								final float dx = x - mLastTouchX;
 								final float dy = y - mLastTouchY;
@@ -1350,18 +1356,18 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 					{
 
 						//alignment and magnetism come from menu now
-						boolean alignmentActivated = MultipleLevelsPlanPanel.alignmentActivated;
+						boolean alignmentActivated = PlanComponent.this.alignmentActivated;
 						//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
 						//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
 						boolean duplicationActivated = ((MultipleLevelsPlanPanel) controller.getView()).getIsControlKeyOn();
 						//OperatingSystem.isMacOSX()
 						//		? ev.isAltDown() : ev.isControlDown();
-						boolean magnetismToggled = MultipleLevelsPlanPanel.magnetismToggled;
+						boolean magnetismToggled = PlanComponent.this.magnetismToggled;
 						//OperatingSystem.isWindows()
 						//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
 						//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
 
-						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && MultipleLevelsPlanPanel.selectMultiple;
+						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && PlanComponent.this.selectMultiple;
 
 						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1);
 

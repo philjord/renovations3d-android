@@ -62,11 +62,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	// if we are not intialized then ignore onCreateViews
 	private boolean initialized = false;
 
-	//menu item options
-	public static boolean alignmentActivated = false;
-	public static boolean magnetismToggled = false;// careful toggle != checked!
-	public static boolean selectLasso = false;
-	public static boolean selectMultiple = false;
 	private DrawableView drawableView;
 
 	private MenuItemGroup selectionGroup = new MenuItemGroup();
@@ -181,7 +176,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					planController.deleteSelection();
 					break;
 				case R.id.planGoto3D:
-					Renovations3DActivity.mViewPager.setCurrentItem(3, true);
+					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(3, true);
 					break;
 				case R.id.planSelect:
 					item.setChecked(true);
@@ -364,7 +359,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				{
 					public void run()
 					{
-						if (Renovations3DActivity.renovations3D.getHomeController().getView().showActionTipMessage(actionKey))
+						if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null &&
+								((Renovations3DActivity) getActivity()).renovations3D.getHomeController().getView().showActionTipMessage(actionKey))
 						{
 							preferences.setActionTipIgnored(actionKey);
 						}
@@ -433,9 +429,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	public void onPrepareOptionsMenu(Menu menu)
 	{
 		mOptionsMenu = menu;
-		menu.findItem(R.id.alignment).setChecked(alignmentActivated);
+		menu.findItem(R.id.alignment).setChecked(this.planComponent.alignmentActivated);
 		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
-		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !magnetismToggled);
+		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
 
 		MenuItem item = menu.findItem(R.id.lockCheck);
 		item.setChecked(home.isBasePlanLocked());
@@ -449,8 +445,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		item.setTitleCondensed(lockedText);
 		item.setIcon(iconId);
 
-		menu.findItem(R.id.planSelectLasso).setChecked(this.selectLasso);
-		menu.findItem(R.id.planSelectMultiple).setChecked(this.selectMultiple);
+		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
+		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
 
 
 		if(resetToSelectTool)
@@ -488,19 +484,19 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		{
 			case R.id.alignment:
 				item.setChecked(!item.isChecked());
-				this.alignmentActivated = item.isChecked();
+				this.planComponent.alignmentActivated = item.isChecked();
 				return true;
 			case R.id.magnetism:
 				item.setChecked(!item.isChecked());
-				this.magnetismToggled = !item.isChecked();// careful toggle != checked!
+				this.planComponent.magnetismToggled = !item.isChecked();// careful toggle != checked!
 				return true;
 			case R.id.planSelectLasso:
 				item.setChecked(!item.isChecked());
-				this.selectLasso = item.isChecked();
+				this.planComponent.selectLasso = item.isChecked();
 				return true;
 			case R.id.planSelectMultiple:
 				item.setChecked(!item.isChecked());
-				this.selectMultiple = item.isChecked();
+				this.planComponent.selectMultiple = item.isChecked();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

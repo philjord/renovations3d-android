@@ -31,9 +31,14 @@ public class JSpinnerJogDial extends NumberPicker
 		resetDisplayValues();
 
 		//get rid of damn keyboard
-		EditText numberPickerChild = (EditText) getChildAt(0);
-		numberPickerChild.setFocusable(false);
-		numberPickerChild.setInputType(InputType.TYPE_NULL);
+		// once this cae through as an ImageView
+		// https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/8633fd3a?duration=2592000000&appVersions=192
+		if(getChildAt(0) instanceof EditText)
+		{
+			EditText numberPickerChild = (EditText) getChildAt(0);
+			numberPickerChild.setFocusable(false);
+			numberPickerChild.setInputType(InputType.TYPE_NULL);
+		}
 
 		final ChangeListener changerListener = new ChangeListener(){
 			@Override

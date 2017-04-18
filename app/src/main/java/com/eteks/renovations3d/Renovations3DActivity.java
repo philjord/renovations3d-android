@@ -84,13 +84,13 @@ public class Renovations3DActivity extends FragmentActivity
 	private static FirebaseAnalytics mFirebaseAnalytics;
 
 	private Renovations3DPagerAdapter mRenovations3DPagerAdapter;
-	public static ViewPager mViewPager; // public to allow fragmenet to move around by button
+	public ViewPager mViewPager; // public to allow fragment to move around by button
 
 	private File chooserStartFolder;
 
 	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
-	public static Renovations3D renovations3D; // for plan undo redo, now for import statements too
+	public Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
 	private boolean fileSystemAccessGranted = false;
 
@@ -138,7 +138,7 @@ public class Renovations3DActivity extends FragmentActivity
 	// I still must recognise the Canvas3D in a view issue before load up of the
 	// 3D gear of Component3D
 	// I would like to the viewController versions of Component3DController etc
-	// to come from teh base project, so I need to get that right
+	// to come from the base project, so I need to get that right
 	// notice that the Factory can happily hand out the Fragment bits
 	// so that should be possible?
 
@@ -256,6 +256,12 @@ public class Renovations3DActivity extends FragmentActivity
 
 	public void onCreate(Bundle savedInstanceState)
 	{
+
+		if(renovations3D !=null )
+		{
+			System.out.println("renovations3D ! = null!!");
+		}
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
@@ -788,7 +794,7 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			//TODO: not sure if this is needed? might start like this?
 			newHome();
-			HomeController controller = Renovations3DActivity.renovations3D.getHomeController();
+			HomeController controller = renovations3D.getHomeController();
 			if (controller != null)
 			{
 				controller.importFurnitureLibrary(inFile.getAbsolutePath());
@@ -797,7 +803,7 @@ public class Renovations3DActivity extends FragmentActivity
 		else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
 		{
 			newHome();
-			HomeController controller2 = Renovations3DActivity.renovations3D.getHomeController();
+			HomeController controller2 = renovations3D.getHomeController();
 			if (controller2 != null)
 			{
 				controller2.importTexturesLibrary(inFile.getAbsolutePath());

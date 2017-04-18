@@ -138,8 +138,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private boolean fullRoomUpdateRequired = false;
 	private boolean fullWallUpdateRequired = false;
 
-
-
 	public static boolean ENABLE_HUD = true;
 	public static final String WELCOME_SCREEN_UNWANTED = "COMPONENT_3D_WELCOME_SCREEN_UNWANTED";
 
@@ -182,11 +180,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		caps.setHardwareAccelerated(true);
 		caps.setBackgroundOpaque(true);
 
-
-//caps.setRedBits(8);
-//caps.setGreenBits(8);
-//caps.setBlueBits(8);
-
 		//TODO: see if this works
 		//caps.setBackgroundOpaque(false);
 		//caps.setSampleBuffers(true);//death! no touch! //TODO: this works in morrowind now?
@@ -204,7 +197,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void init(@SuppressWarnings("unused") final GLAutoDrawable drawable)
 		{
-
 		}
 
 		@Override
@@ -255,7 +247,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						{
 							// called here not in createComponent, just for life cycle clarity
 							canvas3D2D.addNotify();
-						}catch(NullPointerException e)
+						}
+						catch(NullPointerException e)
 						{
 							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 0", "drawable: " + drawable);
 							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
@@ -267,6 +260,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 							throw e;
 						}
+
 						//wait for onscreen hint as this component is create whilst off screen
 						if (!HomeComponent3D.this.getUserVisibleHint())
 							canvas3D2D.stopRenderer();
@@ -357,6 +351,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	};
 
+
 	@Override
 	public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -374,22 +369,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onResume() {
 
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume", null );
-		// if we have multiple apps running sometimes the static context can be null if the other app has been destroyed
-		if(StaticContext.getContext() == null)
-		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "StaticContext.init(getContext());", null );
-
-			if(getContext() == null)
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getContext() == null !!!", null );
-
-			StaticContext.init(getContext());
-		}
 
 		super.onResume();
 
-
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "super.onResume finished", null );
-
 
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
@@ -540,7 +523,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
 		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
 
-		createGoToPointOfViewMenu(home, preferences, Renovations3DActivity.renovations3D.getHomeController(), menu.findItem(R.id.gotopov));
+		createGoToPointOfViewMenu(home, preferences, ((Renovations3DActivity)getActivity()).renovations3D.getHomeController(), menu.findItem(R.id.gotopov));
 
 		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
@@ -571,7 +554,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		menu.findItem(R.id.createPhoto).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name"));
 
-		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, Renovations3DActivity.renovations3D.getHomeController());
+		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, ((Renovations3DActivity)getActivity()).renovations3D.getHomeController());
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -643,7 +626,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				if(cameraName.equals(camera.getName()))
 				{
-					Renovations3DActivity.renovations3D.getHomeController().getHomeController3D().goToCamera(camera);
+					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().getHomeController3D().goToCamera(camera);
 					// update the check box item nicely
 					MenuItem vv = mOptionsMenu.findItem(R.id.virtualvisit);
 					vv.setChecked(home.getCamera() == home.getObserverCamera());
@@ -658,7 +641,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			switch (item.getItemId())
 			{
 				case R.id.goto2Dview:
-					Renovations3DActivity.mViewPager.setCurrentItem(1, false);// true cause no render! god knows why
+					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, false);// true cause no render! god knows why
 					break;
 				case R.id.virtualvisit:
 					item.setChecked(!item.isChecked());
@@ -672,7 +655,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// do nothing it just nicely opens the list for us
 					break;
 				case R.id.modifyvirtualvisitor:
-					Renovations3DActivity.renovations3D.getHomeController().getPlanController().modifyObserverCamera();
+					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().getPlanController().modifyObserverCamera();
 					break;
 				case R.id.storepov:
 					//I must get off the EDT and ask the question in a blocking manner
@@ -680,7 +663,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						public void run()
 						{
-							Renovations3DActivity.renovations3D.getHomeController().storeCamera();
+							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().storeCamera();
 						}
 					};
 					t2.start();
@@ -690,7 +673,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						public void run()
 						{
-							Renovations3DActivity.renovations3D.getHomeController().deleteCameras();
+							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().deleteCameras();
 						}
 					};
 					t3.start();
@@ -710,7 +693,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					//{
 					//	public void run()
 						{
-							Renovations3DActivity.renovations3D.getHomeController().createPhoto();
+							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().createPhoto();
 						}
 					//};
 					//t4.start();

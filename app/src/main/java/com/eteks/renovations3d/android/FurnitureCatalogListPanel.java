@@ -183,7 +183,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			case R.id.import_furniture_lib:
 				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3f file to import" , Toast.LENGTH_LONG).show();
 				Thread t2 = new Thread(){public void run(){
-					HomeController controller = Renovations3DActivity.renovations3D.getHomeController();
+					HomeController controller = ((Renovations3DActivity)FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
 					if(controller != null)
 					{
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -199,7 +199,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			case R.id.import_texture_lib:
 				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3t file to import" , Toast.LENGTH_LONG).show();
 				Thread t3 = new Thread(){public void run(){
-					HomeController controller2 = Renovations3DActivity.renovations3D.getHomeController();
+					HomeController controller2 = ((Renovations3DActivity)FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
 					if(controller2 != null)
 					{
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -225,14 +225,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
 			al.add(selectedFiv.getCatalogPieceOfFurniture());
-			HomeController homeController = ((Renovations3DActivity)this.getActivity()).renovations3D.getHomeController();
+			HomeController homeController = ((Renovations3DActivity)getActivity()).renovations3D.getHomeController();
 			homeController.getFurnitureCatalogController().setSelectedFurniture(al);
 			homeController.addHomeFurniture();
 
 			Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
 
-			Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
-			Renovations3DActivity.mViewPager.setCurrentItem(1, true);
+			Toast.makeText(getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
+			((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
 		}
 	}
 
