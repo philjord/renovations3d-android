@@ -230,10 +230,11 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	//TODO: why is this not being called!!
-	public void onNewIntent(Intent intent)
+	//TODO: why is this now being called in the wild?
+	//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/crash?reportTypes=REPORT_TYPE_UNSPECIFIED&duration=2592000000&appVersions=193
+	/*public void onNewIntent(Intent intent)
 	{
-		OperatingSystem.activity = this;
+		OperatingSystem.applicationInfoDataDir = getApplicationInfo().dataDir;
 
 		renovations3D = new Renovations3D(this);
 
@@ -250,9 +251,10 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 		}
 
+		this.setIntent(intent);
 		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), renovations3D);
 		permissionGranted();
-	}
+	}*/
 
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -292,7 +294,7 @@ public class Renovations3DActivity extends FragmentActivity
 		PrintStream interceptor2 = new SopInterceptor(System.err, "syserr");
 		System.setErr(interceptor2);
 
-		OperatingSystem.activity = this;
+		OperatingSystem.applicationInfoDataDir = getApplicationInfo().dataDir;
 
 		renovations3D = new Renovations3D(this);
 

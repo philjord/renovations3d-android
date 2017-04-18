@@ -48,7 +48,7 @@ public class OperatingSystem {
 	private static final String TEMPORARY_SESSION_SUB_FOLDER;
 
 
-	public static Activity activity;
+	public static String applicationInfoDataDir = "";
 
 	static {
 		// Retrieve sub folders where is stored application data
@@ -453,7 +453,7 @@ public class OperatingSystem {
 			//userApplicationFolder = new File(System.getProperty("user.home"));
 
 			//PJPJPJ we are unix on android,  but user.home doesn't exist, we must use the apps folder
-			userApplicationFolder = new File(activity.getApplicationInfo().dataDir);
+			userApplicationFolder = new File(applicationInfoDataDir);
 		}
 		return new File(userApplicationFolder,
 				EDITOR_SUB_FOLDER + File.separator + APPLICATION_SUB_FOLDER);
