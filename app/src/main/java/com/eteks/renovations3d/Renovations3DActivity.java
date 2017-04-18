@@ -1159,7 +1159,7 @@ public class Renovations3DActivity extends FragmentActivity
 		switch (requestCode)
 		{
 			case REQUEST_CODE_ASK_PERMISSIONS:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				{
 					// Permission Granted
 					permissionGranted();
