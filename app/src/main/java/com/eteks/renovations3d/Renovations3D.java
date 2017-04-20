@@ -86,6 +86,9 @@ public class Renovations3D extends HomeApplication
 	{
 		this.parentActivity = parentActivity;
 
+		//System.setProperty("jogl.verbose", "true");
+		//System.setProperty("jogl.debug", "true");
+
 		System.setProperty("j3d.cacheAutoComputeBounds", "true");
 		System.setProperty("j3d.defaultReadCapability", "false");
 		System.setProperty("j3d.defaultNodePickable", "false");
