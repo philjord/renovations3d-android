@@ -29,11 +29,12 @@
     <!-- no internet required to use -->
     <uses-feature android:name="android.permission.INTERNET" android:required="false" />
 
+    <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with teh Jogl renderering -->
   <application android:label="@string/app_name"
                android:icon="@drawable/renovations3dicon"
                android:largeHeap="true"
                android:launchMode="singleInstance"
-               android:hardwareAccelerated="true"
+               android:hardwareAccelerated="false"
                android:theme="@style/MyCustomTheme">
 
       <activity android:name="com.eteks.renovations3d.Renovations3DActivity"

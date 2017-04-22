@@ -290,7 +290,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 
 						// mouse interaction with picking
-						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, getContext());
+						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, (Renovations3DActivity) getActivity());
 						/*{
 							public void doMouseClicked(final MouseEvent e)
 							{

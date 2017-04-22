@@ -79,7 +79,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 	// used as a modal mouse click blocker
-	public static AndroidDialogView currentDialog = null;
+	public AndroidDialogView currentDialog = null;
 
 	private static FirebaseAnalytics mFirebaseAnalytics;
 

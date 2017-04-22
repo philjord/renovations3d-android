@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sunflow-0.07.3pj">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/sunflow-0.07.3pj.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -229,10 +229,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createUserPreferencesView(UserPreferences preferences,
 												UserPreferencesController userPreferencesController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -245,10 +245,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createLevelView(UserPreferences preferences, LevelController levelController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new LevelPanel(preferences, levelController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new LevelPanel(preferences, levelController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -262,10 +262,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHomeFurnitureView(UserPreferences preferences,
 											  HomeFurnitureController homeFurnitureController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -279,10 +279,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createWallView(UserPreferences preferences,
 									 WallController wallController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new WallPanel(preferences, wallController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new WallPanel(preferences, wallController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -296,10 +296,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createRoomView(UserPreferences preferences,
 									 RoomController roomController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new RoomPanel(preferences, roomController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new RoomPanel(preferences, roomController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -313,10 +313,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createPolylineView(UserPreferences preferences,
 										 PolylineController polylineController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new PolylinePanel(preferences, polylineController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new PolylinePanel(preferences, polylineController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -331,10 +331,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  LabelController labelController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new LabelPanel(modification, preferences, labelController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new LabelPanel(modification, preferences, labelController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -348,10 +348,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createCompassView(UserPreferences preferences,
 										CompassController compassController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new CompassPanel(preferences, compassController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new CompassPanel(preferences, compassController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -365,10 +365,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createHome3DAttributesView(UserPreferences preferences,
 												 Home3DAttributesController home3DAttributesController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{
@@ -382,10 +382,10 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createObserverCameraView(UserPreferences preferences,
 											   ObserverCameraController observerCameraController)
 	{
-		if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
 		{
-			Renovations3DActivity.currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
-			return Renovations3DActivity.currentDialog;
+			activity.currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
+			return activity.currentDialog;
 		}
 		else
 		{

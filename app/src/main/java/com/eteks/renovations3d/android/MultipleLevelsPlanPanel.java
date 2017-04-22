@@ -782,7 +782,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 												final PlanController controller)
 	{
 		PlanComponent pc = new PlanComponent();
-		pc.init(home, preferences, controller);
+		pc.init(home, preferences, controller, this);
 		return pc;
 	}
 

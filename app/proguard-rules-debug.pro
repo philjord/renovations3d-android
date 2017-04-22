@@ -19,14 +19,6 @@
 # if you get warnings that stop proguard building you can swap all -dontwarn below to this catch all statement
 #-ignorewarnings
 
-#http://stackoverflow.com/questions/35321742/android-proguard-most-aggressive-optimizations
--optimizationpasses 2
--allowaccessmodification
--repackageclasses ''
--dontskipnonpubliclibraryclasses
--dontpreverify
--verbose
--optimizations **
 
 
 #-optimizations code/simplification/arithmetic
@@ -50,8 +42,9 @@
 -dontwarn com.eteks.sweethome3d.plugin.**
 -dontwarn com.eteks.sweethome3d.swing.**
 
-
-
+# please KEEP ALL THE NAMES
+-keepnames class ** { *; }
+-dontobfuscate
 
 
 #if any class not found issues occured replace all "-keep" lines below with these 2 lines

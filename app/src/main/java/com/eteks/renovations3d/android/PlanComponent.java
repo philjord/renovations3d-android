@@ -614,6 +614,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	}
 
 	private PlanController controller;
+	private MultipleLevelsPlanPanel parentFragment;
 
 
 		/**
@@ -621,11 +622,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		 */
     public void init(Home home,
                        UserPreferences preferences,
-                       PlanController controller) {
+                       PlanController controller,
+					 MultipleLevelsPlanPanel parentFragment) {
       this.home = home;
       this.preferences = preferences;
 
 	  this.controller = controller;
+		this.parentFragment = parentFragment;
 
 	  //PJPJPJ Cursors dropped
  /*   this.rotationCursor = createCustomCursor("resources/cursors/rotation16x16.png",
@@ -1342,8 +1345,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		public void mousePressed(View v, MotionEvent ev)
 		{
-			// no selection or edits while a dialog is up
-			if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
+			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null || !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing())
 			{
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);
@@ -1354,7 +1357,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 					//requestFocusInWindow();
 					//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
 					{
-
 						//alignment and magnetism come from menu now
 						boolean alignmentActivated = PlanComponent.this.alignmentActivated;
 						//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
@@ -1400,7 +1402,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		public void mouseReleased(View v, MotionEvent ev)
 		{
-			if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
+			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null || !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing())
 			{
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);

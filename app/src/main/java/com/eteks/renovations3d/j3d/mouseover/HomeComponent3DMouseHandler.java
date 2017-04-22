@@ -37,6 +37,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 	private final Home home;
 	private final UserPreferences preferences;
 	private final HomeController3D controller;
+	private Renovations3DActivity activity;
 
 	private static final int INVALID_POINTER_ID = -1;
 
@@ -51,13 +52,14 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 	private Point2f currentLocation = new Point2f();
 
-	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller, Context context)
+	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller,  Renovations3DActivity activity)
 	{
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;
+		this.activity = activity;
 
-		final float scale = context.getResources().getDisplayMetrics().density;
+		final float scale = activity.getResources().getDisplayMetrics().density;
 		allowableWaverPx = (int) (ALLOWABLE_WAVER_DP * scale + 0.5f);
 	}
 
@@ -118,7 +120,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 					if ((ev.getEventTime() - lastDownTime) < SINGLE_TAP_MAX)
 					{
 						// don't allow any selection or editing whilst a dialog is up
-						if (Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
+						if (activity.currentDialog == null || !activity.currentDialog.isShowing())
 						{
 							int tapCount = 1;
 

@@ -8,6 +8,9 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         multiDexEnabled = true
+        // SM-T210 didn't like this setting, presumably the proguard sorts this out
+        //http://stackoverflow.com/questions/32723590/generate-maindexlist-multidex-for-maven/39771419#39771419
+        //
 
         ndk {
             // Specifies the ABI configurations of your native
@@ -22,13 +25,13 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-debug.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-release.pro'
             zipAlignEnabled true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             //see ${sdk.dir}/tools/proguard/proguard-android-optimize.txt
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-debug.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
             zipAlignEnabled true
         }
     }
@@ -49,8 +52,8 @@ dependencies {
     compile files('libs/sweethome3D-android.jar')
     compile files('libs/sweethome3D-tools.jar')
     compile files('libs/sunflow-0.07.3pj.jar')
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:preference-v7:25.2.0'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:preference-v7:25.3.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
     // all firebase libs versions must match
     compile 'com.google.firebase:firebase-ads:10.0.1'
