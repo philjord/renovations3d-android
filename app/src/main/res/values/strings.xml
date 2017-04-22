@@ -74,4 +74,5 @@ If you see a corrupt view, please try the deoptomize option in the menu.<br>
     <string name="long_process_title">Long running process</string>
     <string name="high_quality_photo_notice">High quality photo rendering can take a long time to calculate, in some cases more than an hour, please be aware of this.</string>
 
+
 </resources>

@@ -553,6 +553,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
 		menu.findItem(R.id.createPhoto).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name"));
+		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));
 
 		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, ((Renovations3DActivity)getActivity()).renovations3D.getHomeController());
 
@@ -689,15 +691,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					controller.modifyAttributes();
 					break;
 				case R.id.createPhoto:
-					//Thread t4 = new Thread()
-					//{
-					//	public void run()
-						{
-							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().createPhoto();
-						}
-					//};
-					//t4.start();
+					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().createPhoto();
 					break;
+				case R.id.exportToObj:
+					Thread t4 = new Thread()
+					{
+						public void run(){
+							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().exportToOBJ();
+						}
+					};
+					t4.start();
+				break;
 				case R.id.deoptomize:
 					item.setChecked(!item.isChecked());
 					setDeoptomize(item.isChecked());

@@ -21,4 +21,5 @@
     <string name="modify3dview" translatable="false">Modify 3D view</string>
     <string name="viewalllevels" translatable="false">View all levels</string>
     <string name="menu_createPhoto" translatable="false">createPhoto</string>
+    <string name="menu_exportToObj" translatable="false">exportToObj</string>
 </resources>

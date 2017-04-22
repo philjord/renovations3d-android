@@ -40,6 +40,9 @@
     <item android:id="@+id/createPhoto"
           android:title="@string/menu_createPhoto"
         />
+    <item android:id="@+id/exportToObj"
+          android:title="@string/menu_exportToObj"
+        />
     <item android:id="@+id/deoptomize"
           android:title="@string/menu_deoptomize"
           android:checkable="true"

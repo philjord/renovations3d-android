@@ -29,7 +29,7 @@ android {
             zipAlignEnabled true
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             //see ${sdk.dir}/tools/proguard/proguard-android-optimize.txt
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
             zipAlignEnabled true

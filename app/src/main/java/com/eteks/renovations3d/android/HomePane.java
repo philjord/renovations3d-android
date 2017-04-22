@@ -38,15 +38,26 @@ import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
 import java.security.AccessControlException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 
+import javaawt.EventQueue;
 import javaawt.VMImage;
+import javaawt.geom.Rectangle2D;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
@@ -55,10 +66,15 @@ import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JTextField;
+import com.eteks.sweethome3d.j3d.Ground3D;
+import com.eteks.sweethome3d.j3d.OBJWriter;
 import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
 import com.eteks.sweethome3d.model.Camera;
 import com.eteks.sweethome3d.model.Content;
+import com.eteks.sweethome3d.model.Elevatable;
 import com.eteks.sweethome3d.model.Home;
+import com.eteks.sweethome3d.model.HomeFurnitureGroup;
+import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.InterruptedRecorderException;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.Selectable;
@@ -75,6 +91,8 @@ import com.eteks.renovations3d.android.swingish.JOptionPane;
 import static com.eteks.renovations3d.android.swingish.JOptionPane.showOptionDialog;
 
 import com.mindblowing.renovations3d.R;
+
+import org.jogamp.java3d.Node;
 
 /**
  * ONLY used for dialogs and menu item enabling
@@ -4274,30 +4292,30 @@ public class HomePane implements HomeView
 	 */
 	public String showExportToOBJDialog(String homeName)
 	{
- /*   homeName = this.controller.getContentManager().showSaveDialog(this,
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToOBJDialog.title"), 
-        ContentManager.ContentType.OBJ, homeName);
-    
-    this.exportAllToOBJ = true;
-    List<Selectable> selectedItems = this.home.getSelectedItems();
-    if (homeName != null
-        && !selectedItems.isEmpty()
-        && (selectedItems.size() > 1
-             || !(selectedItems.get(0) instanceof Camera))) {
-      String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.message");
-      String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.title");
-      String exportAll = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportAll");
-      String exportSelection = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportSelection");
-      String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.cancel");
-      int response = JOptionPane.showOptionDialog(this, message, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-              null, new Object [] {exportAll, exportSelection, cancel}, exportAll);
-      if (response == JOptionPane.NO_OPTION) {
-        this.exportAllToOBJ = false;
-      } else if (response != JOptionPane.YES_OPTION) {
-        return null;
-      }
-    }*/
-		throw new UnsupportedOperationException("No export to OBJ...");
+		homeName = this.controller.getContentManager().showSaveDialog(this,
+			this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToOBJDialog.title"),
+			ContentManager.ContentType.OBJ, homeName);
+
+		this.exportAllToOBJ = true;
+		List<Selectable> selectedItems = this.home.getSelectedItems();
+		if (homeName != null
+			&& !selectedItems.isEmpty()
+			&& (selectedItems.size() > 1
+				 || !(selectedItems.get(0) instanceof Camera))) {
+		  String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.message");
+		  String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.title");
+		  String exportAll = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportAll");
+		  String exportSelection = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportSelection");
+		  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.cancel");
+		  int response = JOptionPane.showOptionDialog(activity,  message, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+				  null, new Object [] {exportAll, exportSelection, cancel}, exportAll);
+		  if (response == JOptionPane.NO_OPTION) {
+			this.exportAllToOBJ = false;
+		  } else if (response != JOptionPane.YES_OPTION) {
+			return null;
+		  }
+		}
+		return homeName;
 	}
 
 	/**
@@ -4315,20 +4333,20 @@ public class HomePane implements HomeView
 	 */
 	protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException
 	{
-/*    String header = this.preferences != null
+    String header = this.preferences != null
         ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, 
                                               "exportToOBJ.header", new Date())
         : "";
         
     // Use a clone of home to ignore selection and for thread safety
     OBJExporter.exportHomeToFile(cloneHomeInEventDispatchThread(this.home), 
-        objFile, header, this.exportAllToOBJ, object3dFactory);*/
+        objFile, header, this.exportAllToOBJ, object3dFactory);
 	}
 
 	/**
 	 * Returns a clone of the given <code>home</code> safely cloned in the EDT.
 	 */
-/*  private Home cloneHomeInEventDispatchThread(final Home home) throws RecorderException {
+  private Home cloneHomeInEventDispatchThread(final Home home) throws RecorderException {
     if (EventQueue.isDispatchThread()) {
       return home.clone();
     } else {
@@ -4346,12 +4364,12 @@ public class HomePane implements HomeView
         throw new RecorderException("Couldn't clone home", ex.getCause());
       } 
     }
-  }*/
+  }
 
 	/**
 	 * Export to OBJ in a separate class to be able to run HomePane without Java 3D classes.
 	 */
-/*  private static class OBJExporter {
+  private static class OBJExporter {
     public static void exportHomeToFile(Home home, String objFile, String header, 
                                         boolean exportAllToOBJ, Object3DFactory object3dFactory) throws RecorderException {
       OBJWriter writer = null;
@@ -4383,7 +4401,7 @@ public class HomePane implements HomeView
           // Create a not alive new ground to be able to explore its coordinates without setting capabilities
           Rectangle2D homeBounds = getExportedHomeBounds(home);
           if (homeBounds != null) {
-            Ground3D groundNode = new Ground3D(home, 
+            Ground3D groundNode = new Ground3D(home,
                 (float)homeBounds.getX(), (float)homeBounds.getY(), 
                 (float)homeBounds.getWidth(), (float)homeBounds.getHeight(), true);
             writer.writeNode(groundNode, "ground");
@@ -4421,12 +4439,12 @@ public class HomePane implements HomeView
           }
         }
       }
-    }*/
+    }
 
 	/**
 	 * Returns <code>home</code> bounds.
 	 */
- /*   private static Rectangle2D getExportedHomeBounds(Home home) {
+    private static Rectangle2D getExportedHomeBounds(Home home) {
       // Compute bounds that include walls and furniture
       Rectangle2D homeBounds = updateObjectsBounds(null, home.getWalls());
       for (HomePieceOfFurniture piece : getVisibleFurniture(home.getFurniture())) {
@@ -4439,12 +4457,12 @@ public class HomePane implements HomeView
         }
       }
       return updateObjectsBounds(homeBounds, home.getRooms());
-    }*/
+    }
 
 	/**
 	 * Returns all the visible pieces in the given <code>furniture</code>.
 	 */
-/*    private static List<HomePieceOfFurniture> getVisibleFurniture(List<HomePieceOfFurniture> furniture) {
+    private static List<HomePieceOfFurniture> getVisibleFurniture(List<HomePieceOfFurniture> furniture) {
       List<HomePieceOfFurniture> visibleFurniture = new ArrayList<HomePieceOfFurniture>(furniture.size());
       for (HomePieceOfFurniture piece : furniture) {
         if (piece.isVisible()
@@ -4463,7 +4481,7 @@ public class HomePane implements HomeView
     /**
      * Updates <code>objectBounds</code> to include the bounds of <code>items</code>.
      */
- /*   private static Rectangle2D updateObjectsBounds(Rectangle2D objectBounds,
+    private static Rectangle2D updateObjectsBounds(Rectangle2D objectBounds,
                                             Collection<? extends Selectable> items) {
       for (Selectable item : items) {
         if (!(item instanceof Elevatable)
