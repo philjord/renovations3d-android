@@ -36,6 +36,7 @@ import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.plugin.PluginAction;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.google.android.gms.ads.AdRequest;
@@ -1175,5 +1176,6 @@ public class Renovations3DActivity extends FragmentActivity
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
+
 
 }

@@ -20,8 +20,6 @@
 package com.eteks.renovations3d.android;
 
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -37,8 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import javaawt.EventQueue;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -2010,6 +2006,13 @@ public class HomePane implements HomeView
 		//  if (action != null) {
 		//    action.setEnabled(enabled);
 		//  }
+		//PJPJPJP but we are interested in teh REDO and Undo items being enabled or disabled!
+		if (actionType == ActionType.UNDO || actionType == ActionType.REDO)
+		{
+			((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setEnabled(actionType, enabled);
+		}
+
+
 	}
 
 	/**
@@ -2021,6 +2024,9 @@ public class HomePane implements HomeView
 	{
 		// setNameAndShortDescription(ActionType.UNDO, undoText);
 		// setNameAndShortDescription(ActionType.REDO, redoText);
+		//PJPJP we want this bad bad right here!
+		((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setNameAndShortDescription(ActionType.UNDO, undoText);
+		((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setNameAndShortDescription(ActionType.REDO, redoText);
 	}
 
 	/**

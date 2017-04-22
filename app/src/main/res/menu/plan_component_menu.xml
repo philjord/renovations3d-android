@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/spinner"
+          android:title="CurrentTool"
+          android:showAsAction="always"
+          android:actionViewClass="android.widget.Spinner" />
 
     <item android:id="@+id/editUndo"
             android:title="undo"
             android:icon="@drawable/edit_undo"
             android:showAsAction="always"
-        />
-    <item android:id="@+id/editRedo"
-            android:title="redo"
-            android:icon="@drawable/edit_redo"
-          android:showAsAction="@integer/menuShowAsAction"
         />
     <item
         android:id="@+id/delete"
@@ -18,50 +19,6 @@
         android:showAsAction="always"
         />
 
-    <item
-        android:id="@+id/planSelect"
-        android:title="Select"
-        android:icon="@drawable/plan_select_selector"
-        android:checkable="true"
-        android:showAsAction="always"
-        android:state_checked="true"
-        />
-
-    <item
-        android:id="@+id/createWalls"
-        android:title="Create walls"
-        android:icon="@drawable/plan_create_walls_selector"
-        android:checkable="true"
-        android:showAsAction="@integer/menuShowAsAction"
-        />
-    <item
-        android:id="@+id/createRooms"
-        android:title="Create rooms"
-        android:icon="@drawable/plan_create_rooms_selector"
-        android:checkable="true"
-        android:showAsAction="@integer/menuShowAsAction"
-        />
-    <item
-        android:id="@+id/createPolyLines"
-        android:title="Create lines"
-        android:icon="@drawable/plan_create_polylines_selector"
-        android:checkable="true"
-        android:showAsAction="@integer/menuShowAsAction"
-        />
-    <item
-        android:id="@+id/createDimensions"
-        android:title="Create dimensions"
-        android:icon="@drawable/plan_create_dimension_lines_selector"
-        android:checkable="true"
-        android:showAsAction="@integer/menuShowAsAction"
-        />
-    <item
-        android:id="@+id/createText"
-        android:title="Create labels"
-        android:icon="@drawable/plan_create_labels_selector"
-        android:checkable="true"
-        android:showAsAction="@integer/menuShowAsAction"
-        />
     <item
         android:id="@+id/planGoto3D"
         android:title="3D"
@@ -74,6 +31,11 @@
         android:icon="@drawable/edit_copy_selector"
         android:checkable="true"
         android:showAsAction="never"
+        />
+    <item android:id="@+id/editRedo"
+          android:title="redo"
+          android:icon="@drawable/edit_redo"
+          android:showAsAction="never"
         />
     <item
         android:id="@+id/planSelectLasso"
@@ -88,13 +50,6 @@
         android:showAsAction="never"
         />
     <item
-        android:id="@+id/planPan"
-        android:title="Pan"
-        android:icon="@drawable/plan_pan_selector"
-        android:checkable="true"
-        android:showAsAction="never"
-        />
-    <item
         android:id="@+id/lockCheck"
         android:title="lock"
         android:icon="@drawable/lockcheck"
@@ -103,9 +58,13 @@
         />
     <item android:id="@+id/alignment"
           android:title="@string/alignment"
-          android:checkable="true"/>
+          android:checkable="true"
+          android:showAsAction="never"
+        />
     <item android:id="@+id/magnetism"
           android:title="@string/magnetism"
           android:checkable="true"
-          android:checked="true"/>
+          android:checked="true"
+          android:showAsAction="never"
+        />
 </menu>

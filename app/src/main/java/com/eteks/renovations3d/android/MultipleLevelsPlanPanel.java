@@ -1,8 +1,10 @@
 package com.eteks.renovations3d.android;
 
+import android.content.res.Configuration;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -12,7 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
@@ -21,7 +28,6 @@ import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JTabbedPane;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
-import com.eteks.renovations3d.android.utils.MenuItemGroup;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
@@ -41,6 +47,7 @@ import org.jogamp.vecmath.Point2f;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.List;
 
 import javaawt.Graphics;
@@ -51,22 +58,19 @@ import javaawt.print.PrinterException;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
 
-import static com.mindblowing.renovations3d.R.id.controlKeyOneTimer;
-
 
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
 	public static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
 
-
-	// if we are not intialized then ignore onCreateViews
+	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
 
 	private DrawableView drawableView;
 
-	private MenuItemGroup selectionGroup = new MenuItemGroup();
-
 	private Menu mOptionsMenu;
+
+	private Spinner toolSpinner;
 
 	private View rootView;// recorded to prevent double view creates from fragment manager
 	private boolean resetToSelectTool = false;
@@ -155,7 +159,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					try
 					{
 
-						if(((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+						if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
 							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().undo();
 					}
 					catch (CannotUndoException e)
@@ -165,7 +169,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				case R.id.editRedo:
 					try
 					{
-						if(((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+						if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
 							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().redo();
 					}
 					catch (CannotRedoException e)
@@ -177,53 +181,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case R.id.planGoto3D:
 					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(3, true);
-					break;
-				case R.id.planSelect:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					setMode(PlanController.Mode.SELECTION);
-					break;
-				case R.id.planPan:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					setMode(PlanController.Mode.PANNING);
-					break;
-				case R.id.createWalls:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.WALL_CREATION);
-					break;
-				case R.id.createRooms:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.ROOM_CREATION);
-					break;
-				case R.id.createPolyLines:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
-					break;
-				case R.id.createDimensions:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
-					break;
-				case R.id.createText:
-					item.setChecked(true);
-					selectionGroup.onMenuItemClick(item);
-					finishCurrentMode();
-					// note single tap works for this one
-					setMode(PlanController.Mode.LABEL_CREATION);
 					break;
 				case R.id.controlKeyOneTimer:
 					//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
@@ -258,6 +215,58 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	};
 
+	AdapterView.OnItemSelectedListener planToolSpinnerListener = new AdapterView.OnItemSelectedListener()
+	{
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		{
+			switch (position)
+			{
+				case 0://R.id.planSelect:
+					finishCurrentMode();
+					setMode(PlanController.Mode.SELECTION);
+					break;
+				case 1://R.id.createWalls:
+					finishCurrentMode();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					setMode(PlanController.Mode.WALL_CREATION);
+					break;
+				case 2://R.id.createRooms:
+					finishCurrentMode();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					setMode(PlanController.Mode.ROOM_CREATION);
+					break;
+				case 3://R.id.createPolyLines:
+					finishCurrentMode();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
+					break;
+				case 4://R.id.createDimensions:
+					finishCurrentMode();
+					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
+					break;
+				case 5://R.id.createText:
+					finishCurrentMode();
+					// note single tap works for this one
+					setMode(PlanController.Mode.LABEL_CREATION);
+					break;
+				case 6://R.id.planPan:
+					finishCurrentMode();
+					setMode(PlanController.Mode.PANNING);
+					break;
+
+			}
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
+			// this should never happen, no real plan here
+		}
+	};
+
 	private void setIconFromSelector(MenuItem item, int resId)
 	{
 		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
@@ -269,9 +278,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	private void finishCurrentMode()
 	{
-
 		PlanController.Mode currentMode = planController.getMode();
-
 
 		if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION)
 		{
@@ -386,91 +393,156 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.delete).setOnMenuItemClickListener(planMenuItemActionListener);
 		menu.findItem(R.id.planGoto3D).setOnMenuItemClickListener(planMenuItemActionListener);
 
-		menu.findItem(R.id.planSelect).setOnMenuItemClickListener(planMenuItemActionListener);
-		menu.findItem(R.id.planSelect).setChecked(true);// not sure why this isn't coming off the xml?
-		selectionGroup.add(menu.findItem(R.id.planSelect));
-		menu.findItem(R.id.planPan).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.planPan));
-		menu.findItem(R.id.createWalls).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.createWalls));
-		menu.findItem(R.id.createRooms).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.createRooms));
-		menu.findItem(R.id.createPolyLines).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.createPolyLines));
-		menu.findItem(R.id.createDimensions).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.createDimensions));
-		menu.findItem(R.id.createText).setOnMenuItemClickListener(planMenuItemActionListener);
-		selectionGroup.add(menu.findItem(R.id.createText));
-		menu.findItem(controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
-		SpannableStringBuilder builder = new SpannableStringBuilder("* Cntl");// it will replace "*" with icon
+
+		menu.findItem(R.id.editUndo).setEnabled(false);// nothing to undo at first
+
+		String redoName = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
+		SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoName);// it will replace "*" with icon
+		builder2.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		menu.findItem(R.id.editRedo).setTitle(builder2);
+		menu.findItem(R.id.editRedo).setTitleCondensed(redoName);
+		menu.findItem(R.id.editRedo).setEnabled(false);// nothing to redo at first
+
+
+		menu.findItem(R.id.controlKeyOneTimer).setOnMenuItemClickListener(planMenuItemActionListener);
+		//TODO: set this to the word for ARC use the label from:
+		//SwingTools.getLocalizedLabelText(preferences,	com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.text", unitName)
+		String copy = getActivity().getResources().getString(android.R.string.copy);
+		SpannableStringBuilder builder = new SpannableStringBuilder("* " + copy);// it will replace "*" with icon
 		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menu.findItem(controlKeyOneTimer).setTitle(builder);
-		menu.findItem(controlKeyOneTimer).setTitleCondensed("Cntl");
-		menu.findItem(R.id.editRedo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name"));
-		menu.findItem(R.id.editUndo).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "UNDO.Name"));
+		menu.findItem(R.id.controlKeyOneTimer).setTitle(builder);
+		menu.findItem(R.id.controlKeyOneTimer).setTitleCondensed(copy);
+
+
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
-		menu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
-		menu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
-		menu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
-		menu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
-		menu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
-		menu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
-		menu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
+
+		updateToolNames();
+
+		MenuItem item = menu.findItem(R.id.spinner);
+		toolSpinner = (Spinner) MenuItemCompat.getActionView(item);
+		toolSpinner.setPadding(toolSpinner.getPaddingLeft(), 0, toolSpinner.getPaddingRight(), toolSpinner.getPaddingBottom());
+		toolSpinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toolNames)
+		{
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				Configuration configuration = getActivity().getResources().getConfiguration();
+				int screenWidthDp = configuration.screenWidthDp;
+
+				boolean withText = screenWidthDp > 500;
+				View view = getTextView(position, withText);
+				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+				return view;
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent)
+			{
+				return getTextView(position, true);
+			}
+
+			public View getTextView(int position, boolean withText)
+			{
+				TextView ret = new TextView(getActivity());
+				String spanText = "* " + (withText ? toolNames[position] : "");
+				int drawRes = toolIcon[position];
+				SpannableStringBuilder builder = new SpannableStringBuilder(spanText);// it will replace "*" with icon
+				builder.setSpan(new ImageSpan(getActivity(), drawRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				ret.setText(builder);
+
+				return ret;
+			}
+		}); // set the adapter to provide layout of rows and content
+		toolSpinner.setOnItemSelectedListener(planToolSpinnerListener);
+	}
 
 
-		//In fact there is no text about these at all just button operations and the prefer about magnet
-		// remember to update the language listener below too
-		//	menu.findItem(R.id.magnetism).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
-		//	menu.findItem(R.id.alignment).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
-		// 	menu.findItem(R.id.planMulitSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EXIT.Name"));
+	private void updateToolNames()
+	{
+		toolNames = new String[]{
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"),
+				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
+		};
+	}
+
+	private String[] toolNames;
+	private int[] toolIcon = new int[]{
+			R.drawable.plan_select_selector,
+			R.drawable.plan_create_walls,
+			R.drawable.plan_create_rooms,
+			R.drawable.plan_create_polylines,
+			R.drawable.plan_create_dimension_lines,
+			R.drawable.plan_create_labels,
+			R.drawable.plan_pan
+	};
+	private PlanController.Mode[] modesInSpinnerOrder = new PlanController.Mode[]{
+			PlanController.Mode.SELECTION,
+			PlanController.Mode.WALL_CREATION,
+			PlanController.Mode.ROOM_CREATION,
+			PlanController.Mode.POLYLINE_CREATION,
+			PlanController.Mode.DIMENSION_LINE_CREATION,
+			PlanController.Mode.LABEL_CREATION,
+			PlanController.Mode.PANNING
+	};
+
+	private void resetToolSpinnerToMode()
+	{
+		PlanController.Mode mode = planController.getMode();
+		toolSpinner.setOnItemSelectedListener(null);
+		int position = Arrays.asList(modesInSpinnerOrder).indexOf(mode);
+		toolSpinner.setSelection(position);
+		toolSpinner.setOnItemSelectedListener(planToolSpinnerListener);
 	}
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
 		mOptionsMenu = menu;
-		menu.findItem(R.id.alignment).setChecked(this.planComponent.alignmentActivated);
-		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
-		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
 
-		MenuItem item = menu.findItem(R.id.lockCheck);
-		item.setChecked(home.isBasePlanLocked());
 
-		int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
-		String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
+		MenuItem itemLocked = menu.findItem(R.id.lockCheck);
+		itemLocked.setChecked(home.isBasePlanLocked());
+
+		int iconId = itemLocked.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
+		String actionName = itemLocked.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
 		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
 		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
 		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		item.setTitle(builder);
-		item.setTitleCondensed(lockedText);
-		item.setIcon(iconId);
+		itemLocked.setTitle(builder);
+		itemLocked.setTitleCondensed(lockedText);
+		itemLocked.setIcon(iconId);
+
+		// notice don't touch redo as it's name is updated by the setNameAndShortDescription method when edits happen
 
 		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
 
+		menu.findItem(R.id.alignment).setChecked(this.planComponent.alignmentActivated);
+		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
+		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
 
-		if(resetToSelectTool)
+		if (resetToSelectTool && planController.getMode() != PlanController.Mode.PANNING)
 		{
-			PlanController.Mode mode = planController.getMode();
-
-			if (mode == PlanController.Mode.PANNING)
-			{
-				mOptionsMenu.findItem(R.id.planPan).setChecked(true);
-				selectionGroup.onMenuItemClick(mOptionsMenu.findItem(R.id.planPan));
-			}
-			else
-			{
-				// it is best to set the tool back to the select tool if it's on one of the create tools (leave it as pan if already pan)
-				MenuItem selectTool = mOptionsMenu.findItem(R.id.planSelect);
-				selectTool.setChecked(true);
-				selectionGroup.onMenuItemClick(selectTool);
-				finishCurrentMode();
-				setMode(PlanController.Mode.SELECTION);
-			}
-			resetToSelectTool = false;
+			setMode(PlanController.Mode.SELECTION);
 		}
+		resetToSelectTool = false;
 
-		selectionGroup.refreshIcons();
+		resetToolSpinnerToMode();
+
+		// undo doesn't get text updated as it is just an icon
+		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);
+
+		String redoName = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
+		SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoName);// it will replace "*" with icon
+		builder2.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		menu.findItem(R.id.editRedo).setTitle(builder2);
+		menu.findItem(R.id.editRedo).setTitleCondensed(redoName);
+		menu.findItem(R.id.editRedo).setEnabled(redoEnabled);
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -516,8 +588,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		this.home = home;
 		this.preferences = preferences2;
 		this.planController = planController;
-		// Card layout relates to the odd single/multiple options
-		//super(new CardLayout());
 
 		// taken from createComponents
 		this.planComponent = createPlanComponent(home, preferences, planController);
@@ -544,22 +614,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				{
 					public void propertyChange(PropertyChangeEvent event)
 					{
-						//TODO: this should set teh names of the menu optons just once now
+						//TODO: this should set the names of the menu options just once now
 					}
 				});
 	}
 
-	//private static final String ONE_LEVEL_PANEL_NAME = "oneLevelPanel";
-	//private static final String MULTIPLE_LEVELS_PANEL_NAME = "multipleLevelsPanel";
-
-	// use a class from the jar
-	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(HomeFrameController.class.getResource("swing/resources/sameElevation.png"));
-	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(FurnitureTable.class.getResource("resources/sameElevation.png"));
+	//PJPJP will be needed later I guess
+	// use a class from the jar!
+	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(this.class.getResource("swing/resources/sameElevation.png"));
 
 	private PlanComponent planComponent;
-	//	private JScrollPane planScrollPane;
 	private JTabbedPane multipleLevelsTabbedPane;
-//	private JPanel oneLevelPanel; //PJPJP this is not used now at all, nor the card layout thing
 
 	/**
 	 * Called by our drawableView when onDraw called for it
@@ -603,22 +668,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		// moved to init
 		//this.planComponent = createPlanComponent(home, preferences, controller);
 
-	/*	UIManager.getDefaults().put("TabbedPane.contentBorderInsets", OperatingSystem.isMacOSX()
-				? new Insets(2, 2, 2, 2)
-				: new Insets(-1, 0, 2, 2));*/
-		//this.multipleLevelsTabbedPane = new JTabbedPane(); // defined in the layout xml in fact
-/*		if (OperatingSystem.isMacOSX())
-		{
-			this.multipleLevelsTabbedPane.setBorder(new EmptyBorder(-2, -6, -7, -6));
-		}*/
 		List<Level> levels = home.getLevels();
-		//	this.planScrollPane = new JScrollPane(this.planComponent);
-		//	this.planScrollPane.setMinimumSize(new Dimension());
-/*		if (OperatingSystem.isMacOSX())
-		{
-			this.planScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			this.planScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		}*/
 
 		// notice this must be set before any tabs are created
 		this.multipleLevelsTabbedPane.addOnLongClickListener(new View.OnLongClickListener()
@@ -627,10 +677,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			public boolean onLongClick(View v)
 			{
 				LevelLabel selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
-				//if (selectedComponent instanceof LevelLabel)
-				{
-					controller.setSelectedLevel(selectedComponent.getLevel());
-				}
+				controller.setSelectedLevel(selectedComponent.getLevel());
 				controller.modifySelectedLevel();
 				return false;
 			}
@@ -643,10 +690,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			public void stateChanged(ChangeEvent ev)
 			{
 				LevelLabel selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
-				//if (selectedComponent instanceof LevelLabel)
-				{
-					controller.setSelectedLevel(selectedComponent.getLevel());
-				}
+				controller.setSelectedLevel(selectedComponent.getLevel());
 			}
 		};
 		this.multipleLevelsTabbedPane.addChangeListener(changeListener);
@@ -736,7 +780,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					case DELETE:
 						ev.getItem().removePropertyChangeListener(levelChangeListener);
 						multipleLevelsTabbedPane.remove(ev.getIndex());
-						Renovations3DActivity.logFireBaseLevelUp("DeleteLevel", "Idx: "+ ev.getIndex());
+						Renovations3DActivity.logFireBaseLevelUp("DeleteLevel", "Idx: " + ev.getIndex());
 						break;
 				}
 				updateLayout(home);
@@ -857,6 +901,62 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}*/
 	}
 
+
+	private boolean redoEnabled = false;
+	private boolean undoEnabled = false;
+	private String redoText = null;
+	private String undoText = null;
+
+	public void setEnabled(HomeView.ActionType actionType, boolean enabled)
+	{
+
+		if (actionType == HomeView.ActionType.UNDO)
+		{
+			undoEnabled = enabled;
+			if (mOptionsMenu != null)
+			{
+				MenuItem undoItem = mOptionsMenu.findItem(R.id.editUndo);
+				if (undoItem != null)
+					undoItem.setEnabled(enabled);
+			}
+		}
+		else if (actionType == HomeView.ActionType.REDO)
+		{
+
+			redoEnabled = enabled;
+			if (mOptionsMenu != null)
+			{
+				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
+				if (redoItem != null)
+					redoItem.setEnabled(enabled);
+			}
+		}
+
+	}
+
+	public void setNameAndShortDescription(HomeView.ActionType actionType, String text)
+	{
+		if (actionType == HomeView.ActionType.REDO )
+		{
+			redoText =  text != null ? text.replace("redoText ", "") : null;
+			if (mOptionsMenu != null && text != null)
+			{
+				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
+				if(redoItem != null)
+				{
+					SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoText);// it will replace "*" with icon
+					builder2.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					redoItem.setTitle(builder2);
+					redoItem.setTitleCondensed(text);
+				}
+			}
+		}
+		else
+		{
+			System.out.println("Action text updated " + actionType + " " + text );
+		}
+	}
+
 	/**
 	 * Preferences property listener bound to this component with a weak reference to avoid
 	 * strong link between preferences and this component.
@@ -887,16 +987,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				//planPanel.multipleLevelsTabbedPane.setToolTipTextAt(planPanel.multipleLevelsTabbedPane.getTabCount() - 1, createNewLevelTooltip);
 
 				//PJ
-				if(planPanel.getUserVisibleHint())
-				{
-					planPanel.mOptionsMenu.findItem(R.id.planSelect).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.planPan).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.createWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.createRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.createPolyLines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.createDimensions).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"));
-					planPanel.mOptionsMenu.findItem(R.id.createText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"));
-				}
+				planPanel.updateToolNames();
 			}
 		}
 	}
