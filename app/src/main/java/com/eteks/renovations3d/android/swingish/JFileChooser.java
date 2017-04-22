@@ -115,6 +115,11 @@ public class JFileChooser
 		{
 			startFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		}
+		else if (startFolder.getAbsolutePath().contains("com.mindblowing.renovations3d"))
+		{
+			// extra care in case the caller is trying to use a app cache file location, which is invalid
+			startFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		}
 		else if (startFolder.isFile())
 		{
 			startFolder = startFolder.getParentFile();
