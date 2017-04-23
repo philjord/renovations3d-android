@@ -10,6 +10,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -174,8 +176,10 @@ public class JFileChooser
 			nameInputLabel.setText("Save file name");
 			nameInputLabel.setTextAppearance(context, android.R.style.TextAppearance_Medium);
 			nameInput = new EditText(context);
+			nameInput.setEms(10);
 			nameInput.setMaxLines(1);
 			nameInput.setSingleLine(true);
+
 
 			rootView.addView(nameInputLabel, lp2);
 			rootView.addView(nameInput, lp2);
@@ -219,6 +223,10 @@ public class JFileChooser
 			});
 
 			((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+			//nameInput.requestFocus();
+			//InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+			//imm.showSoftInput(nameInput, InputMethodManager.SHOW_IMPLICIT);
 		}
 	}
 
