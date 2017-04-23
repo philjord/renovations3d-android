@@ -32,7 +32,10 @@ import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
 import com.eteks.sweethome3d.model.Home;
+import com.eteks.sweethome3d.model.Label;
 import com.eteks.sweethome3d.model.Level;
+import com.eteks.sweethome3d.model.Polyline;
+import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -50,11 +53,14 @@ import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
 
+import javaawt.EventQueue;
 import javaawt.Graphics;
 import javaawt.Graphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.print.PageFormat;
 import javaawt.print.PrinterException;
+import javaxswing.event.UndoableEditEvent;
+import javaxswing.event.UndoableEditListener;
 import javaxswing.undo.CannotRedoException;
 import javaxswing.undo.CannotUndoException;
 
@@ -280,13 +286,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	{
 		PlanController.Mode currentMode = planController.getMode();
 
-		if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION)
-		{
-			//TODO:  the below does not set the current dim line in place for some reason, nor a mouse release
-		}
-		else if (currentMode == PlanController.Mode.WALL_CREATION
-				|| currentMode == PlanController.Mode.ROOM_CREATION
-				|| currentMode == PlanController.Mode.POLYLINE_CREATION)
+		if (currentMode == PlanController.Mode.DIMENSION_LINE_CREATION
+			|| currentMode == PlanController.Mode.WALL_CREATION
+			|| currentMode == PlanController.Mode.ROOM_CREATION
+			|| currentMode == PlanController.Mode.POLYLINE_CREATION)
 		{
 			// need to simulate a press on the last dragged position to make it stick
 			Point2f lastDrag = planComponent.getLastDragLocation();
@@ -617,6 +620,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 						//TODO: this should set the names of the menu options just once now
 					}
 				});
+
 	}
 
 	//PJPJP will be needed later I guess
@@ -909,7 +913,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	public void setEnabled(HomeView.ActionType actionType, boolean enabled)
 	{
-
 		if (actionType == HomeView.ActionType.UNDO)
 		{
 			undoEnabled = enabled;
@@ -931,12 +934,30 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					redoItem.setEnabled(enabled);
 			}
 		}
-
 	}
 
+	private boolean resettingToSelect = false;
 	public void setNameAndShortDescription(HomeView.ActionType actionType, String text)
 	{
-		if (actionType == HomeView.ActionType.REDO )
+		// Each time an undoable name is undated then if we are on the room,line,dim or label tools we should go back to select
+		if (actionType == HomeView.ActionType.UNDO)
+		{
+			if (!resettingToSelect &&
+					(planController.getMode() == PlanController.Mode.ROOM_CREATION ||
+					planController.getMode() == PlanController.Mode.DIMENSION_LINE_CREATION ||
+					planController.getMode() == PlanController.Mode.POLYLINE_CREATION ||
+					planController.getMode() == PlanController.Mode.LABEL_CREATION))
+			{
+				// get off this thread
+				resettingToSelect = true;
+				EventQueue.invokeLater(new Runnable(){public void run(){
+					setMode(PlanController.Mode.SELECTION);
+					resetToolSpinnerToMode();
+					resettingToSelect = false;}});
+			}
+		}
+
+		if (actionType == HomeView.ActionType.REDO)
 		{
 			redoText =  text != null ? text.replace("redoText ", "") : null;
 			if (mOptionsMenu != null && text != null)
