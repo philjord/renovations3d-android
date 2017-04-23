@@ -20,20 +20,17 @@ import java.util.ResourceBundle;
 
 public class ISO8859FileControl	extends ResourceBundle.Control
 {
-	private Charset encoding;
+	private String encodingStr = "UTF-8";
 
 	/**
 	 * StandardCharsets.ISO_8859_1
 	 * default was StandardCharsets.UTF_8
-	 * @param encoding
+
 	 */
-	public ISO8859FileControl(Charset encoding)
-	{
-		this.encoding = encoding;
-	}
 	public ISO8859FileControl()
 	{
-		this.encoding = StandardCharsets.ISO_8859_1;
+		//NOTE can't use StandardCharsets before sdk 19
+		this.encodingStr = "ISO-8859-1";// a stab at the name
 	}
 
 	public ResourceBundle newBundle(String baseName, Locale locale, String format,
@@ -89,7 +86,7 @@ public class ISO8859FileControl	extends ResourceBundle.Control
 			if (stream != null) {
 				try {
 					bundle = new PropertyResourceBundle(
-							new InputStreamReader(stream, encoding));
+							new InputStreamReader(stream, encodingStr));
 				} finally {
 					stream.close();
 				}
