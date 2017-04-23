@@ -641,8 +641,9 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		  swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
 		  swapOut(this.nameLabel, R.id.roompanel_nameLabel);
 		  swapOut(this.nameTextField, R.id.roompanel_nameTextField);
-		  if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
-			  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		  // in all cases suppresses teh name field
+		  //if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
+		  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 		  swapOut(this.areaVisibleCheckBox, R.id.roompanel_areaVisibleCheckBox);
 	  }
@@ -718,6 +719,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 
 	  this.setTitle(dialogTitle);
 	  swapOut(closeButton, R.id.roompanel_closeButton);
+
   }
 
   
