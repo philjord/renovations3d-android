@@ -24,6 +24,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -368,20 +371,57 @@ public class Renovations3DActivity extends FragmentActivity
 			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
 		}
 
-		menu.findItem(R.id.menu_new).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
-		menu.findItem(R.id.menu_load).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name"));
-		menu.findItem(R.id.menu_save).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name"));
-		menu.findItem(R.id.menu_saveas).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name"));
-		menu.findItem(R.id.menu_help).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name"));
-		menu.findItem(R.id.menu_about).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name"));
-		menu.findItem(R.id.menu_preferences).setTitle(renovations3D.getUserPreferences().getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name"));
+		MenuItem newMI = menu.findItem(R.id.menu_new);
+		String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name");
+		SpannableStringBuilder builderNew = new SpannableStringBuilder("* " + newStr);
+		builderNew.setSpan(new ImageSpan(this, android.R.drawable.ic_input_add), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		newMI.setTitle(builderNew);
+		newMI.setTitleCondensed(newStr);
+
+		//TODO: find a good load icon
+		MenuItem loadMI = menu.findItem(R.id.menu_load);
+		String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
+		//SpannableStringBuilder builderLoad = new SpannableStringBuilder("* " + loadStr);
+		//builderLoad.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_add), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		//loadMI.setTitle(builderLoad);
+		loadMI.setTitle(loadStr);
+		loadMI.setTitleCondensed(loadStr);
+
+		MenuItem saveMI = menu.findItem(R.id.menu_save);
+		String saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name");
+		SpannableStringBuilder builderSave = new SpannableStringBuilder("* " + saveStr);
+		builderSave.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_save), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		saveMI.setTitle(builderSave);
+		saveMI.setTitleCondensed(saveStr);
+
+		MenuItem saveasMI = menu.findItem(R.id.menu_saveas);
+		String saveasStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name");
+		SpannableStringBuilder builderSaveas = new SpannableStringBuilder("* " + saveasStr);
+		builderSaveas.setSpan(new ImageSpan(this, R.drawable.ic_menu_save_as), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		saveasMI.setTitle(builderSaveas);
+		saveasMI.setTitleCondensed(saveasStr);
+
+		MenuItem prefsMI = menu.findItem(R.id.menu_preferences);
+		String prefsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name");
+		SpannableStringBuilder builderPref = new SpannableStringBuilder("* " + prefsStr);
+		builderPref.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_preferences), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		prefsMI.setTitle(builderPref);
+		prefsMI.setTitleCondensed(prefsStr);
+
+		MenuItem helpMI = menu.findItem(R.id.menu_help);
+		String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name");
+		SpannableStringBuilder builderHelp = new SpannableStringBuilder("* " + helpStr);
+		builderHelp.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_help), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		helpMI.setTitle(builderHelp);
+		helpMI.setTitleCondensed(helpStr);
+
+		MenuItem aboutMI = menu.findItem(R.id.menu_about);
+		String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
+		SpannableStringBuilder builderAbout = new SpannableStringBuilder("* " + aboutStr);
+		builderAbout.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_info_details), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		aboutMI.setTitle(builderAbout);
+		aboutMI.setTitleCondensed(aboutStr);
+
 		return true;
 	}
 

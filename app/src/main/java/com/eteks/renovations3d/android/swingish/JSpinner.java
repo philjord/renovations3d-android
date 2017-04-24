@@ -3,6 +3,9 @@ package com.eteks.renovations3d.android.swingish;
 import android.content.Context;
 import android.os.Handler;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -59,11 +62,18 @@ public class JSpinner extends LinearLayout
 		};
 		model.addChangeListener(changerListener);
 
+
+
+		SpannableStringBuilder upSB = new SpannableStringBuilder("*");// it will replace "*" with icon
+		upSB.setSpan(new ImageSpan(context, android.R.drawable.arrow_up_float), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		upButton = new Button(context);
-		upButton.setText("+");
+		upButton.setText(upSB);
 		upButton.setPadding(0,0,0,0);
+
+		SpannableStringBuilder downSB = new SpannableStringBuilder("*");// it will replace "*" with icon
+		downSB.setSpan(new ImageSpan(context, android.R.drawable.arrow_down_float), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		downButton = new Button(context);
-		downButton.setText("-");
+		downButton.setText(downSB);
 		downButton.setPadding(0,0,0,0);
 
 
