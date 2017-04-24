@@ -129,11 +129,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    />
             </TableRow>
             <CheckBox
                 android:id="@+id/furniture_panel_basePlanItemCheckBox"
@@ -188,11 +183,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    />
             </TableRow>
             <CheckBox
                 android:id="@+id/furniture_panel_keepProportionsCheckBox"

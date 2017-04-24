@@ -39,11 +39,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-            <TextView
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
             </TableRow>
             <TableRow>
                 <NumberPicker
@@ -61,11 +56,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
-                <TextView
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
             </TableRow>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
@@ -98,11 +88,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-                <TextView
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
             </TableRow>
             <TableRow>
             <NumberPicker
@@ -120,11 +105,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-                <TextView
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
             </TableRow>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
