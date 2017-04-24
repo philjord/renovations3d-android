@@ -6259,7 +6259,14 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		  if(universe != null)
 		  {
 			  pauseOffScreenRendering();
-			  universe.cleanup();
+			  try
+			  {
+				  universe.cleanup();
+			  }catch(Exception e)
+			  {
+				  // in production I don't care about exceptions now, but I do care about crashing.
+				  e.printStackTrace();
+			  }
 			  universe = null;
 			  canvas3D = null;
 			  sceneRoot = null;

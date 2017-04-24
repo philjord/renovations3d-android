@@ -450,8 +450,9 @@ public class Renovations3DActivity extends FragmentActivity
 
 				Renovations3DActivity.logFireBaseLevelUp("menu_help");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				//TODO: externalize strings
 				dialog.setTitle("Notice");
-				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D User Interface"));
+				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D user interface"));
 				dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 				{
 					@Override
@@ -460,6 +461,11 @@ public class Renovations3DActivity extends FragmentActivity
 						dialog.dismiss();
 						//TODO: this is a short term fix, I need to make a Renovations 3D branded version of this site
 						Uri webpage = Uri.parse("http://www.sweethome3d.com/userGuide.jsp#drawingWalls");
+						//localize like so
+						// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
+						// String language = Locale.getDefault().getLanguage();
+						// fr etc
+
 						Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
 						if (intent.resolveActivity(getPackageManager()) != null)
 						{

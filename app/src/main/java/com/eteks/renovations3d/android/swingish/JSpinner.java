@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -207,6 +208,9 @@ public class JSpinner extends LinearLayout
 					return true;
 			}
 
+
+			//TODO: add some slop in so the users can be a vague down, instead of all moves returning false;
+			//mSpanSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
 			return false;
 		}
 

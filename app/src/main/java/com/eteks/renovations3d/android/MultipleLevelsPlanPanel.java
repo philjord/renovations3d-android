@@ -60,6 +60,8 @@ import javaxswing.undo.CannotUndoException;
 public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 {
 	public static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
+	public static final int TOOLS_WIDE_MIN_DP = 550;
+	public static final int LEVELS_WIDE_MIN_DP = 350;
 
 	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
@@ -93,7 +95,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			if (initialized)
 			{
 				this.setHasOptionsMenu(true);
-
 
 				drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
 				drawableView.setDrawer(this);
@@ -196,15 +197,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			// this should never happen, no real plan here
 		}
 	};
-
-	private void setIconFromSelector(MenuItem item, int resId)
-	{
-		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getActivity(), resId);
-		int[] state = {item.isChecked() ? android.R.attr.state_checked : android.R.attr.state_empty};
-		stateListDrawable.setState(state);
-		item.setIcon(stateListDrawable.getCurrent());
-	}
-
 
 	private void finishCurrentMode()
 	{
@@ -321,7 +313,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		String copy = getActivity().getResources().getString(android.R.string.copy);
 		SpannableStringBuilder builder = new SpannableStringBuilder("* " + copy);// it will replace "*" with icon
-		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy_selector), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		menu.findItem(R.id.controlKeyOneTimer).setTitle(builder);
 		menu.findItem(R.id.controlKeyOneTimer).setTitleCondensed(copy);
 
@@ -338,10 +330,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				Configuration configuration = getActivity().getResources().getConfiguration();
 				int screenWidthDp = configuration.screenWidthDp;
-
-				boolean withText = screenWidthDp > 500;
-				View view = getTextView(position, withText);
+				boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
+				View view = getTextView(position, toolsWide);
 				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+
 				return view;
 			}
 
@@ -368,7 +360,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		levelsSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.levelsSpinner));
 		// PJ no icons no need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
-		levelSpinnerControl.setSpinner(levelsSpinner);
+
+		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this itme round
+		if(levelSpinnerControl != null)
+			levelSpinnerControl.setSpinner(levelsSpinner);
 
 	}
 
@@ -388,7 +383,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	private String[] toolNames;
 	private int[] toolIcon = new int[]{
-			R.drawable.plan_select_selector,
+			R.drawable.plan_select,
 			R.drawable.plan_create_walls,
 			R.drawable.plan_create_rooms,
 			R.drawable.plan_create_polylines,
@@ -435,7 +430,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 
 		MenuItem cntlMI = menu.findItem(R.id.controlKeyOneTimer);
-		if( planController.getMode() == PlanController.Mode.WALL_CREATION || planController.getMode() == PlanController.Mode.POLYLINE_CREATION)
+		if(planController.getMode() == PlanController.Mode.WALL_CREATION || planController.getMode() == PlanController.Mode.POLYLINE_CREATION)
 		{
 			String arcText = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.text");
 			//TODO: make up an icon for bend walls
@@ -443,10 +438,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			cntlMI.setTitleCondensed(arcText);
 			cntlMI.setEnabled(true);
 		}
-		else if( planController.getMode() == PlanController.Mode.SELECTION)
+		else if(planController.getMode() == PlanController.Mode.SELECTION)
 		{
 			String cntlText = getActivity().getResources().getString(android.R.string.copy);
-			int cntlRes = R.drawable.edit_copy_selector;
+			int cntlRes = R.drawable.edit_copy;
 			SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + cntlText);// it will replace "*" with icon
 			builder2.setSpan(new ImageSpan(getActivity(), cntlRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			cntlMI.setTitle(builder2);
@@ -534,7 +529,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.controlKeyOneTimer:
 				//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
 				item.setChecked(!item.isChecked());
-				setIconFromSelector(item, R.drawable.edit_copy_selector);
 				return true;
 			case R.id.lockCheck:
 				item.setChecked(!item.isChecked());

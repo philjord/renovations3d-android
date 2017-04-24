@@ -208,7 +208,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void display(final GLAutoDrawable drawable)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "display", null );
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start display", null );
 
 			//odd createComponent3D calls addMouseListenr which attaches this listener to the view
 			// that view is being destroyed and I'm getting back here so I have to re-add the mouse listener now
@@ -220,15 +220,31 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			if (canvas3D2D != null)
 			{
 				// must call this as onPause has called removeNotify
-				canvas3D2D.addNotify();
-				//wait for onscreen hint
-				if (!HomeComponent3D.this.getUserVisibleHint())
+				try
 				{
-					canvas3D2D.stopRenderer();
+					canvas3D2D.addNotify();
+					//wait for onscreen hint
+					if (!HomeComponent3D.this.getUserVisibleHint())
+					{
+						canvas3D2D.stopRenderer();
+					}
+					else
+					{
+						canvas3D2D.startRenderer();
+					}
 				}
-				else
+				catch(NullPointerException e)
 				{
-					canvas3D2D.startRenderer();
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 0", "drawable: " + drawable);
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
+					if(gl_window != null)
+					{
+						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+					}
+
+					// let's see if other failures happen or is this just a race condition
+					//throw e;
 				}
 			}
 			else
@@ -250,15 +266,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 						catch(NullPointerException e)
 						{
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 0", "drawable: " + drawable);
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 0", "drawable: " + drawable);
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
 							if(gl_window != null)
 							{
-								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
 							}
 
-							throw e;
+							// let's see if other failures happen or is this just a race condition
+							//throw e;
 						}
 
 						//wait for onscreen hint as this component is create whilst off screen
@@ -291,32 +308,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 						// mouse interaction with picking
 						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, (Renovations3DActivity) getActivity());
-						/*{
-							public void doMouseClicked(final MouseEvent e)
-							{
-								// once again dialog need to be on edt, and this guy might dialog up
-								EventQueue.invokeLater(new Runnable()
-								{
-									public void run()
-									{
-										// no selection or edits while a dialog is up
-										if(Renovations3DActivity.currentDialog == null || !Renovations3DActivity.currentDialog.isShowing())
-										{
-											edtMouseClicked(e);
-										}
-									}
-								});
-							}
-							public void edtMouseClicked(MouseEvent e)
-							{
-								super.doMouseClicked(e);
-							}
-						};*/
+
 						homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
 					}
 					}
 				});
 			}
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end display", null );
 		}
 
 		@Override
@@ -368,7 +366,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 	public void onResume() {
 
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume", null );
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
 
 		super.onResume();
 
@@ -392,8 +390,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 			else
 			{
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume pre addNotify", null );
 				canvas3D2D.addNotify();
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "addNotify", null );
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume post addNotify", null );
 			}
 
 			if (HomeComponent3D.this.getUserVisibleHint())
@@ -401,20 +400,22 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				canvas3D2D.startRenderer();
 			}
 		}
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onResume", null );
 	}
 
 	@Override
 	public void onPause() {
 
-
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onPause", null );
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause", null );
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
 		if(canvas3D2D != null)
 		{
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause pre removeNotify", null );
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "removeNotify", null );
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause post removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
@@ -422,25 +423,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.onPause();
 
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onPause", null );
 	}
 
 	@Override
 	public void onStop()
 	{
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onStop", null );
 		// MUST output GLStatePreserved on console, or it won't restart
 		super.onStop();
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStop", null );
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onStop", null );
 	}
 
 	@Override
 	public void onDestroy()
 	{
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onDestroy", null );
 		// now we want to dump the universe as this fragment is being garbage collected shortly
 		if(canvas3D2D != null)
 		{
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy pre removeNotify", null );
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "removeNotify", null );
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy post removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
@@ -454,7 +459,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.onDestroy();
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy", null );
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onDestroy", null );
 	}
 
 	@Override
@@ -1619,7 +1624,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				public void run()
 				{
-					mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
+					// possibly if an exit is called and a loadHome is still happening we can get here just as the universe collapses
+					if(getContext() != null)
+					{
+						mScaleDetector = new ScaleGestureDetector(HomeComponent3D.this.getContext(), new ScaleListener());
+					}
 				}
 			});
 		}

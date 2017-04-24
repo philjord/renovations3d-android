@@ -4299,14 +4299,16 @@ public class HomePane implements HomeView
 		//PJPJPJ
 		// For tidiness sake if the selected file does not exist we create a sub folder and point to the file in that
 		// this is so all the many mtl and png files are kept tidy
-		File objFile = new File(homeName);
-		if(!objFile.exists())
+		if (homeName != null && homeName.replace(".obj", "").length() > 0)
 		{
-			File objFolder = new File(homeName.replace(".obj",""));
-			objFolder.mkdir();
-			homeName = new File(objFolder, objFile.getName()).getAbsolutePath();
+			File objFile = new File(homeName);
+			if (!objFile.exists())
+			{
+				File objFolder = new File(homeName.replace(".obj", ""));
+				objFolder.mkdir();
+				homeName = new File(objFolder, objFile.getName()).getAbsolutePath();
+			}
 		}
-
 
 		this.exportAllToOBJ = true;
 		List<Selectable> selectedItems = this.home.getSelectedItems();

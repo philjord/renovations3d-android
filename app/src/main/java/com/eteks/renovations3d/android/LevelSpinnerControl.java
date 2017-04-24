@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
+import com.mindblowing.renovations3d.R;
 
 import java.util.ArrayList;
 
@@ -87,13 +88,25 @@ public class LevelSpinnerControl
 				Configuration configuration = context.getResources().getConfiguration();
 				int screenWidthDp = configuration.screenWidthDp;
 
-				boolean withText = screenWidthDp > 400;
-				TextView view = getTextView(position, withText);
+				boolean toolsWide = screenWidthDp > MultipleLevelsPlanPanel.TOOLS_WIDE_MIN_DP;
+				boolean levelsWide = screenWidthDp > MultipleLevelsPlanPanel.LEVELS_WIDE_MIN_DP;
+
+				TextView view = getTextView(position, levelsWide);
 				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
-				int dp = 40 + (screenWidthDp > 480 ? (screenWidthDp - 480) : 0);
+
+				// more, then 3 buttons then tools, *2 to give marign each side butons
+				float othersSpace = 40 + (3 * (context.getResources().getDimension(R.dimen.button_dp) * 2)) + (toolsWide ? 300 : 50);
+
+				float dpAllowed = 40 + Math.max(screenWidthDp - othersSpace, 0);
 				float density = context.getResources().getDisplayMetrics().density;
-				float pixel = dp * density;
+				float pixel = dpAllowed * density;
 				view.setMaxWidth((int)pixel);
+
+				//System.out.println("setMaxWidth toolsWide " + toolsWide + "=" + (toolsWide ? 300 : 50) );
+				//System.out.println("setMaxWidth (3 * R.dimen.button_dp) " + (3 * context.getResources().getDimension(R.dimen.button_dp))  );
+				//System.out.println("setMaxWidth screenWidthDp " + screenWidthDp  );
+				//System.out.println("setMaxWidth othersSpace " + othersSpace  );
+				//System.out.println("setMaxWidth dpAllowed " + dpAllowed + "=" + pixel );
 				return view;
 			}
 
