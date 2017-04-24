@@ -354,6 +354,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			public View getTextView(int position, boolean withText)
 			{
 				TextView ret = new TextView(getActivity());
+				ret.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
 				String spanText = "* " + (withText ? toolNames[position] : "");
 				int drawRes = toolIcon[position];
 				SpannableStringBuilder builder = new SpannableStringBuilder(spanText);// it will replace "*" with icon

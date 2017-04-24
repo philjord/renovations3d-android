@@ -2,9 +2,6 @@ package com.eteks.renovations3d.android;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.mindblowing.renovations3d.R;
 
 import java.util.ArrayList;
 
@@ -92,9 +88,12 @@ public class LevelSpinnerControl
 				int screenWidthDp = configuration.screenWidthDp;
 
 				boolean withText = screenWidthDp > 400;
-				View view = getTextView(position, withText);
+				TextView view = getTextView(position, withText);
 				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
-
+				int dp = 40 + (screenWidthDp > 480 ? (screenWidthDp - 480) : 0);
+				float density = context.getResources().getDisplayMetrics().density;
+				float pixel = dp * density;
+				view.setMaxWidth((int)pixel);
 				return view;
 			}
 
@@ -105,12 +104,13 @@ public class LevelSpinnerControl
 				return view;
 			}
 
-			public View getTextView(int position, boolean withText)
+			public TextView getTextView(int position, boolean withText)
 			{
 				TextView ret = new TextView(context);
 				ret.setTextAppearance(context, android.R.style.TextAppearance_Large);
 				String spanText = "L" + position + (withText ? "-" + levelNames.get(position) : "");
 				ret.setText(spanText);
+
 				//int drawRes = toolIcon[position];
 				//SpannableStringBuilder builder = new SpannableStringBuilder(spanText);// it will replace "*" with icon
 				//builder.setSpan(new ImageSpan(context, drawRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

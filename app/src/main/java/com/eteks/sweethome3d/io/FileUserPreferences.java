@@ -944,6 +944,9 @@ public class FileUserPreferences extends UserPreferences {
     final Set<URL> furnitureContentURLs = new HashSet<URL>();
     int i = 1;
     for (FurnitureCategory category : getFurnitureCatalog().getCategories()) {
+
+		//PJ I got a NPE when changeing language here once
+	if(category != null)
       for (CatalogPieceOfFurniture piece : category.getFurniture()) {
         if (piece.isModifiable()) {
           preferences.put(FURNITURE_NAME + i, piece.getName());
