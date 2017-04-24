@@ -4,38 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="@android:color/white">
-    <TableLayout android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:padding="5dp">
-        <TableRow>
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1" >
-
-                <RadioGroup
-                    android:id="@+id/levelsRadioGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_margin="10dp">
-                </RadioGroup>
-            </HorizontalScrollView>
-            <Button android:id="@+id/levelPlusButton"
-                    android:text=""
-                    android:background="@drawable/plan_add_level"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:minHeight="@dimen/button_dp"
-                    android:minWidth="@dimen/button_dp"
-                />
-        </TableRow>
-    </TableLayout>
-
-
     <com.eteks.renovations3d.android.utils.DrawableView
         android:id="@+id/drawableView"
         android:layout_width="match_parent"

@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/spinner"
+    <item android:id="@+id/levelsSpinner"
+          android:title="Level"
+          android:showAsAction="always"
+          android:actionViewClass="android.widget.Spinner"
+        />
+
+    <item android:id="@+id/toolSelectSpinner"
           android:title="CurrentTool"
           android:showAsAction="always"
-          android:actionViewClass="android.widget.Spinner" />
+          android:actionViewClass="android.widget.Spinner"
+        />
 
     <item android:id="@+id/editUndo"
             android:title="undo"
             android:icon="@drawable/edit_undo"
             android:showAsAction="always"
         />
-    <item
-        android:id="@+id/delete"
+
+    <item android:id="@+id/delete"
         android:title="delete"
         android:icon="@drawable/user_trash"
         android:showAsAction="always"
         />
 
-    <item
-        android:id="@+id/planGoto3D"
+    <item android:id="@+id/planGoto3D"
         android:title="3D"
         android:icon="@drawable/plan_goto_3d"
         android:showAsAction="always"
         />
-    <item
-        android:id="@+id/controlKeyOneTimer"
-        android:title="Cntl"
-        android:icon="@drawable/edit_copy_selector"
-        android:checkable="true"
-        android:showAsAction="never"
+
+    <item android:id="@+id/planAddLevel"
+      android:title="planAddLevel"
+      android:showAsAction="never"
         />
+
+    <item android:id="@+id/planDeleteLevel"
+        android:title="planDeleteLevel"
+        android:showAsAction="never"
+    />
+
     <item android:id="@+id/editRedo"
           android:title="redo"
           android:icon="@drawable/edit_redo"
           android:showAsAction="never"
         />
-    <item
-        android:id="@+id/planSelectLasso"
+    <item android:id="@+id/controlKeyOneTimer"
+          android:title="Cntl"
+          android:icon="@drawable/edit_copy_selector"
+          android:checkable="true"
+          android:showAsAction="never"
+        />
+
+    <item android:id="@+id/planSelectLasso"
         android:title="@string/select_lasso"
         android:checkable="true"
         android:showAsAction="never"
         />
-    <item
-        android:id="@+id/planSelectMultiple"
+
+    <item android:id="@+id/planSelectMultiple"
         android:title="@string/select_multiple"
         android:checkable="true"
         android:showAsAction="never"
         />
-    <item
-        android:id="@+id/lockCheck"
+
+    <item android:id="@+id/lockCheck"
         android:title="lock"
         android:icon="@drawable/lockcheck"
         android:checkable="true"
         android:showAsAction="never"
         />
+
     <item android:id="@+id/alignment"
           android:title="@string/alignment"
           android:checkable="true"
           android:showAsAction="never"
         />
+
     <item android:id="@+id/magnetism"
           android:title="@string/magnetism"
           android:checkable="true"
