@@ -19,11 +19,7 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>Нажмите на значок добавления мебели, чтобы поместить выбранный элемент мебели на вид сверху на месте 0.0.<br>
 Или вы можете долго нажать на элемент (нет перетаскивания).<br>
 С этой точки зрения вы можете импортировать каталог мебели библиотеки, выберите Меню-> библиотеку Импорт мебели ...<br>
-Вы можете скачать мебель и текстуры библиотеки из Интернета, вам нужно распаковать их, может, используя файловый менеджер, прежде чем импортировать их.<br>
-</p><p>Чтобы получить больше информации
-              <br>посетите <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>а также <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
-			     ]]></string>
+     ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Это вид всей мебели В настоящее время размещены на вашем плане.<br>
 На данный момент единственная функция, которую вы можете сделать здесь, чтобы изменить видимость элементов.<br>
@@ -69,5 +65,11 @@ Pinch переместит вас вперед или назад. <br>
     <string name="double_tap_finish">Нажмите дважды, чтобы закончить</string>
     <string name="long_process_title">Длительный процесс</string>
     <string name="high_quality_photo_notice">Пожалуйста, отдайте себе отчет в том, что высокое качество рендеринга фотографий может занять много времени, в некоторых случаях более часа.</string>
+    <string name="libraryDownLoadNotice">Этот файл библиотеки загружается, это может занять некоторое время, вы будете уведомлены после его загрузки и установки.</string>
+    <string name="libraryExistsLocal">Эта библиотека существует в ваших загружаемых файлах, вы можете импортировать ее с помощью опции Local.</string>
+    <string name="local">Местный</string>
+    <string name="pleaseSelectSh3f">Выберите файл sh3f для импорта</string>
+    <string name="pleaseSelectSh3t">Выберите файл sh3t для импорта</string>
+    <string name="helpRedirectNotice">Вы направляетесь в справочную систему приложений для настольных приложений Sweet Home 3D, она не будет точно соответствовать пользовательскому интерфейсу Renovations 3D.</string>
 
 </resources>

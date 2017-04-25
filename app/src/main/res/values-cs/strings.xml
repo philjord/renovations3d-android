@@ -19,10 +19,6 @@ Použijte svůj prohlížeč tak, aby stahovat více SH3D souborů z internetu, 
     <string name="catalogview_welcometext"><![CDATA[<html><p>Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0.<br>
 Případně si můžete dlouho tlačit na položku (není drag and drop).<br>
 Z tohoto pohledu lze importovat katalog nábytek knihovny, zvolte Menu-> Importovat nábytek knihovny ...<br>
-Zde si můžete stáhnout nábytek a textury knihovny z internetu, budete muset rozbalit em může používat prohlížeč souborů před importem em.<br>
-<p>Pro více informací:
-              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-		<br>a <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
     ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 To je pohled na veškerý nábytek v současné době umístěn na vaši plánu.<br>
@@ -71,5 +67,11 @@ Pokud vidíte poškozený pohled, zkuste volbu deoptomize v nabídce. <br>
     <string name="double_tap_finish">Dvojitým poklepáním na dokončení</string>
     <string name="long_process_title">Дълъг процес бягане...</string>
     <string name="high_quality_photo_notice">Vysoce kvalitní fotografie rendering může trvat dlouhou dobu pro výpočet, v některých případech více než hodinu, prosím, vědomi.</string>
+    <string name="libraryDownLoadNotice">Tento soubor knihovny je nyní stažen, může to trvat nějakou dobu, po stažení a instalaci vás budeme informovat.</string>
+    <string name="libraryExistsLocal">Tato knihovna existuje ve vašich stahování, můžete ji importovat pomocí možnosti Místní.</string>
+    <string name="local">Místní</string>
+    <string name="pleaseSelectSh3f">Vyberte soubor sh3f, který chcete importovat</string>
+    <string name="pleaseSelectSh3t">Vyberte soubor sh3t, který chcete importovat</string>
+    <string name="helpRedirectNotice">Budete přesměrováni do systému nápovědy pro stolní aplikace Sweet Home 3D, nebude to přesně odpovídat uživatelskému rozhraní Renovace 3D.</string>
 
 </resources>

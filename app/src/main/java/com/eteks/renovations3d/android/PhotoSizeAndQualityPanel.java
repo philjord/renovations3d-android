@@ -100,8 +100,6 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
     this.widthLabel = new JLabel(activity, "");
     final SpinnerNumberModel widthSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
     this.widthSpinner = new AutoCommitSpinner(activity, widthSpinnerModel);
-    //PJ controller width sometimes comes back with over large value
-	  System.out.println(" controller.getWidth()  "+ controller.getWidth() );
 	  if(controller.getWidth() < 2048 )
 	  	widthSpinnerModel.setValue(controller.getWidth());
 	  else

@@ -20,10 +20,6 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>Πατήστε το εικονίδιο προσθήκης έπιπλα για να τοποθετήσετε το επιλεγμένο στοιχείο επίπλου πάνω στην κάτοψη στη θέση 0,0.<br>
 Εναλλακτικά, μπορείτε να πατήσετε παρατεταμένα πάνω στο αντικείμενο (δεν υπάρχει drag and drop).<br>
 Από την άποψη αυτή, μπορείτε να εισαγάγετε Κατάλογος επίπλων βιβλιοθήκες, επιλέξτε Μενού-> βιβλιοθήκη έπιπλα Εισαγωγή ...<br>
-Μπορείτε να κατεβάσετε τα έπιπλα και την υφή βιβλιοθήκες από το διαδίκτυο, μπορεί να χρειαστεί να τα αποσυμπιέσετε χρησιμοποιώντας ένα αρχείο εξερευνητής πριν από την εισαγωγή τους.<br>
-</p><p>Παρακαλώ επισκεφτείτε τη διεύθυνση
-    <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>και <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html><p>
 Αυτή είναι μια τρισδιάστατη όψη 3 του σχεδίου σας. <br>
@@ -71,4 +67,10 @@ Pinch θα κινείστε προς τα εμπρός ή προς τα πίσω
     <string name="double_tap_finish">Πατήστε δύο φορές για να ολοκληρωθεί</string>
     <string name="long_process_title">Μακρά διαδικασία λειτουργίας</string>
     <string name="high_quality_photo_notice">Υψηλής ποιότητας φωτογραφία απόδοση μπορεί να πάρει πολύ χρόνο για να υπολογίσετε, σε ορισμένες περιπτώσεις περισσότερο από μία ώρα, παρακαλώ να το γνωρίζουν αυτό.</string>
+    <string name="libraryDownLoadNotice">Αυτό το αρχείο βιβλιοθήκης έχει πλέον μεταφορτωθεί, αυτό μπορεί να διαρκέσει αρκετό καιρό, θα σας ειδοποιηθεί μόλις το κατεβάσετε και εγκαταστήσετε.</string>
+    <string name="libraryExistsLocal">Αυτή η βιβλιοθήκη υπάρχει στις λήψεις σας, μπορείτε να την εισαγάγετε χρησιμοποιώντας την επιλογή Τοπική.</string>
+    <string name="local">Τοπικός</string>
+    <string name="pleaseSelectSh3f">Επιλέξτε sh3f αρχείο για εισαγωγή</string>
+    <string name="pleaseSelectSh3t">Επιλέξτε sh3t αρχείο για εισαγωγή</string>
+    <string name="helpRedirectNotice">Σας κατευθύνεστε στο σύστημα βοήθειας για εφαρμογές γραφείου Sweet Home 3D, δεν θα ταιριάζει ακριβώς με το περιβάλλον εργασίας Ανακαίνισης 3D.</string>
 </resources>

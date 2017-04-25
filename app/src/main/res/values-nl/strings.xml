@@ -19,9 +19,6 @@ Gebruik uw browser om meer SH3D bestanden te downloaden van het internet, zullen
     <string name="catalogview_welcometext"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
 Als alternatief kun je lang op het artikel (er is geen drag and drop).<br>
 Vanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek ...<br>
-U kunt meubels en textuur bibliotheken downloaden van het internet, moet je uit te pakken hen met behulp van een file explorer voordat u ze importeert.<br>
-</p><p>Bezoek <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>en <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 	   ]]>\n</string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.<br>
@@ -67,5 +64,11 @@ Als u een corrupte uitzicht, probeer dan de optie deoptomize in het menu. <br>
     <string name="double_tap_finish">Double tap om te voltooien</string>
     <string name="long_process_title">Lang lopend proces</string>
     <string name="high_quality_photo_notice">Hoge kwaliteit foto renderen kan een lange tijd in beslag nemen om te berekenen, in sommige gevallen meer dan een uur, dan kunt u zich bewust zijn van dit.</string>
+    <string name="libraryDownLoadNotice">Dit bibliotheekbestand wordt nu gedownload, dit kan enige tijd duren, u wordt op de hoogte gesteld zodra het is gedownload en geïnstalleerd.</string>
+    <string name="libraryExistsLocal">Deze bibliotheek bestaat in uw downloads, u kunt deze importeren met de optie Lokale.</string>
+    <string name="local">Lokaal</string>
+    <string name="pleaseSelectSh3f">Selecteer alsjeblieft sh3f-bestand om te importeren</string>
+    <string name="pleaseSelectSh3t">Selecteer alsjeblieft sh3t-bestand om te importeren</string>
+    <string name="helpRedirectNotice">U wordt aangestuurd naar het Help-systeem van Sweet Home 3D, het komt niet precies overeen met Renovations 3D gebruikersinterface.</string>
 
 </resources>

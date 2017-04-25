@@ -19,10 +19,6 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>位置0.0での平面図上に家具を選択した項目を配置する追加の家具のアイコンを押してください<br>
 または、項目を長押しすることもできます（ドラッグアンドドロップはありません）。<br>
 このビューからは、家具ライブラリカタログをインポートするメニュー - > [インポート家具ライブラリを選択することができます...<br>
-あなたは、インターネットから家具やテクスチャのライブラリをダウンロードすることができ、あなたは彼らがそれらをインポートする前に、ファイルエクスプローラを使用して可能性があり解凍する必要があります。<br>
-</p><p>ソフトウエアの更新および不具合の報告は
-    <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>そして <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 	   ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 これは、現在、あなたの計画に置かれたすべての家具の図です。<br>
@@ -68,5 +64,11 @@
     <string name="double_tap_finish">ダブルタップして終了</string>
     <string name="long_process_title">長期実行プロセス</string>
     <string name="high_quality_photo_notice">高品質の写真のレンダリングには時間がかかりますが、場合によっては1時間以上かかることもありますので、ご注意ください。</string>
+    <string name="libraryDownLoadNotice">このライブラリファイルは現在ダウンロードされていますが、これには時間がかかることがあります。ダウンロードしてインストールすると通知されます。</string>
+    <string name="libraryExistsLocal">このライブラリはダウンロードに存在し、ローカルオプションを使用してインポートできます。</string>
+    <string name="local">地元</string>
+    <string name="pleaseSelectSh3f">インポートするsh3fファイルを選択してください</string>
+    <string name="pleaseSelectSh3t">インポートするsh3tファイルを選択してください</string>
+    <string name="helpRedirectNotice">あなたはSweet Home 3Dデスクトップアプリケーションヘルプシステムに向けられていますが、Renovationsの3Dユーザーインターフェイスと正確には一致しません。</string>
 
 </resources>

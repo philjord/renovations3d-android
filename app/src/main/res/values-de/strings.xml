@@ -19,9 +19,6 @@ Benutzen Sie Ihren Browser mehr SH3D Dateien aus dem Internet herunterladen, die
     <string name="catalogview_welcometext"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
 Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).<br>
 Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren ...<br>
-Sie können Möbel und Textur-Bibliotheken aus dem Internet herunterladen, müssen Sie entpacken em vor dem Import em einen Datei-Explorer verwenden, können.<br>
-</p><p>Besuchen Sie <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			<br>und <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.<br>
@@ -68,5 +65,11 @@ Wenn Sie eine korrupte Ansicht sehen, versuchen Sie bitte die Option deoptomize 
     <string name="double_tap_finish">Doppeltippen, um zu beenden</string>
     <string name="long_process_title">Lange Laufzeit</string>
     <string name="high_quality_photo_notice">Hochwertige Foto-Rendering kann eine lange Zeit zu berechnen, in einigen Fällen mehr als eine Stunde, bitte beachten Sie diese.</string>
+    <string name="libraryDownLoadNotice">Diese Bibliotheksdatei wird nun heruntergeladen, dies kann einige Zeit dauern, Sie werden benachrichtigt, sobald es heruntergeladen und installiert ist.</string>
+    <string name="libraryExistsLocal">Diese Bibliothek existiert in Ihren Downloads, Sie können sie mit der Option Local importieren.</string>
+    <string name="local">Lokal</string>
+    <string name="pleaseSelectSh3f">Bitte wählen Sie sh3f Datei zum Importieren aus</string>
+    <string name="pleaseSelectSh3t">Bitte wählen Sie sh3t Datei zum Importieren aus</string>
+    <string name="helpRedirectNotice">Sie werden an die Sweet Home 3D Desktop-Anwendung Hilfesystem gerichtet, es wird nicht genau mit der Benutzeroberfläche von Renovations 3D übereinstimmen.</string>
 
 </resources>

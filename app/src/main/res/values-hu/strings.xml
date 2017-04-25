@@ -19,9 +19,6 @@ A böngésző letölthető több SH3D fájlokat az interneten, akkor nyissa meg 
     <string name="catalogview_welcometext"><![CDATA[<html><p>Nyomja meg a Hozzáadás bútorok ikont elhelyezni a kiválasztott elemet bútorok rá a felülnézetben a helyszínen 0.0.<br>
 Másik lehetőség, hogy a hosszú nyomja meg az elem (nincs drag and drop).<br>
 Ebből a nézetből akkor importálni bútorok könyvtárak katalógusban válassza Menü-> Import bútorok könyvtár ...<br>
-Tudod letölt bútorok és textúra könyvtárak az interneten, meg kell, hogy csomagolja ki belőlük egy fájlkezelő importálása előtt őket.<br>
-</p><p>Kérem, látogasson el a <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>és <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Ez a kilátás az összes bútor Jelenleg elhelyezni a tervet.<br>
@@ -67,5 +64,11 @@ Ha látsz egy korrupt véli, próbálkozz az deoptomize lehetőséget a menübő
     <string name="double_tap_finish">Koppintson duplán, hogy befejezze</string>
     <string name="long_process_title">Hosszú futó folyamat</string>
     <string name="high_quality_photo_notice">Kiváló minőségű renderelés fotó is hosszú időt vesz igénybe, hogy kiszámítható, esetenként több mint egy óra, kérjük ennek tudatában.</string>
+    <string name="libraryDownLoadNotice">Ez a könyvtárfájl most letöltődik, ez eltarthat egy ideig, értesítést kap a letöltés és telepítés után.</string>
+    <string name="libraryExistsLocal">A könyvtár a letöltések során létezik, a Helyi lehetőség használatával importálhatja.</string>
+    <string name="local">Helyi</string>
+    <string name="pleaseSelectSh3f">Kérem, válassza ki az importálni kívánt sh3f fájlt</string>
+    <string name="pleaseSelectSh3t">Kérem, válassza ki az importálni kívánt sh3t fájlt</string>
+    <string name="helpRedirectNotice">A Sweet Home 3D asztali alkalmazás súgórendszerére irányítod, nem fog pontosan illeszkedni a Renovations 3D felhasználói felülethez.</string>
 
 </resources>

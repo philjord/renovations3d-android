@@ -20,11 +20,7 @@ Use o seu navegador para baixar mais arquivos SH3D da internet, eles vão abrir 
     <string name="catalogview_welcometext"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
 Alternativamente, você pode pressionar longamente o item (não há arrastar e soltar).<br>
 Desde este ponto de vista que você pode importar catálogo bibliotecas móveis, selecione Menu-> biblioteca de móveis de importação ...<br>
-Você pode baixar móveis e textura bibliotecas a partir da Internet, você precisa descompactá-los Maio usando um explorador de arquivos antes de importá-los.<br>
-</p><p>Por favor, visite
-              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>e <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
-			     ]]></string>
+     ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Esta é uma visão de todo o mobiliário Atualmente Colocado em seu plano.<br>
 Por agora a única função que você pode fazer aqui é para mudar uma visibilidade itens.<br>
@@ -72,5 +68,11 @@ Se você ver uma exibição corrompida, tente a opção deoptomize no menu.<br>
     <string name="double_tap_finish">Toque duas vezes para terminar</string>
     <string name="long_process_title">Processo de longa duração</string>
     <string name="high_quality_photo_notice">Alta qualidade de processamento de fotos pode levar muito tempo para calcular, em alguns casos, mais de uma hora, por favor, esteja ciente disso.</string>
+    <string name="libraryDownLoadNotice">Este arquivo de biblioteca está sendo baixado, isso pode levar algum tempo, você será notificado assim que for baixado e instalado.</string>
+    <string name="libraryExistsLocal">Esta biblioteca existe em seus downloads, você pode importá-lo usando a opção Local.</string>
+    <string name="local">Local</string>
+    <string name="pleaseSelectSh3f">Selecione o arquivo sh3f para importar</string>
+    <string name="pleaseSelectSh3t">Selecione o arquivo sh3t para importar</string>
+    <string name="helpRedirectNotice">Você está sendo direcionado para o sistema de ajuda do aplicativo de área de trabalho do Sweet Home 3D, ele não corresponderá exatamente com a interface de usuário do Renovations 3D.</string>
 
 </resources>

@@ -20,10 +20,6 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>Натисніть на значок додавання меблів, щоб помістити вибраний елемент меблів на вигляд зверху на місці 0.0.<br>
 В якості альтернативи ви можете довго натиснути на пункт (немає перетягування).<br>
 З цієї точки зору ви можете імпортувати каталог меблів бібліотеки, виберіть Меню-> бібліотеку Імпорт меблів ...<br>
-Ви можете завантажити меблі і текстури бібліотеки з Інтернету, вам потрібно розпакувати їх, може, використовуючи файловий менеджер, перш ніж імпортувати їх.<br>
-</p><p>ласка, відвідайте
-    <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>i <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 	 ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Це вид всіх меблів В даний час розміщені на вашому плані.<br>
@@ -70,5 +66,11 @@ Pinch буде рухати вас вперед або назад. <br>
     <string name="double_tap_finish">Двічі натисніть, щоб закінчити</string>
     <string name="long_process_title">Довгий процес працює</string>
     <string name="high_quality_photo_notice">Висока якість фото рендеринга може зайняти багато часу, щоб обчислити, в деяких випадках більш ніж на годину, будь ласка, знати про це.</string>
+    <string name="libraryDownLoadNotice">Цей файл бібліотеки в даний час завантаження, це може зайняти деякий час, ви будете повідомлені, як тільки він буде завантажений і встановлено.</string>
+    <string name="libraryExistsLocal">Ця бібліотека існує у вашій завантаженні, ви можете імпортувати його за допомогою локального варіанту.</string>
+    <string name="local">місцевий</string>
+    <string name="pleaseSelectSh3f">Будь ласка, виберіть sh3f файл для імпорту</string>
+    <string name="pleaseSelectSh3t">Будь ласка, виберіть sh3t файл для імпорту</string>
+    <string name="helpRedirectNotice">Ви спрямовані в систему настільних додатків допомоги Sweet Home 3D, це не буде точно збігатися з Renovations 3D користувальницький інтерфейс.</string>
 
 </resources>

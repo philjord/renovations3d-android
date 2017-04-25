@@ -19,9 +19,6 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
 或者，您可以长按项目（没有拖放）。<br>
 从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...<br>
-您可以从互联网上下载的家具和纹理库，则需要在导入之前解压他们可以使用文件资源管理器。<br>
-</p><p>请访问 <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>和 <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 	   ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 这是当前摆在你的计划中的所有家具的景色。<br>
@@ -67,5 +64,11 @@
     <string name="double_tap_finish">双击完成</string>
     <string name="long_process_title">长时间运行的过程</string>
     <string name="high_quality_photo_notice">高品质的照片渲染可能需要很长时间来计算，在某些情况下超过一个小时，请注意这一点。</string>
+    <string name="libraryDownLoadNotice">此庫文件正在下載，這可能需要一些時間，一旦下載並安裝，您將收到通知。</string>
+    <string name="libraryExistsLocal">該庫存在您的下載中，您可以使用本地選項導入它。</string>
+    <string name="local">本地</string>
+    <string name="pleaseSelectSh3f">請選擇要導入的sh3f文件</string>
+    <string name="pleaseSelectSh3t">請選擇要導入的sh3t文件</string>
+    <string name="helpRedirectNotice">您正在被引導到Sweet Home 3D桌面應用程序幫助系統，它將不會與Renovations 3D用戶界面完全匹配。</string>
 
 </resources>

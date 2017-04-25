@@ -20,9 +20,6 @@ Use your browser to download more sh3d files from the internet, they will open f
 Press the add furniture icon to place the selected furniture item onto the plan view at the location 0,0.<br>
 Alternatively you can long press on the item (there is no drag and drop).<br>
 From this view you can import furniture catalog libraries, select Menu->Import furniture library&#8230;<br>
-You can download furniture and texture libraries from the internet, you may need to unzip them using a file explorer before importing them.<br>
-</p><p>Please visit <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-<br> and <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 This is a view of all the furniture currently placed on your plan.<br>
@@ -73,6 +70,12 @@ If you see a corrupt view, please try the deoptomize option in the menu.<br>
     <string name="double_tap_finish">Double tap to finish</string>
     <string name="long_process_title">Long running process</string>
     <string name="high_quality_photo_notice">High quality photo rendering can take a long time to calculate, in some cases more than an hour, please be aware of this.</string>
+    <string name="libraryDownLoadNotice">This library file is now being downloaded, this may take some time, you will be notified once it is downloaded and installed.</string>
+    <string name="libraryExistsLocal">This library exists in your downloads, you can import it using the Local option.</string>
+    <string name="local">Local</string>
+    <string name="pleaseSelectSh3t">Please select sh3t file to import</string>
+    <string name="pleaseSelectSh3f">Please select sh3f file to import</string>
+    <string name="helpRedirectNotice">You are being directed to the Sweet Home 3D desktop application\'s help system, it will not match exactly with Renovations 3D user interface.</string>
 
 
 </resources>

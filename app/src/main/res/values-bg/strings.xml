@@ -19,9 +19,6 @@
     <string name="catalogview_welcometext"><![CDATA[<html><p>Натиснете иконата за добавяне на сайт мебели избран мебели елемента върху екрана на картата на лизинговия договор 0.0.<br>
 Като алтернатива можете да натиснете продължително върху елемента (не е влачене и пускане).<br>
 От тази гледна точка можете да импортирате мебели библиотеки на стоките, изберете Меню-> Import мебели библиотека ...<br>
-Можете да изтеглите мебели и текстура библиотеки от интернет, трябва да разархивирате ги Може да се използва File Explorer преди импортирането им.<br>
-</p><p>Моля, посетете <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>και <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 	  ]]>\n</string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Това е изглед на всички мебели в момента са поставени на Вашия план.<br>
@@ -67,5 +64,11 @@ Pinch ще се движите напред или назад. <br>
     <string name="double_tap_finish">Докоснете два пъти, за да завършите</string>
     <string name="long_process_title">Дълъг процес бягане</string>
     <string name="high_quality_photo_notice">Високо качество на снимките изобразяване може да отнеме много време, за да се изчисли, в някои случаи повече от един час, моля да са наясно с това.</string>
+    <string name="libraryDownLoadNotice">Този файл на библиотеката вече се изтегля, може да отнеме известно време, след като бъде изтеглен и инсталиран, ще бъдете известени.</string>
+    <string name="libraryExistsLocal">Тази библиотека съществува във вашите файлове за изтегляне, можете да я импортирате с помощта на опцията Local.</string>
+    <string name="local">Локално</string>
+    <string name="pleaseSelectSh3f">Моля, изберете sh3f файл за импортиране</string>
+    <string name="pleaseSelectSh3t">Моля, изберете sh3t файл за импортиране</string>
+    <string name="helpRedirectNotice">Вие се насочвате към системата за помощ за настолни компютри Sweet Home 3D, няма да съвпада точно с потребителския интерфейс на Renovations 3D.</string>
 
 </resources>

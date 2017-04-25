@@ -10,9 +10,6 @@ Per vedere gli arredi disponibili, scorri il dito da destra, potrai aggiungere g
 Per scorrere lungo la mappa senza modificare la selezione attuale, scorri con due dita.<br>
 Per selezionare più di un oggetto contemporaneamente, utilizza la Selezione con lazo o la Selezione Multipla nel menu aggiuntivo.<br>
 Due file demo di sh3d verranno scaricati nella tua cartella dei downloads, seleziona Menu->Apri .<br>
-Utilizza il tuo browser per scaricare più file sh3d da internet, verranno aperti direttamente da li.<br>
-<p>Visita <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-    <br> e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
     <br>per ulteriori informazioni.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>
@@ -71,6 +68,12 @@ Se vedi una vista corrotta, prova a cambiare l\'impostazione "Deottimizzazione 3
     <string name="double_tap_finish">Doppio tap per finire</string>
     <string name="long_process_title">processo in esecuzione lungo</string>
     <string name="high_quality_photo_notice">foto di rendering di alta qualità può richiedere molto tempo per calcolare, in alcuni casi più di un\'ora, si prega di essere consapevoli di questo.</string>
+    <string name="libraryDownLoadNotice">Questo file di libreria è ora scaricato, potrebbe richiedere un certo tempo, sarai notificato una volta scaricato e installato.</string>
+    <string name="libraryExistsLocal">Questa libreria esiste nei tuoi download, puoi importarla utilizzando l\'opzione Local.</string>
+    <string name="local">Locale</string>
+    <string name="pleaseSelectSh3f">Seleziona il file sh3f da importare</string>
+    <string name="pleaseSelectSh3t">Seleziona il file sh3t da importare</string>
+    <string name="helpRedirectNotice">Ti viene indirizzato al sistema di assistenza per applicazioni desktop Sweet Home 3D, non corrisponderà esattamente all\'interfaccia utente di Renovations 3D.</string>
 
 
 </resources>

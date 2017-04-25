@@ -19,9 +19,6 @@ Sử dụng trình duyệt để tải nhiều tập tin SH3D từ internet, H�
     <string name="catalogview_welcometext"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
 Ngoài ra bạn có thể nhấn lâu vào mục (không có kéo và thả).<br>
 Từ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu ...<br>
-Bạn có thể tải về nội thất và kết cấu các thư viện từ internet, bạn cần phải giải nén chúng có thể sử dụng một tập tin thám hiểm trước khi nhập khẩu.<br>
- </p><p>Hãy truy cập <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>Và <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Đây là một quan điểm của tất cả các đồ nội thất Hiện nay Đặt trên kế hoạch của bạn.<br>
@@ -68,5 +65,11 @@ Nếu bạn thấy một chế độ xem hỏng, vui lòng thử tùy chọn deo
     <string name="double_tap_finish">Nhấn đúp để kết thúc</string>
     <string name="long_process_title">Quá trình chạy dài</string>
     <string name="high_quality_photo_notice">Việc hiển thị hình ảnh chất lượng cao có thể mất một thời gian dài để tính toán, trong một số trường hợp hơn một giờ, hãy chú ý đến việc này.</string>
+    <string name="libraryDownLoadNotice">Tệp thư viện này hiện đang được tải xuống, quá trình này có thể mất một lúc, bạn sẽ được thông báo khi đã tải xuống và cài đặt.</string>
+    <string name="libraryExistsLocal">Thư viện này tồn tại trong các tệp tải xuống của bạn, bạn có thể nhập nó bằng tùy chọn Địa phương.</string>
+    <string name="local">Địa phương</string>
+    <string name="pleaseSelectSh3f">Vui lòng chọn tệp sh3f để nhập</string>
+    <string name="pleaseSelectSh3t">Vui lòng chọn tệp sh3t để nhập</string>
+    <string name="helpRedirectNotice">Bạn đang hướng tới hệ thống trợ giúp ứng dụng Sweet Home 3D, nó sẽ không khớp chính xác với giao diện người dùng Renovations 3D.</string>
 
 </resources>

@@ -1,0 +1,281 @@
+LICENSE
+
+This sh3f file is under the Creative Commons Attribution 3.0 license:
+
+http://creativecommons.org/licenses/by/3.0/
+
+
+"Yucca plant" by betomo16
+Replaced pot and trunk image textures by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/69456
+
+"WOODEN XYLOPHONE" by SonnySee
+http://www.blendswap.com/blends/view/73441
+
+"work bench" by victorbied. 
+Added CC-BY texture by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/78823
+
+"Low-Poly office phone" by DennisH2010
+http://www.blendswap.com/blends/view/69957
+
+"wire coathanger" by loopo
+http://www.blendswap.com/blends/view/50473
+
+"White lily" by Nmn9
+http://www.blendswap.com/blends/view/74582
+
+"Wheel Chair" by bgamage
+http://www.blendswap.com/blends/view/68885
+
+"Washing Machine" by Cattail
+http://www.blendswap.com/blends/view/12651
+
+"Bathroom-Suite-Cycles" by Jay-Artist
+http://www.blendswap.com/blends/view/24948
+
+"Bedroom furniture" by SirOccor
+http://www.blendswap.com/blends/view/58816
+
+"Country-Kitchen  Cycles" by Jay-Artist
+http://www.blendswap.com/blends/view/42851
+
+"Kitchen Nr 2" by oldtimer
+http://www.blendswap.com/blends/view/70272
+
+"Tv stand" by Leximumxii
+texture replaced by a CC-BY texture by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/69859
+
+"Tulip" by Nmn9
+http://www.blendswap.com/blends/view/74181
+
+"gym" by muhtesemozcinar
+http://www.blendswap.com/blends/view/74269
+
+"Toy Train" by RegusTtef
+http://www.blendswap.com/blends/view/73421
+
+"Bathroom-Suite-Cycles" by Jay-Artist
+http://www.blendswap.com/blends/view/24948
+
+"room thermometer-clock" by DennisH2010
+http://www.blendswap.com/blends/view/65114
+
+"Racket of Table Tennis" by BrunoMatheus
+http://www.blendswap.com/blends/view/49333
+
+"Table_tennice" by bheema
+http://www.blendswap.com/blends/view/68853
+
+"sun glasses" by krabz
+http://www.blendswap.com/blends/view/52807
+
+"Suitcases" by Pyrophorus
+http://www.blendswap.com/blends/view/70602
+
+"Men Suit" by rosenth
+http://www.blendswap.com/blends/view/24211
+
+"Succulent plant" by Nmn9
+http://www.blendswap.com/blends/view/74058
+
+"Spider Plant" by Nmn9
+http://www.blendswap.com/blends/view/74001
+
+"Living room plant" by heraSK
+http://www.blendswap.com/blends/view/72551
+
+"sofa e almofadas" by 3dModeling
+Simplified and CC-BY texture added by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/80671 
+
+"Basic modern livingroom" by Derte21
+https://www.blendswap.com/blends/view/71907
+
+"Bedroom furniture" by SirOccor
+http://www.blendswap.com/blends/view/58816
+
+"Lowpoly Siamese Cat" by Gwinna
+http://www.blendswap.com/blends/view/57118
+
+"Vault - cube" by bocko
+http://www.blendswap.com/blends/view/68016
+
+"Rubick s Cube" by farcgs
+http://www.blendswap.com/blends/view/40816
+
+"Heated towel rail"
+http://www.blendswap.com/blends/view/81301 
+
+"Low Poly Pool Lounge" by LarryStephenRobb
+http://www.blendswap.com/blends/view/63925
+
+"plaid chair" by Cezar 
+CC-BY texture modification by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/77791
+
+"vertical piano with material" by LVlittering
+http://www.blendswap.com/blends/view/41527
+
+"low poly office table" by Nmn9
+http://www.blendswap.com/blends/view/70974
+
+"Stylish MP3 station and radio" by TrueCryer
+http://www.blendswap.com/blends/view/78279
+
+""Any" size modern radiator" by ATSZGO
+http://www.blendswap.com/blends/view/78416
+
+"Handphone" by SONGKRO
+http://www.blendswap.com/blends/view/51692
+
+"Medium indoor plant" by betomo16
+http://www.blendswap.com/blends/view/69457
+
+"Lucky Bamboo" by renderbob
+http://www.blendswap.com/blends/view/51068
+
+"JOYstick packshot" by bjo.bernis
+http://www.blendswap.com/blends/view/67339
+
+"Cloud bed " by fabbyone
+modified by Emmanuel Puybaret / eTeks to add sheets coming from "furniture pack" model 
+http://www.blendswap.com/blends/view/69291
+
+"chair_leaf" by voodoc
+http://www.blendswap.com/blends/view/67190
+
+"Laptop" by Mayollo
+http://www.blendswap.com/blends/view/67749
+
+"Lamp with stone stand" by bulgakov
+Shader improvements and wood texture by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/51447
+
+"Kitchen Nr 2" by oldtimer
+http://www.blendswap.com/blends/view/70272
+
+"Kitchen Blender" by PrinterKiller
+http://www.blendswap.com/blends/view/41687
+
+"Bedroom furniture" by SirOccor
+modified by Emmanuel Puybaret / eTeks to add mattress and sheets borrowed from "furniture pack" model 
+http://www.blendswap.com/blends/view/58816
+
+"Horse" by b2przemo
+http://www.blendswap.com/blends/view/76528
+
+"Hamburger" by SaiZyca2
+http://www.blendswap.com/blends/view/75497
+
+"green stool" by dalenryder
+http://www.blendswap.com/blends/view/67517
+
+"Gifts" by tadine
+http://www.blendswap.com/blends/view/62886
+
+"High poly Fountain" by pndrdm 
+modified by Emmanuel Puybaret / eTeks (added CC-BY water and marble images)
+http://www.blendswap.com/blends/view/78775
+
+"ArmChairTripleJ" by tripleJ
+http://www.blendswap.com/blends/view/76009
+
+"Ford Focus" by Ruff
+Simplified by Emmanuel Puybaret / eTeks
+http://www.blendswap.com/blends/view/76275
+
+"Folding chair"
+http://www.blendswap.com/blends/view/82003
+
+"espressokettle" by krabz
+http://www.blendswap.com/blends/view/43646
+
+"Kitchen Chair" by sizzler
+http://www.blendswap.com/blends/view/40140
+
+"Arroyo lupine" by Nmn9
+http://www.blendswap.com/blends/view/73893
+
+"sofa+table+pillow" by nikitron
+http://www.blendswap.com/blends/view/6605
+
+"French Coffee Press" by cephei
+http://www.blendswap.com/blends/view/67141
+
+"Coffee Cups" by dzerbs
+http://www.blendswap.com/blends/view/67728
+
+"CocktailGlass" by xablend1122
+http://www.blendswap.com/blends/view/69572
+
+"Alarm clock" by krabz
+http://www.blendswap.com/blends/view/51645
+
+"Lecture seats"
+http://www.blendswap.com/blends/view/78934 
+
+"Chaild chair IKEA" by Radio_hate
+http://www.blendswap.com/blends/view/50221
+
+"Chest of drawers and cabinet" by elhzar
+http://www.blendswap.com/blends/view/72214
+
+"Chessboard" by swapnilrocks98
+http://www.blendswap.com/blends/view/73022
+
+"Deck Chair" by north.star
+http://www.blendswap.com/blends/view/41615
+
+"Wooden Car on the Shelf" by oldtimer
+http://www.blendswap.com/blends/view/66755
+
+"cafe_set_tonon" by voodoc
+http://www.blendswap.com/blends/view/67192
+
+"cafe_set_mota" by voodoc
+http://www.blendswap.com/blends/view/67194
+
+"Bunk Bed - Beliche" by NabHlEsCK
+modified by Emmanuel Puybaret / eTeks to add mattress and sheets borrowed from "furniture pack" model
+http://www.blendswap.com/blends/view/65551
+
+"Bulldog" by Priide
+http://www.blendswap.com/blends/view/53182
+
+"Boneco de neve" by zema
+http://www.blendswap.com/blends/view/72242
+
+"Desk" by hilux
+http://www.blendswap.com/blends/view/68337
+
+"Bike" by rodrigoalves123
+http://www.blendswap.com/blends/view/76279
+
+"Beer Bottle with label marker" by poifox
+http://www.blendswap.com/blends/view/68000
+
+"Bedroom furniture" by SirOccor
+http://www.blendswap.com/blends/view/58816
+
+"bath-units" by nikitron
+http://www.blendswap.com/blends/view/6601
+
+"Soccer ball." by DooL
+http://www.blendswap.com/blends/view/69175
+
+"unfinished backpack" by Jo.3D
+http://www.blendswap.com/blends/view/3424
+
+"Armchair" by aymanslman
+http://www.blendswap.com/blends/view/73558
+
+"Arbol de Navidad" by hermescn
+http://www.blendswap.com/blends/view/58510
+
+"gym" by muhtesemozcinar
+http://www.blendswap.com/blends/view/74269
+
+
+

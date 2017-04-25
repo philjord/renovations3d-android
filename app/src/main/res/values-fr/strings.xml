@@ -19,10 +19,7 @@ Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d
     <string name="catalogview_welcometext"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
 ou appuyez plus longuement sur ce meuble (il n\'y a de possibilité de glisser déposer les meubles dans le plan).<br>
 Vous pouvez importer des bibliothèques de meubles catalogue à partir de cette vue, sélectionnez Importer bibliothèque de meubles&#8230; dans le menu.<br>
-Vous pouvez aussi télécharger des bibliothèques de meubles et de textures à partir d\'Internet, et devrez éventuellement les décompresser en utilisant un explorateur de fichiers avant de les importer.<br>
-</p><p>Rendez-vous sur <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>et <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
-			     ]]></string>
+     ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Cette vue liste tous les meubles actuellement placés dans votre plan.<br>
 Pour l\'instant la seule fonction disponible permet de changer la visibilité des éléments.<br>
@@ -67,5 +64,11 @@ Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
     <string name="double_tap_finish">Double-cliquez pour finir</string>
     <string name="long_process_title">Processus à long terme</string>
     <string name="high_quality_photo_notice">Un rendu photo de haute qualité peut prendre beaucoup de temps pour calculer, dans certains cas, plus d\'une heure, soyez conscient de cela.</string>
+    <string name="libraryDownLoadNotice">Ce fichier de bibliothèque est en cours de téléchargement, cela peut prendre un certain temps, vous serez averti une fois qu\'il est téléchargé et installé.</string>
+    <string name="libraryExistsLocal">Cette bibliothèque existe dans vos téléchargements, vous pouvez l\'importer à l\'aide de l\'option Local.</string>
+    <string name="local">Local</string>
+    <string name="pleaseSelectSh3f">Sélectionnez le fichier sh3f à importer</string>
+    <string name="pleaseSelectSh3t">Sélectionnez le fichier sh3t à importer</string>
+    <string name="helpRedirectNotice">Vous êtes dirigé vers le système d\'aide aux applications de bureau Sweet Home 3D, il ne correspond pas exactement à l\'interface utilisateur Renovations 3D.</string>
 
 </resources>

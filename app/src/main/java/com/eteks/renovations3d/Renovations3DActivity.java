@@ -58,6 +58,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -450,21 +451,41 @@ public class Renovations3DActivity extends FragmentActivity
 
 				Renovations3DActivity.logFireBaseLevelUp("menu_help");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-				//TODO: externalize strings
-				dialog.setTitle("Notice");
-				dialog.setMessage(Html.fromHtml("This is the Sweet Home 3D desktop application's help system, it will not match exactly with Renovations 3D user interface"));
+				dialog.setMessage(getString(R.string.helpRedirectNotice));
 				dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{
 						dialog.dismiss();
-						//TODO: this is a short term fix, I need to make a Renovations 3D branded version of this site
-						Uri webpage = Uri.parse("http://www.sweethome3d.com/userGuide.jsp#drawingWalls");
-						//localize like so
-						// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
-						// String language = Locale.getDefault().getLanguage();
-						// fr etc
+
+						// build a localized version if possible
+						String language = Locale.getDefault().getLanguage();
+
+						// note in order
+						String [] localizedHelp = {
+								"bg",
+								"de",
+								"es",
+								"fr",
+								"it",
+								"pt",
+								"ru",
+								"th",
+								"zh-cn",
+								"zh-tw"
+								};
+
+						String urlStr = "http://www.sweethome3d.com";
+						if (Arrays.binarySearch(localizedHelp, language) >= 0)
+						{
+							// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
+							urlStr += "/" + language;
+						}
+
+						urlStr += "/userGuide.jsp#drawingWalls";
+						Uri webpage = Uri.parse(urlStr);
+
 
 						Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
 						if (intent.resolveActivity(getPackageManager()) != null)
@@ -759,7 +780,7 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 
-	BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver()
+	public BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver()
 	{
 		public void onReceive(Context ctxt, Intent intent)
 		{
@@ -826,37 +847,45 @@ public class Renovations3DActivity extends FragmentActivity
 	};
 
 
-	private void loadFile(File inFile)
+	private void loadFile(final File inFile)
 	{
-		/*
-		 I think I need to clean up any existing loading file now? don't I, coming in from a tap on teh internet
-		 seems to leave teh old home in place some how? wooooahh hold on
-
-		 If I come to a home form the internet I'm not reusing my current Activity at all!!!
-		 I've now got 2 activities running at the same time!!
-		 */
 		if (inFile.getName().toLowerCase().endsWith(".sh3d"))
 		{
 			loadHome(inFile);
 		}
-		else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
+		else
 		{
-			//TODO: not sure if this is needed? might start like this?
-			newHome();
-			HomeController controller = renovations3D.getHomeController();
-			if (controller != null)
+			//get off EDT so blocking questions can be asked
+			Thread t = new Thread()
 			{
-				controller.importFurnitureLibrary(inFile.getAbsolutePath());
-			}
-		}
-		else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
-		{
-			newHome();
-			HomeController controller2 = renovations3D.getHomeController();
-			if (controller2 != null)
-			{
-				controller2.importTexturesLibrary(inFile.getAbsolutePath());
-			}
+				public void run()
+				{
+					if (inFile.getName().toLowerCase().endsWith(".sh3f"))
+					{
+						if (renovations3D.getHomeController() == null)
+							newHome();
+
+						HomeController controller = renovations3D.getHomeController();
+						if (controller != null)
+						{
+							controller.importFurnitureLibrary(inFile.getAbsolutePath());
+						}
+					}
+					else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
+					{
+						if (renovations3D.getHomeController() == null)
+							newHome();
+
+						HomeController controller = renovations3D.getHomeController();
+						if (controller != null)
+						{
+
+							controller.importTexturesLibrary(inFile.getAbsolutePath());
+						}
+					}
+				}
+			};
+			t.start();
 		}
 	}
 
@@ -1056,7 +1085,6 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 			else
 			{
-				Region r;
 				//This is where we open the temp file that was last used
 				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
 				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);

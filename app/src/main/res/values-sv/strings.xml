@@ -20,11 +20,7 @@ Använd din webbläsare för att ladda ner fler SH3D filer från Internet, komme
     <string name="catalogview_welcometext"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
 Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).<br>
 Från denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek ...<br>
-Du kan ladda ner möbler och textur bibliotek från Internet, måste du packa upp dem Kan med hjälp av en filhanterare innan du importerar dem.<br>
-</p><p>Vänligen besök
-              <br><a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>och <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
-			     ]]>\n</string>
+	     ]]>\n</string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Detta är en bild av alla möbler närvarande Placerad på din plan.<br>
 För nu den enda funktion du kan göra här är att ändra ett objekt synlighet.<br>
@@ -71,5 +67,11 @@ Om du ser en korrumperad syn, försök alternativet deoptomize i menyn. <br>
     <string name="double_tap_finish">Dubbeltryck för att avsluta</string>
     <string name="long_process_title">Långdragna process</string>
     <string name="high_quality_photo_notice">Hög kvalitet foto rendering kan ta lång tid att beräkna, i vissa fall mer än en timme, du vara medveten om detta.</string>
+    <string name="libraryDownLoadNotice">Den här biblioteksfilen hämtas nu, det kan ta lite tid, du kommer att bli underrättad när den har laddats ner och installerats.</string>
+    <string name="libraryExistsLocal">Det här biblioteket finns i dina nedladdningar, du kan importera det med hjälp av alternativet Lokalt.</string>
+    <string name="local">Lokal</string>
+    <string name="pleaseSelectSh3f">Var god välj sh3f-fil som ska importeras</string>
+    <string name="pleaseSelectSh3t">Var god välj sh3t-fil som ska importeras</string>
+    <string name="helpRedirectNotice">Du riktas till hjälpsystemet för Sweet Home 3D, det matchar inte exakt med Renovations 3D användargränssnitt.</string>
 
 </resources>

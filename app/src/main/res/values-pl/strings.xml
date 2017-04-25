@@ -19,9 +19,6 @@ Za pomocą przeglądarki, aby pobrać więcej plików SH3D z internetu, będą o
     <string name="catalogview_welcometext"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
 Możesz również nacisnąć długi element (nie ma przeciągania i upuszczania).<br>
 Z tego punktu widzenia można importować katalog biblioteki mebli, wybierz Menu-> biblioteki importu mebli ...<br>
-Można pobrać bibliotek mebli i tekstury z Internetu, trzeba rozpakować nich może za pomocą eksploratora plików przed ich importem.<br>
-<p>Odwiedź <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-			  <br>i <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a>
 			     ]]>\n</string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 To jest widok wszystkich mebli Obecnie umieszczone na planie.<br>
@@ -68,5 +65,11 @@ Jeśli widzisz uszkodzony widok, spróbuj skorzystać z opcji deoptomize w menu.
     <string name="double_tap_finish">Kliknij dwukrotnie, aby zakończyć</string>
     <string name="long_process_title">Długi proces</string>
     <string name="high_quality_photo_notice">Wysoka jakość renderowania zdjęć może zająć dużo czasu, aby obliczyć, w niektórych przypadkach ponad godzinę, pamiętaj o tym.</string>
+    <string name="libraryDownLoadNotice">Ten plik biblioteki jest teraz pobierany, co może zająć trochę czasu, zostanie ono powiadomione po jej pobraniu i zainstalowaniu.</string>
+    <string name="libraryExistsLocal">Ta biblioteka istnieje w plikach do pobrania, można je zaimportować za pomocą opcji Lokalny.</string>
+    <string name="local">Lokalny</string>
+    <string name="pleaseSelectSh3f">Proszę wybrać plik sh3f do zaimportowania</string>
+    <string name="pleaseSelectSh3t">Proszę wybrać plik sh3t do zaimportowania</string>
+    <string name="helpRedirectNotice">Jesteście skierowani do systemu pomocniczego aplikacji Sweet Home 3D, nie pasuje dokładnie do interfejsu użytkownika Renovations 3D.</string>
 
 </resources>

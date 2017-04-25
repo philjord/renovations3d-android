@@ -1,12 +1,24 @@
 package com.eteks.renovations3d.android;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Environment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,16 +29,21 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JOptionPane;
+import com.eteks.sweethome3d.model.Camera;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 
 import com.eteks.sweethome3d.model.FurnitureCatalog;
 import com.eteks.sweethome3d.model.FurnitureCategory;
+import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
+import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -40,6 +57,11 @@ import com.mindblowing.renovations3d.R;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
 
@@ -62,6 +84,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 {
 	public static final String WELCOME_SCREEN_UNWANTED = "CATALOG_WELCOME_SCREEN_UNWANTED";
 
+	private static String localString = "Local";
 
 	// if we are not intialized then ignore onCreateViews
 	private boolean initialized = false;
@@ -89,7 +112,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	{
 
 		View rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
-		if(initialized)
+		if (initialized)
 		{
 			this.setHasOptionsMenu(true);
 
@@ -147,7 +170,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	{
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wat until we have an activity
-		if(isVisibleToUser && getActivity() != null)
+		if (isVisibleToUser && getActivity() != null)
 			JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
 	}
 
@@ -157,11 +180,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		super.onDestroy();
 	}
 
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
 		inflater.inflate(R.menu.furniture_cat_list_menu, menu);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
+
+
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
@@ -171,52 +197,270 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE_LIBRARY.Name"));
 		menu.findItem(R.id.import_texture_lib).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_TEXTURES_LIBRARY.Name"));
+
+
+		localString = getActivity().getString(R.string.local);
+
+		updateImportSubMenus(menu.findItem(R.id.import_furniture_lib), menu.findItem(R.id.import_texture_lib),
+				((Renovations3DActivity) getActivity()).renovations3D.getHomeController());
+
 		super.onPrepareOptionsMenu(menu);
 	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case R.id.furnitureAdd:
-					addFurniture();
-				return true;
-			case R.id.import_furniture_lib:
-				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3f file to import" , Toast.LENGTH_LONG).show();
-				Thread t2 = new Thread(){public void run(){
-					HomeController controller = ((Renovations3DActivity)FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
-					if(controller != null)
-					{
-						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
-						//controller.importFurnitureLibrary();
-						String furnitureLibraryName = controller.getView().showImportFurnitureLibraryDialog();
-						if(furnitureLibraryName != null) {
-							controller.importFurnitureLibrary(furnitureLibraryName);
-							Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", furnitureLibraryName);
-						}
-					}}};
-				t2.start();
-				return true;
-			case R.id.import_texture_lib:
-				Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), "Please select sh3t file to import" , Toast.LENGTH_LONG).show();
-				Thread t3 = new Thread(){public void run(){
-					HomeController controller2 = ((Renovations3DActivity)FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
-					if(controller2 != null)
-					{
-						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
-						//	controller.importTexturesLibrary();
 
-						String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
-						if(texturesLibraryName != null) {
-							controller2.importTexturesLibrary(texturesLibraryName);
-							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", texturesLibraryName);
-						}
-					}
-				}};
-				t3.start();
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getGroupId() == MENU_IMPORT_FURNITURE || item.getGroupId() == MENU_IMPORT_TEXTURE)
+		{
+			String importName = item.getTitle().toString();
+
+			if (importName.equals(localString))
+			{
+				if (item.getGroupId() == MENU_IMPORT_FURNITURE)
+				{
+					importFurnitureLibrary();
+				}
+				else
+				{
+					importTextureLibrary();
+				}
 				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+			}
+
+
+			for (ImportInfo importInfo : importInfos)
+			{
+				if (importInfo.label.equals(importName))
+				{
+					importLibrary(importInfo, item);
+					return true;
+				}
+			}
 		}
+		else
+		{
+			// Handle item selection
+			switch (item.getItemId())
+			{
+				case R.id.furnitureAdd:
+					addFurniture();
+					return true;
+				default:
+					return super.onOptionsItemSelected(item);
+			}
+		}
+		return false;
+	}
+
+	private void importLibrary(ImportInfo importInfo, MenuItem menuItem)
+	{
+		if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), importInfo.libraryName).exists()))
+		{
+			menuItem.setEnabled(false);
+
+			String url = importInfo.url;
+			String fileName = importInfo.libraryName;
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+			request.setDescription(fileName + " download");
+			request.setTitle(fileName);
+			// in order for this if to run, you must use the android 3.2 to compile your app
+			request.allowScanningByMediaScanner();
+			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+			request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+			// get download service and enqueue file
+			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+			manager.enqueue(request);
+			Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+
+			getActivity().registerReceiver(((Renovations3DActivity) getActivity()).onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+			// now present the notice about length and the license info
+			final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setPositiveButton(close, null);
+
+			String libraryDownLoadNotice = getActivity().getString(R.string.libraryDownLoadNotice);
+			String license = "";
+			if(importInfo.license != null)
+			{
+				try
+				{
+					AssetManager am = getActivity().getAssets();
+					InputStream is = am.open("licenses/" + importInfo.license);
+					BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+					String line;
+					while ((line = reader.readLine()) != null)
+					{
+						license += line + System.getProperty("line.separator");
+					}
+					reader.close();
+				}
+				catch (IOException ioe)
+				{
+					ioe.printStackTrace();
+				}
+			}
+
+			ScrollView scrollView = new ScrollView(getActivity());
+			TextView textView = new TextView(getActivity());
+			textView.setPadding(10,10,10,10);
+			textView.setText(libraryDownLoadNotice + "\n\n" + license);
+			scrollView.addView(textView);
+			builder.setView(scrollView);
+			AlertDialog dialog = builder.create();
+			dialog.show();
+		}
+		else
+		{
+			Toast.makeText(getActivity(), getActivity().getString(R.string.libraryExistsLocal), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	enum ImportType
+	{
+		FURNITURE, TEXTURE
+	}
+
+	;
+
+	class ImportInfo
+	{
+		public ImportType type;
+		String id = "";
+		public String label = "";
+		public String libraryName = "";
+		public String license = "";
+		public String url;
+
+		public ImportInfo(ImportType type, String id, String label, String libraryName, String license, String url)
+		{
+			this.id = id;
+			this.type = type;
+			this.label = label;
+			this.libraryName = libraryName;
+			this.license = license;
+			this.url = url;
+		}
+	}
+
+	ImportInfo[] importInfos = new ImportInfo[]{
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-0-Models", "BlendSwap-CC-0", "BlendSwap-CC-0.sh3f", null,
+					"https://dl.dropboxusercontent.com/s/we0yep4m0nxu5xw/BlendSwap-CC-0.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-BY-Models-v2", "BlendSwap-CC-BY-v2", "BlendSwap-CC-BY-v2.sh3f", "ALL_LICENSEBlendSwap-CC-BY-v2.TXT",
+					"https://dl.dropboxusercontent.com/s/o4u6yy5ylxgmdl3/BlendSwap-CC-BY-v2.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ContributionsModels", "Contributions", "Contributions.sh3f", "ALL_LICENSEContributions.TXT",
+					"https://dl.dropboxusercontent.com/s/glz7vsr04yzszro/Contributions.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#KatorLegazModels", "KatorLegaz", "KatorLegaz.sh3f", "ALL_LICENSEKatorLegaz.TXT",
+					"https://dl.dropboxusercontent.com/s/ppzfsl6uldqfxy1/KatorLegaz.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#LucaPresidenteModels", "LucaPresidente", "LucaPresidente.sh3f", "ALL_LICENSELucaPresidente.TXT",
+					"https://dl.dropboxusercontent.com/s/a7jcxe0xdtkhw9b/LucaPresidente.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ReallusionModels", "Reallusion", "Reallusion.sh3f", "ALL_LICENSEReallusion.TXT",
+					"https://dl.dropboxusercontent.com/s/xrnt81rpke271jo/Reallusion.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ScopiaModels", "Scopia", "Scopia.sh3f", "ALL_LICENSEScopia.TXT",
+					"https://dl.dropboxusercontent.com/s/ij2ly5qrau9t4la/Scopia.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "Local_Furniture", "Local", null, null, null),
+			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#ContributionsTextures", "TextureContributions", "TextureContributions.sh3t", "ALL_LICENSETextureContributions.TXT",
+					"https://dl.dropboxusercontent.com/s/smlz0f6rwowc1gp/TextureContributions.sh3t"),
+			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#eTeksScopiaTextures", "eTeksScopia", "eTeksScopia.sh3t", "ALL_LICENSEeTeksScopia.TXT",
+					"https://dl.dropboxusercontent.com/s/5b6b0kkwlu48kui/eTeksScopia.sh3t"),
+			new ImportInfo(ImportType.TEXTURE, "Local_Texture", "Local", null, null, null),
+	};
+
+	private static int MENU_IMPORT_FURNITURE = 10;
+	private static int MENU_IMPORT_TEXTURE = 11;
+
+
+	private void updateImportSubMenus(MenuItem furnitureMenu,
+									  MenuItem textureMenu,
+									  final HomeController controller)
+	{
+		furnitureMenu.getSubMenu().clear();
+		textureMenu.getSubMenu().clear();
+		List<Library> libs = ((Renovations3DActivity) getActivity()).renovations3D.getUserPreferences().getLibraries();
+
+		int menuId = Menu.FIRST;
+		for (ImportInfo importInfo : importInfos)
+		{
+			if( importInfo.id.equals("Local_Furniture") || importInfo.id.equals("Local_Texture"))
+				importInfo.label = localString;
+
+			if (importInfo.type == ImportType.FURNITURE)
+			{
+				boolean enable = true;
+				for (Library lib : libs)
+				{
+					if (lib.getId().equals(importInfo.id))
+					{
+						enable = false;
+						break;
+					}
+				}
+
+				MenuItem menuitem = furnitureMenu.getSubMenu().add(MENU_IMPORT_FURNITURE, menuId++, Menu.NONE, importInfo.label);
+				menuitem.setEnabled(enable);
+			}
+			else
+			{
+				textureMenu.getSubMenu().add(MENU_IMPORT_TEXTURE, menuId++, Menu.NONE, importInfo.label);
+			}
+		}
+	}
+
+	private void importTextureLibrary()
+	{
+
+		Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), getActivity().getString(R.string.pleaseSelectSh3t) , Toast.LENGTH_LONG).show();
+		Thread t3 = new Thread()
+		{
+			public void run()
+			{
+				HomeController controller2 = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+				if (controller2 != null)
+				{
+					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
+					//	controller.importTexturesLibrary();
+
+					String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
+					if (texturesLibraryName != null)
+					{
+						controller2.importTexturesLibrary(texturesLibraryName);
+						Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", texturesLibraryName);
+						getActivity().invalidateOptionsMenu();
+					}
+				}
+			}
+		};
+		t3.start();
+	}
+
+	private void importFurnitureLibrary()
+	{
+		// so this business is only when the dialog last "Other" item is selected
+		Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), getActivity().getString(R.string.pleaseSelectSh3f) , Toast.LENGTH_LONG).show();
+		Thread t2 = new Thread()
+		{
+			public void run()
+			{
+				HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+				if (controller != null)
+				{
+					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
+					//controller.importFurnitureLibrary();
+					String furnitureLibraryName = controller.getView().showImportFurnitureLibraryDialog();
+					if (furnitureLibraryName != null)
+					{
+						controller.importFurnitureLibrary(furnitureLibraryName);
+						Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", furnitureLibraryName);
+						getActivity().invalidateOptionsMenu();
+					}
+				}
+			}
+		};
+		t2.start();
 	}
 
 	private void addFurniture()
@@ -225,14 +469,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
 			al.add(selectedFiv.getCatalogPieceOfFurniture());
-			HomeController homeController = ((Renovations3DActivity)getActivity()).renovations3D.getHomeController();
+			HomeController homeController = ((Renovations3DActivity) getActivity()).renovations3D.getHomeController();
 			homeController.getFurnitureCatalogController().setSelectedFurniture(al);
 			homeController.addHomeFurniture();
 
 			Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
 
-			Toast.makeText(getActivity(), "Furniture added" , Toast.LENGTH_SHORT).show();
-			((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
+			((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(1, true);
 		}
 	}
 
@@ -242,41 +485,46 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	{
 		private Context mContext;
 
-		public ImageAdapter(Context c) {
-				mContext = c;
+		public ImageAdapter(Context c)
+		{
+			mContext = c;
 		}
 
-		public int getCount() {
+		public int getCount()
+		{
 			return catalogListModel.getSize();
 		}
 
-		public Object getItem(int position) {
-			return   catalogListModel.getElementAt(position);
+		public Object getItem(int position)
+		{
+			return catalogListModel.getElementAt(position);
 		}
 
-		public long getItemId(int position) {
+		public long getItemId(int position)
+		{
 			return 0;
 		}
 
 		// create a new ImageView for each item referenced by the Adapter
-		public View getView(int position, View convertView, ViewGroup parent) {
-			  CatalogPieceOfFurniture  catalogPieceOfFurniture  = (CatalogPieceOfFurniture) catalogListModel.getElementAt(position);
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			CatalogPieceOfFurniture catalogPieceOfFurniture = (CatalogPieceOfFurniture) catalogListModel.getElementAt(position);
 			ImageView imageView;
 			//can't recycle as the furniture catalog is wrong
 			//if (convertView == null) {
-				// if it's not recycled, initialize some attributes
-				imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
+			// if it's not recycled, initialize some attributes
+			imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
 
-				imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx +10, iconHeightPx +10));
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(8, 8, 8, 8);
-				imageView.setBackgroundColor(Color.WHITE);
-				//int DEFAULT_ICON_HEIGHT = 80;//see below
-				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
-				if(icon instanceof ImageIcon)
-				{
-					imageView.setImageBitmap(((Bitmap) ((ImageIcon)icon).getImage().getDelegate()));
-				}
+			imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx + 10, iconHeightPx + 10));
+			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			imageView.setPadding(8, 8, 8, 8);
+			imageView.setBackgroundColor(Color.WHITE);
+			//int DEFAULT_ICON_HEIGHT = 80;//see below
+			Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
+			if (icon instanceof ImageIcon)
+			{
+				imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+			}
 			//} else {
 			//	imageView = (ImageView) convertView;
 			//}
@@ -290,7 +538,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	class FurnitureImageView extends android.support.v7.widget.AppCompatImageView
 	{
 		private CatalogPieceOfFurniture catalogPieceOfFurniture;
-		public FurnitureImageView(Context c,  CatalogPieceOfFurniture catalogPieceOfFurniture )
+
+		public FurnitureImageView(Context c, CatalogPieceOfFurniture catalogPieceOfFurniture)
 		{
 			super(c);
 			this.catalogPieceOfFurniture = catalogPieceOfFurniture;
@@ -309,7 +558,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			// note +5 because icon is smaller than grid size
 			canvas.drawText(catalogPieceOfFurniture.getName(), 10, iconHeightPx + 5, mTextPaint);
 		}
-	};
+	}
+
+	;
 
 	private FurnitureCatalogListModel catalogListModel;
 
@@ -344,8 +595,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	 */
 	private void createComponents(FurnitureCatalog catalog,
 								  final UserPreferences preferences,
-								  final FurnitureCatalogController controller) {
-		    catalogListModel = new FurnitureCatalogListModel(catalog);
+								  final FurnitureCatalogController controller)
+	{
+		catalogListModel = new FurnitureCatalogListModel(catalog);
 
 		//headerView
 
@@ -519,40 +771,50 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		catalog.addFurnitureListener(preferencesChangeListener);
 	}
 
-/**
- * Language and catalog listener bound to this component with a weak reference to avoid
- * strong link between preferences and this component.
- */
-private static class PreferencesChangeListener implements PropertyChangeListener, CollectionListener<CatalogPieceOfFurniture> {
-	private final WeakReference<FurnitureCatalogListPanel> furnitureCatalogPanel;
+	/**
+	 * Language and catalog listener bound to this component with a weak reference to avoid
+	 * strong link between preferences and this component.
+	 */
+	private static class PreferencesChangeListener implements PropertyChangeListener, CollectionListener<CatalogPieceOfFurniture>
+	{
+		private final WeakReference<FurnitureCatalogListPanel> furnitureCatalogPanel;
 
-	public PreferencesChangeListener(FurnitureCatalogListPanel furnitureCatalogPanel) {
-		this.furnitureCatalogPanel = new WeakReference<FurnitureCatalogListPanel>(furnitureCatalogPanel);
-	}
+		public PreferencesChangeListener(FurnitureCatalogListPanel furnitureCatalogPanel)
+		{
+			this.furnitureCatalogPanel = new WeakReference<FurnitureCatalogListPanel>(furnitureCatalogPanel);
+		}
 
-	public void propertyChange(PropertyChangeEvent ev) {
-		// If panel was garbage collected, remove this listener from preferences
-		FurnitureCatalogListPanel furnitureCatalogPanel = this.furnitureCatalogPanel.get();
-		UserPreferences preferences = (UserPreferences)ev.getSource();
-		if (furnitureCatalogPanel == null) {
-			preferences.removePropertyChangeListener(UserPreferences.Property.LANGUAGE, this);
-		} else {
+		public void propertyChange(PropertyChangeEvent ev)
+		{
+			// If panel was garbage collected, remove this listener from preferences
+			FurnitureCatalogListPanel furnitureCatalogPanel = this.furnitureCatalogPanel.get();
+			UserPreferences preferences = (UserPreferences) ev.getSource();
+			if (furnitureCatalogPanel == null)
+			{
+				preferences.removePropertyChangeListener(UserPreferences.Property.LANGUAGE, this);
+			}
+			else
+			{
 /*			furnitureCatalogPanel.categoryFilterLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 					FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
 			furnitureCatalogPanel.searchLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 					FurnitureCatalogListPanel.class, "searchLabel.text"));*/
-			furnitureCatalogPanel.setMnemonics(preferences);
-			// Categories listed in combo box are updated through collectionChanged
+				furnitureCatalogPanel.setMnemonics(preferences);
+				// Categories listed in combo box are updated through collectionChanged
+			}
 		}
-	}
 
-	public void collectionChanged(CollectionEvent<CatalogPieceOfFurniture> ev) {
-		// If panel was garbage collected, remove this listener from catalog
-		FurnitureCatalogListPanel furnitureCatalogPanel = this.furnitureCatalogPanel.get();
-		FurnitureCatalog catalog = (FurnitureCatalog)ev.getSource();
-		if (furnitureCatalogPanel == null) {
-			catalog.removeFurnitureListener(this);
-		} else {
+		public void collectionChanged(CollectionEvent<CatalogPieceOfFurniture> ev)
+		{
+			// If panel was garbage collected, remove this listener from catalog
+			FurnitureCatalogListPanel furnitureCatalogPanel = this.furnitureCatalogPanel.get();
+			FurnitureCatalog catalog = (FurnitureCatalog) ev.getSource();
+			if (furnitureCatalogPanel == null)
+			{
+				catalog.removeFurnitureListener(this);
+			}
+			else
+			{
 /*			DefaultComboBoxModel model =
 					(DefaultComboBoxModel)furnitureCatalogPanel.categoryFilterComboBox.getModel();
 			FurnitureCategory category = ev.getItem().getCategory();
@@ -563,9 +825,9 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 			} else if (model.getIndexOf(category) == -1) {
 				model.insertElementAt(category, categories.indexOf(category) + 1);
 			}*/
+			}
 		}
 	}
-}
 
 	/**
 	 * Adds mouse listeners that will select only the piece under mouse cursor in the furniture list
@@ -691,7 +953,8 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	/**
 	 * Sets components mnemonics and label / component associations.
 	 */
-	private void setMnemonics(UserPreferences preferences) {
+	private void setMnemonics(UserPreferences preferences)
+	{
 /*		if (!OperatingSystem.isMacOSX()) {
 			this.categoryFilterLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
 					FurnitureCatalogListPanel.class, "categoryFilterLabel.mnemonic")).getKeyCode());
@@ -705,7 +968,8 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	/**
 	 * Layouts the components displayed by this panel.
 	 */
-	private void layoutComponents() {
+	private void layoutComponents()
+	{
 /*		int labelAlignment = OperatingSystem.isMacOSX()
 				? GridBagConstraints.LINE_END
 				: GridBagConstraints.LINE_START;
@@ -796,9 +1060,12 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	 * Adds the listeners that manage selection synchronization in this tree.
 	 */
 	private void addSelectionListeners(final FurnitureCatalog catalog,
-									   final FurnitureCatalogController controller) {
-		final SelectionListener modelSelectionListener = new SelectionListener() {
-			public void selectionChanged(SelectionEvent selectionEvent) {
+									   final FurnitureCatalogController controller)
+	{
+		final SelectionListener modelSelectionListener = new SelectionListener()
+		{
+			public void selectionChanged(SelectionEvent selectionEvent)
+			{
 				updateListSelectedFurniture(catalog, controller);
 			}
 		};
@@ -819,7 +1086,8 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	 * Updates selected items in list from <code>controller</code> selected furniture.
 	 */
 	private void updateListSelectedFurniture(FurnitureCatalog catalog,
-											 FurnitureCatalogController controller) {
+											 FurnitureCatalogController controller)
+	{
 /*		if (this.listSelectionListener != null) {
 			this.catalogFurnitureList.getSelectionModel().removeListSelectionListener(this.listSelectionListener);
 		}
@@ -998,87 +1266,88 @@ private static class PreferencesChangeListener implements PropertyChangeListener
 	}
 }*/
 
-/**
- * List model adaptor to CatalogPieceOfFurniture instances of catalog.
- */
-private class FurnitureCatalogListModel
-{//extends AbstractListModel {
-	private FurnitureCatalog catalog;
-	private List<CatalogPieceOfFurniture> furniture;
-	private FurnitureCategory filterCategory;
-	private String filterText;
+	/**
+	 * List model adaptor to CatalogPieceOfFurniture instances of catalog.
+	 */
+	private class FurnitureCatalogListModel
+	{//extends AbstractListModel {
+		private FurnitureCatalog catalog;
+		private List<CatalogPieceOfFurniture> furniture;
+		private FurnitureCategory filterCategory;
+		private String filterText;
 
-	public FurnitureCatalogListModel(FurnitureCatalog catalog)
-	{
-		this.catalog = catalog;
-		this.filterText = "";
-		catalog.addFurnitureListener(new FurnitureCatalogListener(this));
-	}
-
-	public void setFilterCategory(FurnitureCategory filterCategory)
-	{
-		this.filterCategory = filterCategory;
-		resetFurnitureList();
-	}
-
-	public void setFilterText(String filterText)
-	{
-		this.filterText = filterText;
-		resetFurnitureList();
-	}
-
-	public Object getElementAt(int index)
-	{
-		checkFurnitureList();
-		return this.furniture.get(index);
-	}
-
-	public int getSize()
-	{
-		checkFurnitureList();
-		return this.furniture.size();
-	}
-
-	private void resetFurnitureList()
-	{
-		if (this.furniture != null)
+		public FurnitureCatalogListModel(FurnitureCatalog catalog)
 		{
-			this.furniture = null;
-			EventQueue.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					//fireContentsChanged(this, -1, -1);
-					// called in cases like where language changes or perhaps catalog imported
-					gridView.setAdapter(new ImageAdapter(FurnitureCatalogListPanel.this.getContext()));
-					FurnitureCatalogListPanel.this.getView().postInvalidate();
-				}
-			});
+			this.catalog = catalog;
+			this.filterText = "";
+			catalog.addFurnitureListener(new FurnitureCatalogListener(this));
 		}
-	}
 
-	private void checkFurnitureList()
-	{
-		if (this.furniture == null)
+		public void setFilterCategory(FurnitureCategory filterCategory)
 		{
-			this.furniture = new ArrayList<CatalogPieceOfFurniture>();
-			this.furniture.clear();
-			for (FurnitureCategory category : this.catalog.getCategories())
+			this.filterCategory = filterCategory;
+			resetFurnitureList();
+		}
+
+		public void setFilterText(String filterText)
+		{
+			this.filterText = filterText;
+			resetFurnitureList();
+		}
+
+		public Object getElementAt(int index)
+		{
+			checkFurnitureList();
+			return this.furniture.get(index);
+		}
+
+		public int getSize()
+		{
+			checkFurnitureList();
+			return this.furniture.size();
+		}
+
+		private void resetFurnitureList()
+		{
+			if (this.furniture != null)
 			{
-				for (CatalogPieceOfFurniture piece : category.getFurniture())
+				this.furniture = null;
+				EventQueue.invokeLater(new Runnable()
 				{
-					if ((this.filterCategory == null
-							|| piece.getCategory().equals(this.filterCategory))
-							&& piece.matchesFilter(this.filterText))
+					public void run()
 					{
-						furniture.add(piece);
+						//fireContentsChanged(this, -1, -1);
+						// called in cases like where language changes or perhaps catalog imported
+						gridView.setAdapter(new ImageAdapter(FurnitureCatalogListPanel.this.getContext()));
+						FurnitureCatalogListPanel.this.getView().postInvalidate();
+					}
+				});
+			}
+		}
+
+		private void checkFurnitureList()
+		{
+			if (this.furniture == null)
+			{
+				this.furniture = new ArrayList<CatalogPieceOfFurniture>();
+				this.furniture.clear();
+				for (FurnitureCategory category : this.catalog.getCategories())
+				{
+					for (CatalogPieceOfFurniture piece : category.getFurniture())
+					{
+						if ((this.filterCategory == null
+								|| piece.getCategory().equals(this.filterCategory))
+								&& piece.matchesFilter(this.filterText))
+						{
+							furniture.add(piece);
+						}
 					}
 				}
+				Collections.sort(this.furniture);
 			}
-			Collections.sort(this.furniture);
 		}
 	}
-}
+
 	/**
 	 * Catalog furniture listener bound to this list model with a weak reference to avoid
 	 * strong link between catalog and this list.
@@ -1087,17 +1356,22 @@ private class FurnitureCatalogListModel
 	{
 		private WeakReference<FurnitureCatalogListModel> listModel;
 
-		public FurnitureCatalogListener(FurnitureCatalogListModel catalogListModel) {
+		public FurnitureCatalogListener(FurnitureCatalogListModel catalogListModel)
+		{
 			this.listModel = new WeakReference<FurnitureCatalogListModel>(catalogListModel);
 		}
 
-		public void collectionChanged(CollectionEvent<CatalogPieceOfFurniture> ev) {
+		public void collectionChanged(CollectionEvent<CatalogPieceOfFurniture> ev)
+		{
 			// If catalog list model was garbage collected, remove this listener from catalog
 			FurnitureCatalogListModel listModel = this.listModel.get();
-			FurnitureCatalog catalog = (FurnitureCatalog)ev.getSource();
-			if (listModel == null) {
+			FurnitureCatalog catalog = (FurnitureCatalog) ev.getSource();
+			if (listModel == null)
+			{
 				catalog.removeFurnitureListener(this);
-			} else {
+			}
+			else
+			{
 				listModel.resetFurnitureList();
 			}
 		}

@@ -19,9 +19,6 @@ Internetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın
     <string name="catalogview_welcometext"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
 Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).<br>
 Bu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...<br>
-Eğer internetten mobilya ve doku kütüphanelerini indirebilirsiniz, onları aktarmadan önce bir dosya gezgini kullanarak Mayıs halletmek gerekir.<br>
-<p>Lütfen, <a href="http://www.sweethome3d.com/importModels.jsp">http://www.sweethome3d.com/importModels</a>
-	<br>ve <a href="http://www.sweethome3d.com/importTextures.jsp">http://www.sweethome3d.com/importTextures</a> adresini
 	   ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.<br>
@@ -67,5 +64,11 @@ Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini d
     <string name="double_tap_finish">Bitirmek için iki kez hafifçe dokunun</string>
     <string name="long_process_title">Uzun süren süreç</string>
     <string name="high_quality_photo_notice">Yüksek kaliteli fotoğraf işleme, hesaplama uzun sürebilir, bazı durumlarda bir saatten daha uzun sürebilir, lütfen bunun farkında olun.</string>
+    <string name="libraryDownLoadNotice">Bu kütüphane dosyası şimdi indiriliyor, bu biraz zaman alabilir, indirildikten ve yüklendikten sonra bilgilendirileceksiniz.</string>
+    <string name="libraryExistsLocal">Bu kütüphane sitelerinizde bulunur, Yerel seçeneğini kullanarak içe aktarabilirsiniz.</string>
+    <string name="local">Yerel</string>
+    <string name="pleaseSelectSh3f">Lütfen içe aktarmak için sh3f dosyasını seçin</string>
+    <string name="pleaseSelectSh3t">Lütfen içe aktarmak için sh3t dosyasını seçin</string>
+    <string name="helpRedirectNotice">Sweet Home 3D masaüstü uygulama yardım sistemine yönlendiriliyorsunuz, Renovations 3D kullanıcı arayüzüyle tam olarak eşleşmiyor.</string>
 
 </resources>
