@@ -1,9 +1,7 @@
 package com.eteks.renovations3d.android;
 
 import android.content.res.Configuration;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -25,6 +23,7 @@ import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
+import com.eteks.renovations3d.androidonly.LevelSpinnerControl;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;

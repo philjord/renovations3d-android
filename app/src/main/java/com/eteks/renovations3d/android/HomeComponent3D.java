@@ -723,6 +723,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 		return true;
 	}
+
 	private void setIconFromSelector(MenuItem item, int resId)
 	{
 		StateListDrawable stateListDrawable = (StateListDrawable) ContextCompat.getDrawable(getContext(), resId);

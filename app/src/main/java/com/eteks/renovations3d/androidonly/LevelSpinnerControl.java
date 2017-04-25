@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.android;
+package com.eteks.renovations3d.androidonly;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.mindblowing.renovations3d.R;
