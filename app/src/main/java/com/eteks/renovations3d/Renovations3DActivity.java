@@ -933,12 +933,10 @@ public class Renovations3DActivity extends FragmentActivity
 					DownloadManager.Request request = new DownloadManager.Request(uri);
 					request.setDescription(fileName + "_download");
 					request.setTitle(fileName);
-					// in order for this if to run, you must use the android 3.2 to compile your app
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-					{
-						request.allowScanningByMediaScanner();
-						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-					}
+
+					request.allowScanningByMediaScanner();
+					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
 					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
 					// get download service and enqueue file
@@ -989,66 +987,62 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 
 
-		// download managers only appeared in ginger bread
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+
+		// now download the files from drop box
+		// folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";
+
+		//https://www.dropbox.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d?dl=0
+		//https://www.dropbox.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d?dl=0
+
+		// notice the files actual url not the sexy page offering the file
+		String[] urls = new String[]{
+				"https://dl.dropboxusercontent.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d",
+				"https://dl.dropboxusercontent.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d"};
+		String[] fileNames = new String[]{
+				"SweetHome3DExample2.sh3d",
+				"SweetHome3DExample3.sh3d"};
+
+		// only download attempt 3 times, after that consider it impossible or the user sick of it
+		int downloadAttempts = settings.getInt(EXAMPLE_DOWNLOAD_COUNT, 0);
+		if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[0]).exists()))
 		{
-			// now download the files from drop box
-			// folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";
+			downloadAttempts++;
+			editor.putInt(EXAMPLE_DOWNLOAD_COUNT, downloadAttempts);
+			editor.apply();
+		}
 
-			//https://www.dropbox.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d?dl=0
-			//https://www.dropbox.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d?dl=0
-
-			// notice the files actual url not the sexy page offering the file
-			String[] urls = new String[]{
-					"https://dl.dropboxusercontent.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d",
-					"https://dl.dropboxusercontent.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d"};
-			String[] fileNames = new String[]{
-					"SweetHome3DExample2.sh3d",
-					"SweetHome3DExample3.sh3d"};
-
-			// only download attempt 3 times, after that consider it impossible or the user sick of it
-			int downloadAttempts = settings.getInt(EXAMPLE_DOWNLOAD_COUNT, 0);
-			if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[0]).exists()))
+		if (downloadAttempts < 4)
+		{
+			for (int i = 0; i < urls.length; i++)
 			{
-				downloadAttempts++;
-				editor.putInt(EXAMPLE_DOWNLOAD_COUNT, downloadAttempts);
-				editor.apply();
-			}
-
-			if (downloadAttempts < 4)
-			{
-				for (int i = 0; i < urls.length; i++)
+				if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
 				{
-					if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
+					String url = urls[i];
+					String fileName = fileNames[i];
+					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+					request.setDescription(fileName + " download");
+					request.setTitle(fileName);
+					// in order for this if to run, you must use the android 3.2 to compile your app
+					request.allowScanningByMediaScanner();
+					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+					// get download service and enqueue file
+					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+					manager.enqueue(request);
+					Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+
+					// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
+					if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
 					{
-						String url = urls[i];
-						String fileName = fileNames[i];
-						DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-						request.setDescription(fileName + " download");
-						request.setTitle(fileName);
-						// in order for this if to run, you must use the android 3.2 to compile your app
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-						{
-							request.allowScanningByMediaScanner();
-							request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-						}
-						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-						// get download service and enqueue file
-						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-						manager.enqueue(request);
-						Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
-
-						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
-						if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
-						{
-							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-							return;
-						}
+						registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+						return;
 					}
 				}
 			}
 		}
+
 
 		if (!firstOpening)
 		{
