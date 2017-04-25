@@ -259,12 +259,16 @@ public class JOptionPane
 						switch (which){
 							case DialogInterface.BUTTON_POSITIVE:
 								selectedOption[0] = OK_OPTION;
-								((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
+
+								//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/1ac9ba79?duration=2592000000&appVersions=190
+								if(root.getParent() != null)
+									((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
 							case DialogInterface.BUTTON_NEGATIVE:
 								selectedOption[0] = NO_OPTION;
-								((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
+								if(root.getParent() != null)
+									((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
 						}
