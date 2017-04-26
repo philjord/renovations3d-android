@@ -186,7 +186,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", ""+caps );
+		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", null);
 		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
 
@@ -235,12 +235,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				}
 				catch(NullPointerException e)
 				{
-					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 0", "drawable: " + drawable);
-					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
-					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 0", null );
 					if(gl_window != null)
 					{
-						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 1", "ChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
 					}
 
 					// let's see if other failures happen or is this just a race condition
@@ -266,12 +264,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 						catch(NullPointerException e)
 						{
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 0", "drawable: " + drawable);
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 1", "this.glwindow.getChosenGLCapabilities().getDoubleBuffered();");
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 2", "gl_window: " + gl_window );
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 0", null);
 							if(gl_window != null)
 							{
-								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 3", "gl_window.getChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 1", "ChosenGLCapabilities(): " + gl_window.getChosenGLCapabilities() );
 							}
 
 							// let's see if other failures happen or is this just a race condition
@@ -384,7 +380,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			if(!canvas3D2D.getGLWindow().isNativeValid())
 			{
 				gl_window = GLWindow.create(caps);
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "recreate", null );
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps) recreate", null );
 				// equal to addAnsecter listeners but that's too late by far
 				gl_window.addGLEventListener(glWindowInitListener);
 			}
