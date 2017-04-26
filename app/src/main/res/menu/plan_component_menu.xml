@@ -31,15 +31,24 @@
         android:showAsAction="always"
         />
 
-    <item android:id="@+id/planAddLevel"
-      android:title="planAddLevel"
-      android:showAsAction="never"
-        />
-
-    <item android:id="@+id/planDeleteLevel"
-        android:title="planDeleteLevel"
-        android:showAsAction="never"
-    />
+    <item android:id="@+id/planLevelMenu"
+          android:title="planLevels"
+          android:showAsAction="never">
+        <menu>
+            <item android:id="@+id/planAddLevel"
+              android:title="planAddLevel"
+                />
+            <item android:id="@+id/planAddLevelAtSame"
+                  android:title="planAddLevelAtSame"
+                />
+            <item android:id="@+id/planModifyLevel"
+                  android:title="planModifyLevel"
+                />
+            <item android:id="@+id/planDeleteLevel"
+                android:title="planDeleteLevel"
+                />
+        </menu>
+    </item>
 
     <item android:id="@+id/editRedo"
           android:title="redo"

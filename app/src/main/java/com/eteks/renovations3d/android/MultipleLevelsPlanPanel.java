@@ -32,6 +32,7 @@ import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
@@ -291,6 +292,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 	}
 
+	/*
+Note word for a new level is used as deafult name of a level PlanController.levelName=Level %d have to strip the %d
+	Also put the add delete level under a sub menu along with a edit
+	and an add level at the same elevation too
+
+BackgroundImageWizardController.wizard.title=Background image wizard delte last word?
+		All under a sub menu of back ground image
+	 homeController.importBackgroundImage()
+homeController.modifyBackgroundImage()
+homeController.hideBackgroundImage()
+			 homeController.showBackgroundImage()
+			 deleteBackgroundImage()
+
+
+			 then import texture on the catalog
+*/
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
@@ -300,7 +317,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		menu.findItem(R.id.editUndo).setEnabled(false);// nothing to undo at first
 
+
+		// use the new default name without teh number format
+		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
+		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
 		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
+		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
+		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 
 		String redoName = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
@@ -472,7 +495,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		// undo doesn't get text updated as it is just an icon
 		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);
 
+		// use the new default name without teh number format
+		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
+		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
 		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
+		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
+		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
+		boolean canModLevel = ((Renovations3DActivity) getActivity()).renovations3D.getHome() != null && ((Renovations3DActivity) getActivity()).renovations3D.getHome().getSelectedLevel() != null;
+		menu.findItem(R.id.planModifyLevel).setEnabled(canModLevel);
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 
 		String redoName = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
@@ -521,6 +551,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				return true;
 			case R.id.planAddLevel:
 				planController.addLevel();
+				return true;
+			case R.id.planAddLevelAtSame:
+				planController.addLevelAtSameElevation();
+				return true;
+			case R.id.planModifyLevel:
+				planController.modifySelectedLevel();
 				return true;
 			case R.id.planDeleteLevel:
 				planController.deleteSelectedLevel();
