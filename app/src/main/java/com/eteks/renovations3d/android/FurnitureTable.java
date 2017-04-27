@@ -778,8 +778,11 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			} else {
 				//furnitureTable.repaint();
 				//furnitureTable.getTableHeader().repaint();
-				furnitureTable.updateTable();
-				furnitureTable.getView().postInvalidate();
+				if(furnitureTable.getView() != null)
+				{
+					furnitureTable.updateTable();
+					furnitureTable.getView().postInvalidate();
+				}
 
 			}
 		}
