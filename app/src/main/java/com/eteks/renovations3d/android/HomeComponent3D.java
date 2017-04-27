@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
@@ -662,11 +663,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					break;
 				case R.id.storepov:
 					//I must get off the EDT and ask the question in a blocking manner
-					Thread t2 = new Thread()
+					// however I may need to show a dialog, so I need to have had looper prepare called hence the HandlerThread below
+					HandlerThread t2 = new HandlerThread("store camera")
 					{
 						public void run()
 						{
 							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().storeCamera();
+							// amazingly only returns after teh store point of view dialog dismessed
+							this.quit();
 						}
 					};
 					t2.start();
