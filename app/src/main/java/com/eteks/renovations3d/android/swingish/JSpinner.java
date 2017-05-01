@@ -40,8 +40,31 @@ public class JSpinner extends LinearLayout
 	public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
 	public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
 	public void afterTextChanged(Editable arg0) {
-		model.setValue(Float.parseFloat(output.getText().toString()));
+		model.removeChangeListener(changerListener);
+		if( output.getText().toString().length() > 0)
+			model.setValue(Float.parseFloat(output.getText().toString()));
+		else
+			model.setValue(0);
+		model.addChangeListener(changerListener);
 	}};
+
+	private ChangeListener changerListener = new ChangeListener()
+	{
+		@Override
+		public void stateChanged(ChangeEvent ev)
+		{
+			if(output instanceof EditText)
+				output.removeTextChangedListener(textWatcher);
+
+			if(currentFormat != null)
+				output.setText(currentFormat.format(model.getValue()));
+			else
+				output.setText("" + model.getValue());
+
+			if(output instanceof EditText)
+				output.addTextChangedListener(textWatcher);
+		}
+	};
 
 
 
@@ -77,21 +100,10 @@ public class JSpinner extends LinearLayout
 		output.setTextAppearance(context, android.R.style.TextAppearance_Large);
 		output.setMinEms(6);
 		output.setMaxLines(1);
-		output.addTextChangedListener(textWatcher);
+		if(output instanceof EditText)
+			output.addTextChangedListener(textWatcher);
 
-		final ChangeListener changerListener = new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent ev)
-			{
-				output.removeTextChangedListener(textWatcher);
-				if(currentFormat != null)
-					output.setText(currentFormat.format(model.getValue()));
-				else
-					output.setText("" + model.getValue());
-				output.addTextChangedListener(textWatcher);
-			}
-		};
+
 		model.addChangeListener(changerListener);
 
 
