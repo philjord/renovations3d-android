@@ -2,18 +2,24 @@ package com.eteks.renovations3d.android.swingish;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.eteks.sweethome3d.viewcontroller.LabelController;
+
 import java.text.Format;
+import java.text.ParseException;
 
 
 /**
@@ -30,6 +36,15 @@ public class JSpinner extends LinearLayout
 	private Button upButton;
 	private Button downButton;
 
+	private TextWatcher textWatcher = new TextWatcher(){
+	public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
+	public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
+	public void afterTextChanged(Editable arg0) {
+		model.setValue(Float.parseFloat(output.getText().toString()));
+	}};
+
+
+
 	public JSpinner(Context context, AbstractSpinnerModel model)
 	{
 		this(context, model, null);
@@ -37,28 +52,44 @@ public class JSpinner extends LinearLayout
 
 	public JSpinner(Context context, final AbstractSpinnerModel model, Format format)
 	{
+		 this(context, model, format, false);
+	}
+
+	public JSpinner(Context context, final AbstractSpinnerModel model, Format format, boolean allowTextEntry)
+	{
 		super(context);
 		this.model = model;
 
 		this.setOrientation(LinearLayout.VERTICAL);
-		output = new TextView(context);
+		if(!allowTextEntry)
+		{
+			output = new TextView(context);
+		}
+		else
+		{
+			output = new EditText(context);
+			output.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+
+		}
 		setFormat(format);
 
 
 		output.setTextAppearance(context, android.R.style.TextAppearance_Large);
 		output.setMinEms(6);
 		output.setMaxLines(1);
-		output.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+		output.addTextChangedListener(textWatcher);
 
 		final ChangeListener changerListener = new ChangeListener()
 		{
 			@Override
 			public void stateChanged(ChangeEvent ev)
 			{
+				output.removeTextChangedListener(textWatcher);
 				if(currentFormat != null)
 					output.setText(currentFormat.format(model.getValue()));
 				else
 					output.setText("" + model.getValue());
+				output.addTextChangedListener(textWatcher);
 			}
 		};
 		model.addChangeListener(changerListener);

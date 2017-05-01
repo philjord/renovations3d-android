@@ -40,13 +40,17 @@ public class AutoCommitSpinner extends JSpinner
   public AutoCommitSpinner(Context context, SpinnerNumberModel model) {
     this(context, model, null);
   }
-
+  public AutoCommitSpinner(Context context, SpinnerNumberModel model,
+							 Format format)
+	{
+		 this(context, model, format, false);
+	}
   /**
    * Creates a spinner with a given <code>model</code> and <code>format</code>.
    */
   public AutoCommitSpinner(Context context, SpinnerNumberModel model,
-						   Format format) {
-	super(context, model, format);
+						   Format format, boolean allowTextEntry) {
+	super(context, model, format, allowTextEntry);
 
 	  //TODO: this has no more function a than a spinner? what's autocommit mean?
 

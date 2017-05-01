@@ -17,9 +17,13 @@ public class NullableSpinner extends AutoCommitSpinner
 
 	public NullableSpinner(Context context, SpinnerNumberModel model)
 	{
+		this( context, model, false);
+	}
+	public NullableSpinner(Context context, SpinnerNumberModel model, boolean allowTextEntry)
+	{
 		super(context, model,
 				model instanceof NullableSpinnerNumberModel.NullableSpinnerLengthModel
 						? ((NullableSpinnerNumberModel.NullableSpinnerLengthModel) model).getLengthUnit().getFormat()
-						: null);
+						: null, allowTextEntry);
 	}
 }
