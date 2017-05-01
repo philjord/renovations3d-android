@@ -38,6 +38,7 @@ import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JCheckBox;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JPanel;
 import com.eteks.renovations3d.android.swingish.JSlider;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
@@ -55,7 +56,7 @@ import com.mindblowing.renovations3d.R;
  * A panel to edit photo size and quality. 
  * @author Emmanuel Puybaret
  */
-public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.sweethome3d.viewcontroller.View
+public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweethome3d.viewcontroller.View
 {
   private JLabel                        widthLabel;
   private JSpinner widthSpinner;
@@ -69,20 +70,14 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
   private JLabel                        bestQualityLabel;
 
 	private final UserPreferences preferences;
-	private Activity activity;
-
-	protected ViewGroup rootView;
 
   public PhotoSizeAndQualityPanel(Home home, 
                     UserPreferences preferences, 
                     AbstractPhotoController controller,
 								  final Activity activity) {
-	  super(activity);
-	  this.activity = activity;
+	  super(activity, R.layout.photosizeandqualityview);
 	  this.preferences = preferences;
 
-	  rootView = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.photosizeandqualityview, null);
-	  this.addView(rootView);
 
     createComponents(home, preferences, controller);
     layoutComponents();
@@ -337,13 +332,7 @@ public class PhotoSizeAndQualityPanel extends LinearLayout implements com.eteks.
 	  swapOut(this.fastQualityLabel, R.id.photosizeandqualityview_fastQualityLabel);
 	  swapOut(this.bestQualityLabel, R.id.photosizeandqualityview_bestQualityLabel);
   }
-	protected void swapOut(android.view.View newView, int placeHolderId)
-	{
-		android.view.View placeHolder = rootView.findViewById(placeHolderId);
-		newView.setLayoutParams(placeHolder.getLayoutParams());
-		AndroidDialogView.replaceView(placeHolder, newView);
-	}
-  
+
   /**
    * Enables or disables this panel and its components.
    */

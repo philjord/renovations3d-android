@@ -27,6 +27,7 @@ import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JButton;
 import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JPanel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
@@ -42,7 +43,7 @@ import java.beans.PropertyChangeListener;
  * Baseboard editing panel.
  * @author Emmanuel Puybaret
  */
-public class BaseboardChoiceComponent extends LinearLayout implements View {
+public class BaseboardChoiceComponent extends JPanel implements View {
   private NullableCheckBox      visibleCheckBox;
   private JRadioButton sameColorAsWallRadioButton;
   private JRadioButton          colorRadioButton;
@@ -54,11 +55,8 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
   private JLabel                thicknessLabel;
   private JSpinner thicknessSpinner;
 
-
 	private final UserPreferences preferences;
-	private Activity activity;
 
-	protected ViewGroup rootView;
 
   /**
    * Creates a panel that displays baseboard data.
@@ -68,12 +66,10 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
   public BaseboardChoiceComponent(UserPreferences preferences,
                                   BaseboardChoiceController controller,
 								  final Activity activity) {
-	  super(activity);
-	  this.activity = activity;
+	  super(activity, R.layout.baseboardview);
 	  this.preferences = preferences;
 
-	  rootView = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.baseboardview, null);
-	  this.addView(rootView);
+
 
     createComponents(preferences, controller);
     layoutComponents(preferences);
@@ -289,10 +285,4 @@ public class BaseboardChoiceComponent extends LinearLayout implements View {
 	  swapOut(this.thicknessSpinner, R.id.baseboardview_thicknessSpinner);
   }
 
-	protected void swapOut(android.view.View newView, int placeHolderId)
-	{
-		android.view.View placeHolder = rootView.findViewById(placeHolderId);
-		newView.setLayoutParams(placeHolder.getLayoutParams());
-		AndroidDialogView.replaceView(placeHolder, newView);
-	}
 }
