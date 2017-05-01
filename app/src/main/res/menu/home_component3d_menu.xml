@@ -46,8 +46,10 @@
     <item android:id="@+id/deoptomize"
           android:title="@string/menu_deoptomize"
           android:checkable="true"
+          android:visible="false"
         />
     <item android:id="@+id/show_jogl_status"
           android:title="@string/menu_show3dcaps"
+          android:visible="false"
         />
 </menu>
