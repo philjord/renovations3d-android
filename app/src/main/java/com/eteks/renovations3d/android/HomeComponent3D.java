@@ -357,17 +357,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
 		return rootView;
 	}
-	public void onStart() {
+	public void onStart()
+	{
 		super.onStart();
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStart", null );
 	}
-	public void onResume() {
-
+	public void onResume()
+	{
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
-
 		super.onResume();
-
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "super.onResume finished", null );
 
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
@@ -401,10 +399,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	@Override
-	public void onPause() {
-
+	public void onPause()
+	{
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onPause", null );
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause", null );
+
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
 		if(canvas3D2D != null)
@@ -448,8 +446,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
 		if(onscreenUniverse != null)
 		{
-			onscreenUniverse.cleanup();
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onscreenUniverse.cleanup();", null );
+			try
+			{
+				onscreenUniverse.cleanup();
+			}catch(Exception e)
+			{
+				// in production I don't care about exceptions now, but I do care about crashing.
+				e.printStackTrace();
+			}
 			onscreenUniverse = null;
 		}
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
@@ -1195,7 +1200,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			this.home.setSelectedItems(selectedItems);
 			if (offScreenImageUniverse != null)
 			{
-				offScreenImageUniverse.cleanup();
+				try
+				{
+					offScreenImageUniverse.cleanup();
+				}catch(Exception e)
+				{
+					// in production I don't care about exceptions now, but I do care about crashing.
+					e.printStackTrace();
+				}
 			}
 		}
 	}
