@@ -37,7 +37,6 @@ One finger sliding up or down will alter the vertical angle your head is pointed
 Pinch will move you forward or backward.<br>
 Saved points of view can be found under the eye icon.<br>
 Changing from top down to visit can be done by the icon of a man or the icon of a plan.<br>
-If you see a corrupt view, please try the deoptomize option in the menu.<br>
 ]]></string>
 
     <string name="menu_deoptomize">Deoptomize 3d</string>

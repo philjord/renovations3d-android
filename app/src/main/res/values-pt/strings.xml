@@ -37,7 +37,6 @@ Um dedo deslizando para cima ou para baixo alterará o ângulo vertical da cabe�
 A pitada o moverá para frente ou para trás.<br>
 Os pontos de vista guardados podem ser encontrados sob o ícone de olho. <br>
 Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem ou o ícone de um plano.<br>
-Se você ver uma exibição corrompida, tente a opção deoptomize no menu.<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Informação GPU</string>

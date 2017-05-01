@@ -36,7 +36,6 @@ Egy ujj csúszó felfelé vagy lefelé módosítja a függőleges szög a fejét
 Pinch mozog akkor előre vagy hátra. <br>
 Mentett nézőpontok alatt található a szem ikonra. <br>
 Változó fentről lefelé, hogy nézze meg lehet tenni az ikon egy ember vagy az ikont egy terv. <br>
-Ha látsz egy korrupt véli, próbálkozz az deoptomize lehetőséget a menüből. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

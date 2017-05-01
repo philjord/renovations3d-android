@@ -36,7 +36,6 @@ Le déplacement du doigt fait pivoter votre point de vue autour de vous sans le 
 Pincer déplace votre point de vue d\'avant en arrière.<br>
 Les points de vue enregistrés sont listés sous l\'icône représentant un œoeil.<br>
 Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan.<br>
-Si vous voyez une vue corrompue, essayez l\'option deoptomize dans le menu.<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomise 3d</string>
     <string name="menu_show3dcaps">infos GPU</string>

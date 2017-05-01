@@ -36,7 +36,6 @@ Bir parmak yukarı veya aşağıya doğru kaymak, başınızın üzerinde durdu�
 Pinch seni ileri geri hareket ettirecek. <br>
 Kayıt simgeleri göz simgesinin altında bulunabilir. <br>
 Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir planın simgesi ile yapılabilir. <br>
-Bozuk bir görünümü görürseniz, lütfen menüdeki deoptomize seçeneğini deneyin. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU bilgi</string>

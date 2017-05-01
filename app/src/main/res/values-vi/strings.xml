@@ -36,7 +36,6 @@ Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi góc thẳng 
 Pinch sẽ di chuyển bạn về phía trước hoặc ngược lại. <br>
 Bạn có thể tìm thấy các điểm được lưu trên biểu tượng mắt. <br>
 Thay đổi từ trên xuống dưới để truy cập có thể được thực hiện bằng biểu tượng của một người đàn ông hoặc biểu tượng của một kế hoạch <br>
-Nếu bạn thấy một chế độ xem hỏng, vui lòng thử tùy chọn deoptomize trong trình đơn <br> <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Thông tin GPU</string>

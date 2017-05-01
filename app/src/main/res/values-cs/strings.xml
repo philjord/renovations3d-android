@@ -36,7 +36,6 @@ Jeden prst posuvné nahoru nebo dolů změní vertikální úhel hlavu je ukáza
 Špetka vás posune dopředu nebo dozadu. <br>
 Uloženo úhly pohledu lze nalézt pod ikonou oka. <br>
 Změna od shora dolů k návštěvě lze provést pomocí ikony člověka nebo na ikonu plánu. <br>
-Pokud vidíte poškozený pohled, zkuste volbu deoptomize v nabídce. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

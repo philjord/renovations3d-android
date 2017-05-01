@@ -36,7 +36,6 @@ Ein Finger, der nach oben oder unten gleitet, ändert den senkrechten Winkel, de
 Pinch bewegt dich vorwärts oder rückwärts<br>
 Gespeicherte Standpunkte können unter dem Augensymbol gefunden werden<br>
 Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikone eines Plans erfolgen<br>
-Wenn Sie eine korrupte Ansicht sehen, versuchen Sie bitte die Option deoptomize im Menü<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

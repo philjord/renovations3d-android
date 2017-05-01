@@ -36,7 +36,6 @@ Trascina un dito in alto o in basso per inclinare la vista in verticale.<br>
 Il Pinch (pizzico) muoverà il punto di vista avanti o indietro.<br>
 I punti di vista salvati possono essere richiamati tramite l\'icona a forma di occhio.<br>
 Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma di omino o su quella a forma di piano.<br>
-Se vedi una vista corrotta, prova a cambiare l\'impostazione "Deottimizzazione 3d" dal menu.<br>
 ]]></string>
 
     <string name="menu_deoptomize">Deottimizzazione 3d</string>

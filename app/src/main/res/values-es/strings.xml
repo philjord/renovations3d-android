@@ -36,7 +36,6 @@ Un dedo que se desliza hacia arriba o hacia abajo alterará el ángulo vertical 
 El pellizco lo moverá hacia delante o hacia atrás.<br>
 Los puntos de vista guardados se pueden encontrar bajo el icono de ojo. <br>
 Cambiar de arriba abajo a la visita se puede hacer por el icono de un hombre o el icono de un plan.<br>
-Si ves una vista corrupta, prueba la opción deoptomize en el menú. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Datos de la GPU</string>

@@ -36,7 +36,6 @@
 ピンチはあなたを前後に動かします。<br>
 保存された視点は、目のアイコンの下に表示されます。<br>
 上から下への変更は、人のアイコンや計画のアイコンで行うことができます。<br>
-破損したビューが表示された場合は、メニューの[deoptomize]オプションを試してください。<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize部3d</string>
     <string name="menu_show3dcaps">GPU情報</string>

@@ -37,7 +37,6 @@ Ett finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln
 Nypa kommer att flytta dig framåt eller bakåt. <br>
 Sparade synpunkter kan hittas under ögonikonen . <br>
 Byte från toppen och nedåt för att besöka kan göras genom ikonen för en man eller ikonen för en plan. <br>
-Om du ser en korrumperad syn, försök alternativet deoptomize i menyn. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>

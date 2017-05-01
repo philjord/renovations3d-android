@@ -36,7 +36,6 @@ Jeden palec przesuwający się w górę lub w dół zmienia kąt pionowy, na kt�
 Pinch poruszy cię w przód iw tył <br>
 Zapisane punkty widzenia można znaleźć pod ikoną oka <br>
 Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczyzny lub ikonę planu <br>
-Jeśli widzisz uszkodzony widok, spróbuj skorzystać z opcji deoptomize w menu. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Informacje o GPU</string>

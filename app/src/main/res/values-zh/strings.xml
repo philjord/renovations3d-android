@@ -36,7 +36,6 @@
 捏捏将你向前或向后移动<br>
 保存的观点可以在眼睛图标下找到<br>
 从上到下的访问可以通过一个人的图标或一个计划的图标来完成<br>
-如果您看到损坏的视图，请尝试在菜单中的deoptomize选项<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU信息</string>
