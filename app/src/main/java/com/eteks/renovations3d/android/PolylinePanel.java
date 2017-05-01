@@ -527,8 +527,13 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.arrowsStyleComboBox, R.id.polyline_panel_arrowsCombobox);
 	  swapOut(this.joinStyleLabel, R.id.polyline_panel_joinLabel);
 	  swapOut(this.joinStyleComboBox, R.id.polyline_panel_joinCombobox);
-	  swapOut(this.dashStyleLabel, R.id.polyline_panel_dashLabel);
-	  swapOut(this.dashStyleComboBox, R.id.polyline_panel_dashCombobox);
+
+	  //PJ remvoed as not usable in VMGraphics2D
+	  removeView(R.id.polyline_panel_dashLabel);
+	  removeView(R.id.polyline_panel_dashCombobox);
+
+	  //swapOut(this.dashStyleLabel, R.id.polyline_panel_dashLabel);
+	  //swapOut(this.dashStyleComboBox, R.id.polyline_panel_dashCombobox);
 	  swapOut(this.colorLabel, R.id.polyline_panel_colorLabel);
 	  swapOut(this.colorButton, R.id.polyline_panel_colorButton);
 
