@@ -20,12 +20,15 @@
 package com.eteks.renovations3d.android;
 
 
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.ImageReader;
 import android.view.View;
 
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
+import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -35,10 +38,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javaawt.BasicStroke;
 import javaawt.Color;
+import javaawt.Dimension;
 import javaawt.Graphics2D;
 import javaawt.Image;
 import javaawt.Stroke;
@@ -514,11 +520,11 @@ public class SwingTools
 	 * Returns <code>image</code> size in pixels.
 	 * @return the size or <code>null</code> if the information isn't given in the meta data of the image
 	 */
-/*	public static Dimension getImageSizeInPixels(Content image) throws IOException {
+	public static Dimension getImageSizeInPixels(Content image) throws IOException {
 		InputStream in = null;
 		try {
 			in = image.openStream();
-			ImageInputStream iis = ImageIO.createImageInputStream(in);
+			/*ImageInputStream iis = ImageIO.createImageInputStream(in);
 			Iterator<ImageReader> it = ImageIO.getImageReaders(iis);
 			if (it.hasNext()) {
 				ImageReader reader = (ImageReader)it.next();
@@ -527,14 +533,22 @@ public class SwingTools
 				int imageHeight = reader.getHeight(reader.getMinIndex());
 				reader.dispose();
 				return new Dimension(imageWidth, imageHeight);
-			}
-			return null;
+			}*/
+
+			//http://stackoverflow.com/questions/12018620/getting-a-bitmaps-dimensions-in-android-without-reading-the-entire-file
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(in, null, options);
+			int imageHeight = options.outHeight;
+			int imageWidth = options.outWidth;
+			return new Dimension(imageWidth, imageHeight);
+
 		} finally {
 			if (in != null) {
 				in.close();
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * Returns the line stroke matching the given line styles.
@@ -545,9 +559,7 @@ public class SwingTools
 								   Polyline.DashStyle dashStyle)
 	{
 
-		//TODO: possibly well impossible
-		return null;
-/*		int strokeCapStyle;
+		int strokeCapStyle;
 		switch (capStyle) {
 			case ROUND :
 				strokeCapStyle = BasicStroke.CAP_ROUND;
@@ -593,7 +605,7 @@ public class SwingTools
 				break;
 		}
 
-		return new BasicStroke(thickness, strokeCapStyle, strokeJoinStyle, 10, strokeDashes, 0);*/
+		return new BasicStroke(thickness, strokeCapStyle, strokeJoinStyle, 10, strokeDashes, 0);
 	}
 
 
