@@ -2767,25 +2767,24 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
         Window window = SwingUtilities.getWindowAncestor(this);
         if (window != null && !window.isActive()) {
-			//TODO: more UIManager colors!
-          Color selectionColor = new Color(1.0f,0.5f,0.5f);//UIManager.getColor("List.selectionInactiveBackground");
+          Color selectionColor = UIManager.getColor("List.selectionInactiveBackground");
           if (selectionColor != null) {
             return selectionColor.darker();
           }
         }
 
-        Color selectionColor = new Color(1.0f,0.5f,0.5f);//UIManager.getColor("List.selectionBackground");
+        Color selectionColor = UIManager.getColor("List.selectionBackground");
         if (selectionColor != null) {
           return selectionColor;
         }
       }
 
-      return   new Color(1.0f,0.5f,0.5f);//UIManager.getColor("textHighlight");
+      return   UIManager.getColor("textHighlight");
     } else {*/
       // On systems different from Mac OS X, take a darker color
-	  //TODO: more UIManager colors!
 	  //PJPJ
-      return  new Color(1.0f,0.5f,0.5f);// UIManager.getColor("textHighlight").darker();
+	  // Form desktop r=0,g=84,b=150
+      return  new Color(0.0f,84f/255f,150f/255f);// UIManager.getColor("textHighlight").darker();
    // }
   }
 
