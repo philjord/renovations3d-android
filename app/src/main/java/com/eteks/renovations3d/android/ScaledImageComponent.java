@@ -22,6 +22,7 @@ package com.eteks.renovations3d.android;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import javaawt.AlphaComposite;
 import javaawt.Color;
@@ -47,9 +48,9 @@ public class ScaledImageComponent extends ImageView
 	private static final int MODEL_PREFERRED_SIZE_DP = 128;
 	private int modelPreferredSizePx = 128;
   
-  private BufferedImage image;
+  protected BufferedImage image;
   private boolean       imageEnlargementEnabled;
-  private float         scaleMultiplier = 1f;
+  protected float         scaleMultiplier = 1f;
   
   /**
    * Creates a component that will display no image.
@@ -70,7 +71,7 @@ public class ScaledImageComponent extends ImageView
    * Creates a component that will display the given <code>image</code> 
    * with no maximum scale if <code>imageEnlargementEnabled</code> is <code>true</code>.
    */
-  public ScaledImageComponent(BufferedImage image, 
+  public ScaledImageComponent(BufferedImage image,
                               boolean imageEnlargementEnabled, Context context) {
 	  super(context);
     this.image = image;
@@ -102,8 +103,9 @@ public class ScaledImageComponent extends ImageView
       if (this.image == null) {
         return new Dimension(defaultPreferredWidth + insetsWidth, defaultPreferredHeight + insetsHeight);
       }
-	  /*else if (getParent() instanceof JViewport){
-        Dimension extentSize = ((JViewport)getParent()).getExtentSize();
+	  else if (getParent() instanceof ScrollView){
+        Dimension extentSize = new Dimension(((ScrollView)getParent()).getWidth(), ((ScrollView)getParent()).getHeight());
+		  //Dimension extentSize = ((JViewport)getParent()).getExtentSize();
         extentSize.width -= insetsWidth;
         extentSize.height -= insetsHeight;
         float widthScale = (float)this.image.getWidth() / extentSize.width;
@@ -115,7 +117,7 @@ public class ScaledImageComponent extends ImageView
           return new Dimension((int)(this.image.getWidth() / heightScale * this.scaleMultiplier) + insetsWidth, 
               (int)(extentSize.height * this.scaleMultiplier) + insetsHeight);
         }
-      } */else {
+      } else {
         // Compute the component preferred size in such a way 
         // its bigger dimension (width or height) is 300 * scaleMultiplier pixels
         int maxImagePreferredWith   = defaultPreferredWidth - insetsWidth;
@@ -134,8 +136,7 @@ public class ScaledImageComponent extends ImageView
   }
 
 	@Override
-	public void onDraw(Canvas canvas)
-	{
+	public void onDraw(Canvas canvas){
 		Graphics2D g2D = new VMGraphics2D(canvas);
 		paintComponent(g2D);
 	}
@@ -198,9 +199,11 @@ public class ScaledImageComponent extends ImageView
       Dimension dimension;
      // if (getParent() instanceof JViewport) {
      //   dimension = ((JViewport)getParent()).getExtentSize();
-    //  } else {
+	  if (getParent() instanceof ScrollView){
+		  dimension = new Dimension(((ScrollView)getParent()).getWidth(), ((ScrollView)getParent()).getHeight());
+      } else {
         dimension = this.getPreferredSize();//getSize();
-    //  }
+      }
       Insets insets = new Insets(5,5,5,5);//getInsets();
       imageScale = Math.min((float)(dimension.width - insets.left - insets.right) / image.getWidth(), 
           (float)(dimension.height - insets.top - insets.bottom) / image.getHeight());
