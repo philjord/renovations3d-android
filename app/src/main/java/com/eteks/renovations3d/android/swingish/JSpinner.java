@@ -56,10 +56,17 @@ public class JSpinner extends LinearLayout
 			if(output instanceof EditText)
 				output.removeTextChangedListener(textWatcher);
 
-			if(currentFormat != null)
-				output.setText(currentFormat.format(model.getValue()));
+			if(model.getValue() !=null)
+			{
+				if (currentFormat != null)
+					output.setText(currentFormat.format(model.getValue()));
+				else
+					output.setText("" + model.getValue());
+			}
 			else
-				output.setText("" + model.getValue());
+			{
+				output.setText("");
+			}
 
 			if(output instanceof EditText)
 				output.addTextChangedListener(textWatcher);
