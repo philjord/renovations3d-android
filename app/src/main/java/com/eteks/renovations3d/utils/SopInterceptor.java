@@ -16,8 +16,8 @@ import java.util.Calendar;
  */
 public class SopInterceptor extends PrintStream
 {
-	String tag;
-
+	private String tag;
+	public static boolean useLog = false;
 
 	private File logFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Renovations3D.log.txt");
 
@@ -33,7 +33,7 @@ public class SopInterceptor extends PrintStream
 	{//do what ever you like
 		//super.print(s);
 		Log.w(tag, s);
-		if (logFile != null && s.trim().length() > 0)
+		if (useLog && logFile != null && s.trim().length() > 0)
 		{
 			if (!logFile.exists())
 			{
