@@ -4,26 +4,22 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Use the pinch gesture to zoom in and out.<br>
-To see the furniture table swipe with 1 finger from the left edge of the plan view.<br>
-To see the furniture catalog swipe from the right edge, you can add furniture from there.<br>
-To pan without altering the current selection swipe with 2 fingers together.<br>
-To edit any object double tap on it.<br>
-To select more than one object use the Select lasso or Select multiple actions in the More menu.<br>
-Two demo sh3d files will be in your downloads folder, select More->Open home.<br>
-Use your browser to download more sh3d files from the internet, they will open from the browser.<br>
-<p>Please visit <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-    <br> and <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-    <br>for more information.
+Drag with one finger to move the view and use the pinch gesture to zoom in and out.<br>
+To see the furniture table drag from the left edge of the screen.<br>
+To see the furniture catalog drag from the right edge of the screen, you can add furniture from there.<br>
+Drag with two fingers to move the plan without changing what is selected.<br>
+Double tap on any object to edit it.<br>
+Two demo home files will be in your downloads folder, use "Open Home" in the menu.<br>
+You can use your browser to download more home files (.sh3d) from the internet, they will open from the browser.<br>
+<p>For example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>
-Press the add furniture icon to place the selected furniture item onto the plan view at the location 0,0.<br>
-Alternatively you can long press on the item (there is no drag and drop).<br>
-From this view you can import furniture catalog libraries, select Menu->Import furniture library&#8230;<br>
+Hold down on any item to add it to the plan, it will be selected and at location 0,0.<br>
+From this view you can import furniture catalog libraries using the actions.<br>
    ]]></string>
     <string name="furnitureview_welcometext"><![CDATA[<html>
 This is a view of all the furniture currently placed on your plan.<br>
-For now the only function you can do here is to change an items visibility.<br>
+From here you can change the visibility of items.<br>
 ]]></string>
     <string name="component3dview_welcometext"><![CDATA[<html><p>
 This is a 3 dimensional view of your plan. <br>
@@ -38,12 +34,10 @@ Pinch will move you forward or backward.<br>
 Saved points of view can be found under the eye icon.<br>
 Changing from top down to visit can be done by the icon of a man or the icon of a plan.<br>
 ]]></string>
-
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
     <string name="select_multiple">Select multiple</string>
     <string name="select_lasso">Select lasso</string>
-
     <string name="help_about"><![CDATA[<html>
     <font face="sans-serif"><center><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
     <br><b>Version %1$s</b>

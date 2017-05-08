@@ -303,10 +303,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							onscreenInfo.addToCanvas(canvas3D2D);
 						}
 
-						// mouse interaction with picking
-						homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, (Renovations3DActivity) getActivity());
-
-						homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
+						// I have no idea how 	getActivity() can return null here, possibly we are being destroyed right now
+						// but I think it happens after the canvas.addnotify failure above anyway
+						if(getActivity() != null)
+						{
+							// mouse interaction with picking
+							homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, (Renovations3DActivity) getActivity());
+							homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
+						}
 					}
 					}
 				});

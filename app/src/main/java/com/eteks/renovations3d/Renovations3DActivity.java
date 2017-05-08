@@ -986,15 +986,24 @@ public class Renovations3DActivity extends FragmentActivity
 					request.allowScanningByMediaScanner();
 					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+					//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/62b79646?duration=2592000000
+					// needs areboot of the device says http://stackoverflow.com/questions/23325250/java-lang-illegalstateexception-unable-to-create-directory-mnt-sdcard-downloa
+					try
+					{
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
-					// get download service and enqueue file
-					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-					manager.enqueue(request);
-					registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-					setIntent(null);
-					Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
+						// get download service and enqueue file
+						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+						manager.enqueue(request);
+						registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+						setIntent(null);
+						Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
+						Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
+					}
+					catch(IllegalStateException e)
+					{
+
+					}
 					return;
 				}
 				else if (scheme.compareTo("ftp") == 0)
@@ -1073,19 +1082,25 @@ public class Renovations3DActivity extends FragmentActivity
 					// in order for this if to run, you must use the android 3.2 to compile your app
 					request.allowScanningByMediaScanner();
 					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-					// get download service and enqueue file
-					DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-					manager.enqueue(request);
-					Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
-
-					// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
-					if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
+					try
 					{
-						registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-						return;
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+						// get download service and enqueue file
+						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+						manager.enqueue(request);
+						Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+
+						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
+						if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
+						{
+							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+							return;
+						}
+					}
+					catch(IllegalStateException e)
+					{
+
 					}
 				}
 			}

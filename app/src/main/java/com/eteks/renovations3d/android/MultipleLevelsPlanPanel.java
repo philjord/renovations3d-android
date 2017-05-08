@@ -570,6 +570,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Renovations3DActivity renovations3DActivity = ((Renovations3DActivity) getActivity());
 		// Handle item selection
 		switch (item.getItemId())
 		{
@@ -577,28 +578,32 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				try
 				{
 
-					if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
-						((Renovations3DActivity) getActivity()).renovations3D.getHomeController().undo();
+					if (renovations3DActivity.renovations3D.getHomeController() != null)
+						renovations3DActivity.renovations3D.getHomeController().undo();
 				}
-				catch (CannotUndoException e)
-				{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
+				catch (Exception e)
+				{
+					//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
+					// I'm getting NPE in a call to addLevel https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/crash?reportTypes=REPORT_TYPE_UNSPECIFIED&duration=2592000000
+					e.printStackTrace();
 				}
 				return true;
 			case R.id.editRedo:
 				try
 				{
-					if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
-						((Renovations3DActivity) getActivity()).renovations3D.getHomeController().redo();
+					if (renovations3DActivity.renovations3D.getHomeController() != null)
+						renovations3DActivity.renovations3D.getHomeController().redo();
 				}
-				catch (CannotRedoException e)
+				catch (Exception e)
 				{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
+					e.printStackTrace();
 				}
 				return true;
 			case R.id.delete:
 				planController.deleteSelection();
 				return true;
 			case R.id.planGoto3D:
-				((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(3, true);
+				renovations3DActivity.mViewPager.setCurrentItem(3, true);
 				return true;
 			case R.id.planAddLevel:
 				planController.addLevel();
@@ -641,25 +646,25 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 			case R.id.bgImageImportModify:
 				//PJ the import appears to modify if it's already there??
-				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
-					((Renovations3DActivity) getActivity()).renovations3D.getHomeController().importBackgroundImage();
+				if (renovations3DActivity.renovations3D.getHomeController() != null)
+					renovations3DActivity.renovations3D.getHomeController().importBackgroundImage();
 				return true;
 			case R.id.bgImageToggleVis:
-				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+				if (renovations3DActivity.renovations3D.getHomeController() != null)
 				{
 					final BackgroundImage backgroundImage = currentBackgroundImage();
 					if(backgroundImage != null)
 					{
 						if(backgroundImage.isVisible())
-							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().hideBackgroundImage();
+							renovations3DActivity.renovations3D.getHomeController().hideBackgroundImage();
 						else
-							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().showBackgroundImage();
+							renovations3DActivity.renovations3D.getHomeController().showBackgroundImage();
 					}
 				}
 				return true;
 			case R.id.bgImageDelete:
-				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
-					((Renovations3DActivity) getActivity()).renovations3D.getHomeController().deleteBackgroundImage();
+				if (renovations3DActivity.renovations3D.getHomeController() != null)
+					renovations3DActivity.renovations3D.getHomeController().deleteBackgroundImage();
 				return true;
 
 			case R.id.alignment:
