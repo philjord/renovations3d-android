@@ -69,5 +69,7 @@ Változó fentről lefelé, hogy nézze meg lehet tenni az ikon egy ember vagy a
     <string name="pleaseSelectSh3f">Kérem, válassza ki az importálni kívánt sh3f fájlt</string>
     <string name="pleaseSelectSh3t">Kérem, válassza ki az importálni kívánt sh3t fájlt</string>
     <string name="helpRedirectNotice">A Sweet Home 3D asztali alkalmazás súgórendszerére irányítod, nem fog pontosan illeszkedni a Renovations 3D felhasználói felülethez.</string>
+    <string name="get_image_camera">Kamera</string>
+    <string name="get_image_file">fájl</string>
 
 </resources>

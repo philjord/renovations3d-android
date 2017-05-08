@@ -81,6 +81,22 @@
         android:showAsAction="never"
         />
 
+    <item android:id="@+id/bgImageMenu"
+          android:title="bgImage"
+          android:showAsAction="never">
+        <menu>
+            <item android:id="@+id/bgImageImportModify"
+                  android:title="bgImageImportModify"
+                />
+            <item android:id="@+id/bgImageToggleVis"
+                  android:title="bgImageToggleVis"
+                />
+            <item android:id="@+id/bgImageDelete"
+                  android:title="bgImageDelete"
+                />
+        </menu>
+    </item>
+
     <item android:id="@+id/alignment"
           android:title="@string/alignment"
           android:checkable="true"

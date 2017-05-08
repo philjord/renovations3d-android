@@ -174,7 +174,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createWizardView(UserPreferences preferences,
 									   WizardController wizardController)
 	{
-		throw new UnsupportedOperationException();//return new WizardPane(preferences, wizardController);
+		return new WizardPane(preferences, wizardController, activity);
 	}
 
 	/**
@@ -184,8 +184,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 													   UserPreferences preferences,
 													   BackgroundImageWizardController backgroundImageWizardController)
 	{
-		throw new UnsupportedOperationException();//return new BackgroundImageWizardStepsPanel(backgroundImage, preferences,
-		//		backgroundImageWizardController);
+		return new BackgroundImageWizardStepsPanel(backgroundImage, preferences, backgroundImageWizardController, activity);
 	}
 
 	/**

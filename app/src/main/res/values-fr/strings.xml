@@ -69,5 +69,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="pleaseSelectSh3f">Sélectionnez le fichier sh3f à importer</string>
     <string name="pleaseSelectSh3t">Sélectionnez le fichier sh3t à importer</string>
     <string name="helpRedirectNotice">Vous êtes dirigé vers le système d\'aide aux applications de bureau Sweet Home 3D, il ne correspond pas exactement à l\'interface utilisateur Renovations 3D.</string>
+    <string name="get_image_camera">Caméra</string>
+    <string name="get_image_file">Fichier</string>
 
 </resources>

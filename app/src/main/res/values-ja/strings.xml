@@ -69,5 +69,7 @@
     <string name="pleaseSelectSh3f">インポートするsh3fファイルを選択してください</string>
     <string name="pleaseSelectSh3t">インポートするsh3tファイルを選択してください</string>
     <string name="helpRedirectNotice">あなたはSweet Home 3Dデスクトップアプリケーションヘルプシステムに向けられていますが、Renovationsの3Dユーザーインターフェイスと正確には一致しません。</string>
+    <string name="get_image_camera">カメラ</string>
+    <string name="get_image_file">ファイル</string>
 
 </resources>

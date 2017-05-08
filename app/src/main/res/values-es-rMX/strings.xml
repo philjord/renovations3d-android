@@ -71,5 +71,7 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un hombre o e
     <string name="pleaseSelectSh3f">Por favor seleccione el archivo sh3f para importar</string>
     <string name="pleaseSelectSh3t">Por favor seleccione el archivo sh3t para importar</string>
     <string name="helpRedirectNotice">Está siendo dirigido al sistema de ayuda de la aplicación de escritorio Sweet Home 3D, no coincidirá exactamente con la interfaz de usuario de Renovations 3D.</string>
+    <string name="get_image_camera">Cámara</string>
+    <string name="get_image_file">Archivo</string>
 
 </resources>

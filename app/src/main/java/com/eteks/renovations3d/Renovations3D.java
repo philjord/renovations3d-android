@@ -29,9 +29,6 @@ import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mindblowing.renovations3d.R;
 
-import org.jogamp.java3d.JoglesPipeline;
-import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -39,6 +36,7 @@ import java.io.IOException;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -46,9 +44,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javaawt.EventQueue;
-import javaawt.VMEventQueue;
-import javaawt.image.VMBufferedImage;
-import javaawt.imageio.VMImageIO;
 
 
 public class Renovations3D extends HomeApplication
@@ -77,6 +72,18 @@ public class Renovations3D extends HomeApplication
 	private Renovations3DActivity parentActivity;
 	public boolean currentHomeReduceVisible = false;
 
+
+	private LinkedHashSet<OnHomeLoadedListener> onHomeLoadedListeners = new LinkedHashSet<OnHomeLoadedListener>();
+	public void addOnHomeLoadedListener(OnHomeLoadedListener OnHomeLoadedListener)
+	{
+		onHomeLoadedListeners.add(OnHomeLoadedListener);
+	}
+	public void removeOnHomeLoadedListener(OnHomeLoadedListener OnHomeLoadedListener)
+	{
+		onHomeLoadedListeners.remove(OnHomeLoadedListener);
+	}
+
+
 	/**
 	 * Creates a home application instance. Recorders, user preferences, content
 	 * manager, view factory and plug-in manager handled by this application are
@@ -86,31 +93,11 @@ public class Renovations3D extends HomeApplication
 	{
 		this.parentActivity = parentActivity;
 
-		//System.setProperty("jogl.verbose", "true");
-		//System.setProperty("jogl.debug", "true");
-
-		System.setProperty("j3d.cacheAutoComputeBounds", "true");
-		System.setProperty("j3d.defaultReadCapability", "false");
-		System.setProperty("j3d.defaultNodePickable", "false");
-		System.setProperty("j3d.defaultNodeCollidable", "false");
-		System.setProperty("j3d.usePbuffer", "true"); // some phones have no fbo under offscreen
-		System.setProperty("j3d.noDestroyContext", "true");// don't clean up as the preserve/restore will handle it
-
-		JoglesPipeline.LATE_RELEASE_CONTEXT = false;// so the world can clean up, otherwise the plan renderer holds onto it
-
-		//PJPJPJ
-		javaawt.image.BufferedImage.installBufferedImageDelegate(VMBufferedImage.class);
-		javaawt.imageio.ImageIO.installBufferedImageImpl(VMImageIO.class);
-		javaawt.EventQueue.installEventQueueImpl(VMEventQueue.class);
-		VMEventQueue.activity = parentActivity;
-		SimpleShaderAppearance.setVersionES100();
-
 		init();
 
 		this.viewFactory = getViewFactory();
 		this.contentManager = getContentManager();
 		this.pluginManager = getPluginManager();
-
 	}
 
 	public void newHome()
@@ -193,6 +180,11 @@ public class Renovations3D extends HomeApplication
 						parentActivity.invalidateOptionsMenu();
 					}
 				});
+
+				for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners)
+				{
+					onHomeLoadedListener.onHomeLoaded(home, homeController);
+				}
 				return null;
 			}
 		};
@@ -815,7 +807,10 @@ private static class FileContentManagerWithRecordedLastDirectories extends FileC
 	}
 }
 
-
+	public interface OnHomeLoadedListener
+	{
+		void onHomeLoaded(Home home, HomeController homeController);
+	}
 }
 
 

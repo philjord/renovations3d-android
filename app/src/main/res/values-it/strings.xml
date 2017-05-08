@@ -73,6 +73,8 @@ Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma 
     <string name="pleaseSelectSh3f">Seleziona il file sh3f da importare</string>
     <string name="pleaseSelectSh3t">Seleziona il file sh3t da importare</string>
     <string name="helpRedirectNotice">Ti viene indirizzato al sistema di assistenza per applicazioni desktop Sweet Home 3D, non corrisponderà esattamente all\'interfaccia utente di Renovations 3D.</string>
+    <string name="get_image_camera">telecamera</string>
+    <string name="get_image_file">File</string>
 
 
 </resources>

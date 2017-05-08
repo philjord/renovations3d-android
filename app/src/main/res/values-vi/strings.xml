@@ -70,5 +70,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="pleaseSelectSh3f">Vui lòng chọn tệp sh3f để nhập</string>
     <string name="pleaseSelectSh3t">Vui lòng chọn tệp sh3t để nhập</string>
     <string name="helpRedirectNotice">Bạn đang hướng tới hệ thống trợ giúp ứng dụng Sweet Home 3D, nó sẽ không khớp chính xác với giao diện người dùng Renovations 3D.</string>
+    <string name="get_image_camera">Máy ảnh</string>
+    <string name="get_image_file">Tập tin</string>
 
 </resources>

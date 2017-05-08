@@ -69,5 +69,7 @@
     <string name="pleaseSelectSh3f">请选择要导入的sh3f文件</string>
     <string name="pleaseSelectSh3t">请选择要导入的sh3t文件</string>
     <string name="helpRedirectNotice">您正在被引导到Sweet Home 3D桌面应用程序帮助系统，它将不会与Renovations 3D用户界面完全匹配。</string>
+    <string name="get_image_camera">相机</string>
+    <string name="get_image_file">文件</string>
 
 </resources>

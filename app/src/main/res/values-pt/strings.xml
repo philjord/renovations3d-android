@@ -73,5 +73,7 @@ Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem o
     <string name="pleaseSelectSh3f">Selecione o arquivo sh3f para importar</string>
     <string name="pleaseSelectSh3t">Selecione o arquivo sh3t para importar</string>
     <string name="helpRedirectNotice">Você está sendo direcionado para o sistema de ajuda do aplicativo de área de trabalho do Sweet Home 3D, ele não corresponderá exatamente com a interface de usuário do Renovations 3D.</string>
+    <string name="get_image_camera">Câmera</string>
+    <string name="get_image_file">Arquivo</string>
 
 </resources>

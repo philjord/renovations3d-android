@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.androidonly;
+package com.eteks.renovations3d.android.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;

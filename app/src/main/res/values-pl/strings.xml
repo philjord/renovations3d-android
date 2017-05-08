@@ -70,5 +70,7 @@ Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczy
     <string name="pleaseSelectSh3f">Proszę wybrać plik sh3f do zaimportowania</string>
     <string name="pleaseSelectSh3t">Proszę wybrać plik sh3t do zaimportowania</string>
     <string name="helpRedirectNotice">Jesteście skierowani do systemu pomocniczego aplikacji Sweet Home 3D, nie pasuje dokładnie do interfejsu użytkownika Renovations 3D.</string>
+    <string name="get_image_camera">otograficzny</string>
+    <string name="get_image_file">Plik</string>
 
 </resources>

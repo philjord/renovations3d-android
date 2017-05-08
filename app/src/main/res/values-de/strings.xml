@@ -70,5 +70,7 @@ Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikon
     <string name="pleaseSelectSh3f">Bitte wählen Sie sh3f Datei zum Importieren aus</string>
     <string name="pleaseSelectSh3t">Bitte wählen Sie sh3t Datei zum Importieren aus</string>
     <string name="helpRedirectNotice">Sie werden an die Sweet Home 3D Desktop-Anwendung Hilfesystem gerichtet, es wird nicht genau mit der Benutzeroberfläche von Renovations 3D übereinstimmen.</string>
+    <string name="get_image_camera">Kamera</string>
+    <string name="get_image_file">Datei</string>
 
 </resources>

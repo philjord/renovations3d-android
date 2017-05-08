@@ -26,10 +26,9 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	private FragmentTransaction mCurTransaction = null;
 	private Fragment mCurrentPrimaryItem = null;
 
-	public Renovations3DPagerAdapter(FragmentManager fm, Renovations3D renovations3D)
+	public Renovations3DPagerAdapter(FragmentManager fm)
 	{
 		super(fm);
-		this.renovations3D = renovations3D;
 		this.mFragmentManager = fm;
 	}
 

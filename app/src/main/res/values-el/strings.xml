@@ -72,4 +72,6 @@ Pinch θα κινείστε προς τα εμπρός ή προς τα πίσω
     <string name="pleaseSelectSh3f">Επιλέξτε sh3f αρχείο για εισαγωγή</string>
     <string name="pleaseSelectSh3t">Επιλέξτε sh3t αρχείο για εισαγωγή</string>
     <string name="helpRedirectNotice">Σας κατευθύνεστε στο σύστημα βοήθειας για εφαρμογές γραφείου Sweet Home 3D, δεν θα ταιριάζει ακριβώς με το περιβάλλον εργασίας Ανακαίνισης 3D.</string>
+    <string name="get_image_file">Αρχείο</string>
+    <string name="get_image_camera">κάμερα</string>
 </resources>

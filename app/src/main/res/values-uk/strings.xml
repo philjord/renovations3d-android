@@ -71,5 +71,7 @@ Pinch буде рухати вас вперед або назад. <br>
     <string name="pleaseSelectSh3f">Будь ласка, виберіть sh3f файл для імпорту</string>
     <string name="pleaseSelectSh3t">Будь ласка, виберіть sh3t файл для імпорту</string>
     <string name="helpRedirectNotice">Ви спрямовані в систему настільних додатків допомоги Sweet Home 3D, це не буде точно збігатися з Renovations 3D користувальницький інтерфейс.</string>
+    <string name="get_image_camera">камера</string>
+    <string name="get_image_file">файл</string>
 
 </resources>

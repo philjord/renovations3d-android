@@ -23,7 +23,8 @@ import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.utils.DrawableView;
-import com.eteks.renovations3d.androidonly.LevelSpinnerControl;
+import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
+import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
@@ -32,7 +33,6 @@ import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
@@ -292,22 +292,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		}
 	}
 
-	/*
-Note word for a new level is used as deafult name of a level PlanController.levelName=Level %d have to strip the %d
-	Also put the add delete level under a sub menu along with a edit
-	and an add level at the same elevation too
 
-BackgroundImageWizardController.wizard.title=Background image wizard delte last word?
-		All under a sub menu of back ground image
-	 homeController.importBackgroundImage()
-homeController.modifyBackgroundImage()
-homeController.hideBackgroundImage()
-			 homeController.showBackgroundImage()
-			 deleteBackgroundImage()
-
-
-			 then import texture on the catalog
-*/
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
@@ -325,6 +310,21 @@ homeController.hideBackgroundImage()
 		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
 		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
+
+
+		String subMenuTile = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController.class, "wizard.title");
+		//TODO: localize this properly not this madness
+		//subMenuTile = subMenuTile.replace(" wizard", "...");// just en only
+		// let's try rip out every ting after last space the append
+		if (subMenuTile.lastIndexOf(" ") > 0)
+		{
+			subMenuTile = subMenuTile.substring(0, subMenuTile.lastIndexOf(" "));
+		}
+		subMenuTile += "...";
+		menu.findItem(R.id.bgImageMenu).setTitle(subMenuTile);
+
+		sortOutBackgroundMenu(menu);
+
 
 		String redoName = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
 		SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoName);// it will replace "*" with icon
@@ -383,10 +383,58 @@ homeController.hideBackgroundImage()
 		levelsSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.levelsSpinner));
 		// PJ no icons no need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
 
-		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this itme round
+		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		if(levelSpinnerControl != null)
 			levelSpinnerControl.setSpinner(levelsSpinner);
 
+
+		menu.findItem(R.id.levelsSpinner).setVisible(home.getLevels().size() > 0);
+
+	}
+
+
+	private BackgroundImage currentBackgroundImage()
+	{
+		Level selectedLevel = this.home.getSelectedLevel();
+		Level backgroundImageLevel = null;
+		if (selectedLevel != null)
+		{
+			// Search the first level at same elevation with a background image
+			List<Level> levels = this.home.getLevels();
+			for (int i = levels.size() - 1; i >= 0; i--)
+			{
+				Level level = levels.get(i);
+				if (level.getElevation() == selectedLevel.getElevation()
+						&& level.getElevationIndex() <= selectedLevel.getElevationIndex()
+						&& level.isViewable()
+						&& level.getBackgroundImage() != null) //PJ this is taken from plancomp paint, but visible check removed
+				{
+					backgroundImageLevel = level;
+					break;
+				}
+			}
+		}
+		return backgroundImageLevel == null ? this.home.getBackgroundImage() : backgroundImageLevel.getBackgroundImage();
+	}
+
+	private void sortOutBackgroundMenu(Menu menu)
+	{
+		final BackgroundImage backgroundImage = currentBackgroundImage();
+
+		String importModifyString  = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_BACKGROUND_IMAGE.Name");
+		if(backgroundImage != null)
+			importModifyString = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_BACKGROUND_IMAGE.Name");
+		menu.findItem(R.id.bgImageImportModify).setTitle(importModifyString);
+
+		String showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HIDE_BACKGROUND_IMAGE.Name");
+		if (backgroundImage != null && !backgroundImage.isVisible())
+			showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SHOW_BACKGROUND_IMAGE.Name");
+		menu.findItem(R.id.bgImageToggleVis).setTitle(showHideVis);
+
+		menu.findItem(R.id.bgImageDelete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_BACKGROUND_IMAGE.Name"));
+
+		menu.findItem(R.id.bgImageToggleVis).setEnabled(backgroundImage != null);
+		menu.findItem(R.id.bgImageDelete).setEnabled(backgroundImage != null);
 	}
 
 
@@ -437,7 +485,6 @@ homeController.hideBackgroundImage()
 	{
 		mOptionsMenu = menu;
 
-
 		MenuItem itemLocked = menu.findItem(R.id.lockCheck);
 		itemLocked.setChecked(home.isBasePlanLocked());
 
@@ -449,6 +496,8 @@ homeController.hideBackgroundImage()
 		itemLocked.setTitle(builder);
 		itemLocked.setTitleCondensed(lockedText);
 		itemLocked.setIcon(iconId);
+
+		sortOutBackgroundMenu(menu);
 
 
 		MenuItem cntlMI = menu.findItem(R.id.controlKeyOneTimer);
@@ -492,10 +541,12 @@ homeController.hideBackgroundImage()
 
 		resetToolSpinnerToMode();
 
+		menu.findItem(R.id.levelsSpinner).setVisible(home.getLevels().size() > 0);
+
 		// undo doesn't get text updated as it is just an icon
 		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);
 
-		// use the new default name without teh number format
+		// use the new default name without the number format
 		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
 		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
 		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
@@ -587,6 +638,30 @@ homeController.hideBackgroundImage()
 				else
 					planController.unlockBasePlan();
 				return true;
+
+			case R.id.bgImageImportModify:
+				//PJ the import appears to modify if it's already there??
+				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+					((Renovations3DActivity) getActivity()).renovations3D.getHomeController().importBackgroundImage();
+				return true;
+			case R.id.bgImageToggleVis:
+				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+				{
+					final BackgroundImage backgroundImage = currentBackgroundImage();
+					if(backgroundImage != null)
+					{
+						if(backgroundImage.isVisible())
+							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().hideBackgroundImage();
+						else
+							((Renovations3DActivity) getActivity()).renovations3D.getHomeController().showBackgroundImage();
+					}
+				}
+				return true;
+			case R.id.bgImageDelete:
+				if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null)
+					((Renovations3DActivity) getActivity()).renovations3D.getHomeController().deleteBackgroundImage();
+				return true;
+
 			case R.id.alignment:
 				item.setChecked(!item.isChecked());
 				this.planComponent.alignmentActivated = item.isChecked();
@@ -748,6 +823,7 @@ homeController.hideBackgroundImage()
 					updateSelectedTab(home);
 					levelSpinnerControl.addChangeListener(changeListener);
 				}
+				getActivity().invalidateOptionsMenu();
 			}
 		};
 		for (Level level : levels)
@@ -775,6 +851,8 @@ homeController.hideBackgroundImage()
 				}
 				updateLayout(home);
 				levelSpinnerControl.addChangeListener(changeListener);
+
+				getActivity().invalidateOptionsMenu();
 			}
 		});
 

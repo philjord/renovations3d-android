@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 
 import com.eteks.renovations3d.android.SwingTools;
@@ -22,9 +23,19 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 
 	protected ViewGroup inflatedView;
 
+
 	public AndroidDialogView(UserPreferences preferences, Activity activity, int rootViewId)
 	{
+		this(preferences,  activity,  rootViewId, false);
+	}
+
+	public AndroidDialogView(UserPreferences preferences, Activity activity, int rootViewId, boolean removeTitle)
+	{
 		super(activity);
+		// this must be called early apparently
+		 if(removeTitle)
+			 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		this.activity = activity;
 		inflatedView = (ViewGroup)this.getLayoutInflater().inflate(rootViewId, null);
 		this.setContentView(inflatedView);
@@ -48,16 +59,16 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 		replaceView(placeHolder, newView);
 	}
 
-	protected void removeView( int placeHolderId)
+	protected void removeView(int placeHolderId)
 	{
-		removeView(inflatedView.findViewById(placeHolderId));
+		removeViewFromParent(inflatedView.findViewById(placeHolderId));
 	}
 
 	public static ViewGroup getParent(View view) {
 		return (ViewGroup)view.getParent();
 	}
 
-	public static void removeView(View view) {
+	public static void removeViewFromParent(View view) {
 		ViewGroup parent = getParent(view);
 		if(parent != null) {
 			parent.removeView(view);
@@ -70,8 +81,8 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 			return;
 		}
 		final int index = parent.indexOfChild(currentView);
-		removeView(currentView);
-		removeView(newView);
+		removeViewFromParent(currentView);
+		removeViewFromParent(newView);
 		parent.addView(newView, index);
 	}
 

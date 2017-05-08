@@ -75,6 +75,8 @@ Changing from top down to visit can be done by the icon of a man or the icon of 
     <string name="pleaseSelectSh3t">Please select sh3t file to import</string>
     <string name="pleaseSelectSh3f">Please select sh3f file to import</string>
     <string name="helpRedirectNotice">You are being directed to the Sweet Home 3D desktop application\'s help system, it will not match exactly with Renovations 3D user interface.</string>
+    <string name="get_image_file">File</string>
+    <string name="get_image_camera">Camera</string>
 
 
 </resources>

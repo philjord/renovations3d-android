@@ -76,6 +76,8 @@
     <string name="pleaseSelectSh3f">가져올 sh3f 파일을 선택하십시오.</string>
     <string name="pleaseSelectSh3t">가져올 sh3t 파일을 선택하십시오.</string>
     <string name="helpRedirectNotice">Sweet Home 3D 데스크톱 응용 프로그램 도움말 시스템으로 이동하면 Renovations 3D 사용자 인터페이스와 정확하게 일치하지 않습니다.</string>
+    <string name="get_image_camera">카메라</string>
+    <string name="get_image_file">파일</string>
 
 
 </resources>
