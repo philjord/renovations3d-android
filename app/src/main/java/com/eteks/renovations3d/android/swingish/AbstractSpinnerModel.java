@@ -2,6 +2,7 @@ package com.eteks.renovations3d.android.swingish;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractSpinnerModel
 {
@@ -71,7 +72,8 @@ public abstract class AbstractSpinnerModel
 
 	protected void fireStateChanged()
 	{
-		for (ChangeListener cl : listenerList)
+		List<ChangeListener> list = (List<ChangeListener>)listenerList.clone();
+		for (ChangeListener cl : list)
 		{
 			cl.stateChanged(null);
 		}

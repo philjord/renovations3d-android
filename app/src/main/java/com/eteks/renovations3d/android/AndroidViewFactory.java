@@ -208,8 +208,8 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 			UserPreferences preferences,
 			ImportedTextureWizardController importedTextureWizardController)
 	{
-		throw new UnsupportedOperationException();//return new ImportedTextureWizardStepsPanel(texture, textureName, preferences,
-		//		importedTextureWizardController);
+		return new ImportedTextureWizardStepsPanel(texture, textureName, preferences,
+				importedTextureWizardController, activity);
 	}
 
 	/**

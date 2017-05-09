@@ -26,9 +26,12 @@ import java.util.Date;
 
 public class ActivityIntentManager
 {
+	public enum Destination {IMPORT_BACKGROUND, IMPORT_TEXTURE};
+
 	private static final int REQUEST_CODE_GET_IMAGE = 4736;
 	private static final int REQUEST_CODE_TAKE_IMAGE = 4737;
 	private ImageReceiver imageReceiver = null;
+	private Destination imageDestination = null;
 	private String imagedReceivedFile = null;// used by the dialog itself to ask for a pending image
 
 	private String mCurrentPhotoPath = null;
@@ -45,25 +48,41 @@ public class ActivityIntentManager
 	public void clear()
 	{
 		imageReceiver = null;
+		imageDestination = null;
 		imagedReceivedFile = null;
 		mCurrentPhotoPath = null;
 	}
 
-	public String requestPendingPickedFile()
+	public String requestPendingChosenImageFile(Destination destination)
 	{
-		// return the value then blank it out so it doesn't get used twices
-		String ret = imagedReceivedFile;
-		imagedReceivedFile = null;
-		return ret;
+		if(destination == imageDestination)
+		{
+			// return the value then blank it out so it doesn't get used twices
+			String ret = imagedReceivedFile;
+			clear();
+			return ret;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
-	public void pickImage(ImageReceiver imageReceiver)
+	public void pickImage(ImageReceiver imageReceiver, Destination destination)
 	{
 		this.imageReceiver = imageReceiver;
+		this.imageDestination = destination;
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+		// we will get teh file path back in teh return but we might still be destroyed so we need to record the destination
+		SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("mCurrentPhotoPath", "");
+		editor.putString("imageDestination", imageDestination.name());
+		editor.apply();
 
 		// in case this is a destroy version
 		System.out.println("startActivityForResult - auto saving");
@@ -71,9 +90,10 @@ public class ActivityIntentManager
 		activity.startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
 	}
 
-	public void takeImage(ImageReceiver imageReceiver)
+	public void takeImage(ImageReceiver imageReceiver, Destination destination)
 	{
 		this.imageReceiver = imageReceiver;
+		this.imageDestination = destination;
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		try
 		{
@@ -83,13 +103,11 @@ public class ActivityIntentManager
 
 			// I don't seem to get the save instance state or onPause calls, so if I have a photo file path then I assume this might destroy
 			// to get the camera running, so I need to save the destination of the photo for a restart
-			if (mCurrentPhotoPath != null)
-			{
-				SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putString("mCurrentPhotoPath", mCurrentPhotoPath);
-				editor.apply();
-			}
+			SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("mCurrentPhotoPath", mCurrentPhotoPath != null ? mCurrentPhotoPath : "");
+			editor.putString("imageDestination", imageDestination.name());
+			editor.apply();
 		}
 		catch (IOException e)
 		{
@@ -196,18 +214,54 @@ public class ActivityIntentManager
 					if (imageReceiver != null)
 					{
 						imageReceiver.receivedImage(fileName);
-						imageReceiver = null;
+						// all done clear up
+						clear();
 					}
 					else
 					{
+						// record it ready for pick up once the dialog is up
 						imagedReceivedFile = fileName;
+						// note no clear obviously as we need destination etc ready
 
-						// let's presume this has come from a destroy call after the get file intent
-						// so I need to open the background import dialog now and it will check back with the activity to see if a
-						// a file is waiting to be received
-						activity.showBackGroundImportWizard();
+
+						if( imageDestination == null )
+						{
+							SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+							try
+							{
+								imageDestination = Destination.valueOf(settings.getString("imageDestination", ""));
+							}
+							catch( Exception e)
+							{
+								e.printStackTrace();
+								//NPE or illegalarguement, just ignore as the null will carry through to no action
+							}
+							// just to be sure clear it all out
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString("mCurrentPhotoPath", "");
+							editor.apply();
+
+						}
+
+						if(imageDestination !=null )
+						{
+							switch(imageDestination)
+							{
+								case IMPORT_BACKGROUND:
+									// let's presume this has come from a destroy call after the get file intent
+									// so I need to open the background import dialog now and it will check back with the activity to see if a
+									// a file is waiting to be received
+									activity.showBackGroundImportWizard();
+									break;
+								case IMPORT_TEXTURE:
+									activity.showImportTextureWizard();
+									break;
+							}
+						}
+
 
 					}
+
 				}
 				else
 				{

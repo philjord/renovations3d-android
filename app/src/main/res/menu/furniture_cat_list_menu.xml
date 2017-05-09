@@ -24,4 +24,9 @@
                 android:title="Default" />
         </menu>
     </item>
+    <item
+        android:id="@+id/importTexture"
+        android:text="Import Texture"
+        android:showAsAction="never"
+        />
 </menu>

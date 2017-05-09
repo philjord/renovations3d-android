@@ -27,7 +27,7 @@ public class JComboBox extends Spinner
 		setModel(dcbm);
 	}
 
-	public JComboBox(Context context, String[] objs)
+	public JComboBox(Context context, Object[] objs)
 	{
 		this(context, new DefaultComboBoxModel(objs));
 	}

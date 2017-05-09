@@ -65,7 +65,6 @@ import javaawt.Dimension;
 import javaawt.EventQueue;
 import javaawt.Graphics;
 import javaawt.Graphics2D;
-import javaawt.Insets;
 import javaawt.Point;
 import javaawt.RenderingHints;
 import javaawt.Shape;
@@ -135,7 +134,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 		layoutComponents(preferences);
 
 		// check in case teh image request buttons caused this activity to be destoryed then recreated
-		String pendingImageName = ((Renovations3DActivity)activity).getActivityIntentManager().requestPendingPickedFile();
+		String pendingImageName = ((Renovations3DActivity)activity).getActivityIntentManager().requestPendingChosenImageFile(ActivityIntentManager.Destination.IMPORT_BACKGROUND);
 		if(pendingImageName == null)
 		{
 			updateController(backgroundImage, preferences);
@@ -202,7 +201,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 							updateController(imageName, preferences, controller.getContentManager());
 						}
 					}
-				);
+				,ActivityIntentManager.Destination.IMPORT_BACKGROUND);
 			}
 		});
 		this.imageChoiceOrChangeButtonCamera = new JButton(activity, "");
@@ -228,7 +227,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 							updateController(imageName, preferences, controller.getContentManager());
 						}
 					}
-				);
+				, ActivityIntentManager.Destination.IMPORT_BACKGROUND);
 			}
 		});
 		this.imageChoiceErrorLabel = new JLabel(activity, preferences.getLocalizedString(

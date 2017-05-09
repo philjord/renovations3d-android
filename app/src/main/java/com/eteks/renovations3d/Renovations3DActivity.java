@@ -31,7 +31,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
@@ -1318,6 +1317,37 @@ public class Renovations3DActivity extends FragmentActivity
 							public void run()
 							{
 								renovations3D.getHomeController().importBackgroundImage();
+							}
+						});
+					}
+				});
+			}
+		}
+	}
+
+	public void showImportTextureWizard()
+	{
+		if (renovations3D != null)
+		{
+			if (renovations3D.getHomeController() != null)
+			{
+				renovations3D.getHomeController().importTexture();
+			}
+			else
+			{
+				//the home is still loading need to call the import statement when the controller is not null
+				renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
+				{
+					@Override
+					public void onHomeLoaded(Home home, HomeController homeController)
+					{
+						renovations3D.removeOnHomeLoadedListener(this);
+						Handler handler = new Handler(Looper.getMainLooper());
+						handler.post(new Runnable()
+						{
+							public void run()
+							{
+								renovations3D.getHomeController().importTexture();
 							}
 						});
 					}
