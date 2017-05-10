@@ -21,6 +21,7 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.view.WindowManager;
 
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.ItemListener;
@@ -88,7 +89,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     final float maximumLength = 5E5f;
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+    this.xSpinner = new NullableSpinner(activity, xSpinnerModel, true);
     xSpinnerModel.setLength(controller.getX());
     final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -107,7 +108,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 			com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+    this.ySpinner = new NullableSpinner(activity, ySpinnerModel, true);
     ySpinnerModel.setLength(controller.getY());
     final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -127,7 +128,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     float maximumElevation = preferences.getLengthUnit().getMaximumElevation();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, controller.getMinimumElevation(), maximumElevation);
-    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
+    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel, true);
     elevationSpinnerModel.setLength(controller.getElevation());
     elevationSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
@@ -274,7 +275,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
         && this.controller != null) {
       this.controller.modifyObserverCamera();
     }*/
-
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	  this.setOnDismissListener(new OnDismissListener()
 	  {
 		  @Override

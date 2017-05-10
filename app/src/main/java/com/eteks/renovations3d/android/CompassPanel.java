@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -116,7 +117,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+    this.xSpinner = new NullableSpinner(activity, xSpinnerModel, true);
     xSpinnerModel.setLength(controller.getX());
     final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -137,7 +138,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 			com.eteks.sweethome3d.android_props.CompassPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+    this.ySpinner = new NullableSpinner(activity, ySpinnerModel, true);
     ySpinnerModel.setLength(controller.getY());
     final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -159,7 +160,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel diameterSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences,
             preferences.getLengthUnit().getMinimumLength(), preferences.getLengthUnit().getMaximumLength()  / 10);
-    this.diameterSpinner = new NullableSpinner(activity, diameterSpinnerModel);
+    this.diameterSpinner = new NullableSpinner(activity, diameterSpinnerModel, true);
     diameterSpinnerModel.setLength(controller.getDiameter());
     final PropertyChangeListener diameterChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -447,6 +448,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         && this.controller != null) {
       this.controller.modifyCompass();
     }*/
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	  this.setOnDismissListener(new OnDismissListener()
 	  {
 		  @Override

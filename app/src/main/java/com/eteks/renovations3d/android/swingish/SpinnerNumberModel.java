@@ -69,7 +69,9 @@ public class SpinnerNumberModel extends AbstractSpinnerModel
 
 	public void setValue(Object value)
 	{
-		this.value =  ((Number)value).doubleValue();
+		//this really really needs to only accept values in range
+		double newValue = ((Number) value).doubleValue();
+		this.value = newValue < minimum ? minimum : newValue > maximum ? maximum : newValue;
 		fireStateChanged();
 	}
 

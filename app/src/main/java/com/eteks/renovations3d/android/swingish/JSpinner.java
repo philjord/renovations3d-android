@@ -11,12 +11,14 @@ import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.eteks.sweethome3d.viewcontroller.LabelController;
+import com.mindblowing.renovations3d.R;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -42,9 +44,19 @@ public class JSpinner extends LinearLayout
 	public void afterTextChanged(Editable arg0) {
 		model.removeChangeListener(changerListener);
 		if( output.getText().toString().length() > 0)
-			model.setValue(Float.parseFloat(output.getText().toString()));
+		{
+			try
+			{
+				model.setValue(Float.parseFloat(output.getText().toString()));
+			}catch(NumberFormatException e)
+			{
+				//possibly entering a -ve number or something, just ignore for now
+			}
+		}
 		else
+		{
 			model.setValue(0);
+		}
 		model.addChangeListener(changerListener);
 	}};
 
@@ -99,7 +111,7 @@ public class JSpinner extends LinearLayout
 		{
 			output = new EditText(context);
 			output.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-
+			output.setImeOptions(EditorInfo.IME_ACTION_DONE);
 		}
 		setFormat(format);
 

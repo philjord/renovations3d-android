@@ -20,8 +20,6 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -30,7 +28,6 @@ import com.eteks.renovations3d.android.swingish.JLabel;
 import com.eteks.renovations3d.android.swingish.JPanel;
 import com.eteks.renovations3d.android.swingish.JRadioButton;
 import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.View;
@@ -186,7 +183,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
             controller.getMaxHeight() == null
                 ? preferences.getLengthUnit().getMaximumLength() / 10
                 : controller.getMaxHeight());
-    this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
+    this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
     heightSpinnerModel.setNullable(controller.getHeight() == null);
     final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -228,7 +225,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
 			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "thicknessLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2);
-    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
+    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel, true);
     thicknessSpinnerModel.setNullable(controller.getThickness() == null);
     thicknessSpinnerModel.setLength(controller.getThickness());
     final PropertyChangeListener thicknessChangeListener = new PropertyChangeListener() {
@@ -283,6 +280,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
 	  swapOut(this.heightSpinner, R.id.baseboardview_heightSpinner);
 	  swapOut(this.thicknessLabel, R.id.baseboardview_thicknessLabel);
 	  swapOut(this.thicknessSpinner, R.id.baseboardview_thicknessSpinner);
+
   }
 
 }

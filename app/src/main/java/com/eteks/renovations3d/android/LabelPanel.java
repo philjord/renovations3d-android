@@ -268,7 +268,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
 
 	  final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 			  preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
-    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
+    this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel, true);
     elevationSpinnerModel.setNullable(controller.getElevation() == null);
     elevationSpinnerModel.setValue(controller.getElevation());
     final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {

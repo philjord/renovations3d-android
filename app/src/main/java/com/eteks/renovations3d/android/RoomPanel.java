@@ -643,7 +643,6 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		  swapOut(this.nameTextField, R.id.roompanel_nameTextField);
 		  // in all cases suppresses teh name field
 		  //if (this.nameTextField.getText().toString() != null && this.nameTextField.getText().toString().length() > 0)
-		  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 		  swapOut(this.areaVisibleCheckBox, R.id.roompanel_areaVisibleCheckBox);
 	  }
@@ -732,6 +731,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
         && this.controller != null) {
       this.controller.modifyRooms();
     }*/
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	  this.setOnDismissListener(new OnDismissListener()
 	  {
 		  @Override

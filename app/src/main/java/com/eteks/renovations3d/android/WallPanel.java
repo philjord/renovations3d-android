@@ -23,6 +23,7 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import java.beans.PropertyChangeEvent;
@@ -117,7 +118,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  super(preferences, activity, R.layout.dialog_wallpanel);
     this.controller = controller;
     createComponents(preferences, controller);
-    setMnemonics(preferences);
     layoutComponents(preferences, controller);
   }
 
@@ -135,7 +135,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     final float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xStartSpinner = new NullableSpinner(activity, xStartSpinnerModel);
+    this.xStartSpinner = new NullableSpinner(activity, xStartSpinnerModel, true);
     xStartSpinnerModel.setNullable(controller.getXStart() == null);
     xStartSpinnerModel.setLength(controller.getXStart());
     final PropertyChangeListener xStartChangeListener = new PropertyChangeListener() {
@@ -158,7 +158,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel yStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.yStartSpinner = new NullableSpinner(activity, yStartSpinnerModel);
+    this.yStartSpinner = new NullableSpinner(activity, yStartSpinnerModel, true);
     yStartSpinnerModel.setNullable(controller.getYStart() == null);
     yStartSpinnerModel.setLength(controller.getYStart());
     final PropertyChangeListener yStartChangeListener = new PropertyChangeListener() {
@@ -181,7 +181,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.xEndSpinner = new NullableSpinner(activity, xEndSpinnerModel);
+    this.xEndSpinner = new NullableSpinner(activity, xEndSpinnerModel, true);
     xEndSpinnerModel.setNullable(controller.getXEnd() == null);
     xEndSpinnerModel.setLength(controller.getXEnd());
     final PropertyChangeListener xEndChangeListener = new PropertyChangeListener() {
@@ -204,7 +204,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel yEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-    this.yEndSpinner = new NullableSpinner(activity, yEndSpinnerModel);
+    this.yEndSpinner = new NullableSpinner(activity, yEndSpinnerModel, true);
     yEndSpinnerModel.setNullable(controller.getYEnd() == null);
     yEndSpinnerModel.setLength(controller.getYEnd());
     final PropertyChangeListener yEndChangeListener = new PropertyChangeListener() {
@@ -228,7 +228,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     float minimumLength = preferences.getLengthUnit().getMinimumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel distanceToEndPointSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2 * maximumLength * (float)Math.sqrt(2));
-    this.distanceToEndPointSpinner = new NullableSpinner(activity, distanceToEndPointSpinnerModel);
+    this.distanceToEndPointSpinner = new NullableSpinner(activity, distanceToEndPointSpinnerModel, true);
     distanceToEndPointSpinnerModel.setNullable(controller.getLength() == null);
     distanceToEndPointSpinnerModel.setLength(controller.getDistanceToEndPoint());
     final PropertyChangeListener distanceToEndPointChangeListener = new PropertyChangeListener() {
@@ -590,7 +590,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
             com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallHeightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel rectangularWallHeightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.rectangularWallHeightSpinner = new NullableSpinner(activity, rectangularWallHeightSpinnerModel);
+    this.rectangularWallHeightSpinner = new NullableSpinner(activity, rectangularWallHeightSpinnerModel, true);
     rectangularWallHeightSpinnerModel.setNullable(controller.getRectangularWallHeight() == null);
     rectangularWallHeightSpinnerModel.setLength(controller.getRectangularWallHeight());
     final PropertyChangeListener rectangularWallHeightChangeListener = new PropertyChangeListener() {
@@ -630,7 +630,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtStartLabel.text"));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.slopingWallHeightAtStartSpinner = new NullableSpinner(activity, slopingWallHeightAtStartSpinnerModel);
+    this.slopingWallHeightAtStartSpinner = new NullableSpinner(activity, slopingWallHeightAtStartSpinnerModel, true);
     slopingWallHeightAtStartSpinnerModel.setNullable(controller.getSlopingWallHeightAtStart() == null);
     slopingWallHeightAtStartSpinnerModel.setLength(controller.getSlopingWallHeightAtStart());
     final PropertyChangeListener slopingWallHeightAtStartChangeListener = new PropertyChangeListener() {
@@ -656,7 +656,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtEndLabel.text"));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
-    this.slopingWallHeightAtEndSpinner = new NullableSpinner(activity, slopingWallHeightAtEndSpinnerModel);
+    this.slopingWallHeightAtEndSpinner = new NullableSpinner(activity, slopingWallHeightAtEndSpinnerModel, true);
     slopingWallHeightAtEndSpinnerModel.setNullable(controller.getSlopingWallHeightAtEnd() == null);
     slopingWallHeightAtEndSpinnerModel.setLength(controller.getSlopingWallHeightAtEnd());
     final PropertyChangeListener slopingWallHeightAtEndChangeListener = new PropertyChangeListener() {
@@ -682,7 +682,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "thicknessLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
-    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
+    this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel, true);
     thicknessSpinnerModel.setNullable(controller.getThickness() == null);
     thicknessSpinnerModel.setLength(controller.getThickness());
     final PropertyChangeListener thicknessChangeListener = new PropertyChangeListener() {
@@ -870,13 +870,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
   }
   
-  /**
-   * Sets components mnemonics and label / component associations.
-   */
-  private void setMnemonics(UserPreferences preferences) {
 
-  }
-  
   /**
    * Layouts panel components in panel with their labels. 
    */
@@ -1014,6 +1008,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
             this, this.dialogTitle, thicknessTextField) == JOptionPane.OK_OPTION) {
       this.controller.modifyWalls();
     }*/
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	  this.setOnDismissListener(new OnDismissListener()
 	  {
 		  @Override

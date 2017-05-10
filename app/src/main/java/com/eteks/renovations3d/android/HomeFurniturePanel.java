@@ -247,7 +247,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "priceLabel.text"));
       final NullableSpinnerNumberModel priceSpinnerModel =
           new NullableSpinnerNumberModel(0, 0, 10000, 1f);
-      this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel);
+      this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel, true);
       BigDecimal price = controller.getPrice();
       priceSpinnerModel.setNullable(price == null);
       priceSpinnerModel.setValue(price == null  ? null  : price.floatValue());
@@ -275,7 +275,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
-      this.xSpinner = new NullableSpinner(activity, xSpinnerModel);
+      this.xSpinner = new NullableSpinner(activity, xSpinnerModel, true);
       xSpinnerModel.setNullable(controller.getX() == null);
       xSpinnerModel.setLength(controller.getX());
       final PropertyChangeListener xChangeListener = new PropertyChangeListener() {
@@ -300,7 +300,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, -maximumLength, maximumLength);
-      this.ySpinner = new NullableSpinner(activity, ySpinnerModel);
+      this.ySpinner = new NullableSpinner(activity, ySpinnerModel, true);
       ySpinnerModel.setNullable(controller.getY() == null);
       ySpinnerModel.setLength(controller.getY());
       final PropertyChangeListener yChangeListener = new PropertyChangeListener() {
@@ -325,7 +325,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "elevationLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
-      this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
+      this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel, true);
       elevationSpinnerModel.setNullable(controller.getElevation() == null);
       elevationSpinnerModel.setLength(controller.getElevation());
       final PropertyChangeListener elevationChangeListener = new PropertyChangeListener() {
@@ -416,7 +416,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "widthLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel);
+      this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel, true);
       final PropertyChangeListener widthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float width = controller.getWidth();
@@ -444,7 +444,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "depthLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel);
+      this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel, true);
       final PropertyChangeListener depthChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float depth = controller.getDepth();
@@ -472,7 +472,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
           "heightLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
           preferences, minimumLength, maximumLength);
-      this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
+      this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
       final PropertyChangeListener heightChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Float height = controller.getHeight();
@@ -1109,6 +1109,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
             this, this.dialogTitle, this.nameTextField) == JOptionPane.OK_OPTION) {
       this.controller.modifyFurniture();
     }*/
+	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	  this.setOnDismissListener(new OnDismissListener()
 	  {
 		  @Override
