@@ -170,6 +170,7 @@ public class JOptionPane
 		{
 			new Throwable().printStackTrace();
 			System.err.println("JOptionPane asked to showOptionDialog (String message) on EDT thread you MUST not as I will block!");
+			// In this case you likely want just a new Thread (not the handler version)
 			return NO_OPTION;
 		}
 
