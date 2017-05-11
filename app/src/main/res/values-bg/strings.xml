@@ -71,5 +71,6 @@ Pinch ще се движите напред или назад. <br>
     <string name="helpRedirectNotice">Вие се насочвате към системата за помощ за настолни компютри Sweet Home 3D, няма да съвпада точно с потребителския интерфейс на Renovations 3D.</string>
     <string name="get_image_camera">Камера</string>
     <string name="get_image_file">досие</string>
+    <string name="search_hint">Търсене</string>
 
 </resources>

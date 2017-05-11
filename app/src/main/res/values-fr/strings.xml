@@ -71,5 +71,6 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="helpRedirectNotice">Vous êtes dirigé vers le système d\'aide aux applications de bureau Sweet Home 3D, il ne correspond pas exactement à l\'interface utilisateur Renovations 3D.</string>
     <string name="get_image_camera">Caméra</string>
     <string name="get_image_file">Fichier</string>
+    <string name="search_hint">Chercher</string>
 
 </resources>

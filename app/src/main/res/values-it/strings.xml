@@ -75,6 +75,7 @@ Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma 
     <string name="helpRedirectNotice">Ti viene indirizzato al sistema di assistenza per applicazioni desktop Sweet Home 3D, non corrisponderà esattamente all\'interfaccia utente di Renovations 3D.</string>
     <string name="get_image_camera">telecamera</string>
     <string name="get_image_file">File</string>
+    <string name="search_hint">Ricerca</string>
 
 
 </resources>

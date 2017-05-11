@@ -310,7 +310,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       this.searchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "searchLabel.text"));
       this.searchTextField = new JTextField(activity, "");
-
+		searchTextField.setHint(R.string.search_hint);
 		searchTextField.addTextChangedListener(new TextWatcher(){
 			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
 				texturesListModel.setFilterText(searchTextField.getText().toString());

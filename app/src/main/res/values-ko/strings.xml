@@ -78,6 +78,7 @@
     <string name="helpRedirectNotice">Sweet Home 3D 데스크톱 응용 프로그램 도움말 시스템으로 이동하면 Renovations 3D 사용자 인터페이스와 정확하게 일치하지 않습니다.</string>
     <string name="get_image_camera">카메라</string>
     <string name="get_image_file">파일</string>
+    <string name="search_hint">수색</string>
 
 
 </resources>

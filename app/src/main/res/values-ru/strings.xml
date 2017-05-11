@@ -72,5 +72,6 @@ Pinch переместит вас вперед или назад. <br>
     <string name="helpRedirectNotice">Вы направляетесь в справочную систему приложений для настольных приложений Sweet Home 3D, она не будет точно соответствовать пользовательскому интерфейсу Renovations 3D.</string>
     <string name="get_image_camera">камера</string>
     <string name="get_image_file">файл</string>
+    <string name="search_hint">Поиск</string>
 
 </resources>

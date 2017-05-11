@@ -71,5 +71,6 @@
     <string name="helpRedirectNotice">あなたはSweet Home 3Dデスクトップアプリケーションヘルプシステムに向けられていますが、Renovationsの3Dユーザーインターフェイスと正確には一致しません。</string>
     <string name="get_image_camera">カメラ</string>
     <string name="get_image_file">ファイル</string>
+    <string name="search_hint">サーチ</string>
 
 </resources>

@@ -4,10 +4,7 @@
     <string name="menu_save" translatable="false">Save home</string>
     <string name="menu_delete" translatable="false">Delete home</string>
     <string name="menu_help" translatable="false">Help</string>
-    <string name="search_hint" translatable="false">Search Furniture</string>
     <string name="virtualvisit" translatable="false">Virtual visit</string>
-    <string name="searchFurniture" translatable="false">search</string>
-    <string name="filterFurniture" translatable="false">filter</string>
     <string name="menu_save_as" translatable="false">Save as&#8230;</string>
     <string name="menu_about" translatable="false">About</string>
     <string name="menu_new" translatable="false">New home</string>

@@ -71,5 +71,6 @@ Változó fentről lefelé, hogy nézze meg lehet tenni az ikon egy ember vagy a
     <string name="helpRedirectNotice">A Sweet Home 3D asztali alkalmazás súgórendszerére irányítod, nem fog pontosan illeszkedni a Renovations 3D felhasználói felülethez.</string>
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">fájl</string>
+    <string name="search_hint">Keresés</string>
 
 </resources>

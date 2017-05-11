@@ -71,5 +71,6 @@ Het veranderen van boven naar beneden om te bezoeken kan worden gedaan door het 
     <string name="helpRedirectNotice">U wordt aangestuurd naar het Help-systeem van Sweet Home 3D, het komt niet precies overeen met Renovations 3D gebruikersinterface.</string>
     <string name="get_image_camera">Camera</string>
     <string name="get_image_file">het dossier</string>
+    <string name="search_hint">Zoeken</string>
 
 </resources>

@@ -74,5 +74,6 @@ Byte från toppen och nedåt för att besöka kan göras genom ikonen för en ma
     <string name="helpRedirectNotice">Du riktas till hjälpsystemet för Sweet Home 3D, det matchar inte exakt med Renovations 3D användargränssnitt.</string>
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">Fil</string>
+    <string name="search_hint">Sök</string>
 
 </resources>

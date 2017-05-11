@@ -74,5 +74,6 @@ Změna od shora dolů k návštěvě lze provést pomocí ikony člověka nebo n
     <string name="helpRedirectNotice">Budete přesměrováni do systému nápovědy pro stolní aplikace Sweet Home 3D, nebude to přesně odpovídat uživatelskému rozhraní Renovace 3D.</string>
     <string name="get_image_camera">Fotoaparát</string>
     <string name="get_image_file">Soubor</string>
+    <string name="search_hint">Vyhledávání</string>
 
 </resources>

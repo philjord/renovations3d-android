@@ -71,5 +71,6 @@ Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir p
     <string name="helpRedirectNotice">Sweet Home 3D masaüstü uygulama yardım sistemine yönlendiriliyorsunuz, Renovations 3D kullanıcı arayüzüyle tam olarak eşleşmiyor.</string>
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">Dosya</string>
+    <string name="search_hint">Arama</string>
 
 </resources>

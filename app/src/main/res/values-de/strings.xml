@@ -72,5 +72,6 @@ Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikon
     <string name="helpRedirectNotice">Sie werden an die Sweet Home 3D Desktop-Anwendung Hilfesystem gerichtet, es wird nicht genau mit der Benutzeroberfläche von Renovations 3D übereinstimmen.</string>
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">Datei</string>
+    <string name="search_hint">Suche</string>
 
 </resources>
