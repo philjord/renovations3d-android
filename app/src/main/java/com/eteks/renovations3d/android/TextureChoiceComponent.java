@@ -25,8 +25,12 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
@@ -51,6 +55,7 @@ import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.TexturesCatalog;
 import com.eteks.sweethome3d.model.TexturesCategory;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.viewcontroller.HomeFurnitureController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceView;
 import com.eteks.sweethome3d.viewcontroller.View;
@@ -67,9 +72,11 @@ import java.util.List;
 import javaawt.Color;
 import javaawt.Dimension;
 import javaawt.EventQueue;
+import javaawt.Font;
 import javaawt.Graphics;
 import javaawt.Graphics2D;
 import javaawt.Shape;
+import javaawt.VMFont;
 import javaawt.VMGraphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.imageio.ImageIO;
@@ -101,8 +108,10 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 
 	  final float scale = getResources().getDisplayMetrics().density;
 	  TexturePanel.TextureIcon.sizePx = (int) (TexturePanel.TextureIcon.SIZE_DP * scale + 0.5f);
+	  TexturePanel.fontSizePx = (int) (TexturePanel.fontSizeDp * scale + 0.5f);
+	  TexturePanel.namePadBottomPx = (int) (TexturePanel.namePadBottomDp * scale + 0.5f);
 
-    controller.addPropertyChangeListener(TextureChoiceController.Property.TEXTURE, 
+    controller.addPropertyChangeListener(TextureChoiceController.Property.TEXTURE,
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             postInvalidate();
@@ -186,7 +195,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
           }
         }
       });*/
-    
+
     // Add a listener to update texture
     addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ev) {
@@ -197,7 +206,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
   }
 
   /**
-   * Displays a dialog that let user choose whether he wants to delete 
+   * Displays a dialog that let user choose whether he wants to delete
    * the selected texture from catalog or not.
    * @return <code>true</code> if user confirmed to delete.
    */
@@ -211,7 +220,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.delete");
     String cancel = this.preferences.getLocalizedString(
         com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.cancel");
-    
+
     return JOptionPane.showOptionDialog(
         activity, message, title,
         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -219,15 +228,21 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
   }
 
   /**
-   * A panel that displays available textures in a list to let user make choose one. 
+   * A panel that displays available textures in a list to let user make choose one.
    */
   private static class TexturePanel extends AndroidDialogView{//JPanel {
-    private static final int PREVIEW_ICON_SIZE = Math.round(128 * SwingTools.getResolutionScale());; 
+
+	  public static int fontSizeDp = 12;
+	  public static int namePadBottomDp = 6;
+	  public static int fontSizePx = 12;
+	  public static int namePadBottomPx = 6;
+
+	  private static final int PREVIEW_ICON_SIZE = Math.round(128 * SwingTools.getResolutionScale());;
     private static String    searchFilterText = "";
-    private static Dimension dialogPreferredSize; 
-    
+    private static Dimension dialogPreferredSize;
+
     private TextureChoiceController controller;
-    
+
     private TextureImage            previewTexture;
     private JLabel                  searchLabel;
     private JTextField searchTextField;
@@ -246,7 +261,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     //private CatalogItemToolTip      toolTip;
 
 	  private Activity activity;
-    public TexturePanel(UserPreferences preferences, 
+    public TexturePanel(UserPreferences preferences,
                         TextureChoiceController controller,
 						Activity activity) {
 		super(preferences, activity, R.layout.dialog_texturechoice);
@@ -259,7 +274,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     /**
      * Creates and initializes components.
      */
-    private void createComponents(final UserPreferences preferences, 
+    private void createComponents(final UserPreferences preferences,
                                   final TextureChoiceController controller) {
       this.availableTexturesLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "availableTexturesLabel.text"));
@@ -292,11 +307,20 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             }
           });
 
-      /*this.searchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+      this.searchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "searchLabel.text"));
       this.searchTextField = new JTextField(activity, "");
+
+		searchTextField.addTextChangedListener(new TextWatcher(){
+			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+				texturesListModel.setFilterText(searchTextField.getText().toString());
+			}
+			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
 		//TODO: some sort of actual search
-      this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+   /*   this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {
           public void changedUpdate(DocumentEvent ev) {
             Object selectedValue = availableTexturesList.getSelectedValue();
             texturesListModel.setFilterText(searchTextField.getText());
@@ -340,7 +364,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
               g2D.rotate(Math.PI / 4, getWidth() / 2, getHeight() / 2);
             } else if (angle90DegreeRadioButton.isSelected()) {
               g2D.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2);
-            } 
+            }
             super.paintComponent(g);
             g2D.setTransform(oldTransform);
             g2D.setClip(oldClip);
@@ -353,7 +377,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         String importTextureButtonText = SwingTools.getLocalizedLabelText(
             preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "importTextureButton.text");
         //this.texturePreviewComponent.setBorder(SwingTools.getDropableComponentBorder());
-        // Add to label a transfer handler to let user drag and drop a file on it 
+        // Add to label a transfer handler to let user drag and drop a file on it
       /*  this.texturePreviewComponent.setTransferHandler(new TransferHandler() {
             @Override
             public boolean canImport(JComponent comp, DataFlavor [] flavors) {
@@ -378,7 +402,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
               }
             }
           });*/
-      
+
         this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class,
             "angleLabel.text"));
         this.angle0DegreeRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class,
@@ -412,9 +436,13 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         this.modifyTextureButton.setEnabled(false);
         this.modifyTextureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-              controller.modifyTexture((CatalogTexture)availableTexturesList.getSelectedItem());
+
+				int c = availableTexturesList.getCheckedItemPosition();
+				CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
+				controller.modifyTexture(ct);
+              //controller.modifyTexture((CatalogTexture)availableTexturesList.getSelectedItem());
             }
-          });    
+          });
         this.deleteTextureButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
             com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "deleteTextureButton.text"));
         this.deleteTextureButton.setEnabled(false);
@@ -425,6 +453,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 						int c = availableTexturesList.getCheckedItemPosition();
 						CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
 						controller.deleteTexture(ct);
+					//controller.deleteTexture((CatalogTexture)availableTexturesList.getSelectedItem());
 					}};
 				t.start();
             }
@@ -432,7 +461,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 
         preferences.getTexturesCatalog().addTexturesListener(new TexturesCatalogListener(this));
       } catch (IllegalArgumentException ex) {
-        // Do not support import texture if importTextureButton.text isn't defined 
+        // Do not support import texture if importTextureButton.text isn't defined
         //this.texturePreviewComponent.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       }
       //TODO: add back the recent textures panel
@@ -469,29 +498,21 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     }
 
     /**
-     * Renderer used to display the textures in list. 
+     * Renderer used to display the textures in list.
      */
-    private class TextureListCellRenderer extends ArrayAdapter<CatalogTexture>
+    private  class TextureListCellRenderer extends ArrayAdapter<CatalogTexture>
 			//DefaultListCellRenderer
 	{
-      //private Font defaultFont;
-      //private Font modifiablePieceFont;
+
+        private Font defaultFont;
+        private Font modifiablePieceFont;
 		public TextureListCellRenderer(Context context, List<CatalogTexture> catalog)
 		{
 			super(context, android.R.layout.simple_list_item_1, catalog);
+			this.defaultFont = new VMFont(Typeface.DEFAULT, fontSizePx);//getFont();
+			this.modifiablePieceFont = new VMFont(Typeface.defaultFromStyle(Typeface.ITALIC), fontSizePx);//new Font(this.defaultFont.getFontName(), Font.ITALIC, this.defaultFont.getSize());
 		}
 
-		//TODO: once catagory is showing use this font change to indicate alterability
-     // @Override
-      //public Component getListCellRendererComponent(final JList list, Object value,
-      //    int index, boolean isSelected, boolean cellHasFocus) {
-        // Initialize fonts if not done
-       /* if (this.defaultFont == null) {
-          this.defaultFont = getFont();
-          this.modifiablePieceFont = 
-              new Font(this.defaultFont.getFontName(), Font.ITALIC, this.defaultFont.getSize());
-          
-        }*/
 		 @Override
 		 public android.view.View getView(int position, android.view.View convertView, ViewGroup parent)
 		 {
@@ -507,6 +528,12 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 				{
 					Graphics2D g2D = new VMGraphics2D(canvas);
 					ti.paintIcon(null, g2D, 0, 0);
+
+					String value = texture.getName();
+					value = texture.getCategory().getName() + " - " + value;
+					g2D.setFont(texture.isModifiable() ? modifiablePieceFont : defaultFont);
+					g2D.setColor(Color.BLACK);
+					g2D.drawString(value, 0, this.getHeight() - namePadBottomPx);// at the bottom
 					if(isChecked())
 					{
 						g2D.setColor(Color.DARK_GRAY);
@@ -514,14 +541,8 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 					}
 				}};
 			ret.setMinimumWidth(TextureIcon.sizePx);
-			ret.setMinimumHeight(TextureIcon.sizePx);
+			ret.setMinimumHeight(TextureIcon.sizePx + fontSizePx + namePadBottomPx);
 
-        //value = texture.getName();
-        //value = texture.getCategory().getName() + " - " + value;
-        //Component component = super.getListCellRendererComponent(
-          //  list, value, index, isSelected, cellHasFocus);
-        //setIcon(new TextureIcon(texture, list));
-        //setFont(texture.isModifiable() ? this.modifiablePieceFont : this.defaultFont);
         return ret;
       }
     }
@@ -559,7 +580,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     private static class TextureIcon implements Icon {
       public static int SIZE_DP = 96;
 		public static int sizePx = 96;
-      
+
       private TextureImage texture;
       private JComponent   component;
 
@@ -568,7 +589,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         this.texture = texture;
         this.component = component;
       }
-      
+
       public int getIconWidth() {
         return sizePx;
       }
@@ -592,19 +613,19 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         }
       }
     }
-    
+
     /**
      * Catalog listener that updates textures list each time a texture
      * is deleted or added in textures catalog. This listener is bound to this component
-     * with a weak reference to avoid strong link between catalog and this component.  
+     * with a weak reference to avoid strong link between catalog and this component.
      */
     private static class TexturesCatalogListener implements CollectionListener<CatalogTexture> {
       private WeakReference<TexturePanel> texturePanel;
-      
+
       public TexturesCatalogListener(TexturePanel texturePanel) {
         this.texturePanel = new WeakReference<TexturePanel>(texturePanel);
       }
-      
+
       public void collectionChanged(final CollectionEvent<CatalogTexture> ev) {
         // If controller was garbage collected, remove this listener from catalog
         final TexturePanel texturePanel = this.texturePanel.get();
@@ -623,7 +644,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 						p, texturePanel.availableTexturesList.getAdapter().getItemId(p));
              //PJ not in yet: texturePanel.searchTextField.setText("");
 
-              // Select added texture only when the list is showing on screen to reduce the delay 
+              // Select added texture only when the list is showing on screen to reduce the delay
               // spent on fully reloading the textures list after a language change
              /* if (texturePanel.availableTexturesList.isShowing()) {
                 EventQueue.invokeLater(new Runnable() {
@@ -651,7 +672,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 					//texturePanel.availableTexturesList.clearSelection();
 				}});
               break;
-          }       
+          }
         }
       }
     }
@@ -692,24 +713,17 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       this.recentTexturesPanel.setVisible(!recentTextures.isEmpty());
     }*/
 
-    
+
     /**
-     * Layouts components in panel with their labels. 
+     * Layouts components in panel with their labels.
      */
     private void layoutComponents() {
 		swapOut(this.availableTexturesLabel, R.id.texture_choice_availableLabel);
-		swapOut(this.availableTexturesList,R.id.texture_choice_availableTextureList);
+		swapOut(this.availableTexturesList, R.id.texture_choice_availableTextureList);
 
+       // leftPanel.add(this.searchLabel,
+		swapOut(this.searchTextField, R.id.texture_choice_searchTextField);
 
-     /*
-        leftPanel.add(this.searchLabel, new GridBagConstraints(
-            0, 5, 1, 1, 0, 0, labelAlignment, 
-            GridBagConstraints.NONE, new Insets(2, 0, 0, 3), 0, 0));
-        leftPanel.add(this.searchTextField, new GridBagConstraints(
-            1, 5, 1, 1, 0, 0, GridBagConstraints.LINE_START, 
-            GridBagConstraints.HORIZONTAL, new Insets(2, 0, 0, 0), 0, 0));
-      */
-      
 		swapOut(this.chosenTextureLabel, R.id.texture_choice_chosenLabel);
 		swapOut(this.texturePreviewComponent, R.id.texture_choice_chosenView);
 		if (this.controller.isRotationSupported()) {
@@ -729,9 +743,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       // Fifth row
       if (this.importTextureButton != null) {
 		  swapOut(this.importTextureButton, R.id.texture_choice_importTextureButton);
-		  //swapOut(this.modifyTextureButton, R.id.texture_choice_modifyTextureButton);
-		  //PJ modify removed becuase teh list does not stay highlighted
-		  removeView(R.id.texture_choice_modifyTextureButton);
+		  swapOut(this.modifyTextureButton, R.id.texture_choice_modifyTextureButton);
 		  swapOut(this.deleteTextureButton, R.id.texture_choice_deleteTextureButton);
       }
       else
@@ -745,8 +757,8 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
      /* add(this.recentTexturesPanel, new GridBagConstraints(
           0, 1, 2, 1, 0, 0, GridBagConstraints.NORTH,
           GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));*/
-      
-      // Change component tab order to ensure search text field is after the available textures list 
+
+      // Change component tab order to ensure search text field is after the available textures list
     /*  final List<JComponent> components = new ArrayList<JComponent>();
       components.add(this.availableTexturesList);
       components.add(this.searchTextField);
@@ -765,7 +777,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 		this.setTitle(controller.getDialogTitle());
 		swapOut(closeButton, R.id.texture_choice_closeButton);
     }
-    
+
     /**
      * Returns the chosen texture.
      */
@@ -792,7 +804,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             } catch (IOException ex) {
             }
           }
-        }        
+        }
       } else {
         //this.texturePreviewComponent.setToolTipText(null);
         this.texturePreviewComponent.setImage(null);
@@ -824,7 +836,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
           && dialogPreferredSize.height >= dialog.getHeight()) {
         dialog.setSize(dialogPreferredSize);
       }*/
-      // Initialize search field value once list preferred size is set      
+      // Initialize search field value once list preferred size is set
      // searchTextField.setText(searchFilterText);
       // Add a listener that transfer focus to focusable field of texture panel when dialog is shown
    /*   dialog.addComponentListener(new ComponentAdapter() {
@@ -844,7 +856,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             }
           }
         });*/
-      
+
       //ToolTipManager.sharedInstance().registerComponent(this.availableTexturesList);
     /*  dialog.setVisible(true);
       dialog.dispose();
@@ -858,7 +870,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
           this.controller.addRecentTexture(selectedTexture);
         }
       }*/
-
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		this.setOnDismissListener(new OnDismissListener()
 		{
 			@Override
@@ -893,16 +905,16 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         return new HomeTexture(previewTexture, angleInRadians);
       }
     }
-    
+
     /**
-     * List model adaptor to CatalogTexture instances of catalog.  
+     * List model adaptor to CatalogTexture instances of catalog.
      */
     private static class TexturesCatalogListModel extends JList.AbstractListModel
 	{
       private TexturesCatalog        catalog;
       private List<CatalogTexture>   textures;
       private String                 filterText;
-      
+
       public TexturesCatalogListModel(TexturesCatalog catalog) {
         this.catalog = catalog;
         this.filterText = "";
@@ -923,10 +935,13 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         checkFurnitureList();
         return this.textures.size();
       }
-      
+
       private void resetFurnitureList() {
         if (this.textures != null) {
           this.textures = null;
+			//PJ added now to force an update, before the fireupdate refreshs the list
+			checkFurnitureList();
+
           EventQueue.invokeLater(new Runnable() {
               public void run() {
 				  fireContentsChanged(this, -1, -1);
@@ -959,7 +974,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 
 		/**
        * Catalog textures listener bound to this list model with a weak reference to avoid
-       * strong link between catalog and this list.  
+       * strong link between catalog and this list.
        */
       private static class TexturesCatalogListener implements CollectionListener<CatalogTexture> {
         private WeakReference<TexturesCatalogListModel>  listModel;
@@ -967,7 +982,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         public TexturesCatalogListener(TexturesCatalogListModel catalogListModel) {
           this.listModel = new WeakReference<TexturesCatalogListModel>(catalogListModel);
         }
-        
+
         public void collectionChanged(CollectionEvent<CatalogTexture> ev) {
           // If catalog list model was garbage collected, remove this listener from catalog
           TexturesCatalogListModel listModel = this.listModel.get();

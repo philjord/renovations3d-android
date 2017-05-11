@@ -26,6 +26,8 @@ public class JList extends ListView
 		super(context);
 		this.listModel = listModel;
 
+
+		listModel.list = this;
 	}
 
 	/**
@@ -59,22 +61,20 @@ public class JList extends ListView
 		public abstract List toList();
 
 
-
+		JList list;
 		public void fireContentsChanged(Object source, int start, int end)
 		{
 			//TODO: tell people about it? or just update renderererer
-		/*	if(list != null)
+			if(list != null)
 			{
 				if(list.getAdapter() instanceof ArrayAdapter)
 				{
 					((ArrayAdapter)list.getAdapter()).clear();
-					((ArrayAdapter)list.getAdapter()).addAll(this.toArray());
+					((ArrayAdapter)list.getAdapter()).addAll(this.toList());
 					((ArrayAdapter)list.getAdapter()).notifyDataSetChanged();
-					((ArrayAdapter)list.getAdapter()).notifyDataSetInvalidated();
-					list.requestLayout();
 					list.postInvalidate();
 				}
-			}*/
+			}
 		}
 	}
 }
