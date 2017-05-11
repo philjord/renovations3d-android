@@ -7,13 +7,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 /**
  * Created by phil on 1/27/2017.
  */
 
 public class JComboBox extends Spinner
 {
-	private Object[] objs;
+	private DefaultComboBoxModel dcbm;
 
 	public JComboBox(Context context)
 	{
@@ -32,18 +34,24 @@ public class JComboBox extends Spinner
 		this(context, new DefaultComboBoxModel(objs));
 	}
 
+	public JComboBox(Context context, ArrayList objs)
+	{
+		this(context, new DefaultComboBoxModel(objs));
+	}
+
 	public void setModel(DefaultComboBoxModel dcbm)
 	{
-		this.objs = dcbm.objs;
+		this.dcbm = dcbm;
 		setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, dcbm.objs));
 	}
 
 	public void setSelectedItem(Object selection)
 	{
 		int selectionPos = 0;
-		for (int i = 0; i < objs.length; i++)
+		for (int i = 0; i < dcbm.objs.size(); i++)
 		{
-			if (objs[i] != null && objs[i].equals(selection))
+			Object o = dcbm.objs.get(i);
+			if (o != null && o.equals(selection))
 			{
 				selectionPos = i;
 				break;

@@ -66,17 +66,34 @@
                     android:layout_gravity="center_vertical|center_horizontal"/>
                 <CheckBox
                     android:id="@+id/texture_choice_angle45"
-                    android:text="0 deg"
+                    android:text="45 deg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
                 <CheckBox
                     android:id="@+id/texture_choice_angle90"
-                    android:text="0 deg"
+                    android:text="90 deg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
-
+            <Button
+                android:id="@+id/texture_choice_importTextureButton"
+                android:text="texture_choice_importTextureButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+            <Button
+                android:id="@+id/texture_choice_modifyTextureButton"
+                android:text="texture_choice_modifyTextureButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+            <Button
+                android:id="@+id/texture_choice_deleteTextureButton"
+                android:text="texture_choice_deleteTextureButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
 

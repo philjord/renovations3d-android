@@ -1,6 +1,7 @@
 package com.eteks.renovations3d.android.swingish;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by phil on 1/27/2017.
@@ -8,20 +9,23 @@ import java.util.ArrayList;
 
 public class DefaultComboBoxModel
 {
-	public Object[] objs;
+	public ArrayList objs;
 	public DefaultComboBoxModel(Object[] objs)
+	{
+		this.objs = new ArrayList(Arrays.asList(objs));
+	}
+
+	public DefaultComboBoxModel(ArrayList objs)
 	{
 		this.objs = objs;
 	}
 
+
 	public void insertElementAt(Object o, int idx)
 	{
-		ArrayList a = new ArrayList();
-		if(objs!=null)
-			for(Object ob : objs)
-				a.add(ob);
-		a.add(idx,o);
-		objs = a.toArray();
+		if(objs==null)
+			objs = new ArrayList();
 
+		objs.add(idx,o);
 	}
 }

@@ -35,6 +35,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -316,9 +319,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "nameLabel.text"));
     this.nameTextField = new JTextField(activity, "");
-    //if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
-    //  SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
-    //}
 	  nameTextField.addTextChangedListener(new TextWatcher(){
 		  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
 		  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
@@ -356,8 +356,9 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 
     this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "categoryLabel.text"));
-    this.categoryComboBox = new JComboBox(activity, preferences.getTexturesCatalog().getCategories().toArray());
-	  categoryComboBox.setAdapter(new ArrayAdapter<TexturesCategory>(activity, android.R.layout.simple_list_item_1, preferences.getTexturesCatalog().getCategories().toArray(new TexturesCategory[0]))
+	  ArrayList<TexturesCategory> cats = new ArrayList<TexturesCategory>(Arrays.asList(preferences.getTexturesCatalog().getCategories().toArray(new TexturesCategory[0])));
+    this.categoryComboBox = new JComboBox(activity, cats);
+	  categoryComboBox.setAdapter(new ArrayAdapter<TexturesCategory>(activity, android.R.layout.simple_list_item_1, cats)
 	  {
 		  @Override
 		  public View getView(int position, View convertView, ViewGroup parent)
@@ -439,6 +440,14 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
             // If category changes update category combo box
             TexturesCategory category = controller.getCategory();
             if (category != null) {
+				// on desktop if the jcombobox is free form edited this call will add it (e.g. USer catagory
+				// however on Android spinners no edit, no select until adapter updated
+				ArrayAdapter aa = ((ArrayAdapter)categoryComboBox.getAdapter());
+				if(aa.getPosition(category) == -1)
+				{
+					aa.add(category);
+					aa.notifyDataSetChanged();
+				}
               categoryComboBox.setSelectedItem(category);
             }
           }
