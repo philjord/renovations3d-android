@@ -877,20 +877,38 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 		else
 		{
+			// if no home loaded must load a new home and on complete import libraries
+			if (renovations3D == null || renovations3D.getHomeController() == null)
+			{
+				// must always recreate otherwise the pager hand out an IllegalStateException
+				renovations3D = new Renovations3D(Renovations3DActivity.this);
+
+				mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
+				//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+
+				// discard the old view first
+				mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+				mRenovations3DPagerAdapter.notifyDataSetChanged();
+
+				// create new home and trigger the new views
+				renovations3D.newHome();
+				mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+				mRenovations3DPagerAdapter.notifyDataSetChanged();
+
+				recordHomeStateInPrefs("", false, "");
+
+			}
+
 			//get off EDT so blocking questions can be asked
 			Thread t = new Thread()
 			{
 				public void run()
 				{
-
-					if (renovations3D == null || renovations3D.getHomeController() == null)
-						newHome();
-
 					if (inFile.getName().toLowerCase().endsWith(".sh3f"))
-					{
+					{System.out.println("sh3f" );
 						HomeController controller = renovations3D.getHomeController();
 						if (controller != null)
-						{
+						{System.out.println("importFurnitureLibrary " + inFile.getAbsolutePath() );
 							controller.importFurnitureLibrary(inFile.getAbsolutePath());
 						}
 					}
