@@ -319,7 +319,6 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 			public void afterTextChanged(Editable arg0) {
 			}
 		});
-		//TODO: some sort of actual search
    /*   this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {
           public void changedUpdate(DocumentEvent ev) {
             Object selectedValue = availableTexturesList.getSelectedValue();
