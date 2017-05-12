@@ -905,10 +905,10 @@ public class Renovations3DActivity extends FragmentActivity
 				public void run()
 				{
 					if (inFile.getName().toLowerCase().endsWith(".sh3f"))
-					{System.out.println("sh3f" );
+					{
 						HomeController controller = renovations3D.getHomeController();
 						if (controller != null)
-						{System.out.println("importFurnitureLibrary " + inFile.getAbsolutePath() );
+						{
 							controller.importFurnitureLibrary(inFile.getAbsolutePath());
 						}
 					}

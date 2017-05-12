@@ -94,7 +94,7 @@ public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweeth
     // Create width label and spinner bound to WIDTH controller property
     this.widthLabel = new JLabel(activity, "");
     final SpinnerNumberModel widthSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
-    this.widthSpinner = new AutoCommitSpinner(activity, widthSpinnerModel);
+    this.widthSpinner = new AutoCommitSpinner(activity, widthSpinnerModel, true);
 	  if(controller.getWidth() < 2048 )
 	  	widthSpinnerModel.setValue(controller.getWidth());
 	  else
@@ -115,7 +115,7 @@ public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweeth
     // Create height label and spinner bound to HEIGHT controller property
     this.heightLabel = new JLabel(activity, "");
     final SpinnerNumberModel heightSpinnerModel = new SpinnerNumberModel(480, 10, 10000, 10);
-    this.heightSpinner = new AutoCommitSpinner(activity, heightSpinnerModel);
+    this.heightSpinner = new AutoCommitSpinner(activity, heightSpinnerModel, true);
 	  //PJ controller width sometimes comes back with over large value
 	  if(controller.getHeight() < 2048 )
     	heightSpinnerModel.setValue(controller.getHeight());

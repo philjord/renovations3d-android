@@ -10,18 +10,13 @@ import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.eteks.sweethome3d.viewcontroller.LabelController;
-import com.mindblowing.renovations3d.R;
-
 import java.text.Format;
-import java.text.ParseException;
 
 
 /**

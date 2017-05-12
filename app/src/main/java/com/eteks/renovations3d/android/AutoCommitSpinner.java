@@ -40,6 +40,11 @@ public class AutoCommitSpinner extends JSpinner
   public AutoCommitSpinner(Context context, SpinnerNumberModel model) {
     this(context, model, null);
   }
+
+	public AutoCommitSpinner(Context context, SpinnerNumberModel model, boolean allowTextEntry) {
+		this(context, model, null, allowTextEntry);
+	}
+
   public AutoCommitSpinner(Context context, SpinnerNumberModel model,
 							 Format format)
 	{

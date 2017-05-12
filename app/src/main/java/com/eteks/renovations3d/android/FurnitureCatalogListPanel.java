@@ -584,6 +584,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	private JTextField            searchTextField;
 	//private JList                 catalogFurnitureList;
 
+	private FurnitureCategory dummyAllCategory =  new FurnitureCategory("All");
+
 	public void init(FurnitureCatalog catalog, UserPreferences preferences, FurnitureCatalogController controller)
 	{
 		initialized = true;
@@ -720,7 +722,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		this.categoryFilterLabel = new JLabel(getActivity(), SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
 		ArrayList<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
-		categories.add(null);
+		categories.add(dummyAllCategory);//PJ blank was not clear
 		categories.addAll(catalog.getCategories());
 		this.categoryFilterComboBox = new JComboBox(getActivity(), new DefaultComboBoxModel(categories));
 		/*{
@@ -742,11 +744,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			public View getDropDownView (int position, View convertView, ViewGroup parent)
 			{
 				TextView ret = new TextView(getActivity());
-				// careful first item is null
-				Object item = ((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position));
-				if(item != null)
-					ret.setText(((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position)).getName());
-
+				ret.setText(((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position)).getName());
+				ret.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
 				return ret;
 			}
 		});
@@ -765,7 +764,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		});*/
 		this.categoryFilterComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent ev) {
-				catalogListModel.setFilterCategory((FurnitureCategory)categoryFilterComboBox.getSelectedItem());
+				if(categoryFilterComboBox.getSelectedItem() == dummyAllCategory)
+					catalogListModel.setFilterCategory(null);
+				else
+					catalogListModel.setFilterCategory((FurnitureCategory)categoryFilterComboBox.getSelectedItem());
 				//catalogFurnitureList.clearSelection();
 			}
 		});
