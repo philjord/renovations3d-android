@@ -356,7 +356,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 
     this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "categoryLabel.text"));
-	  ArrayList<TexturesCategory> cats = new ArrayList<TexturesCategory>(Arrays.asList(preferences.getTexturesCatalog().getCategories().toArray(new TexturesCategory[0])));
+	  ArrayList<TexturesCategory> cats = new ArrayList<TexturesCategory>(preferences.getTexturesCatalog().getCategories());
     this.categoryComboBox = new JComboBox(activity, cats);
 	  categoryComboBox.setAdapter(new ArrayAdapter<TexturesCategory>(activity, android.R.layout.simple_list_item_1, cats)
 	  {

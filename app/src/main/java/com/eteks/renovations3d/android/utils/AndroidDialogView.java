@@ -2,6 +2,8 @@ package com.eteks.renovations3d.android.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,8 +35,10 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 	{
 		super(activity);
 		// this must be called early apparently
-		 if(removeTitle)
-			 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		Configuration configuration = activity.getResources().getConfiguration();
+		if( configuration.screenHeightDp < 500)
+				this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		this.activity = activity;
 		inflatedView = (ViewGroup)this.getLayoutInflater().inflate(rootViewId, null);

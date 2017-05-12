@@ -636,9 +636,12 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   {
 	  if (this.nameLabel != null || this.areaVisibleCheckBox != null)
 	  {
-		  JLabel nameAndAreaPanel = new JLabel(activity,
-				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
-		  swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
+		  //JLabel nameAndAreaPanel = new JLabel(activity,
+			//	  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
+		  //swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
+		  //PJ removed as pointless
+		  removeView(R.id.roompanel_nameAndAreaPanel);
+
 		  swapOut(this.nameLabel, R.id.roompanel_nameLabel);
 		  swapOut(this.nameTextField, R.id.roompanel_nameTextField);
 		  // in all cases suppresses teh name field

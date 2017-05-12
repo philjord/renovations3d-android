@@ -827,9 +827,11 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
                                 final HomeFurnitureController controller) {
 	  boolean priceDisplayed = this.priceLabel != null;
 
-	  JLabel namePanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed ? "nameAndPricePanel.title" : "namePanel.title"));
-	  swapOut(namePanel, R.id.furniture_panel_namePanel);
+	  //JLabel namePanel = new JLabel(activity, preferences.getLocalizedString(
+	//		  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed ? "nameAndPricePanel.title" : "namePanel.title"));
+	  //swapOut(namePanel, R.id.furniture_panel_namePanel);
+		//PJ removed as pointless
+	  removeView(R.id.furniture_panel_namePanel);
 
 	  if (this.nameLabel != null)
 	  {

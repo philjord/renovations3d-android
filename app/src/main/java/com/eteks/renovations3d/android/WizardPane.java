@@ -288,9 +288,9 @@ public class WizardPane extends AndroidDialogView implements DialogView {
             ? this.controller.getTitle() 
             : this.defaultTitle);*/
 
-	//PJ this title takes up a lot of space for no real reason
+	//PJ this title may not be displayed on small screens
 	 // see above
-	/*    this.setTitle(this.controller.getTitle() != null
+	    this.setTitle(this.controller.getTitle() != null
 			  ? this.controller.getTitle()
 			  : this.defaultTitle);
     this.controller.addPropertyChangeListener(WizardController.Property.TITLE, 
@@ -300,7 +300,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
                                 ? controller.getTitle() 
                                 : defaultTitle);
           }
-        });*/
+        });
 
     
  /*   this.dialog.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));

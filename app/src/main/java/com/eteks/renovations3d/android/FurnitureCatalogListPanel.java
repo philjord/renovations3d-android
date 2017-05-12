@@ -1,12 +1,9 @@
 package com.eteks.renovations3d.android;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,9 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Environment;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -33,19 +30,23 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
+import com.eteks.renovations3d.android.swingish.ItemListener;
+import com.eteks.renovations3d.android.swingish.JComboBox;
+import com.eteks.renovations3d.android.swingish.JLabel;
+import com.eteks.renovations3d.android.swingish.JList;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
-import com.eteks.sweethome3d.model.Camera;
+import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 
 import com.eteks.sweethome3d.model.FurnitureCatalog;
 import com.eteks.sweethome3d.model.FurnitureCategory;
-import com.eteks.sweethome3d.model.Home;
-import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
+import com.eteks.sweethome3d.model.TexturesCategory;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
@@ -63,7 +64,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-
 
 import java.util.ArrayList;
 
@@ -106,21 +106,22 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	private GridView gridView;
 	private FurnitureImageView selectedFiv = null;
 
+	private View rootView;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
 
-		View rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
+		rootView = inflater.inflate(R.layout.furniture_catalog_list, container, false);
 		if (initialized)
 		{
 			this.setHasOptionsMenu(true);
 
 			createComponents(catalog, preferences, controller);
-			setMnemonics(preferences);
 			layoutComponents();
 
-			gridView = (GridView) rootView.findViewById(R.id.main_grid);
+			gridView = (GridView) rootView.findViewById(R.id.furniture_cat_main_grid);
 			gridView.setAdapter(new ImageAdapter(this.getContext()));
 
 			gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -577,10 +578,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 
 	//private ListSelectionListener listSelectionListener;
-	//private JLabel                categoryFilterLabel;
-	//private JComboBox             categoryFilterComboBox;
+	private JLabel                categoryFilterLabel;
+	private JComboBox             categoryFilterComboBox;
 	//private JLabel                searchLabel;
-	//private JTextField            searchTextField;
+	private JTextField            searchTextField;
 	//private JList                 catalogFurnitureList;
 
 	public void init(FurnitureCatalog catalog, UserPreferences preferences, FurnitureCatalogController controller)
@@ -708,42 +709,80 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		updateListSelectedFurniture(catalog, controller);
 		addSelectionListeners(catalog, controller);
 
-//		this.categoryFilterLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences,
-//				FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
-//		List<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
-//		categories.add(null);
-//		categories.addAll(catalog.getCategories());
-/*		this.categoryFilterComboBox = new JComboBox(new DefaultComboBoxModel(categories.toArray())) {
+//PJ can't use swapOut cos flexbox doesn't work
+	//	swapOut(this.categoryFilterLabel, R.id.furniture_cat_categoryLabel);
+	//	swapOut(this.categoryFilterComboBox, R.id.furniture_cat_category);
+
+		//PJ label made into hint add(this.searchLabel
+	//	swapOut(this.searchTextField, R.id.furniture_cat_search);
+
+
+		this.categoryFilterLabel = new JLabel(getActivity(), SwingTools.getLocalizedLabelText(preferences,
+				com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
+		ArrayList<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
+		categories.add(null);
+		categories.addAll(catalog.getCategories());
+		this.categoryFilterComboBox = new JComboBox(getActivity(), new DefaultComboBoxModel(categories));
+		/*{
 			@Override
 			public Dimension getMinimumSize() {
 				return new Dimension(60, super.getMinimumSize().height);
 			}
 		};
-		this.categoryFilterComboBox.setMaximumRowCount(20);
-		this.categoryFilterComboBox.setRenderer(new DefaultListCellRenderer() {
+		this.categoryFilterComboBox.setMaximumRowCount(20);*/
+
+		this.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(getActivity(), android.R.layout.simple_list_item_1, categories)
+		{
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				return getDropDownView(position, convertView, parent);
+			}
+			@Override
+			public View getDropDownView (int position, View convertView, ViewGroup parent)
+			{
+				TextView ret = new TextView(getActivity());
+				// careful first item is null
+				Object item = ((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position));
+				if(item != null)
+					ret.setText(((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position)).getName());
+
+				return ret;
+			}
+		});
+		/*this.categoryFilterComboBox.setRenderer(new DefaultListCellRenderer() {
 			public Component getListCellRendererComponent(JList list, Object value,
 														  int index, boolean isSelected, boolean cellHasFocus) {
 				if (value == null) {
 					return super.getListCellRendererComponent(list,
-							preferences.getLocalizedString(FurnitureCatalogListPanel.class, "categoryFilterComboBox.noCategory"),
+							preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterComboBox.noCategory"),
 							index, isSelected, cellHasFocus);
 				} else {
 					return super.getListCellRendererComponent(list,
 							((FurnitureCategory)value).getName(), index, isSelected, cellHasFocus);
 				}
 			}
-		});
+		});*/
 		this.categoryFilterComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent ev) {
 				catalogListModel.setFilterCategory((FurnitureCategory)categoryFilterComboBox.getSelectedItem());
-				catalogFurnitureList.clearSelection();
+				//catalogFurnitureList.clearSelection();
 			}
-		});*/
+		});
 
-/*		this.searchLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences,
-				FurnitureCatalogListPanel.class, "searchLabel.text"));
-		this.searchTextField = new JTextField(5);
-		this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+		//PJPJ moved to hint this.searchLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences, FurnitureCatalogListPanel.class, "searchLabel.text"));
+
+		this.searchTextField = new JTextField(getActivity(), "");
+		searchTextField.setHint(R.string.search_hint);
+		searchTextField.addTextChangedListener(new TextWatcher(){
+			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+				catalogListModel.setFilterText(searchTextField.getText().toString());
+			}
+			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
+		/*this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent ev) {
 				Object selectedValue = catalogFurnitureList.getSelectedValue();
 				catalogListModel.setFilterText(searchTextField.getText());
@@ -762,16 +801,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			public void removeUpdate(DocumentEvent ev) {
 				changedUpdate(ev);
 			}
-		});*/
-/*		this.searchTextField.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "deleteContent");
+		});
+		this.searchTextField.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "deleteContent");
 		this.searchTextField.getActionMap().put("deleteContent", new AbstractAction() {
 			public void actionPerformed(ActionEvent ev) {
 				searchTextField.setText("");
 			}
-		});
-		if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-			this.searchTextField.putClientProperty("JTextField.variant", "search");
-		}*/
+		});*/
+
 
 		PreferencesChangeListener preferencesChangeListener = new PreferencesChangeListener(this);
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE, preferencesChangeListener);
@@ -802,11 +839,11 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			}
 			else
 			{
-/*			furnitureCatalogPanel.categoryFilterLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-					FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
-			furnitureCatalogPanel.searchLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+			furnitureCatalogPanel.categoryFilterLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+					com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
+			/*furnitureCatalogPanel.searchLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 					FurnitureCatalogListPanel.class, "searchLabel.text"));*/
-				furnitureCatalogPanel.setMnemonics(preferences);
+
 				// Categories listed in combo box are updated through collectionChanged
 			}
 		}
@@ -957,81 +994,49 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		catalogFurnitureList.addMouseMotionListener(mouseListener);
 	}*/
 
-	/**
-	 * Sets components mnemonics and label / component associations.
-	 */
-	private void setMnemonics(UserPreferences preferences)
-	{
-/*		if (!OperatingSystem.isMacOSX()) {
-			this.categoryFilterLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-					FurnitureCatalogListPanel.class, "categoryFilterLabel.mnemonic")).getKeyCode());
-			this.categoryFilterLabel.setLabelFor(this.categoryFilterComboBox);
-			this.searchLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
-					FurnitureCatalogListPanel.class, "searchLabel.mnemonic")).getKeyCode());
-			this.searchLabel.setLabelFor(this.searchTextField);
-		}*/
-	}
 
 	/**
 	 * Layouts the components displayed by this panel.
 	 */
 	private void layoutComponents()
 	{
-/*		int labelAlignment = OperatingSystem.isMacOSX()
-				? GridBagConstraints.LINE_END
-				: GridBagConstraints.LINE_START;
-		// First row
-		Insets labelInsets = new Insets(0, 2, 5, 3);
-		Insets componentInsets = new Insets(0, 2, 3, 0);
-		if (!OperatingSystem.isMacOSX()) {
-			labelInsets.top = 2;
-			componentInsets.top = 2;
-			componentInsets.right = 2;
-		}
-		add(this.categoryFilterLabel, new GridBagConstraints(
-				0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-				GridBagConstraints.HORIZONTAL, labelInsets, 0, 0));
-		add(this.categoryFilterComboBox, new GridBagConstraints(
-				1, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-				GridBagConstraints.HORIZONTAL, componentInsets, 0, 0));
-		// Second row
-		if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-			add(this.searchTextField, new GridBagConstraints(
-					0, 1, 2, 1, 0, 0, GridBagConstraints.LINE_START,
-					GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 0), 0, 0));
-		} else {
-			add(this.searchLabel, new GridBagConstraints(
-					0, 1, 1, 1, 0, 0, labelAlignment,
-					GridBagConstraints.NONE, labelInsets, 0, 0));
-			add(this.searchTextField, new GridBagConstraints(
-					1, 1, 1, 1, 0, 0, GridBagConstraints.LINE_START,
-					GridBagConstraints.HORIZONTAL, componentInsets, 0, 0));
-		}
-		// Last row
-		JScrollPane listScrollPane = new JScrollPane(this.catalogFurnitureList);
-		listScrollPane.getVerticalScrollBar().addAdjustmentListener(
-				SwingTools.createAdjustmentListenerUpdatingScrollPaneViewToolTip(listScrollPane));
-		listScrollPane.setPreferredSize(new Dimension(250, 250));
-		listScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		add(listScrollPane,
-				new GridBagConstraints(
-						0, 2, 2, 1, 1, 1, GridBagConstraints.CENTER,
-						GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-		SwingTools.installFocusBorder(this.catalogFurnitureList);
+		swapOut(this.categoryFilterLabel, R.id.furniture_cat_categoryLabel);
+		swapOut(this.categoryFilterComboBox, R.id.furniture_cat_category);
 
-		setFocusTraversalPolicyProvider(true);
-		setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
-			@Override
-			public Component getDefaultComponent(Container aContainer) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						// Return furniture list only at the first request
-						setFocusTraversalPolicyProvider(false);
-					}
-				});
-				return catalogFurnitureList;
-			}
-		});*/
+		//PJ label made into hint add(this.searchLabel
+		swapOut(this.searchTextField, R.id.furniture_cat_search);
+
+		//PJ main grid just left alone
+	}
+
+	protected void swapOut(View newView, int placeHolderId)
+	{
+		View placeHolder = rootView.findViewById(placeHolderId);
+		newView.setLayoutParams(placeHolder.getLayoutParams());
+		replaceView(placeHolder, newView);
+	}
+
+
+	public static ViewGroup getParent(View view) {
+		return (ViewGroup)view.getParent();
+	}
+
+	public static void removeViewFromParent(View view) {
+		ViewGroup parent = getParent(view);
+		if(parent != null) {
+			parent.removeView(view);
+		}
+	}
+
+	public static void replaceView(View currentView, View newView) {
+		ViewGroup parent = getParent(currentView);
+		if(parent == null) {
+			return;
+		}
+		final int index = parent.indexOfChild(currentView);
+		removeViewFromParent(currentView);
+		removeViewFromParent(newView);
+		parent.addView(newView, index);
 	}
 
 	/**
@@ -1319,6 +1324,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			if (this.furniture != null)
 			{
 				this.furniture = null;
+				//PJ added now to force an update, before the fireupdate refreshs the list
+				checkFurnitureList();
 				EventQueue.invokeLater(new Runnable()
 				{
 					public void run()

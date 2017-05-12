@@ -315,9 +315,12 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
    */
   private void layoutComponents(final LabelController controller, UserPreferences preferences)
   {
-	  JLabel nameAndStylePanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
-	  swapOut(nameAndStylePanel, R.id.labelpanel_nameAndStylePanel);
+	 // JLabel nameAndStylePanel = new JLabel(activity,
+	//		  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "textAndStylePanel.title"));
+	 // swapOut(nameAndStylePanel, R.id.labelpanel_nameAndStylePanel);
+	  //PJ removed as pointless
+	  removeView(R.id.labelpanel_nameAndStylePanel);
+
 	  swapOut(this.textLabel, R.id.labelpanel_textLabel);
 	  swapOut(this.textTextField, R.id.labelpanel_textTextField);
 	  //hide the input keyboard unless the text is blank
