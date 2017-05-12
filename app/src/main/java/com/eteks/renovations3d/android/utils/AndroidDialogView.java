@@ -37,7 +37,7 @@ public abstract class AndroidDialogView extends Dialog implements DialogView
 		// this must be called early apparently
 
 		Configuration configuration = activity.getResources().getConfiguration();
-		if( configuration.screenHeightDp < 500)
+		if( configuration.screenHeightDp < 600)
 				this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		this.activity = activity;
