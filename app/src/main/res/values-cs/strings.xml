@@ -75,5 +75,6 @@ Změna od shora dolů k návštěvě lze provést pomocí ikony člověka nebo n
     <string name="get_image_camera">Fotoaparát</string>
     <string name="get_image_file">Soubor</string>
     <string name="search_hint">Vyhledávání</string>
+    <string name="basic_remove_ads">Odebrat reklamy</string>
 
 </resources>

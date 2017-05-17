@@ -72,5 +72,6 @@ Változó fentről lefelé, hogy nézze meg lehet tenni az ikon egy ember vagy a
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">fájl</string>
     <string name="search_hint">Keresés</string>
+    <string name="basic_remove_ads">Hirdetések eltávolítása</string>
 
 </resources>

@@ -28,7 +28,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.LinearLayout;
 
-import com.eteks.renovations3d.ActivityIntentManager;
+import com.eteks.renovations3d.ImageAcquireManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -134,7 +134,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 		layoutComponents(preferences);
 
 		// check in case teh image request buttons caused this activity to be destoryed then recreated
-		String pendingImageName = ((Renovations3DActivity)activity).getActivityIntentManager().requestPendingChosenImageFile(ActivityIntentManager.Destination.IMPORT_BACKGROUND);
+		String pendingImageName = ((Renovations3DActivity)activity).getImageAcquireManager().requestPendingChosenImageFile(ImageAcquireManager.Destination.IMPORT_BACKGROUND);
 		if(pendingImageName == null)
 		{
 			updateController(backgroundImage, preferences);
@@ -192,8 +192,8 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 					e.printStackTrace();
 				}
 				//PJ replaced with intent system
-				((Renovations3DActivity)activity).getActivityIntentManager().pickImage(
-					new ActivityIntentManager.ImageReceiver()
+				((Renovations3DActivity)activity).getImageAcquireManager().pickImage(
+					new ImageAcquireManager.ImageReceiver()
 					{
 						@Override
 						public void receivedImage(String imageName)
@@ -201,7 +201,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 							updateController(imageName, preferences, controller.getContentManager());
 						}
 					}
-				,ActivityIntentManager.Destination.IMPORT_BACKGROUND);
+				, ImageAcquireManager.Destination.IMPORT_BACKGROUND);
 			}
 		});
 		this.imageChoiceOrChangeButtonCamera = new JButton(activity, "");
@@ -218,8 +218,8 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 					e.printStackTrace();
 				}
 
-				((Renovations3DActivity)activity).getActivityIntentManager().takeImage(
-					new ActivityIntentManager.ImageReceiver()
+				((Renovations3DActivity)activity).getImageAcquireManager().takeImage(
+					new ImageAcquireManager.ImageReceiver()
 					{
 						@Override
 						public void receivedImage(String imageName)
@@ -227,7 +227,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 							updateController(imageName, preferences, controller.getContentManager());
 						}
 					}
-				, ActivityIntentManager.Destination.IMPORT_BACKGROUND);
+				, ImageAcquireManager.Destination.IMPORT_BACKGROUND);
 			}
 		});
 		this.imageChoiceErrorLabel = new JLabel(activity, preferences.getLocalizedString(

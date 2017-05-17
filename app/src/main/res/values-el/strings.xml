@@ -75,4 +75,5 @@ Pinch θα κινείστε προς τα εμπρός ή προς τα πίσω
     <string name="get_image_file">Αρχείο</string>
     <string name="get_image_camera">κάμερα</string>
     <string name="search_hint">Ψάξιμο</string>
+    <string name="basic_remove_ads">Αφαίρεσε τις διαφημίσεις</string>
 </resources>

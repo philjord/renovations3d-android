@@ -73,5 +73,6 @@ Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczy
     <string name="get_image_camera">otograficzny</string>
     <string name="get_image_file">Plik</string>
     <string name="search_hint">Szukanie</string>
+    <string name="basic_remove_ads">Usuń reklamy</string>
 
 </resources>

@@ -73,5 +73,6 @@ Pinch переместит вас вперед или назад. <br>
     <string name="get_image_camera">камера</string>
     <string name="get_image_file">файл</string>
     <string name="search_hint">Поиск</string>
+    <string name="basic_remove_ads">Убрать рекламу</string>
 
 </resources>

@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mindblowing.renovations3d"
-  android:versionCode="198"
-  android:versionName="1.98">
+  android:versionCode="1995"
+  android:versionName="1.995">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -24,7 +24,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BILLING" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
 
     <!-- no internet required to use -->
     <uses-feature android:name="android.permission.INTERNET" android:required="false" />

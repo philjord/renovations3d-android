@@ -41,9 +41,6 @@ import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
@@ -104,6 +101,10 @@ public class Renovations3DActivity extends FragmentActivity
 	private boolean fileSystemAccessGranted = false;
 
 	private final Timer autoSaveTimer = new Timer("autosave", true);
+
+	private BillingManager billingManager;
+	private ImageAcquireManager imageAcquireManager;
+	private AdMobManager adMobManager;
 
 	// Description of original
 	// Renovations3D|HomeApplication
@@ -279,7 +280,6 @@ public class Renovations3DActivity extends FragmentActivity
 
 		JoglesPipeline.LATE_RELEASE_CONTEXT = false;// so the world can clean up, otherwise the plan renderer holds onto it
 
-		//PJPJPJ
 		javaawt.image.BufferedImage.installBufferedImageDelegate(VMBufferedImage.class);
 		javaawt.imageio.ImageIO.installBufferedImageImpl(VMImageIO.class);
 		javaawt.EventQueue.installEventQueueImpl(VMEventQueue.class);
@@ -291,21 +291,17 @@ public class Renovations3DActivity extends FragmentActivity
 
 		setContentView(R.layout.main);
 
-		if (!BuildConfig.DEBUG)
-		{
-			MobileAds.initialize(getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
-			AdView mAdView = (AdView) findViewById(R.id.lowerBannerAdView);
-			AdRequest.Builder builder = new AdRequest.Builder();
-			builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");
-			AdRequest adRequest = builder.build();
-			mAdView.loadAd(adRequest);
-		}
+		this.imageAcquireManager = new ImageAcquireManager(this);
+		// set up billing manager will call back adsmanager once connected
+		this.billingManager = new BillingManager(this);
+		this.adMobManager = new AdMobManager(this);
 
+		// Obtain the FirebaseAnalytics instance.
 		if (!BuildConfig.DEBUG)
 		{
-			// Obtain the FirebaseAnalytics instance.
 			mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 		}
+
 
 		ActionBar actionBar = getActionBar();
 		//actionBar.setDisplayHomeAsUpEnabled(true);
@@ -339,8 +335,7 @@ public class Renovations3DActivity extends FragmentActivity
 			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED)
 			{
-				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						REQUEST_CODE_ASK_PERMISSIONS);
+				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
 			}
 			else
 			{
@@ -352,6 +347,7 @@ public class Renovations3DActivity extends FragmentActivity
 			permissionGranted();
 		}
 	}
+
 
 
 	/**
@@ -388,6 +384,23 @@ public class Renovations3DActivity extends FragmentActivity
 			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
 		}
 
+
+
+		// should this be on the menu at all?
+		if(this.getBillingManager().ownsBasicAdFree())
+		{
+			menu.removeItem(R.id.basic_remove_ads);
+		}
+		else
+		{
+			MenuItem removeAdsMI = menu.findItem(R.id.basic_remove_ads);
+			String removeAdsStr = this.getString(R.string.basic_remove_ads);
+			SpannableStringBuilder builderRemoveAds = new SpannableStringBuilder("* " + removeAdsStr);
+			builderRemoveAds.setSpan(new ImageSpan(this, R.drawable.ic_shopping_cart_black_24dp), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			removeAdsMI.setTitle(builderRemoveAds);
+			removeAdsMI.setTitleCondensed(removeAdsStr);
+		}
+
 		if(renovations3D != null)
 		{
 			MenuItem newMI = menu.findItem(R.id.menu_new);
@@ -397,7 +410,7 @@ public class Renovations3DActivity extends FragmentActivity
 			newMI.setTitle(builderNew);
 			newMI.setTitleCondensed(newStr);
 
-			//TODO: find a good load icon
+			//TODO: find a good load icon, look here https://material.io/icons
 			MenuItem loadMI = menu.findItem(R.id.menu_load);
 			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
 			//SpannableStringBuilder builderLoad = new SpannableStringBuilder("* " + loadStr);
@@ -450,6 +463,9 @@ public class Renovations3DActivity extends FragmentActivity
 		// Handle item selection
 		switch (item.getItemId())
 		{
+			case R.id.basic_remove_ads:
+				this.billingManager.buyBasicAdFree();
+				return true;
 			case R.id.menu_new:
 				newHome();
 				return true;
@@ -541,6 +557,14 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 		super.onPause();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		this.imageAcquireManager.onDestroy();
+		this.billingManager.onDestroy();
 	}
 
 	@Override
@@ -647,7 +671,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void loadSh3dFile()
 	{
-		activityIntentManager.clear();
+		imageAcquireManager.clear();
 
 		if (renovations3D != null && renovations3D.getHomeController() != null)
 		{
@@ -714,7 +738,7 @@ public class Renovations3DActivity extends FragmentActivity
 				if (renovations3D != null && renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().close();
 
-				activityIntentManager.clear();
+				imageAcquireManager.clear();
 
 				// to be safe get this back onto the ui thread
 				Renovations3DActivity.this.runOnUiThread(new Runnable()
@@ -1272,44 +1296,36 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	final private int REQUEST_CODE_ASK_PERMISSIONS = 123;//just has to match from request to response below
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+	public void showImportTextureWizard()
 	{
-		switch (requestCode)
+		if (renovations3D != null)
 		{
-			case REQUEST_CODE_ASK_PERMISSIONS:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			if (renovations3D.getHomeController() != null)
+			{
+				renovations3D.getHomeController().importTexture();
+			}
+			else
+			{
+				//the home is still loading need to call the import statement when the controller is not null
+				renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
 				{
-					// Permission Granted
-					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Granted");
-					permissionGranted();
-				}
-				else
-				{
-					// Permission Denied
-					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
-					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
-							.show();
-				}
-				break;
-			default:
-				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+					@Override
+					public void onHomeLoaded(Home home, HomeController homeController)
+					{
+						renovations3D.removeOnHomeLoadedListener(this);
+						Handler handler = new Handler(Looper.getMainLooper());
+						handler.post(new Runnable()
+						{
+							public void run()
+							{
+								renovations3D.getHomeController().importTexture();
+							}
+						});
+					}
+				});
+			}
 		}
-	}
-
-	ActivityIntentManager activityIntentManager = new ActivityIntentManager(this);
-
-	public ActivityIntentManager getActivityIntentManager()
-	{
-		return activityIntentManager;
-	}
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		this.activityIntentManager.onActivityResult(requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void showBackGroundImportWizard()
@@ -1343,35 +1359,55 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	public void showImportTextureWizard()
+	final private int REQUEST_CODE_ASK_PERMISSIONS = 123;//just has to match from request to response below
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
 	{
-		if (renovations3D != null)
+		switch (requestCode)
 		{
-			if (renovations3D.getHomeController() != null)
-			{
-				renovations3D.getHomeController().importTexture();
-			}
-			else
-			{
-				//the home is still loading need to call the import statement when the controller is not null
-				renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
+			case REQUEST_CODE_ASK_PERMISSIONS:
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				{
-					@Override
-					public void onHomeLoaded(Home home, HomeController homeController)
-					{
-						renovations3D.removeOnHomeLoadedListener(this);
-						Handler handler = new Handler(Looper.getMainLooper());
-						handler.post(new Runnable()
-						{
-							public void run()
-							{
-								renovations3D.getHomeController().importTexture();
-							}
-						});
-					}
-				});
-			}
+					// Permission Granted
+					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Granted");
+					permissionGranted();
+				}
+				else
+				{
+					// Permission Denied
+					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
+					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
+							.show();
+				}
+				break;
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
 
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
+		this.billingManager.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+
+
+	public AdMobManager getAdMobManager()
+	{
+		return adMobManager;
+	}
+
+	public ImageAcquireManager getImageAcquireManager()
+	{
+		return imageAcquireManager;
+	}
+	public BillingManager getBillingManager()
+	{
+		return billingManager;
+	}
 }

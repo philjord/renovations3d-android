@@ -74,5 +74,6 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un hombre o e
     <string name="get_image_camera">Cámara</string>
     <string name="get_image_file">Archivo</string>
     <string name="search_hint">Buscar</string>
+    <string name="basic_remove_ads">Quitar anuncios</string>
 
 </resources>

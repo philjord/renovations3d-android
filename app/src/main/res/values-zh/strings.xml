@@ -72,5 +72,6 @@
     <string name="get_image_camera">相机</string>
     <string name="get_image_file">文件</string>
     <string name="search_hint">搜索</string>
+    <string name="basic_remove_ads">移除广告</string>
 
 </resources>

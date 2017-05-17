@@ -72,5 +72,6 @@ Pinch ще се движите напред или назад. <br>
     <string name="get_image_camera">Камера</string>
     <string name="get_image_file">досие</string>
     <string name="search_hint">Търсене</string>
+    <string name="basic_remove_ads">Премахни рекламите</string>
 
 </resources>

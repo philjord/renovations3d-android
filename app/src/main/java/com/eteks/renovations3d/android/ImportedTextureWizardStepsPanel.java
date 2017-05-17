@@ -36,14 +36,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-import com.eteks.renovations3d.ActivityIntentManager;
+import com.eteks.renovations3d.ImageAcquireManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -141,7 +139,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     }
     else
 	{
-		String pendingImageName = ((Renovations3DActivity) activity).getActivityIntentManager().requestPendingChosenImageFile(ActivityIntentManager.Destination.IMPORT_TEXTURE);
+		String pendingImageName = ((Renovations3DActivity) activity).getImageAcquireManager().requestPendingChosenImageFile(ImageAcquireManager.Destination.IMPORT_TEXTURE);
 		if (pendingImageName != null)
 		{
 			try
@@ -193,8 +191,8 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 				e.printStackTrace();
 			}
 			//PJ replaced with intent system
-			((Renovations3DActivity)activity).getActivityIntentManager().pickImage(
-					new ActivityIntentManager.ImageReceiver()
+			((Renovations3DActivity)activity).getImageAcquireManager().pickImage(
+					new ImageAcquireManager.ImageReceiver()
 					{
 						@Override
 						public void receivedImage(String imageName)
@@ -202,7 +200,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 							updateController(imageName, controller.getContentManager(), preferences, false);
 						}
 					}
-			, ActivityIntentManager.Destination.IMPORT_TEXTURE);
+			, ImageAcquireManager.Destination.IMPORT_TEXTURE);
 		}
       });
 	  this.imageChoiceOrChangeButtonCamera = new JButton(activity, "");
@@ -221,8 +219,8 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 				  e.printStackTrace();
 			  }
 			  //PJ replaced with intent system
-			  ((Renovations3DActivity)activity).getActivityIntentManager().takeImage(
-					  new ActivityIntentManager.ImageReceiver()
+			  ((Renovations3DActivity)activity).getImageAcquireManager().takeImage(
+					  new ImageAcquireManager.ImageReceiver()
 					  {
 						  @Override
 						  public void receivedImage(String imageName)
@@ -230,7 +228,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 							  updateController(imageName, controller.getContentManager(), preferences, false);
 						  }
 					  }
-			  , ActivityIntentManager.Destination.IMPORT_TEXTURE);
+			  , ImageAcquireManager.Destination.IMPORT_TEXTURE);
 		  }
 	  });
    /* try {

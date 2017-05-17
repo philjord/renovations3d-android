@@ -76,6 +76,7 @@ Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma 
     <string name="get_image_camera">telecamera</string>
     <string name="get_image_file">File</string>
     <string name="search_hint">Ricerca</string>
+    <string name="basic_remove_ads">Rimuovere gli annunci</string>
 
 
 </resources>

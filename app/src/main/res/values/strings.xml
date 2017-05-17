@@ -72,6 +72,7 @@ Changing from top down to visit can be done by the icon of a man or the icon of 
     <string name="get_image_file">File</string>
     <string name="get_image_camera">Camera</string>
     <string name="search_hint">Search</string>
+    <string name="basic_remove_ads">Remove ads</string>
 
 
 </resources>

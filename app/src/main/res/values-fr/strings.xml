@@ -72,5 +72,6 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="get_image_camera">Caméra</string>
     <string name="get_image_file">Fichier</string>
     <string name="search_hint">Chercher</string>
+    <string name="basic_remove_ads">Supprimer la pub</string>
 
 </resources>

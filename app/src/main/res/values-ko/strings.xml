@@ -79,6 +79,7 @@
     <string name="get_image_camera">카메라</string>
     <string name="get_image_file">파일</string>
     <string name="search_hint">수색</string>
+    <string name="basic_remove_ads">광고를 제거하다</string>
 
 
 </resources>

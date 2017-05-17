@@ -75,5 +75,6 @@ Byte från toppen och nedåt för att besöka kan göras genom ikonen för en ma
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">Fil</string>
     <string name="search_hint">Sök</string>
+    <string name="basic_remove_ads">Ta bort annonser</string>
 
 </resources>

@@ -73,5 +73,6 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="get_image_camera">Máy ảnh</string>
     <string name="get_image_file">Tập tin</string>
     <string name="search_hint">Tìm kiếm</string>
+    <string name="basic_remove_ads">Loại bỏ các quảng cáo</string>
 
 </resources>

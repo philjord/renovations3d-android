@@ -72,5 +72,6 @@ Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir p
     <string name="get_image_camera">Kamera</string>
     <string name="get_image_file">Dosya</string>
     <string name="search_hint">Arama</string>
+    <string name="basic_remove_ads">Reklamları kaldırmak</string>
 
 </resources>

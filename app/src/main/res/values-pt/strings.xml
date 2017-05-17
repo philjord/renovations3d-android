@@ -76,5 +76,6 @@ Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem o
     <string name="get_image_camera">Câmera</string>
     <string name="get_image_file">Arquivo</string>
     <string name="search_hint">Pesquisa</string>
+    <string name="basic_remove_ads">Remover propagandas</string>
 
 </resources>
