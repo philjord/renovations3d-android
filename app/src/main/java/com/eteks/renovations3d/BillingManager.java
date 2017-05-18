@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -169,11 +170,13 @@ public class BillingManager
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - RemoteException", null);
+				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - no service", null);
+			Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -188,33 +191,38 @@ public class BillingManager
 
 				PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
-				renovations3DActivity.startIntentSenderForResult(pendingIntent.getIntentSender(),
-						PURCHASE_REQUEST_CODE, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
-						Integer.valueOf(0));
+				if(pendingIntent != null)
+				{
+					renovations3DActivity.startIntentSenderForResult(pendingIntent.getIntentSender(),
+							PURCHASE_REQUEST_CODE, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
+							Integer.valueOf(0));
 
-				// and wait for the onActivityResult of the activity to get back below
+					// and wait for the onActivityResult of the activity to get back below
+				}
+				else
+				{
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - null pendingIntent", null);
+					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				}
 
 			}
 			catch (RemoteException e)
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - RemoteException", null);
+				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 			catch (IntentSender.SendIntentException e)
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - IntentSender.SendIntentException", null);
-			}
-			catch (NullPointerException e)
-			{
-				//Not sure why I'm getting these, can't determine teh exact line
-				e.printStackTrace();
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - NullPointerException", null);
+				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - no service", null);
+			Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 

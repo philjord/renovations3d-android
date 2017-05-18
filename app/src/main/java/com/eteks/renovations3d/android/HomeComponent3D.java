@@ -388,6 +388,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				try
 				{
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume NewtBaseFragment threw 0x3003", null );
+					Toast.makeText(getActivity(), "Insufficient 3D resources", Toast.LENGTH_LONG).show();
 					Thread.sleep(2000);
 
 					//try again manually
@@ -422,15 +423,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			if(!canvas3D2D.getGLWindow().isNativeValid())
 			{
 				gl_window = GLWindow.create(caps);
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps) recreate", null );
+				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps) recreate", null );
 				// equal to addAnsecter listeners but that's too late by far
 				gl_window.addGLEventListener(glWindowInitListener);
 			}
 			else
 			{
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume pre addNotify", null );
+				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume pre addNotify", null );
 				canvas3D2D.addNotify();
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume post addNotify", null );
+				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume post addNotify", null );
 			}
 
 			if (HomeComponent3D.this.getUserVisibleHint())
@@ -438,7 +439,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				canvas3D2D.startRenderer();
 			}
 		}
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onResume", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onResume", null );
 	}
 
 	@Override
@@ -450,10 +451,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// and display will always call addNotify
 		if(canvas3D2D != null)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause pre removeNotify", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause pre removeNotify", null );
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause post removeNotify", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause post removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
@@ -461,7 +462,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.onPause();
 
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onPause", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onPause", null );
 	}
 
 	@Override
@@ -470,7 +471,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onStop", null );
 		// MUST output GLStatePreserved on console, or it won't restart
 		super.onStop();
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onStop", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onStop", null );
 	}
 
 	@Override
@@ -480,16 +481,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// now we want to dump the universe as this fragment is being garbage collected shortly
 		if(canvas3D2D != null)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy pre removeNotify", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy pre removeNotify", null );
 			canvas3D2D.stopRenderer();
 			canvas3D2D.removeNotify();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy post removeNotify", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy post removeNotify", null );
 		}
 
 		PlanComponent.PieceOfFurnitureModelIcon.destroyUniverse();
 		if(onscreenUniverse != null)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onscreenUniverse.cleanup();", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onscreenUniverse.cleanup();", null );
 			try
 			{
 				onscreenUniverse.cleanup();
@@ -504,7 +505,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.onDestroy();
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onDestroy", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onDestroy", null );
 	}
 
 	@Override
