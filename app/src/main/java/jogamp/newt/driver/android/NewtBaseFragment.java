@@ -48,7 +48,7 @@ import android.view.WindowManager;
 
 public class NewtBaseFragment extends Fragment
 {
-	List<Window> newtWindows = new ArrayList<Window>();
+	protected List<Window> newtWindows = new ArrayList<Window>();
 	List<GLAutoDrawable> glAutoDrawables = new ArrayList<GLAutoDrawable>();
 
 	GLAnimatorControl animator = null;

@@ -71,46 +71,53 @@ public class BillingManager
 
 	private void setupSKus()
 	{
-		ArrayList<String> skuList = new ArrayList<String>();
-		skuList.add(BASIC_AD_FREE_SKU);
-		Bundle querySkus = new Bundle();
-		querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
-
-		try
+		if(mService !=null )
 		{
-			Bundle skuDetails = mService.getSkuDetails(3, renovations3DActivity.getPackageName(), IN_APP, querySkus);
+			ArrayList<String> skuList = new ArrayList<String>();
+			skuList.add(BASIC_AD_FREE_SKU);
+			Bundle querySkus = new Bundle();
+			querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
 
-			int response = skuDetails.getInt("RESPONSE_CODE");
-			if (response == BILLING_RESPONSE_RESULT_OK)
+			try
 			{
-				ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
-				for (String thisResponse : responseList)
+				Bundle skuDetails = mService.getSkuDetails(3, renovations3DActivity.getPackageName(), IN_APP, querySkus);
+
+				int response = skuDetails.getInt("RESPONSE_CODE");
+				if (response == BILLING_RESPONSE_RESULT_OK)
 				{
-					JSONObject object = new JSONObject(thisResponse);
-					String sku = object.getString("productId");
-					String price = object.getString("price");
-					if (sku.equals(BASIC_AD_FREE_SKU))
+					ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
+					for (String thisResponse : responseList)
 					{
-						// display it on the menu?
-						basicAdFreePrice = price;
+						JSONObject object = new JSONObject(thisResponse);
+						String sku = object.getString("productId");
+						String price = object.getString("price");
+						if (sku.equals(BASIC_AD_FREE_SKU))
+						{
+							// display it on the menu?
+							basicAdFreePrice = price;
+						}
 					}
 				}
+				else
+				{
+					//I should probably care about these
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - response != BILLING_RESPONSE_RESULT_OK response: " + response, null);
+				}
 			}
-			else
+			catch (RemoteException e)
 			{
-				//I should probably care about these
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - response != BILLING_RESPONSE_RESULT_OK response: " + response, null);
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - RemoteException", null);
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - JSONException", null);
 			}
 		}
-		catch (RemoteException e)
+		else
 		{
-			e.printStackTrace();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - RemoteException", null);
-		}
-		catch (JSONException e)
-		{
-			e.printStackTrace();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - JSONException", null);
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "setupSKus - no service", null);
 		}
 	}
 
@@ -126,68 +133,88 @@ public class BillingManager
 
 	private void cacheOwnerShip()
 	{
-		try
+		if(mService != null)
 		{
-			Bundle ownedItems = mService.getPurchases(3, renovations3DActivity.getPackageName(), IN_APP, null);
-
-			int response = ownedItems.getInt("RESPONSE_CODE");
-			if (response == 0)
+			try
 			{
-				ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-				ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-				ArrayList<String> signatureList = ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
-				String continuationToken = ownedItems.getString("INAPP_CONTINUATION_TOKEN");
+				Bundle ownedItems = mService.getPurchases(3, renovations3DActivity.getPackageName(), IN_APP, null);
 
-				for (int i = 0; i < purchaseDataList.size(); ++i)
+				int response = ownedItems.getInt("RESPONSE_CODE");
+				if (response == 0)
 				{
-					String purchaseData = purchaseDataList.get(i);
-					String signature = signatureList.get(i);// I should use my public key to verify this some how
-					String sku = ownedSkus.get(i);
+					ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+					ArrayList<String> purchaseDataList = ownedItems.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
+					ArrayList<String> signatureList = ownedItems.getStringArrayList("INAPP_DATA_SIGNATURE_LIST");
+					String continuationToken = ownedItems.getString("INAPP_CONTINUATION_TOKEN");
 
-					// do something with this purchase information
-					if (sku.equals(BASIC_AD_FREE_SKU))
+					for (int i = 0; i < purchaseDataList.size(); ++i)
 					{
-						cachedOwnsBasicAdFree = new Boolean(true);
-					}
-					//TODO: other purchases
-				}
+						String purchaseData = purchaseDataList.get(i);
+						String signature = signatureList.get(i);// I should use my public key to verify this some how
+						String sku = ownedSkus.get(i);
 
-				// if continuationToken != null, call getPurchases again
-				// and pass in the token to retrieve more items
+						// do something with this purchase information
+						if (sku.equals(BASIC_AD_FREE_SKU))
+						{
+							cachedOwnsBasicAdFree = new Boolean(true);
+						}
+						//TODO: other purchases
+					}
+
+					// if continuationToken != null, call getPurchases again
+					// and pass in the token to retrieve more items
+				}
+			}
+			catch (RemoteException e)
+			{
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - RemoteException", null);
 			}
 		}
-		catch (RemoteException e)
+		else
 		{
-			e.printStackTrace();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - RemoteException", null);
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - no service", null);
 		}
 	}
 
 	public synchronized void buyBasicAdFree()
 	{
-		try
+		if(mService != null)
 		{
-			String devPayload = "";// might be used to get a generated id from my own servers
-			Bundle buyIntentBundle = mService.getBuyIntent(3, renovations3DActivity.getPackageName(), BASIC_AD_FREE_SKU, IN_APP, devPayload);
+			try
+			{
+				String devPayload = "";// might be used to get a generated id from my own servers
+				Bundle buyIntentBundle = mService.getBuyIntent(3, renovations3DActivity.getPackageName(), BASIC_AD_FREE_SKU, IN_APP, devPayload);
 
-			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+				PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
-			renovations3DActivity.startIntentSenderForResult(pendingIntent.getIntentSender(),
-					PURCHASE_REQUEST_CODE, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
-					Integer.valueOf(0));
+				renovations3DActivity.startIntentSenderForResult(pendingIntent.getIntentSender(),
+						PURCHASE_REQUEST_CODE, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
+						Integer.valueOf(0));
 
-			// and wait for the onActivityResult of the activity to get back below
+				// and wait for the onActivityResult of the activity to get back below
 
+			}
+			catch (RemoteException e)
+			{
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - RemoteException", null);
+			}
+			catch (IntentSender.SendIntentException e)
+			{
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - IntentSender.SendIntentException", null);
+			}
+			catch (NullPointerException e)
+			{
+				//Not sure why I'm getting these, can't determine teh exact line
+				e.printStackTrace();
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - NullPointerException", null);
+			}
 		}
-		catch (RemoteException e)
+		else
 		{
-			e.printStackTrace();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - RemoteException", null);
-		}
-		catch (IntentSender.SendIntentException e)
-		{
-			e.printStackTrace();
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - IntentSender.SendIntentException", null);
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - no service", null);
 		}
 	}
 

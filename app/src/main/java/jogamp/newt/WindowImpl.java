@@ -1128,7 +1128,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 			if(DEBUG_IMPLEMENTATION) {
 				System.err.println("Window setVisible: START (" + getThreadName() + ") " + this.getX() + "/" + this.getY() + " " + this.getWidth() + "x" + this.getHeight() + ", windowHandle " + toHexString(this.windowHandle) + ", state " + this.getStateMaskString() + " -> visible " + var2 + ", parentWindowHandle " + toHexString(this.parentWindowHandle) + ", parentWindow " + (null != this.parentWindow));
 			}
-//PJ this guy can throw a 0x3003!!! TODO: catch it and probably pause for a while? and re-try?
+
 			this.runOnEDTIfAvail(var1, new WindowImpl.VisibleAction(var2));
 		}
 	}
@@ -4099,16 +4099,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 		}
 
 		public final void run() {
-			//PJ this guy can throw a 0x3003!!! TODO: catch it and probably pause for a while? and re-try?
-
-			try
-			{
-				WindowImpl.this.setVisibleActionImpl(this.visible);
-			}catch(Exception e)
-			{
-				e.printStackTrace();
-				System.out.println("What happened just now when I didn't report this error?");
-			}
+			WindowImpl.this.setVisibleActionImpl(this.visible);
 		}
 	}
 

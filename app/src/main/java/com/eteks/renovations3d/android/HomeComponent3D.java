@@ -54,7 +54,9 @@ import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jogamp.newt.Window;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.FPSCounter;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
@@ -369,7 +371,44 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onResume()
 	{
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
-		super.onResume();
+
+		//android.app.ActivityThread.performResumeActivity (ActivityThread.java:3308)
+		// the onResume of NewtBaseFragment, calls setVisible on the window, which throws exceptions
+		// let's try to catch them here
+		// if this doesn't work then needs to register a callback with WindowImpl and the run which will be on EDT can use that
+
+		try
+		{
+			super.onResume();
+		}
+		catch(RuntimeException e)
+		{
+			if(e.getMessage().contains("0x3003"))
+			{
+				try
+				{
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume NewtBaseFragment threw 0x3003", null );
+					Thread.sleep(2000);
+
+					//try again manually
+					for(int i=0; i<newtWindows.size(); i++)
+					{
+						final Window win = newtWindows.get(i);
+						win.setVisible(true);
+					}
+				}
+				catch (InterruptedException e1)
+				{
+					e1.printStackTrace();
+				}
+				super.onResume();
+				return;
+			}
+			else
+			{
+				throw e;
+			}
+		}
 
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
