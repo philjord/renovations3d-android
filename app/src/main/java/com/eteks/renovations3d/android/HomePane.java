@@ -4539,7 +4539,6 @@ public class HomePane implements HomeView
 	 */
 	public String showStoreCameraDialog(final String cameraName)
 	{
-
 		// Retrieve displayed text in dialog
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.title");
@@ -4549,19 +4548,22 @@ public class HomePane implements HomeView
 		cameraNamePanel.setPadding(10,10,10,10);
 		cameraNamePanel.addView(new JLabel(activity, Html.fromHtml(message)));
 
+
+
 		final List<Camera> storedCameras = home.getStoredCameras();
 
-		final JTextField cameraNameTextComponent = new JTextField(activity, cameraName);
-		cameraNamePanel.addView(cameraNameTextComponent);
 
-		if (!storedCameras.isEmpty())
+		// fill the JTextfield and JCombox box a bit later on a looper thread
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.post(new Runnable()
 		{
-			// fill the JCombox box a bit later on a looper thread
-			Handler handler = new Handler(Looper.getMainLooper());
-			handler.post(new Runnable()
+			public void run()
 			{
-				public void run()
+				final JTextField cameraNameTextComponent = new JTextField(activity, cameraName);
+				cameraNamePanel.addView(cameraNameTextComponent);
+				if (!storedCameras.isEmpty())
 				{
+
 					// If cameras are already stored in home propose an editable combo box to user
 					// to let him choose more easily an existing one if he want to overwrite it
 					String[] storedCameraNames = new String[storedCameras.size() + 1];
@@ -4587,8 +4589,8 @@ public class HomePane implements HomeView
 					});
 					cameraNamePanel.addView(cameraNameComboBox);
 				}
-			});
-		}
+			}
+		});
 
 
 		boolean confirmed = showOptionDialog(activity,
@@ -4597,7 +4599,8 @@ public class HomePane implements HomeView
 
 		if (confirmed)
 		{
-			String newCameraName = cameraNameTextComponent.getText().toString().trim();
+			//notice get by index due to need to only construct on the main looper
+			String newCameraName = ((JTextField)cameraNamePanel.getChildAt(1)).getText().toString().trim();
 			return newCameraName.length() > 0 ? newCameraName : null;
 		}
 

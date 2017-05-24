@@ -29,7 +29,7 @@ android {
             zipAlignEnabled true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
 
             //multiDexKeepFile file('multidex_keep_file.txt')// not working yet, possibly need the script system to produce a big list
             //see ${sdk.dir}/tools/proguard/proguard-android-optimize.txt
