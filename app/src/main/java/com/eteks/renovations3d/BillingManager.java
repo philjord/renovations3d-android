@@ -186,6 +186,8 @@ public class BillingManager
 		{
 			try
 			{
+				Renovations3DActivity.logFireBaseContent("Potential buyBasicAdFree");
+
 				String devPayload = "";// might be used to get a generated id from my own servers
 				Bundle buyIntentBundle = mService.getBuyIntent(3, renovations3DActivity.getPackageName(), BASIC_AD_FREE_SKU, IN_APP, devPayload);
 
@@ -263,9 +265,6 @@ public class BillingManager
 
 					if (sku.equals(BASIC_AD_FREE_SKU))
 					{
-						//	alert("You have bought the " + sku + ". Excellent choice, adventurer!");
-						//TODO: very much some sort of thank you big time, this will help dev a lot etc
-
 						cachedOwnsBasicAdFree = new Boolean(true);
 						// the menu should update on the next prepare
 						renovations3DActivity.getAdMobManager().removeBasicLowerBannerAdView();
