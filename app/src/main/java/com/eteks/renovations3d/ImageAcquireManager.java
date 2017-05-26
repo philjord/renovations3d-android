@@ -129,7 +129,12 @@ public class ImageAcquireManager
 	{
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = "JPEG_" + timeStamp + "_" + ".jpg";
-		File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		// I think internal only ever is a fine thing
+	/*	if( Renovations3DActivity.writeExternalStorageGranted)
+		{
+			storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		}*/
 	/*	File image = File.createTempFile(imageFileName, // prefix
 				".jpg", // suffix
 				storageDir // directory

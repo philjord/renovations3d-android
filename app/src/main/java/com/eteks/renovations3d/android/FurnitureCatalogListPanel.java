@@ -263,12 +263,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	private void importLibrary(ImportInfo importInfo, MenuItem menuItem)
 	{
-		if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), importInfo.libraryName).exists()))
+		String fileName = importInfo.libraryName;
+		if (!(new File(Renovations3DActivity.downloadsLocation, fileName).exists()))
 		{
 			menuItem.setEnabled(false);
 
 			String url = importInfo.url;
-			String fileName = importInfo.libraryName;
+
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 			request.setDescription(fileName + " download");
 			request.setTitle(fileName);
@@ -276,7 +277,14 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			request.allowScanningByMediaScanner();
 			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-			request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+			if( Renovations3DActivity.writeExternalStorageGranted)
+			{
+				request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+			}
+			else
+			{
+				request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
+			}
 
 			// get download service and enqueue file
 			DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
@@ -332,8 +340,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	{
 		FURNITURE, TEXTURE
 	}
-
-	;
 
 	class ImportInfo
 	{

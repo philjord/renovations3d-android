@@ -77,6 +77,9 @@ import javaawt.imageio.VMImageIO;
 public class Renovations3DActivity extends FragmentActivity
 {
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
+
+	public static final String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
+	public static final String CURRENT_WORK_FILENAME = "currentWork.sh3d";
 	private static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
@@ -98,7 +101,8 @@ public class Renovations3DActivity extends FragmentActivity
 
 	public Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
-	private boolean fileSystemAccessGranted = false;
+	public static boolean writeExternalStorageGranted = false;
+	public static File downloadsLocation;
 
 	private final Timer autoSaveTimer = new Timer("autosave", true);
 
@@ -330,6 +334,10 @@ public class Renovations3DActivity extends FragmentActivity
 
 		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
 
+
+		// set the no permission default
+		downloadsLocation = this.getExternalFilesDir (Environment.DIRECTORY_DOWNLOADS);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 		{
 			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -375,14 +383,14 @@ public class Renovations3DActivity extends FragmentActivity
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		if (fileSystemAccessGranted)
-		{
-			menu.findItem(R.id.menu_load).setEnabled(true);
 
-			boolean homeLoaded = renovations3D != null && renovations3D.getHomeController() != null;
-			menu.findItem(R.id.menu_save).setEnabled(homeLoaded);
-			menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
-		}
+		// these three always on, but saave location modified
+		menu.findItem(R.id.menu_load).setEnabled(true);
+
+		boolean homeLoaded = renovations3D != null && renovations3D.getHomeController() != null;
+		menu.findItem(R.id.menu_save).setEnabled(homeLoaded);
+		menu.findItem(R.id.menu_saveas).setEnabled(homeLoaded);
+
 
 
 
@@ -480,56 +488,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 				return true;
 			case R.id.menu_help:
-				//if (renovations3D.getHomeController() != null)
-				//	renovations3D.getHomeController().help();
-
-				Renovations3DActivity.logFireBaseLevelUp("menu_help");
-				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-				dialog.setMessage(getString(R.string.helpRedirectNotice));
-				dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						dialog.dismiss();
-
-						// build a localized version if possible
-						String language = Locale.getDefault().getLanguage();
-
-						// note in order
-						String[] localizedHelp = {
-								"bg",
-								"de",
-								"es",
-								"fr",
-								"it",
-								"pt",
-								"ru",
-								"th",
-								"zh-cn",
-								"zh-tw"
-						};
-
-						String urlStr = "http://www.sweethome3d.com";
-						if (Arrays.binarySearch(localizedHelp, language) >= 0)
-						{
-							// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
-							urlStr += "/" + language;
-						}
-
-						urlStr += "/userGuide.jsp#drawingWalls";
-						Uri webpage = Uri.parse(urlStr);
-
-
-						Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-						if (intent.resolveActivity(getPackageManager()) != null)
-						{
-							startActivity(intent);
-						}
-					}
-				});
-				dialog.create().show();
-
+				showHelp();
 				return true;
 			case R.id.menu_about:
 				Renovations3DActivity.logFireBaseLevelUp("menu_about");
@@ -545,6 +504,59 @@ public class Renovations3DActivity extends FragmentActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void showHelp()
+	{
+		//if (renovations3D.getHomeController() != null)
+		//	renovations3D.getHomeController().help();
+
+		Renovations3DActivity.logFireBaseLevelUp("menu_help");
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+		dialog.setMessage(getString(R.string.helpRedirectNotice));
+		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+
+				// build a localized version if possible
+				String language = Locale.getDefault().getLanguage();
+
+				// note in order
+				String[] localizedHelp = {
+						"bg",
+						"de",
+						"es",
+						"fr",
+						"it",
+						"pt",
+						"ru",
+						"th",
+						"zh-cn",
+						"zh-tw"
+				};
+
+				String urlStr = "http://www.sweethome3d.com";
+				if (Arrays.binarySearch(localizedHelp, language) >= 0)
+				{
+					// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
+					urlStr += "/" + language;
+				}
+
+				urlStr += "/userGuide.jsp#drawingWalls";
+				Uri webpage = Uri.parse(urlStr);
+
+
+				Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+				if (intent.resolveActivity(getPackageManager()) != null)
+				{
+					startActivity(intent);
+				}
+			}
+		});
+		dialog.create().show();
 	}
 
 
@@ -602,7 +614,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 					//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
 					//this may not be truly needed but better to be safe
-					if (renovations3D.getHome().getName() != null && renovations3D.getHome().getName().contains("currentWork.sh3d"))
+					if (renovations3D.getHome().getName() != null && renovations3D.getHome().getName().contains(CURRENT_WORK_FILENAME))
 						renovations3D.getHome().setName(null);
 
 
@@ -694,16 +706,13 @@ public class Renovations3DActivity extends FragmentActivity
 		else
 		{
 			// above this is the proper way to do it, but if I don't have a home controller...
-			chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-			final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, chooserStartFolder);
+			final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
 			fileChooser.setExtension("sh3d");
 			fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
 			{
 				@Override
 				public void fileSelected(final File file)
 				{
-					chooserStartFolder = file;
 					Thread t2 = new Thread()
 					{
 						public void run()
@@ -830,7 +839,7 @@ public class Renovations3DActivity extends FragmentActivity
 	{
 		public void onReceive(Context ctxt, Intent intent)
 		{
-			unregisterReceiver(this);
+			//don't call unregisterReceiver(this); in case multiple downloads are set up
 			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
 			// This is one of our downloads.
@@ -854,6 +863,9 @@ public class Renovations3DActivity extends FragmentActivity
 					{
 						File file = new File(new URI(localUri).getPath());
 						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
+
+						System.out.println("For comparision my downloads is  " + Renovations3DActivity.downloadsLocation);
+
 						loadFile(file);
 					}
 					catch (URISyntaxException e)
@@ -952,7 +964,8 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void permissionGranted()
 	{
-		fileSystemAccessGranted = true;
+		writeExternalStorageGranted = true;
+		downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		invalidateOptionsMenu();
 		loadUpContent();
 	}
@@ -1027,11 +1040,17 @@ public class Renovations3DActivity extends FragmentActivity
 					request.allowScanningByMediaScanner();
 					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-					//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/62b79646?duration=2592000000
-					// needs areboot of the device says http://stackoverflow.com/questions/23325250/java-lang-illegalstateexception-unable-to-create-directory-mnt-sdcard-downloa
 					try
 					{
-						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+						if (writeExternalStorageGranted)
+						{
+							request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+						}
+						else
+						{
+							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
+						}
+
 
 						// get download service and enqueue file
 						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -1102,7 +1121,8 @@ public class Renovations3DActivity extends FragmentActivity
 
 		// only download attempt 3 times, after that consider it impossible or the user sick of it
 		int downloadAttempts = settings.getInt(EXAMPLE_DOWNLOAD_COUNT, 0);
-		if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[0]).exists()))
+
+		if (!(new File(downloadsLocation, fileNames[0]).exists()))
 		{
 			downloadAttempts++;
 			editor.putInt(EXAMPLE_DOWNLOAD_COUNT, downloadAttempts);
@@ -1113,35 +1133,40 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			for (int i = 0; i < urls.length; i++)
 			{
-				if (!(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileNames[i]).exists()))
+				String fileName = fileNames[i];
+				if (!(new File(downloadsLocation, fileName).exists()))
 				{
 					String url = urls[i];
-					String fileName = fileNames[i];
 					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 					request.setDescription(fileName + " download");
 					request.setTitle(fileName);
-					// in order for this if to run, you must use the android 3.2 to compile your app
+
 					request.allowScanningByMediaScanner();
 					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 					try
 					{
-						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+						if (writeExternalStorageGranted)
+						{
+							request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+						}
+						else
+						{
+							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
+						}
 
 						// get download service and enqueue file
 						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 						manager.enqueue(request);
 						Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
 
-						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file
-						if (firstOpening && fileName.equals("SweetHome3DExample2.sh3d"))
+						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file after it's downloaded
+						if (firstOpening && fileName.equals(autoOpenFirstOpen))
 						{
 							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-							return;
 						}
 					}
 					catch(IllegalStateException e)
 					{
-
 					}
 				}
 			}
@@ -1172,7 +1197,7 @@ public class Renovations3DActivity extends FragmentActivity
 				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
 				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 				File outputDir = getCacheDir();
-				File homeName = new File(outputDir, "currentWork.sh3d");
+				File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
 				if (homeName.exists())
 				{
 					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
@@ -1190,8 +1215,8 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 		else
 		{
-			String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
-			File autoOpenFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), autoOpenFirstOpen);
+
+			File autoOpenFile = new File(downloadsLocation, autoOpenFirstOpen);
 			if (autoOpenFile.exists())
 			{
 				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getName());
@@ -1236,7 +1261,7 @@ public class Renovations3DActivity extends FragmentActivity
 							boolean isModifiedOverrideValue = renovations3D.getHome().isModified();
 							String originalName = autoSaveHome.getName();
 							File outputDir = getCacheDir();
-							File homeName = new File(outputDir, "currentWork.sh3d");
+							File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
 							// not using HomeRecorder.Type.COMPRESSED I feel it is super slow, compare a normal save press
 							renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
 							recordHomeStateInPrefs(originalName, isModifiedOverrideValue, "");
@@ -1377,8 +1402,14 @@ public class Renovations3DActivity extends FragmentActivity
 				{
 					// Permission Denied
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
+
+					//TODO: mention that teh save location of homes will be in a private area making sharing of them more difficult
+					// use that web site example dialogs
 					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
 							.show();
+
+					invalidateOptionsMenu();
+					loadUpContent();
 				}
 				break;
 			default:

@@ -729,7 +729,7 @@ private Renovations3DActivity activity;//for dialogs etc
 		  final File parent;
 		  if(path == null || path.length() == 0)
 		  {
-			  parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			  parent = Renovations3DActivity.downloadsLocation;
 		  }
 		  else
 		  {
@@ -769,15 +769,13 @@ private Renovations3DActivity activity;//for dialogs etc
 	  {
 			// in this case we want ot show a real file picker (with an extension filter of the right type
 		  //TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
-		  final File chooserStartFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
 		  //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
 
 		  activity.runOnUiThread(new Runnable()
 		  {
 			  public void run()
 			  {
-				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, chooserStartFolder, false, false, okCancel);
+				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, Renovations3DActivity.downloadsLocation, false, false, okCancel);
 				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
 				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
 				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()

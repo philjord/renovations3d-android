@@ -10,18 +10,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mindblowing.renovations3d.R;
+import com.eteks.renovations3d.Renovations3DActivity;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -115,14 +111,16 @@ public class JFileChooser
 
 		if (startFolder == null)
 		{
-			startFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			startFolder = Renovations3DActivity.downloadsLocation;
 		}
-		else if (startFolder.getAbsolutePath().contains("com.mindblowing.renovations3d"))
+		else if (startFolder.getAbsolutePath().contains(Renovations3DActivity.CURRENT_WORK_FILENAME))
 		{
 			// extra care in case the caller is trying to use a app cache file location, which is invalid
-			startFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			startFolder = Renovations3DActivity.downloadsLocation;
 		}
-		else if (startFolder.isFile())
+
+
+		if (startFolder.isFile())
 		{
 			startFolder = startFolder.getParentFile();
 		}
@@ -243,7 +241,7 @@ public class JFileChooser
 		// in case of a locked up situation just attempt to go back to the downloads folder
 		if (currentPath == null)
 		{
-			currentPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			currentPath = Renovations3DActivity.downloadsLocation;
 		}
 
 		// note downloads might be returning null
