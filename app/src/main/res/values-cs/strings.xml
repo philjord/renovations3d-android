@@ -76,5 +76,7 @@ Změna od shora dolů k návštěvě lze provést pomocí ikony člověka nebo n
     <string name="get_image_file">Soubor</string>
     <string name="search_hint">Vyhledávání</string>
     <string name="basic_remove_ads">Odebrat reklamy</string>
+    <string name="insufficient3dResourcesTitle">Nízké zdroje</string>
+    <string name="insufficient3dResourcesMessage">Tento proud zařízení nemá dostatečné zdroje k provádění 3D vykreslování, zvažte znovupoužití.</string>
 
 </resources>

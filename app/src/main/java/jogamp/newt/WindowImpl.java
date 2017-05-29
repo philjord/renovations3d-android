@@ -73,6 +73,7 @@ import jogamp.newt.ScreenImpl;
 
 /**
  * EXACT copy from 2.3.2 but a few lines removed from doPointerEvent, as they are buggy
+ * as well as teh NativeWindowExceptionListener system for dealing with failed creation
  */
 public abstract class WindowImpl implements Window, NEWTEventConsumer {
 	public static final boolean DEBUG_TEST_REPARENT_INCOMPATIBLE;
@@ -670,6 +671,10 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 						}
 
 						long var8 = System.currentTimeMillis();
+//PJ
+						if(true)
+						throw new NativeWindowException();
+
 						this.createNativeImpl();
 						this.supportedReconfigStateMask = this.getSupportedReconfigMaskImpl() & 32767;
 						if(DEBUG_IMPLEMENTATION) {
@@ -722,7 +727,19 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 						}
 					}
 				}
-			} finally {
+			}
+			//PJPJPJPJPJPJ when the device is out of resources we allow a registered callback to deal with it
+			catch(NativeWindowException e)
+			{
+				boolean doThrow = true;
+				if(nativeWindowExceptionListener != null)
+				{
+					doThrow = !nativeWindowExceptionListener.handleException(e);
+				}
+				if(doThrow)
+					throw e;
+			}
+			finally {
 				if(null != this.parentWindow) {
 					this.parentWindow.unlockSurface();
 				}
@@ -740,6 +757,17 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 
 			return this.isNativeValid();
 		}
+	}
+
+	private NativeWindowExceptionListener nativeWindowExceptionListener = null;
+	public void setNativeWindowExceptionListener(NativeWindowExceptionListener nativeWindowExceptionListener)
+	{
+		this.nativeWindowExceptionListener = nativeWindowExceptionListener;
+	}
+	public interface NativeWindowExceptionListener
+	{
+		// return true to indicate success, false will throw the exception
+		boolean handleException(NativeWindowException nwp);
 	}
 
 	private void removeScreenReference() {

@@ -73,5 +73,7 @@
     <string name="get_image_file">ファイル</string>
     <string name="search_hint">サーチ</string>
     <string name="basic_remove_ads">広告を削除</string>
+    <string name="insufficient3dResourcesTitle">低リソース</string>
+    <string name="insufficient3dResourcesMessage">このデバイスの電流には、3Dレンダリングに必要なリソースが不足しています。再起動を検討してください。</string>
 
 </resources>

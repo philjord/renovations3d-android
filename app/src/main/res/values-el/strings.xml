@@ -76,4 +76,6 @@ Pinch θα κινείστε προς τα εμπρός ή προς τα πίσω
     <string name="get_image_camera">κάμερα</string>
     <string name="search_hint">Ψάξιμο</string>
     <string name="basic_remove_ads">Αφαίρεσε τις διαφημίσεις</string>
+    <string name="insufficient3dResourcesTitle">Χαμηλοί πόροι</string>
+    <string name="insufficient3dResourcesMessage">Αυτό το ρεύμα της συσκευής δεν διαθέτει επαρκείς πόρους για την απόδοση της απεικόνισης 3D, παρακαλούμε να επανεκκινήσετε.</string>
 </resources>

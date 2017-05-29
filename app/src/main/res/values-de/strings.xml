@@ -74,5 +74,7 @@ Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikon
     <string name="get_image_file">Datei</string>
     <string name="search_hint">Suche</string>
     <string name="basic_remove_ads">Anzeigen entfernen</string>
+    <string name="insufficient3dResourcesTitle">Niedrige Ressourcen</string>
+    <string name="insufficient3dResourcesMessage">Dieses Gerät Strom hat nicht genügend Ressourcen, um 3D-Rendering zu tun, bitte betrachten Sie das Neustart.</string>
 
 </resources>

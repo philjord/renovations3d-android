@@ -80,6 +80,8 @@
     <string name="get_image_file">파일</string>
     <string name="search_hint">수색</string>
     <string name="basic_remove_ads">광고를 제거하다</string>
+    <string name="insufficient3dResourcesTitle">낮은 리소스</string>
+    <string name="insufficient3dResourcesMessage">이 기기의 전류가 부족하여 3D 렌더링을 수행 할 수 없습니다. 다시 시작하십시오.</string>
 
 
 </resources>

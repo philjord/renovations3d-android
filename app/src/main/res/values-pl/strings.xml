@@ -74,5 +74,7 @@ Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczy
     <string name="get_image_file">Plik</string>
     <string name="search_hint">Szukanie</string>
     <string name="basic_remove_ads">Usuń reklamy</string>
+    <string name="insufficient3dResourcesTitle">Niskie zasoby</string>
+    <string name="insufficient3dResourcesMessage">Ten obecny stan urządzeń nie ma wystarczających zasobów do renderowania renderingu 3D, proszę rozważyć ponowne uruchomienie.</string>
 
 </resources>

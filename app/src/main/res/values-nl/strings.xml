@@ -73,5 +73,7 @@ Het veranderen van boven naar beneden om te bezoeken kan worden gedaan door het 
     <string name="get_image_file">het dossier</string>
     <string name="search_hint">Zoeken</string>
     <string name="basic_remove_ads">Verwijder advertenties</string>
+    <string name="insufficient3dResourcesTitle">Lage middelen</string>
+    <string name="insufficient3dResourcesMessage">Dit apparaat heeft onvoldoende middelen om 3D-rendering te doen. Overweeg het opnieuw te starten.</string>
 
 </resources>

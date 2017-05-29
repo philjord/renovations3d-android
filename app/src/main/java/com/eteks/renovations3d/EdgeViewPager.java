@@ -34,7 +34,6 @@ public class EdgeViewPager extends ViewPager
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		System.out.println("onTouchEvent");
 		//see https://github.com/chrisbanes/PhotoView/issues/31
 		try {
 			return super.onTouchEvent(ev);
@@ -46,7 +45,7 @@ public class EdgeViewPager extends ViewPager
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev)
-	{System.out.println("onInterceptTouchEvent");
+	{
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
 		if (action == MotionEvent.ACTION_DOWN)

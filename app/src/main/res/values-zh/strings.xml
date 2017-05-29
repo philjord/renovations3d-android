@@ -73,5 +73,7 @@
     <string name="get_image_file">文件</string>
     <string name="search_hint">搜索</string>
     <string name="basic_remove_ads">移除广告</string>
+    <string name="insufficient3dResourcesTitle">资源不足</string>
+    <string name="insufficient3dResourcesMessage">此设备当前没有足够的资源进行3D渲染，请考虑重新启动。</string>
 
 </resources>

@@ -75,5 +75,7 @@ Pinch буде рухати вас вперед або назад. <br>
     <string name="get_image_file">файл</string>
     <string name="search_hint">пошук</string>
     <string name="basic_remove_ads">видалення оголошень</string>
+    <string name="insufficient3dResourcesTitle">низькі ресурси</string>
+    <string name="insufficient3dResourcesMessage">Це поточний пристрій не мають достатні ресурси, щоб зробити 3D-рендеринг, будь ласка, розгляньте перезапуск.</string>
 
 </resources>

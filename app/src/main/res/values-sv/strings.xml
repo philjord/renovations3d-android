@@ -76,5 +76,7 @@ Byte från toppen och nedåt för att besöka kan göras genom ikonen för en ma
     <string name="get_image_file">Fil</string>
     <string name="search_hint">Sök</string>
     <string name="basic_remove_ads">Ta bort annonser</string>
+    <string name="insufficient3dResourcesTitle">Låga resurser</string>
+    <string name="insufficient3dResourcesMessage">Den här strömmen har otillräckliga resurser för att göra 3D-rendering, var god överväga omstart.</string>
 
 </resources>

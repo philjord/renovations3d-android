@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.utils.InfoText3D;
 import com.eteks.renovations3d.utils.JoglStatusActivity;
 import com.eteks.sweethome3d.j3d.Ground3D;
@@ -54,6 +55,9 @@ import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jogamp.nativewindow.NativeSurface;
+import com.jogamp.nativewindow.NativeWindow;
+import com.jogamp.nativewindow.NativeWindowException;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.FPSCounter;
@@ -122,8 +126,9 @@ import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
 import javaawt.image.BufferedImage;
-import jogamp.common.os.android.StaticContext;
+import jogamp.newt.WindowImpl;
 import jogamp.newt.driver.android.NewtBaseFragment;
+import jogamp.newt.driver.android.WindowDriver;
 
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 import static com.eteks.renovations3d.android.swingish.JOptionPane.possiblyShowWelcomeScreen;
@@ -189,6 +194,47 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//caps.setNumSamples(2);
 
 		gl_window = GLWindow.create(caps);
+
+		// in case of a create exception set up a listener to nicely report it to the user
+		final Window delegateWindow = gl_window.getDelegatedWindow();
+		if(delegateWindow instanceof WindowDriver) {
+			WindowDriver wd = (WindowDriver)delegateWindow;
+			wd.setNativeWindowExceptionListener( new WindowImpl.NativeWindowExceptionListener()
+			{
+				// return true to indicate success, false will throw the exception
+				public boolean handleException(NativeWindowException nwp)
+				{
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "NativeWindowException", null );
+					String message = getActivity().getString(R.string.insufficient3dResourcesMessage);
+					String title = getActivity().getString(R.string.insufficient3dResourcesTitle);
+					JOptionPane.showMessageDialog(getActivity(), message, title, JOptionPane.ERROR_MESSAGE);
+
+
+
+				/* I'd like to do something like this, but obviously as it si it's a recursive mess
+					try
+					{
+						Thread.sleep(2000);
+
+						//try again manually
+						for(int i=0; i<newtWindows.size(); i++)
+						{
+							final Window win = newtWindows.get(i);
+							win.setVisible(true);
+						}
+					}
+					catch (InterruptedException e1)
+					{
+						e1.printStackTrace();
+					}*/
+
+					//hopefully not throwing teh exception will allow the user to save work
+					return true;
+				}
+			});
+		}
+
+
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", null);
 		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
@@ -213,7 +259,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start display", null );
 
-			//odd createComponent3D calls addMouseListenr which attaches this listener to the view
+			//odd createComponent3D calls addMouseListener which attaches this listener to the view
 			// that view is being destroyed and I'm getting back here so I have to re-add the mouse listener now
 			// so instead I just always add the mouse listener here now
 
@@ -241,7 +287,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 0", null );
 					if(gl_window != null)
 					{
-						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 1", "ChosenGLCapabilities(): "+gl_window.getChosenGLCapabilities() );
+						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 1", "ChosenGLCapabilities(): " + gl_window.getChosenGLCapabilities() );
 					}
 
 					// let's see if other failures happen or is this just a race condition
@@ -371,45 +417,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onResume()
 	{
 		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
-
-		//android.app.ActivityThread.performResumeActivity (ActivityThread.java:3308)
-		// the onResume of NewtBaseFragment, calls setVisible on the window, which throws exceptions
-		// let's try to catch them here
-		// if this doesn't work then needs to register a callback with WindowImpl and the run which will be on EDT can use that
-
-		try
-		{
-			super.onResume();
-		}
-		catch(RuntimeException e)
-		{
-			if(e.getMessage().contains("0x3003"))
-			{
-				try
-				{
-					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume NewtBaseFragment threw 0x3003", null );
-					Toast.makeText(getActivity(), "Insufficient 3D resources", Toast.LENGTH_LONG).show();
-					Thread.sleep(2000);
-
-					//try again manually
-					for(int i=0; i<newtWindows.size(); i++)
-					{
-						final Window win = newtWindows.get(i);
-						win.setVisible(true);
-					}
-				}
-				catch (InterruptedException e1)
-				{
-					e1.printStackTrace();
-				}
-				super.onResume();
-				return;
-			}
-			else
-			{
-				throw e;
-			}
-		}
+		super.onResume();
 
 		// ok at this point either
 		// A/ we've just started up onStart was called and now onResume
@@ -424,7 +432,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				gl_window = GLWindow.create(caps);
 				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps) recreate", null );
-				// equal to addAnsecter listeners but that's too late by far
+				// equal to addAncestor listeners but that's too late by far
 				gl_window.addGLEventListener(glWindowInitListener);
 			}
 			else

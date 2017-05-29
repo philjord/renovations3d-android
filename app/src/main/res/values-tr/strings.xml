@@ -73,5 +73,7 @@ Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir p
     <string name="get_image_file">Dosya</string>
     <string name="search_hint">Arama</string>
     <string name="basic_remove_ads">Reklamları kaldırmak</string>
+    <string name="insufficient3dResourcesTitle">Düşük kaynaklar</string>
+    <string name="insufficient3dResourcesMessage">Bu cihazın şu an için 3B oluşturma işlemi için yeterli kaynak yok, lütfen yeniden başlatmayı düşünün.</string>
 
 </resources>

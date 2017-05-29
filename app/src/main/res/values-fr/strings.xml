@@ -73,5 +73,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="get_image_file">Fichier</string>
     <string name="search_hint">Chercher</string>
     <string name="basic_remove_ads">Supprimer la pub</string>
+    <string name="insufficient3dResourcesTitle">Faibles ressources</string>
+    <string name="insufficient3dResourcesMessage">Rénovations 3D ne dispose pas de ressources suffisantes pour effectuer un rendu 3D, s\'il vous plaît envisager de redémarrer.</string>
 
 </resources>
