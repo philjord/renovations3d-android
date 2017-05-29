@@ -69,6 +69,7 @@ import com.mindblowing.renovations3d.R;
 import javaawt.Color;
 import javaawt.Dimension;
 import javaawt.EventQueue;
+import javaawt.Graphics;
 import javaawt.Graphics2D;
 import javaawt.RenderingHints;
 import javaawt.TexturePaint;
@@ -82,8 +83,9 @@ import javaawt.imageio.ImageIO;
  * @author Emmanuel Puybaret
  */
 public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks.sweethome3d.viewcontroller.View {
-  private static final int LARGE_IMAGE_PIXEL_COUNT_THRESHOLD = 640 * 640;
-  private static final int IMAGE_PREFERRED_MAX_SIZE = 512;
+	//PJPJ increased these sizes a bit, because reduction always happens now, as mobiles have tight limtis
+  private static final int LARGE_IMAGE_PIXEL_COUNT_THRESHOLD = 1280 * 1280;
+  private static final int IMAGE_PREFERRED_MAX_SIZE = 1024;
   private static final int LARGE_IMAGE_MAX_PIXEL_COUNT = IMAGE_PREFERRED_MAX_SIZE * IMAGE_PREFERRED_MAX_SIZE;
   
   private static final int IMAGE_PREFERRED_SIZE_DP = 200;//Math.round(150 * SwingTools.getResolutionScale());
@@ -695,7 +697,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
   private Content readAndReduceImage(Content imageContent, 
                                      final Dimension imageSize, 
                                      final UserPreferences preferences) throws IOException {
-    try {
+   // try {
       float factor;
       float ratio = (float)imageSize.width / imageSize.height;
       if (ratio < .5f || ratio > 2.) {
@@ -708,7 +710,11 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
       final int reducedWidth = Math.round(imageSize.width * factor);
       final int reducedHeight = Math.round(imageSize.height * factor);
       final AtomicInteger result = new AtomicInteger(JOptionPane.CANCEL_OPTION);
-      EventQueue.invokeAndWait(new Runnable() {
+		// ok giant texture are bad news, lets not just say ok to them let's reduce them
+		// in fact on a little device they are always better to be reasonable size, so don't even ask!
+	  // there is a GL_MAX_TEXTURE_SIZE figure which can be 4k or less and camera always return big images these days
+		result.set(JOptionPane.YES_OPTION);
+      /*EventQueue.invokeAndWait(new Runnable() {
           public void run() {
             String title = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.title");
             String confirmMessage = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class,
@@ -717,12 +723,13 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
             String keepUnchanged = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.keepUnchanged");
             String cancel = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.cancel");
 
-			  // PJ currently always prints a stack trace and return NO
-			  result.set(JOptionPane.showOptionDialog(activity,
+
+			 result.set(JOptionPane.showOptionDialog(activity,
                   confirmMessage, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-                  null, new Object [] {reduceSize, keepUnchanged, cancel}, keepUnchanged));
+                 null, new Object [] {reduceSize, keepUnchanged, cancel}, keepUnchanged));
+
           }
-        });
+        });*/
       if (result.get() == JOptionPane.CANCEL_OPTION) {
         return null;
       } else if (result.get() == JOptionPane.YES_OPTION) {
@@ -733,10 +740,14 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
         contentStream.close();
         if (image != null) {
           BufferedImage reducedImage = new BufferedImage(reducedWidth, reducedHeight, image.getType());
-          Graphics2D g2D = (Graphics2D)reducedImage.getGraphics();
-          g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-          g2D.drawImage(image, AffineTransform.getScaleInstance(factor, factor), null);
-          g2D.dispose();
+          //Graphics2D g2D = (Graphics2D)reducedImage.getGraphics();
+          //g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+          //g2D.drawImage(image, AffineTransform.getScaleInstance(factor, factor), null);
+          //g2D.dispose();
+			 //PJ AffineTransform version doesn't work
+			Graphics g = reducedImage.getGraphics();
+			g.drawImage(image.getScaledInstance(reducedWidth, reducedHeight, 0), 0, 0, null);
+			g.dispose();
           
           File file = OperatingSystem.createTemporaryFile("texture", ".tmp");
           ImageIO.write(reducedImage, image.getTransparency() == BufferedImage.OPAQUE ? "JPEG" : "PNG", file);
@@ -744,15 +755,15 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
         }
       }
       return imageContent;
-    } catch (InterruptedException ex) {
-      return imageContent;
-    } catch (InvocationTargetException ex) {
-      ex.printStackTrace();
-      return imageContent;
-    } catch (IOException ex) {
-      updatePreviewComponentsImage(null);
-      throw ex;
-    } 
+  //  } catch (InterruptedException ex) {
+  //    return imageContent;
+  //  } catch (InvocationTargetException ex) {
+  //    ex.printStackTrace();
+  //    return imageContent;
+  //  } catch (IOException ex) {
+   //   updatePreviewComponentsImage(null);
+  //    throw ex;
+  //  }
   }
 
   /**
