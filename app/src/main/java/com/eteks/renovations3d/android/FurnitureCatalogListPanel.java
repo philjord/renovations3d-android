@@ -544,26 +544,35 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			CatalogPieceOfFurniture catalogPieceOfFurniture = (CatalogPieceOfFurniture) catalogListModel.getElementAt(position);
-			ImageView imageView;
-			//can't recycle as the furniture catalog is wrong
-			//if (convertView == null) {
-			// if it's not recycled, initialize some attributes
-			imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
+			FurnitureImageView imageView;
+			if (convertView == null) {
+				// if it's not recycled, initialize some attributes
+				imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
 
-			imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx + 10, iconHeightPx + 10));
-			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			imageView.setPadding(8, 8, 8, 8);
-			imageView.setBackgroundColor(Color.WHITE);
-			//int DEFAULT_ICON_HEIGHT = 80;//see below
-			Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
-			if (icon instanceof ImageIcon)
-			{
-				imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+				imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx + 10, iconHeightPx + 10));
+				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				imageView.setPadding(8, 8, 8, 8);
+				imageView.setBackgroundColor(Color.WHITE);
+
+				//int DEFAULT_ICON_HEIGHT = 80;//see below
+				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
+				if (icon instanceof ImageIcon)
+				{
+					imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+				}
+
+			} else {
+				imageView = (FurnitureImageView) convertView;
+				if(imageView.getCatalogPieceOfFurniture() != catalogPieceOfFurniture)
+				{
+					imageView.setCatalogPieceOfFurniture(catalogPieceOfFurniture);
+					Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
+					if (icon instanceof ImageIcon)
+					{
+						imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+					}
+				}
 			}
-			//} else {
-			//	imageView = (ImageView) convertView;
-			//}
-
 
 			return imageView;
 		}
@@ -585,6 +594,11 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			return catalogPieceOfFurniture;
 		}
 
+		public void setCatalogPieceOfFurniture(CatalogPieceOfFurniture catalogPieceOfFurniture)
+		{
+			this.catalogPieceOfFurniture = catalogPieceOfFurniture;
+		}
+
 		public void onDraw(Canvas canvas)
 		{
 			super.onDraw(canvas);
@@ -594,8 +608,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			canvas.drawText(catalogPieceOfFurniture.getName(), 10, iconHeightPx + 5, mTextPaint);
 		}
 	}
-
-	;
 
 	private FurnitureCatalogListModel catalogListModel;
 
