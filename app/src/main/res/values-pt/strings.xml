@@ -78,6 +78,6 @@ Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem o
     <string name="search_hint">Pesquisa</string>
     <string name="basic_remove_ads">Remover propagandas</string>
     <string name="insufficient3dResourcesTitle">Baixos recursos</string>
-    <string name="insufficient3dResourcesMessage">Esta corrente do dispositivo tem recursos insuficientes para fazer renderização 3D, considere reiniciar.</string>
+    <string name="insufficient3dResourcesMessage">Este dispositivo tem atualmente recursos insuficientes para fazer renderização 3D, considere reiniciar.</string>
 
 </resources>

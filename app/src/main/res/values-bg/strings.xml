@@ -74,6 +74,6 @@ Pinch ще се движите напред или назад. <br>
     <string name="search_hint">Търсене</string>
     <string name="basic_remove_ads">Премахни рекламите</string>
     <string name="insufficient3dResourcesTitle">Ниски ресурси</string>
-    <string name="insufficient3dResourcesMessage">Това текущо устройство няма достатъчно ресурси, за да направи 3D изобразяване, моля, помислете за рестартиране.</string>
+    <string name="insufficient3dResourcesMessage">Понастоящем устройството няма достатъчно ресурси, за да извършва триизмерно изобразяване, моля, помислете за рестартиране.</string>
 
 </resources>

@@ -74,6 +74,6 @@
     <string name="search_hint">搜索</string>
     <string name="basic_remove_ads">移除廣告</string>
     <string name="insufficient3dResourcesTitle">資源不足</string>
-    <string name="insufficient3dResourcesMessage">此設備當前沒有足夠的資源進行3D渲染，請考慮重新啟動。</string>
+    <string name="insufficient3dResourcesMessage">該設備當前沒有足夠的資源進行3D渲染，請考慮重新啟動。</string>
 
 </resources>

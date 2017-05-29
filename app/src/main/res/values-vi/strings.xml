@@ -75,6 +75,6 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="search_hint">Tìm kiếm</string>
     <string name="basic_remove_ads">Loại bỏ các quảng cáo</string>
     <string name="insufficient3dResourcesTitle">низькі ресурси...</string>
-    <string name="insufficient3dResourcesMessage">Dòng thiết bị này không có đủ tài nguyên để thực hiện dựng hình 3D, vui lòng xem xét khởi động lại.</string>
+    <string name="insufficient3dResourcesMessage">Thiết bị này hiện không có đủ tài nguyên để làm rendering 3D, vui lòng xem xét khởi động lại.</string>
 
 </resources>
