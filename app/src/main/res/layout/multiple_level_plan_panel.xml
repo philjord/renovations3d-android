@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@android:color/white">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    >
+
+
+
     <com.eteks.renovations3d.android.utils.DrawableView
         android:id="@+id/drawableView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         />
-
-
-</LinearLayout>
+    <Button
+        android:id="@+id/planLeftSwiper"
+        android:layout_width = "30dp"
+        android:layout_height = "100dp"
+        android:padding="0dp"
+        android:text="@string/gt"
+        android:layout_marginLeft="-5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        />
+    <Button
+        android:id="@+id/planRightSwiper"
+        android:layout_width = "30dp"
+        android:layout_height = "100dp"
+        android:padding="0dp"
+        android:text="@string/lt"
+        android:layout_marginRight="-5dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        />
+</RelativeLayout>

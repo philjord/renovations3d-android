@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -108,6 +109,27 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				layoutComponents();
 				updateSelectedTab(home);
 			}
+
+
+			// make the left and right swipers work
+			Button planLeftSwiper = (Button)rootView.findViewById(R.id.planLeftSwiper);
+			planLeftSwiper.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(0, true);
+				}
+			});
+			Button planRightSwiper = (Button)rootView.findViewById(R.id.planRightSwiper);
+			planRightSwiper.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(2, true);
+				}
+			});
 		}
 		return rootView;
 	}

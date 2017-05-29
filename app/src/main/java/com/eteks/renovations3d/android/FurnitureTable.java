@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -111,6 +113,18 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
 			updateTable();
 		}
+
+
+		// make the right swiper work
+		Button furnitureTableRightSwiper = (Button)rootView.findViewById(R.id.furnitureTableRightSwiper);
+		furnitureTableRightSwiper.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
+			}
+		});
 
 		return rootView;
 	}

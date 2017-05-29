@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -163,6 +164,26 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			final float scale = getResources().getDisplayMetrics().density;
 			iconHeightPx = (int) (DEFAULT_ICON_HEIGHT_DP * scale + 0.5f);
 		}
+
+		// make the left and right swipers work
+		Button furnitureCatalogLeftSwiper = (Button)rootView.findViewById(R.id.furnitureCatalogLeftSwiper);
+		furnitureCatalogLeftSwiper.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
+			}
+		});
+		Button furnitureCatalogRightSwiper = (Button)rootView.findViewById(R.id.furnitureCatalogRightSwiper);
+		furnitureCatalogRightSwiper.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(3, true);
+			}
+		});
 		return rootView;
 	}
 

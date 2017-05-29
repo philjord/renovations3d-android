@@ -13,30 +13,28 @@ import android.view.MotionEvent;
 
 public class EdgeViewPager extends ViewPager
 {
-	public float gripWidthMaxInch = 0.5f;
-	public float gripWidthMaxPix = 200;
-	public float gripWidthPercent = 0.1f; //10% max otherwise nothing else works I wager
-
+	public static final float gripWidthMaxDp = 30;
+	public float gripWidthMaxPx = 30;
 
 	public EdgeViewPager(Context context)
 	{
 		super(context);
-		// Now determine a fat fingers size for the indicators
-		DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-		gripWidthMaxPix = (int)(mDisplayMetrics.densityDpi * gripWidthMaxInch);
+		final float scale = getResources().getDisplayMetrics().density;
+		gripWidthMaxPx = (int) (gripWidthMaxDp * scale + 0.5f);
+
 	}
 
 	public EdgeViewPager(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		// Now determine a fat fingers size for the indicators
-		DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-		gripWidthMaxPix = (int)Math.min((mDisplayMetrics.densityDpi * gripWidthMaxInch), gripWidthPercent*mDisplayMetrics.widthPixels );
+		final float scale = getResources().getDisplayMetrics().density;
+		gripWidthMaxPx = (int) (gripWidthMaxDp * scale + 0.5f);
 	}
 
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
+		System.out.println("onTouchEvent");
 		//see https://github.com/chrisbanes/PhotoView/issues/31
 		try {
 			return super.onTouchEvent(ev);
@@ -48,7 +46,7 @@ public class EdgeViewPager extends ViewPager
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev)
-	{
+	{System.out.println("onInterceptTouchEvent");
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
 		if (action == MotionEvent.ACTION_DOWN)
@@ -56,7 +54,7 @@ public class EdgeViewPager extends ViewPager
 			float x = ev.getX();
 			//float y = ev.getY();
 			//int pointerId = MotionEventCompat.getPointerId(ev, 0);
-			boolean grip = x < gripWidthMaxPix || (this.getWidth() - x) < gripWidthMaxPix;
+			boolean grip = x < gripWidthMaxPx || (this.getWidth() - x) < gripWidthMaxPx;
 			if (!grip || ev.getPointerCount() != 1)
 				return false;
 		}

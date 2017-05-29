@@ -19,4 +19,6 @@
     <string name="viewalllevels" translatable="false">View all levels</string>
     <string name="menu_createPhoto" translatable="false">createPhoto</string>
     <string name="menu_exportToObj" translatable="false">exportToObj</string>
+    <string name="gt" translatable="false">&gt;</string>
+    <string name="lt" translatable="false">&lt;</string>
 </resources>

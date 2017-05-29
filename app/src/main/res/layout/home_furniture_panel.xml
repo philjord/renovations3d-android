@@ -1,33 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     >
-    <RelativeLayout
+
+    <!-- no left hand side grabber -->
+    <!-- notice linear layout so no button overlapping -->
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight = "1"
+        >
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             >
 
-        <LinearLayout
-            android:id="@+id/header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="4"
-            >
-        </LinearLayout>
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/header">
-            <TableLayout
-                android:id="@+id/table"
+            <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                >
+                <!-- filled by code-->
+            </LinearLayout>
+            <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               >
-
-            </TableLayout>
-        </ScrollView>
-    </RelativeLayout>
-</HorizontalScrollView>
+                android:layout_below="@+id/header">
+                <TableLayout
+                    android:id="@+id/table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+                    <!-- filled by code-->
+                </TableLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </HorizontalScrollView>
+    <Button
+        android:id="@+id/furnitureTableRightSwiper"
+        android:layout_width = "30dp"
+        android:layout_weight = "0"
+        android:layout_height = "100dp"
+        android:layout_gravity="center_vertical"
+        android:text="@string/lt"
+        android:layout_marginRight="-5dp"
+        />
+</LinearLayout>
