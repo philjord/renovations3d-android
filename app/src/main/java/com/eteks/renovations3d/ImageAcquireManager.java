@@ -12,6 +12,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +22,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.os.Build.VERSION_CODES.KITKAT;
+import static android.os.Build.VERSION_CODES.M;
 
 /**
  * Created by phil on 5/7/2017.
@@ -103,7 +109,16 @@ public class ImageAcquireManager
 		try
 		{
 			//http://stackoverflow.com/questions/1910608/android-action-image-capture-intent
-			Uri outputFileUri = Uri.fromFile(createImageFile());
+			Uri outputFileUri = null;
+
+			//https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+			if (Build.VERSION.SDK_INT > M) {
+				outputFileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", createImageFile());
+			} else {
+				outputFileUri = Uri.fromFile(createImageFile());
+			}
+			intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
 
 			// I don't seem to get the save instance state or onPause calls, so if I have a photo file path then I assume this might destroy
@@ -113,15 +128,17 @@ public class ImageAcquireManager
 			editor.putString("mCurrentPhotoPath", mCurrentPhotoPath != null ? mCurrentPhotoPath : "");
 			editor.putString("imageDestination", imageDestination.name());
 			editor.apply();
+
+			// in case this is a destroy version
+			System.out.println("startActivityForResult - auto saving");
+			activity.doAutoSave();
+			activity.startActivityForResult(intent, REQUEST_CODE_TAKE_IMAGE);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IOException - takeImage", null);
 		}
-		// in case this is a destroy version
-		System.out.println("startActivityForResult - auto saving");
-		activity.doAutoSave();
-		activity.startActivityForResult(intent, REQUEST_CODE_TAKE_IMAGE);
 	}
 
 
@@ -192,6 +209,7 @@ public class ImageAcquireManager
 				catch (URISyntaxException e)
 				{
 					e.printStackTrace();
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "URISyntaxException - onActivityResult", null);
 				}
 
 				// are we looking at some sort of google docs or something?
@@ -212,6 +230,7 @@ public class ImageAcquireManager
 						catch (IOException e)
 						{
 							e.printStackTrace();
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IOException - onActivityResult", null);
 						}
 					}
 				}
@@ -273,7 +292,7 @@ public class ImageAcquireManager
 				}
 				else
 				{
-					System.err.println("fileName == null!");
+					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "fileName == null - onActivityResult", null);
 				}
 			}
 		}
@@ -292,7 +311,7 @@ public class ImageAcquireManager
 		String[] selectionArgs = null;
 		// Uri is different in versions after KITKAT (Android 4.4), we need to
 
-		if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri))
+		if (Build.VERSION.SDK_INT >= KITKAT && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri))
 		{
 			if (isExternalStorageDocument(uri))
 			{
