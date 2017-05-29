@@ -671,9 +671,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 						}
 
 						long var8 = System.currentTimeMillis();
-//PJ
-						if(true)
-						throw new NativeWindowException();
 
 						this.createNativeImpl();
 						this.supportedReconfigStateMask = this.getSupportedReconfigMaskImpl() & 32767;
