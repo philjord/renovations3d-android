@@ -20,8 +20,10 @@
 package com.eteks.renovations3d.android;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.util.DisplayMetrics;
@@ -70,6 +72,7 @@ import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.j3d.Component3DManager;
+import com.mindblowing.renovations3d.R;
 
 import org.jogamp.java3d.AmbientLight;
 import org.jogamp.java3d.Appearance;
@@ -176,12 +179,13 @@ import javaxswing.ImageIcon;
  */
 public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
-	static int HORIZONTAL =0;
-	static int VERTICAL=1;
+	private static final boolean USE_CHUNKY_INDICATORS = false;
+	static int HORIZONTAL = 0;
+	static int VERTICAL = 1;
 
 	//PJ taken from HomePane
-	private static final String PLAN_VIEWPORT_X_VISUAL_PROPERTY                = "com.eteks.sweethome3d.SweetHome3D.PlanViewportX";
-	private static final String PLAN_VIEWPORT_Y_VISUAL_PROPERTY                = "com.eteks.sweethome3d.SweetHome3D.PlanViewportY";
+	private static final String PLAN_VIEWPORT_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportX";
+	private static final String PLAN_VIEWPORT_Y_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportY";
 
   /**
    * The circumstances under which the home items displayed by this component will be painted.
@@ -4035,11 +4039,21 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       float pieceAngle = piece.getAngle();
       Shape rotationIndicator = getIndicator(piece, IndicatorType.ROTATE);
       if (rotationIndicator != null) {AffineTransform previousTransform2 = g2D.getTransform();
-        // Draw rotation indicator at top left point of the piece
+      	// Draw rotation indicator at top left point of the piece
         g2D.translate(piecePoints [0][0], piecePoints [0][1]);
-        //g2D.scale(scaleInverse, scaleInverse);
-        g2D.rotate(pieceAngle);
-		  ((VMGraphics2D)g2D).draw(rotationIndicator, scaleInverse);
+		g2D.rotate(pieceAngle);
+
+		if(!USE_CHUNKY_INDICATORS)
+		{
+			((VMGraphics2D) g2D).draw(rotationIndicator, scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.edit_undo)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
+
         g2D.setTransform(previousTransform2);
       }
 
@@ -4047,39 +4061,82 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       if (elevationIndicator != null) {AffineTransform previousTransform2 = g2D.getTransform();
         // Draw elevation indicator at top right point of the piece
         g2D.translate(piecePoints [1][0], piecePoints [1][1]);
-        //g2D.scale(scaleInverse, scaleInverse);
         g2D.rotate(pieceAngle);
-		  ((VMGraphics2D)g2D).draw(ELEVATION_POINT_INDICATOR, scaleInverse);
+
+		  if(!USE_CHUNKY_INDICATORS)
+		  {
+			  // TODO: what's this??
+			  ((VMGraphics2D)g2D).draw(ELEVATION_POINT_INDICATOR, scaleInverse);
+		  }
+
         // Place elevation indicator farther but don't rotate it
         g2D.translate(6.5f, -6.5f);
         g2D.rotate(-pieceAngle);
-		  ((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
-        g2D.setTransform(previousTransform2);
+
+		  if(!USE_CHUNKY_INDICATORS)
+		  {
+			  ((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
+		  }
+		  else
+		  {
+			  g2D.scale(scaleInverse, scaleInverse);
+			  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_target)).getBitmap();
+			  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		  }
+			  g2D.setTransform(previousTransform2);
       }
 
       if (piece.isResizable()) {AffineTransform previousTransform = g2D.getTransform();
         // Draw height indicator at bottom left point of the piece
         g2D.translate(piecePoints [3][0], piecePoints [3][1]);
-        //g2D.scale(scaleInverse, scaleInverse);
         g2D.rotate(pieceAngle);
 
         if (piece instanceof HomeLight) {
           Shape powerIndicator = getIndicator(piece, IndicatorType.CHANGE_POWER);
           if (powerIndicator != null) {
-			  ((VMGraphics2D)g2D).draw(LIGHT_POWER_POINT_INDICATOR, scaleInverse);
+
+			  if(!USE_CHUNKY_INDICATORS)
+			  {
+				  //TODO:?? what's this
+				  ((VMGraphics2D) g2D).draw(LIGHT_POWER_POINT_INDICATOR, scaleInverse);
+			  }
             // Place power indicator farther but don't rotate it
             g2D.translate(-7.5f, 7.5f);
             g2D.rotate(-pieceAngle);
-			  ((VMGraphics2D)g2D).draw(powerIndicator, scaleInverse);
+
+			  if(!USE_CHUNKY_INDICATORS)
+			  {
+				  ((VMGraphics2D)g2D).draw(powerIndicator, scaleInverse);
+			  }
+			  else
+			  {
+				  g2D.scale(scaleInverse, scaleInverse);
+				  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_target)).getBitmap();
+				  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			  }
           }
         } else {
           Shape heightIndicator = getIndicator(piece, IndicatorType.RESIZE_HEIGHT);
           if (heightIndicator != null) {
-            g2D.draw(FURNITURE_HEIGHT_POINT_INDICATOR);
+			  if(!USE_CHUNKY_INDICATORS)
+			  {
+				  //TODO:?? what's this
+				  g2D.draw(FURNITURE_HEIGHT_POINT_INDICATOR);
+			  }
             // Place height indicator farther but don't rotate it
             g2D.translate(-7.5f, 7.5f);
             g2D.rotate(-pieceAngle);
-			  ((VMGraphics2D)g2D).draw(heightIndicator, scaleInverse);
+
+			  if(!USE_CHUNKY_INDICATORS)
+			  {
+				  ((VMGraphics2D)g2D).draw(heightIndicator, scaleInverse);
+			  }
+			  else
+			  {
+				  g2D.scale(scaleInverse, scaleInverse);
+				  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_arrow_down)).getBitmap();
+				  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			  }
           }
         }
         g2D.setTransform(previousTransform);
@@ -4090,7 +4147,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           g2D.translate(piecePoints [2][0], piecePoints [2][1]);
           //g2D.scale(scaleInverse, scaleInverse);
           g2D.rotate(pieceAngle);
-			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+			if(!USE_CHUNKY_INDICATORS)
+			{
+				((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+			}
+			else
+			{
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.plan_pan)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
+
           g2D.setTransform(previousTransform2);
         }
       }
