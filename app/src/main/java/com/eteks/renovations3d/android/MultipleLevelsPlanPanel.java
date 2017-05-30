@@ -372,13 +372,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				Configuration configuration = getActivity().getResources().getConfiguration();
-				int screenWidthDp = configuration.screenWidthDp;
-				boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
-				View view = getTextView(position, toolsWide);
-				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+				 // why can this be null?
+				if (getActivity() != null)
+				{
+					Configuration configuration = getActivity().getResources().getConfiguration();
+					int screenWidthDp = configuration.screenWidthDp;
+					boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
 
-				return view;
+					View view = getTextView(position, toolsWide);
+					view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+
+					return view;
+				}
+				else
+				{
+					return convertView;
+				}
 			}
 
 			@Override
