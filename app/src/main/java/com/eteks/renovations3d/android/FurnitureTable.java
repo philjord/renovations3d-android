@@ -1,6 +1,7 @@
 package com.eteks.renovations3d.android;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -57,15 +59,13 @@ import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
 
-
 /**
  * Created by phil on 11/22/2016.
  */
 
 public class FurnitureTable extends JTable implements com.eteks.sweethome3d.viewcontroller.View, Printable
 {
-
-	// if we are not intialized then ignore onCreateViews
+	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
 
 	public static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
@@ -74,44 +74,37 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	private UserPreferences preferences;
 	private FurnitureController controller;
 
-
 	// terrible but it'll do
-	private int[] widths = new int[]{100,200,150,150,150,150};
+	private int[] minWidthsDp = new int[]{80,200,80,80,80,80};
+	private int[] widthsPx = new int[]{80,200,80,80,80,80};
+
+	private float[] percentWidth = new float[]{0.1f,0.4f,0.1f,0.1f,0.1f,0.1f};
 
 	private static int ICON_HEIGHT_DP = 24;
 	private int iconHeightPx = 24;
-
 
 	private HomePieceOfFurniture.SortableProperty[] headerNames = new HomePieceOfFurniture.SortableProperty[]{
 			HomePieceOfFurniture.SortableProperty.TEXTURE,HomePieceOfFurniture.SortableProperty.NAME,HomePieceOfFurniture.SortableProperty.WIDTH,
 			HomePieceOfFurniture.SortableProperty.DEPTH,HomePieceOfFurniture.SortableProperty.HEIGHT,HomePieceOfFurniture.SortableProperty.VISIBLE};
 	private TableLayout tableLayout;
 	private LinearLayout header;
+	private View rootView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
-		View rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
+		rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
 		if(initialized)
 		{
-			DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
-			widths = new int[]{(int) (mDisplayMetrics.densityDpi * 0.45f),
-					(int) (mDisplayMetrics.densityDpi * 0.55f),
-					(int) (mDisplayMetrics.densityDpi * 0.40f),
-					(int) (mDisplayMetrics.densityDpi * 0.40f),
-					(int) (mDisplayMetrics.densityDpi * 0.40f),
-					(int) (mDisplayMetrics.densityDpi * 0.40f)};
+			header = (LinearLayout) rootView.findViewById(R.id.header);
+			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
+
+			updateTable();
+
 
 			final float scale = getResources().getDisplayMetrics().density;
 			iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
-
-
-			header = (LinearLayout) rootView.findViewById(R.id.header);
-			updateHeader();
-
-			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
-			updateTable();
 		}
 
 
@@ -132,34 +125,50 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 	private void updateHeader()
 	{
-		header.removeAllViews();
-
-		TableRow headerRow = new TableRow(this.getContext());
-
-		for (int i = 0; i < headerNames.length; i++)
+		if(header != null)
 		{
-			TextView tv = new TextView(this.getContext());
-			tv.setBackgroundColor(Color.WHITE);
-			tv.setTextColor(Color.BLACK);
-			tv.setPadding(10, 10, 10, 10);
-			tv.setGravity(Gravity.CENTER);
-			tv.setText(getColumnName(headerNames[i], preferences));
-			tv.setWidth(widths[i]);
-			headerRow.addView(tv);
+			final int fragWidthPx = rootView.getWidth();
+			final float scale = getResources().getDisplayMetrics().density;
+
+			for(int i = 0; i < widthsPx.length; i++)
+				widthsPx[i] = (int) Math.max((minWidthsDp[i] * scale + 0.5f), percentWidth[i] * fragWidthPx);
+
+			System.out.println("fragWidthPx " +fragWidthPx);
+			for(int i = 0; i < widthsPx.length; i++)
+				System.out.println("width " +  i + " " + widthsPx[i]) ;
+
+			header.removeAllViews();
+
+			TableRow headerRow = new TableRow(this.getContext());
+
+			for (int i = 0; i < headerNames.length; i++)
+			{
+				TextView tv = new TextView(this.getContext());
+				tv.setBackgroundColor(Color.WHITE);
+				tv.setTextColor(Color.BLACK);
+				tv.setPadding(10, 10, 10, 10);
+				tv.setGravity(Gravity.CENTER);
+				tv.setText(getColumnName(headerNames[i], preferences));
+				tv.setWidth(widthsPx[i]);
+				headerRow.addView(tv);
+			}
+			header.addView(headerRow);
 		}
-		header.addView(headerRow);
 	}
 
 	/**
-	 * This is really expensive and is not simple an update, I need a single row updateer system , not this super expensive one
+	 * This is really expensive and is not simple an update, I need a single row updater system , not this super expensive one
 	 */
 	private void updateTable()
 	{
-		if(tableLayout!=null)
+
+		if(tableLayout != null)
 		{
+			updateHeader();
+
 			tableLayout.removeAllViews();
 			tableLayout.setBackgroundColor(Color.WHITE);
-			//PJPJ this doesn't appear to do anyhting
+			//PJPJ this doesn't appear to do anything
 			//tableLayout.setDividerDrawable(this.getResources().getDrawable(R.drawable.empty_small_divider));
 
 			FurnitureTreeTableModel model = getModel();
@@ -175,7 +184,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				imageView.setPadding(10, 10, 10, 10);
 				//imageView.setLayoutParams(new GridView.LayoutParams(48, 48));
 				imageView.setScaleType(ImageView.ScaleType.CENTER);
-				imageView.setMinimumWidth(widths[0]);
+				imageView.setMinimumWidth(widthsPx[0]);
 
 				Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), iconHeightPx, null);
 				if (icon instanceof ImageIcon)
@@ -192,7 +201,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				tv.setPadding(10, 10, 10, 10);
 				tv.setGravity(Gravity.CENTER);
 				tv.setText(piece.getName());
-				tv.setWidth(widths[1]);
+				tv.setWidth(widthsPx[1]);
 				tv.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv);
 
@@ -203,7 +212,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				tv2.setPadding(10, 10, 10, 10);
 				tv2.setGravity(Gravity.CENTER);
 				tv2.setText("" + piece.getWidth());
-				tv2.setWidth(widths[2]);
+				tv2.setWidth(widthsPx[2]);
 				tv2.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv2);
 
@@ -213,7 +222,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				tv3.setPadding(10, 10, 10, 10);
 				tv3.setGravity(Gravity.CENTER);
 				tv3.setText("" + piece.getDepth());
-				tv3.setWidth(widths[3]);
+				tv3.setWidth(widthsPx[3]);
 				tv3.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv3);
 
@@ -223,15 +232,14 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				tv4.setPadding(10, 10, 10, 10);
 				tv4.setGravity(Gravity.CENTER);
 				tv4.setText("" + piece.getHeight());
-				tv4.setWidth(widths[4]);
+				tv4.setWidth(widthsPx[4]);
 				tv4.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv4);
 
 				VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
 				vcb.setBackgroundColor(Color.WHITE);
 				vcb.setPadding(10, 10, 10, 10);
-				vcb.setGravity(Gravity.CENTER);
-				vcb.setWidth(widths[5]);
+				vcb.setWidth(widthsPx[5]);
 				vcb.setOnClickListener(tableSelectionListener);
 				tableRow.addView(vcb);
 
@@ -281,13 +289,34 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	};
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		final int oldHeight = rootView.getHeight();
+		final int oldWidth = rootView.getWidth();
+
+		rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				if (rootView.getHeight() != oldHeight && rootView.getWidth() != oldWidth) {
+
+					rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+					//mView now has the correct dimensions, continue with your stuff
+					updateTable();
+				}
+			}
+		});
+		super.onConfigurationChanged(newConfig);
+
+	}
+
+	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser)
 	{
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wait until we have an activity
 		if(isVisibleToUser && getActivity() != null)
 		{
-			JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
+			//PJ cut out as it provides almost no infomation at all now, add back when table is functional
+			//JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
 		}
 
 		if(isVisibleToUser && getView()!= null)

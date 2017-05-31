@@ -9,7 +9,7 @@
           android:showAsAction="always"/>
     <item android:id="@+id/gotopov"
           android:title="@string/gotopov"
-          android:icon="@android:drawable/ic_menu_view"
+          android:icon="@drawable/ic_go_to_pov"
           android:showAsAction="always">
         <menu>
             <item
