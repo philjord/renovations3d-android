@@ -239,26 +239,28 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			String importName = item.getTitle().toString();
 
-			if (importName.equals(localString))
+			if (importName != null)
 			{
-				if (item.getGroupId() == MENU_IMPORT_FURNITURE)
+				if (importName.equals(localString))
 				{
-					importFurnitureLibrary();
-				}
-				else
-				{
-					importTextureLibrary();
-				}
-				return true;
-			}
-
-
-			for (ImportInfo importInfo : importInfos)
-			{
-				if (importInfo.label.equals(importName))
-				{
-					importLibrary(importInfo, item);
+					if (item.getGroupId() == MENU_IMPORT_FURNITURE)
+					{
+						importFurnitureLibrary();
+					}
+					else
+					{
+						importTextureLibrary();
+					}
 					return true;
+				}
+
+				for (ImportInfo importInfo : importInfos)
+				{
+					if (importInfo.label.equals(importName))
+					{
+						importLibrary(importInfo, item);
+						return true;
+					}
 				}
 			}
 		}
@@ -294,8 +296,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 			request.setDescription(fileName + " download");
 			request.setTitle(fileName);
-			// in order for this if to run, you must use the android 3.2 to compile your app
-			request.allowScanningByMediaScanner();
 			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
 			if( Renovations3DActivity.writeExternalStorageGranted)
@@ -353,7 +353,27 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		}
 		else
 		{
-			Toast.makeText(getActivity(), getActivity().getString(R.string.libraryExistsLocal), Toast.LENGTH_LONG).show();
+			//If it already exists in the downloads folder, just import it
+			//Toast.makeText(getActivity(), getActivity().getString(R.string.libraryExistsLocal), Toast.LENGTH_LONG).show();
+
+			HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+			if (controller != null)
+			{
+				File importFile = new File(Renovations3DActivity.downloadsLocation, fileName);
+
+				if(importInfo.type == ImportType.FURNITURE)
+				{
+					controller.importFurnitureLibrary(importFile.getAbsolutePath());
+					Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", importFile.getName());
+				}
+				else if(importInfo.type == ImportType.TEXTURE)
+				{
+					controller.importTexturesLibrary(importFile.getAbsolutePath());
+					Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
+				}
+				getActivity().invalidateOptionsMenu();
+
+			}
 		}
 	}
 
