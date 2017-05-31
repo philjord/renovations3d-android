@@ -90,9 +90,14 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 		else
 		{
 			fragment = getItem(position);
-
-			mCurTransaction.add(container.getId(), fragment, makeFragmentName(container.getId(), itemId));
+			// position might be out of range 0-3
+			if (fragment != null)
+			{
+				mCurTransaction.add(container.getId(), fragment, makeFragmentName(container.getId(), itemId));
+			}
 		}
+
+
 		if (fragment != mCurrentPrimaryItem)
 		{
 			fragment.setMenuVisibility(false);
@@ -105,16 +110,19 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object)
 	{
-		if (mCurTransaction == null)
+		if(object != null)
 		{
-			mCurTransaction = mFragmentManager.beginTransaction();
+			if (mCurTransaction == null)
+			{
+				mCurTransaction = mFragmentManager.beginTransaction();
+			}
+
+			mCurTransaction.detach((Fragment) object);
+
+			// they stay in mActive cos the backstack might want them, and we want to get rid of them
+			// note this must be done in the same transaction as the adds etc hence the copy of the parent class
+			mCurTransaction.remove((Fragment) object);
 		}
-
-		mCurTransaction.detach((Fragment) object);
-
-		// they stay in mActive cos the backstack might want them, and we want to get rid of them
-		// note this must be done in the same transaction as the adds etc hence the copy of the parent class
-		mCurTransaction.remove((Fragment) object);
 	}
 
 	@Override
