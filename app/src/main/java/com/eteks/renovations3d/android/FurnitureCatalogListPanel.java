@@ -35,7 +35,6 @@ import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JList;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JTextField;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
@@ -47,7 +46,6 @@ import com.eteks.sweethome3d.model.FurnitureCategory;
 import com.eteks.sweethome3d.model.Library;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
-import com.eteks.sweethome3d.model.TexturesCategory;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
@@ -87,7 +85,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	private static String localString = "Local";
 
-	// if we are not intialized then ignore onCreateViews
+	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
 
 	private int iconHeightPx = 75;// used by imageviews
@@ -375,7 +373,12 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 							controller.importTexturesLibrary(importFile.getAbsolutePath());
 							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
 						}
-						getActivity().invalidateOptionsMenu();
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								getActivity().invalidateOptionsMenu();
+							}
+						});
 
 					}
 				}
@@ -491,7 +494,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					{
 						controller2.importTexturesLibrary(texturesLibraryName);
 						Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", texturesLibraryName);
-						getActivity().invalidateOptionsMenu();
+
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								getActivity().invalidateOptionsMenu();
+							}
+						});
 					}
 				}
 			}
@@ -517,7 +526,12 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					{
 						controller.importFurnitureLibrary(furnitureLibraryName);
 						Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", furnitureLibraryName);
-						getActivity().invalidateOptionsMenu();
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								getActivity().invalidateOptionsMenu();
+							}
+						});
 					}
 				}
 			}

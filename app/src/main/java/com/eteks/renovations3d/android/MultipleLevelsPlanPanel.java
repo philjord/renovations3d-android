@@ -859,7 +859,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					updateSelectedTab(home);
 					levelSpinnerControl.addChangeListener(changeListener);
 				}
-				getActivity().invalidateOptionsMenu();
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						getActivity().invalidateOptionsMenu();
+					}
+				});
 			}
 		};
 		for (Level level : levels)
@@ -888,7 +893,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				updateLayout(home);
 				levelSpinnerControl.addChangeListener(changeListener);
 
-				getActivity().invalidateOptionsMenu();
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						getActivity().invalidateOptionsMenu();
+					}
+				});
 			}
 		});
 
