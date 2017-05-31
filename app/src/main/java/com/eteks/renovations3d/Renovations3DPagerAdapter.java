@@ -61,7 +61,9 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 		{
 			return (HomeComponent3D) renovations3D.getHomeController().getHomeController3D().getView();
 		}
-		return null;
+
+		// it is safest by far to always return something here
+		return new Fragment();
 	}
 
 	@Override
