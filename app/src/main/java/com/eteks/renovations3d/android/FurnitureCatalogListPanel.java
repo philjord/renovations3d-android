@@ -284,7 +284,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		return false;
 	}
 
-	private void importLibrary(ImportInfo importInfo, MenuItem menuItem)
+	private void importLibrary(final ImportInfo importInfo, MenuItem menuItem)
 	{
 		String fileName = importInfo.libraryName;
 		if (!(new File(Renovations3DActivity.downloadsLocation, fileName).exists()))
@@ -355,25 +355,32 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			//If it already exists in the downloads folder, just import it
 			//Toast.makeText(getActivity(), getActivity().getString(R.string.libraryExistsLocal), Toast.LENGTH_LONG).show();
-
-			HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
-			if (controller != null)
+			Thread t3 = new Thread()
 			{
-				File importFile = new File(Renovations3DActivity.downloadsLocation, fileName);
-
-				if(importInfo.type == ImportType.FURNITURE)
+				public void run()
 				{
-					controller.importFurnitureLibrary(importFile.getAbsolutePath());
-					Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", importFile.getName());
-				}
-				else if(importInfo.type == ImportType.TEXTURE)
-				{
-					controller.importTexturesLibrary(importFile.getAbsolutePath());
-					Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
-				}
-				getActivity().invalidateOptionsMenu();
+					HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+					if (controller != null)
+					{
+						String fileName = importInfo.libraryName;
+						File importFile = new File(Renovations3DActivity.downloadsLocation, fileName);
 
-			}
+						if (importInfo.type == ImportType.FURNITURE)
+						{
+							controller.importFurnitureLibrary(importFile.getAbsolutePath());
+							Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", importFile.getName());
+						}
+						else if (importInfo.type == ImportType.TEXTURE)
+						{
+							controller.importTexturesLibrary(importFile.getAbsolutePath());
+							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
+						}
+						getActivity().invalidateOptionsMenu();
+
+					}
+				}
+			};
+			t3.start();
 		}
 	}
 
