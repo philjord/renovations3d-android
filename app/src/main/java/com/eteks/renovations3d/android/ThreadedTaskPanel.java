@@ -21,19 +21,12 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.Html;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.eteks.renovations3d.android.swingish.ActionListener;
-import com.eteks.renovations3d.android.swingish.JButton;
-import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskView;
@@ -43,9 +36,6 @@ import java.util.TimerTask;
 
 import javaawt.EventQueue;
 import javaawt.VMEventQueue;
-
-import static com.eteks.renovations3d.android.swingish.JOptionPane.OK_CANCEL_OPTION;
-import static com.eteks.renovations3d.android.swingish.JOptionPane.YES_NO_OPTION;
 
 
 /**
@@ -217,7 +207,7 @@ public class ThreadedTaskPanel extends LinearLayout//extends JPanel
 			  }
 		  }, 200);
 
-	  } else if (!taskRunning && this.dialog != null) {
+	  } else if (!taskRunning && this.dialog != null && !((Activity) context).isFinishing() ) {
 		  this.dialog.dismiss();
 	  }
 
