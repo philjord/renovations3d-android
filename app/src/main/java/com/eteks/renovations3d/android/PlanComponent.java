@@ -6468,29 +6468,38 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 				background.setColor(1, 1, 1);
 				canvas3D.renderOffScreenBuffer();
 				canvas3D.waitForOffScreenRendering();
-				BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
-				int[] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
-				// Render scene with a black background
-				background.setColor(0, 0, 0);
-				canvas3D.renderOffScreenBuffer();
-				canvas3D.waitForOffScreenRendering();
-				BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-				int[] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
-				// Create an image with transparent pixels where model isn't drawn
-				for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
+
+				//I have bug report stating canvas3D has become null after this wait, I'm not sure how as the semaphore should protect
+				// https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/46677556?duration=2592000000
+				if(canvas3D != null && sceneRoot !=null)
 				{
-					if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
-							&& imageWithBlackBackgoundPixels[i] == 0xFF000000
-							&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
+					BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
+					int[] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
+					// Render scene with a black background
+					background.setColor(0, 0, 0);
+					canvas3D.renderOffScreenBuffer();
+					canvas3D.waitForOffScreenRendering();
+					if(canvas3D != null && sceneRoot !=null)
 					{
-						imageWithWhiteBackgoundPixels[i] = 0;
+						BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+						int[] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
+						// Create an image with transparent pixels where model isn't drawn
+						for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
+						{
+							if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
+									&& imageWithBlackBackgoundPixels[i] == 0xFF000000
+									&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
+							{
+								imageWithWhiteBackgoundPixels[i] = 0;
+							}
+						}
+						sceneRoot.removeChild(model);
+
+						Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
+						VMBufferedImage img = new VMBufferedImage(bm);
+						return new ImageIcon(img);
 					}
 				}
-				sceneRoot.removeChild(model);
-
-				Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-				VMBufferedImage img = new VMBufferedImage(bm);
-				return new ImageIcon(img);
 			}
 		}
 		catch (InterruptedException e)
