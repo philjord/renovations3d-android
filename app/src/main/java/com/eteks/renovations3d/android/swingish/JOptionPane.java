@@ -123,7 +123,11 @@ public class JOptionPane
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
-				dialog.create().show();
+				if(!((Activity) context).isFinishing())
+				{
+					dialog.create().show();
+				}
+
 		}	});
 	}
 
@@ -153,7 +157,10 @@ public class JOptionPane
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
-				dialog.create().show();
+				if(!((Activity) context).isFinishing())
+				{
+					dialog.create().show();
+				}
 			}	});
 	}
 
@@ -215,7 +222,10 @@ public class JOptionPane
 							 dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
 							 dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
 							 dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
-							 dialog.create().show();
+							 if(!((Activity) context).isFinishing())
+							 {
+								 dialog.create().show();
+							 }
 						 }
 					 });
 
@@ -288,7 +298,10 @@ public class JOptionPane
 				dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
 				dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
 				dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
-				dialog.create().show();
+				if(!((Activity) context).isFinishing())
+				{
+					dialog.create().show();
+				}
 			}
 		});
 
@@ -389,7 +402,10 @@ public class JOptionPane
 
 				// Create the AlertDialog
 				AlertDialog dialog = builder.create();
-				dialog.show();
+				if(!((Activity) context).isFinishing())
+				{
+					dialog.show();
+				}
 			}
 		}
 	}
