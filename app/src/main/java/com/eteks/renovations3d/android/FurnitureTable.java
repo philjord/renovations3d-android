@@ -133,10 +133,6 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			for(int i = 0; i < widthsPx.length; i++)
 				widthsPx[i] = (int) Math.max((minWidthsDp[i] * scale + 0.5f), percentWidth[i] * fragWidthPx);
 
-			System.out.println("fragWidthPx " +fragWidthPx);
-			for(int i = 0; i < widthsPx.length; i++)
-				System.out.println("width " +  i + " " + widthsPx[i]) ;
-
 			header.removeAllViews();
 
 			TableRow headerRow = new TableRow(this.getContext());
