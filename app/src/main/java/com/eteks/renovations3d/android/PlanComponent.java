@@ -6299,7 +6299,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     private static BranchGroup     sceneRoot;
     private static ExecutorService iconsCreationExecutor = Executors.newSingleThreadExecutor();
 
-	  private static Semaphore offScreenRenderSemaphore;
+	  private static Semaphore offScreenRenderSemaphore = new Semaphore(1, true);
 	  public static void pauseOffScreenRendering()
 	  {
 		  if(offScreenRenderSemaphore != null)
@@ -6344,7 +6344,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	{
 		if(canvas3D == null)
 		{
-			offScreenRenderSemaphore = new Semaphore(1, true);
+
 			// Create the universe used to compute top view icons
 			canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
 			universe = new SimpleUniverse(canvas3D);
