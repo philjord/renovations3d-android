@@ -6150,15 +6150,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
 
     public int getIconWidth() {
-      return this.icon.getIconWidth();
+      return this.icon !=null ? this.icon.getIconWidth() : 0;
     }
 
     public int getIconHeight() {
-      return this.icon.getIconHeight();
+      return this.icon !=null ? this.icon.getIconHeight() : 0;
     }
 
     public void paintIcon(Object c, Graphics g, int x, int y) {
-      this.icon.paintIcon(c, g, x, y);
+		if(this.icon != null)
+			this.icon.paintIcon(c, g, x, y);
     }
 
     public boolean isWaitIcon() {
