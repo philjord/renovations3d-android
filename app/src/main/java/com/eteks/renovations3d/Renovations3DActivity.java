@@ -333,7 +333,7 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 		}
 
-		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+
 
 
 		// set the no permission default
@@ -364,6 +364,10 @@ public class Renovations3DActivity extends FragmentActivity
 	 */
 	public void setUpViews()
 	{
+
+
+
+
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mRenovations3DPagerAdapter);
 		mViewPager.setCurrentItem(1);
@@ -371,6 +375,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 		invalidateOptionsMenu();
 	}
+
 
 
 	@Override
@@ -765,12 +770,19 @@ public class Renovations3DActivity extends FragmentActivity
 						// must always recreate otherwise the pager hand out an IllegalStateException
 						renovations3D = new Renovations3D(Renovations3DActivity.this);
 
+
+						if(mRenovations3DPagerAdapter !=null)
+						{
+							// discard the old view first
+							mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+							mRenovations3DPagerAdapter.notifyDataSetChanged();
+						}
+
+						// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
+						mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+
 						mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 						//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
-
-						// discard the old view first
-						mRenovations3DPagerAdapter.notifyChangeInPosition(1);
-						mRenovations3DPagerAdapter.notifyDataSetChanged();
 
 						// create new home and trigger the new views
 						renovations3D.newHome();
@@ -818,12 +830,19 @@ public class Renovations3DActivity extends FragmentActivity
 				{
 					boolean prevHomeLoaded = renovations3D != null && renovations3D.getHomeController() != null;
 					renovations3D = new Renovations3D(Renovations3DActivity.this);
+
+					if(mRenovations3DPagerAdapter !=null)
+					{
+						// discard the old view first
+						mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+						mRenovations3DPagerAdapter.notifyDataSetChanged();
+					}
+
+					// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
+					mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+
 					mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 					//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
-
-					// discard the old view first
-					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
-					mRenovations3DPagerAdapter.notifyDataSetChanged();
 
 					renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
 

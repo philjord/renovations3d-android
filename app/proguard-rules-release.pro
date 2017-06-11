@@ -52,6 +52,12 @@
 
 
 
+#just a debug case for https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/42e1896f?duration=2592000000
+
+-keep class android.support.v4.app.FragmentManagerImpl { *; }
+-keep class android.support.v4.app.BackStackRecord { *; }
+-keep class com.eteks.renovations3d.Renovations3DPagerAdapter { *; }
+
 
 
 #if any class not found issues occured replace all "-keep" lines below with these 2 lines

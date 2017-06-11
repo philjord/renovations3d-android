@@ -58,7 +58,7 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 			return (FurnitureCatalogListPanel) renovations3D.getHomeController().getFurnitureCatalogController().getView();
 		}
 		else if (position == 3)
-		{
+		{//return new Fragment();
 			return (HomeComponent3D) renovations3D.getHomeController().getHomeController3D().getView();
 		}
 
