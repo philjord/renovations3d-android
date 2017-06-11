@@ -4,18 +4,13 @@
     <string name="alignment">alinhamento</string>
     <string name="magnetism">magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Use o gesto de pinça para zoom in e out.<br>
-Para ver a tabela de mobiliário com um dedo deslize a partir da borda esquerda da visualização do mapa.<br>
-Para ver o furto catálogo de móveis a partir da borda direita, você pode adicionar uma parede de lá.<br>
-Para deslocar sem alterar o furto seleção atual com dois dedos juntos.<br>
-Para editar qualquer objeto, toque duas vezes nele.<br>
-Para selecionar mais de um objeto usar os Lasso Select Select ações múltipla de ouro no menu Mais.<br>
-Dois arquivos de demonstração SH3D estará na sua pasta de downloads, selecione Mais-> Open casa.<br>
-Use o seu navegador para baixar mais arquivos SH3D da internet, eles vão abrir a partir do browser.<br>
-<p>Por favor, visite
-              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>e <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>para maiores informações.
+Arraste com um dedo para mover o plano. <br>
+Arraste com dois dedos para mover o plano sem alterar o que está selecionado. <br>
+Use pitada para ampliar. <br>
+Toque duas vezes em qualquer objeto para editá-lo. <br>
+Para ver o catálogo de móveis disponível, arraste o "&lt;" Lidar de lado. <br>
+Dois arquivos domésticos de demonstração estarão na sua pasta de downloads, use Abrir ... no menu. <br>
+Você pode usar seu navegador para abrir diretamente mais arquivos domésticos (.sh3d) da internet, por exemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
 Alternativamente, você pode pressionar longamente o item (não há arrastar e soltar).<br>

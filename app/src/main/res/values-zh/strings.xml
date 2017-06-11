@@ -4,17 +4,13 @@
     <string name="alignment">对准</string>
     <string name="magnetism">磁</string>
     <string name="planview_welcometext"><![CDATA[<html>
-使用捏手势放大和缩小。<br>
-要查看与1指轻扫家具表从地图视图左侧边缘。<br>
-要看到右边缘的家具目录轻扫，你可以从那里添加家具。<br>
-要平移不改变用两个手指当前选择刷卡在一起。<br>
-要编辑任何对象，双击它<br>
-要选择多个对象使用套索选择选择多黄金股在更多菜单。<br>
-两个SH3D演示文件将在您的下载文件夹，选择更多 - >打开主页。<br>
-使用浏览器从互联网上下载更多SH3D文件，他们会从浏览器中打开。<br>
-<p>请访问 <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-	<br>和 <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-    <br>了解更多信息。
+用一根手指拖动移动计划。<br>
+用两根手指拖动移动计划，而不改变所选的内容。<br>
+使用捏捏缩放。<br>
+双击任何对象进行编辑。<br>
+要查看可用的家具目录，请拖出“＆lt;” 从侧面处理。<br>
+两个演示家庭文件将在您的下载文件夹中，在菜单中使用打开...点击。<br>
+您可以使用浏览器从互联网直接打开更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
 或者，您可以长按项目（没有拖放）。<br>

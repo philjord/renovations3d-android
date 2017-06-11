@@ -4,17 +4,13 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">từ tính</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Sử dụng các cử chỉ pinch để phóng to ra.<br>
-Để xem bảng đồ nội thất với 1 ngón tay vuốt từ cạnh bên trái của bản đồ.<br>
-Để xem các cửa hàng đồ nội thất vuốt từ cạnh phải, bạn có thể thêm đồ nội thất từ đó.<br>
-Để chảo mà không thay đổi swipe lựa chọn hiện tại bằng hai ngón tay lại với nhau.<br>
-Để chỉnh sửa bất kỳ đối tượng nào, nhấn đúp vào nó. <br>
-Để chọn nhiều đối tượng sử dụng Lasso Chọn cổ phiếu nhiều vàng trong menu Thêm.<br>
-Hai file demo SH3D sẽ nằm trong thư mục tải về của bạn, chọn thêm-> Open nhà.<br>
-Sử dụng trình duyệt để tải nhiều tập tin SH3D từ internet, Họ sẽ mở từ trình duyệt.<br>
-</p><p>Hãy truy cập <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-	<br>Và <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-    <br>để biết thêm thông tin.
+Kéo bằng một ngón tay để di chuyển kế hoạch <br>
+Kéo bằng hai ngón tay để di chuyển kế hoạch mà không thay đổi những gì được chọn. <br>
+Sử dụng pinch để phóng to. <br>
+Nhấn đúp vào bất kỳ đối tượng nào để chỉnh sửa. <br>
+Để xem danh mục cửa hàng đồ dùng hiện có kéo ra thẻ "&lt;" Xử lý từ phía bên. <br>
+Hai tệp trình diễn bản demo sẽ nằm trong thư mục tải xuống của bạn, sử dụng Mở ... trong trình đơn. <br>
+Bạn có thể sử dụng trình duyệt để trực tiếp mở thêm các tệp tin nhà (.sh3d) từ internet, ví dụ như <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
 Ngoài ra bạn có thể nhấn lâu vào mục (không có kéo và thả).<br>

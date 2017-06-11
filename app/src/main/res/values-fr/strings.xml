@@ -5,16 +5,11 @@
     <string name="magnetism">Magnétisme</string>
     <string name="planview_welcometext"><![CDATA[<html>
 Pincer l\'écran pour zoomer et dézoomer.<br>
-Pour voir la liste des meubles, balayez l\'écran à partir du bord gauche.<br>
-Pour voir le catalogue de meubles et ajouter des meubles au plan, balayez l\'écran à partir du bord droit.<br>
+Pour voir le catalogue de meubles, balayez l\'écran à partir du bord droit.<br>
 Pour déplacer la zone visible du plan, déplacez deux doigts ensemble.<br>
 Pour modifier n\'importe quel objet, double-cliquez.<br>
-Pour sélectionner plus d\'un objet à la fois, choisissez Sélection lasso ou Sélection multiple dans le menu.<br>
 Deux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir... dans le menu.<br>
-Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, ils s\'ouvriront du navigateur.<br>
-<p>Rendez-vous sur <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>et <a href="http://www.sweethome3d.com/fr/">http://www.sweethome3d.com/fr/</a>
-              <br>pour plus d\'informations.
+Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, par exemple <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
 ou appuyez plus longuement sur ce meuble (il n\'y a de possibilité de glisser déposer les meubles dans le plan).<br>

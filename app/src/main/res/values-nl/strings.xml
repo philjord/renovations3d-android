@@ -4,17 +4,13 @@
     <string name="alignment">opstelling</string>
     <string name="magnetism">magnetisme</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Gebruik de pinch gebaar om in en uit te zoomen.<br>
-Om de meubels tafel met 1 vingerbeweging zien vanaf de linkerrand van de kaartweergave.<br>
-Om de meubels catalogus swipe van de rechterrand ziet, kun je meubels toevoegen vanaf daar.<br>
-Pan zonder elkaar wijziging van de huidige selectie vegen met twee vingers.<br>
-Om een object dubbele tik op het te bewerken. <br>
-Om te selecteren meer dan één object gebruik maken van de Lasso selecteren meerdere gouden aandelen in het menu Meer.<br>
-Twee SH3D demo bestanden in de map downloads, selecteert Meer-> Open huis.<br>
-Gebruik uw browser om meer SH3D bestanden te downloaden van het internet, zullen ze openen vanuit de browser.<br>
-</p><p>Bezoek <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-	<br>en <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-    <br>voor meer informatie.
+Sleep met een vinger om het plan te verplaatsen. <br>
+Sleep met twee vingers om het plan te verplaatsen zonder te veranderen wat is geselecteerd. <br>
+Gebruik knijp om te zoomen. <br>
+Dubbeltik op elk object om het te bewerken. <br>
+Om de beschikbare meubel catalogus te zien, sleept u de "&lt;" Handvat van de kant. <br>
+Twee demo-thuisbestanden zijn in uw downloads-map, gebruik Open ... in het menu. <br>
+U kunt uw browser gebruiken om meer thuisbestanden (.sh3d) van het internet direct te openen, bijvoorbeeld <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
 Als alternatief kun je lang op het artikel (er is geen drag and drop).<br>

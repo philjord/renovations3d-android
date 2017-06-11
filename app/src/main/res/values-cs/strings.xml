@@ -4,17 +4,13 @@
     <string name="alignment">zarovnání</string>
     <string name="magnetism">magnetismus</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Použijte špetka gesto k přiblížení a oddálení.<br>
-Chcete-li vidět nábytek tabulku s 1 prstem švihnout z levého okraje zobrazení mapy.<br>
-Chcete-li vidět nábytek katalog přejeďte prstem od pravého okraje, můžete přidat nábytek odtamtud.<br>
-Chcete-li posunout beze změny aktuálního výběru přejeďte dvěma prsty k sobě.<br>
-Chcete-li upravit libovolný objekt dvojí poklepání na něj. <br>
-Chcete-li vybrat více než jeden objekt použít laso Select vybrat více zlatých akcií v nabídce Více.<br>
-Dva SH3D demo soubory budou ve složce stahování, zvolte více-> Otevřít domů.<br>
-Použijte svůj prohlížeč tak, aby stahovat více SH3D souborů z internetu, budou otevírat z prohlížeče.<br>
-<p>Pro více informací:
-              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-		<br>a 	<a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>.
+Přetažením jednoho prstu přetáhněte plán<br>
+Přetáhněte s dvěma prsty pohyb plánu bez změny toho, co je vybráno<br>
+Pro přiblížení použijte sevření<br>
+Dvojitým klepnutím na kterýkoli objekt jej upravíte<br>
+Chcete-li zobrazit dostupný katalog nábytku, přetáhněte "&lt;" Rukojeť ze strany<br>
+Dva demo domovské soubory budou ve složce ke stažení, v nabídce použijte možnost Otevřít .... <br>
+Můžete použít váš prohlížeč k přímému otevření více domácích souborů (.sh3d) z internetu, například <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0.<br>
 Případně si můžete dlouho tlačit na položku (není drag and drop).<br>

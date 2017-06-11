@@ -4,17 +4,13 @@
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Ve uzaklaştırmak için kıstırma hareketini kullanın.<br>
-Harita görünümünün sol kenarından 1 parmak kaydırma ile mobilya tablosunu görmek için.<br>
-Sağ kenarından mobilya katalog tokatlamak görmek için, oradan mobilya ekleyebilirsiniz.<br>
-Birlikte iki parmağınızla Geçerli seçimi tokatlamak değiştirmeden kaydırmak için.<br>
-Herhangi bir nesneyi düzenlemek için üzerine iki kez dokunun. <br>
-Birden fazla nesne Diğer menüsünde Kement Seçiniz Seçiniz birden altın paylaşımları kullanmak seçin.<br>
-İki SH3D demo dosyaları, senin indirme klasöründe olması> Aç ev Dahası seçecektir.<br>
-Internetten daha fazla SH3D dosyaları indirmek için tarayıcınızı kullanın, onlar tarayıcıdan açılacaktır.<br>
-<p>Lütfen, <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-	<br>ve <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a> adresini
-	<br>daha fazla bilgi için.
+Planı taşımak için bir parmakla sürükleyin. <br>
+Seçilenleri değiştirmeden planı taşımak için iki parmağınızla sürükleyin. <br>
+Yakınlaştırmak için tutam kullanın. <br>
+Düzenlemek için herhangi bir nesneye iki kez hafifçe dokunun <br>
+Mevcut mobilya kataloğunu görmek için "&lt;" Yan taraftan tutun. <br>
+İki demo ev dosyası indirme klasörünüzde olacak, menüde Aç ... komutunu kullanın. <br>
+İnternetten daha fazla ev dosyasını (.sh3d) doğrudan açmak için tarayıcınızı kullanabilirsiniz, örneğin <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
 Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).<br>

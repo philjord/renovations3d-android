@@ -207,7 +207,12 @@ public class ThreadedTaskPanel extends LinearLayout//extends JPanel
 			  }
 		  }, 200);
 
-	  } else if (!taskRunning && this.dialog != null && !((Activity) context).isFinishing() ) {
+	  }
+	  // heaps of checks becuase user might have left app during long home save and this business is only from a return later
+	  else if (!taskRunning
+			  && this.dialog != null
+			  && this.dialog.isShowing()
+			  && !((Activity) context).isFinishing() ) {
 		  this.dialog.dismiss();
 	  }
 

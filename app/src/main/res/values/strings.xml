@@ -4,14 +4,13 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Drag with one finger to move the view and use the pinch gesture to zoom in and out.<br>
-To see the furniture table drag from the left edge of the screen.<br>
-To see the furniture catalog drag from the right edge of the screen, you can add furniture from there.<br>
+Drag with one finger to move the plan.<br>
 Drag with two fingers to move the plan without changing what is selected.<br>
+Use pinch to zoom.<br>
 Double tap on any object to edit it.<br>
-Two demo home files will be in your downloads folder, use "Open Home" in the menu.<br>
-You can use your browser to download more home files (.sh3d) from the internet, they will open from the browser.<br>
-<p>For example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
+To see the available furniture catalog drag out the "&lt;" handle from the side.<br>
+Two demo home files will be in your downloads folder, use Open... in the menu. <br>
+You can use your browser to directly open more home files (.sh3d) from the internet, for example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>
 Hold down on any item to add it to the plan, it will be selected and at location 0,0.<br>

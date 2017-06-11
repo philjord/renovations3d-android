@@ -1,6 +1,8 @@
 package com.eteks.renovations3d;
 
+import android.content.SharedPreferences;
 import android.text.format.Formatter;
+import android.widget.Toast;
 
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
@@ -35,9 +37,11 @@ import java.io.File;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.prefs.BackingStoreException;
@@ -98,7 +102,38 @@ public class Renovations3D extends HomeApplication
 		this.viewFactory = getViewFactory();
 		this.contentManager = getContentManager();
 		this.pluginManager = getPluginManager();
+
+		languageSetOnFirstUse();
 	}
+
+	private void languageSetOnFirstUse()
+	{
+		SharedPreferences settings = parentActivity.getSharedPreferences(parentActivity.PREFS_NAME, 0);
+		boolean languageSetOnFirstUse = settings.getBoolean(parentActivity.LANGUAGE_SET_ON_FIRST_USE, false);
+
+		if (!languageSetOnFirstUse)
+		{
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(parentActivity.LANGUAGE_SET_ON_FIRST_USE, true);
+			editor.apply();
+			EventQueue.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					String language = Locale.getDefault().getLanguage();
+					List<String> supportedLanguages = Arrays.asList(getUserPreferences().getSupportedLanguages());
+					if (supportedLanguages.contains(language))
+					{
+						getUserPreferences().setLanguage(language);
+
+						Toast.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+		}
+	}
+
 
 	public void newHome()
 	{

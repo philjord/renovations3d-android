@@ -4,18 +4,13 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Använd nypa gest för att zooma in och ut.<br>
-Att se möbler bord med en fingrar från vänster kant av kartvyn.<br>
-Att se möbler katalogen svepa från den högra kanten, kan du lägga till möbler därifrån .<br>
-Att panorera utan att ändra den aktuella markeringen svepa med två fingrar tillsammans.<br>
-Om du vill redigera ett objekt dubbeltryck på den. <br>
-Om du vill markera mer än ett objekt använder Lasso Välj Markera flera guld aktier på menyn Mer.<br>
-Två SH3D demofiler kommer att vara i din nedladdningar mapp väljer mer-> Öppna hem.<br>
-Använd din webbläsare för att ladda ner fler SH3D filer från Internet, kommer de att öppna från webbläsaren.<br>
- </p><p>Vänligen besök
-              <br><a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>och <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>för mer information.
+Dra med ett finger för att flytta planen. <br>
+Dra med två fingrar för att flytta planen utan att ändra vad som valts. <br>
+Använd nypa till att zooma. <br>
+Dubbelklicka på något objekt för att redigera det. <br>
+För att se den tillgängliga möbelkatalogen dra ut "&lt;" Hantera från sidan. <br>
+Två demo hemfiler kommer att finnas i din nedladdningsmapp, använd Öppna ... i menyn. <br>
+Du kan använda din webbläsare för att direkt öppna fler hemfiler (.sh3d) från internet, till exempel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
 Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).<br>

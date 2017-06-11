@@ -4,17 +4,13 @@
     <string name="alignment">alineación</string>
     <string name="magnetism">magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Utilizar el gesto de pellizcar para acercar y alejar.<br>
-Para ver la tabla 1 mueble con pasar el dedo desde el borde izquierdo de la vista del mapa.<br>
-Para ver el catálogo de muebles desliza el dedo desde el borde derecho, se puede añadir el mobiliario de allí.<br>
-Para obtener una panorámica sin alterar el golpe selección actual con dos dedos juntos.<br>
-Para editar cualquier objeto, pulse dos veces sobre él.<br>
-Para seleccionar más de un objeto utilizar las acciones Selección de lazo Seleccione múltiple de oro en el menú Más.<br>
-Dos archivos de demostración SH3D estarán en la carpeta de descargas, seleccione más-> casa abierta.<br>
-Utilizar el navegador para descargar más archivos SH3D de la Internet, se abrirá desde el navegador.<br>
-<p>Visita  <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>y <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>para más información.
+Arrastre con un dedo para mover el plan<br>
+Arrastre con dos dedos para mover el plan sin cambiar lo que está seleccionado<br>
+Utilice el pellizco para hacer zoom<br>
+Toca dos veces en cualquier objeto para editarlo<br>
+Para ver el catálogo de muebles disponibles, arrastre el botón "&lt;" Manija desde el lateral<br>
+Dos archivos de inicio de demostración estarán en su carpeta de descargas, utilice Abrir ... en el menú<br>
+Puede utilizar su navegador para abrir directamente más archivos de inicio (.sh3d) desde Internet, por ejemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0.<br>
 Alternativamente, puede presionar largo sobre el elemento (no hay arrastrar y soltar).<br>

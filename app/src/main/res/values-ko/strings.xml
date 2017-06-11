@@ -4,17 +4,13 @@
     <string name="alignment">정렬</string>
     <string name="magnetism">자성</string>
     <string name="planview_welcometext"><![CDATA[<html>
-집기 동작을 사용하여 확대 및 축소합니다. <br>
-평면도의 왼쪽 가장자리에서 1 개의 손가락으로 가구 테이블을 스 와이프합니다. <br>
-오른쪽 가장자리에서 가구 카탈로그를 스 와이프하려면 가구를 추가 할 수 있습니다. <br>
-현재 선택을 변경하지 않고 화면 이동하려면 두 손가락으로 함께 스 와이프하십시오. <br>
-개체를 편집하려면 두 번 탭합니다. <br>
-두 개 이상의 객체를 선택하려면 [더] 메뉴에서 [올가미 선택] 또는 [여러 작업 선택]을 사용하십시오. <br>
-데모 sh3d 파일 두 개를 다운로드 폴더에 추가하려면 More-> Open home을 선택하십시오. <br>
-인터넷을 통해 브라우저를 사용하여 더 많은 sh3d 파일을 다운로드하면 브라우저에서 열립니다. <br>
-<p> <a href="http://www.sweethome3d.com/gallery.jsp"> http://www.sweethome3d.com/gallery </a>를 방문하십시오.
-    <br> 및 <a href="http://www.sweethome3d.com/"> http://www.sweethome3d.com/ </a>
-    자세한 내용은 <br>.
+한 손가락으로 드래그하여 계획을 이동하십시오. <br>
+선택한 것을 변경하지 않고 두 손가락으로 드래그하여 계획을 이동하십시오. <br>
+핀치를 사용하여 확대 / 축소하십시오. <br>
+모든 개체를 두 번 탭하여 편집하십시오. <br>
+사용 가능한 가구 카탈로그를 보려면 "&lt;" 옆에서 손잡이. <br>
+두 개의 데모 홈 파일이 다운로드 폴더에 있으며, 메뉴에서 열기 ...를 사용하십시오. <br>
+브라우저를 사용하여 인터넷에서 더 많은 홈 파일 (.sh3d)을 직접 열 수 있습니다 예 : <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>
 가구 추가 아이콘을 눌러 선택한 가구 항목을 평면 뷰의 위치 0,0에 배치합니다. <br>

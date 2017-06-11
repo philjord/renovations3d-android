@@ -4,13 +4,13 @@
     <string name="alignment">Allineamento</string>
     <string name="magnetism">Magnetismo</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Usa la gesture di Pinch(pizzico) per effettuare uno zoom.<br>
-Per vedere la lista degli arredi aggiunti, scorri il dito da sinistra dello schermo.<br>
-Per vedere gli arredi disponibili, scorri il dito da destra, potrai aggiungere gli arredi da li. <br>
-Per scorrere lungo la mappa senza modificare la selezione attuale, scorri con due dita.<br>
-Per selezionare più di un oggetto contemporaneamente, utilizza la Selezione con lazo o la Selezione Multipla nel menu aggiuntivo.<br>
-Due file demo di sh3d verranno scaricati nella tua cartella dei downloads, seleziona Menu->Apri .<br>
-    <br>per ulteriori informazioni.
+Trascinare con un dito per spostare il piano<br>
+Trascinare con due dita per spostare il piano senza modificare ciò che è selezionato
+Usa pizzico per ingrandire<br>
+Toccare due volte su qualsiasi oggetto per modificarlo<br>
+Per visualizzare il catalogo di mobili disponibile, trascinare il "&lt;" Maniglia dal lato<br>
+Due file di home demo saranno nella cartella download, utilizzare Open ... nel menu. <br>
+Puoi utilizzare il tuo browser per aprire direttamente più file home (.sh3d) da Internet, ad esempio <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>
         Premendo l\'icona di aggiunta mobili, puoi aggiungere l\'oggetto selezionato sulla piantina in posizione 0,0.<br>

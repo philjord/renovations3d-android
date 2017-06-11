@@ -80,7 +80,8 @@ public class Renovations3DActivity extends FragmentActivity
 
 	public static final String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
 	public static final String CURRENT_WORK_FILENAME = "currentWork.sh3d";
-	private static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
+	public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
+	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
@@ -620,6 +621,11 @@ public class Renovations3DActivity extends FragmentActivity
 
 					if (renovations3D.getHome().getName() != null && !renovations3D.getHome().isRepaired())
 					{
+						//TODO: I've just played with a sh3d home from the mezz original and after saving as a new name ("s.sh3d") and closing down etc eventually it reopened
+						// on start up the original name! mezz!
+
+
+
 						// we have a name already so record it
 						recordHomeStateInPrefs("", false, renovations3D.getHome().getName());
 					}
@@ -733,6 +739,8 @@ public class Renovations3DActivity extends FragmentActivity
 			});
 		}
 	}
+
+
 
 	/**
 	 * Only call when not on EDT as blocking save question may arise
@@ -863,9 +871,6 @@ public class Renovations3DActivity extends FragmentActivity
 					{
 						File file = new File(new URI(localUri).getPath());
 						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
-
-						System.out.println("For comparision my downloads is  " + Renovations3DActivity.downloadsLocation);
-
 						loadFile(file);
 					}
 					catch (URISyntaxException e)
@@ -1087,23 +1092,6 @@ public class Renovations3DActivity extends FragmentActivity
 		editor.apply();
 
 		boolean firstOpening = appOpenedCount <= 1;
-		if (firstOpening)
-		{
-			EventQueue.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					String language = Locale.getDefault().getLanguage();
-					List<String> supportedLanguages = Arrays.asList(renovations3D.getUserPreferences().getSupportedLanguages());
-					if (supportedLanguages.contains(language))
-					{
-						renovations3D.getUserPreferences().setLanguage(language);
-					}
-				}
-			});
-		}
-
 
 		// now download the files from drop box
 		// folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";

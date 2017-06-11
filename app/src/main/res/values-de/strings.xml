@@ -4,17 +4,13 @@
     <string name="alignment">Ausrichtung</string>
     <string name="magnetism">Magnetismus</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Verwenden Sie die Pinch-Geste in und heraus zu zoomen.<br>
-Um zu sehen, die Möbel Tisch mit 1 Bewegung des Fingers von der linken Rand der Kartenansicht.<br>
-Um den Möbelkatalog Swipe vom rechten Rand sehen, können Sie Möbel von dort hinzufügen.<br>
-Mit zwei Fingern zusammen ohne Änderung der aktuellen Auswahl Swipe zu schwenken.<br>
-Um ein beliebiges Objekt zu bearbeiten, tippen Sie darauf
-Um mehr als ein Objekt mehrere Goldaktien im Menü Mehr die Lasso Select Select verwenden.<br>
-Zwei SH3D Demo-Dateien werden in Ihrem Download-Ordner sein, wählen Sie More-> Öffnen nach Hause.<br>
-Benutzen Sie Ihren Browser mehr SH3D Dateien aus dem Internet herunterladen, diese werden vom Browser öffnen.<br>
-</p><p>Besuchen Sie <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			<br>und <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>für mehr Informationen.
+Mit einem Finger ziehen, um den Plan zu bewegen<br>
+Ziehe mit zwei Fingern, um den Plan zu bewegen, ohne zu ändern, was ausgewählt ist
+Verwenden Sie Prise zu vergrößern<br>
+Doppelhahn Sie auf ein beliebiges Objekt, um es zu bearbeiten<br>
+Um den verfügbaren Möbelkatalog zu sehen, ziehen Sie die "&lt;" Griff von der Seite<br>
+Zwei Demo-Home-Dateien werden in Ihrem Download-Ordner, verwenden Sie Open ... im Menü. <br>
+Sie können Ihren Browser verwenden, um direkt mehr Home-Dateien (.sh3d) aus dem Internet zu öffnen, zum Beispiel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
 Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).<br>

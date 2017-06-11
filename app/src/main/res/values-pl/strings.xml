@@ -4,17 +4,13 @@
     <string name="alignment">wyrównanie</string>
     <string name="magnetism">magnetyzm</string>
     <string name="planview_welcometext"><![CDATA[<html>
-Użyj gestu pinch do przybliżania i oddalania.<br>
-Aby zobaczyć tabelę meble z 1 machnięcia palcem od lewej krawędzi widoku mapy.<br>
-Aller à la Meble Katalog przesuń palcem od prawej krawędzi, można dodać meble stamtąd.<br>
-Aby przesuwać bez zmiany bieżącego wyboru bezstykowa dwoma palcami razem.<br>
-Aby edytować dowolny obiekt, kliknij go dwukrotnie. <br>
-Aby wybrać więcej niż jeden obiekt użyć Lasso Wybierz Wybierz akcji wielokrotnego złota w menu Więcej.<br>
-Dwa SH3D pliki demo będzie w folderze pobieranie, wybierz więcej-> Otwórz domu.<br>
-Za pomocą przeglądarki, aby pobrać więcej plików SH3D z internetu, będą otwarte w przeglądarce.<br>
- <p>Odwiedź <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
-			  <br>i <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
-              <br>po więcej informacji.
+Przeciągnij jednym palcem, aby przenieść plan. <br>
+Przeciągnij dwoma palcami, aby przenieść plan bez zmiany tego, co zostało wybrane. <br>
+Użyj szczypta, aby powiększyć. <br>
+Kliknij dwukrotnie na dowolnym obiekcie, aby go edytować. <br>
+Aby wyświetlić dostępny katalog mebli, przeciągnij "&lt;" Uchwyt z boku. <br>
+Dwie pliki domowego demo będą znajdować się w folderze do pobrania, użyj Open ... w menu. <br>
+Możesz użyć swojej przeglądarki, aby bezpośrednio otworzyć więcej plików domowych (.sh3d) z Internetu, na przykład <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="catalogview_welcometext"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
 Możesz również nacisnąć długi element (nie ma przeciągania i upuszczania).<br>
