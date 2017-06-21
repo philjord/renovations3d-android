@@ -74,5 +74,8 @@ Změna od shora dolů k návštěvě lze provést pomocí ikony člověka nebo n
     <string name="basic_remove_ads">Odebrat reklamy</string>
     <string name="insufficient3dResourcesTitle">Nízké zdroje</string>
     <string name="insufficient3dResourcesMessage">Toto zařízení má v současné době nedostatečné zdroje k provádění 3D vykreslování. Zvažte proto restartování.</string>
+    <string name="showOtherHandles">Zobrazit další úchytky</string>
+    <string name="showPagerButtons">Zobrazit tlačítka pagerů</string>
+    <string name="useChunkyHandles">Zobrazit rukojetí</string>
 
 </resources>

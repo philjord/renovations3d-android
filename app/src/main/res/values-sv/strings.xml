@@ -73,5 +73,8 @@ Byte från toppen och nedåt för att besöka kan göras genom ikonen för en ma
     <string name="basic_remove_ads">Ta bort annonser</string>
     <string name="insufficient3dResourcesTitle">Låga resurser</string>
     <string name="insufficient3dResourcesMessage">Den här enheten har för närvarande inte tillräckligt med resurser för att göra 3D-rendering, var god överväga omstart.</string>
+    <string name="showOtherHandles">Visa andra handtag</string>
+    <string name="showPagerButtons">Visa pagerknappar</string>
+    <string name="useChunkyHandles">Visa klara handtag</string>
 
 </resources>

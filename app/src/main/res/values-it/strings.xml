@@ -79,6 +79,9 @@ Per cambiare la vista da aerea a prima persona puoi premere sull\'icona a forma 
     <string name="basic_remove_ads">Rimuovere gli annunci</string>
     <string name="insufficient3dResourcesTitle">Risorse basse</string>
     <string name="insufficient3dResourcesMessage">Questo dispositivo ha attualmente risorse insufficienti per eseguire il rendering 3D, per favore considera di riavviare.</string>
+    <string name="showOtherHandles">Mostrare altre maniglie</string>
+    <string name="showPagerButtons">Mostrare i pulsanti pager</string>
+    <string name="useChunkyHandles">Mostrare maniglie grosse</string>
 
 
 </resources>

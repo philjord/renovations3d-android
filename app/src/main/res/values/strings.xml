@@ -74,6 +74,9 @@ Changing from top down to visit can be done by the icon of a man or the icon of 
     <string name="basic_remove_ads">Remove ads</string>
     <string name="insufficient3dResourcesMessage">This device currently has insufficient resources to do 3D rendering, please consider restarting.</string>
     <string name="insufficient3dResourcesTitle">Low resources</string>
+    <string name="useChunkyHandles">Show Chunky Handles</string>
+    <string name="showOtherHandles">Show Other Handles</string>
+    <string name="showPagerButtons">Show Pager Buttons</string>
 
 
 </resources>

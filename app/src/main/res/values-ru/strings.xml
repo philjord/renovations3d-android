@@ -72,5 +72,8 @@ Pinch переместит вас вперед или назад. <br>
     <string name="basic_remove_ads">Убрать рекламу</string>
     <string name="insufficient3dResourcesTitle">Низкие ресурсы</string>
     <string name="insufficient3dResourcesMessage">В настоящее время на этом устройстве недостаточно ресурсов для 3D-рендеринга, попробуйте перезапустить.</string>
+    <string name="showOtherHandles">Показать другие ручки</string>
+    <string name="showPagerButtons">Показать кнопки пейджера</string>
+    <string name="useChunkyHandles">Показать короткими ручками</string>
 
 </resources>

@@ -71,5 +71,8 @@ Változó fentről lefelé, hogy nézze meg lehet tenni az ikon egy ember vagy a
     <string name="basic_remove_ads">Hirdetések eltávolítása</string>
     <string name="insufficient3dResourcesTitle">Alacsony erőforrások</string>
     <string name="insufficient3dResourcesMessage">Az eszköz jelenleg nem rendelkezik elegendő erőforrással a 3D megjelenítéshez, kérjük, fontolja meg az újraindítást.</string>
+    <string name="showOtherHandles">Mutasson más fogantyúkat</string>
+    <string name="showPagerButtons">A pager gombok megjelenítése</string>
+    <string name="useChunkyHandles">Mutatják a vastag fogantyúkat</string>
 
 </resources>

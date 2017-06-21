@@ -71,5 +71,8 @@
     <string name="basic_remove_ads">広告を削除</string>
     <string name="insufficient3dResourcesTitle">低リソース</string>
     <string name="insufficient3dResourcesMessage">このデバイスは現在、3Dレンダリングに必要なリソースが不足しています。再起動を検討してください。</string>
+    <string name="showOtherHandles">他のハンドルを表示する</string>
+    <string name="showPagerButtons">ページャボタンを表示する</string>
+    <string name="useChunkyHandles">ちっちゃなハンドルを表示する</string>
 
 </resources>

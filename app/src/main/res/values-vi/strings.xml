@@ -72,5 +72,8 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="basic_remove_ads">Loại bỏ các quảng cáo</string>
     <string name="insufficient3dResourcesTitle">низькі ресурси...</string>
     <string name="insufficient3dResourcesMessage">Thiết bị này hiện không có đủ tài nguyên để làm rendering 3D, vui lòng xem xét khởi động lại.</string>
+    <string name="showOtherHandles">Hiển thị các thanh khác</string>
+    <string name="showPagerButtons">Hiển thị các nút máy nhắn tin</string>
+    <string name="useChunkyHandles">Cho thấy chunky xử lý</string>
 
 </resources>

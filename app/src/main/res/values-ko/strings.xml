@@ -78,6 +78,9 @@
     <string name="basic_remove_ads">광고를 제거하다</string>
     <string name="insufficient3dResourcesTitle">낮은 리소스</string>
     <string name="insufficient3dResourcesMessage">이 기기는 현재 3D 렌더링을 수행 할 수있는 리소스가 부족하므로 다시 시작하십시오.</string>
+    <string name="showOtherHandles">다른 손잡이를 보여라.</string>
+    <string name="showPagerButtons">호출기 버튼 표시</string>
+    <string name="useChunkyHandles">엉뚱한 핸들을 보여라.</string>
 
 
 </resources>

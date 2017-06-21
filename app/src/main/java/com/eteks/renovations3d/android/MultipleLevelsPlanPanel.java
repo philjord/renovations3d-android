@@ -111,25 +111,27 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 
 
+
 			// make the left and right swipers work
-			Button planLeftSwiper = (Button)rootView.findViewById(R.id.planLeftSwiper);
+			Button planLeftSwiper = (Button) rootView.findViewById(R.id.planLeftSwiper);
 			planLeftSwiper.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(0, true);
+					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(0, true);
 				}
 			});
-			Button planRightSwiper = (Button)rootView.findViewById(R.id.planRightSwiper);
+			Button planRightSwiper = (Button) rootView.findViewById(R.id.planRightSwiper);
 			planRightSwiper.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(2, true);
+					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(2, true);
 				}
 			});
+
 		}
 		return rootView;
 	}
@@ -148,6 +150,18 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 
 			resetToSelectTool = true;
+
+
+			if(Renovations3DActivity.SHOW_PAGER_BUTTONS)
+			{
+				rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.VISIBLE);
+				rootView.findViewById(R.id.planRightSwiper).setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
+				rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
+			}
 
 			repaint();
 		}

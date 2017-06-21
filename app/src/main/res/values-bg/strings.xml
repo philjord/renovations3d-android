@@ -71,5 +71,8 @@ Pinch ще се движите напред или назад. <br>
     <string name="basic_remove_ads">Премахни рекламите</string>
     <string name="insufficient3dResourcesTitle">Ниски ресурси</string>
     <string name="insufficient3dResourcesMessage">Понастоящем устройството няма достатъчно ресурси, за да извършва триизмерно изобразяване, моля, помислете за рестартиране.</string>
+    <string name="showOtherHandles">Показване на други дръжки</string>
+    <string name="showPagerButtons">Показване на бутоните за пейджър</string>
+    <string name="useChunkyHandles">Покажете дълга дръжки</string>
 
 </resources>

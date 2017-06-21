@@ -114,10 +114,15 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JSpinner newFloorThicknessSpinner;
 	//private JCheckBox        checkUpdatesCheckBox;
 	//private JButton checkUpdatesNowButton;
-	private JCheckBox        autoSaveDelayForRecoveryCheckBox;
-	private JSpinner autoSaveDelayForRecoverySpinner;
-	private JLabel           autoSaveDelayForRecoveryUnitLabel;
+	//private JCheckBox        autoSaveDelayForRecoveryCheckBox;
+	//private JSpinner autoSaveDelayForRecoverySpinner;
+	//private JLabel           autoSaveDelayForRecoveryUnitLabel;
 	private JButton          resetDisplayedActionTipsButton;
+
+	private JCheckBox        useChunkyHandles;
+	private JCheckBox        showOtherHandles;
+	private JCheckBox        showPagerButtons;
+
 	private String           dialogTitle;
 
   /**
@@ -390,7 +395,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             controller.setGridVisible(gridCheckBox.isSelected());
           }
         });
-      controller.addPropertyChangeListener(UserPreferencesController.Property.GRID_VISIBLE, 
+      controller.addPropertyChangeListener(UserPreferencesController.Property.GRID_VISIBLE,
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
               gridCheckBox.setSelected(controller.isGridVisible());
@@ -619,8 +624,9 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             }
           }));
     }*/
-    
 
+//PJ cut out as misleading
+/*
     if (controller.isPropertyEditable(UserPreferencesController.Property.AUTO_SAVE_DELAY_FOR_RECOVERY)) {
       this.autoSaveDelayForRecoveryCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryCheckBox.text"));
@@ -644,7 +650,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             }
           }
         };*/
-      this.autoSaveDelayForRecoverySpinner = new AutoCommitSpinner(activity, autoSaveDelayForRecoverySpinnerModel);
+/*      this.autoSaveDelayForRecoverySpinner = new AutoCommitSpinner(activity, autoSaveDelayForRecoverySpinnerModel);
       this.autoSaveDelayForRecoveryUnitLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "autoSaveDelayForRecoveryUnitLabel.text"));
       updateAutoSaveDelayForRecoveryComponents(controller);
@@ -665,8 +671,10 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
         };
       controller.addPropertyChangeListener(UserPreferencesController.Property.AUTO_SAVE_DELAY_FOR_RECOVERY, listener);
       controller.addPropertyChangeListener(UserPreferencesController.Property.AUTO_SAVE_FOR_RECOVERY_ENABLED, listener);
-    }
-    
+    }*/
+
+	  final SharedPreferences settings = getContext().getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
+
     this.resetDisplayedActionTipsButton = new JButton(activity,
 			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "RESET_DISPLAYED_ACTION_TIPS.Name"));
 	  resetDisplayedActionTipsButton.setOnClickListener(new View.OnClickListener(){
@@ -676,9 +684,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
 			  //PJPJPJPJ
 			  // remind again for the welcome screens
-			  SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 			  SharedPreferences.Editor editor = settings.edit();
-
 			  editor.putBoolean(MultipleLevelsPlanPanel.WELCOME_SCREEN_UNWANTED, false);
 			  editor.putBoolean(HomeComponent3D.WELCOME_SCREEN_UNWANTED, false);
 			  editor.putBoolean(FurnitureCatalogListPanel.WELCOME_SCREEN_UNWANTED, false);
@@ -687,8 +693,44 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			  Renovations3DActivity.welcomeScreensShownThisSession.clear();
           }
         });
-    
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
+
+	  //PJ----------------------------new refs for Renovations, using the local prefs storage system
+
+	  boolean SHOW_CHUNKY_HANDLES = settings.getBoolean(PlanComponent.SHOW_CHUNKY_HANDLES_PREF, true);
+	  boolean SHOW_HANDLES_THAT_NEED_TOOLTIPS = settings.getBoolean(PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS_PREF, false);
+	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, true);
+
+	  this.useChunkyHandles = new JCheckBox(activity, getContext().getString(R.string.useChunkyHandles), SHOW_CHUNKY_HANDLES);
+	  this.useChunkyHandles.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+			  SharedPreferences.Editor editor = settings.edit();
+			  editor.putBoolean(PlanComponent.SHOW_CHUNKY_HANDLES_PREF, useChunkyHandles.isSelected());
+			  editor.apply();
+			  PlanComponent.SHOW_CHUNKY_HANDLES = useChunkyHandles.isSelected();
+		  }
+	  });
+	  this.showOtherHandles = new JCheckBox(activity, getContext().getString(R.string.showOtherHandles), SHOW_HANDLES_THAT_NEED_TOOLTIPS);
+	  this.showOtherHandles.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+			  SharedPreferences.Editor editor = settings.edit();
+			  editor.putBoolean(PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS_PREF, showOtherHandles.isSelected());
+			  editor.apply();
+			  PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS = showOtherHandles.isSelected();
+		  }
+	  });
+	  this.showPagerButtons = new JCheckBox(activity, getContext().getString(R.string.showPagerButtons), SHOW_PAGER_BUTTONS_PREF);
+	  this.showPagerButtons.addChangeListener(new ChangeListener() {
+		  public void stateChanged(ChangeEvent ev) {
+			  SharedPreferences.Editor editor = settings.edit();
+			  editor.putBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, showPagerButtons.isSelected());
+			  editor.apply();
+			  Renovations3DActivity.SHOW_PAGER_BUTTONS = showPagerButtons.isSelected();
+		  }
+	  });
+
+
+
+	  this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
   }
 
   /**
@@ -813,7 +855,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     }
   }
 
-  private void updateAutoSaveDelayForRecoveryComponents(UserPreferencesController controller) {
+/*  private void updateAutoSaveDelayForRecoveryComponents(UserPreferencesController controller) {
     int autoSaveDelayForRecoveryInMinutes = controller.getAutoSaveDelayForRecovery() / 60000;
     boolean autoSaveForRecoveryEnabled = controller.isAutoSaveForRecoveryEnabled();
     this.autoSaveDelayForRecoverySpinner.setEnabled(autoSaveForRecoveryEnabled);
@@ -821,7 +863,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     if (autoSaveForRecoveryEnabled) {
       this.autoSaveDelayForRecoverySpinner.setValue(autoSaveDelayForRecoveryInMinutes);
     }
-  }
+  }*/
 
 
 	/**
@@ -991,7 +1033,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 					updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesCheckBox,
 					updatesAndAutoSaveDelayForRecoveryPanel.add(this.checkUpdatesNowButton,
 		  }*/
-		if (this.autoSaveDelayForRecoveryCheckBox != null)
+		/*if (this.autoSaveDelayForRecoveryCheckBox != null)
 		{
 			swapOut(this.autoSaveDelayForRecoveryCheckBox, R.id.prefs_autoSaveRadioButton);
 			swapOut(this.autoSaveDelayForRecoverySpinner, R.id.prefs_autoSaveSpinner);
@@ -1002,7 +1044,31 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_autoSaveRadioButton);
 			removeView(R.id.prefs_autoSaveSpinner);
 			removeView(R.id.prefs_autoSaveUnitLabel);
-		}
+
+// had to strip this out completely
+			 <TableRow>
+            <CheckBox
+                android:id="@+id/prefs_autoSaveRadioButton"
+                android:text="Auto Save time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
+            <NumberPicker
+                android:id="@+id/prefs_autoSaveSpinner"
+                android:text=""
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+            />
+            <TextView
+                android:id="@+id/prefs_autoSaveUnitLabel"
+                android:text="Min"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                />
+        </TableRow>
+		}*/
 
 		if (this.resetDisplayedActionTipsButton.getText() != null
 				&& this.resetDisplayedActionTipsButton.getText().length() > 0)
@@ -1014,6 +1080,11 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		{
 			removeView(R.id.prefs_resetTipsButton);
 		}
+
+
+		swapOut(this.useChunkyHandles, R.id.prefs_useChunkyHandles);
+		swapOut(this.showOtherHandles, R.id.prefs_showOtherHandles);
+		swapOut(this.showPagerButtons, R.id.prefs_showPagerButtons);
 
 		this.setTitle(dialogTitle);
 		swapOut(closeButton, R.id.prefs_closeButton);

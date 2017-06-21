@@ -82,11 +82,15 @@ public class Renovations3DActivity extends FragmentActivity
 	public static final String CURRENT_WORK_FILENAME = "currentWork.sh3d";
 	public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
+	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
+
+
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
 
+	public static boolean SHOW_PAGER_BUTTONS = true;
 
 	// used as a modal mouse click blocker
 	public AndroidDialogView currentDialog = null;
@@ -95,8 +99,6 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private Renovations3DPagerAdapter mRenovations3DPagerAdapter;
 	public ViewPager mViewPager; // public to allow fragment to move around by button
-
-	private File chooserStartFolder;
 
 	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
@@ -334,7 +336,8 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 
 
-
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SHOW_PAGER_BUTTONS = settings.getBoolean(SHOW_PAGER_BUTTONS_PREF, true);
 
 		// set the no permission default
 		downloadsLocation = this.getExternalFilesDir (Environment.DIRECTORY_DOWNLOADS);

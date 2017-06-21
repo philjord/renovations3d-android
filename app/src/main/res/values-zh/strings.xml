@@ -71,5 +71,8 @@
     <string name="basic_remove_ads">移除广告</string>
     <string name="insufficient3dResourcesTitle">资源不足</string>
     <string name="insufficient3dResourcesMessage">该设备当前没有足够的资源进行3D渲染，请考虑重新启动。</string>
+    <string name="showOtherHandles">显示其他手柄</string>
+    <string name="showPagerButtons">显示寻呼机按钮</string>
+    <string name="useChunkyHandles">显示大块手柄</string>
 
 </resources>

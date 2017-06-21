@@ -72,5 +72,8 @@ Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikon
     <string name="basic_remove_ads">Anzeigen entfernen</string>
     <string name="insufficient3dResourcesTitle">Niedrige Ressourcen</string>
     <string name="insufficient3dResourcesMessage">Dieses Gerät verfügt derzeit über nicht genügend Ressourcen, um 3D-Rendering durchzuführen. Bitte beachten Sie das Neustart.</string>
+    <string name="showOtherHandles">Zeige andere Griffe</string>
+    <string name="showPagerButtons">Pager-Tasten anzeigen</string>
+    <string name="useChunkyHandles">Zeigen klobige Griffe</string>
 
 </resources>

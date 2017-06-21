@@ -73,5 +73,8 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un hombre o e
     <string name="basic_remove_ads">Quitar anuncios</string>
     <string name="insufficient3dResourcesTitle">Recursos bajos</string>
     <string name="insufficient3dResourcesMessage">Este dispositivo tiene actualmente recursos insuficientes para hacer renderizado en 3D, por favor, considere reiniciar.</string>
+    <string name="useChunkyHandles">Mostrar asideros pesados</string>
+    <string name="showPagerButtons">Mostrar botones de localizador</string>
+    <string name="showOtherHandles">Mostrar otras manijas</string>
 
 </resources>

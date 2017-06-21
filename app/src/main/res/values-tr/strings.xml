@@ -71,5 +71,8 @@ Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir p
     <string name="basic_remove_ads">Reklamları kaldırmak</string>
     <string name="insufficient3dResourcesTitle">Düşük kaynaklar</string>
     <string name="insufficient3dResourcesMessage">Bu cihaz şu anda 3D görüntüleme yapmak için yetersiz kaynak içeriyor, lütfen yeniden başlatmayı düşünün.</string>
+    <string name="showOtherHandles">Diğer kolları göster</string>
+    <string name="showPagerButtons">Çağrı düğmelerini göster</string>
+    <string name="useChunkyHandles">Tıknaz kolları göster</string>
 
 </resources>

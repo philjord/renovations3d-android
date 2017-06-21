@@ -73,4 +73,7 @@ Pinch θα κινείστε προς τα εμπρός ή προς τα πίσω
     <string name="basic_remove_ads">Αφαίρεσε τις διαφημίσεις</string>
     <string name="insufficient3dResourcesTitle">Χαμηλοί πόροι</string>
     <string name="insufficient3dResourcesMessage">Αυτήν τη στιγμή η συσκευή δεν διαθέτει επαρκείς πόρους για να πραγματοποιήσει απόδοση 3D, παρακαλούμε να επανεκκινήσετε.</string>
+    <string name="showOtherHandles">Δείχνουν άλλες λαβές</string>
+    <string name="showPagerButtons">Εμφάνιση κουμπιών τηλεειδοποίησης</string>
+    <string name="useChunkyHandles">Δείχνουν χοντρά χερούλια</string>
 </resources>

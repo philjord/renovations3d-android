@@ -70,5 +70,8 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="basic_remove_ads">Supprimer la pub</string>
     <string name="insufficient3dResourcesTitle">Faibles ressources</string>
     <string name="insufficient3dResourcesMessage">Cet appareil dispose actuellement de ressources insuffisantes pour effectuer un rendu 3D, s\'il vous plaît envisager de redémarrer.</string>
+    <string name="showOtherHandles">Montrer d\'autres poignées</string>
+    <string name="showPagerButtons">Afficher les boutons de pager</string>
+    <string name="useChunkyHandles">Montre des poignées robustes</string>
 
 </resources>
