@@ -582,7 +582,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
 		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
 
-		createGoToPointOfViewMenu(home, preferences, ((Renovations3DActivity)getActivity()).renovations3D.getHomeController(), menu.findItem(R.id.gotopov));
+		createGoToPointOfViewMenu(home, menu.findItem(R.id.gotopov));
 
 		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
@@ -615,17 +615,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));
 
-		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home, ((Renovations3DActivity)getActivity()).renovations3D.getHomeController());
+		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home);
 
 		super.onPrepareOptionsMenu(menu);
 	}
 
 	//PJPJPJ Taken from HomePane and adapted
 	private void createGoToPointOfViewMenu(final Home home,
-											UserPreferences preferences,
-											final HomeController controller,
 										   final MenuItem goToPointOfViewMenu) {
-		updateGoToPointOfViewMenu(goToPointOfViewMenu, home, controller);
+		updateGoToPointOfViewMenu(goToPointOfViewMenu, home);
 		home.addPropertyChangeListener(Home.Property.STORED_CAMERAS,
 				new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent ev) {
@@ -634,7 +632,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						Runnable myRunnable = new Runnable() {
 							@Override
 							public void run() {
-								updateGoToPointOfViewMenu(goToPointOfViewMenu, home, controller);
+								updateGoToPointOfViewMenu(goToPointOfViewMenu, home);
 							}
 						};
 						mainHandler.post(myRunnable);
@@ -649,8 +647,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Updates Go to point of view menu items from the cameras stored in home.
 	 */
 	private void updateGoToPointOfViewMenu(MenuItem goToPointOfViewMenu,
-										   Home home,
-										   final HomeController controller) {
+										   Home home) {
 		List<Camera> storedCameras = home.getStoredCameras();
 		//TODO: very much sort this list so its n the same order ech time
 		goToPointOfViewMenu.getSubMenu().clear();
@@ -687,12 +684,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				if(cameraName.equals(camera.getName()))
 				{
-					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().getHomeController3D().goToCamera(camera);
-					// update the check box item nicely
-					MenuItem vv = mOptionsMenu.findItem(R.id.virtualvisit);
-					vv.setChecked(home.getCamera() == home.getObserverCamera());
-					setIconFromSelector(vv, R.drawable.virtualvist_selector);
-					return true;
+					HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+					if(homeController != null)
+					{
+						homeController.getHomeController3D().goToCamera(camera);
+						// update the check box item nicely
+						MenuItem vv = mOptionsMenu.findItem(R.id.virtualvisit);
+						vv.setChecked(home.getCamera() == home.getObserverCamera());
+						setIconFromSelector(vv, R.drawable.virtualvist_selector);
+						return true;
+					}
 				}
 			}
 		}
@@ -716,7 +717,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// do nothing it just nicely opens the list for us
 					break;
 				case R.id.modifyvirtualvisitor:
-					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().getPlanController().modifyObserverCamera();
+					HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+					if(homeController != null)
+					{
+						homeController.getPlanController().modifyObserverCamera();
+					}
 					break;
 				case R.id.storepov:
 					//I must get off the EDT and ask the question in a blocking manner
@@ -724,7 +729,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						public void run()
 						{
-							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().storeCamera();
+							HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+							if(homeController != null)
+							{
+								homeController.storeCamera();
+							}
 						}
 					};
 					t2.start();
@@ -734,7 +743,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						public void run()
 						{
-							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().deleteCameras();
+							HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+							if(homeController != null)
+							{
+								homeController.deleteCameras();
+							}
 						}
 					};
 					t3.start();
@@ -750,13 +763,21 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					controller.modifyAttributes();
 					break;
 				case R.id.createPhoto:
-					((Renovations3DActivity)getActivity()).renovations3D.getHomeController().createPhoto();
+						HomeController homeController2 = ((Renovations3DActivity)getActivity()).getHomeController();
+						if(homeController2 != null)
+						{
+							homeController2.createPhoto();
+						}
 					break;
 				case R.id.exportToObj:
 					Thread t4 = new Thread()
 					{
 						public void run(){
-							((Renovations3DActivity)getActivity()).renovations3D.getHomeController().exportToOBJ();
+							HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+							if(homeController != null)
+							{
+								homeController.exportToOBJ();
+							}
 						}
 					};
 					t4.start();

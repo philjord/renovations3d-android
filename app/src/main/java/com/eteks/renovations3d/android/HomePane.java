@@ -2027,7 +2027,11 @@ public class HomePane implements HomeView
 		//PJPJPJP but we are interested in teh REDO and Undo items being enabled or disabled!
 		if (actionType == ActionType.UNDO || actionType == ActionType.REDO)
 		{
-			((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setEnabled(actionType, enabled);
+			HomeController homeController = activity.getHomeController();
+			if(homeController != null)
+			{
+				((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setEnabled(actionType, enabled);
+			}
 		}
 
 
@@ -2043,8 +2047,12 @@ public class HomePane implements HomeView
 		// setNameAndShortDescription(ActionType.UNDO, undoText);
 		// setNameAndShortDescription(ActionType.REDO, redoText);
 		//PJPJP we want this bad bad right here!
-		((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setNameAndShortDescription(ActionType.UNDO, undoText);
-		((MultipleLevelsPlanPanel)activity.renovations3D.getHomeController().getPlanController().getView()).setNameAndShortDescription(ActionType.REDO, redoText);
+		HomeController homeController = activity.getHomeController();
+		if(homeController != null)
+		{
+			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(ActionType.UNDO, undoText);
+			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(ActionType.REDO, redoText);
+		}
 	}
 
 	/**

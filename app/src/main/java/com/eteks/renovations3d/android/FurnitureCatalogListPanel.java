@@ -223,8 +223,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 		localString = getActivity().getString(R.string.local);
 
-		updateImportSubMenus(menu.findItem(R.id.import_furniture_lib), menu.findItem(R.id.import_texture_lib),
-				((Renovations3DActivity) getActivity()).renovations3D.getHomeController());
+		updateImportSubMenus(menu.findItem(R.id.import_furniture_lib), menu.findItem(R.id.import_texture_lib));
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -272,8 +271,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					addFurniture();
 					return true;
 				case R.id.importTexture:
-					if (renovations3DActivity.renovations3D.getHomeController() != null)
-						renovations3DActivity.renovations3D.getHomeController().importTexture();
+					if (renovations3DActivity.getHomeController() != null)
+						renovations3DActivity.getHomeController().importTexture();
 					return true;
 				default:
 					return super.onOptionsItemSelected(item);
@@ -357,7 +356,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			{
 				public void run()
 				{
-					HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+					HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
 					if (controller != null)
 					{
 						String fileName = importInfo.libraryName;
@@ -440,12 +439,11 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 
 	private void updateImportSubMenus(MenuItem furnitureMenu,
-									  MenuItem textureMenu,
-									  final HomeController controller)
+									  MenuItem textureMenu)
 	{
 		furnitureMenu.getSubMenu().clear();
 		textureMenu.getSubMenu().clear();
-		List<Library> libs = ((Renovations3DActivity) getActivity()).renovations3D.getUserPreferences().getLibraries();
+		List<Library> libs = ((Renovations3DActivity) getActivity()).getUserPreferences().getLibraries();
 
 		int menuId = Menu.FIRST;
 		for (ImportInfo importInfo : importInfos)
@@ -483,7 +481,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			public void run()
 			{
-				HomeController controller2 = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+				HomeController controller2 = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
 				if (controller2 != null)
 				{
 					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -516,7 +514,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			public void run()
 			{
-				HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).renovations3D.getHomeController();
+				HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
 				if (controller != null)
 				{
 					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -545,13 +543,16 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		{
 			ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
 			al.add(selectedFiv.getCatalogPieceOfFurniture());
-			HomeController homeController = ((Renovations3DActivity) getActivity()).renovations3D.getHomeController();
-			homeController.getFurnitureCatalogController().setSelectedFurniture(al);
-			homeController.addHomeFurniture();
+			HomeController homeController = ((Renovations3DActivity) getActivity()).getHomeController();
+			if(homeController != null)
+			{
+				homeController.getFurnitureCatalogController().setSelectedFurniture(al);
+				homeController.addHomeFurniture();
 
-			Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
+				Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
 
-			((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(1, true);
+				((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(1, true);
+			}
 		}
 	}
 

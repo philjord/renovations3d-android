@@ -102,7 +102,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
-	public Renovations3D renovations3D; // for plan undo redo, now for import statements too
+
 
 	public static boolean writeExternalStorageGranted = false;
 	public static File downloadsLocation;
@@ -112,6 +112,9 @@ public class Renovations3DActivity extends FragmentActivity
 	private BillingManager billingManager;
 	private ImageAcquireManager imageAcquireManager;
 	private AdMobManager adMobManager;
+
+
+	private Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
 	// Description of original
 	// Renovations3D|HomeApplication
@@ -608,6 +611,41 @@ public class Renovations3DActivity extends FragmentActivity
 		editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, tempHomeRealModified);
 		editor.putString(STATE_CURRENT_HOME_NAME, currentHomeName);
 		editor.apply();
+	}
+
+
+	/**
+	 * NOTE! you must check for the often null return!
+	 * @return
+	 */
+	public HomeController getHomeController()
+	{
+		if(renovations3D != null)
+			return renovations3D.getHomeController();
+		else
+			return null;
+	}
+	/**
+	 * NOTE! you must check for the often null return!
+	 * @return
+	 */
+	public UserPreferences getUserPreferences()
+	{
+		if(renovations3D != null)
+			return renovations3D.getUserPreferences();
+		else
+			return null;
+	}
+	/**
+	 * NOTE! you must check for the often null return!
+	 * @return
+	 */
+	public Home getHome()
+	{
+		if(renovations3D != null)
+			return renovations3D.getHome();
+		else
+			return null;
 	}
 
 	private void saveSh3dFile()

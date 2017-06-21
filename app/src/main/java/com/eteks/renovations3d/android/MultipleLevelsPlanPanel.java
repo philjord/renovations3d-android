@@ -317,8 +317,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				{
 					public void run()
 					{
-						if (((Renovations3DActivity) getActivity()).renovations3D.getHomeController() != null &&
-								((Renovations3DActivity) getActivity()).renovations3D.getHomeController().getView().showActionTipMessage(actionKey))
+						if (((Renovations3DActivity) getActivity()).getHomeController() != null &&
+								((Renovations3DActivity) getActivity()).getHomeController().getView().showActionTipMessage(actionKey))
 						{
 							preferences.setActionTipIgnored(actionKey);
 						}
@@ -600,7 +600,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
 		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
 		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
-		boolean canModLevel = ((Renovations3DActivity) getActivity()).renovations3D.getHome() != null && ((Renovations3DActivity) getActivity()).renovations3D.getHome().getSelectedLevel() != null;
+		boolean canModLevel = ((Renovations3DActivity) getActivity()).getHome() != null && ((Renovations3DActivity) getActivity()).getHome().getSelectedLevel() != null;
 		menu.findItem(R.id.planModifyLevel).setEnabled(canModLevel);
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 
@@ -626,8 +626,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				try
 				{
 
-					if (renovations3DActivity.renovations3D.getHomeController() != null)
-						renovations3DActivity.renovations3D.getHomeController().undo();
+					if (renovations3DActivity.getHomeController() != null)
+						renovations3DActivity.getHomeController().undo();
 				}
 				catch (Exception e)
 				{
@@ -639,8 +639,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.editRedo:
 				try
 				{
-					if (renovations3DActivity.renovations3D.getHomeController() != null)
-						renovations3DActivity.renovations3D.getHomeController().redo();
+					if (renovations3DActivity.getHomeController() != null)
+						renovations3DActivity.getHomeController().redo();
 				}
 				catch (Exception e)
 				{//ignored, as the button should only be enabled when one undo is available (see HomeView addUndoSupportListener)
@@ -694,25 +694,25 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 			case R.id.bgImageImportModify:
 				//PJ the import appears to modify if it's already there??
-				if (renovations3DActivity.renovations3D.getHomeController() != null)
-					renovations3DActivity.renovations3D.getHomeController().importBackgroundImage();
+				if (renovations3DActivity.getHomeController() != null)
+					renovations3DActivity.getHomeController().importBackgroundImage();
 				return true;
 			case R.id.bgImageToggleVis:
-				if (renovations3DActivity.renovations3D.getHomeController() != null)
+				if (renovations3DActivity.getHomeController() != null)
 				{
 					final BackgroundImage backgroundImage = currentBackgroundImage();
 					if(backgroundImage != null)
 					{
 						if(backgroundImage.isVisible())
-							renovations3DActivity.renovations3D.getHomeController().hideBackgroundImage();
+							renovations3DActivity.getHomeController().hideBackgroundImage();
 						else
-							renovations3DActivity.renovations3D.getHomeController().showBackgroundImage();
+							renovations3DActivity.getHomeController().showBackgroundImage();
 					}
 				}
 				return true;
 			case R.id.bgImageDelete:
-				if (renovations3DActivity.renovations3D.getHomeController() != null)
-					renovations3DActivity.renovations3D.getHomeController().deleteBackgroundImage();
+				if (renovations3DActivity.getHomeController() != null)
+					renovations3DActivity.getHomeController().deleteBackgroundImage();
 				return true;
 
 			case R.id.alignment:
