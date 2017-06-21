@@ -664,7 +664,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	private JTextField            searchTextField;
 	//private JList                 catalogFurnitureList;
 
-	private FurnitureCategory dummyAllCategory =  new FurnitureCategory("All");
+	private FurnitureCategory dummyAllCategory =  new FurnitureCategory("All");//TODO: localize this word!
 
 	public void init(FurnitureCatalog catalog, UserPreferences preferences, FurnitureCatalogController controller)
 	{
@@ -858,6 +858,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		searchTextField.setHint(R.string.search_hint);
 		searchTextField.addTextChangedListener(new TextWatcher(){
 			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+				System.out.println("catalogListModel.setFilterText " +searchTextField.getText() );
 				catalogListModel.setFilterText(searchTextField.getText().toString());
 			}
 			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
@@ -1431,12 +1432,27 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				{
 					for (CatalogPieceOfFurniture piece : category.getFurniture())
 					{
-						if ((this.filterCategory == null
+						/*if ((this.filterCategory == null
 								|| piece.getCategory().equals(this.filterCategory))
 								&& piece.matchesFilter(this.filterText))
 						{
 							furniture.add(piece);
+						}*/
+
+						//the java.text.Collator systems differs on Android compared with jdk
+						// and it hits everything, so instead a dummy lowercase contains is us
+						//FIXME: this is really poor searching
+
+						if ((this.filterCategory == null
+								|| piece.getCategory().equals(this.filterCategory))
+								&&
+								(this.filterText == null || this.filterText == "" ||
+								piece.getName().toLowerCase().contains(this.filterText.toLowerCase())))
+						{
+							furniture.add(piece);
 						}
+
+
 					}
 				}
 				Collections.sort(this.furniture);
