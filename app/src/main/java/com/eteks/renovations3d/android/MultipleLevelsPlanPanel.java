@@ -152,15 +152,18 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			resetToSelectTool = true;
 
 
-			if(Renovations3DActivity.SHOW_PAGER_BUTTONS)
+			if(rootView != null)
 			{
-				rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.VISIBLE);
-				rootView.findViewById(R.id.planRightSwiper).setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
-				rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
+				if (Renovations3DActivity.SHOW_PAGER_BUTTONS)
+				{
+					rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.VISIBLE);
+					rootView.findViewById(R.id.planRightSwiper).setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
+					rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
+				}
 			}
 
 			repaint();
