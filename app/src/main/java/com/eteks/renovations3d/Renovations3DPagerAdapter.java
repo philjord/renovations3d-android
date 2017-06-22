@@ -152,7 +152,12 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	{
 		if (mCurTransaction != null)
 		{
-			mCurTransaction.commitNowAllowingStateLoss();
+			//attempt to solve
+			//https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/3ea8661b?duration=172800000
+			try
+			{
+				mCurTransaction.commitNowAllowingStateLoss();
+			}catch(NullPointerException e){}
 			mCurTransaction = null;
 		}
 	}
