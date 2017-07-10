@@ -3199,7 +3199,18 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           angle = angleAtEnd;
         }
         g2D.rotate(angle);
-		  ((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+
+		  if (!SHOW_CHUNKY_HANDLES)
+		  {
+			  ((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		  }
+		  else
+		  {
+			  g2D.scale(scaleInverse, scaleInverse);
+			  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		  }
+
         g2D.setTransform(previousTransform);
       }
     }
@@ -3301,7 +3312,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       if (Label.class.isAssignableFrom(selectableClass)) {
 		  ((VMGraphics2D)g2D).draw(LABEL_CENTER_INDICATOR, scaleInverse);
       } else {
-		  ((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.MOVE_TEXT), scaleInverse);
+
+		  if (!SHOW_CHUNKY_HANDLES)
+		  {
+			  ((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.MOVE_TEXT), scaleInverse);
+		  }
+		  else
+		  {
+			  g2D.scale(scaleInverse, scaleInverse);
+			  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_move)).getBitmap();
+			  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		  }
       }
       if (style == null) {
         style = this.preferences.getDefaultTextStyle(selectableClass);
@@ -3314,7 +3335,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
       g2D.translate(0, fontMetrics.ascent * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
 		//PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
-		((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.ROTATE_TEXT), scaleInverse);
+
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.ROTATE_TEXT), scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_rotator)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform2);
     }
   }
@@ -3504,7 +3535,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.translate(wall.getXEnd(), wall.getYEnd());
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(indicatorAngle);
-		((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
+
       g2D.setTransform(previousTransform);
 		AffineTransform previousTransform2 = g2D.getTransform();
       if (arcExtent != null) {
@@ -3517,7 +3558,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.translate(wall.getXStart(), wall.getYStart());
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(indicatorAngle);
-		((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform2);
     }
   }
@@ -4465,6 +4515,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       //g2D.scale(scaleInverse, scaleInverse);
       Shape resizeIndicator = getIndicator(dimensionLine, IndicatorType.RESIZE);
 		((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform);
 		AffineTransform previousTransform2 = g2D.getTransform();
       // Draw resize indicator at the end of dimension line
@@ -4472,7 +4532,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.rotate(wallAngle);
       g2D.translate(0, dimensionLine.getOffset());
       //g2D.scale(scaleInverse, scaleInverse);
-		((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform2);
 		AffineTransform previousTransform3 = g2D.getTransform();
       // Draw resize indicator at the middle of dimension line
@@ -4484,7 +4553,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           ? Math.PI / 2
           : -Math.PI / 2);
       //g2D.scale(scaleInverse, scaleInverse);
-		((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform3);
     }
   }
@@ -4626,7 +4704,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           (compassPoints [2][1] + compassPoints [3][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(compass.getNorthDirection());
-		((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.ROTATE), scaleInverse);
+
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.ROTATE), scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_rotator)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
       g2D.setTransform(previousTransform);
 		AffineTransform previousTransform2 = g2D.getTransform();
       // Draw resize indicator at middle of second and third point of compass
@@ -4634,7 +4722,18 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           (compassPoints [1][1] + compassPoints [2][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(compass.getNorthDirection());
-		((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.RESIZE), scaleInverse);
+
+		if (!SHOW_CHUNKY_HANDLES)
+		{
+			((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.RESIZE), scaleInverse);
+		}
+		else
+		{
+			g2D.scale(scaleInverse, scaleInverse);
+			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_resize)).getBitmap();
+			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+		}
+
       g2D.setTransform(previousTransform2);
     }
   }
