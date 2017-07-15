@@ -410,7 +410,15 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			@Override
 			public View getDropDownView(int position, View convertView, ViewGroup parent)
 			{
-				return getTextView(position, true);
+				// why can this be null?
+				if (getActivity() != null)
+				{
+					return getTextView(position, true);
+				}
+				else
+				{
+					return convertView;
+				}
 			}
 
 			public View getTextView(int position, boolean withText)

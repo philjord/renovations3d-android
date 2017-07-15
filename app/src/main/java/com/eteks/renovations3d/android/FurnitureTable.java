@@ -125,7 +125,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 	private void updateHeader()
 	{
-		if(header != null)
+		// sometimes Exception java.lang.IllegalStateException: Fragment ii{d4006c0} not attached to Activity  is thrown, presumably during destroy or dispose
+		if(header != null && getActivity() != null)
 		{
 			final int fragWidthPx = rootView.getWidth();
 			final float scale = getResources().getDisplayMetrics().density;

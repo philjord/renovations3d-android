@@ -35,6 +35,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
@@ -520,9 +521,11 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 		@Override
 		public android.view.View getDropDownView (final int position, android.view.View convertView, ViewGroup parent)
 		{
-			final CatalogTexture texture = (CatalogTexture)this.getItem(position);
+
+			final CatalogTexture texture = (CatalogTexture) this.getItem(position);
 			final TextureIcon ti = new TextureIcon(texture, null);
-			ImageView ret = new CheckableImageView(getContext()){
+			ImageView ret = new CheckableImageView(getContext())
+			{
 				public void onDraw(Canvas canvas)
 				{
 					Graphics2D g2D = new VMGraphics2D(canvas);
@@ -533,17 +536,19 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 					g2D.setFont(texture.isModifiable() ? modifiablePieceFont : defaultFont);
 					g2D.setColor(Color.BLACK);
 					g2D.drawString(value, 0, this.getHeight() - namePadBottomPx);// at the bottom
-					if(isChecked())
+					if (isChecked())
 					{
 						g2D.setColor(Color.DARK_GRAY);
 						g2D.drawRect(0, 0, this.getWidth(), this.getHeight());
 					}
-				}};
+				}
+			};
 			ret.setMinimumWidth(TextureIcon.sizePx);
 			ret.setMinimumHeight(TextureIcon.sizePx + fontSizePx + namePadBottomPx);
 
-        return ret;
-      }
+			return ret;
+
+      	}
     }
 
     class CheckableImageView extends android.support.v7.widget.AppCompatImageView implements Checkable
@@ -665,10 +670,13 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 					aa2.remove(ev.getItem());
 					aa2.notifyDataSetChanged();
 					// select next thing along, to ensure buttons updated etc (p will be one down after remove above)
-					texturePanel.availableTexturesList.performItemClick(
-							texturePanel.availableTexturesList.getAdapter().getView(p, null, null),
-							p, texturePanel.availableTexturesList.getAdapter().getItemId(p));
-					//texturePanel.availableTexturesList.clearSelection();
+					if( p != -1 )
+					{
+						texturePanel.availableTexturesList.performItemClick(
+								texturePanel.availableTexturesList.getAdapter().getView(p, null, null),
+								p, texturePanel.availableTexturesList.getAdapter().getItemId(p));
+						//texturePanel.availableTexturesList.clearSelection();
+					}
 				}});
               break;
           }
