@@ -750,28 +750,30 @@ public class Renovations3DActivity extends FragmentActivity
 				{
 					// shouldn't really happen unless crash on load of first home
 					// above this is the proper way to do it, but if I don't have a home controller...
-					final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
-					fileChooser.setExtension("sh3d");
-					fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
-					{
-						@Override
-						public void fileSelected(final File file)
-						{
-							Thread t2 = new Thread()
-							{
-								public void run()
-								{
-									loadHome(file);
-								}
-							};
-							t2.start();
-						}
-					});
-					// get on the EDT
+					// get on the EDT, for the init of fileChooser
 					Renovations3DActivity.this.runOnUiThread(new Runnable()
 					{
 						public void run()
 						{
+							final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
+							fileChooser.setExtension("sh3d");
+							fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
+							{
+								@Override
+								public void fileSelected(final File file)
+								{
+									Thread t2 = new Thread()
+									{
+										public void run()
+										{
+											// get back off the EDT
+											loadHome(file);
+										}
+									};
+									t2.start();
+								}
+							});
+
 							fileChooser.showDialog();
 						}
 					});
