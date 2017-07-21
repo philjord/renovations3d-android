@@ -195,13 +195,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		gl_window = GLWindow.create(caps);
 
-		// in case of a create exception set up a listener to nicely report it to the user
+		// in case of a create or runtime exception set up a listener to nicely report it to the user
 		final Window delegateWindow = gl_window.getDelegatedWindow();
 		if(delegateWindow instanceof WindowDriver) {
 			WindowDriver wd = (WindowDriver)delegateWindow;
 			wd.setNativeWindowExceptionListener( new WindowImpl.NativeWindowExceptionListener()
 			{
-				// return true to indicate success, false will throw the exception
 				public boolean handleException(NativeWindowException nwp)
 				{
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "NativeWindowException", null );
@@ -211,7 +210,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 
 
-				/* I'd like to do something like this, but obviously as it si it's a recursive mess
+				/* I'd like to do something like this, but obviously as it is it's a recursive mess
 					try
 					{
 						Thread.sleep(2000);
@@ -228,8 +227,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						e1.printStackTrace();
 					}*/
 
-					//hopefully not throwing teh exception will allow the user to save work
+					//hopefully not throwing the exception will allow the user to save work
 					return true;
+				}
+
+				/**
+				 * Currently called when the WindowImpl has an exception during event processing
+				 * So far only failed to lock messages are dealt with here
+				 * @param e
+				 * @return
+				 */
+				@Override
+				public boolean handleRuntimeException(RuntimeException e)
+				{
+					// just ignore the failed lock and hope it is acquired during later processing
+					if(e.getMessage().contains("Waited 5000ms"))
+						return true;
+
+					return false;
 				}
 			});
 		}
