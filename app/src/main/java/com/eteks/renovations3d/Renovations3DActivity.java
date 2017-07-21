@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -37,6 +36,7 @@ import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
+import com.eteks.sweethome3d.model.HomeRecorder;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
@@ -51,21 +51,20 @@ import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import javaawt.EventQueue;
 import javaawt.VMEventQueue;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.VMImageIO;
@@ -1182,7 +1181,7 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			// do we have a temp home we were working on
 			String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
-			if (unmodifiedFileName.length() > 0)
+			if (unmodifiedFileName.length() > 0 && !unmodifiedFileName.endsWith(CURRENT_WORK_FILENAME))
 			{
 				File homeName = new File(unmodifiedFileName);
 				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getName());
@@ -1198,17 +1197,29 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 			else
 			{
-				//This is where we open the temp file that was last used
+				//This is where we open the temp file that was last used, but wait for any writes to finish
 				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
 				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 				File outputDir = getCacheDir();
 				File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
+
 				if (homeName.exists())
 				{
+					// wait for any previous still running autosaves to finish up
+					try
+					{
+						autoSaveSemaphore.acquire();
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+
 					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
 							+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
 					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
+					autoSaveSemaphore.release();
 				}
 				else
 				{
@@ -1216,6 +1227,8 @@ public class Renovations3DActivity extends FragmentActivity
 					// or just fire up a lovely clear new home
 					newHome();
 				}
+
+
 			}
 		}
 		else
@@ -1235,7 +1248,9 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	final Semaphore dialogSemaphore = new Semaphore(1, true);
+	//NOTE static as this is reused by the load to wait for auto save,
+	// static will stay around as long as exiting activity is alive saving
+	private static final Semaphore autoSaveSemaphore = new Semaphore(1, true);
 
 	public void doAutoSave()
 	{
@@ -1249,7 +1264,7 @@ public class Renovations3DActivity extends FragmentActivity
 					try
 					{
 						// all synchro-meshed and sexy
-						dialogSemaphore.acquire();
+						autoSaveSemaphore.acquire();
 					}
 					catch (InterruptedException e)
 					{
@@ -1265,7 +1280,9 @@ public class Renovations3DActivity extends FragmentActivity
 							String originalName = autoSaveHome.getName();
 							File outputDir = getCacheDir();
 							File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
-							// not using HomeRecorder.Type.COMPRESSED I feel it is super slow, compare a normal save press
+							// not using getHomeRecorder(HomeRecorder.Type.COMPRESSED) as it is 25 seconds for terrase
+							// not compressed = 8 seconds
+							System.out.println("doAutoSave start");
 							renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
 							recordHomeStateInPrefs(originalName, isModifiedOverrideValue, "");
 
@@ -1279,7 +1296,7 @@ public class Renovations3DActivity extends FragmentActivity
 							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "RecorderException during autosave", getHome().getName());
 						}
 					}
-					dialogSemaphore.release();
+					autoSaveSemaphore.release();
 				}
 			});
 			t.start();
