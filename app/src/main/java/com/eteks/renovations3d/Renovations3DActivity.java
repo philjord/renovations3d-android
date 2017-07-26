@@ -30,13 +30,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
-import com.eteks.sweethome3d.model.HomeRecorder;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.tools.OperatingSystem;
@@ -51,13 +51,9 @@ import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
@@ -110,7 +106,7 @@ public class Renovations3DActivity extends FragmentActivity
 	private BillingManager billingManager;
 	private ImageAcquireManager imageAcquireManager;
 	private AdMobManager adMobManager;
-
+	private Tutorial tutorial;
 
 	private Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
@@ -993,6 +989,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void loadUpContent()
 	{
+		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
 		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()
 		{
