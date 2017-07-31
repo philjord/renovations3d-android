@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.utils.InfoText3D;
 import com.eteks.renovations3d.utils.JoglStatusActivity;
@@ -55,12 +55,9 @@ import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.renovations3d.utils.AndyFPSCounter;
 import com.eteks.renovations3d.utils.Canvas3D2D;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.jogamp.nativewindow.NativeSurface;
-import com.jogamp.nativewindow.NativeWindow;
 import com.jogamp.nativewindow.NativeWindowException;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.FPSCounter;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
@@ -97,6 +94,7 @@ import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
+import org.jogamp.vecmath.Point2f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.TexCoord2f;
@@ -567,8 +565,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		if(isVisibleToUser && getContext() != null)
-			possiblyShowWelcomeScreen(getContext(), WELCOME_SCREEN_UNWANTED, R.string.component3dview_welcometext, preferences);
+		{
+			possiblyShowWelcomeScreen((Renovations3DActivity) getContext(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_component3dview, preferences);
 
+			// tell the tutorial we've been shown
+			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.VIEW_SHOWN_3D);
+		}
 
 
 		if (canvas3D2D != null)
@@ -593,11 +595,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	{
 		mOptionsMenu = menu;// for later use
 		inflater.inflate(R.menu.home_component3d_menu, menu);
-		menu.findItem(R.id.virtualvisit).setChecked(home.getCamera() == home.getObserverCamera());
+		menu.findItem(R.id.virtual_visit).setChecked(home.getCamera() == home.getObserverCamera());
 		boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
 		menu.findItem(R.id.viewalllevels).setChecked(allLevelsVisible);
 
-		createGoToPointOfViewMenu(home, menu.findItem(R.id.gotopov));
+		createGoToPointOfViewMenu(home, menu.findItem(R.id.go_to_camera_position));
 
 		SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
@@ -609,28 +611,42 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	@Override
 	public void onPrepareOptionsMenu(Menu menu)
 	{
-		menu.findItem(R.id.virtualvisit).setTitle(preferences.getLocalizedString(
+		MenuItem virtualVisit = menu.findItem(R.id.virtual_visit);
+		virtualVisit.setTitle(preferences.getLocalizedString(
 					com.eteks.sweethome3d.android_props.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
-		setIconFromSelector(menu.findItem(R.id.virtualvisit), R.drawable.virtualvist_selector);
-		menu.findItem(R.id.gotopov).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "GO_TO_POINT_OF_VIEW.Name"));
+		setIconFromSelector(virtualVisit, R.drawable.virtualvist_selector);
 
-		menu.findItem(R.id.modifyvirtualvisitor).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name"));
-		menu.findItem(R.id.storepov).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "STORE_POINT_OF_VIEW.Name"));
-		menu.findItem(R.id.deletepov).setTitle(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_POINTS_OF_VIEW.Name"));
+		//both on action bar
+		menu.findItem(R.id.go_to_camera_position).setTitle(R.string.goToCameraPosition);
+		menu.findItem(R.id.store_camera_position).setTitle(R.string.addCameraPosition);
+
+
+		MenuItem deletePov = menu.findItem(R.id.delete_camera_position);
+		String deletePovStr =  getActivity().getString(R.string.deleteCameraPosition);
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(deletePov, deletePovStr, R.drawable.ic_videocam_off_black_24dp);
+
+		MenuItem cameraMenu = menu.findItem(R.id.cameraMenu);
+		String cameraMenuStr = "...";
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(cameraMenu, cameraMenuStr, R.drawable.ic_videocam_black_24dp);
+
+		MenuItem modVV = menu.findItem(R.id.modify_virtual_visitor);
+		String modVVStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name");
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(modVV, modVVStr, R.drawable.view3d_view_from_observer);
+
 		menu.findItem(R.id.viewalllevels).setTitle(preferences.getLocalizedString(
 			com.eteks.sweethome3d.android_props.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
+
 		menu.findItem(R.id.modify3dview).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
-		menu.findItem(R.id.createPhoto).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name"));
+
+		MenuItem createPhoto = menu.findItem(R.id.createPhoto);
+		String createPhotoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name");
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(createPhoto, createPhotoStr, R.drawable.ic_add_a_photo_black_24dp);
+
 		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));
 
-		updateGoToPointOfViewMenu(menu.findItem(R.id.gotopov), home);
+		updateGoToPointOfViewMenu(menu.findItem(R.id.go_to_camera_position), home);
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -663,8 +679,20 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void updateGoToPointOfViewMenu(MenuItem goToPointOfViewMenu,
 										   Home home) {
-		List<Camera> storedCameras = home.getStoredCameras();
-		//TODO: very much sort this list so its n the same order ech time
+		List<Camera> storedCameras = new ArrayList<Camera>(home.getStoredCameras());
+		// sort them so this list is consistent
+		Collections.sort(storedCameras, new Comparator<Camera>()
+		{
+			@Override
+			public int compare(Camera o1, Camera o2)
+			{
+				if(o1==null||o2==null)
+						return 0;
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+
 		goToPointOfViewMenu.getSubMenu().clear();
 
 		if (storedCameras.isEmpty()) {
@@ -704,7 +732,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					{
 						homeController.getHomeController3D().goToCamera(camera);
 						// update the check box item nicely
-						MenuItem vv = mOptionsMenu.findItem(R.id.virtualvisit);
+						MenuItem vv = mOptionsMenu.findItem(R.id.virtual_visit);
 						vv.setChecked(home.getCamera() == home.getObserverCamera());
 						setIconFromSelector(vv, R.drawable.virtualvist_selector);
 						return true;
@@ -717,28 +745,35 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			// Handle item selection
 			switch (item.getItemId())
 			{
-				case R.id.goto2Dview:
-					((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, false);// true cause no render! god knows why
+				case R.id.goto_2D_view:
+					((Renovations3DActivity)getActivity()).getViewPager().setCurrentItem(1, false);// true cause no render! god knows why
 					break;
-				case R.id.virtualvisit:
+				case R.id.virtual_visit:
 					item.setChecked(!item.isChecked());
 					setIconFromSelector(item, R.drawable.virtualvist_selector);
 					if (item.isChecked())
+					{
 						controller.viewFromObserver();
+						// tell the tutorial
+						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.VIRTUAL_VISIT_STARTED);
+					}
 					else
+					{
 						controller.viewFromTop();
+					}
+
 					break;
-				case R.id.gotopov:
+				case R.id.go_to_camera_position:
 					// do nothing it just nicely opens the list for us
 					break;
-				case R.id.modifyvirtualvisitor:
+				case R.id.modify_virtual_visitor:
 					HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
 					if(homeController != null)
 					{
 						homeController.getPlanController().modifyObserverCamera();
 					}
 					break;
-				case R.id.storepov:
+				case R.id.store_camera_position:
 					//I must get off the EDT and ask the question in a blocking manner
 					Thread t2 = new Thread()
 					{
@@ -753,7 +788,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					};
 					t2.start();
 					break;
-				case R.id.deletepov:
+				case R.id.delete_camera_position:
 					Thread t3 = new Thread()
 					{
 						public void run()
@@ -1928,6 +1963,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							// Mouse move along Y axis changes camera pitch
 							float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1) * PITCH_REDUCTION;
 							controller.rotateCameraPitch(factor * pitchDelta);
+
+
+							// tell the tutorial
+							Point2f data = new Point2f(yawDelta, pitchDelta);
+							((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.CAMERA_MOVED_3D, data);
 						}
 						this.xLastMouseMove1 = ev.getX();
 						this.yLastMouseMove1 = ev.getY();

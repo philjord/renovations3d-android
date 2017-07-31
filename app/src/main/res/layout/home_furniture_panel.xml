@@ -13,8 +13,9 @@
     <HorizontalScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight = "1"
+        android:layout_weight="1"
         >
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -29,10 +30,12 @@
                 >
                 <!-- filled by code-->
             </LinearLayout>
+
             <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/header">
+
                 <TableLayout
                     android:id="@+id/table"
                     android:layout_width="wrap_content"
@@ -43,13 +46,14 @@
             </ScrollView>
         </RelativeLayout>
     </HorizontalScrollView>
-    <Button
+
+    <ImageButton
         android:id="@+id/furnitureTableRightSwiper"
-        android:layout_width = "30dp"
-        android:layout_weight = "0"
-        android:layout_height = "100dp"
+        android:layout_width="30dp"
+        android:layout_height="100dp"
         android:layout_gravity="center_vertical"
-        android:text="@string/lt"
         android:layout_marginRight="-5dp"
+        android:layout_weight="0"
+        android:src="@drawable/ic_chevron_left_black_24dp"
         />
 </LinearLayout>

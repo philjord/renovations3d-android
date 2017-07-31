@@ -79,13 +79,12 @@ public class Renovations3DActivity extends FragmentActivity
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
 
+	public static boolean SHOW_PAGER_BUTTONS = true;
 
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
 	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
 	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
-
-	public static boolean SHOW_PAGER_BUTTONS = true;
 
 	// used as a modal mouse click blocker
 	public AndroidDialogView currentDialog = null;
@@ -93,9 +92,10 @@ public class Renovations3DActivity extends FragmentActivity
 	private static FirebaseAnalytics mFirebaseAnalytics;
 
 	private Renovations3DPagerAdapter mRenovations3DPagerAdapter;
-	public ViewPager mViewPager; // public to allow fragment to move around by button
 
-	public static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
+	private ViewPager mViewPager; // public to allow fragment to move around by button
+
+	private static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
 
 	public static boolean writeExternalStorageGranted = false;
@@ -357,14 +357,26 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
+	public ViewPager getViewPager()
+	{
+		return mViewPager;
+	}
+
+	public HashSet<String> getWelcomeScreensShownThisSession()
+	{
+		return welcomeScreensShownThisSession;
+	}
+
+	public Tutorial getTutorial()
+	{
+		return tutorial;
+	}
 
 	/**
 	 * This must be called eventually by Renovations3D
 	 */
 	public void setUpViews()
 	{
-
-
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mRenovations3DPagerAdapter);
 		mViewPager.setCurrentItem(1);
@@ -403,64 +415,38 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			MenuItem removeAdsMI = menu.findItem(R.id.basic_remove_ads);
 			String removeAdsStr = this.getString(R.string.basic_remove_ads);
-			SpannableStringBuilder builderRemoveAds = new SpannableStringBuilder("* " + removeAdsStr);
-			builderRemoveAds.setSpan(new ImageSpan(this, R.drawable.ic_shopping_cart_black_24dp), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			removeAdsMI.setTitle(builderRemoveAds);
-			removeAdsMI.setTitleCondensed(removeAdsStr);
+			setIconizedMenuTitle(removeAdsMI, removeAdsStr, R.drawable.ic_shopping_cart_black_24dp);
 		}
 
 		if (renovations3D != null)
 		{
 			MenuItem newMI = menu.findItem(R.id.menu_new);
 			String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name");
-			SpannableStringBuilder builderNew = new SpannableStringBuilder("* " + newStr);
-			builderNew.setSpan(new ImageSpan(this, android.R.drawable.ic_input_add), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			newMI.setTitle(builderNew);
-			newMI.setTitleCondensed(newStr);
+			setIconizedMenuTitle(newMI, newStr, android.R.drawable.ic_input_add);
 
-			//TODO: find a good load icon, look here https://material.io/icons
 			MenuItem loadMI = menu.findItem(R.id.menu_load);
 			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
-			//SpannableStringBuilder builderLoad = new SpannableStringBuilder("* " + loadStr);
-			//builderLoad.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_add), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			//loadMI.setTitle(builderLoad);
-			loadMI.setTitle(loadStr);
-			loadMI.setTitleCondensed(loadStr);
+			setIconizedMenuTitle(loadMI, loadStr, R.drawable.ic_open_in_new_black_24dp);
 
-			MenuItem saveMI = menu.findItem(R.id.menu_save);
-			String saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name");
-			SpannableStringBuilder builderSave = new SpannableStringBuilder("* " + saveStr);
-			builderSave.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_save), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			saveMI.setTitle(builderSave);
-			saveMI.setTitleCondensed(saveStr);
+			MenuItem  saveMI = menu.findItem(R.id.menu_save);
+			String  saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name");
+			setIconizedMenuTitle(saveMI, saveStr, android.R.drawable.ic_menu_save);
 
-			MenuItem saveasMI = menu.findItem(R.id.menu_saveas);
-			String saveasStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name");
-			SpannableStringBuilder builderSaveas = new SpannableStringBuilder("* " + saveasStr);
-			builderSaveas.setSpan(new ImageSpan(this, R.drawable.ic_menu_save_as), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			saveasMI.setTitle(builderSaveas);
-			saveasMI.setTitleCondensed(saveasStr);
+			MenuItem saveAsMI = menu.findItem(R.id.menu_saveas);
+			String saveAsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name");
+			setIconizedMenuTitle(saveAsMI, saveAsStr, R.drawable.ic_menu_save_as);
 
 			MenuItem prefsMI = menu.findItem(R.id.menu_preferences);
 			String prefsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name");
-			SpannableStringBuilder builderPref = new SpannableStringBuilder("* " + prefsStr);
-			builderPref.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_preferences), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			prefsMI.setTitle(builderPref);
-			prefsMI.setTitleCondensed(prefsStr);
+			setIconizedMenuTitle(prefsMI, prefsStr, android.R.drawable.ic_menu_preferences);
 
 			MenuItem helpMI = menu.findItem(R.id.menu_help);
 			String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name");
-			SpannableStringBuilder builderHelp = new SpannableStringBuilder("* " + helpStr);
-			builderHelp.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_help), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			helpMI.setTitle(builderHelp);
-			helpMI.setTitleCondensed(helpStr);
+			setIconizedMenuTitle(helpMI, helpStr, android.R.drawable.ic_menu_help);
 
 			MenuItem aboutMI = menu.findItem(R.id.menu_about);
 			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
-			SpannableStringBuilder builderAbout = new SpannableStringBuilder("* " + aboutStr);
-			builderAbout.setSpan(new ImageSpan(this, android.R.drawable.ic_menu_info_details), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			aboutMI.setTitle(builderAbout);
-			aboutMI.setTitleCondensed(aboutStr);
+			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details);
 		}
 		return true;
 	}
@@ -485,7 +471,9 @@ public class Renovations3DActivity extends FragmentActivity
 				return true;
 			case R.id.menu_saveas:
 				saveAsSh3dFile();
-
+				return true;
+			case R.id.menu_help_tutorial:
+				tutorial.setEnable(true);
 				return true;
 			case R.id.menu_help:
 				showHelp();
@@ -500,7 +488,6 @@ public class Renovations3DActivity extends FragmentActivity
 				if (renovations3D != null && renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().editPreferences();
 				return true;
-
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -569,6 +556,9 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 		super.onPause();
+
+		if(tutorial != null)
+			tutorial.onPause();
 	}
 
 	@Override
@@ -578,6 +568,15 @@ public class Renovations3DActivity extends FragmentActivity
 
 		this.imageAcquireManager.onDestroy();
 		this.billingManager.onDestroy();
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		if(tutorial != null)
+			tutorial.onResume();
 	}
 
 	@Override
@@ -983,13 +982,22 @@ public class Renovations3DActivity extends FragmentActivity
 	{
 		writeExternalStorageGranted = true;
 		downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+		//possibly the ext is not mounted
+		if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+		{
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
+		}
+
 		invalidateOptionsMenu();
 		loadUpContent();
 	}
 
 	private void loadUpContent()
 	{
-		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
+
+
+
 		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()
 		{
@@ -1224,8 +1232,6 @@ public class Renovations3DActivity extends FragmentActivity
 					// or just fire up a lovely clear new home
 					newHome();
 				}
-
-
 			}
 		}
 		else
@@ -1243,6 +1249,8 @@ public class Renovations3DActivity extends FragmentActivity
 				newHome();
 			}
 		}
+
+		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
 	}
 
 	//NOTE static as this is reused by the load to wait for auto save,
@@ -1401,6 +1409,21 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 		}
 	}
+
+	public void setIconizedMenuTitle(MenuItem menuItem, String title, int iconId)
+	{
+		// NOTE use of setTitleCondensed as well as setTitle
+		//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
+		//http://stackoverflow.com/questions/7658725/android-java-lang-illegalargumentexception-invalid-payload-item-type
+
+
+		SpannableStringBuilder builder = new SpannableStringBuilder("* " + title);
+		builder.setSpan(new ImageSpan(this, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		menuItem.setTitle(builder);
+		menuItem.setTitleCondensed(title);
+		//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwsie there 2 icons
+	}
+
 
 	final private int REQUEST_CODE_ASK_PERMISSIONS = 123;//just has to match from request to response below
 

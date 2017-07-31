@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">opstelling</string>
     <string name="magnetism">magnetisme</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Sleep met een vinger om het plan te verplaatsen. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Sleep met twee vingers om het plan te verplaatsen zonder te veranderen wat is geselecteerd. <br>
-Gebruik knijp om te zoomen. <br>
 Dubbeltik op elk object om het te bewerken. <br>
-Om de beschikbare meubel catalogus te zien, sleept u de "&lt;" Handvat van de kant. <br>
 Twee demo-thuisbestanden zijn in uw downloads-map, gebruik Open ... in het menu. <br>
 U kunt uw browser gebruiken om meer thuisbestanden (.sh3d) van het internet direct te openen, bijvoorbeeld <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
 Als alternatief kun je lang op het artikel (er is geen drag and drop).<br>
 Vanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek ...<br>
 	   ]]>\n</string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.<br>
 Voor nu de enige functie die u hier kunt doen is om een items zichtbaarheid te wijzigen.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Dit is een 3-dimensionale weergave van uw plan. <br>
-Als u op zoek bent van boven naar beneden: <br>
-Eén vinger schuiven naar links of rechts zal het plan te draaien. <br>
-Eén vinger glijden omhoog of omlaag zal de hoogte van de camera en ook de toonhoogte te veranderen. <br>
-Pinch zal de camera dichter bij het centrum of verder van het. <br>
-Als u op zoek bent vanaf het bezoek oogpunt: <br>
-Eén vinger schuiven naar links of rechts zal het plan om je heen draaien. <br>
-Eén vinger glijden omhoog of omlaag zal de verticale hoek je hoofd is gericht te veranderen. <br>
-Pinch zal je vooruit of achteruit. <br>
-Saved standpunten is te vinden onder het pictogram oog. <br>
-Het veranderen van boven naar beneden om te bezoeken kan worden gedaan door het icoon van een man of het pictogram van een plan. <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Als u op zoek bent van boven naar beneden, pinch zal de camera dichter bij het centrum of verder van het. <br>
+Als u op zoek bent vanaf het bezoek oogpunt, pinch zal je vooruit of achteruit. <br>
+Bewaar de positie van de camera met het pictogram Camera toevoegen, ga naar een camera positie met het pictogram van de switch camera. <br>
+Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram van een plan / persoon. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
@@ -74,5 +64,49 @@ Het veranderen van boven naar beneden om te bezoeken kan worden gedaan door het 
     <string name="showOtherHandles">Laat andere handgrepen zien</string>
     <string name="showPagerButtons">Toon pager knoppen</string>
     <string name="useChunkyHandles">Toon dikke handgrepen</string>
+    <string name="menu_help_online">Online hulp</string>
+    <string name="menu_help_tutorial">Tutorial</string>
+    <string name="tutStep0Title">Tutorial</string>
+    <string name="tutStep0Text">Bij fouten gebruikt u Ongedaan maken. Sleep het plan met een vinger, zoom met behulp van de knijpactie. Probeer het plan nu te verplaatsen ... (U kunt deze handleiding altijd sluiten / weergeven).</string>
+    <string name="tutStep10Text">Verplaats de stoel rond en probeer het te draaien.</string>
+    <string name="tutStep10Title">Voeg een stoel toe - 3</string>
+    <string name="tutStep11Text">Tik op de 3D-knop en de weergave verandert in de 3D-weergave.</string>
+    <string name="tutStep11Title">Bekijk in 3D - 1</string>
+    <string name="tutStep12Text">Verplaats de camera door te slepen.</string>
+    <string name="tutStep12Title">Bekijk in 3D - 2</string>
+    <string name="tutStep13Text">Ga binnen in het huis door op de virtuele bezoek knop te drukken.</string>
+    <string name="tutStep13Title">Bekijk in 3D - 3</string>
+    <string name="tutStep14Text">Toon de meubel catalogus, door het uit te trekken van de linkerkant van het scherm.</string>
+    <string name="tutStep14Title">Voeg een deur toe - 1</string>
+    <string name="tutStep15Text">Zoek naar het woord \"deur\".</string>
+    <string name="tutStep15Title">Voeg een deur toe - 2</string>
+    <string name="tutStep16Text">Lang druk op een deur, en het wordt toegevoegd aan uw plan.</string>
+    <string name="tutStep16Title">Voeg een deur toe - 3</string>
+    <string name="tutStep17Text">Sleep de deur naar een muur, let op dat het zich automatisch aan de muur past.</string>
+    <string name="tutStep17Title">Voeg een deur toe - 4</string>
+    <string name="tutStep1Text">Selecteer het gereedschap \'Muren maken\' uit de hulpprogramma.</string>
+    <string name="tutStep1Title">Maak een aantal muren - 1</string>
+    <string name="tutStep2Text">Maak een muur door op het scherm te slepen en dan je vinger op te tillen.</string>
+    <string name="tutStep2Title">Maak een aantal muren - 2</string>
+    <string name="tutStep3Text">Maak een vierkant muren door drie keer te slepen. Maak het laatste dragende einde bij het begin van je eerste muur.</string>
+    <string name="tutStep3Title">Maak een aantal muren - 3</string>
+    <string name="tutStep4Text">Doe mee aan de laatste wand naar de eerste door dubbel te tikken om de creatie af te ronden.</string>
+    <string name="tutStep4Title">Maak een kamer aan - 1</string>
+    <string name="tutStep5Text">Selecteer het gereedschap \'Creëren kamers\' uit de hulpprogramma.</string>
+    <string name="tutStep5Title">Maak een kamer aan - 2</string>
+    <string name="tutStep6Text">Dubbel tik ergens in de vier muren om een kamer te creëren.</string>
+    <string name="tutStep6Title">Maak een kamer aan - 3</string>
+    <string name="tutStep7Text">Bewerk de nieuwe kamer door er dubbel op te tikken, selecteer de vloerstructuur, maak het betegeld. Sluit de dialoogvensters.</string>
+    <string name="tutStep7Title">Voeg een stoel toe - 1</string>
+    <string name="tutStep8Text">Toon de meubel catalogus door op de pijl te drukken.</string>
+    <string name="tutStep8Title">Voeg een stoel toe - 1</string>
+    <string name="tutStep9Text">Lang druk op een stoel, en het wordt toegevoegd aan uw plan.</string>
+    <string name="tutStep9Title">Voeg een stoel toe - 2</string>
+    <string name="tutStepFinishText">Goed werk, nu kun je naar je deur kijken in 3d? Of geef de muren wat kleur? Later kun je zien of je uitkomt hoe je een foto van je huis kunt maken ...</string>
+    <string name="tutStepFinishTitle">Tutorial klaar</string>
+    <string name="addCameraPosition">Voeg camera positie toe</string>
+    <string name="deleteCameraPosition">Verwijder de camera positie</string>
+    <string name="goToCameraPosition">Ga naar de camera positie</string>
+    <string name="tutorialWellDone">Goed gedaan!</string>
 
 </resources>

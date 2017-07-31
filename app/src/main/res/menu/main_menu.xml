@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      >
-    <item android:id="@+id/basic_remove_ads"
-          android:title="@string/basic_remove_ads"
-          android:orderInCategory = "0"/>
-    <item android:id="@+id/menu_new"
-          android:title="@string/menu_new"/>
-    <item android:id="@+id/menu_load"
-          android:title="@string/menu_load"
-          android:enabled="false"/>
-    <item android:id="@+id/menu_save"
-          android:title="@string/menu_save"
-          android:enabled="false"/>
-    <item android:id="@+id/menu_saveas"
-          android:title="@string/menu_save_as"
-          android:enabled="false"/>
-    <item android:id="@+id/menu_preferences"
-          android:title="@string/menu_preferences"
-          android:orderInCategory = "990"/>
-    <item android:id="@+id/menu_help"
-          android:title="@string/menu_help"
-          android:orderInCategory = "991"/>
-    <item android:id="@+id/menu_about"
-          android:title="@string/menu_about"
-          android:orderInCategory = "992"/>
+    >
+    <item
+        android:id="@+id/basic_remove_ads"
+        android:orderInCategory="0"
+        android:title="@string/basic_remove_ads"/>
+    <item
+        android:id="@+id/menu_new"
+        android:title="@string/menu_new"/>
+    <item
+        android:id="@+id/menu_load"
+        android:enabled="false"
+        android:title="@string/menu_load"/>
+    <item
+        android:id="@+id/menu_save"
+        android:enabled="false"
+        android:title="@string/menu_save"/>
+    <item
+        android:id="@+id/menu_saveas"
+        android:enabled="false"
+        android:title="@string/menu_save_as"/>
+    <item
+        android:id="@+id/menu_preferences"
+        android:orderInCategory="990"
+        android:title="@string/menu_preferences"/>
+    <item
+        android:orderInCategory="991"
+        android:title="@string/menu_help">
+        <menu>
+            <item
+                android:id="@+id/menu_help_tutorial"
+                android:title="@string/menu_help_tutorial"/>
+            <item
+                android:id="@+id/menu_help"
+                android:title="@string/menu_help_online"/>
+            <item
+                android:id="@+id/menu_about"
+                android:title="@string/menu_about"/>
+        </menu>
+    </item>
+
 </menu>

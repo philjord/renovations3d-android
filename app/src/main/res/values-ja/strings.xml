@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">アラインメント</string>
     <string name="magnetism">磁気</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-本の指でドラッグしてプランを移動します<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 選択したものを変更せずに、2本の指でドラッグしてプランを移動します<br>
-ピンチを使用してズームする<br>
 任意のオブジェクトをダブルタップして編集します<br>
-利用可能な家具カタログを見るには、「＆lt;」 側面からハンドルします<br>
 2つのデモホームファイルがダウンロードフォルダにあります。メニューの[開く...]を使用します<br>
 ブラウザを使用して、インターネットからより多くのホームファイル（.sh3d）を直接開くことができます（例：<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>位置0.0での平面図上に家具を選択した項目を配置する追加の家具のアイコンを押してください<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>位置0.0での平面図上に家具を選択した項目を配置する追加の家具のアイコンを押してください<br>
 または、項目を長押しすることもできます（ドラッグアンドドロップはありません）。<br>
 このビューからは、家具ライブラリカタログをインポートするメニュー - > [インポート家具ライブラリを選択することができます...<br>
 	   ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 これは、現在、あなたの計画に置かれたすべての家具の図です。<br>
 今のあなたはここで行うことができる唯一の機能は、項目の可視性を変更することです。<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-これは、あなたの計画の3次元ビューです。 <br>
-トップダウンから見ている場合：<br>
-1本の指が左または右にスライドすると、プランが回転します。<br>
-1本の指が上下にスライドすると、カメラの高さとピッチが変更されます。<br>
-ピンチは、カメラを中心付近またはそれ以上に移動させます。<br>
-あなたが訪問の視点から見ている場合：<br>
-1本の指が左または右にスライドすると、プランがあなたの周りを回転します。<br>
-1本の指が上下にスライドすると、頭が指し示す垂直角度が変わります。<br>
-ピンチはあなたを前後に動かします。<br>
-保存された視点は、目のアイコンの下に表示されます。<br>
-上から下への変更は、人のアイコンや計画のアイコンで行うことができます。<br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+トップダウンから見ている場合, ピンチは、カメラを中心付近またはそれ以上に移動させます。<br>
+あなたが訪問の視点から見ている場合, ピンチはあなたを前後に動かします。<br>
+カメラの追加アイコンでカメラの位置を保存し、スイッチのカメラアイコンでカメラの位置に移動します。 <br>
+上から下への変更は、計画/人のアイコンで行うことができます。 <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize部3d</string>
     <string name="menu_show3dcaps">GPU情報</string>
@@ -74,5 +64,49 @@
     <string name="showOtherHandles">他のハンドルを表示する</string>
     <string name="showPagerButtons">ページャボタンを表示する</string>
     <string name="useChunkyHandles">ちっちゃなハンドルを表示する</string>
+    <string name="menu_help_online">オンラインヘルプ</string>
+    <string name="menu_help_tutorial">チュートリアル</string>
+    <string name="tutStep0Title">チュートリアル</string>
+    <string name="tutStep0Text">間違いの場合は元に戻す。 1本の指でプランをドラッグし、ピンチアクションを使用してズームします。 今プランを移動してみてください...（いつでもこのチュートリアルを閉じる/表示することができます）</string>
+    <string name="tutStep10Text">椅子を回して回転させてみてください。</string>
+    <string name="tutStep10Title">椅子を追加する - 3</string>
+    <string name="tutStep11Text">3Dボタンをタップすると、ビューは3Dビューに変わります。</string>
+    <string name="tutStep11Title">3Dで表示 - 1</string>
+    <string name="tutStep12Text">カメラをドラッグして動かします。</string>
+    <string name="tutStep12Title">3Dで見る - 2</string>
+    <string name="tutStep13Text">仮想訪問ボタンを押して家の中に入る。</string>
+    <string name="tutStep13Title">3Dで表示 - 3</string>
+    <string name="tutStep14Text">家具カタログを画面の左側からドラッグして表示します。</string>
+    <string name="tutStep14Title">ドアを追加する - 1</string>
+    <string name="tutStep15Text">単語「ドア」を検索します。</string>
+    <string name="tutStep15Title">ドアを追加する - 2</string>
+    <string name="tutStep16Text">ドアを長押しすると、それがあなたの計画に追加されます。</string>
+    <string name="tutStep16Title">ドアを追加する - 3</string>
+    <string name="tutStep17Text">ドアを壁にドラッグして、壁に自動的にフィットすることに注意してください。</string>
+    <string name="tutStep17Title">ドアを追加する - 4</string>
+    <string name="tutStep1Text">ツールセレクタから「壁の作成」ツールを選択します。</string>
+    <string name="tutStep1Title">いくつかの壁を作成する - 1</string>
+    <string name="tutStep2Text">画面をドラッグして指を離して壁を作成します。</string>
+    <string name="tutStep2Title">いくつかの壁を作りなさい - 2</string>
+    <string name="tutStep3Text">3回以上ドラッグして壁の四角形を作成します。あなたの最初の壁の始まりの近くで最後のドラッグを終了させます。</string>
+    <string name="tutStep3Title">いくつかの壁を作りなさい - 3</string>
+    <string name="tutStep4Text">ダブルタップで最後の壁を最初の壁に結合し、作成を完了します。</string>
+    <string name="tutStep4Title">部屋を作る - 1</string>
+    <string name="tutStep5Text">ツールセレクタから「部屋を作成」ツールを選択します。</string>
+    <string name="tutStep5Title">部屋を作る - 2</string>
+    <string name="tutStep6Text">4つの壁のどこかをダブルタップして部屋を作成します。</string>
+    <string name="tutStep6Title">部屋を作る - 3</string>
+    <string name="tutStep7Text">新しい部屋をダブルタップして編集し、床のテクスチャを選択してタイル張りにします。 ダイアログを閉じます。</string>
+    <string name="tutStep7Title">椅子を追加する - 1</string>
+    <string name="tutStep8Text">矢印を押して、家具カタログを表示します。</string>
+    <string name="tutStep8Title">椅子を追加する - 1</string>
+    <string name="tutStep9Text">椅子を長押しすると、それがあなたの計画に追加されます。</string>
+    <string name="tutStep9Title">椅子を追加する - 2</string>
+    <string name="tutStepFinishText">良い仕事、今あなたは3dであなたのドアを見ることができますか？または壁に色を付けますか？後であなたはあなたの家の写真を作る方法を考えているかどうかを見ることができます...</string>
+    <string name="tutStepFinishTitle">チュートリアルが完了しました</string>
+    <string name="addCameraPosition">カメラ位置を追加する</string>
+    <string name="deleteCameraPosition">カメラの位置を削除する</string>
+    <string name="goToCameraPosition">カメラの位置に移動</string>
+    <string name="tutorialWellDone">よくやった！</string>
 
 </resources>

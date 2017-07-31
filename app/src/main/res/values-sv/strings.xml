@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Dra med ett finger för att flytta planen. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Dra med två fingrar för att flytta planen utan att ändra vad som valts. <br>
-Använd nypa till att zooma. <br>
 Dubbelklicka på något objekt för att redigera det. <br>
-För att se den tillgängliga möbelkatalogen dra ut "&lt;" Hantera från sidan. <br>
 Två demo hemfiler kommer att finnas i din nedladdningsmapp, använd Öppna ... i menyn. <br>
 Du kan använda din webbläsare för att direkt öppna fler hemfiler (.sh3d) från internet, till exempel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
 Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).<br>
 Från denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek ...<br>
 	     ]]>\n</string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Detta är en bild av alla möbler närvarande Placerad på din plan.<br>
 För nu den enda funktion du kan göra här är att ändra ett objekt synlighet.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Detta är en 3-dimensionell bild av din plan. <br>
-Om du letar uppifrån och ned: <br>
-Ett finger glidning åt vänster eller höger roterar planen. <br>
-Ett finger glida uppåt eller nedåt kommer att ändra höjden på kameran och även planen. <br>
-Nypa kommer att flytta kameran närmare centrum eller längre bort från den. <br>
-Om du letar från besöket synvinkel: <br>
-Ett finger glidning åt vänster eller höger roterar planen omkring dig. <br>
-Ett finger glida uppåt eller nedåt kommer att förändra den vertikala vinkeln huvudet pekar. <br>
-Nypa kommer att flytta dig framåt eller bakåt. <br>
-Sparade synpunkter kan hittas under ögonikonen . <br>
-Byte från toppen och nedåt för att besöka kan göras genom ikonen för en man eller ikonen för en plan. <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Om du letar uppifrån och ned, nypa kommer att flytta kameran närmare centrum eller längre bort från den. <br>
+Om du letar från besöket synvinkel, nypa kommer att flytta dig framåt eller bakåt. <br>
+Spara kamerans position med ikonen för att lägga till kameran, gå till en kameraposition med strömkameraikonen. <br>
+Byte från toppen ner till besöket kan göras med ikonen för en plan / person. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
@@ -76,5 +66,49 @@ Byte från toppen och nedåt för att besöka kan göras genom ikonen för en ma
     <string name="showOtherHandles">Visa andra handtag</string>
     <string name="showPagerButtons">Visa pagerknappar</string>
     <string name="useChunkyHandles">Visa klara handtag</string>
+    <string name="menu_help_online">Online hjälp</string>
+    <string name="menu_help_tutorial">Handledning</string>
+    <string name="tutStep0Title">Handledning</string>
+    <string name="tutStep0Text">För misstag använd Ångra. Dra planen runt med ett finger, zooma genom att använda nypa åtgärden. Försök flytta planen nu ... (Du kan stänga / visa denna handledning när som helst.)</string>
+    <string name="tutStep10Text">Flytta stolen runt och försök rotera den.</string>
+    <string name="tutStep10Title">Lägg till en stol - 3</string>
+    <string name="tutStep11Text">Tryck på 3D-knappen och vyn ändras till 3D-vyn.</string>
+    <string name="tutStep11Title">Visa i 3D - 1</string>
+    <string name="tutStep12Text">Flytta kameran runt genom att dra.</string>
+    <string name="tutStep12Title">Visa i 3D - 2</string>
+    <string name="tutStep13Text">Gå in i hemmet genom att trycka på den virtuella besöksknappen.</string>
+    <string name="tutStep13Title">Visa i 3D - 3</string>
+    <string name="tutStep14Text">Visa möbelkatalogen genom att dra ut den från vänstra sidan av skärmen.</string>
+    <string name="tutStep14Title">Lägg till en dörr - 1</string>
+    <string name="tutStep15Text">Sök efter ordet \"dörr\".</string>
+    <string name="tutStep15Title">Lägg till en dörr - 2</string>
+    <string name="tutStep16Text">Långt tryck på en dörr, och det kommer att läggas till din plan.</string>
+    <string name="tutStep16Title">Lägg till en dörr - 3</string>
+    <string name="tutStep17Text">Dra dörren till en vägg, märk att den automatiskt passar sig mot väggen.</string>
+    <string name="tutStep17Title">Lägg till en dörr - 4</string>
+    <string name="tutStep1Text">Välj verktyget \"Skapa väggar\" från Verktygsväljaren.</string>
+    <string name="tutStep1Title">Skapa några väggar - 1</string>
+    <string name="tutStep2Text">Skapa en vägg genom att dra på skärmen och lyft sedan fingret.</string>
+    <string name="tutStep2Title">Skapa några väggar - 2</string>
+    <string name="tutStep3Text">Skapa en kvadrat med väggar genom att dra tre gånger. Gör sista dragänden nära början på din första vägg.</string>
+    <string name="tutStep3Title">Skapa några väggar - 3</string>
+    <string name="tutStep4Text">Gå med i den sista väggen till den första genom att dubbelklicka för att avsluta skapandet.</string>
+    <string name="tutStep4Title">Skapa ett rum - 1</string>
+    <string name="tutStep5Text">Välj verktyget \"Skapa rum\" från Verktygsväljaren.</string>
+    <string name="tutStep5Title">Skapa ett rum - 2</string>
+    <string name="tutStep6Text">Dubbelklicka någonstans inuti de fyra väggarna för att skapa ett rum.</string>
+    <string name="tutStep6Title">Skapa ett rum - 3</string>
+    <string name="tutStep7Text">Redigera det nya rummet genom att dubbelklicka på det, välj golvstruktur, gör det kaklat. Stäng dialogrutorna.</string>
+    <string name="tutStep7Title">Lägg till en stol - 1</string>
+    <string name="tutStep8Text">Visa möbelkatalogen genom att trycka på pilen.</string>
+    <string name="tutStep8Title">Lägg till en stol - 1</string>
+    <string name="tutStep9Text">Långt tryck på en stol, och det kommer att läggas till din plan.</string>
+    <string name="tutStep9Title">Lägg till en stol - 2</string>
+    <string name="tutStepFinishText">Bra jobb, nu kan du gå och titta på din dörr i 3d? Eller ge väggarna lite färg? Senare kunde du se om du tränar hur man gör ett foto av ditt hem ...</string>
+    <string name="tutStepFinishTitle">Handledning Slutförd</string>
+    <string name="addCameraPosition">Lägg till kamerans position</string>
+    <string name="deleteCameraPosition">Ta bort kamerans position</string>
+    <string name="goToCameraPosition">Gå till kamerans position</string>
+    <string name="tutorialWellDone">Bra gjort!</string>
 
 </resources>

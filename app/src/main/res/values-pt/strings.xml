@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">alinhamento</string>
     <string name="magnetism">magnetismo</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Arraste com um dedo para mover o plano. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Arraste com dois dedos para mover o plano sem alterar o que está selecionado. <br>
-Use pitada para ampliar. <br>
 Toque duas vezes em qualquer objeto para editá-lo. <br>
-Para ver o catálogo de móveis disponível, arraste o "&lt;" Lidar de lado. <br>
 Dois arquivos domésticos de demonstração estarão na sua pasta de downloads, use Abrir ... no menu. <br>
 Você pode usar seu navegador para abrir diretamente mais arquivos domésticos (.sh3d) da internet, por exemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
 Alternativamente, você pode pressionar longamente o item (não há arrastar e soltar).<br>
 Desde este ponto de vista que você pode importar catálogo bibliotecas móveis, selecione Menu-> biblioteca de móveis de importação ...<br>
      ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Esta é uma visão de todo o mobiliário Atualmente Colocado em seu plano.<br>
 Por agora a única função que você pode fazer aqui é para mudar uma visibilidade itens.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Esta é uma visão tridimensional do seu plano. <br>
-Se você está olhando de cima para baixo: <br>
-Um dedo deslizando para a esquerda ou para a direita girará o plano.<br>
-Um dedo deslizando para cima ou para baixo alterará a altura da câmera e também o passo.<br>
-Pinch moverá a câmara mais perto do centro ou mais longe dela.<br>
-Se você está olhando do ponto de vista da visita: <br>
-Um dedo deslizando para a esquerda ou para a direita girará o plano à sua volta.<br>
-Um dedo deslizando para cima ou para baixo alterará o ângulo vertical da cabeça.<br>
-A pitada o moverá para frente ou para trás.<br>
-Os pontos de vista guardados podem ser encontrados sob o ícone de olho. <br>
-Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem ou o ícone de um plano.<br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Se você está olhando de cima para baixo, pinch moverá a câmara mais perto do centro ou mais longe dela.<br>
+Se você está olhando do ponto de vista da visita, a pitada o moverá para frente ou para trás.<br>
+Salve a posição da câmera com o ícone de adicionar câmera, vá para a posição da câmera com o ícone da câmera. <br>
+Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano / pessoa. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Informação GPU</string>
@@ -77,5 +67,49 @@ Mudando de cima para baixo para visitar pode ser feito pelo ícone de um homem o
     <string name="showOtherHandles">Mostre outras alças</string>
     <string name="showPagerButtons">Mostrar botões do pager</string>
     <string name="useChunkyHandles">Mostre alças robustas</string>
+    <string name="menu_help_online">Ajuda online</string>
+    <string name="menu_help_tutorial">Tutorial</string>
+    <string name="tutStep0Title">Tutorial</string>
+    <string name="tutStep0Text">Para erros, use Desfazer. Arraste o plano com um dedo, faça zoom usando a ação de pitada. Tente mover o plano agora ... (Você pode fechar / mostrar este tutorial a qualquer momento.)</string>
+    <string name="tutStep10Text">Mova a cadeira ao redor e tente girá-la.</string>
+    <string name="tutStep10Title">Adicione uma cadeira - 3</string>
+    <string name="tutStep11Text">Toque no botão 3D e a visualização mudará para a vista 3D.</string>
+    <string name="tutStep11Title">Ver em 3D - 1</string>
+    <string name="tutStep12Text">Mova a câmera ao redor arrastando.</string>
+    <string name="tutStep12Title">Ver em 3D - 2</string>
+    <string name="tutStep13Text">Entre na casa pressionando o botão de visita virtual.</string>
+    <string name="tutStep13Title">Ver em 3D - 3</string>
+    <string name="tutStep14Text">Mostre o catálogo de móveis, arrastando-o para fora do lado esquerdo da tela.</string>
+    <string name="tutStep14Title">Adicionar uma porta - 1</string>
+    <string name="tutStep15Text">Procure a palavra \"porta\".</string>
+    <string name="tutStep15Title">Adicione uma porta - 2</string>
+    <string name="tutStep16Text">Pressione longamente uma porta, e será adicionado ao seu plano.</string>
+    <string name="tutStep16Title">Adicionar uma porta - 3</string>
+    <string name="tutStep17Text">Arraste a porta para uma parede, observe que ela se encaixa automaticamente na parede.</string>
+    <string name="tutStep17Title">Adicione uma porta - 4</string>
+    <string name="tutStep1Text">Selecione a ferramenta \"Criar paredes\" no seletor de ferramentas.</string>
+    <string name="tutStep1Title">Crie algumas paredes - 1</string>
+    <string name="tutStep2Text">Crie uma parede arrastando a tela e levante seu dedo.</string>
+    <string name="tutStep2Title">Crie algumas paredes - 2</string>
+    <string name="tutStep3Text">Crie um quadrado de paredes arrastando mais três vezes. Faça o último fim de arrastamento perto do início da sua primeira parede.</string>
+    <string name="tutStep3Title">Crie algumas paredes - 3</string>
+    <string name="tutStep4Text">Junte-se ao último muro para o primeiro pressionando duas vezes para terminar a criação.</string>
+    <string name="tutStep4Title">Crie um quarto - 1</string>
+    <string name="tutStep5Text">Selecione a ferramenta \"Criar quartos\" no seletor de ferramentas.</string>
+    <string name="tutStep5Title">Crie um quarto - 2</string>
+    <string name="tutStep6Text">Toque duas vezes em qualquer lugar dentro das quatro paredes para criar uma sala.</string>
+    <string name="tutStep6Title">Crie um quarto - 3</string>
+    <string name="tutStep7Text">Edite a nova sala com um toque duplo, selecione a textura do chão, faça-a em azulejo. Feche as caixas de diálogo.</string>
+    <string name="tutStep7Title">Adicione uma cadeira - 1</string>
+    <string name="tutStep8Text">Mostre o catálogo de móveis, pressionando a seta.</string>
+    <string name="tutStep8Title">Adicione uma cadeira - 1</string>
+    <string name="tutStep9Text">Pressione uma cadeira, e ela será adicionada ao seu plano.</string>
+    <string name="tutStep9Title">Adicione uma cadeira - 2</string>
+    <string name="tutStepFinishText">Bom trabalho, agora você poderia olhar para sua porta em 3d? Ou dê alguma cor às paredes? Mais tarde, você pode ver se você trabalha como fazer uma foto de sua casa ...</string>
+    <string name="tutStepFinishTitle">Tutorial concluído</string>
+    <string name="addCameraPosition">Adicionar posição da câmera</string>
+    <string name="deleteCameraPosition">Eliminar a posição da câmera</string>
+    <string name="goToCameraPosition">Vá para a posição da câmera</string>
+    <string name="tutorialWellDone">Bem feito!</string>
 
 </resources>

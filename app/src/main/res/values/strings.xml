@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Drag with one finger to move the plan.<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Drag with two fingers to move the plan without changing what is selected.<br>
-Use pinch to zoom.<br>
 Double tap on any object to edit it.<br>
-To see the available furniture catalog drag out the "&lt;" handle from the side.<br>
 Two demo home files will be in your downloads folder, use Open... in the menu. <br>
 You can use your browser to directly open more home files (.sh3d) from the internet, for example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>
 Hold down on any item to add it to the plan, it will be selected and at location 0,0.<br>
 From this view you can import furniture catalog libraries using the actions.<br>
    ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 This is a view of all the furniture currently placed on your plan.<br>
 From here you can change the visibility of items.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html><p>
-This is a 3 dimensional view of your plan. <br>
-If you are looking from the top down:<br>
-One finger sliding left or right will rotate the plan.<br>
-One finger sliding up or down will alter the height of the camera and also the pitch.<br>
-Pinch will move the camera closer to the center or further from it.<br>
-If you are looking from the visit point of view:<br>
-One finger sliding left or right will rotate the plan around you.<br>
-One finger sliding up or down will alter the vertical angle your head is pointed.<br>
-Pinch will move you forward or backward.<br>
-Saved points of view can be found under the eye icon.<br>
-Changing from top down to visit can be done by the icon of a man or the icon of a plan.<br>
+    <string name="welcometext_component3dview"><![CDATA[<html><p>
+If you are looking from the top down, pinch will move the camera closer to the center or further from it. <br>
+If you are looking from the visit point of view, pinch will move you forward or backward. <br>
+Save the camera position with the add camera icon, go to a camera position with the switch camera icon. <br>
+Changing from top down to visit can be done by the icon of a plan/person. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
@@ -77,6 +67,51 @@ Changing from top down to visit can be done by the icon of a man or the icon of 
     <string name="useChunkyHandles">Show Chunky Handles</string>
     <string name="showOtherHandles">Show Other Handles</string>
     <string name="showPagerButtons">Show Pager Buttons</string>
+    <string name="menu_help_tutorial">Tutorial</string>
+    <string name="menu_help_online">Online Help</string>
+    <string name="goToCameraPosition">Go to camera position</string>
+    <string name="addCameraPosition">Add camera position</string>
+    <string name="deleteCameraPosition">Delete camera position</string>
+    <string name="tutorialWellDone">Well done!</string>
+    <string name="tutStep0Title">Tutorial</string>
+    <string name="tutStep0Text">For mistakes use Undo.  Drag the plan around with one finger, zoom by using the pinch action. Try moving the plan now...  (You can close/show this tutorial anytime.)</string>
+    <string name="tutStep1Title">Create some walls - 1</string>
+    <string name="tutStep1Text">Select the \"Create walls\" tool from the Tool Selector.</string>
+    <string name="tutStep2Title">Create some walls - 2</string>
+    <string name="tutStep2Text">Create a wall by dragging on the screen and then lifting your finger.</string>
+    <string name="tutStep3Title">Create some walls - 3</string>
+    <string name="tutStep3Text">Create a square of walls by dragging three more times. Make the last drag end near the start of your first wall.</string>
+    <string name="tutStep4Title">Create a room – 1</string>
+    <string name="tutStep4Text">Join the last wall to the first by double tapping to finish creation.</string>
+    <string name="tutStep5Title">Create a room – 2</string>
+    <string name="tutStep5Text">Select the \"Create Rooms\" tool from the Tool Selector.</string>
+    <string name="tutStep6Title">Create a room – 3</string>
+    <string name="tutStep6Text">Double tap anywhere inside the four walls to create a room.</string>
+    <string name="tutStep7Title">Add a chair – 1</string>
+    <string name="tutStep7Text">Edit the new room by double tapping on it, select the floor texture, make it tiled. Close the dialogs.</string>
+    <string name="tutStep8Title">Add a chair – 1</string>
+    <string name="tutStep8Text">Show the furniture catalog, by pressing the arrow.</string>
+    <string name="tutStep9Title">Add a chair – 2</string>
+    <string name="tutStep9Text">Long press on a chair, and it will be added to your plan.</string>
+    <string name="tutStep10Title">Add a chair – 3</string>
+    <string name="tutStep10Text">Move the chair around, and try rotating it.</string>
+    <string name="tutStep11Title">View in 3D – 1</string>
+    <string name="tutStep11Text">Tap the 3D button, and the view will change to the 3D view.</string>
+    <string name="tutStep12Title">View in 3D – 2</string>
+    <string name="tutStep12Text">Move the camera around by dragging.</string>
+    <string name="tutStep13Title">View in 3D – 3</string>
+    <string name="tutStep13Text">Go inside the home by pressing the virtual visit button.</string>
+    <string name="tutStep14Title">Add a door – 1</string>
+    <string name="tutStep14Text">Show the furniture catalog, by dragging it out from the left side of the screen.</string>
+    <string name="tutStep15Title">Add a door – 2</string>
+    <string name="tutStep15Text">Search for the word \"door\".</string>
+    <string name="tutStep16Title">Add a door – 3</string>
+    <string name="tutStep16Text">Long press on a door, and it will be added to your plan.</string>
+    <string name="tutStep17Title">Add a door – 4</string>
+    <string name="tutStep17Text">Drag the door onto a wall, notice that it automatically fits itself to the wall.</string>
+    <string name="tutStepFinishTitle">Tutorial Finished</string>
+    <string name="tutStepFinishText">Good work, now you could go look at your door in 3d? Or give the walls some color? Later you could see if you work out how to make a photo of your home...</string>
+
 
 
 </resources>

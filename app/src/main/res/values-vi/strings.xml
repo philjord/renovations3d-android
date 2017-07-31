@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">Alignment</string>
     <string name="magnetism">từ tính</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Kéo bằng một ngón tay để di chuyển kế hoạch <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Kéo bằng hai ngón tay để di chuyển kế hoạch mà không thay đổi những gì được chọn. <br>
-Sử dụng pinch để phóng to. <br>
 Nhấn đúp vào bất kỳ đối tượng nào để chỉnh sửa. <br>
-Để xem danh mục cửa hàng đồ dùng hiện có kéo ra thẻ "&lt;" Xử lý từ phía bên. <br>
 Hai tệp trình diễn bản demo sẽ nằm trong thư mục tải xuống của bạn, sử dụng Mở ... trong trình đơn. <br>
 Bạn có thể sử dụng trình duyệt để trực tiếp mở thêm các tệp tin nhà (.sh3d) từ internet, ví dụ như <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
 Ngoài ra bạn có thể nhấn lâu vào mục (không có kéo và thả).<br>
 Từ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu ...<br>
    ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Đây là một quan điểm của tất cả các đồ nội thất Hiện nay Đặt trên kế hoạch của bạn.<br>
 Hiện tại chức năng duy nhất bạn có thể làm ở đây là thay đổi một tầm nhìn mục.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Đây là một cái nhìn 3 chiều về kế hoạch của bạn. <br>
-Nếu bạn đang tìm kiếm từ trên xuống dưới: <br>
-Một ngón tay trượt trái hoặc phải sẽ xoay kế hoạch <br> <br>
-Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi chiều cao của máy ảnh cũng như mức độ. <br>
-Chụm sẽ di chuyển máy ảnh gần trung tâm hoặc xa hơn từ nó. <br>
-Nếu bạn đang tìm kiếm từ điểm truy cập của xem: <br>
-Một ngón tay trượt trái hoặc phải sẽ xoay kế hoạch xung quanh bạn. <br>
-Một ngón tay trượt lên hoặc xuống sẽ làm thay đổi góc thẳng đứng đầu của bạn được trỏ. <br>
-Pinch sẽ di chuyển bạn về phía trước hoặc ngược lại. <br>
-Bạn có thể tìm thấy các điểm được lưu trên biểu tượng mắt. <br>
-Thay đổi từ trên xuống dưới để truy cập có thể được thực hiện bằng biểu tượng của một người đàn ông hoặc biểu tượng của một kế hoạch <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Nếu bạn đang tìm kiếm từ trên xuống dưới, chụm sẽ di chuyển máy ảnh gần trung tâm hoặc xa hơn từ nó. <br>
+Nếu bạn đang tìm kiếm từ điểm truy cập của xem, pinch sẽ di chuyển bạn về phía trước hoặc ngược lại. <br>
+Lưu vị trí máy ảnh bằng cách thêm biểu tượng máy ảnh, đi đến vị trí máy ảnh với biểu tượng máy ảnh chuyển đổi. <br>
+Thay đổi từ trên xuống dưới để truy cập có thể được thực hiện bằng biểu tượng của một kế hoạch / người. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Thông tin GPU</string>
@@ -75,5 +65,49 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="showOtherHandles">Hiển thị các thanh khác</string>
     <string name="showPagerButtons">Hiển thị các nút máy nhắn tin</string>
     <string name="useChunkyHandles">Cho thấy chunky xử lý</string>
+    <string name="menu_help_online">Hỗ trợ trực tuyến</string>
+    <string name="menu_help_tutorial">Hướng dẫn</string>
+    <string name="tutStep0Title">Hướng dẫn</string>
+    <string name="tutStep0Text">Đối với những sai lầm sử dụng Hoàn tác. Kéo kế hoạch xung quanh bằng một ngón tay, phóng to bằng cách sử dụng tác vụ chụm pin. Hãy thử di chuyển kế hoạch bây giờ ... (Bạn có thể đóng / hiển thị hướng dẫn này bất kỳ lúc nào.)</string>
+    <string name="tutStep10Text">Di chuyển ghế xung quanh, và thử xoay nó.</string>
+    <string name="tutStep10Title">Thêm ghế - 3</string>
+    <string name="tutStep11Text">Chạm vào nút 3D, và chế độ xem sẽ chuyển sang chế độ xem 3D.</string>
+    <string name="tutStep11Title">Xem trong 3D - 1</string>
+    <string name="tutStep12Text">Di chuyển máy ảnh xung quanh bằng cách kéo.</string>
+    <string name="tutStep12Title">Xem trong 3D - 2</string>
+    <string name="tutStep13Text">Vào trong nhà bằng cách nhấn nút truy cập ảo.</string>
+    <string name="tutStep13Title">Xem trong 3D - 3</string>
+    <string name="tutStep14Text">Hiển thị danh mục đồ nội thất, bằng cách kéo nó ra từ phía bên trái của màn hình.</string>
+    <string name="tutStep14Title">Thêm một cửa - 1</string>
+    <string name="tutStep15Text">Tìm kiếm từ \"cửa\".</string>
+    <string name="tutStep15Title">Thêm một cánh cửa - 2</string>
+    <string name="tutStep16Text">Nhấn lâu vào cánh cửa, và nó sẽ được thêm vào kế hoạch của bạn.</string>
+    <string name="tutStep16Title">Thêm một cánh cửa - 3</string>
+    <string name="tutStep17Text">Kéo cửa vào tường, chú ý rằng nó sẽ tự động khớp với tường.</string>
+    <string name="tutStep17Title">Thêm một cánh cửa - 4</string>
+    <string name="tutStep1Text">Chọn công cụ \"Tạo bức tường\" từ Công cụ chọn.</string>
+    <string name="tutStep1Title">Tạo một số bức tường - 1</string>
+    <string name="tutStep2Text">Tạo một bức tường bằng cách kéo trên màn hình và sau đó nhấc ngón tay lên.</string>
+    <string name="tutStep2Title">Tạo một số bức tường - 2</string>
+    <string name="tutStep3Text">Tạo một hình vuông của bức tường bằng cách kéo thêm ba lần nữa. Làm cho cuối cùng kết thúc kéo gần đầu tường đầu tiên của bạn.</string>
+    <string name="tutStep3Title">Tạo một số bức tường - 3</string>
+    <string name="tutStep4Text">Tham gia bức tường cuối cùng trước tiên bằng cách nhấn đúp để hoàn thành sáng tạo.</string>
+    <string name="tutStep4Title">Tạo phòng - 1</string>
+    <string name="tutStep5Text">Chọn công cụ \"Tạo phòng\" từ Công cụ chọn.</string>
+    <string name="tutStep5Title">Tạo phòng - 2</string>
+    <string name="tutStep6Text">Nhấn đúp vào bất kỳ nơi nào trong bốn bức tường để tạo phòng.</string>
+    <string name="tutStep6Title">Tạo phòng - 3</string>
+    <string name="tutStep7Text">Chỉnh sửa phòng mới bằng cách nhấn đúp vào nó, chọn kết cấu sàn, làm cho nó lát gạch. Đóng các hộp thoại.</string>
+    <string name="tutStep7Title">Thêm ghế - 1</string>
+    <string name="tutStep8Text">Hiển thị danh mục đồ dùng bằng gỗ, bằng cách nhấn vào mũi tên.</string>
+    <string name="tutStep8Title">Thêm ghế - 1</string>
+    <string name="tutStep9Text">Nhấn lâu trên ghế, và nó sẽ được thêm vào kế hoạch của bạn.</string>
+    <string name="tutStep9Title">Thêm ghế - 2</string>
+    <string name="tutStepFinishText">Tốt công việc, bây giờ bạn có thể đi nhìn vào cửa của bạn trong 3d? Hoặc cho các bức tường một số màu? Sau đó bạn có thể thấy nếu bạn làm việc ra làm thế nào để làm một bức ảnh của nhà bạn ...</string>
+    <string name="tutStepFinishTitle">Hướng dẫn hoàn tất</string>
+    <string name="addCameraPosition">Thêm vị trí máy ảnh</string>
+    <string name="deleteCameraPosition">Xóa vị trí máy ảnh</string>
+    <string name="goToCameraPosition">Đi tới vị trí máy ảnh</string>
+    <string name="tutorialWellDone">Làm tốt!</string>
 
 </resources>

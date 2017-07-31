@@ -71,7 +71,7 @@ public class JFileChooser
 	}
 	/**
 	 * MUST be on a thread with Looper called
-	 * @param activity
+	 * @param context
 	 */
 	public JFileChooser(Context context, File startFolder, final boolean allowNewName, final boolean allowDirSelect, String[] okCancel)
 	{

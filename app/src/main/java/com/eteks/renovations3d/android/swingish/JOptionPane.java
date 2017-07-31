@@ -357,12 +357,12 @@ public class JOptionPane
 	}
 
 
-	public static void possiblyShowWelcomeScreen(final Context context, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
+	public static void possiblyShowWelcomeScreen(final Renovations3DActivity context, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
 	{
 		// only one per session
-		if(!Renovations3DActivity.welcomeScreensShownThisSession.contains(welcomeScreenName))
+		if(!context.getTutorial().isEnabled() && !context.getWelcomeScreensShownThisSession().contains(welcomeScreenName))
 		{
-			Renovations3DActivity.welcomeScreensShownThisSession.add(welcomeScreenName);
+			context.getWelcomeScreensShownThisSession().add(welcomeScreenName);
 			SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 			boolean welcomeScreenUnwanted = settings.getBoolean(welcomeScreenName, false);
 

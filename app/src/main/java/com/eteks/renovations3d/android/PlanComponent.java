@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.JViewPort;
 import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
@@ -191,8 +192,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	static int VERTICAL = 1;
 
 	//PJ taken from HomePane
-	private static final String PLAN_VIEWPORT_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportX";
-	private static final String PLAN_VIEWPORT_Y_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportY";
+	public static final String PLAN_VIEWPORT_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportX";
+	public static final String PLAN_VIEWPORT_Y_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportY";
 
   /**
    * The circumstances under which the home items displayed by this component will be painted.
@@ -1150,9 +1151,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	 * @return
 	 */
 	public Point2f getLastDragLocation()
-  {
-	  return touchyListener.getLastDragLocation();
-  }
+  	{
+	  	return touchyListener.getLastDragLocation();
+  	}
 	TouchyListener touchyListener = new TouchyListener();
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
@@ -1178,7 +1179,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		{
 			// I should use this as the previous tap time, not my time grab I reckon
 			//ev.getEventTime()
-
 
 			// Let the ScaleGestureDetector inspect all events.
 			mScaleDetector.onTouchEvent(ev);
@@ -5348,8 +5348,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 
 	/**
-   * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.
-   */
+	 *
+	 * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.
+	 */
   public void moveView(float dx, float dy) {
 
 	  //PJPJ
@@ -5367,6 +5368,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(getScrolledX()));
 	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(getScrolledY()));
 	  PlanComponent.this.revalidate();
+
+
+	  //update the tutorial
+	  Point2D data = new Point2D.Float(getScrolledX(), getScrolledY());
+	  ((Renovations3DActivity)parentFragment.getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.PLAN_MOVED, data);
+
   }
 
   /**

@@ -2,6 +2,7 @@ package com.eteks.renovations3d.android;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -14,12 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JComponent;
 import com.eteks.renovations3d.android.swingish.JOptionPane;
@@ -30,11 +32,15 @@ import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.DimensionLine;
 import com.eteks.sweethome3d.model.Home;
+import com.eteks.sweethome3d.model.HomeDoorOrWindow;
+import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.Label;
 import com.eteks.sweethome3d.model.Level;
+import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.TextStyle;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanController.EditableProperty;
@@ -110,22 +116,22 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 
 			// make the left and right swipers work
-			Button planLeftSwiper = (Button) rootView.findViewById(R.id.planLeftSwiper);
+			ImageButton planLeftSwiper = (ImageButton) rootView.findViewById(R.id.planLeftSwiper);
 			planLeftSwiper.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(0, true);
+					((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(0, true);
 				}
 			});
-			Button planRightSwiper = (Button) rootView.findViewById(R.id.planRightSwiper);
+			ImageButton planRightSwiper = (ImageButton) rootView.findViewById(R.id.planRightSwiper);
 			planRightSwiper.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(2, true);
+					((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(2, true);
 				}
 			});
 
@@ -143,7 +149,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			// this gets called heaps of time, wait until we have an activity
 			if (getActivity() != null)
 			{
-				JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.planview_welcometext, preferences);
+				JOptionPane.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_planview, preferences);
 			}
 
 			resetToSelectTool = true;
@@ -185,6 +191,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 		{
+			Tutorial tutorial = ((Renovations3DActivity) getActivity()).getTutorial();
 			switch (position)
 			{
 				case 0://planSelect:
@@ -193,22 +200,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					break;
 				case 1://createWalls:
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					if (!tutorial.isEnabled())
+						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.WALL_CREATION);
+					tutorial.actionComplete(Tutorial.TutorialAction.CREATE_WALL_TOOL_SELECTED);
 					break;
 				case 2://createRooms:
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					if (!tutorial.isEnabled())
+						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.ROOM_CREATION);
+					tutorial.actionComplete(Tutorial.TutorialAction.CREATE_ROOM_TOOL_SELECTED);
 					break;
 				case 3://createPolyLines:
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					if (!tutorial.isEnabled())
+						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 					break;
 				case 4://createDimensions:
 					finishCurrentMode();
-					Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+					if (!tutorial.isEnabled())
+						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 					break;
 				case 5://createText:
@@ -358,19 +371,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		sortOutBackgroundMenu(menu);
 
-
-		String redoName = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
-		SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoName);// it will replace "*" with icon
-		builder2.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menu.findItem(R.id.editRedo).setTitle(builder2);
-		menu.findItem(R.id.editRedo).setTitleCondensed(redoName);
+		MenuItem editRedo = menu.findItem(R.id.editRedo);
+		String editRedoStr = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(editRedo, editRedoStr, R.drawable.edit_redo);
 		menu.findItem(R.id.editRedo).setEnabled(false);// nothing to redo at first
 
-		String copy = getActivity().getResources().getString(android.R.string.copy);
-		SpannableStringBuilder builder = new SpannableStringBuilder("* " + copy);// it will replace "*" with icon
-		builder.setSpan(new ImageSpan(getActivity(), R.drawable.edit_copy), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menu.findItem(R.id.controlKeyOneTimer).setTitle(builder);
-		menu.findItem(R.id.controlKeyOneTimer).setTitleCondensed(copy);
+		MenuItem copy = menu.findItem(R.id.controlKeyOneTimer);
+		String copyStr = getActivity().getResources().getString(android.R.string.copy);
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(copy, copyStr, R.drawable.edit_copy);
 
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
 
@@ -541,12 +549,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		int iconId = itemLocked.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
 		String actionName = itemLocked.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
 		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
-		SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
-		builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		itemLocked.setTitle(builder);
-		itemLocked.setTitleCondensed(lockedText);
-		itemLocked.setIcon(iconId);
-
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(itemLocked, lockedText, iconId );
 		sortOutBackgroundMenu(menu);
 
 
@@ -562,11 +565,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		else if (planController.getMode() == PlanController.Mode.SELECTION)
 		{
 			String cntlText = getActivity().getResources().getString(android.R.string.copy);
-			int cntlRes = R.drawable.edit_copy;
-			SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + cntlText);// it will replace "*" with icon
-			builder2.setSpan(new ImageSpan(getActivity(), cntlRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			cntlMI.setTitle(builder2);
-			cntlMI.setTitleCondensed(cntlText);
+			((Renovations3DActivity)getActivity()).setIconizedMenuTitle(cntlMI, cntlText, R.drawable.edit_copy );
 			cntlMI.setEnabled(true);
 		}
 		else
@@ -606,12 +605,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planModifyLevel).setEnabled(canModLevel);
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 
-		String redoName = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
-		SpannableStringBuilder builder3 = new SpannableStringBuilder("* " + redoName);// it will replace "*" with icon
-		builder3.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menu.findItem(R.id.editRedo).setTitle(builder3);
-		menu.findItem(R.id.editRedo).setTitleCondensed(redoName);
-		menu.findItem(R.id.editRedo).setEnabled(redoEnabled);
+		MenuItem redo = menu.findItem(R.id.editRedo);
+		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
+		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(redo, redoStr, R.drawable.edit_redo);
+		redo.setEnabled(redoEnabled);
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -653,7 +650,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				planController.deleteSelection();
 				return true;
 			case R.id.planGoto3D:
-				renovations3DActivity.mViewPager.setCurrentItem(3, true);
+				renovations3DActivity.getViewPager().setCurrentItem(3, true);
 				return true;
 			case R.id.planAddLevel:
 				planController.addLevel();
@@ -674,17 +671,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.lockCheck:
 				item.setChecked(!item.isChecked());
 
-				// NOTE use of setTitleCondensed as well as setTitle
-				//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
-				//http://stackoverflow.com/questions/7658725/android-java-lang-illegalargumentexception-invalid-payload-item-type
 				int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
 				String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
 				String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
-				SpannableStringBuilder builder = new SpannableStringBuilder("* " + lockedText);// it will replace "*" with icon
-				builder.setSpan(new ImageSpan(getActivity(), iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				item.setTitle(builder);
-				item.setTitleCondensed(lockedText);
-				item.setIcon(iconId);
+				((Renovations3DActivity)getActivity()).setIconizedMenuTitle(item, lockedText, iconId );
 
 				if (item.isChecked())
 					planController.lockBasePlan();
@@ -931,9 +921,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		// PJ this.oneLevelPanel not used at all, nor is scrollpane
-		//	this.oneLevelPanel = new JPanel(new BorderLayout());
-
 		home.addPropertyChangeListener(Home.Property.ALL_LEVELS_SELECTION, new PropertyChangeListener()
 		{
 			public void propertyChange(PropertyChangeEvent ev)
@@ -942,33 +929,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
 				new LanguageChangeListener(this));
 
-
-		//PJ  listener for auto reset
-		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener()
-		{
-			@Override
-			public void propertyChange(PropertyChangeEvent evt)
-			{
-				//FIXME: this needs a preference and flag
-				// when old isModification was true and new is not we've just finished an action
-				// but not for label creates - NOTE label system below is mid process and not the same as this listener (it will cause bugs for multi step edits)
-				if (((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
-				{
-					if (planController.getMode() == PlanController.Mode.ROOM_CREATION ||
-							planController.getMode() == PlanController.Mode.DIMENSION_LINE_CREATION ||
-							planController.getMode() == PlanController.Mode.POLYLINE_CREATION)
-					{
-						setMode(PlanController.Mode.SELECTION);
-						resetToolSpinnerToMode();
-					}
-				}
-			}
-		});
-// auto reset for label creates
+		// auto reset for label creates
 		home.addLabelsListener(new CollectionListener<Label>()
 		{
 			@Override
@@ -976,11 +940,123 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			{
 				if (planController.getMode() == PlanController.Mode.LABEL_CREATION)
 				{
-					setMode(PlanController.Mode.SELECTION);
-					resetToolSpinnerToMode();
+					// run this code after everything has finished in the controller (invoke later)
+					Handler h = new Handler();
+					h.post(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							setMode(PlanController.Mode.SELECTION);
+							resetToolSpinnerToMode();
+						}
+					});
 				}
 			}
 		});
+		// auto reset for rooms creates
+		home.addRoomsListener(new CollectionListener<Room>()
+		{
+			@Override
+			public void collectionChanged(CollectionEvent<Room> collectionEvent)
+			{
+				if (planController.getMode() == PlanController.Mode.ROOM_CREATION)
+				{
+					// run this code after everything has finished in the controller (invoke later)
+					Handler h = new Handler();
+					h.post(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							setMode(PlanController.Mode.SELECTION);
+							resetToolSpinnerToMode();
+						}
+					});
+				}
+			}
+		});
+
+
+		//tutorial listener
+		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange(PropertyChangeEvent evt)
+			{
+				if (((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
+				{
+					if (planController.getMode() == PlanController.Mode.WALL_CREATION)
+					{
+						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_CREATION_FINISHED);
+					}
+				}
+			}
+		});
+
+		//tutorial listener
+		home.addWallsListener(new CollectionListener<Wall>()
+		{
+			@Override
+			public void collectionChanged(CollectionEvent<Wall> collectionEvent)
+			{
+				if (collectionEvent.getType() == CollectionEvent.Type.ADD)
+				{
+					 ((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_PLACED);
+				}
+			}
+		});
+
+
+		//tutorial listener
+		home.addRoomsListener(new CollectionListener<Room>()
+		{
+			@Override
+			public void collectionChanged(CollectionEvent<Room> collectionEvent)
+			{
+				if (collectionEvent.getType() == CollectionEvent.Type.ADD)
+				{
+					((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.CREATE_ROOM_FINISHED);
+				}
+			}
+		});
+
+		final PropertyChangeListener furnitureChangeListener =
+				new PropertyChangeListener () {
+					public void propertyChange(PropertyChangeEvent ev) {
+						HomePieceOfFurniture piece = (HomePieceOfFurniture)ev.getSource();
+						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_UPDATED, piece);
+					}
+				};
+		//tutorial listener
+		home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>()
+		{
+			@Override
+			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> collectionEvent)
+			{
+				if (collectionEvent.getType() == CollectionEvent.Type.ADD)
+				{
+					if(collectionEvent.getItem() instanceof HomeDoorOrWindow)
+					{
+						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.DOOR_ADDED);
+					}
+					else
+					{
+						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_ADDED);
+					}
+				}
+
+				//also listen for x,y events, note x y events only get reported for NEWLY added furniture, not loaded from file
+				HomePieceOfFurniture piece = collectionEvent.getItem();
+				if (collectionEvent.getType() == CollectionEvent.Type.ADD) {
+					piece.addPropertyChangeListener(furnitureChangeListener);
+				} else {
+					piece.removePropertyChangeListener(furnitureChangeListener);
+				}
+			}
+		});
+
+
 
 	}
 
@@ -1040,10 +1116,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
 				if (redoItem != null)
 				{
-					SpannableStringBuilder builder2 = new SpannableStringBuilder("* " + redoText);// it will replace "*" with icon
-					builder2.setSpan(new ImageSpan(getActivity(), R.drawable.edit_redo), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					redoItem.setTitle(builder2);
-					redoItem.setTitleCondensed(text);
+					((Renovations3DActivity)getActivity()).setIconizedMenuTitle(redoItem, redoText, R.drawable.edit_redo );
 				}
 			}
 		}

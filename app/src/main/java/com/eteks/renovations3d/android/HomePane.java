@@ -48,6 +48,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -3634,7 +3635,9 @@ public class HomePane implements HomeView
 
 		final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipTitle");
 		final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipMessage");
-		if (message.length() > 0)
+
+		// no tips while tutorial is showing
+		if (!activity.getTutorial().isEnabled() && message.length() > 0)
 		{
      /* JPanel tipPanel = new JPanel(new GridBagLayout());
       
@@ -4558,8 +4561,18 @@ public class HomePane implements HomeView
 
 
 
-		final List<Camera> storedCameras = home.getStoredCameras();
-
+		final List<Camera> storedCameras = new ArrayList<Camera>(home.getStoredCameras());
+		// sort them so this list is consistent
+		Collections.sort(storedCameras, new Comparator<Camera>()
+		{
+			@Override
+			public int compare(Camera o1, Camera o2)
+			{
+				if(o1==null||o2==null)
+					return 0;
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 
 		// fill the JTextfield and JCombox box a bit later on a looper thread
 		Handler handler = new Handler(Looper.getMainLooper());
@@ -4580,6 +4593,7 @@ public class HomePane implements HomeView
 					{
 						storedCameraNames[i] = storedCameras.get(i - 1).getName();
 					}
+
 					final JComboBox cameraNameComboBox = new JComboBox(activity, storedCameraNames);
 					cameraNameComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 					{
@@ -4666,7 +4680,18 @@ public class HomePane implements HomeView
 		camerasPanel.setPadding(10,10,10,10);
 		camerasPanel.addView(new JLabel(activity, Html.fromHtml(message)));
 
-		List<Camera> storedCameras = this.home.getStoredCameras();
+		List<Camera> storedCameras = new ArrayList<Camera>(home.getStoredCameras());
+		// sort them so this list is consistent
+		Collections.sort(storedCameras, new Comparator<Camera>()
+		{
+			@Override
+			public int compare(Camera o1, Camera o2)
+			{
+				if(o1==null||o2==null)
+					return 0;
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 		final List<Camera> selectedCameras = new ArrayList<Camera>();
 		final ListView camerasList = new ListView(activity);
 		String[] camerasNameList = new String[storedCameras.size()];

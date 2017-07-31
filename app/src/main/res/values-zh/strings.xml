@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">对准</string>
     <string name="magnetism">磁</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-用一根手指拖动移动计划。<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 用两根手指拖动移动计划，而不改变所选的内容。<br>
-使用捏捏缩放。<br>
 双击任何对象进行编辑。<br>
-要查看可用的家具目录，请拖出“＆lt;” 从侧面处理。<br>
 两个演示家庭文件将在您的下载文件夹中，在菜单中使用打开...点击。<br>
 您可以使用浏览器从互联网直接打开更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
 或者，您可以长按项目（没有拖放）。<br>
 从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...<br>
 	   ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 这是当前摆在你的计划中的所有家具的景色。<br>
 现在你可以在这里做的唯一功能是改变一个项目的知名度。<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-这是您的计划的三维视图。 <br>
-如果你从上往下看：<br>
-一只手指向左或向右滑动将旋转计划<br>
-一只手指向上或向下滑动会改变相机的高度以及音高<br>
-夹子将相机移动到靠近中心或更远的位置<br>
-如果您从访问的角度来看：<br>
-一个手指向左或向右滑动会绕着你旋转计划<br>
-一只手指向上或向下滑动会改变你的头部指向的垂直角度<br>
-捏捏将你向前或向后移动<br>
-保存的观点可以在眼睛图标下找到<br>
-从上到下的访问可以通过一个人的图标或一个计划的图标来完成<br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+如果你从上往下看, 夹子将相机移动到靠近中心或更远的位置 <br>
+如果您从访问的角度来看, 捏捏将你向前或向后移动 <br>
+使用添加摄像头图标保存摄像机位置，使用开关摄像头图标转到摄像机位置。<br>
+从上到下的访问可以通过计划/人的图标来完成。<br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU信息</string>
@@ -74,5 +64,49 @@
     <string name="showOtherHandles">显示其他手柄</string>
     <string name="showPagerButtons">显示寻呼机按钮</string>
     <string name="useChunkyHandles">显示大块手柄</string>
+    <string name="menu_help_online">网上帮助</string>
+    <string name="menu_help_tutorial">教程</string>
+    <string name="tutStep0Title">教程</string>
+    <string name="tutStep0Text">对于错误使用撤消。 用一根手指拖动计划，用缩小动作进行缩放。 现在尝试移动计划...（您可以随时关闭/显示本教程。）</string>
+    <string name="tutStep10Text">移动椅子，并尝试旋转它。</string>
+    <string name="tutStep10Title">添加椅子 - 3</string>
+    <string name="tutStep11Text">点击3D按钮，视图将更改为3D视图。</string>
+    <string name="tutStep11Title">查看3D - 1</string>
+    <string name="tutStep12Text">通过拖动移动相机。</string>
+    <string name="tutStep12Title">查看3D - 2</string>
+    <string name="tutStep13Text">按住虚拟访问按钮进入家中。</string>
+    <string name="tutStep13Title">查看3D - 3</string>
+    <string name="tutStep14Text">通过从屏幕左侧拖出来显示家具目录。</string>
+    <string name="tutStep14Title">添加一扇门 - 1</string>
+    <string name="tutStep15Text">搜索“门”一词。</string>
+    <string name="tutStep15Title">添加一扇门 - 2</string>
+    <string name="tutStep16Text">长按一个门，它将被添加到你的计划。</string>
+    <string name="tutStep16Title">添加一个门 - 3</string>
+    <string name="tutStep17Text">将门拖到墙上，注意它自动适应墙壁。</string>
+    <string name="tutStep17Title">添加一扇门 - 4</string>
+    <string name="tutStep1Text">从工具选择器中选择“创建墙壁”工具。</string>
+    <string name="tutStep1Title">创建一些墙壁 - 1</string>
+    <string name="tutStep2Text">通过在屏幕上拖动然后抬起手指创建一个墙壁。</string>
+    <string name="tutStep2Title">创建一些墙壁 - 2</string>
+    <string name="tutStep3Text">再拖三次，创建一个平方的墙壁。使最后一个拖曳靠近你的第一个墙壁的开始。</string>
+    <string name="tutStep3Title">创造一些墙壁 - 3</string>
+    <string name="tutStep4Text">通过双击完成创建，将最后一个墙加入第一个墙。</string>
+    <string name="tutStep4Title">创建一个房间 - 1</string>
+    <string name="tutStep5Text">从工具选择器中选择“创建房间”工具。</string>
+    <string name="tutStep5Title">创建一个房间 - 2</string>
+    <string name="tutStep6Text">双击四面墙内的任何地方创建一个房间。</string>
+    <string name="tutStep6Title">创建一个房间 - 3</string>
+    <string name="tutStep7Text">通过双击来编辑新房间，选择地板纹理，使其平铺。 关闭对话框。</string>
+    <string name="tutStep7Title">添加椅子 - 1</string>
+    <string name="tutStep8Text">按箭头显示家具目录。</string>
+    <string name="tutStep8Title">添加椅子 - 1</string>
+    <string name="tutStep9Text">长按一把椅子，它会被添加到你的计划。</string>
+    <string name="tutStep9Title">添加椅子 - 2</string>
+    <string name="tutStepFinishText">好的工作，现在你可以去看看你的门在3d？还是给墙壁一些颜色？后来你可以看到你是否找出如何制作你家的照片？</string>
+    <string name="tutStepFinishTitle">教程完成</string>
+    <string name="addCameraPosition">添加相机位置</string>
+    <string name="deleteCameraPosition">删除相机位置</string>
+    <string name="goToCameraPosition">转到相机位置</string>
+    <string name="tutorialWellDone">做得好！</string>
 
 </resources>

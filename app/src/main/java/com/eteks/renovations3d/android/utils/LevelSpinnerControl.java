@@ -95,8 +95,8 @@ public class LevelSpinnerControl
 				TextView view = getTextView(position, levelsWide);
 				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
 
-				// more, then 3 buttons then tools, *2 to give marign each side butons
-				float othersSpace = 40 + (3 * (context.getResources().getDimension(R.dimen.button_dp) * 2)) + (toolsWide ? 300 : 50);
+				// more, then 3 buttons then tools, *2 to give margin each side buttons
+				float othersSpace = 40 + (3 * (36 * 2)) + (toolsWide ? 300 : 50);
 
 				float dpAllowed = 40 + Math.max(screenWidthDp - othersSpace, 0);
 				float density = context.getResources().getDisplayMetrics().density;

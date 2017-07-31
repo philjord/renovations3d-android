@@ -4,21 +4,16 @@
     <string name="menu_save" translatable="false">Save home</string>
     <string name="menu_delete" translatable="false">Delete home</string>
     <string name="menu_help" translatable="false">Help</string>
-    <string name="virtualvisit" translatable="false">Virtual visit</string>
+    <string name="virtual_visit" translatable="false">Virtual visit</string>
     <string name="menu_save_as" translatable="false">Save as&#8230;</string>
     <string name="menu_about" translatable="false">About</string>
     <string name="menu_new" translatable="false">New home</string>
     <string name="menu_preferences" translatable="false">Preferences</string>
     <string name="importFurnitureLib" translatable="false">Import furniture library&#8230;</string>
     <string name="importTextureLib" translatable="false">Import texture library&#8230;</string>
-    <string name="modifyvirtualvisitor" translatable="false">Modify virtual visitor</string>
-    <string name="storepov" translatable="false">Store point of view</string>
-    <string name="gotopov" translatable="false">Go to point of view</string>
-    <string name="deletepov" translatable="false">Delete point of view</string>
+    <string name="modifyVirtualVisitor" translatable="false">Modify virtual visitor</string>
     <string name="modify3dview" translatable="false">Modify 3D view</string>
-    <string name="viewalllevels" translatable="false">View all levels</string>
+    <string name="viewAllLevels" translatable="false">View all levels</string>
     <string name="menu_createPhoto" translatable="false">createPhoto</string>
     <string name="menu_exportToObj" translatable="false">exportToObj</string>
-    <string name="gt" translatable="false">&gt;</string>
-    <string name="lt" translatable="false">&lt;</string>
 </resources>

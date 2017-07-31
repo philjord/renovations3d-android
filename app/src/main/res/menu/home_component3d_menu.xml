@@ -1,55 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/virtualvisit"
-          android:title="@string/virtualvisit"
-          android:icon="@drawable/view3d_view_from_observer"
-          android:checkable="true"
-          android:checked="false"
-          android:showAsAction="always"/>
-    <item android:id="@+id/gotopov"
-          android:title="@string/gotopov"
-          android:icon="@drawable/ic_go_to_pov"
-          android:showAsAction="always">
+    <item
+        android:id="@+id/virtual_visit"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/view3d_view_from_observer"
+        android:showAsAction="always"
+        android:title="@string/virtual_visit"
+        android:orderInCategory="1"/>
+    <item
+        android:id="@+id/go_to_camera_position"
+        android:icon="@drawable/ic_switch_video_black_24dp"
+        android:showAsAction="always"
+        android:title="@string/goToCameraPosition"
+        android:orderInCategory="2">
         <menu>
             <item
-                android:id="@+id/gotodefaultpov"
-                android:title="Default" />
+                android:id="@+id/goto_pov_default"
+                android:title="Default"/>
         </menu>
     </item>
-    <item android:id="@+id/goto2Dview"
-          android:title="2D"
-          android:icon="@drawable/view3d_goto_2d"
-          android:showAsAction="always"/>
-    <item android:id="@+id/modifyvirtualvisitor"
-          android:title="@string/modifyvirtualvisitor"
-          />
-    <item android:id="@+id/storepov"
-          android:title="@string/storepov"
-          />
-    <item android:id="@+id/deletepov"
-          android:title="@string/deletepov"
-          />
-    <item android:id="@+id/viewalllevels"
-          android:title="@string/viewalllevels"
-          android:checkable="true"
+    <item
+        android:id="@+id/store_camera_position"
+        android:title="@string/addCameraPosition"
+        android:icon="@drawable/ic_video_call_black_24dp"
+        android:showAsAction="always"
+        android:orderInCategory="3"
         />
-    <item android:id="@+id/modify3dview"
-          android:title="@string/modify3dview"
+
+    <item
+        android:id="@+id/goto_2D_view"
+        android:icon="@drawable/view3d_goto_2d"
+        android:showAsAction="always"
+        android:title="2D"
+        android:orderInCategory="100"/>
+    <item
+        android:id="@+id/cameraMenu"
+        android:icon="@drawable/ic_videocam_black_24dp"
+        android:title="...">
+        <menu>
+            <item
+                android:id="@+id/delete_camera_position"
+                android:title="@string/deleteCameraPosition"
+                />
+            <item
+                android:id="@+id/modify_virtual_visitor"
+                android:title="@string/modifyVirtualVisitor"
+                />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/viewalllevels"
+        android:checkable="true"
+        android:title="@string/viewAllLevels"
         />
-    <item android:id="@+id/createPhoto"
-          android:title="@string/menu_createPhoto"
+    <item
+        android:id="@+id/modify3dview"
+        android:title="@string/modify3dview"
         />
-    <item android:id="@+id/exportToObj"
-          android:title="@string/menu_exportToObj"
+    <item
+        android:id="@+id/createPhoto"
+        android:title="@string/menu_createPhoto"
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
         />
-    <item android:id="@+id/deoptomize"
-          android:title="@string/menu_deoptomize"
-          android:checkable="true"
-          android:visible="false"
+    <item
+        android:id="@+id/exportToObj"
+        android:title="@string/menu_exportToObj"
         />
-    <item android:id="@+id/show_jogl_status"
-          android:title="@string/menu_show3dcaps"
-          android:visible="false"
+    <item
+        android:id="@+id/deoptomize"
+        android:checkable="true"
+        android:title="@string/menu_deoptomize"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/show_jogl_status"
+        android:title="@string/menu_show3dcaps"
+        android:visible="false"
         />
 </menu>

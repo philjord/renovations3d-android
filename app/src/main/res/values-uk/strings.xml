@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">центрування</string>
     <string name="magnetism">магнетизм</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Перетягніть з одним пальцем, щоб перемістити план. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Перетягніть двома пальцями, щоб перемістити план без зміни того, що вибрано. <br>
-Використовуйте дрібкою для збільшення. <br>
 Двічі натисніть на будь-який об\'єкт, щоб змінити його. <br>
-Щоб подивитися доступну меблі каталог витягувати «&lt;» ручка з боку. <br>
 Два демо будинку файли будуть знаходитися у вашій папці завантаження, використовуйте Open ... в меню. <br>
 Ви можете використовувати свій браузер, щоб безпосередньо відкрити більше домашніх файлів (.sh3d) з Інтернету, наприклад, <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Натисніть на значок додавання меблів, щоб помістити вибраний елемент меблів на вигляд зверху на місці 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Натисніть на значок додавання меблів, щоб помістити вибраний елемент меблів на вигляд зверху на місці 0.0.<br>
 В якості альтернативи ви можете довго натиснути на пункт (немає перетягування).<br>
 З цієї точки зору ви можете імпортувати каталог меблів бібліотеки, виберіть Меню-> бібліотеку Імпорт меблів ...<br>
 	 ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Це вид всіх меблів В даний час розміщені на вашому плані.<br>
 На даний момент єдина функція, яку ви можете зробити тут, щоб змінити видимість елементів.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Це 3 тривимірний вигляд вашого плану. <br>
-Якщо ви шукаєте зверху вниз: <br>
-Один палець, зсунувши вліво або вправо буде обертати план. <br>
-Один палець ковзання вгору або вниз буде змінювати висоту камери, а також висота тону. <br>
-Pinch буде переміщати камеру ближче до центру або далі від нього. <br>
-Якщо дивитися з точки зору візиту: <br>
-Один палець, зсунувши вліво або вправо буде обертати план навколо вас. <br>
-Один палець ковзання вгору або вниз буде змінювати вертикальний кут ваша голова загострена. <br>
-Pinch буде рухати вас вперед або назад. <br>
-Збережені точки зору можна знайти під значком очі. <br>
-Зміна зверху вниз, щоб відвідати можна зробити іконку людини або значок плану. <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Якщо ви шукаєте зверху вниз, pinch буде переміщати камеру ближче до центру або далі від нього. <br>
+Якщо дивитися з точки зору візиту, pinch буде рухати вас вперед або назад. <br>
+Збережіть позицію камери за допомогою піктограми додати камеру, перейдіть до положення камери за допомогою значка камери перемикача. <br>
+Зміна зверху вниз до відвідування може бути виконана піктограмою плану / людини. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">інформація про GPU</string>
@@ -75,5 +65,49 @@ Pinch буде рухати вас вперед або назад. <br>
     <string name="showOtherHandles">Показати інші ручки</string>
     <string name="showPagerButtons">Показати кнопки пейджера</string>
     <string name="useChunkyHandles">Покажи рукотворні ручки</string>
+    <string name="menu_help_online">Онлайнова довідка</string>
+    <string name="menu_help_tutorial">Підручник</string>
+    <string name="tutStep0Title">Підручник</string>
+    <string name="tutStep0Text">Для помилок використовуйте Скасувати. Перетягніть план навколо одним пальцем, збільшіть масштаб, використовуючи дію дрібниці. Спробуйте перемістити план зараз ... (Ви можете закрити / показати цей підручник у будь-який час.)</string>
+    <string name="tutStep10Text">Перемістіть стілець навколо і спробуйте обертати його.</string>
+    <string name="tutStep10Title">Додати крісло - 3</string>
+    <string name="tutStep11Text">Торкніться кнопки «3D», і перегляд буде змінено на тривимірне зображення.</string>
+    <string name="tutStep11Title">Переглянути в 3D - 1</string>
+    <string name="tutStep12Text">Перемістіть камеру, перетягнувши її.</string>
+    <string name="tutStep12Title">Переглянути в 3D - 2</string>
+    <string name="tutStep13Text">Перейдіть всередину будинку, натиснувши кнопку віртуального відвідування.</string>
+    <string name="tutStep13Title">Переглянути в 3D - 3</string>
+    <string name="tutStep14Text">Покажіть каталог меблів, перетягнувши його зліва на екрані.</string>
+    <string name="tutStep14Title">Додати двері - 1</string>
+    <string name="tutStep15Text">Шукайте слово \"двері\".</string>
+    <string name="tutStep15Title">Додати двері - 2</string>
+    <string name="tutStep16Text">Довго натискайте на двері, і це буде додано до вашого плану.</string>
+    <string name="tutStep16Title">Додати двері - 3</string>
+    <string name="tutStep17Text">Перетягніть двері на стіну, помітите, що він автоматично підходить до стіни.</string>
+    <string name="tutStep17Title">Додати двері - 4</string>
+    <string name="tutStep1Text">Виберіть інструмент \"Створити стіни\" з інструмента вибору інструмента.</string>
+    <string name="tutStep1Title">Створіть кілька стін - 1</string>
+    <string name="tutStep2Text">Створіть стіну, перетягнувши на екрані, а потім підніміть палець.</string>
+    <string name="tutStep2Title">Створіть кілька стін - 2</string>
+    <string name="tutStep3Text">Створіть квадрат стін, перетягнувши ще три рази. Зробіть останній елемент перетягування біля початку вашої першої стіни.</string>
+    <string name="tutStep3Title">Створіть кілька стін - 3</string>
+    <string name="tutStep4Text">Приєднайте останню стіну до першої, двічі торкніться, щоб завершити створення.</string>
+    <string name="tutStep4Title">Створити кімнату - 1</string>
+    <string name="tutStep5Text">Виберіть інструмент \"Створити кімнати\" з інструмента вибору інструмента.</string>
+    <string name="tutStep5Title">Створити кімнату - 2</string>
+    <string name="tutStep6Text">Двічі торкніться будь-де всередині чотирьох стін, щоб створити кімнату.</string>
+    <string name="tutStep6Title">Створити кімнату - 3</string>
+    <string name="tutStep7Text">Редагуйте нову кімнату, подвійним натисканням на неї, виділіть текстуру підлоги, зробіть її черепицею. Закрийте діалогові вікна.</string>
+    <string name="tutStep7Title">Додати крісло - 1</string>
+    <string name="tutStep8Text">Показати каталог меблів, натиснувши стрілку.</string>
+    <string name="tutStep8Title">Додати крісло - 1</string>
+    <string name="tutStep9Text">Довго натискайте на стілець, і це буде додано до вашого плану.</string>
+    <string name="tutStep9Title">Додати крісло - 2</string>
+    <string name="tutStepFinishText">Хороша робота, тепер ти можеш подивитися на твою двері в 3D? Або принесіть стінам якийсь колір? Пізніше ви могли побачити, чи ви працюєте, як зробити фотографію вашого будинку ...</string>
+    <string name="tutStepFinishTitle">Підручник завершений</string>
+    <string name="addCameraPosition">Додати позицію камери</string>
+    <string name="deleteCameraPosition">Видалити позицію камери</string>
+    <string name="goToCameraPosition">Перейти до позиції камери</string>
+    <string name="tutorialWellDone">Добре зроблено!</string>
 
 </resources>
