@@ -360,7 +360,7 @@ public class JOptionPane
 	public static void possiblyShowWelcomeScreen(final Renovations3DActivity context, final String welcomeScreenName, int welcomeTextId, UserPreferences preferences)
 	{
 		// only one per session
-		if(!context.getTutorial().isEnabled() && !context.getWelcomeScreensShownThisSession().contains(welcomeScreenName))
+		if((context.getTutorial() == null || !context.getTutorial().isEnabled()) && !context.getWelcomeScreensShownThisSession().contains(welcomeScreenName))
 		{
 			context.getWelcomeScreensShownThisSession().add(welcomeScreenName);
 			SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);

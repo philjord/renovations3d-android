@@ -996,7 +996,7 @@ public class Renovations3DActivity extends FragmentActivity
 	private void loadUpContent()
 	{
 
-
+		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
 
 		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()
@@ -1250,7 +1250,7 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 		}
 
-		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
+
 	}
 
 	//NOTE static as this is reused by the load to wait for auto save,
