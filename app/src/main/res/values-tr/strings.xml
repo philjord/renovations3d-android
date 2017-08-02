@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Planı taşımak için bir parmakla sürükleyin. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Seçilenleri değiştirmeden planı taşımak için iki parmağınızla sürükleyin. <br>
-Yakınlaştırmak için tutam kullanın. <br>
 Düzenlemek için herhangi bir nesneye iki kez hafifçe dokunun <br>
-Mevcut mobilya kataloğunu görmek için "&lt;" Yan taraftan tutun. <br>
 İki demo ev dosyası indirme klasörünüzde olacak, menüde Aç ... komutunu kullanın. <br>
 İnternetten daha fazla ev dosyasını (.sh3d) doğrudan açmak için tarayıcınızı kullanabilirsiniz, örneğin <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
 Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).<br>
 Bu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...<br>
 	   ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.<br>
 Şimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Bu, planınızın 3 boyutlu bir görünümdür. <br>
-Yukarıdan aşağıya doğru arıyorsanız: <br>
-Sola veya sağa kayan bir parmak planı döndürür. <br>
-Bir parmağınız yukarı veya aşağı doğru kayar fotoğraf makinesinin yüksekliğini ve tonunu da değiştirir. <br>
-Çimdik kamera merkeze daha da yakınlaştıracaktır. <br>
-Ziyaret açısından baktıysanız: <br>
-Sola veya sağa kayan bir parmak etrafınızdaki planı döndürecektir. <br>
-Bir parmak yukarı veya aşağıya doğru kaymak, başınızın üzerinde durduğu dikey açıyı değiştirir. <br>
-Pinch seni ileri geri hareket ettirecek. <br>
-Kayıt simgeleri göz simgesinin altında bulunabilir. <br>
-Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir planın simgesi ile yapılabilir. <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Yukarıdan aşağıya doğru arıyorsanız, Çimdik kamera merkeze daha da yakınlaştıracaktır. <br>
+Ziyaret açısından baktıysanız, pinch seni ileri geri hareket ettirecek. <br>
+Kamera konumunu kamerayı ekle simgesiyle kaydedin, kamera kamera simgesiyle kamera konumuna gidin. <br>
+Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU bilgi</string>
@@ -74,5 +64,49 @@ Yukarıdan aşağıya doğru değişiklik yapmak, bir adamın simgesi veya bir p
     <string name="showOtherHandles">Diğer kolları göster</string>
     <string name="showPagerButtons">Çağrı düğmelerini göster</string>
     <string name="useChunkyHandles">Tıknaz kolları göster</string>
+    <string name="menu_help_online">Çevrimiçi yardım</string>
+    <string name="menu_help_tutorial">Eğitimi</string>
+    <string name="tutStep0Title">Eğitimi</string>
+    <string name="tutStep0Text">Hatalar için Geri Al\'ı kullanın. Çimdik eylemini kullanarak planı tek bir parmağınızla sürükleyin, yakınlaştırın. Şimdi planı taşımayı deneyin ... (Bu öğreticiyi istediğiniz zaman kapatıp gösterebilirsiniz.)</string>
+    <string name="tutStep10Text">Sandalyeyi dolaştırıp döndürmeyi deneyin.</string>
+    <string name="tutStep10Title">Bir sandalye ekle - 3</string>
+    <string name="tutStep11Text">3D düğmesine dokunun; görünüm, 3B görünümüne dönüşecektir.</string>
+    <string name="tutStep11Title">3D Görünüm - 1</string>
+    <string name="tutStep12Text">Sürükleyerek kamerayı hareket ettirin.</string>
+    <string name="tutStep12Title">3D Görünüm - 2</string>
+    <string name="tutStep13Text">Sanal ziyaret düğmesine basarak eve girin.</string>
+    <string name="tutStep13Title">3D Görünüm - 3</string>
+    <string name="tutStep14Text">Mobilya kataloğunu ekranın solundan dışarı sürükleyerek gösterin.</string>
+    <string name="tutStep14Title">Bir kapı ekle - 1</string>
+    <string name="tutStep15Text">\"Kapı\" kelimesini ara.</string>
+    <string name="tutStep15Title">Bir kapı ekle - 2</string>
+    <string name="tutStep16Text">Bir kapıyı uzunca bastığınızda planınıza eklenecektir.</string>
+    <string name="tutStep16Title">Bir kapı ekle - 3</string>
+    <string name="tutStep17Text">Kapıyı bir duvara sürükleyip otomatik olarak duvara sığdığına dikkat edin.</string>
+    <string name="tutStep17Title">Bir kapı ekle - 4</string>
+    <string name="tutStep1Text">Araç Seçici\'nden \"Duvarları oluştur\" aracını seçin.</string>
+    <string name="tutStep1Title">Biraz duvar yarat - 1</string>
+    <string name="tutStep2Text">Ekranda sürükleyip parmağınızı kaldırarak bir duvar oluşturun.</string>
+    <string name="tutStep2Title">Bazı duvarlar oluştur - 2</string>
+    <string name="tutStep3Text">Üç kez daha sürükleyerek bir duvar karesi oluşturun. Son sürükleme ucu ilk duvarınızın başlangıcına yakın olun.</string>
+    <string name="tutStep3Title">Biraz duvar yarat - 3</string>
+    <string name="tutStep4Text">Oluşturmayı tamamlamak için çift dokunarak ilk duvarın son duvarına katılın.</string>
+    <string name="tutStep4Title">Bir oda yarat - 1</string>
+    <string name="tutStep5Text">Araç Seçici\'den \"Odalar Yarat\" aracını seçin.</string>
+    <string name="tutStep5Title">Bir oda yarat - 2</string>
+    <string name="tutStep6Text">Bir oda oluşturmak için dört duvarın herhangi bir yerine iki kez hafifçe vurun.</string>
+    <string name="tutStep6Title">Bir oda yarat - 3</string>
+    <string name="tutStep7Text">Yeni odayı üzerine çift dokunarak düzenleyin, zemin dokusunu seçin, karo haline getirin. Diyalog kutularını kapatın.</string>
+    <string name="tutStep7Title">Bir sandalye ekle - 1</string>
+    <string name="tutStep8Text">Mobilya katalogunu ok tuşuna basarak gösterin.</string>
+    <string name="tutStep8Title">Bir sandalye ekle - 1</string>
+    <string name="tutStep9Text">Bir sandalyeye uzun bastığınızda planınıza eklenecektir.</string>
+    <string name="tutStep9Title">Sandalyeyi ekle - 2</string>
+    <string name="tutStepFinishText">İyi iş, şimdi 3B\'de kapınıza bakabilir misiniz? Ya da duvarlara biraz renk veriyor musun? Daha sonra, evinizin fotoğrafını nasıl çekebileceğinizi öğrenebilirsiniz ...</string>
+    <string name="tutStepFinishTitle">Öğretici Biten</string>
+    <string name="addCameraPosition">Kamera konumunu ekle</string>
+    <string name="deleteCameraPosition">Kamera konumunu sil</string>
+    <string name="goToCameraPosition">amera konumuna gidin</string>
+    <string name="tutorialWellDone">Aferin!</string>
 
 </resources>

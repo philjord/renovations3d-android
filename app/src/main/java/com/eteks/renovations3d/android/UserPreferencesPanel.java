@@ -690,7 +690,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			  editor.putBoolean(FurnitureCatalogListPanel.WELCOME_SCREEN_UNWANTED, false);
 			  editor.putBoolean(FurnitureTable.WELCOME_SCREEN_UNWANTED, false);
 			  editor.apply();
-			  Renovations3DActivity.welcomeScreensShownThisSession.clear();
+			  ((Renovations3DActivity)activity).getWelcomeScreensShownThisSession().clear();
           }
         });
 

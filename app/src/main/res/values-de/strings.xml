@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">Ausrichtung</string>
     <string name="magnetism">Magnetismus</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Mit einem Finger ziehen, um den Plan zu bewegen<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Ziehe mit zwei Fingern, um den Plan zu bewegen, ohne zu ändern, was ausgewählt ist
-Verwenden Sie Prise zu vergrößern<br>
 Doppelhahn Sie auf ein beliebiges Objekt, um es zu bearbeiten<br>
-Um den verfügbaren Möbelkatalog zu sehen, ziehen Sie die "&lt;" Griff von der Seite<br>
 Zwei Demo-Home-Dateien werden in Ihrem Download-Ordner, verwenden Sie Open ... im Menü. <br>
 Sie können Ihren Browser verwenden, um direkt mehr Home-Dateien (.sh3d) aus dem Internet zu öffnen, zum Beispiel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
 Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).<br>
 Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren ...<br>
    ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.<br>
 Denn nun ist die einzige Funktion, die Sie hier tun können, ist ein Artikel Sichtbarkeit zu ändern.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Dies ist eine dreidimensionale Ansicht Ihres Planes. <br>
-Wenn Sie von oben nach unten schauen: <br>
-Ein Finger, der nach links oder rechts schiebt, dreht den Plan<br>
-Ein Finger, der nach oben oder unten gleitet, ändert die Höhe der Kamera und auch die Tonhöhe<br>
-Pinch bewegt die Kamera näher an die Mitte oder weiter davon<br>
-Wenn Sie von der Besuchssicht aussehen: <br>
-Ein Finger, der nach links oder rechts schiebt, dreht den Plan um dich herum<br>
-Ein Finger, der nach oben oder unten gleitet, ändert den senkrechten Winkel, den Ihr Kopf zeigt<br>
-Pinch bewegt dich vorwärts oder rückwärts<br>
-Gespeicherte Standpunkte können unter dem Augensymbol gefunden werden<br>
-Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikone eines Plans erfolgen<br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Wenn Sie von oben nach unten schauen, pinch bewegt die Kamera näher an die Mitte oder weiter davon<br>
+Wenn Sie von der Besuchssicht aussehen, pinch bewegt dich vorwärts oder rückwärts<br>
+Sichern Sie die Kameraposition mit dem Symbol für die Kamera, gehen Sie mit der Kameraposition auf eine Kameraposition. <br>
+Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / Person durchgeführt werden. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU info</string>
@@ -75,5 +65,49 @@ Das Wechseln von oben nach unten kann durch die Ikone eines Mannes oder der Ikon
     <string name="showOtherHandles">Zeige andere Griffe</string>
     <string name="showPagerButtons">Pager-Tasten anzeigen</string>
     <string name="useChunkyHandles">Zeigen klobige Griffe</string>
+    <string name="menu_help_online">Onlinehilfe</string>
+    <string name="menu_help_tutorial">Tutorial</string>
+    <string name="tutStep0Title">Tutorial</string>
+    <string name="tutStep0Text">Bei Fehlern verwenden Rückgängig machen. Ziehen Sie den Plan mit einem Finger, zoomen, indem Sie die Pinch-Aktion verwenden. Versuche, den Plan jetzt zu bewegen ... (Du kannst dieses Tutorial jederzeit schließen / anzeigen).</string>
+    <string name="tutStep10Text">Bewege den Stuhl um und versuche es zu drehen.</string>
+    <string name="tutStep10Title">Stuhl hinzufügen - 3</string>
+    <string name="tutStep11Text">Tippen Sie auf die 3D-Schaltfläche, und die Ansicht wechselt zur 3D-Ansicht.</string>
+    <string name="tutStep11Title">Ansicht in 3D - 1</string>
+    <string name="tutStep12Text">Bewegen Sie die Kamera durch Ziehen.</string>
+    <string name="tutStep12Title">Ansicht in 3D - 2</string>
+    <string name="tutStep13Text">Gehen Sie in die Heimat durch Drücken der virtuellen Besuch-Taste.</string>
+    <string name="tutStep13Title">Ansicht in 3D - 3</string>
+    <string name="tutStep14Title">Füge eine Tür hinzu - 1</string>
+    <string name="tutStep15Title">Füge eine Tür hinzu - 2</string>
+    <string name="tutStep16Title">Füge eine Tür hinzu - 3</string>
+    <string name="tutStep17Title">Füge eine Tür hinzu - 4</string>
+    <string name="tutStep1Title">Erstellen Sie einige Wände - 1</string>
+    <string name="tutStep2Title">Erstellen Sie einige Wände - 2</string>
+    <string name="tutStep3Title">Erstellen Sie einige Wände - 3</string>
+    <string name="tutStep4Title">Erstellen Sie ein Zimmer - 1</string>
+    <string name="tutStep5Title">Erstellen Sie ein Zimmer - 2</string>
+    <string name="tutStep6Title">Erstellen Sie ein Zimmer - 3</string>
+    <string name="tutStep7Title">Stuhl hinzufügen - 1</string>
+    <string name="tutStep8Title">Stuhl hinzufügen - 1</string>
+    <string name="tutStep9Title">Stuhl hinzufügen - 2</string>
+    <string name="tutStepFinishTitle">Tutorial Fertig</string>
+    <string name="addCameraPosition">Kameraposition hinzufügen</string>
+    <string name="deleteCameraPosition">Kameraposition löschen</string>
+    <string name="goToCameraPosition">Zur Kameraposition gehen</string>
+    <string name="tutStep14Text">Zeigen Sie den Möbelkatalog, indem Sie ihn aus der linken Seite des Bildschirms herausziehen.</string>
+    <string name="tutStep15Text">Suche nach dem Wort \"Tür\".</string>
+    <string name="tutStep16Text">Lange Presse auf eine Tür, und es wird zu Ihrem Plan hinzugefügt werden.</string>
+    <string name="tutStep17Text">Ziehen Sie die Tür auf eine Wand, beachten Sie, dass es sich automatisch an die Wand passt.</string>
+    <string name="tutStep1Text">Wählen Sie aus der Werkzeugauswahl das Werkzeug \"Wände erstellen\".</string>
+    <string name="tutStep2Text">Erstellen Sie eine Wand, indem Sie auf den Bildschirm ziehen und dann den Finger anheben.</string>
+    <string name="tutStep3Text">Erstellen Sie ein Quadrat von Wänden, indem Sie drei weitere Male ziehen. Machen Sie das letzte Wendeende in der Nähe des Anfangs Ihrer ersten Wand.</string>
+    <string name="tutStep4Text">Verbinde die letzte Mauer zum ersten durch doppelte Klopfen, um die Schöpfung zu beenden.</string>
+    <string name="tutStep5Text">Wählen Sie aus der Werkzeugauswahl das Werkzeug \"Räume erstellen\".</string>
+    <string name="tutStep6Text">Doppeltes Hahn irgendwo innerhalb der vier Wände, um ein Zimmer zu schaffen.</string>
+    <string name="tutStep7Text">Bearbeiten Sie das neue Zimmer, indem Sie es doppelt klopfen, wählen Sie die Bodenstruktur, machen Sie es gefliest. Schließen Sie die Dialoge.</string>
+    <string name="tutStep8Text">Zeigen Sie den Möbelkatalog, indem Sie den Pfeil drücken.</string>
+    <string name="tutStep9Text">Lange Presse auf einen Stuhl, und es wird zu Ihrem Plan hinzugefügt werden.</string>
+    <string name="tutStepFinishText">Gute Arbeit, jetzt könntest du deine Tür in 3d sehen? Oder die Wände etwas Farbe? Später könntest du sehen, ob du kommst, wie du ein Foto von deinem Zuhause machst ...</string>
+    <string name="tutorialWellDone">Gut gemacht!</string>
 
 </resources>

@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">подравняване</string>
     <string name="magnetism">магнетизъм</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Плъзнете с един пръст, за да преместите плана<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Плъзнете с два пръста, за да преместите плана, без да променяте това, което е избрано<br>
-Използвайте щипка за приближаване. <br>
 Докоснете двукратно върху който и да е обект, за да го редактирате<br>
-За да видите наличния каталог на мебели, изтеглете "&lt;" Дръжка отстрани<br>
 Два демо файлови файла ще бъдат в папката ви за изтегляне, в менюто ще се използва Open .... <br>
 Можете да използвате браузъра си, за да отворите директно повече домашни файлове (.sh3d) от интернет, например <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Натиснете иконата за добавяне на сайт мебели избран мебели елемента върху екрана на картата на лизинговия договор 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Натиснете иконата за добавяне на сайт мебели избран мебели елемента върху екрана на картата на лизинговия договор 0.0.<br>
 Като алтернатива можете да натиснете продължително върху елемента (не е влачене и пускане).<br>
 От тази гледна точка можете да импортирате мебели библиотеки на стоките, изберете Меню-> Import мебели библиотека ...<br>
 	  ]]>\n</string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Това е изглед на всички мебели в момента са поставени на Вашия план.<br>
 За сега единствената функция можете да направите тук е да се промени, за да елементи видимост.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html><p>
-Това е три измерна оглед на плана си. <br>
-Ако търсите от горе на долу: <br>
-Един пръст плъзгането наляво или надясно, ще се завърти плана. <br>
-Един пръст плъзгане нагоре или надолу ще промени височината на камерата, а също и на терена. <br>
-Pinch ще се движат камерата близо до центъра или по-далеч от него. <br>
-Ако търсите от точката на посещение оглед на: <br>
-Един пръст плъзгането наляво или надясно, ще се завърти на плана около вас. <br>
-Един пръст плъзгане нагоре или надолу ще промени вертикалния ъгъл главата ти се посочи. <br>
-Pinch ще се движите напред или назад. <br>
-Спасен гледни точки могат да бъдат намерени под иконата на очите. <br>
-Промяна от горе надолу, за да посетите може да стане чрез иконата на човек, или иконата на даден план. <br>
+    <string name="welcometext_component3dview"><![CDATA[<html><p>
+Ако търсите от горе на долу, pinch ще се движат камерата близо до центъра или по-далеч от него. <br>
+Ако търсите от точката на посещение оглед на, pinch ще се движите напред или назад. <br>
+Запазете позицията на камерата с иконата за добавяне на камера, отидете на позиция на камерата с иконата на камерата на превключвателя. <br>
+Промяната от горе надолу до посещението може да бъде направена от иконата на план / човек. <br>
 ]]></string>
     <string name="menu_deoptomize">3d Deoptomize</string>
     <string name="menu_show3dcaps">информация за GPU</string>
@@ -74,5 +64,49 @@ Pinch ще се движите напред или назад. <br>
     <string name="showOtherHandles">Показване на други дръжки</string>
     <string name="showPagerButtons">Показване на бутоните за пейджър</string>
     <string name="useChunkyHandles">Покажете дълга дръжки</string>
+    <string name="menu_help_online">Онлайн помощ</string>
+    <string name="menu_help_tutorial">настойнически</string>
+    <string name="tutStep0Title">настойнически</string>
+    <string name="tutStep0Text">За грешки използвайте Отмяна. Плъзнете плана около с един пръст, увеличете с помощта на действието на щипката. Опитайте да преместите плана сега ... (Можете да затворите / покажете този урок по всяко време.)</string>
+    <string name="tutStep10Text">Преместете стола наоколо и опитайте да го завъртите.</string>
+    <string name="tutStep10Title">Добавете стол - 3</string>
+    <string name="tutStep11Text">Докоснете бутона 3D и изгледа ще се промени в триизмерния изглед.</string>
+    <string name="tutStep11Title">Изглед в 3D - 1</string>
+    <string name="tutStep12Text">Преместете камерата наоколо чрез плъзгане.</string>
+    <string name="tutStep12Title">Изглед в 3D - 2</string>
+    <string name="tutStep13Text">Влезте в дома, като натиснете бутона за виртуална визита.</string>
+    <string name="tutStep13Title">Преглед в 3D - 3</string>
+    <string name="tutStep14Title">Добавете врата - 1</string>
+    <string name="tutStep15Title">Добави врата - 2</string>
+    <string name="tutStep16Title">Добави врата - 3</string>
+    <string name="tutStep17Title">Добави врата - 4</string>
+    <string name="tutStep1Title">Създайте няколко стени - 1</string>
+    <string name="tutStep2Title">Създайте няколко стени - 2</string>
+    <string name="tutStep3Title">Създайте няколко стени - 3</string>
+    <string name="tutStep4Title">Създайте стая - 1</string>
+    <string name="tutStep5Title">Създайте стая - 2</string>
+    <string name="tutStep6Title">Създайте стая - 3</string>
+    <string name="tutStep7Title">Добавете стол - 1</string>
+    <string name="tutStep8Title">Добавете стол - 1</string>
+    <string name="tutStep9Title">Добавете стол - 2</string>
+    <string name="tutStepFinishTitle">Урокът е завършен</string>
+    <string name="addCameraPosition">Добавете позиция на камерата</string>
+    <string name="deleteCameraPosition">Изтрийте позицията на камерата</string>
+    <string name="goToCameraPosition">Отидете до позицията на камерата</string>
+    <string name="tutStep14Text">Покажете каталога за мебели, като го издърпате от лявата страна на екрана.</string>
+    <string name="tutStep15Text">Потърсете думата \"врата\".</string>
+    <string name="tutStep16Text">Дълго натискайте на вратата и тя ще бъде добавена към вашия план.</string>
+    <string name="tutStep17Text">Плъзнете вратата на стената, забележите, че тя автоматично се приляга към стената.</string>
+    <string name="tutStep1Text">Изберете инструмента \"Създаване на стени\" от селектора на инструменти.</string>
+    <string name="tutStep2Text">Създайте стена, като плъзнете екрана и вдигнете пръста си.</string>
+    <string name="tutStep3Text">Създайте квадратни стени, като плъзнете още три пъти. Направете последния край на плъзгане близо до началото на първата стена.</string>
+    <string name="tutStep4Text">Присъединете се към последната стена към първата, като натиснете два пъти, за да завършите създаването.</string>
+    <string name="tutStep5Text">Изберете инструмента \"Създаване на стаи\" от инструмента за избор на инструменти.</string>
+    <string name="tutStep6Text">Двойно чукнете навсякъде в четирите стени, за да създадете стая.</string>
+    <string name="tutStep7Text">Редактирайте новата стая, като я докоснете два пъти, изберете текстурата на пода, направете я с плочки. Затворете диалозите.</string>
+    <string name="tutStep8Text">Покажете каталога за мебели, като натиснете стрелката.</string>
+    <string name="tutStep9Text">Дълъг натиск върху един стол, и той ще бъде добавен към вашия план.</string>
+    <string name="tutStepFinishText">Добра работа, сега можеш да отидеш да погледнеш вратата си в 3d? Или да даде някакъв цвят на стените? По-късно можете да видите дали ще можете да направите снимка на вашия дом ...</string>
+    <string name="tutorialWellDone">Много добре!</string>
 
 </resources>

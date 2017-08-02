@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -44,21 +45,34 @@ public class JFileChooser
 
 	private FileSelectedListener fileListener;
 
+	/**
+	 * MUST be on a thread with Looper called
+	 * @param activity
+	 */
 	public JFileChooser(Activity activity)
 	{
 		this(activity, null, false, false, null);
 	}
-
+	/**
+	 * MUST be on a thread with Looper called
+	 * @param activity
+	 */
 	public JFileChooser(Activity activity, boolean allowNewName)
 	{
 		this(activity, null, allowNewName, false, null);
 	}
-
+	/**
+	 * MUST be on a thread with Looper called
+	 * @param activity
+	 */
 	public JFileChooser(Activity activity, File startFolder)
 	{
 		this(activity, startFolder, false, false, null);
 	}
-
+	/**
+	 * MUST be on a thread with Looper called
+	 * @param context
+	 */
 	public JFileChooser(Context context, File startFolder, final boolean allowNewName, final boolean allowDirSelect, String[] okCancel)
 	{
 		this.context = context;

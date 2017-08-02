@@ -24,13 +24,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JComboBox;
@@ -164,22 +165,22 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		}
 
 		// make the left and right swipers work
-		Button furnitureCatalogLeftSwiper = (Button)rootView.findViewById(R.id.furnitureCatalogLeftSwiper);
+		ImageButton furnitureCatalogLeftSwiper = (ImageButton)rootView.findViewById(R.id.furnitureCatalogLeftSwiper);
 		furnitureCatalogLeftSwiper.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
+				((Renovations3DActivity)getActivity()).getViewPager().setCurrentItem(1, true);
 			}
 		});
-		Button furnitureCatalogRightSwiper = (Button)rootView.findViewById(R.id.furnitureCatalogRightSwiper);
+		ImageButton furnitureCatalogRightSwiper = (ImageButton)rootView.findViewById(R.id.furnitureCatalogRightSwiper);
 		furnitureCatalogRightSwiper.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(3, true);
+				((Renovations3DActivity)getActivity()).getViewPager().setCurrentItem(3, true);
 			}
 		});
 		return rootView;
@@ -191,7 +192,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wat until we have an activity
 		if (isVisibleToUser && getActivity() != null)
-			JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.catalogview_welcometext, preferences);
+		{
+			JOptionPane.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_catalogview, preferences);
+
+			// tell the tutorial we've been shown
+			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_CATALOG_SHOWN);
+
+		}
 	}
 
 	@Override
@@ -551,7 +558,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 				Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
 
-				((Renovations3DActivity) getActivity()).mViewPager.setCurrentItem(1, true);
+				((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(1, true);
 			}
 		}
 	}
@@ -864,6 +871,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			}
 			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
 			public void afterTextChanged(Editable arg0) {
+				((Renovations3DActivity)getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.SEARCH_DONE, arg0.toString());
 			}
 		});
 		/*this.searchTextField.getDocument().addDocumentListener(new DocumentListener() {

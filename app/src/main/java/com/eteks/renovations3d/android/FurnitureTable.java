@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -109,13 +110,13 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 
 		// make the right swiper work
-		Button furnitureTableRightSwiper = (Button)rootView.findViewById(R.id.furnitureTableRightSwiper);
+		ImageButton furnitureTableRightSwiper = (ImageButton)rootView.findViewById(R.id.furnitureTableRightSwiper);
 		furnitureTableRightSwiper.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				((Renovations3DActivity)getActivity()).mViewPager.setCurrentItem(1, true);
+				((Renovations3DActivity)getActivity()).getViewPager().setCurrentItem(1, true);
 			}
 		});
 
@@ -125,7 +126,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 
 	private void updateHeader()
 	{
-		if(header != null)
+		// sometimes Exception java.lang.IllegalStateException: Fragment ii{d4006c0} not attached to Activity  is thrown, presumably during destroy or dispose
+		if(header != null && this.getContext() != null)
 		{
 			final int fragWidthPx = rootView.getWidth();
 			final float scale = getResources().getDisplayMetrics().density;
@@ -158,7 +160,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	private void updateTable()
 	{
 
-		if(tableLayout != null)
+		if(tableLayout != null && this.getContext() != null)
 		{
 			updateHeader();
 

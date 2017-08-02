@@ -3,34 +3,25 @@
     <string name="app_name">Rénovations 3D</string>
     <string name="alignment">Alignement</string>
     <string name="magnetism">Magnétisme</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Pincer l\'écran pour zoomer et dézoomer.<br>
-Pour voir le catalogue de meubles, balayez l\'écran à partir du bord droit.<br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Pour déplacer la zone visible du plan, déplacez deux doigts ensemble.<br>
 Pour modifier n\'importe quel objet, double-cliquez.<br>
 Deux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir... dans le menu.<br>
 Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, par exemple <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
 ou appuyez plus longuement sur ce meuble (il n\'y a de possibilité de glisser déposer les meubles dans le plan).<br>
 Vous pouvez importer des bibliothèques de meubles catalogue à partir de cette vue, sélectionnez Importer bibliothèque de meubles&#8230; dans le menu.<br>
      ]]></string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 Cette vue liste tous les meubles actuellement placés dans votre plan.<br>
 Pour l\'instant la seule fonction disponible permet de changer la visibilité des éléments.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Ceci est une vue en 3D de votre plan.<br>
-La navigation dans la 3D s\'effectue en déplaçant les doigts à l\'écran.<br>
-Si vous êtes en vue de haut :<br>
-Le déplacement du doigt vers la gauche ou la droite fait tourner la scène autour d\'elle même.<br>
-Le déplacement du doigt vers le haut ou le bas modifie la hauteur du point de vue.<br>
-Pincer vers le haut ou le bas approche ou éloigne le point du vue du centre.<br>
-Si vous êtes en visite virtuelle :<br>
-Le déplacement du doigt fait pivoter votre point de vue autour de vous sans le déplacer.<br>
-Pincer déplace votre point de vue d\'avant en arrière.<br>
-Les points de vue enregistrés sont listés sous l\'icône représentant un œoeil.<br>
-Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan.<br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Si vous êtes en vue de haut, pincer vers le haut ou le bas approche ou éloigne le point du vue du centre. <br>
+Si vous êtes en visite virtuelle, pincer déplace votre point de vue d\'avant en arrière. <br>
+Enregistrez la position de l\'appareil photo avec l\'icône ajouter une caméra, accédez à la position d\'une caméra avec l\'icône de la caméra. <br>
+Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône représentant un visiteur ou un plan. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomise 3d</string>
     <string name="menu_show3dcaps">infos GPU</string>
@@ -73,5 +64,49 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="showOtherHandles">Montrer d\'autres poignées</string>
     <string name="showPagerButtons">Afficher les boutons de pager</string>
     <string name="useChunkyHandles">Montre des poignées robustes</string>
+    <string name="menu_help_online">Aide en ligne</string>
+    <string name="menu_help_tutorial">Didacticiel</string>
+    <string name="tutStep0Title">Didacticiel</string>
+    <string name="tutStep0Text">Pour les erreurs, utilisez Annuler. Faites glisser le plan avec un doigt, faites un zoom en utilisant l\'action de pincement. Essayez de déplacer le plan maintenant ... (Vous pouvez fermer / afficher ce tutoriel à tout moment.)</string>
+    <string name="tutStep10Text">Déplacez la chaise et essayez de la faire tourner.</string>
+    <string name="tutStep10Title">Ajouter une chaise - 3</string>
+    <string name="tutStep11Text">Appuyez sur le bouton 3D, et la vue changera en vue 3D.</string>
+    <string name="tutStep11Title">Voir en 3D - 1</string>
+    <string name="tutStep12Text">Déplacez la caméra en faisant glisser.</string>
+    <string name="tutStep12Title">Vue en 3D - 2</string>
+    <string name="tutStep13Text">Entrez dans la maison en appuyant sur le bouton de visite virtuelle.</string>
+    <string name="tutStep13Title">Vue en 3D - 3</string>
+    <string name="tutStep14Text">Montrez le catalogue de meubles, en le faisant glisser du côté gauche de l\'écran.</string>
+    <string name="tutStep14Title">Ajouter une porte - 1</string>
+    <string name="tutStep15Text">Recherchez le mot \"porte\".</string>
+    <string name="tutStep15Title">Ajouter une porte - 2</string>
+    <string name="tutStep16Text">Appuyez longuement sur une porte, et cela sera ajouté à votre plan.</string>
+    <string name="tutStep16Title">Ajouter une porte - 3</string>
+    <string name="tutStep17Text">Faites glisser la porte sur un mur, remarquez qu\'il s\'intègre automatiquement au mur.</string>
+    <string name="tutStep17Title">Ajouter une porte - 4</string>
+    <string name="tutStep1Text">Sélectionnez l\'outil \"Créer des murs\" à partir du sélecteur d\'outils.</string>
+    <string name="tutStep1Title">Créez des murs - 1</string>
+    <string name="tutStep2Text">Créez un mur en faisant glisser l\'écran puis en soulevant le doigt.</string>
+    <string name="tutStep2Title">Créez des murs - 2</string>
+    <string name="tutStep3Text">Créez un carré de murs en traînant trois fois de plus. Faites la dernière extrémité de la glissière près du début de votre premier mur.</string>
+    <string name="tutStep3Title">Créez des murs - 3</string>
+    <string name="tutStep4Text">Rejoignez le dernier mur à la première par deux fois pour terminer la création.</string>
+    <string name="tutStep4Title">Créer une chambre - 1</string>
+    <string name="tutStep5Text">Sélectionnez l\'outil \"Créer des pièces\" à partir du Sélecteur d\'outils.</string>
+    <string name="tutStep5Title">Créer une chambre - 2</string>
+    <string name="tutStep6Text">Doublement n\'importe où dans les quatre murs pour créer une pièce.</string>
+    <string name="tutStep6Title">Créer une chambre - 3</string>
+    <string name="tutStep7Text">Modifiez la nouvelle pièce en tapotant dessus, sélectionnez la texture du sol, faites-la carrelée. Fermez les boîtes de dialogue.</string>
+    <string name="tutStep7Title">Ajouter une chaise - 1</string>
+    <string name="tutStep8Text">Montrez le catalogue de meubles en appuyant sur la flèche.</string>
+    <string name="tutStep8Title">Ajouter une chaise - 1</string>
+    <string name="tutStep9Text">Appuyez longuement sur une chaise, et cela sera ajouté à votre plan.</string>
+    <string name="tutStep9Title">Ajouter une chaise - 2</string>
+    <string name="tutStepFinishText">Bon travail, maintenant vous pouvez regarder votre porte en 3d? Ou donner des murs de couleur? Plus tard, vous pouvez voir si vous travaillez comment faire une photo de votre maison ...</string>
+    <string name="tutStepFinishTitle">Didacticiel terminé</string>
+    <string name="addCameraPosition">Ajouter la position de la caméra</string>
+    <string name="deleteCameraPosition">Supprimer la position de la caméra</string>
+    <string name="goToCameraPosition">Aller à la position de la caméra</string>
+    <string name="tutorialWellDone">Bien joué!</string>
 
 </resources>

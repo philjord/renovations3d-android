@@ -72,8 +72,11 @@ import jogamp.newt.PointerIconImpl;
 import jogamp.newt.ScreenImpl;
 
 /**
- * EXACT copy from 2.3.2 but a few lines removed from doPointerEvent, as they are buggy
- * as well as teh NativeWindowExceptionListener system for dealing with failed creation
+ * EXACT copy from 2.3.2 with the following changes
+ * a few lines removed from {@link #doPointerEvent}, as they are buggy
+ * the {@link NativeWindowExceptionListener} system for dealing with failed window creation
+ * The native window exception listener also gets a RuntimeException "failed to lock" message when windowResize
+ * or windowRepaint events can't lock the surface, rather than an app crash, {@link #consumeWindowEvent}
  */
 public abstract class WindowImpl implements Window, NEWTEventConsumer {
 	public static final boolean DEBUG_TEST_REPARENT_INCOMPATIBLE;
@@ -763,8 +766,19 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 	}
 	public interface NativeWindowExceptionListener
 	{
-		// return true to indicate success, false will throw the exception
+		/** return true to indicate success, false will throw the exception
+		 *
+		 * @param nwp
+		 * @return
+		 */
 		boolean handleException(NativeWindowException nwp);
+
+		/** return true to indicate success, false will throw the exception
+		 *
+		 * @param e
+		 * @return
+		 */
+		boolean handleRuntimeException(RuntimeException e);
 	}
 
 	private void removeScreenReference() {
@@ -2734,33 +2748,49 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer {
 			System.err.println("consumeWindowEvent: " + var1 + ", visible " + this.isVisible() + " " + this.getX() + "/" + this.getY() + ", win[" + this.getX() + "/" + this.getY() + " " + this.getWidth() + "x" + this.getHeight() + "], pixel[" + this.getSurfaceWidth() + "x" + this.getSurfaceHeight() + "]");
 		}
 
-		for(int var2 = 0; !var1.isConsumed() && var2 < this.windowListeners.size(); ++var2) {
-			WindowListener var3 = (WindowListener)this.windowListeners.get(var2);
-			switch(var1.getEventType()) {
-				case 100:
-					var3.windowResized(var1);
-					break;
-				case 101:
-					var3.windowMoved(var1);
-					break;
-				case 102:
-					var3.windowDestroyNotify(var1);
-					break;
-				case 103:
-					var3.windowGainedFocus(var1);
-					break;
-				case 104:
-					var3.windowLostFocus(var1);
-					break;
-				case 105:
-					var3.windowRepaint((WindowUpdateEvent)var1);
-					break;
-				case 106:
-					var3.windowDestroyed(var1);
-					break;
-				default:
-					throw new NativeWindowException("Unexpected window event type " + var1.getEventType());
+		try
+		{
+			for (int var2 = 0; !var1.isConsumed() && var2 < this.windowListeners.size(); ++var2)
+			{
+				WindowListener var3 = (WindowListener) this.windowListeners.get(var2);
+				switch (var1.getEventType())
+				{
+					case 100:
+						var3.windowResized(var1);//can fail to lock
+						break;
+					case 101:
+						var3.windowMoved(var1);
+						break;
+					case 102:
+						var3.windowDestroyNotify(var1);
+						break;
+					case 103:
+						var3.windowGainedFocus(var1);
+						break;
+					case 104:
+						var3.windowLostFocus(var1);
+						break;
+					case 105:
+						var3.windowRepaint((WindowUpdateEvent) var1);//can fail to lock
+						break;
+					case 106:
+						var3.windowDestroyed(var1);
+						break;
+					default:
+						throw new NativeWindowException("Unexpected window event type " + var1.getEventType());
+				}
 			}
+		}
+		//PJPJPJPJPJPJ when the device is out of resources we allow a registered callback to deal with it
+		catch(RuntimeException e)
+		{
+			boolean doThrow = true;
+			if(nativeWindowExceptionListener != null)
+			{
+				doThrow = !nativeWindowExceptionListener.handleRuntimeException(e);
+			}
+			if(doThrow)
+				throw e;
 		}
 
 	}

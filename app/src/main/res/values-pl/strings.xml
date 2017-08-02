@@ -3,35 +3,25 @@
     <string name="app_name">Renovations 3D</string>
     <string name="alignment">wyrównanie</string>
     <string name="magnetism">magnetyzm</string>
-    <string name="planview_welcometext"><![CDATA[<html>
-Przeciągnij jednym palcem, aby przenieść plan. <br>
+    <string name="welcometext_planview"><![CDATA[<html>
 Przeciągnij dwoma palcami, aby przenieść plan bez zmiany tego, co zostało wybrane. <br>
-Użyj szczypta, aby powiększyć. <br>
 Kliknij dwukrotnie na dowolnym obiekcie, aby go edytować. <br>
-Aby wyświetlić dostępny katalog mebli, przeciągnij "&lt;" Uchwyt z boku. <br>
 Dwie pliki domowego demo będą znajdować się w folderze do pobrania, użyj Open ... w menu. <br>
 Możesz użyć swojej przeglądarki, aby bezpośrednio otworzyć więcej plików domowych (.sh3d) z Internetu, na przykład <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
-    <string name="catalogview_welcometext"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
+    <string name="welcometext_catalogview"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
 Możesz również nacisnąć długi element (nie ma przeciągania i upuszczania).<br>
 Z tego punktu widzenia można importować katalog biblioteki mebli, wybierz Menu-> biblioteki importu mebli ...<br>
 			     ]]>\n</string>
-    <string name="furnitureview_welcometext"><![CDATA[<html>
+    <string name="welcometext_furnitureview"><![CDATA[<html>
 To jest widok wszystkich mebli Obecnie umieszczone na planie.<br>
 Na razie jedyną funkcją można zrobić o to aby zmienić widoczność przedmiotów.<br>
 ]]></string>
-    <string name="component3dview_welcometext"><![CDATA[<html>
-Jest to trójwymiarowy widok Twojego planu. <br>
-Jeśli szukasz od góry na dół: <br>
-Jeden ruch palca w lewo lub w prawo obróci plan <br>
-Jeden palec przesuwający się w górę lub w dół zmienia wysokość kamery, a także wysokość <br>
-Pinch przesunie kamerę bliżej środka lub dalej <br>
-Jeśli szukasz z punktu widzenia wizyty: <br>
-Przesuń jeden palec w lewo lub w prawo, obracając plan wokół siebie <br>
-Jeden palec przesuwający się w górę lub w dół zmienia kąt pionowy, na którym jest skierowana głowa <br>
-Pinch poruszy cię w przód iw tył <br>
-Zapisane punkty widzenia można znaleźć pod ikoną oka <br>
-Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczyzny lub ikonę planu <br>
+    <string name="welcometext_component3dview"><![CDATA[<html>
+Jeśli szukasz od góry na dół, pinch przesunie kamerę bliżej środka lub dalej <br>
+Jeśli szukasz z punktu widzenia wizyty, pinch poruszy cię w przód iw tył <br>
+Zapisz pozycję kamery za pomocą ikony kamery, a następnie przejdź do pozycji kamery za pomocą ikony kamery przełącznika. <br>
+Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony planu / osoby. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">Informacje o GPU</string>
@@ -75,5 +65,49 @@ Zmiana z góry na dół do odwiedzenia może być dokonana przez ikonę mężczy
     <string name="showOtherHandles">Pokaż inne uchwyty</string>
     <string name="showPagerButtons">Pokazywać przyciski pagera</string>
     <string name="useChunkyHandles">Pokazać chunky uchwyty</string>
+    <string name="menu_help_online">Pomoc online</string>
+    <string name="menu_help_tutorial">Seminarium</string>
+    <string name="tutStep0Title">Seminarium</string>
+    <string name="tutStep0Text">Za błędy użyj funkcji Cofnij. Przeciągnij plan jednym palcem i powiększ zdjęcie, używając akcji naciągania. Spróbuj przenieść plan ... (Możesz zamknąć / pokazać ten samouczek w dowolnym momencie.)</string>
+    <string name="tutStep10Text">Przesuń krzesło i spróbuj go obrócić.</string>
+    <string name="tutStep10Title">Dodaj krzesło - 3</string>
+    <string name="tutStep11Text">Dotknij przycisku 3D, a widok zmieni się na widok 3D.</string>
+    <string name="tutStep11Title">Wyświetl w 3D - 1</string>
+    <string name="tutStep12Text">Przesuń kamerę, przeciągając ją.</string>
+    <string name="tutStep12Title">Wyświetl w 3D - 2</string>
+    <string name="tutStep13Text">Wejdź do domu, naciskając wirtualny przycisk wizyty.</string>
+    <string name="tutStep13Title">Wyświetl w 3D - 3</string>
+    <string name="tutStep14Text">Pokaż katalog mebli, przeciągając go z lewej strony ekranu.</string>
+    <string name="tutStep14Title">Dodaj drzwi - 1</string>
+    <string name="tutStep15Text">Wyszukaj słowo \"drzwi\".</string>
+    <string name="tutStep15Title">Dodaj drzwi - 2</string>
+    <string name="tutStep16Text">Długie naciśnięcie drzwi i zostanie dodane do planu.</string>
+    <string name="tutStep16Title">Dodaj drzwi - 3</string>
+    <string name="tutStep17Text">Przeciągnij drzwi na ścianę, zauważ, że automatycznie pasuje do ściany.</string>
+    <string name="tutStep17Title">Dodaj drzwi - 4</string>
+    <string name="tutStep1Text">Wybierz narzędzie \"Utwórz ściany\" z narzędzia wyboru narzędzia.</string>
+    <string name="tutStep1Title">Utwórz ściany - 1</string>
+    <string name="tutStep2Text">Utwórz ścianę, przeciągając ekran i podnosząc palec.</string>
+    <string name="tutStep2Title">Utwórz kilka ścian - 2</string>
+    <string name="tutStep3Text">Utwórz kwadrat ściany, przeciągając jeszcze trzy razy. Zrób ostatni koniec przeciągnikowy blisko początku swojej pierwszej ściany.</string>
+    <string name="tutStep3Title">Utwórz ściany - 3</string>
+    <string name="tutStep4Text">Dołącz ostatnią ścianę do pierwszej, klikając dwukrotnie, aby zakończyć kreację.</string>
+    <string name="tutStep4Title">Utwórz pokój - 1</string>
+    <string name="tutStep5Text">Wybierz narzędzie \"Utwórz pomieszczenia\" z Narzędzia wyboru.</string>
+    <string name="tutStep5Title">Utwórz pokój - 2</string>
+    <string name="tutStep6Text">Kliknij dwukrotnie w dowolnym miejscu wewnątrz czterech ścian, aby utworzyć pokój.</string>
+    <string name="tutStep6Title">Utwórz pokój - 3</string>
+    <string name="tutStep7Text">Edytuj nowy pokój, podwójnie dotykając go, wybierz teksturę podłogi, wykończ ją. Zamknij okna dialogowe.</string>
+    <string name="tutStep7Title">Dodaj krzesło - 1</string>
+    <string name="tutStep8Text">Pokaż katalog mebli, naciskając strzałkę.</string>
+    <string name="tutStep8Title">Dodaj krzesło - 1</string>
+    <string name="tutStep9Text">Długie naciśnięcie na krześle i zostanie dodane do planu.</string>
+    <string name="tutStep9Title">Dodaj krzesło - 2</string>
+    <string name="tutStepFinishText">Dobra robota, teraz możesz spojrzeć na swoje drzwi w 3D? Albo dać ściany trochę koloru? Później zobaczysz, czy wypracujesz jak zrobić zdjęcie swojego domu ...</string>
+    <string name="tutStepFinishTitle">Ukończony samouczek</string>
+    <string name="addCameraPosition">Dodaj pozycję kamery</string>
+    <string name="deleteCameraPosition">Usuń pozycję kamery</string>
+    <string name="goToCameraPosition">Przejdź do pozycji kamery</string>
+    <string name="tutorialWellDone">Dobra robota!</string>
 
 </resources>

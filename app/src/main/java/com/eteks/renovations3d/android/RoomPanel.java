@@ -27,6 +27,8 @@ import android.text.TextWatcher;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.ActionListener;
 import com.eteks.renovations3d.android.swingish.ButtonGroup;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
@@ -79,8 +81,9 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
   private LinearLayout            wallSidesBaseboardComponent;
   private boolean               firstWallChange;
   private String                dialogTitle;
+	private boolean sendTutorialTextureChange = false;
 
-  /**
+	/**
    * Creates a panel that displays room data according to the units set in
    * <code>preferences</code>.
    * @param preferences user preferences
@@ -539,6 +542,19 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     }
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "room.title");
 
+
+	  //add a tutorial listener to the floor texture
+	  sendTutorialTextureChange = false;
+	  controller.addPropertyChangeListener(RoomController.Property.FLOOR_PAINT,
+			  new PropertyChangeListener() {
+				  public void propertyChange(PropertyChangeEvent ev) {
+					  if(ev.getOldValue() ==  RoomController.RoomPaint.DEFAULT && ev.getNewValue() == RoomController.RoomPaint.TEXTURED)
+					  {
+						  sendTutorialTextureChange = true;
+					  }
+				  }
+			  });
+
   }
 
   /**
@@ -741,6 +757,8 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 		  public void onDismiss(DialogInterface dialog)
 		  {
 			  controller.modifyRooms();
+			  if(sendTutorialTextureChange)
+			  	((Renovations3DActivity)activity).getTutorial().actionComplete(Tutorial.TutorialAction.ROOM_FLOOR_TEXTURE_CHANGED);
 		  }
 	  });
 	  this.show();

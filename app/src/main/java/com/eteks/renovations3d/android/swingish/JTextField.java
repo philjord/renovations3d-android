@@ -1,10 +1,15 @@
 package com.eteks.renovations3d.android.swingish;
 
 import android.content.Context;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by phil on 2/1/2017.
+ * Note these are single line and have a done button that hides them
  */
 
 public class JTextField extends EditText
@@ -15,5 +20,19 @@ public class JTextField extends EditText
 		super(context);
 		setText(text);
 		setSingleLine();
+
+		//JTextField default to assume no next type options
+		setImeOptions(EditorInfo.IME_ACTION_DONE);
+		setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if(actionId==EditorInfo.IME_ACTION_DONE){
+					InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+							Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(getApplicationWindowToken(), 0);
+				}
+				return false;
+			}
+		});
 	}
 }
