@@ -97,7 +97,7 @@
     <string name="tutStep6Text">双击四面墙内的任何地方创建一个房间。</string>
     <string name="tutStep6Title">创建一个房间 - 3</string>
     <string name="tutStep7Text">通过双击来编辑新房间，选择地板纹理，使其平铺。 关闭对话框。</string>
-    <string name="tutStep7Title">添加椅子 - 1</string>
+    <string name="tutStep7Title">创建一个房间 - 4</string>
     <string name="tutStep8Text">按箭头显示家具目录。</string>
     <string name="tutStep8Title">添加椅子 - 1</string>
     <string name="tutStep9Text">长按一把椅子，它会被添加到你的计划。</string>
