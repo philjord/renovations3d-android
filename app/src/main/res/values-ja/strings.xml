@@ -97,7 +97,7 @@
     <string name="tutStep6Text">4つの壁のどこかをダブルタップして部屋を作成します。</string>
     <string name="tutStep6Title">部屋を作る - 3</string>
     <string name="tutStep7Text">新しい部屋をダブルタップして編集し、床のテクスチャを選択してタイル張りにします。 ダイアログを閉じます。</string>
-    <string name="tutStep7Title">椅子を追加する - 1</string>
+    <string name="tutStep7Title">部屋を作る - 4</string>
     <string name="tutStep8Text">矢印を押して、家具カタログを表示します。</string>
     <string name="tutStep8Title">椅子を追加する - 1</string>
     <string name="tutStep9Text">椅子を長押しすると、それがあなたの計画に追加されます。</string>

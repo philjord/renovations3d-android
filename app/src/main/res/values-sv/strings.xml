@@ -99,7 +99,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="tutStep6Text">Dubbelklicka någonstans inuti de fyra väggarna för att skapa ett rum.</string>
     <string name="tutStep6Title">Skapa ett rum - 3</string>
     <string name="tutStep7Text">Redigera det nya rummet genom att dubbelklicka på det, välj golvstruktur, gör det kaklat. Stäng dialogrutorna.</string>
-    <string name="tutStep7Title">Lägg till en stol - 1</string>
+    <string name="tutStep7Title">Skapa ett rum - 4</string>
     <string name="tutStep8Text">Visa möbelkatalogen genom att trycka på pilen.</string>
     <string name="tutStep8Title">Lägg till en stol - 1</string>
     <string name="tutStep9Text">Långt tryck på en stol, och det kommer att läggas till din plan.</string>
