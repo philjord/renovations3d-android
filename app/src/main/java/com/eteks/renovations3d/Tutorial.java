@@ -149,15 +149,22 @@ public class Tutorial
 			activity.getAdMobManager().hide();
 
 			// restart if ended
-			if( currentStep instanceof TutorialStepFinish)
+			if (currentStep instanceof TutorialStepFinish)
 			{
 				tutorialSteps[0].stepStarted(false);
 			}
+
+			if (currentStep != null && currentStep.id > 0)
+				Renovations3DActivity.logFireBaseContent("Tutorial redisplayed");
+			else
+				Renovations3DActivity.logFireBaseContent("Tutorial started");
+
 		}
 		else
 		{
 			view.setVisibility(View.GONE);
 			activity.getAdMobManager().show();
+			Renovations3DActivity.logFireBaseContent("Tutorial hidden");
 		}
 
 		SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
@@ -331,7 +338,7 @@ public class Tutorial
 		{
 			completed = true;
 			// note firebase kills this to a-z style names so id is better
-			Renovations3DActivity.logFireBaseContent("Completed tutorial step - " + this.id);
+			Renovations3DActivity.logFireBaseContent("Tutorial step completed  - " + this.id);
 			skip(true);
 		}
 
@@ -341,6 +348,7 @@ public class Tutorial
 	private class TutorialStep0 extends TutorialStep
 	{
 		private Point2D firstMoveLocation = null;
+
 		@Override
 		public void stepStarted(boolean showWellDone)
 		{
@@ -348,7 +356,7 @@ public class Tutorial
 			skipButton.setEnabled(false);// force them to move the plan
 			prevButton.setEnabled(false);
 
-			String title = activity.getString(R.string.tutStep0Title);			
+			String title = activity.getString(R.string.tutStep0Title);
 			String text = activity.getString(R.string.tutStep0Text);
 			int vidId = R.raw.tut0edit_edit;
 
@@ -362,11 +370,13 @@ public class Tutorial
 		{
 			// this should never be called
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
 			// not used as the position data is required
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction, Object data)
 		{
@@ -389,10 +399,11 @@ public class Tutorial
 	{
 		@Override
 		public void stepStarted(boolean showWellDone)
-		{			
+		{
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep1Title), activity.getString(R.string.tutStep1Text), R.raw.tut1edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -411,6 +422,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep2Title), activity.getString(R.string.tutStep2Text), R.raw.tut2edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -432,6 +444,7 @@ public class Tutorial
 			configureUI(activity.getString(R.string.tutStep3Title), activity.getString(R.string.tutStep3Text), R.raw.tut3edit_edit, showWellDone);
 			wallsPlacedInThisStep = 0;
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -454,6 +467,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep4Title), activity.getString(R.string.tutStep4Text), R.raw.tut4edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -472,6 +486,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep5Title), activity.getString(R.string.tutStep5Text), R.raw.tut5edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -490,6 +505,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep6Title), activity.getString(R.string.tutStep6Text), R.raw.tut6edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -508,6 +524,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep7Title), activity.getString(R.string.tutStep7Text), R.raw.tut7edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -526,6 +543,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep8Title), activity.getString(R.string.tutStep8Text), R.raw.tut8edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -544,6 +562,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep9Title), activity.getString(R.string.tutStep9Text), R.raw.tut9edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -568,11 +587,13 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep10Title), activity.getString(R.string.tutStep10Text), R.raw.tut10edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
 			// not used as the position data is required
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction, Object data)
 		{
@@ -618,6 +639,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep11Title), activity.getString(R.string.tutStep11Text), R.raw.tut11edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -638,11 +660,13 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep12Title), activity.getString(R.string.tutStep12Text), R.raw.tut12edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
 			// not used as the position data is required
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction, Object data)
 		{
@@ -666,6 +690,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep13Title), activity.getString(R.string.tutStep13Text), R.raw.tut13edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -684,6 +709,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep14Title), activity.getString(R.string.tutStep14Text), R.raw.tut14edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -702,11 +728,13 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep15Title), activity.getString(R.string.tutStep15Text), R.raw.tut15edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
 			// not used as the data is required
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction, Object data)
 		{
@@ -729,6 +757,7 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep16Title), activity.getString(R.string.tutStep16Text), R.raw.tut16edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
@@ -752,11 +781,13 @@ public class Tutorial
 			super.stepStarted(showWellDone);
 			configureUI(activity.getString(R.string.tutStep17Title), activity.getString(R.string.tutStep17Text), R.raw.tut17edit_edit, showWellDone);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
 			// not used as the position data is required
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction, Object data)
 		{
@@ -806,12 +837,14 @@ public class Tutorial
 				}
 			});
 		}
+
 		@Override
 		public void skip(boolean showWellDone)
 		{
 			//all done hide, note false not showWellDone
 			Tutorial.this.setEnable(false);
 		}
+
 		@Override
 		public void actionComplete(TutorialAction tutorialAction)
 		{
