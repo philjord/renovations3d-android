@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
-
 import java.util.ArrayList;
 
 /**
@@ -21,7 +19,7 @@ public class JTabbedPane
 	private Context context;
 	private RadioGroup radioGrp;
 	private ArrayList<RadioButton> buttons = new ArrayList<RadioButton>();
-	private ArrayList<LevelLabel> levelLabels = new ArrayList<LevelLabel>();
+	private ArrayList<Object> userObjects = new ArrayList<Object>();
 	private ChangeListener changeListener = null; //note singleton
 	private View.OnLongClickListener onLongClickListener = null; //note singleton
 
@@ -43,10 +41,10 @@ public class JTabbedPane
 	}
 
 
-	public LevelLabel getSelectedComponent()
+	public Object getSelectedComponent()
 	{
 		int checkedRadioButtonId = radioGrp.getCheckedRadioButtonId();
-		return levelLabels.get(checkedRadioButtonId);
+		return userObjects.get(checkedRadioButtonId);
 	}
 
 	public void addChangeListener(ChangeListener changeListener)
@@ -79,17 +77,17 @@ public class JTabbedPane
 	{
 		radioGrp.removeAllViews();
 		buttons.clear();
-		levelLabels.clear();
+		userObjects.clear();
 	}
 
 	public void remove(int index)
 	{
 		radioGrp.removeViewAt(index);
 		buttons.remove(index);
-		levelLabels.remove(index);
+		userObjects.remove(index);
 	}
 
-	public RadioButton insertTab(String title, Object icon, LevelLabel levelLabel, Object tooltip, int index)
+	public RadioButton insertTab(String title, Object icon, Object userObject, Object tooltip, int index)
 	{
 		RadioGroup.LayoutParams lParams = new RadioGroup.LayoutParams(
 				RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
@@ -148,7 +146,7 @@ public class JTabbedPane
 		radioGrp.addView(radioButton, index, lParams);
 
 		buttons.add(index, radioButton);
-		levelLabels.add(index, levelLabel);
+		userObjects.add(index, userObject);
 
 		// the setselected come through too late, so let's just auto selct anything that is added
 		// I don;t know why the listeners in multilevel are set in proper order.
@@ -157,14 +155,14 @@ public class JTabbedPane
 		return radioButton;
 	}
 
-	public RadioButton addTab(String title, LevelLabel levelLabel)
+	public RadioButton addTab(String title, Object userObject)
 	{
-		return addTab(title, null, levelLabel, null);
+		return addTab(title, null, userObject, null);
 	}
 
-	public RadioButton addTab(String title, Object icon, LevelLabel levelLabel, Object tooltip)
+	public RadioButton addTab(String title, Object icon, Object userObject, Object tooltip)
 	{
-		return insertTab(title, icon, levelLabel, tooltip, buttons.size());
+		return insertTab(title, icon, userObject, tooltip, buttons.size());
 	}
 
 	public void repaint()
