@@ -9,7 +9,7 @@
     >
 
 
-    <com.eteks.renovations3d.android.utils.DrawableView
+    <com.eteks.renovations3d.android.swingish.JComponent.DrawableView
         android:id="@+id/drawableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

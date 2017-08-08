@@ -1,33 +1,26 @@
 package com.eteks.renovations3d.android.swingish;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
+import android.util.AttributeSet;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
-import android.widget.TextView;
-
-import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.SwingTools;
-import com.eteks.renovations3d.android.utils.DrawableView;
-import com.eteks.sweethome3d.model.UserPreferences;
-import com.mindblowing.renovations3d.R;
 
 import javaawt.Color;
 import javaawt.Font;
 import javaawt.Graphics;
+import javaawt.Graphics2D;
 import javaawt.Image;
 import javaawt.Insets;
 import javaawt.Rectangle;
 import javaawt.VMFont;
-import javaawt.geom.Rectangle2D;
+import javaawt.VMGraphics2D;
 import javaawt.image.ImageObserver;
 
 /**
@@ -216,6 +209,65 @@ public abstract class JComponent extends Fragment implements ImageObserver
 			fontSizingPaint.setTypeface((Typeface) f.getDelegate());
 			Paint.FontMetrics fontMetrics = fontSizingPaint.getFontMetrics();
 			return fontMetrics;
+		}
+	}
+
+	//http://stackoverflow.com/questions/24890900/using-a-custom-surfaceview-and-thread-for-android-game-programming-example
+	public static class DrawableView extends SurfaceView implements SurfaceHolder.Callback
+	{
+		private SurfaceHolder holder;
+		private JComponent drawer = null;
+
+		public DrawableView(Context context, AttributeSet attrs)
+		{
+			super(context, attrs);
+			holder = getHolder();
+
+			holder.addCallback(this);
+		}
+
+
+		@Override
+		public void surfaceCreated(SurfaceHolder holder)
+		{
+			setWillNotDraw(false);
+		}
+
+		@Override
+		// This is always called at least once, after surfaceCreated
+		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+		{
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder)
+		{
+
+		}
+
+		public void setDrawer(JComponent c)
+		{
+			drawer = c;
+		}
+
+		private Canvas previousCanvas = null;
+		private VMGraphics2D previousVMGraphics2D = null;
+		@Override
+		protected void onDraw(Canvas canvas)
+		{
+			super.onDraw(canvas);
+			if (drawer != null)
+			{
+				Graphics2D g = new VMGraphics2D(canvas);
+				drawer.paintComponent(g);
+				g.dispose();
+			}
+		}
+
+		public Insets getInsets()
+		{
+			Insets insets = new Insets(this.getPaddingLeft(), this.getPaddingRight(), this.getPaddingTop(), this.getPaddingBottom());
+			return insets;
 		}
 	}
 }

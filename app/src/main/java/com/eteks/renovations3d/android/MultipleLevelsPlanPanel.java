@@ -24,9 +24,8 @@ import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.ChangeListener;
 import com.eteks.renovations3d.android.swingish.JComponent;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
-import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
+import com.eteks.renovations3d.android.utils.WelcomeDialog;
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -149,7 +148,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			// this gets called heaps of time, wait until we have an activity
 			if (getActivity() != null)
 			{
-				JOptionPane.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_planview, preferences);
+				WelcomeDialog.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_planview, preferences);
 			}
 
 			resetToSelectTool = true;
@@ -954,12 +953,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				}
 			}
 		});
+
+		//FIXME: removed as broken badly!!!this only happens at start of room drawing not at the end
+		// A cancel acutally does a delete, so my actual hook into this is the state true/false one
 		// auto reset for rooms creates
-		home.addRoomsListener(new CollectionListener<Room>()
+/*		home.addRoomsListener(new CollectionListener<Room>()
 		{
 			@Override
 			public void collectionChanged(CollectionEvent<Room> collectionEvent)
 			{
+
 				if (planController.getMode() == PlanController.Mode.ROOM_CREATION)
 				{
 					// run this code after everything has finished in the controller (invoke later)
@@ -972,10 +975,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 							setMode(PlanController.Mode.SELECTION);
 							resetToolSpinnerToMode();
 						}
-					});
+				});
 				}
 			}
-		});
+		});*/
 
 
 		//tutorial listener

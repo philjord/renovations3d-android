@@ -36,8 +36,8 @@ import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
 import com.eteks.renovations3d.android.swingish.ItemListener;
 import com.eteks.renovations3d.android.swingish.JComboBox;
 import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
 import com.eteks.renovations3d.android.swingish.JTextField;
+import com.eteks.renovations3d.android.utils.WelcomeDialog;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
@@ -193,7 +193,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		// this gets called heaps of time, wat until we have an activity
 		if (isVisibleToUser && getActivity() != null)
 		{
-			JOptionPane.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_catalogview, preferences);
+			WelcomeDialog.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_catalogview, preferences);
 
 			// tell the tutorial we've been shown
 			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_CATALOG_SHOWN);

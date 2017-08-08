@@ -37,7 +37,6 @@ import android.view.ViewGroup;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.swingish.JViewPort;
-import com.eteks.renovations3d.android.utils.DrawableView;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.TextureManager;

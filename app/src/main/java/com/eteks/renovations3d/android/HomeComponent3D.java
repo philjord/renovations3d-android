@@ -129,7 +129,7 @@ import jogamp.newt.driver.android.NewtBaseFragment;
 import jogamp.newt.driver.android.WindowDriver;
 
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
-import static com.eteks.renovations3d.android.swingish.JOptionPane.possiblyShowWelcomeScreen;
+import static com.eteks.renovations3d.android.utils.WelcomeDialog.possiblyShowWelcomeScreen;
 
 
 
