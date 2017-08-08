@@ -34,6 +34,11 @@ public class EdgeViewPager extends ViewPager
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		//see https://github.com/chrisbanes/PhotoView/issues/31
+
+		if (getCurrentItem() == 0 && getChildCount() == 0) {
+			return false;
+		}
+
 		try {
 			return super.onTouchEvent(ev);
 		} catch (IllegalArgumentException ex) {
@@ -45,6 +50,10 @@ public class EdgeViewPager extends ViewPager
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev)
 	{
+		if (getCurrentItem() == 0 && getChildCount() == 0) {
+			return false;
+		}
+
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
 		if (action == MotionEvent.ACTION_DOWN)
