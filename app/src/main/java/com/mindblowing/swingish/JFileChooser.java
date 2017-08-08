@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.eteks.renovations3d.Renovations3DActivity;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
@@ -42,6 +40,12 @@ public class JFileChooser
 	private FileFilter fileFilter = null;
 
 	private FileSelectedListener fileListener;
+
+	private static FolderReviewer folderReviewer;
+	public static void setFolderReviewer(FolderReviewer folderReviewer)
+	{
+		JFileChooser.folderReviewer = folderReviewer;
+	}
 
 	/**
 	 * MUST be on a thread with Looper called
@@ -121,16 +125,10 @@ public class JFileChooser
 
 
 
-		if (startFolder == null)
+		if(folderReviewer != null)
 		{
-			startFolder = Renovations3DActivity.downloadsLocation;
+			startFolder = folderReviewer.reviewFolder(startFolder);
 		}
-		else if (startFolder.getAbsolutePath().contains(Renovations3DActivity.CURRENT_WORK_FILENAME))
-		{
-			// extra care in case the caller is trying to use a app cache file location, which is invalid
-			startFolder = Renovations3DActivity.downloadsLocation;
-		}
-
 
 		if (startFolder.isFile())
 		{
@@ -251,9 +249,9 @@ public class JFileChooser
 	private void refresh(File path)
 	{
 		// in case of a locked up situation just attempt to go back to the downloads folder
-		if (currentPath == null)
+		if(currentPath == null && folderReviewer != null)
 		{
-			currentPath = Renovations3DActivity.downloadsLocation;
+			currentPath = folderReviewer.reviewFolder(currentPath);
 		}
 
 		// note downloads might be returning null
@@ -405,5 +403,11 @@ public class JFileChooser
 	public interface FileSelectedListener
 	{
 		void fileSelected(File file);
+	}
+
+
+	public interface FolderReviewer
+	{
+		File reviewFolder(File folder);
 	}
 }

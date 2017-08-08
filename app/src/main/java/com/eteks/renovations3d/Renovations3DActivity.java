@@ -983,6 +983,24 @@ public class Renovations3DActivity extends FragmentActivity
 		writeExternalStorageGranted = true;
 		downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
+		JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer()
+		{
+			@Override
+			public File reviewFolder(File folder)
+			{
+				if (folder == null)
+				{
+					folder = downloadsLocation;
+				}
+				else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME))
+				{
+					// extra care in case the caller is trying to use a app cache file location, which is invalid
+					folder = downloadsLocation;
+				}
+				return folder;
+			}
+		});
+
 		//possibly the ext is not mounted
 		if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
 		{
