@@ -9,7 +9,7 @@
     >
 
 
-    <com.mindblowing.swingish.JComponent.DrawableView
+    <view class="com.mindblowing.swingish.JComponent$DrawableView"
         android:id="@+id/drawableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
