@@ -534,7 +534,7 @@ public class FileUserPreferences extends UserPreferences {
                 // Delete default furniture of current furniture catalog          
                 for (FurnitureCategory category : furnitureCatalog.getCategories()) {
                   for (CatalogPieceOfFurniture piece : category.getFurniture()) {
-                    if (!piece.isModifiable()) {
+                    if (piece != null && !piece.isModifiable()) {
                       furnitureCatalog.delete(piece);
                     }
                   }
@@ -599,7 +599,7 @@ public class FileUserPreferences extends UserPreferences {
                 // Delete default textures of current textures catalog          
                 for (TexturesCategory category : texturesCatalog.getCategories()) {
                   for (CatalogTexture texture : category.getTextures()) {
-                    if (!texture.isModifiable()) {
+                    if (texture != null && !texture.isModifiable()) {
                       texturesCatalog.delete(texture);
                     }
                   }
@@ -948,7 +948,7 @@ public class FileUserPreferences extends UserPreferences {
 		//PJ I got a NPE when changeing language here once
 	if(category != null)
       for (CatalogPieceOfFurniture piece : category.getFurniture()) {
-        if (piece.isModifiable()) {
+        if (piece != null && piece.isModifiable()) {
           preferences.put(FURNITURE_NAME + i, piece.getName());
           preferences.put(FURNITURE_CATEGORY + i, category.getName());
           putContent(preferences, FURNITURE_ICON + i, piece.getIcon(), 
@@ -1026,7 +1026,7 @@ public class FileUserPreferences extends UserPreferences {
     int i = 1;
     for (TexturesCategory category : getTexturesCatalog().getCategories()) {
       for (CatalogTexture texture : category.getTextures()) {
-        if (texture.isModifiable()) {
+        if (texture != null && texture.isModifiable()) {
           preferences.put(TEXTURE_NAME + i, texture.getName());
           preferences.put(TEXTURE_CATEGORY + i, category.getName());
           putContent(preferences, TEXTURE_IMAGE + i, texture.getImage(), 
