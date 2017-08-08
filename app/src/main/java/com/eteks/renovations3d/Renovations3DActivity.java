@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.renovations3d.utils.SopInterceptor;
+import com.mindblowing.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;

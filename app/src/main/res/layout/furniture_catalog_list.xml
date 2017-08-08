@@ -16,7 +16,7 @@
 
         <TableRow>
 
-            <com.eteks.renovations3d.utils.HorizontalFlowLayout
+            <com.mindblowing.utils.HorizontalFlowLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Search"
                     />
-            </com.eteks.renovations3d.utils.HorizontalFlowLayout>
+            </com.mindblowing.utils.HorizontalFlowLayout>
         </TableRow>
 
         <TableRow>

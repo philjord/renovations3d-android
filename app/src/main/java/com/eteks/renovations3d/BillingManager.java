@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.eteks.renovations3d.billing.util.IabHelper.BILLING_RESPONSE_RESULT_OK;
+import static com.mindblowing.billing.util.IabHelper.BILLING_RESPONSE_RESULT_OK;
 
 /**
  * Created by phil on 5/15/2017.

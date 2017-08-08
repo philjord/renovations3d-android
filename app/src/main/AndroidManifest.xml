@@ -139,7 +139,7 @@
         </activity>
 
         <activity
-            android:name="com.eteks.renovations3d.utils.JoglStatusActivity"
+            android:name="com.mindblowing.j3d.utils.JoglStatusActivity"
             android:label="@string/app_name"/>
     </application>
 </manifest>

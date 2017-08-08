@@ -37,7 +37,7 @@ import org.jogamp.java3d.utils.universe.ViewingPlatform;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.eteks.renovations3d.utils.Canvas3D2D;
+import com.mindblowing.j3d.utils.Canvas3D2D;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jogamp.newt.opengl.GLWindow;
 
