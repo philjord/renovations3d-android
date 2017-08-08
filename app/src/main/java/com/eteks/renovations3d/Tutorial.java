@@ -330,7 +330,8 @@ public class Tutorial
 		protected void completed()
 		{
 			completed = true;
-			Renovations3DActivity.logFireBaseContent("Completed : " + this.getClass().getSimpleName());
+			// note firebase kills this to a-z style names so id is better
+			Renovations3DActivity.logFireBaseContent("Completed tutorial step - " + this.id);
 			skip(true);
 		}
 
