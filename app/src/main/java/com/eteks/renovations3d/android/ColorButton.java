@@ -27,12 +27,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.SpannedString;
 import android.text.style.ImageSpan;
-import android.view.ViewGroup;
 
-import com.eteks.renovations3d.android.swingish.ActionListener;
-import com.eteks.renovations3d.android.swingish.JButton;
+import com.mindblowing.swingish.ActionListener;
+import com.mindblowing.swingish.JButton;
 import com.eteks.sweethome3d.model.UserPreferences;
 
 import java.beans.PropertyChangeEvent;

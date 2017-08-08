@@ -11,8 +11,7 @@ import android.widget.TextView;
 
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel.LevelLabel;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.mindblowing.renovations3d.R;
+import com.mindblowing.swingish.ChangeListener;
 
 import java.util.ArrayList;
 

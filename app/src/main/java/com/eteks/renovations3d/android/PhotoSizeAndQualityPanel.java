@@ -24,7 +24,6 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
@@ -32,17 +31,16 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 
 
-import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
-import com.eteks.renovations3d.android.swingish.ItemListener;
-import com.eteks.renovations3d.android.swingish.JCheckBox;
-import com.eteks.renovations3d.android.swingish.JComboBox;
-import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JPanel;
-import com.eteks.renovations3d.android.swingish.JSlider;
-import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
-import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.mindblowing.swingish.ChangeListener;
+import com.mindblowing.swingish.DefaultComboBoxModel;
+import com.mindblowing.swingish.ItemListener;
+import com.mindblowing.swingish.JCheckBox;
+import com.mindblowing.swingish.JComboBox;
+import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JPanel;
+import com.mindblowing.swingish.JSlider;
+import com.mindblowing.swingish.JSpinner;
+import com.mindblowing.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.model.AspectRatio;
 import com.eteks.sweethome3d.model.Home;

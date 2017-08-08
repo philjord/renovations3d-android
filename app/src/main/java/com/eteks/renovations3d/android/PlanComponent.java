@@ -36,7 +36,7 @@ import android.view.ViewGroup;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
-import com.eteks.renovations3d.android.swingish.JViewPort;
+import com.mindblowing.swingish.JViewPort;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.TextureManager;
@@ -71,7 +71,7 @@ import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
-import com.eteks.renovations3d.android.swingish.JComponent;
+import com.mindblowing.swingish.JComponent;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.mindblowing.renovations3d.R;
 

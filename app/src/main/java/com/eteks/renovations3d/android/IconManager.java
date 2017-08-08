@@ -31,8 +31,7 @@ import javaawt.image.BufferedImage;
 		import java.io.IOException;
 		import java.io.InputStream;
 		import java.util.Collections;
-		import java.util.HashMap;
-		import java.util.Map;
+import java.util.Map;
 		import java.util.WeakHashMap;
 		import java.util.concurrent.ExecutorService;
 
@@ -42,7 +41,7 @@ import javaawt.imageio.ImageIO;
 
 		import com.eteks.sweethome3d.model.Content;
 		import com.eteks.sweethome3d.tools.ResourceURLContent;
-import com.eteks.renovations3d.android.swingish.JComponent;
+import com.mindblowing.swingish.JComponent;
 
 /**
  * Singleton managing icons cache.

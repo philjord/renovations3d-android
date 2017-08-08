@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
 /**
  * Created by phil on 1/1/2017.

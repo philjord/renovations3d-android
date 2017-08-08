@@ -26,7 +26,7 @@ import android.content.DialogInterface;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.eteks.renovations3d.android.swingish.JLabel;
+import com.mindblowing.swingish.JLabel;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskView;

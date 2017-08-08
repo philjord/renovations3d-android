@@ -1,13 +1,8 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.support.v4.content.ContextCompat;
-import android.view.MenuItem;
 import android.widget.CompoundButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**

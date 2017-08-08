@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
+import com.mindblowing.swingish.JOptionPane;
 import com.eteks.renovations3d.utils.InfoText3D;
 import com.eteks.renovations3d.utils.JoglStatusActivity;
 import com.eteks.sweethome3d.j3d.Ground3D;

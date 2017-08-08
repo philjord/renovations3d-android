@@ -1,4 +1,4 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
 import android.app.Activity;
 import android.view.View;

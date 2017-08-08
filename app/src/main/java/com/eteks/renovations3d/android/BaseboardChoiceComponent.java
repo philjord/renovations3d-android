@@ -21,13 +21,13 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 
-import com.eteks.renovations3d.android.swingish.ButtonGroup;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.eteks.renovations3d.android.swingish.JButton;
-import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JPanel;
-import com.eteks.renovations3d.android.swingish.JRadioButton;
-import com.eteks.renovations3d.android.swingish.JSpinner;
+import com.mindblowing.swingish.ButtonGroup;
+import com.mindblowing.swingish.ChangeListener;
+import com.mindblowing.swingish.JButton;
+import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JPanel;
+import com.mindblowing.swingish.JRadioButton;
+import com.mindblowing.swingish.JSpinner;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.View;

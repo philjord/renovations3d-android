@@ -22,8 +22,8 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.eteks.renovations3d.android.swingish.JComponent;
+import com.mindblowing.swingish.ChangeListener;
+import com.mindblowing.swingish.JComponent;
 import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
 import com.eteks.renovations3d.android.utils.WelcomeDialog;
 import com.eteks.sweethome3d.model.BackgroundImage;

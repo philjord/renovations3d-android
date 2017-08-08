@@ -4,7 +4,7 @@ package com.eteks.renovations3d.android;
  * Created by phil on 3/20/2017.
  */
 
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.mindblowing.swingish.SpinnerNumberModel;
 
 /**
  * A spinner number model that will reset to minimum when maximum is reached.

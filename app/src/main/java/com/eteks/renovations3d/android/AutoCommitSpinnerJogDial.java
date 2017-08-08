@@ -22,8 +22,8 @@ package com.eteks.renovations3d.android;
 import android.content.Context;
 
 
-import com.eteks.renovations3d.android.swingish.JSpinnerJogDial;
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.mindblowing.swingish.JSpinnerJogDial;
+import com.mindblowing.swingish.SpinnerNumberModel;
 
 
 

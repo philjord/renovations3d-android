@@ -3,14 +3,13 @@ package com.eteks.renovations3d.android.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Configuration;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
 import com.eteks.renovations3d.android.SwingTools;
-import com.eteks.renovations3d.android.swingish.JButton;
+import com.mindblowing.swingish.JButton;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 

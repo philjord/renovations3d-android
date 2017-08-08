@@ -33,7 +33,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.eteks.renovations3d.android.swingish.JFileChooser;
+import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.renovations3d.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;

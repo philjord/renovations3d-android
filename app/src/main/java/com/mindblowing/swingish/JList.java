@@ -1,16 +1,9 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.eteks.renovations3d.android.TextureChoiceComponent;
-import com.eteks.sweethome3d.model.CatalogTexture;
 
 import java.util.List;
 

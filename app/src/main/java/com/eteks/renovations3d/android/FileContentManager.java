@@ -20,12 +20,10 @@
 package com.eteks.renovations3d.android;
 
 import android.content.DialogInterface;
-import android.os.Environment;
 import android.os.Looper;
 
 import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.swingish.JComponent;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
+import com.mindblowing.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.eteks.sweethome3d.model.UserPreferences;
@@ -33,7 +31,7 @@ import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.View;
-import com.eteks.renovations3d.android.swingish.JFileChooser;
+import com.mindblowing.swingish.JFileChooser;
 
 import java.io.File;
 import java.io.FileFilter;

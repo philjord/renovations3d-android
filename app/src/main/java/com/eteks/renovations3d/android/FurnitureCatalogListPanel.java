@@ -32,11 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Tutorial;
-import com.eteks.renovations3d.android.swingish.DefaultComboBoxModel;
-import com.eteks.renovations3d.android.swingish.ItemListener;
-import com.eteks.renovations3d.android.swingish.JComboBox;
-import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JTextField;
+import com.mindblowing.swingish.DefaultComboBoxModel;
+import com.mindblowing.swingish.ItemListener;
+import com.mindblowing.swingish.JComboBox;
+import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.WelcomeDialog;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.CollectionEvent;
@@ -53,7 +53,7 @@ import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 
 import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.swingish.JComponent;
+import com.mindblowing.swingish.JComponent;
 import com.mindblowing.renovations3d.R;
 
 import java.beans.PropertyChangeEvent;

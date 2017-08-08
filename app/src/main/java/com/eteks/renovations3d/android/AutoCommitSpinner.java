@@ -21,8 +21,8 @@ package com.eteks.renovations3d.android;
 
 import android.content.Context;
 
-import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.mindblowing.swingish.JSpinner;
+import com.mindblowing.swingish.SpinnerNumberModel;
 
 import java.text.Format;
 

@@ -26,12 +26,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.eteks.renovations3d.android.swingish.ButtonGroup;
-import com.eteks.renovations3d.android.swingish.ChangeListener;
-import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JRadioButton;
-import com.eteks.renovations3d.android.swingish.JSpinner;
-import com.eteks.renovations3d.android.swingish.JTextField;
+import com.mindblowing.swingish.ButtonGroup;
+import com.mindblowing.swingish.ChangeListener;
+import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JRadioButton;
+import com.mindblowing.swingish.JSpinner;
+import com.mindblowing.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;

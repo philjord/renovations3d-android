@@ -21,14 +21,13 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.view.Window;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.eteks.renovations3d.android.swingish.ActionListener;
-import com.eteks.renovations3d.android.swingish.JButton;
-import com.eteks.renovations3d.android.swingish.JPanel;
+import com.mindblowing.swingish.ActionListener;
+import com.mindblowing.swingish.JButton;
+import com.mindblowing.swingish.JPanel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;

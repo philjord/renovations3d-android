@@ -1,6 +1,6 @@
 package com.eteks.renovations3d.android;
 
-import com.eteks.renovations3d.android.swingish.SpinnerNumberModel;
+import com.mindblowing.swingish.SpinnerNumberModel;
 import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.UserPreferences;
 

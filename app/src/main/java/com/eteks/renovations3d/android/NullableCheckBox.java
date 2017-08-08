@@ -2,7 +2,7 @@ package com.eteks.renovations3d.android;
 
 import android.content.Context;
 
-import com.eteks.renovations3d.android.swingish.JCheckBox;
+import com.mindblowing.swingish.JCheckBox;
 
 /**
  * Created by phil on 2/1/2017.

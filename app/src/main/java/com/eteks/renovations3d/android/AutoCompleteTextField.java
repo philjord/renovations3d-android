@@ -1,9 +1,8 @@
 package com.eteks.renovations3d.android;
 
 import android.content.Context;
-import android.widget.EditText;
 
-import com.eteks.renovations3d.android.swingish.JTextField;
+import com.mindblowing.swingish.JTextField;
 
 import java.util.List;
 

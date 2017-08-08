@@ -1,12 +1,10 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Environment;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;

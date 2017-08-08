@@ -1,24 +1,17 @@
-package com.eteks.renovations3d.android.swingish;
+package com.mindblowing.swingish;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.SwingTools;
-import com.eteks.sweethome3d.model.UserPreferences;
 
 import org.xml.sax.XMLReader;
 
@@ -26,8 +19,6 @@ import java.util.concurrent.Semaphore;
 
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
-
-import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 
 
 /**

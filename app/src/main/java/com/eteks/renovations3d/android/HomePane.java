@@ -64,9 +64,9 @@ import javaxswing.ImageIcon;
 
 
 import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.swingish.JComboBox;
-import com.eteks.renovations3d.android.swingish.JLabel;
-import com.eteks.renovations3d.android.swingish.JTextField;
+import com.mindblowing.swingish.JComboBox;
+import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JTextField;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.OBJWriter;
 import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
@@ -86,10 +86,10 @@ import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController.Mode;
-import com.eteks.renovations3d.android.swingish.JComponent;
-import com.eteks.renovations3d.android.swingish.JOptionPane;
+import com.mindblowing.swingish.JComponent;
+import com.mindblowing.swingish.JOptionPane;
 
-import static com.eteks.renovations3d.android.swingish.JOptionPane.showOptionDialog;
+import static com.mindblowing.swingish.JOptionPane.showOptionDialog;
 
 import com.mindblowing.renovations3d.R;
 

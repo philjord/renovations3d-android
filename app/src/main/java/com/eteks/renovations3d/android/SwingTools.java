@@ -23,11 +23,10 @@ package com.eteks.renovations3d.android;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.media.ImageReader;
 import android.view.View;
 
-import com.eteks.renovations3d.android.swingish.JComponent;
-import com.eteks.renovations3d.android.swingish.JRadioButton;
+import com.mindblowing.swingish.JComponent;
+import com.mindblowing.swingish.JRadioButton;
 import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.model.TextureImage;
@@ -38,7 +37,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
