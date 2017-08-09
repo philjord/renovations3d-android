@@ -293,19 +293,19 @@ public class Renovations3DActivity extends FragmentActivity
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.main);
-
-		this.imageAcquireManager = new ImageAcquireManager(this);
-		// set up billing manager will call back adsmanager once connected
-		this.billingManager = new BillingManager(this);
-		this.adMobManager = new AdMobManager(this);
-
 		// Obtain the FirebaseAnalytics instance.
 		if (!BuildConfig.DEBUG)
 		{
 			mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 		}
 
+		setContentView(R.layout.main);
+
+		this.imageAcquireManager = new ImageAcquireManager(this);
+		// set up billing manager will call back adsmanager once connected
+		this.billingManager = new BillingManager(this);
+		this.adMobManager = new AdMobManager(this);
+		this.tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
 
 		ActionBar actionBar = getActionBar();
 		//actionBar.setDisplayHomeAsUpEnabled(true);
@@ -1014,7 +1014,7 @@ public class Renovations3DActivity extends FragmentActivity
 	private void loadUpContent()
 	{
 
-		tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
+
 
 		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()

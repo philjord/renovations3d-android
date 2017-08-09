@@ -954,16 +954,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		//FIXME: removed as broken badly!!!this only happens at start of room drawing not at the end
-		// A cancel acutally does a delete, so my actual hook into this is the state true/false one
-		// auto reset for rooms creates
-/*		home.addRoomsListener(new CollectionListener<Room>()
+		// auto reset for room creates
+		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new  PropertyChangeListener()
 		{
 			@Override
-			public void collectionChanged(CollectionEvent<Room> collectionEvent)
+			public void propertyChange(PropertyChangeEvent evt)
 			{
-
-				if (planController.getMode() == PlanController.Mode.ROOM_CREATION)
+				if (planController.getMode() == PlanController.Mode.ROOM_CREATION &&
+						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
 				{
 					// run this code after everything has finished in the controller (invoke later)
 					Handler h = new Handler();
@@ -975,10 +973,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 							setMode(PlanController.Mode.SELECTION);
 							resetToolSpinnerToMode();
 						}
-				});
+					});
 				}
 			}
-		});*/
+		});
 
 
 		//tutorial listener
@@ -987,12 +985,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			@Override
 			public void propertyChange(PropertyChangeEvent evt)
 			{
-				if (((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
+				if (planController.getMode() == PlanController.Mode.WALL_CREATION &&
+						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
 				{
-					if (planController.getMode() == PlanController.Mode.WALL_CREATION)
-					{
-						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_CREATION_FINISHED);
-					}
+					((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_CREATION_FINISHED);
 				}
 			}
 		});
@@ -1010,7 +1006,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-
 		//tutorial listener
 		home.addRoomsListener(new CollectionListener<Room>()
 		{
@@ -1024,6 +1019,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
+		//tutorial listener
 		final PropertyChangeListener furnitureChangeListener =
 				new PropertyChangeListener () {
 					public void propertyChange(PropertyChangeEvent ev) {
@@ -1031,6 +1027,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_UPDATED, piece);
 					}
 				};
+
 		//tutorial listener
 		home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>()
 		{
@@ -1059,9 +1056,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-
-
 	}
+
 
 	/**
 	 * Creates and returns the main plan component displayed and layout by this component.
