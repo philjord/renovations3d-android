@@ -242,6 +242,8 @@ public class Tutorial
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putInt(PREF_TUTORIAL_CURRENT_STEP, id);
 			editor.apply();
+
+			Renovations3DActivity.logFireBaseContent("Tutorial step displayed  - " + this.id);
 		}
 
 		public abstract void actionComplete(TutorialAction tutorialAction);
