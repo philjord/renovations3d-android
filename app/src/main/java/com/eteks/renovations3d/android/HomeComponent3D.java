@@ -63,6 +63,7 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
+import com.mindblowing.utils.LongHoldHandler;
 
 import org.jogamp.java3d.Alpha;
 import org.jogamp.java3d.AmbientLight;
@@ -160,7 +161,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private HomeComponent3DMouseHandler homeComponent3DMouseHandler;
 	private ScaleGestureDetector mScaleDetector;
-	private LongHoldHandler longHoldHandler;
+
 
 	private Menu mOptionsMenu;
 
@@ -1765,10 +1766,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				}
 			});
 		}
-		if(getView() != null)
-		{
-			longHoldHandler = new LongHoldHandler(getView().getResources().getDisplayMetrics());
-		}
+
 	}
 
 
@@ -1800,73 +1798,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			return true;
 		}
 	}
-	private class LongHoldHandler implements android.view.View.OnTouchListener
-	{
-		private int JITTER_DP = 10;
-		private int maxJitter = 10;
-		private Handler handler = new Handler();
-		public boolean pushingDown = false;
-		private float xFirstMouseDown = -1;
-		private float yFirstMouseDown = -1;
 
-		public LongHoldHandler(DisplayMetrics mDisplayMetrics)
-		{
-			final float scale = mDisplayMetrics.density;
-			maxJitter = (int) (JITTER_DP * scale + 0.5f);
-		}
-		private Runnable repeater = new Runnable() {
-			@Override
-			public void run() {
-				// make sure the long hold is still running
-				if (pushingDown) {
-					controller.moveCamera(10);
-					handler.postDelayed(this, 100);
-				}
-			}
-		};
-		@Override
-		public boolean onTouch(android.view.View v, MotionEvent ev)
-		{
-			final int action = MotionEventCompat.getActionMasked(ev);
-
-			switch (action & MotionEvent.ACTION_MASK)
-			{
-				case MotionEvent.ACTION_DOWN:
-				{
-					if (ev.getPointerCount() == 1)
-					{
-						if(!pushingDown)
-						{
-							pushingDown = true;
-							xFirstMouseDown = ev.getX();
-							yFirstMouseDown = ev.getY();
-							handler.postDelayed(repeater, 750);// real long to get out of single and double tap times
-
-							// don't consume the event as taps etc need it as well.
-							return false;
-						}
-					}
-				}
-				case MotionEvent.ACTION_MOVE:
-				{
-					// we want to consume jitters as we are running
-					if (ev.getPointerCount() == 1)
-					{
-						if(pushingDown)
-						{
-							if( Math.abs(xFirstMouseDown - ev.getX()) < maxJitter
-								&& Math.abs(yFirstMouseDown - ev.getY()) < maxJitter)
-							return true;
-
-							// other wise fall through to stop teh long hold repeats
-						}
-					}
-				}
-			}
-			pushingDown = false;
-			return false;
-		}
-	}
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
 		private static final int INVALID_POINTER_ID = -1;
@@ -1891,9 +1823,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 
 
-			//allow the long down hold to inspect it, it might consume jitters
-			if(longHoldHandler!=null && longHoldHandler.onTouch(v,  ev))
-				return true;
+
 
 			// let the selection handler have a go first, if it's working then stop there
 			// note it has a tiny waver factor, it returns false on any down ever though it will use it later

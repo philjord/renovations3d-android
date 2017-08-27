@@ -74,6 +74,7 @@ import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.mindblowing.swingish.JComponent;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.mindblowing.renovations3d.R;
+import com.mindblowing.utils.LongHoldHandler;
 
 import org.jogamp.java3d.AmbientLight;
 import org.jogamp.java3d.Appearance;
@@ -595,6 +596,15 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		throw new RuntimeException("PlanComponent isn't an on screen thing at all!");
 	}
 
+	/**
+	 * This is never on screen so getView will cause crashes
+	 * @return
+	 */
+	@Override
+	public View getView()
+	{
+		return getDrawableView();
+	}
 	@Override
 	public void setDrawableView(DrawableView dv)
 	{
@@ -1141,8 +1151,20 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    * Adds AWT mouse listeners to this component that calls back <code>controller</code> methods.
    */
   private void addMouseListeners(final PlanController controller) {
-		  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
+	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
 	  this.getDrawableView().setOnTouchListener(touchyListener);
+	  longHoldHandler = new LongHoldHandler(this.getDrawableView().getResources().getDisplayMetrics(), 750, 0,
+			  new LongHoldHandler.Callback (){
+				  public void longHoldRepeat(MotionEvent lastMotionEvent){
+					  final float x = lastMotionEvent.getX();
+					  final float y = lastMotionEvent.getY();
+					  // first two ensure a select then the final edits
+					  controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+							  1, false, false, false, false);
+					  controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+					  controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+							  2, false, false, false, false);}
+			  });
   }
 
 	/**
@@ -1154,6 +1176,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	  	return touchyListener.getLastDragLocation();
   	}
 	TouchyListener touchyListener = new TouchyListener();
+	LongHoldHandler longHoldHandler;
 	private class TouchyListener implements android.view.View.OnTouchListener
 	{
 		// what are we currently doing finger-wise
@@ -1181,6 +1204,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 			// Let the ScaleGestureDetector inspect all events.
 			mScaleDetector.onTouchEvent(ev);
+
+			if(longHoldHandler != null && longHoldHandler.onTouch(v,  ev))
+				return true;
 
 			final int action = MotionEventCompat.getActionMasked(ev);
 

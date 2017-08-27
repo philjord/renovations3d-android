@@ -27,7 +27,8 @@ public abstract class MouseOverHandler
 		{
 			pickCanvas = new PickCanvas(canvas3D, locale);
 			pickCanvas.setMode(PickInfo.PICK_GEOMETRY);
-			pickCanvas.setTolerance(0.0f);// mkae sure it's a ray not a cone
+			pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
+			pickCanvas.setTolerance(0.0f);// make sure it's a ray not a cone
 		}
 	}
 

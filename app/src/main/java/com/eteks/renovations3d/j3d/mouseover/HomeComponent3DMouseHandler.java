@@ -23,6 +23,7 @@ import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.viewcontroller.HomeController3D;
+import com.mindblowing.utils.LongHoldHandler;
 
 
 public class HomeComponent3DMouseHandler extends MouseOverHandler
@@ -52,6 +53,8 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 	private Point2f currentLocation = new Point2f();
 
+	private LongHoldHandler longHoldHandler;
+
 	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller,  Renovations3DActivity activity)
 	{
 		this.home = home;
@@ -71,6 +74,15 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 	 */
 	public boolean onTouch(android.view.View v, MotionEvent ev)
 	{
+		if(longHoldHandler == null)
+		{
+			longHoldHandler = new LongHoldHandler(v.getResources().getDisplayMetrics(), 750, 100, longHoldHandlerCallback);
+		}
+
+		//allow the long down hold to inspect it, it might consume jitters
+		if(longHoldHandler.onTouch(v,  ev))
+			return true;
+
 		if (ev.getPointerCount() == 1)
 		{
 			final int action = MotionEventCompat.getActionMasked(ev);
@@ -138,8 +150,6 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 								lastUpTime = ev.getEventTime();
 								//lastUpLocation = new Point2f(currentLocation);
 							}
-
-							pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
 
 							pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
 
@@ -227,4 +237,66 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 		//lastUpLocation = null;
 		return false;
 	}
+
+	private LongHoldHandler.Callback longHoldHandlerCallback =	new LongHoldHandler.Callback (){
+		public void longHoldRepeat(MotionEvent ev){
+			//Note mostly repeat of above code with click count==2
+			pickCanvas.setShapeLocation((int) ev.getX(), (int) ev.getY());
+
+			try
+			{
+				PickInfo pickInfo = pickCanvas.pickClosest();
+				if (pickInfo != null)
+				{
+					SceneGraphPath sg = pickInfo.getSceneGraphPath();
+					Node pickedParent = sg.getNode(sg.nodeCount() - 1);
+					Object userData = pickedParent.getUserData();
+
+					if (userData instanceof Selectable)
+					{
+						Selectable clickedSelectable = (Selectable) userData;
+						ArrayList<Selectable> items = new ArrayList<Selectable>();
+						items.add(clickedSelectable);
+
+						// this can be a very slow process let's get off the edt shall we?
+						home.setSelectedItems(items);
+						home.setAllLevelsSelection(true);
+
+
+						// Modify selected item on a double click
+						if (clickedSelectable instanceof Wall)
+						{
+							controller.modifySelectedWalls();
+						}
+						else if (clickedSelectable instanceof HomePieceOfFurniture)
+						{
+							controller.modifySelectedFurniture();
+						}
+						else if (clickedSelectable instanceof Room)
+						{
+							controller.modifySelectedRooms();
+						}
+						else if (clickedSelectable instanceof Label)
+						{
+							controller.modifySelectedLabels();
+						}
+
+						lastDownObject = clickedSelectable;
+					}
+				}
+			}
+			catch (IllegalStateException e)
+			{
+				//PJ when does this get thrown I wonder
+				e.printStackTrace();
+			}
+			catch (CapabilityNotSetException e)
+			{
+				// seen on firebase crash
+				//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/3fb14576?duration=2592000000
+				//Exception org.jogamp.java3d.CapabilityNotSetException: PickInfo: PICK_GEOMETRY mode - no capability to ALLOW_COORDINATE_READ
+				e.printStackTrace();
+			}
+		}
+	};
 }
