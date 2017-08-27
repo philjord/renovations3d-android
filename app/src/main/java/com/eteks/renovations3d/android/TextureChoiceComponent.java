@@ -24,7 +24,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -130,8 +132,15 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 			  int x = 0;
 			  int y = 0;
 			  Graphics2D g = new VMGraphics2D(canvas);
-			  g.setColor(Color.BLACK);
-			  g.drawRect(x + 2, y + 2, buttonWidth - 4, iconHeight - 4);
+			 // g.setColor(Color.BLACK);
+			 // g.drawRect(x + 2, y + 2, buttonWidth - 4, iconHeight - 4);
+
+			  Paint pp = new Paint();
+			  pp.setColor(Color.white.getRGB());
+			  pp.setShadowLayer(10.0f, 0.0f, 2.0f, 0xFF000000);
+			  RectF rectangle = new RectF(5, 5, buttonWidth - 10, iconHeight - 10);
+			  canvas.drawRoundRect (rectangle, 6, 6, pp);
+
 			  HomeTexture texture = controller.getTexture();
 			  if (texture != null) {
 				  Icon icon = IconManager.getInstance().getIcon(

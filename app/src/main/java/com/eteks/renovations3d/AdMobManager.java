@@ -16,7 +16,7 @@ import com.mindblowing.renovations3d.R;
 public class AdMobManager
 {
 	private static final boolean SUPPRESS_ADS = false;//for debug and screenshots overrides force_ads
-	private static final boolean FORCE_ADS = true;//for debug build to still have ads
+	private static final boolean FORCE_ADS = true;//for debug build to still have ads <= PREFER this one! Less dangerous
 	private Renovations3DActivity renovations3DActivity;
 	private AdView mBasicLowerBannerAdView;
 
