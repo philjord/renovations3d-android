@@ -108,5 +108,6 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="deleteCameraPosition">Törölje a kamera helyzetét</string>
     <string name="goToCameraPosition">Menj a kamera helyzetébe</string>
     <string name="tutorialWellDone">Szép munka!</string>
+    <string name="share">Ossza meg</string>
 
 </resources>

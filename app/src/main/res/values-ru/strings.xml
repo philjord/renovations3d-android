@@ -109,5 +109,6 @@
     <string name="deleteCameraPosition">Удалить позицию камеры</string>
     <string name="goToCameraPosition">Перейти к положению камеры</string>
     <string name="tutorialWellDone">Отлично сработано!</string>
+    <string name="share">Поделиться</string>
 
 </resources>

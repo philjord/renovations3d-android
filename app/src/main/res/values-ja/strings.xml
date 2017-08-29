@@ -108,5 +108,6 @@
     <string name="deleteCameraPosition">カメラの位置を削除する</string>
     <string name="goToCameraPosition">カメラの位置に移動</string>
     <string name="tutorialWellDone">よくやった！</string>
+    <string name="share">シェア</string>
 
 </resources>

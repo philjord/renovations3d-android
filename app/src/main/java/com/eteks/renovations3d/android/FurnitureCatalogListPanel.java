@@ -593,46 +593,37 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			CatalogPieceOfFurniture catalogPieceOfFurniture = (CatalogPieceOfFurniture) catalogListModel.getElementAt(position);
+			FurnitureImageView imageView;
+			if (convertView == null) {
+				// if it's not recycled, initialize some attributes
+				imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
 
+				imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx + 10, iconHeightPx + 10));
+				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				imageView.setPadding(8, 8, 8, 8);
+				imageView.setBackgroundColor(Color.WHITE);
 
-			if(catalogPieceOfFurniture != null)
-			{
-				FurnitureImageView imageView = null;
-				if (convertView == null)
+				//int DEFAULT_ICON_HEIGHT = 80;//see below
+				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
+				if (icon instanceof ImageIcon)
 				{
-					// if it's not recycled, initialize some attributes
-					imageView = new FurnitureImageView(mContext, catalogPieceOfFurniture);
+					imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+				}
 
-					imageView.setLayoutParams(new GridView.LayoutParams(iconHeightPx + 10, iconHeightPx + 10));
-					imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-					imageView.setPadding(8, 8, 8, 8);
-					imageView.setBackgroundColor(Color.WHITE);
-
-					//int DEFAULT_ICON_HEIGHT = 80;//see below
+			} else {
+				imageView = (FurnitureImageView) convertView;
+				if(imageView.getCatalogPieceOfFurniture() != catalogPieceOfFurniture)
+				{
+					imageView.setCatalogPieceOfFurniture(catalogPieceOfFurniture);
 					Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
 					if (icon instanceof ImageIcon)
 					{
 						imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
 					}
-
 				}
-				else
-				{
-					imageView = (FurnitureImageView) convertView;
-					if (imageView.getCatalogPieceOfFurniture() != catalogPieceOfFurniture)
-					{
-						imageView.setCatalogPieceOfFurniture(catalogPieceOfFurniture);
-						Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
-						if (icon instanceof ImageIcon)
-						{
-							imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
-						}
-					}
-				}
-				return imageView;
 			}
-			else
-				return new FurnitureImageView(mContext, null);
+
+			return imageView;
 		}
 
 	}
@@ -663,7 +654,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			mTextPaint.setTextSize(16);
 			mTextPaint.setFakeBoldText(true);
 			// note +5 because icon is smaller than grid size
-			if(catalogPieceOfFurniture != null)
 			canvas.drawText(catalogPieceOfFurniture.getName(), 10, iconHeightPx + 5, mTextPaint);
 		}
 	}
@@ -1382,8 +1372,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	/**
 	 * List model adaptor to CatalogPieceOfFurniture instances of catalog.
-	 * PJ NOTE!!!!!!! this class is now heavily multi threaded as the furniture catalog is loaded on a separate thread
-	 * the furniture arraylist can change and be null and hand out nulls at any time, beware!
 	 */
 	private class FurnitureCatalogListModel
 	{//extends AbstractListModel {
@@ -1414,19 +1402,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		public Object getElementAt(int index)
 		{
 			checkFurnitureList();
-			if( furniture != null && index < furniture.size())
-				return this.furniture.get(index);
-			else
-				return null;
+			return this.furniture.get(index);
 		}
 
 		public int getSize()
 		{
 			checkFurnitureList();
-			if( furniture != null )
-				return this.furniture.size();
-			else
-				return 0;
+			return this.furniture.size();
 		}
 
 		private void resetFurnitureList()
@@ -1434,7 +1416,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			if (this.furniture != null)
 			{
 				this.furniture = null;
-				//PJ added now to force an update, before the fireupdate refreshes the list
+				//PJ added now to force an update, before the fireupdate refreshs the list
 				checkFurnitureList();
 				EventQueue.invokeLater(new Runnable()
 				{
@@ -1454,6 +1436,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			if (this.furniture == null)
 			{
 				this.furniture = new ArrayList<CatalogPieceOfFurniture>();
+				this.furniture.clear();
 				for (FurnitureCategory category : this.catalog.getCategories())
 				{
 					for (CatalogPieceOfFurniture piece : category.getFurniture())
@@ -1475,8 +1458,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 								(this.filterText == null || this.filterText == "" ||
 								piece.getName().toLowerCase().contains(this.filterText.toLowerCase())))
 						{
-							this.furniture.add(piece);
+							furniture.add(piece);
 						}
+
+
 					}
 				}
 				Collections.sort(this.furniture);

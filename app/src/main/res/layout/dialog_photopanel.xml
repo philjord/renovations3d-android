@@ -116,6 +116,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
             <Button
+                android:id="@+id/photopanel_shareButton"
+                android:text="shareButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+            <Button
                 android:id="@+id/photopanel_closeButton"
                 android:text="Close"
                 android:layout_width="match_parent"

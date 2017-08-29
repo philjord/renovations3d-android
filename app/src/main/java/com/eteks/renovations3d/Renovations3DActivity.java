@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -34,8 +35,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.sweethome3d.io.FileUserPreferences;
-import com.eteks.sweethome3d.model.Library;
-import com.eteks.sweethome3d.plugin.PluginManager;
+import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.mindblowing.utils.SopInterceptor;
@@ -57,11 +57,8 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,6 +69,8 @@ import javaawt.EventQueue;
 import javaawt.VMEventQueue;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.VMImageIO;
+
+import static android.os.Build.VERSION_CODES.M;
 
 
 /**
@@ -347,7 +346,7 @@ public class Renovations3DActivity extends FragmentActivity
 		// set the no permission default
 		downloadsLocation = this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		if (Build.VERSION.SDK_INT >= M)
 		{
 			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED)
@@ -480,6 +479,9 @@ public class Renovations3DActivity extends FragmentActivity
 			case R.id.menu_saveas:
 				saveAsSh3dFile();
 				return true;
+			case R.id.menu_share:
+				share();
+				return true;
 			case R.id.menu_help_tutorial:
 				tutorial.setEnable(true);
 				return true;
@@ -498,6 +500,73 @@ public class Renovations3DActivity extends FragmentActivity
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void share()
+	{
+		//https://developer.android.com/training/basics/intents/sending.html
+
+		Home home = getHome();
+		if(home != null)
+		{
+			final Home autoSaveHome = home.clone();
+			Thread t = new Thread(new Runnable()
+			{
+				public void run()
+				{
+					//name will be null for a new home and "" for some corrupted autosaves
+					// to share with a name the user needs to do a save as
+					String name = autoSaveHome.getName();
+					name = (name == null || name.length() == 0) ? "Home.sh3d" : name;
+					final String homeName = new File(name).getName();
+
+					Renovations3DActivity.logFireBaseContent("shareemail_start", "homeName: " +  homeName);
+					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+					emailIntent.setType("text/*");
+
+					String subjectText = getResources().getString(R.string.app_name) + " " + homeName;
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
+					//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+
+					//let's do a temp save
+					File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+					File homeFile = new File(storageDir,  homeName);
+
+					try
+					{
+						//NOTE compressed VERY slow
+						renovations3D.getHomeRecorder(HomeRecorder.Type.COMPRESSED).writeHome(autoSaveHome, homeFile.getAbsolutePath());
+
+						Uri outputFileUri = null;
+						if (Build.VERSION.SDK_INT > M) {
+							outputFileUri = FileProvider.getUriForFile(Renovations3DActivity.this, getApplicationContext().getPackageName() + ".provider", homeFile);
+						} else {
+							outputFileUri = Uri.fromFile(homeFile);
+						}
+						emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+						emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+
+						Renovations3DActivity.this.runOnUiThread(new Runnable(){public void run(){
+						// Always use string resources for UI text.
+						// This says something like "Share this photo with"
+						String title = getResources().getString(R.string.share);
+						// Create intent to show chooser
+						Intent chooser = Intent.createChooser(emailIntent, title);
+
+						// Verify the intent will resolve to at least one activity
+						if (emailIntent.resolveActivity(getPackageManager()) != null) {
+							startActivity(chooser);
+						}
+						Renovations3DActivity.logFireBaseContent("shareemail_end", "homeName: " + homeName);}});
+					}
+					catch (RecorderException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+			t.start();
 		}
 	}
 
@@ -649,7 +718,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 					//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
 					//this may not be truly needed but better to be safe
-					if (getHome().getName() != null && getHome().getName().contains(CURRENT_WORK_FILENAME))
+					if ((getHome().getName() != null && getHome().getName().contains(CURRENT_WORK_FILENAME)) || getHome().getName().length() == 0)
 						renovations3D.getHome().setName(null);
 
 					if (getHome().getName() != null && !getHome().isRepaired())

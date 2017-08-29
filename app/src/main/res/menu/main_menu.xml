@@ -21,6 +21,10 @@
         android:enabled="false"
         android:title="@string/menu_save_as"/>
     <item
+        android:id="@+id/menu_share"
+        android:title="@string/share">
+    </item>
+    <item
         android:id="@+id/menu_preferences"
         android:orderInCategory="990"
         android:title="@string/menu_preferences"/>

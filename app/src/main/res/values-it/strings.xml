@@ -116,6 +116,7 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="deleteCameraPosition">Eliminare la posizione della fotocamera</string>
     <string name="goToCameraPosition">Vai alla posizione della fotocamera</string>
     <string name="tutorialWellDone">Ben fatto!</string>
+    <string name="share">Condividere</string>
 
 
 </resources>

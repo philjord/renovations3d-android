@@ -115,6 +115,7 @@
     <string name="deleteCameraPosition">카메라 위치 삭제</string>
     <string name="goToCameraPosition">카메라 위치로 이동</string>
     <string name="tutorialWellDone">잘 했어!</string>
+    <string name="share">몫</string>
 
 
 </resources>

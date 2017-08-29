@@ -109,5 +109,6 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="deleteCameraPosition">Usuń pozycję kamery</string>
     <string name="goToCameraPosition">Przejdź do pozycji kamery</string>
     <string name="tutorialWellDone">Dobra robota!</string>
+    <string name="share">Dzielić</string>
 
 </resources>

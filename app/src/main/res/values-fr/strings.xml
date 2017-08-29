@@ -108,5 +108,6 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="deleteCameraPosition">Supprimer la position de la caméra</string>
     <string name="goToCameraPosition">Aller à la position de la caméra</string>
     <string name="tutorialWellDone">Bien joué!</string>
+    <string name="share">Partager</string>
 
 </resources>

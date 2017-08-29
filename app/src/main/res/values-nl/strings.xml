@@ -108,5 +108,6 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="deleteCameraPosition">Verwijder de camera positie</string>
     <string name="goToCameraPosition">Ga naar de camera positie</string>
     <string name="tutorialWellDone">Goed gedaan!</string>
+    <string name="share">Delen</string>
 
 </resources>

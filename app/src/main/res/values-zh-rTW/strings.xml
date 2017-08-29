@@ -108,5 +108,6 @@
     <string name="deleteCameraPosition">刪除相機位置</string>
     <string name="goToCameraPosition">轉到相機位置</string>
     <string name="tutorialWellDone">做得好！</string>
+    <string name="share">分享</string>
 
 </resources>

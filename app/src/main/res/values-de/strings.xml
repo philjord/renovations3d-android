@@ -109,5 +109,6 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="tutStep9Text">Lange Presse auf einen Stuhl, und es wird zu Ihrem Plan hinzugefügt werden.</string>
     <string name="tutStepFinishText">Gute Arbeit, jetzt könntest du deine Tür in 3d sehen? Oder die Wände etwas Farbe? Später könntest du sehen, ob du kommst, wie du ein Foto von deinem Zuhause machst ...</string>
     <string name="tutorialWellDone">Gut gemacht!</string>
+    <string name="share">Aktie</string>
 
 </resources>

@@ -108,5 +108,6 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="deleteCameraPosition">Kamera konumunu sil</string>
     <string name="goToCameraPosition">amera konumuna gidin</string>
     <string name="tutorialWellDone">Aferin!</string>
+    <string name="share">Pay</string>
 
 </resources>

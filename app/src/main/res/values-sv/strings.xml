@@ -110,5 +110,6 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="deleteCameraPosition">Ta bort kamerans position</string>
     <string name="goToCameraPosition">Gå till kamerans position</string>
     <string name="tutorialWellDone">Bra gjort!</string>
+    <string name="share">Dela med sig</string>
 
 </resources>

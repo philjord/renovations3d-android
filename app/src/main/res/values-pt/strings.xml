@@ -111,5 +111,6 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="deleteCameraPosition">Eliminar a posição da câmera</string>
     <string name="goToCameraPosition">Vá para a posição da câmera</string>
     <string name="tutorialWellDone">Bem feito!</string>
+    <string name="share">Compartilhar</string>
 
 </resources>
