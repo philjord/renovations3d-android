@@ -204,7 +204,7 @@ public class FileUserPreferences extends UserPreferences {
     this.applicationFolders = applicationFolders;
     Executor defaultExecutor = new Executor() {
         public void execute(Runnable command) {
-          command.run();
+			command.run();
         }
       };
     if (updater == null) {
@@ -541,8 +541,10 @@ public class FileUserPreferences extends UserPreferences {
                 }
               }
             });
+
+
           // Read default furniture catalog
-          final FurnitureCatalog resourceFurnitureCatalog = 
+  /*        final FurnitureCatalog resourceFurnitureCatalog =
               readFurnitureCatalogFromResource(getFurnitureLibrariesPluginFolders());
           for (final FurnitureCategory category : resourceFurnitureCatalog.getCategories()) {
             for (final CatalogPieceOfFurniture piece : category.getFurniture()) {
@@ -560,7 +562,26 @@ public class FileUserPreferences extends UserPreferences {
                   libraries.addAll(((DefaultFurnitureCatalog)resourceFurnitureCatalog).getLibraries());
                 }
               });
-          }
+          }*/
+
+  		//PJ this is super expensive, possibly from masses of exception creation, async it
+		Thread t = new Thread(new Runnable(){public void run(){
+			final FurnitureCatalog resourceFurnitureCatalog =
+					readFurnitureCatalogFromResource(getFurnitureLibrariesPluginFolders());
+			for (final FurnitureCategory category : resourceFurnitureCatalog.getCategories()) {
+				for (final CatalogPieceOfFurniture piece : category.getFurniture()) {
+
+							furnitureCatalog.add(category, piece);
+
+				}
+			}
+			if (resourceFurnitureCatalog instanceof DefaultFurnitureCatalog) {
+
+						removeLibraries(FURNITURE_LIBRARY_TYPE);
+						libraries.addAll(((DefaultFurnitureCatalog)resourceFurnitureCatalog).getLibraries());
+
+			}}}, "Furniture Catalog loader");
+			t.start();
         }
       });
   }

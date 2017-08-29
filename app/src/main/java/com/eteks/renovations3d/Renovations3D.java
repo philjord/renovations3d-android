@@ -52,15 +52,16 @@ import javaawt.EventQueue;
 
 public class Renovations3D extends HomeApplication
 {
-	private static final String PREFERENCES_FOLDER = "com.eteks.sweethome3d.preferencesFolder";
-	private static final String APPLICATION_FOLDERS = "com.eteks.sweethome3d.applicationFolders";
+	protected static final String PREFERENCES_FOLDER = "com.eteks.sweethome3d.preferencesFolder";
+	protected static final String APPLICATION_FOLDERS = "com.eteks.sweethome3d.applicationFolders";
 	private static final String APPLICATION_PLUGINS_SUB_FOLDER = "plugins";
 
 	public static final float LARGE_HOME_MIN_BYTES_RATIO = 0.05f;//512 max = 25.5mb is large, for 256 max = 12.75mb is large
 
 	private HomeRecorder homeRecorder;
 	private HomeRecorder compressedHomeRecorder;
-	private UserPreferences userPreferences;
+	//PJ moved to Renovations3DActivity to make a singleton
+	//private UserPreferences userPreferences;
 	private ContentManager contentManager;
 	private ViewFactory viewFactory;
 	private PluginManager pluginManager;
@@ -237,16 +238,16 @@ public class Renovations3D extends HomeApplication
 							ex.printStackTrace();
 							if (ex instanceof RecorderException)
 							{
-								String message = userPreferences.getLocalizedString(HomeController.class, "openError", homeName);
-								new HomePane(null, userPreferences, null, parentActivity).showError(message);
+								String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", homeName);
+								new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
 							}
 							//}
 						}
 					}
 				};
 		new ThreadedTaskController(openTask,
-				this.userPreferences.getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
-				this.userPreferences, this.viewFactory).executeTask(new View()
+				getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+				getUserPreferences(), this.viewFactory).executeTask(new View()
 		{
 		});
 
@@ -304,78 +305,7 @@ public class Renovations3D extends HomeApplication
 	@Override
 	public UserPreferences getUserPreferences()
 	{
-		// Initialize userPreferences lazily
-		if (this.userPreferences == null)
-		{
-			// Retrieve preferences and application folders
-			String preferencesFolderProperty = System.getProperty(PREFERENCES_FOLDER, null);
-			String applicationFoldersProperty = System.getProperty(APPLICATION_FOLDERS, null);
-			File preferencesFolder = preferencesFolderProperty != null
-					? new File(preferencesFolderProperty)
-					: null;
-			File[] applicationFolders;
-			if (applicationFoldersProperty != null)
-			{
-				String[] applicationFoldersProperties = applicationFoldersProperty.split(File.pathSeparator);
-				applicationFolders = new File[applicationFoldersProperties.length];
-				for (int i = 0; i < applicationFolders.length; i++)
-				{
-					applicationFolders[i] = new File(applicationFoldersProperties[i]);
-				}
-			}
-			else
-			{
-				applicationFolders = null;
-			}
-			Executor eventQueueExecutor = new Executor()
-			{
-				@Override
-				public void execute(Runnable command)
-				{
-					EventQueue.invokeLater(command);
-				}
-			};
-			this.userPreferences = new FileUserPreferences(preferencesFolder, applicationFolders, eventQueueExecutor)
-			{
-				@Override
-				public List<Library> getLibraries()
-				{
-					if (userPreferences != null // Don't go further if preferences are not ready
-							&& getPluginManager() != null)
-					{
-						List<Library> pluginLibraries = getPluginManager().getPluginLibraries();
-						if (!pluginLibraries.isEmpty())
-						{
-							// Add plug-ins to the list returned by user preferences
-							ArrayList<Library> libraries = new ArrayList<Library>(super.getLibraries());
-							libraries.addAll(pluginLibraries);
-							return Collections.unmodifiableList(libraries);
-						}
-					}
-					return super.getLibraries();
-				}
-
-				@Override
-				public void deleteLibraries(List<Library> libraries) throws RecorderException
-				{
-					if (userPreferences != null // Don't go further if preferences are not ready
-							&& getPluginManager() != null)
-					{
-						super.deleteLibraries(libraries);
-						List<Library> plugins = new ArrayList<Library>();
-						for (Library library : libraries)
-						{
-							if (PluginManager.PLUGIN_LIBRARY_TYPE.equals(library.getType()))
-							{
-								plugins.add(library);
-							}
-						}
-						getPluginManager().deletePlugins(plugins);
-					}
-				}
-			};
-		}
-		return this.userPreferences;
+		return parentActivity.getUserPreferences();
 	}
 
 	/**

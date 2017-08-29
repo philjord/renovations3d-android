@@ -33,6 +33,9 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eteks.sweethome3d.io.FileUserPreferences;
+import com.eteks.sweethome3d.model.Library;
+import com.eteks.sweethome3d.plugin.PluginManager;
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.mindblowing.utils.SopInterceptor;
@@ -54,13 +57,18 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Semaphore;
 
+import javaawt.EventQueue;
 import javaawt.VMEventQueue;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.VMImageIO;
@@ -611,19 +619,6 @@ public class Renovations3DActivity extends FragmentActivity
 	{
 		if (renovations3D != null)
 			return renovations3D.getHomeController();
-		else
-			return null;
-	}
-
-	/**
-	 * NOTE! you must check for the often null return!
-	 *
-	 * @return
-	 */
-	public UserPreferences getUserPreferences()
-	{
-		if (renovations3D != null)
-			return renovations3D.getUserPreferences();
 		else
 			return null;
 	}
@@ -1365,6 +1360,91 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}*/
 
+
+
+	private UserPreferences userPreferences;
+	/**
+	 * PJ moved here from Renovations3D to make it a singleton again
+	 * Returns user preferences stored in resources and local file system.
+	 */
+
+	public UserPreferences getUserPreferences()
+	{
+		// Initialize userPreferences lazily
+		if (this.userPreferences == null)
+		{
+			// Retrieve preferences and application folders
+			String preferencesFolderProperty = System.getProperty(Renovations3D.PREFERENCES_FOLDER, null);
+			String applicationFoldersProperty = System.getProperty(Renovations3D.APPLICATION_FOLDERS, null);
+			File preferencesFolder = preferencesFolderProperty != null
+					? new File(preferencesFolderProperty)
+					: null;
+			File[] applicationFolders;
+			if (applicationFoldersProperty != null)
+			{
+				String[] applicationFoldersProperties = applicationFoldersProperty.split(File.pathSeparator);
+				applicationFolders = new File[applicationFoldersProperties.length];
+				for (int i = 0; i < applicationFolders.length; i++)
+				{
+					applicationFolders[i] = new File(applicationFoldersProperties[i]);
+				}
+			}
+			else
+			{
+				applicationFolders = null;
+			}
+			Executor eventQueueExecutor = new Executor()
+			{
+				@Override
+				public void execute(Runnable command)
+				{
+					EventQueue.invokeLater(command);
+				}
+			};
+			this.userPreferences = new FileUserPreferences(preferencesFolder, applicationFolders, eventQueueExecutor);
+			//PJ plugins removed
+			/*{
+				@Override
+				public List<Library> getLibraries()
+				{
+					//PJ no plugin libraries now
+					if (userPreferences != null // Don't go further if preferences are not ready
+							&& getPluginManager() != null)
+					{
+						List<Library> pluginLibraries = getPluginManager().getPluginLibraries();
+						if (!pluginLibraries.isEmpty())
+						{
+							// Add plug-ins to the list returned by user preferences
+							ArrayList<Library> libraries = new ArrayList<Library>(super.getLibraries());
+							libraries.addAll(pluginLibraries);
+							return Collections.unmodifiableList(libraries);
+						}
+					}
+					return super.getLibraries();
+				}
+
+				@Override
+				public void deleteLibraries(List<Library> libraries) throws RecorderException
+				{
+					if (userPreferences != null // Don't go further if preferences are not ready
+							&& getPluginManager() != null)
+					{
+						super.deleteLibraries(libraries);
+						List<Library> plugins = new ArrayList<Library>();
+						for (Library library : libraries)
+						{
+							if (PluginManager.PLUGIN_LIBRARY_TYPE.equals(library.getType()))
+							{
+								plugins.add(library);
+							}
+						}
+						getPluginManager().deletePlugins(plugins);
+					}
+				}
+			};*/
+		}
+		return this.userPreferences;
+	}
 
 	public void showImportTextureWizard()
 	{
