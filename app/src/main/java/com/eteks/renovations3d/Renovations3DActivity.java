@@ -712,19 +712,24 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			public void run()
 			{
-				if (getHomeController() != null && getHome() != null)
+				Home home = getHome();
+				if (getHomeController() != null && home != null)
 				{
-					Renovations3DActivity.logFireBaseContent("menu_save", getHome().getName());
+					String homeName = home.getName();
+					Renovations3DActivity.logFireBaseContent("menu_save", homeName);
 
 					//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
 					//this may not be truly needed but better to be safe
-					if ((getHome().getName() != null && getHome().getName().contains(CURRENT_WORK_FILENAME)) || getHome().getName().length() == 0)
+					if (homeName != null && (homeName.contains(CURRENT_WORK_FILENAME) ||  homeName.length() == 0))
+					{
 						renovations3D.getHome().setName(null);
+						homeName = null;
+					}
 
-					if (getHome().getName() != null && !getHome().isRepaired())
+					if (homeName != null && !home.isRepaired())
 					{
 						// update prefs to base a check of a ral file save
-						recordHomeStateInPrefs("", false, getHome().getName());
+						recordHomeStateInPrefs("", false, homeName);
 					}
 					else
 					{
@@ -759,9 +764,11 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			public void run()
 			{
-				if (getHomeController() != null && getHome() != null)
+				Home home = getHome();
+				if (getHomeController() != null && home != null)
 				{
-					Renovations3DActivity.logFireBaseContent("menu_saveas", getHome().getName());
+					String homeName = home.getName();
+					Renovations3DActivity.logFireBaseContent("menu_saveas", homeName);
 
 					// record the name into prefs after it is changed
 					PropertyChangeListener newNameListener = new PropertyChangeListener()
