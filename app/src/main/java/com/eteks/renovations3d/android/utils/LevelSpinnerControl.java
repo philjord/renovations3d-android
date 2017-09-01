@@ -85,7 +85,7 @@ public class LevelSpinnerControl
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				Configuration configuration = context.getResources().getConfiguration();
+				Configuration configuration = getContext().getResources().getConfiguration();
 				int screenWidthDp = configuration.screenWidthDp;
 
 				boolean toolsWide = screenWidthDp > MultipleLevelsPlanPanel.TOOLS_WIDE_MIN_DP;
@@ -98,7 +98,7 @@ public class LevelSpinnerControl
 				float othersSpace = 40 + (3 * (36 * 2)) + (toolsWide ? 300 : 50);
 
 				float dpAllowed = 40 + Math.max(screenWidthDp - othersSpace, 0);
-				float density = context.getResources().getDisplayMetrics().density;
+				float density = getContext().getResources().getDisplayMetrics().density;
 				float pixel = dpAllowed * density;
 				view.setMaxWidth((int)pixel);
 
@@ -119,8 +119,8 @@ public class LevelSpinnerControl
 
 			public TextView getTextView(int position, boolean withText)
 			{
-				TextView ret = new TextView(context);
-				ret.setTextAppearance(context, android.R.style.TextAppearance_Large);
+				TextView ret = new TextView(getContext());
+				ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 				String spanText = "L" + position + (withText ? "-" + levelNames.get(position) : "");
 				ret.setText(spanText);
 

@@ -190,50 +190,52 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 		{
-			Tutorial tutorial = ((Renovations3DActivity) getActivity()).getTutorial();
-			switch (position)
+			if (getActivity() != null)
 			{
-				case 0://planSelect:
-					finishCurrentMode();
-					setMode(PlanController.Mode.SELECTION);
-					break;
-				case 1://createWalls:
-					finishCurrentMode();
-					if (!tutorial.isEnabled())
-						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.WALL_CREATION);
-					tutorial.actionComplete(Tutorial.TutorialAction.CREATE_WALL_TOOL_SELECTED);
-					break;
-				case 2://createRooms:
-					finishCurrentMode();
-					if (!tutorial.isEnabled())
-						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.ROOM_CREATION);
-					tutorial.actionComplete(Tutorial.TutorialAction.CREATE_ROOM_TOOL_SELECTED);
-					break;
-				case 3://createPolyLines:
-					finishCurrentMode();
-					if (!tutorial.isEnabled())
-						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					planController.setMode(PlanController.Mode.POLYLINE_CREATION);
-					break;
-				case 4://createDimensions:
-					finishCurrentMode();
-					if (!tutorial.isEnabled())
-						Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
-					setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
-					break;
-				case 5://createText:
-					finishCurrentMode();
-					// note single tap works for this one
-					setMode(PlanController.Mode.LABEL_CREATION);
+				Tutorial tutorial = ((Renovations3DActivity) getActivity()).getTutorial();
+				switch (position)
+				{
+					case 0://planSelect:
+						finishCurrentMode();
+						setMode(PlanController.Mode.SELECTION);
+						break;
+					case 1://createWalls:
+						finishCurrentMode();
+						if (!tutorial.isEnabled())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						setMode(PlanController.Mode.WALL_CREATION);
+						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_WALL_TOOL_SELECTED);
+						break;
+					case 2://createRooms:
+						finishCurrentMode();
+						if (!tutorial.isEnabled())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						setMode(PlanController.Mode.ROOM_CREATION);
+						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_ROOM_TOOL_SELECTED);
+						break;
+					case 3://createPolyLines:
+						finishCurrentMode();
+						if (!tutorial.isEnabled())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						planController.setMode(PlanController.Mode.POLYLINE_CREATION);
+						break;
+					case 4://createDimensions:
+						finishCurrentMode();
+						if (!tutorial.isEnabled())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
+						break;
+					case 5://createText:
+						finishCurrentMode();
+						// note single tap works for this one
+						setMode(PlanController.Mode.LABEL_CREATION);
+						break;
+					case 6://planPan:
+						finishCurrentMode();
+						setMode(PlanController.Mode.PANNING);
+						break;
 
-					break;
-				case 6://planPan:
-					finishCurrentMode();
-					setMode(PlanController.Mode.PANNING);
-					break;
-
+				}
 			}
 		}
 
@@ -325,10 +327,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				{
 					public void run()
 					{
-						if (((Renovations3DActivity) getActivity()).getHomeController() != null &&
-								((Renovations3DActivity) getActivity()).getHomeController().getView().showActionTipMessage(actionKey))
+						if(getActivity() != null)
 						{
-							preferences.setActionTipIgnored(actionKey);
+							if (((Renovations3DActivity) getActivity()).getHomeController() != null &&
+									((Renovations3DActivity) getActivity()).getHomeController().getView().showActionTipMessage(actionKey))
+							{
+								preferences.setActionTipIgnored(actionKey);
+							}
 						}
 					}
 				});
@@ -390,46 +395,30 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				// why can this be null?
-				if (getActivity() != null)
-				{
-					Configuration configuration = getActivity().getResources().getConfiguration();
-					int screenWidthDp = configuration.screenWidthDp;
-					boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
+				Configuration configuration = getContext().getResources().getConfiguration();
+				int screenWidthDp = configuration.screenWidthDp;
+				boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
 
-					View view = getTextView(position, toolsWide);
-					view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+				View view = getTextView(position, toolsWide);
+				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
 
-					return view;
-				}
-				else
-				{
-					return convertView;
-				}
+				return view;
 			}
 
 			@Override
 			public View getDropDownView(int position, View convertView, ViewGroup parent)
 			{
-				// why can this be null?
-				if (getActivity() != null)
-				{
-					return getTextView(position, true);
-				}
-				else
-				{
-					return convertView;
-				}
+				return getTextView(position, true);
 			}
 
 			public View getTextView(int position, boolean withText)
 			{
-				TextView ret = new TextView(getActivity());
-				ret.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+				TextView ret = new TextView(getContext());
+				ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
 				String spanText = "* " + (withText ? toolNames[position] : "");
 				int drawRes = toolIcon[position];
 				SpannableStringBuilder builder = new SpannableStringBuilder(spanText);// it will replace "*" with icon
-				builder.setSpan(new ImageSpan(getActivity(), drawRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				builder.setSpan(new ImageSpan(getContext(), drawRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 				ret.setText(builder);
 
 				return ret;

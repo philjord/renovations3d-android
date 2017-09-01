@@ -4384,12 +4384,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       //g2D.scale(scale, scale);
       switch (arrowStyle) {
         case DISC :
+          g2D.scale(scale, scale);
           g2D.fill(new Ellipse2D.Float(-3.5f, -2, 4, 4));
           break;
         case OPEN :
-          g2D.scale(0.9, 0.9);
-          g2D.setStroke(new BasicStroke((float)(thickness / scale / 0.9), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			((VMGraphics2D)g2D).draw(ARROW, (float)scale *0.9f);
+          //g2D.scale(0.9, 0.9);
+          g2D.setStroke(new BasicStroke((float)(thickness), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+			((VMGraphics2D)g2D).draw(ARROW, (float)scale);
           break;
         case DELTA :
           g2D.translate(1.65f, 0);

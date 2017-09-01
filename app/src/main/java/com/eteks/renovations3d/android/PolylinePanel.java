@@ -7,6 +7,7 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.view.View;
@@ -113,7 +114,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
     }
     this.arrowsStyleComboBox = new JComboBox(activity, new DefaultComboBoxModel(arrowsStyles));
     //this.arrowsStyleComboBox.setMaximumRowCount(arrowsStyles.length);
-	  this.arrowsStyleComboBox.setAdapter(new ArrayAdapter<ArrowsStyle>(activity,android.R.layout.simple_list_item_1,arrowsStyles)
+	  this.arrowsStyleComboBox.setAdapter(new ArrayAdapter<ArrowsStyle>(activity, android.R.layout.simple_list_item_1, arrowsStyles)
 	  {
 		  @Override
 		  public View getView(int position, View convertView, ViewGroup parent)
@@ -123,55 +124,12 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 		  @Override
 		  public View getDropDownView(int position, View convertView, ViewGroup parent)
 		  {
-			  final ArrowsStyle arrowsStyle = (ArrowsStyle)arrowsStyleComboBox.getItemAtPosition(position);;
-			  ImageView imageView;
+			  ArrowsStyle arrowsStyle = (ArrowsStyle)arrowsStyleComboBox.getItemAtPosition(position);
+			  ArrowStyleImageView imageView;
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
-				  {
-					  public void onDraw(Canvas canvas)
-					  {
-						  //super.onDraw(canvas);
-						  if (arrowsStyle != null) {
-							  Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
-							  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-								  g2D.translate(0, 2);
-							  }
-							  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-							  g2D.setColor(Color.BLACK);//list.getForeground());
-							  int iconWidth = getWidth();
-							  g2D.setStroke(new BasicStroke(2));
-							  g2D.drawLine(6, 8, iconWidth - 6, 8);
-							  switch (arrowsStyle.getStartArrowStyle()) {
-								  case NONE :
-									  break;
-								  case DISC :
-									  g2D.fillOval(4, 4, 9, 9);
-									  break;
-								  case OPEN :
-									  g2D.drawPolyline(new int [] {15, 5, 15}, new int [] {4, 8, 12}, 3);
-									  break;
-								  case DELTA :
-									  g2D.fillPolygon(new int [] {3, 15, 15}, new int [] {8, 3, 13}, 3);
-									  break;
-							  }
-							  switch (arrowsStyle.getEndArrowStyle()) {
-								  case NONE :
-									  break;
-								  case DISC :
-									  g2D.fillOval(iconWidth - 12, 4, 9, 9);
-									  break;
-								  case OPEN :
-									  g2D.drawPolyline(new int [] {iconWidth - 14, iconWidth - 4, iconWidth - 14}, new int [] {4, 8, 12}, 3);
-									  break;
-								  case DELTA :
-									  g2D.fillPolygon(new int [] {iconWidth - 2, iconWidth - 14, iconWidth - 14}, new int [] {8, 3, 13}, 3);
-									  break;
-							  }
-						  }
-					  }
-				  };
+				  imageView = new ArrowStyleImageView(getContext());
 				  imageView.setMinimumWidth(64);
 				  imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				  imageView.setPadding(15, 15, 15, 15);
@@ -179,71 +137,15 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  }
 			  else
 			  {
-				  imageView = (ImageView) convertView;
+				  imageView = (ArrowStyleImageView) convertView;
 			  }
+
+			  imageView.setArrowStyle(arrowsStyle);
 
 			  return imageView;
 		  }
 	  });
-   /* this.arrowsStyleComboBox.setRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(final JList list, 
-            Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          final ArrowsStyle arrowsStyle = (ArrowsStyle)value;
-          final Component component = super.getListCellRendererComponent(
-              list, "", index, isSelected, cellHasFocus);
-          setIcon(new Icon() {
-              public int getIconWidth() {
-                return 64;
-              }
-        
-              public int getIconHeight() {
-                return 16;
-              }
-        
-              public void paintIcon(Component c, Graphics g, int x, int y) {
-                if (arrowsStyle != null) {
-                  Graphics2D g2D = (Graphics2D)g;
-                  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-                    g2D.translate(0, 2);
-                  }
-                  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                  g2D.setColor(list.getForeground());
-                  int iconWidth = getIconWidth();
-                  g2D.setStroke(new BasicStroke(2));
-                  g2D.drawLine(6, 8, iconWidth - 6, 8);
-                  switch (arrowsStyle.getStartArrowStyle()) {
-                    case NONE :
-                      break;
-                    case DISC : 
-                      g2D.fillOval(4, 4, 9, 9);
-                      break;
-                    case OPEN :
-                      g2D.drawPolyline(new int [] {15, 5, 15}, new int [] {4, 8, 12}, 3);
-                      break;
-                    case DELTA :
-                      g2D.fillPolygon(new int [] {3, 15, 15}, new int [] {8, 3, 13}, 3);
-                      break;
-                  }
-                  switch (arrowsStyle.getEndArrowStyle()) {
-                    case NONE :
-                      break;
-                    case DISC : 
-                      g2D.fillOval(iconWidth - 12, 4, 9, 9);
-                      break;
-                    case OPEN :
-                      g2D.drawPolyline(new int [] {iconWidth - 14, iconWidth - 4, iconWidth - 14}, new int [] {4, 8, 12}, 3);
-                      break;
-                    case DELTA :
-                      g2D.fillPolygon(new int [] {iconWidth - 2, iconWidth - 14, iconWidth - 14}, new int [] {8, 3, 13}, 3);
-                      break;
-                  }
-                }
-              }
-            });
-          return component;
-        }
-      });*/
+
     this.arrowsStyleComboBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent ev) {
           ArrowsStyle arrowsStyle = (ArrowsStyle)arrowsStyleComboBox.getSelectedItem();
@@ -286,11 +188,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
       joinStyles = joinStylesList.toArray(new Polyline.JoinStyle [joinStylesList.size()]);
     }
     this.joinStyleComboBox = new JComboBox(activity, new DefaultComboBoxModel(joinStyles));
-    final GeneralPath joinPath = new GeneralPath();
-    joinPath.moveTo(4, 4);
-    joinPath.lineTo(58, 4);
-    joinPath.lineTo(36, 14);
-    final Shape curvedPath = new Arc2D.Float(-7, 6, 80, 40, 47, 86, Arc2D.OPEN);
+
 	  this.joinStyleComboBox.setAdapter(new ArrayAdapter<Polyline.JoinStyle>(activity, android.R.layout.simple_list_item_1, joinStyles)
 	  {
 		  @Override
@@ -301,32 +199,12 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 		  @Override
 		  public View getDropDownView(int position, View convertView, ViewGroup parent)
 		  {
-			  final Polyline.JoinStyle joinStyle = (Polyline.JoinStyle)joinStyleComboBox.getItemAtPosition(position);
-			  ImageView imageView;
+			  Polyline.JoinStyle joinStyle = (Polyline.JoinStyle)joinStyleComboBox.getItemAtPosition(position);
+			  PolylineJoinStyleImageView imageView;
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
-				  {
-					  public void onDraw(Canvas canvas)
-					  {
-						  //super.onDraw(canvas);
-						  if (joinStyle != null) {
-							  Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
-							  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-								  g2D.translate(0, 2);
-							  }
-							  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-							  g2D.setColor(Color.BLACK);//list.getForeground());
-							  g2D.setStroke(SwingTools.getStroke(6, Polyline.CapStyle.BUTT, joinStyle, Polyline.DashStyle.SOLID));
-							  if (joinStyle == Polyline.JoinStyle.CURVED) {
-								  g2D.draw(curvedPath);
-							  } else {
-								  g2D.draw(joinPath);
-							  }
-						  }
-					  }
-				  };
+				  imageView = new PolylineJoinStyleImageView(activity);
 				  imageView.setMinimumWidth(64);
 				  imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				  imageView.setPadding(15, 15, 15, 15);
@@ -334,48 +212,14 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  }
 			  else
 			  {
-				  imageView = (ImageView) convertView;
+				  imageView = (PolylineJoinStyleImageView) convertView;
 			  }
+			  imageView.setJoinStyle(joinStyle);
 
 			  return imageView;
 		  }
 	  });
-    /*this.joinStyleComboBox.setRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(final JList list, 
-            Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          final Polyline.JoinStyle joinStyle = (Polyline.JoinStyle)value;
-          final Component component = super.getListCellRendererComponent(
-              list, "", index, isSelected, cellHasFocus);
-          setIcon(new Icon() {
-              public int getIconWidth() {
-                return 64;
-              }
-        
-              public int getIconHeight() {
-                return 16;
-              }
-        
-              public void paintIcon(Component c, Graphics g, int x, int y) {
-                if (joinStyle != null) {
-                  Graphics2D g2D = (Graphics2D)g;
-                  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-                    g2D.translate(0, 2);
-                  }
-                  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                  g2D.setColor(list.getForeground());
-                  g2D.setStroke(SwingTools.getStroke(6, Polyline.CapStyle.BUTT, joinStyle, Polyline.DashStyle.SOLID));
-                  if (joinStyle == Polyline.JoinStyle.CURVED) {
-                    g2D.draw(curvedPath);
-                  } else {
-                    g2D.draw(joinPath);
-                  }
-                }
-              }
-            });
-          return component;
-        }
-      });*/
+
     this.joinStyleComboBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent ev) {
           controller.setJoinStyle((Polyline.JoinStyle)joinStyleComboBox.getSelectedItem());
@@ -413,27 +257,12 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 		  @Override
 		  public View getDropDownView(int position, View convertView, ViewGroup parent)
 		  {
-			  final Polyline.DashStyle dashStyle = (Polyline.DashStyle)dashStyleComboBox.getItemAtPosition(position);
-			  ImageView imageView;
+			  Polyline.DashStyle dashStyle = (Polyline.DashStyle)dashStyleComboBox.getItemAtPosition(position);
+			  PolylineDashStyleImageView imageView;
 			  if (convertView == null)
 			  {
 				  // if it's not recycled, initialize some attributes
-				  imageView = new android.support.v7.widget.AppCompatImageView(activity)
-				  {
-					  public void onDraw(Canvas canvas)
-					  {
-						  if (dashStyle != null) {
-							  Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
-							  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-								  g2D.translate(0, 2);
-							  }
-							  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-							  g2D.setColor(Color.BLACK);//list.getForeground());
-							  g2D.setStroke(SwingTools.getStroke(2, Polyline.CapStyle.BUTT, Polyline.JoinStyle.MITER, dashStyle));
-							  g2D.drawLine(4, 8, getWidth() - 4, 8);
-						  }
-					  }
-				  };
+				  imageView = new PolylineDashStyleImageView(activity);
 				  imageView.setMinimumWidth(64);
 				  imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				  imageView.setPadding(15, 15, 15, 15);
@@ -441,44 +270,15 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			  }
 			  else
 			  {
-				  imageView = (ImageView) convertView;
+				  imageView = (PolylineDashStyleImageView) convertView;
 			  }
+
+			  imageView.setDashStyle(dashStyle);
 
 			  return imageView;
 		  }
 	  });
-    /*this.dashStyleComboBox.setRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(final JList list, 
-            Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          final Polyline.DashStyle dashStyle = (Polyline.DashStyle)value;
-          final Component component = super.getListCellRendererComponent(
-              list, "", index, isSelected, cellHasFocus);
-          setIcon(new Icon() {
-              public int getIconWidth() {
-                return 64;
-              }
-        
-              public int getIconHeight() {
-                return 16;
-              }
-        
-              public void paintIcon(Component c, Graphics g, int x, int y) {
-                if (dashStyle != null) {
-                  Graphics2D g2D = (Graphics2D)g;
-                  if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-                    g2D.translate(0, 2);
-                  }
-                  g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                  g2D.setColor(list.getForeground());
-                  g2D.setStroke(SwingTools.getStroke(2, Polyline.CapStyle.BUTT, Polyline.JoinStyle.MITER, dashStyle));
-                  g2D.drawLine(4, 8, getIconWidth() - 4, 8);
-                }
-              }
-            });
-          return component;
-        }
-      });*/
+
     this.dashStyleComboBox.setSelectedItem(controller.getDashStyle());
     this.dashStyleComboBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent ev) {
@@ -516,7 +316,140 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PolylinePanel.class, "polyline.title");
   }
 
-  
+
+	private class ArrowStyleImageView extends  android.support.v7.widget.AppCompatImageView
+	{
+		private ArrowsStyle arrowsStyle;
+		public ArrowStyleImageView(Context context)
+		{
+			super(context);
+		}
+
+		public void setArrowStyle(ArrowsStyle arrowsStyle)
+		{
+			this.arrowsStyle = arrowsStyle;
+		}
+
+		public void onDraw(Canvas canvas)
+		{
+			//super.onDraw(canvas);
+			if (arrowsStyle != null) {
+				Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
+				if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
+					g2D.translate(0, 2);
+				}
+				g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2D.setColor(Color.BLACK);//list.getForeground());
+				int iconWidth = getWidth();
+				g2D.setStroke(new BasicStroke(2));
+				g2D.drawLine(6, 8, iconWidth - 6, 8);
+				switch (arrowsStyle.getStartArrowStyle()) {
+					case NONE :
+						break;
+					case DISC :
+						g2D.fillOval(4, 4, 9, 9);
+						break;
+					case OPEN :
+						g2D.drawPolyline(new int [] {15, 5, 15}, new int [] {4, 8, 12}, 3);
+						break;
+					case DELTA :
+						g2D.fillPolygon(new int [] {3, 15, 15}, new int [] {8, 3, 13}, 3);
+						break;
+				}
+				switch (arrowsStyle.getEndArrowStyle()) {
+					case NONE :
+						break;
+					case DISC :
+						g2D.fillOval(iconWidth - 12, 4, 9, 9);
+						break;
+					case OPEN :
+						g2D.drawPolyline(new int [] {iconWidth - 14, iconWidth - 4, iconWidth - 14}, new int [] {4, 8, 12}, 3);
+						break;
+					case DELTA :
+						g2D.fillPolygon(new int [] {iconWidth - 2, iconWidth - 14, iconWidth - 14}, new int [] {8, 3, 13}, 3);
+						break;
+				}
+			}
+		}
+	}
+
+	public static class PolylineJoinStyleImageView extends  android.support.v7.widget.AppCompatImageView
+	{
+		private Polyline.JoinStyle joinStyle;
+
+		private static GeneralPath joinPath = new GeneralPath();
+		static{
+			joinPath.moveTo(4, 4);
+			joinPath.lineTo(58, 4);
+			joinPath.lineTo(36, 14);}
+
+		//PJ Desktop take a 3 o'clock start and positive = counter clock wise
+		// hence android starts at 9 o'clock + angle and a clockwise (android is always)
+		private static Shape curvedPath = new Arc2D.Float(-7, 6, 80, 40, 47 + 180, 86, Arc2D.OPEN);
+
+		public PolylineJoinStyleImageView(Context context)
+		{
+			super(context);
+		}
+
+		public void setJoinStyle(Polyline.JoinStyle joinStyle)
+		{
+			this.joinStyle = joinStyle;
+		}
+
+		@Override
+		public void onDraw(Canvas canvas)
+		{
+			//super.onDraw(canvas);
+			if (joinStyle != null) {
+				Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
+				if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
+					g2D.translate(0, 2);
+				}
+				g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2D.setColor(Color.BLACK);//list.getForeground());
+				g2D.setStroke(SwingTools.getStroke(6, Polyline.CapStyle.BUTT, joinStyle, Polyline.DashStyle.SOLID));
+				if (joinStyle == Polyline.JoinStyle.CURVED) {
+					g2D.draw(curvedPath);
+				} else {
+					g2D.draw(joinPath);
+				}
+			}
+		}
+
+
+	}
+	private class PolylineDashStyleImageView extends android.support.v7.widget.AppCompatImageView
+	{
+		private Polyline.DashStyle dashStyle;
+		public PolylineDashStyleImageView(Context context)
+		{
+			super(context);
+		}
+
+		public void setDashStyle(Polyline.DashStyle dashStyle)
+		{
+			this.dashStyle = dashStyle;
+		}
+
+		@Override
+		public void onDraw(Canvas canvas)
+		{
+			if (dashStyle != null) {
+				Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
+				if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
+					g2D.translate(0, 2);
+				}
+				g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2D.setColor(Color.BLACK);//list.getForeground());
+				g2D.setStroke(SwingTools.getStroke(2, Polyline.CapStyle.BUTT, Polyline.JoinStyle.MITER, dashStyle));
+				g2D.drawLine(4, 8, getWidth() - 4, 8);
+			}
+		}
+
+
+	}
+
   /**
    * Layouts panel components in panel with their labels. 
    */

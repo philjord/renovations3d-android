@@ -147,7 +147,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       this.languageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "languageLabel.text"));
       this.languageComboBox = new JComboBox(activity, new DefaultComboBoxModel(preferences.getSupportedLanguages()));
-		languageComboBox.setAdapter(new ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,preferences.getSupportedLanguages())
+		languageComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, preferences.getSupportedLanguages())
 		{
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent)
@@ -157,7 +157,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			@Override
 			public View getDropDownView (int position, View convertView, ViewGroup parent)
 			{
-				TextView ret = new TextView(activity);
+				TextView ret = new TextView(getContext());
 				String language = (String)languageComboBox.getItemAtPosition(position);
 				Locale locale;
 				int underscoreIndex = language.indexOf("_");
@@ -236,7 +236,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			@Override
 			public View getDropDownView (int position,	View convertView, ViewGroup parent)
 			{
-				TextView ret = new TextView(activity);
+				TextView ret = new TextView(getContext());
 				ret.setText(comboBoxTexts.get(unitComboBox.getItemAtPosition(position)));
 				return ret;
 			}

@@ -831,9 +831,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			@Override
 			public View getDropDownView (int position, View convertView, ViewGroup parent)
 			{
-				TextView ret = new TextView(getActivity());
+				TextView ret = new TextView(getContext());
 				ret.setText(((FurnitureCategory)categoryFilterComboBox.getItemAtPosition(position)).getName());
-				ret.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+				ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
 				return ret;
 			}
 		});

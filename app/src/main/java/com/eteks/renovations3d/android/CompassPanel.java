@@ -295,7 +295,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 					  //setToolTipText(timeZoneId + " - " + timeZoneDisplayName);
 				  //}
 			  }
-			  TextView ret = new TextView(activity);
+			  TextView ret = new TextView(getContext());
 			  ret.setText(timeZoneId);
 			  return ret;
 		  }

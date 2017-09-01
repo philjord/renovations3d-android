@@ -365,7 +365,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 		  @Override
 		  public View getDropDownView (int position, View convertView, ViewGroup parent)
 		  {
-			  TextView ret = new TextView(activity);
+			  TextView ret = new TextView(getContext());
 			  ret.setText(((TexturesCategory)categoryComboBox.getItemAtPosition(position)).getName());
 			  return ret;
 		  }

@@ -161,7 +161,7 @@ public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweeth
 		  @Override
 		  public View getDropDownView (int position, View convertView, ViewGroup parent)
 		  {
-			  TextView ret = new TextView(activity);
+			  TextView ret = new TextView(getContext());
 			  AspectRatio aspectRatio = (AspectRatio)aspectRatioComboBox.getItemAtPosition(position);
 			  String displayedValue = "";
 			  if (aspectRatio != AspectRatio.FREE_RATIO) {
