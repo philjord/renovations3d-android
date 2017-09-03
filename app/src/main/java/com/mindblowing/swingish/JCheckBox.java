@@ -64,4 +64,11 @@ public class JCheckBox extends CheckBox
 		});
 	}
 
+	public void setVisible(boolean visible)
+	{
+		if(!visible)
+			setVisibility(android.view.View.GONE);
+		else
+			setVisibility(android.view.View.VISIBLE);
+	}
 }

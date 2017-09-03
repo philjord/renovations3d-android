@@ -72,7 +72,8 @@ public class FileContentManager implements ContentManager {
   private static final String DAE_EXTENSION = ".dae";
   private static final String KMZ_EXTENSION = ".kmz";
   private static final String ZIP_EXTENSION = ".zip";
-  private static final FileFilter [] MODEL_FILTERS = {
+	//PJPJ made public for activitt to open home files
+  public static final FileFilter [] MODEL_FILTERS = {
      OBJ_FILTER [0],
      new FileFilter() {
        @Override
@@ -738,7 +739,7 @@ private Renovations3DActivity activity;//for dialogs etc
 			  public void run()
 			  {
 				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
-				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
+				  fileChooser.setFileFilters(fileFilters.get(contentType));
 				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
 				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
 															   {
@@ -768,13 +769,14 @@ private Renovations3DActivity activity;//for dialogs etc
 			// in this case we want ot show a real file picker (with an extension filter of the right type
 		  //TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
 		  //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
+		  //MUST use filefilter array cos furniture model has loads of options, note furniture model import handles teh zip files as well
 
 		  activity.runOnUiThread(new Runnable()
 		  {
 			  public void run()
 			  {
 				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, Renovations3DActivity.downloadsLocation, false, false, okCancel);
-				  fileChooser.setFileFilter(fileFilters.get(contentType)[0]);
+				  fileChooser.setFileFilters(fileFilters.get(contentType));
 				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
 				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
 															   {

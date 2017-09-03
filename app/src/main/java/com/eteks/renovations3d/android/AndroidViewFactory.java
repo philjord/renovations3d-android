@@ -196,8 +196,8 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 			UserPreferences preferences,
 			ImportedFurnitureWizardController importedFurnitureWizardController)
 	{
-		throw new UnsupportedOperationException();//return new ImportedFurnitureWizardStepsPanel(piece, modelName, importHomePiece,
-		//		preferences, importedFurnitureWizardController);
+		return new ImportedFurnitureWizardStepsPanel(piece, modelName, importHomePiece,
+				preferences, importedFurnitureWizardController, activity);
 	}
 
 	/**

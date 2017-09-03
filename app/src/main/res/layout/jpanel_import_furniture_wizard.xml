@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/ifw_modelPanel"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ifw_modelChoiceOrChangeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="modelChoiceOrChangeLabel"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/ifw_modelChoiceOrChangeButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="modelChoiceOrChangeButton"/>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/ifw_findModelsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="findModelsButton"/>
+            </TableRow>
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:fillViewport="true">
+
+            <ImageView
+                android:id="@+id/ifw_modelPreviewComponent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="modelPreviewComponent"
+                />
+        </ScrollView>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:id="@+id/ifw_orientationPanel"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ifw_orientationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="ifw_orientationLabel"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_turnUpButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_turnUpButton"/>
+
+                <TextView
+                    android:id="@+id/ifw_turnLeftButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_turnLeftButton"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/ifw_defaultOrientationButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_defaultOrientationButton"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/ifw_turnRightButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_turnRightButton"/>
+
+                <TextView
+                    android:id="@+id/ifw_turnDownButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_turnDownButton"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/ifw_backFaceShownLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_backFaceShownLabel"/>
+
+                <CheckBox
+                    android:id="@+id/ifw_backFaceShownCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:fillViewport="true">
+
+            <ImageView
+                android:id="@+id/ifw_rotationPreviewComponent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="ifw_rotationPreviewComponent"
+                />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/ifw_attributesPanel"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ifw_attributesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="ifw_attributesLabel"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_nameLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_nameLabel"/>
+
+                <EditText
+                    android:id="@+id/ifw_nameTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_addToCatalogCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_addToCatalogCheckBox"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_categoryLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_categoryLabel"/>
+
+                <Spinner
+                    android:id="@+id/ifw_categoryComboBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_widthLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_widthLabel"/>
+
+                <TextView
+                    android:id="@+id/ifw_depthLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_depthLabel"/>
+
+                <TextView
+                    android:id="@+id/ifw_heightLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_heightLabel"/>
+            </TableRow>
+
+            <TableRow>
+
+                <NumberPicker
+                    android:id="@+id/ifw_widthSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+
+                <NumberPicker
+                    android:id="@+id/ifw_depthSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+
+                <NumberPicker
+                    android:id="@+id/ifw_heightSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_keepProportionsCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_keepProportionsCheckBox"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_elevationLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_elevationLabel"/>
+            </TableRow>
+
+            <TableRow>
+
+                <NumberPicker
+                    android:id="@+id/ifw_elevationSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_movableCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_movableCheckBox"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_doorOrWindowCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_doorOrWindowCheckBox"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_staircaseCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_staircaseCheckBox"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ifw_colorLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_colorLabel"/>
+
+                <Button
+                    android:id="@+id/ifw_colorButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_colorButton"/>
+
+                <Button
+                    android:id="@+id/ifw_clearColorButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_clearColorButton"/>
+            </TableRow>
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:fillViewport="true">
+
+            <ImageView
+                android:id="@+id/ifw_attributesPreviewComponent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="ifw_attributesPreviewComponent"
+                />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/ifw_iconPanel"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ifw_iconLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="ifw_iconLabel"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:fillViewport="true">
+
+            <ImageView
+                android:id="@+id/ifw_iconPreviewComponent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="ifw_iconPreviewComponent"
+                />
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

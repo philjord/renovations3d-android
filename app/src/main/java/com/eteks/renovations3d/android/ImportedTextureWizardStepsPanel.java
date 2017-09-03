@@ -125,7 +125,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 										 Activity activity)
   {
 	  super(activity, R.layout.jpanel_import_texture_wizard);
-	  this.activity = activity;
 	  final float scale = getResources().getDisplayMetrics().density;
 	  IMAGE_PREFERRED_SIZE_PX = (int) (IMAGE_PREFERRED_SIZE_DP * scale + 0.5f);
     this.controller = controller;
@@ -513,7 +512,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
   private void layoutComponents() {
     
 	this.imageChoiceTopPanel = (LinearLayout) inflatedView.findViewById(R.id.itw_imageChoiceTopPanel);
-    swapOut(this.imageChoiceOrChangeLabel, R.id.itw_imageChoiceOrChangeLabel);
+      swapOut(this.imageChoiceOrChangeLabel, R.id.itw_imageChoiceOrChangeLabel);
 	  swapOut(this.imageChoiceOrChangeButtonFile, R.id.itw_imageFromFileButton);
 	  swapOut(this.imageChoiceOrChangeButtonCamera, R.id.itw_imageFromCameraButton);
 

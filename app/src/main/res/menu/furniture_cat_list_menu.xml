@@ -29,4 +29,9 @@
         android:text="Import Texture"
         android:showAsAction="never"
         />
+    <item
+        android:id="@+id/importFurniture"
+        android:text="Import Furniture"
+        android:showAsAction="never"
+        />
 </menu>

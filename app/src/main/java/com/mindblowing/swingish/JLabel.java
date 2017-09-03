@@ -2,6 +2,7 @@ package com.mindblowing.swingish;
 
 import android.content.Context;
 import android.text.Spanned;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -22,5 +23,10 @@ public class JLabel extends TextView
 		super(context);
 		setText(spanned);
 		this.setTextAppearance(context, android.R.style.TextAppearance_Medium);
+	}
+
+	public void setVisible(boolean visible)
+	{
+		super.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 	}
 }

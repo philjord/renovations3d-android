@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class JFileChooser
 {
@@ -33,11 +35,7 @@ public class JFileChooser
 	private boolean allowNewName = false;
 	private boolean allowDirSelect = false;
 
-	// filter on file extension
-	private String extension = null;
-
-	// MUCH sexier system
-	private FileFilter fileFilter = null;
+	private FileFilter[] fileFilters = null;
 
 	private FileSelectedListener fileListener;
 
@@ -278,13 +276,21 @@ public class JFileChooser
 							{
 								return false;
 							}
-							else if (extension == null)
-							{
-								return fileFilter != null ? fileFilter.accept(file) : true;
-							}
 							else
 							{
-								return file.getName().toLowerCase().endsWith(extension);
+								if (fileFilters != null)
+								{
+									for (FileFilter ff : fileFilters)
+									{
+										if (ff.accept(file))
+											return true;
+									}
+									return false;
+								}
+								else
+								{
+									return true;
+								}
 							}
 						}
 						else
@@ -378,20 +384,19 @@ public class JFileChooser
 	 */
 	public void addChoosableFileFilter(FileFilter filter)
 	{
-		fileFilter = filter;
+		List<FileFilter> currentFilters = Arrays.asList(fileFilters);
+		if(!currentFilters.contains(filter))
+		{
+			currentFilters.add(filter);
+			fileFilters = currentFilters.toArray(fileFilters);
+		}
 	}
 
-	public void setFileFilter(FileFilter filter)
+	public void setFileFilters(FileFilter[] filters)
 	{
-		fileFilter = filter;
+		fileFilters = filters;
 	}
 
-	public JFileChooser setExtension(String extension)
-	{
-		this.extension = (extension == null) ? null :
-				extension.toLowerCase();
-		return this;
-	}
 
 	public JFileChooser setFileListener(FileSelectedListener fileListener)
 	{

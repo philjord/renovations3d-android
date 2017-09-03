@@ -227,6 +227,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 		menu.findItem(R.id.importTexture).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_TEXTURE.Name"));
+		menu.findItem(R.id.importFurniture).setTitle(preferences.getLocalizedString(
+				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE.Name"));
+
 
 		localString = getActivity().getString(R.string.local);
 
@@ -280,6 +283,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				case R.id.importTexture:
 					if (renovations3DActivity.getHomeController() != null)
 						renovations3DActivity.getHomeController().importTexture();
+					return true;
+				case R.id.importFurniture:
+					if (renovations3DActivity.getHomeController() != null)
+						renovations3DActivity.getHomeController().importFurniture();
 					return true;
 				default:
 					return super.onOptionsItemSelected(item);

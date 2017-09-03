@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
@@ -54,6 +55,7 @@ import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -830,7 +832,7 @@ public class Renovations3DActivity extends FragmentActivity
 						public void run()
 						{
 							final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
-							fileChooser.setExtension("sh3d");
+							fileChooser.setFileFilters(FileContentManager.MODEL_FILTERS);
 							fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
 							{
 								@Override
