@@ -388,13 +388,15 @@ public class Renovations3DActivity extends FragmentActivity
 		//see https://github.com/umano/AndroidSlidingUpPanel/issues/590
 		// I got IndexOutOfBound when dragging (in a double call case or perhaps a very slow start up time)
 		//https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/9db15004?duration=2592000000
-		if(mViewPager.getAdapter() == null){
+
+		//FIXME:!! this solution stops changes happenign at all! need a better answer
+		//if(mViewPager.getAdapter() == null){
 			mViewPager.setAdapter(mRenovations3DPagerAdapter);
 			mViewPager.setCurrentItem(1);
 			mViewPager.setOffscreenPageLimit(4);
-		} else {
-			mRenovations3DPagerAdapter.notifyDataSetChanged();
-		}
+		//} else {
+		//	mRenovations3DPagerAdapter.notifyDataSetChanged();
+		//}
 
 		invalidateOptionsMenu();
 	}
