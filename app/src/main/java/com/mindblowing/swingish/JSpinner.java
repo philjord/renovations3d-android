@@ -107,11 +107,12 @@ public class JSpinner extends LinearLayout
 			output = new EditText(context);
 			output.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 			output.setImeOptions(EditorInfo.IME_ACTION_DONE);
+			output.setSelectAllOnFocus(true);
 		}
 		setFormat(format);
 
 
-		output.setTextAppearance(context, android.R.style.TextAppearance_Large);
+		output.setTextAppearance(context, android.R.style.TextAppearance_Medium);
 		output.setMinEms(6);
 		output.setMaxLines(1);
 		if(output instanceof EditText)
