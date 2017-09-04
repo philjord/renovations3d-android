@@ -54,6 +54,7 @@ import org.jogamp.vecmath.Matrix3f;
 import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.OBJWriter;
 import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
@@ -155,8 +156,8 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 										   Activity activity)
   {
 	  super(activity, R.layout.jpanel_import_furniture_wizard);
-	  this.activity = activity;
-	  final float scale = getResources().getDisplayMetrics().density;
+
+	  Renovations3DActivity.logFireBaseContent("ImportedFurnitureWizardStepsPanel started");
 
     this.controller = controller;
     // Create a model loader for each wizard in case model loading hangs

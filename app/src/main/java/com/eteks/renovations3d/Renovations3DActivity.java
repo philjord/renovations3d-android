@@ -900,7 +900,6 @@ public class Renovations3DActivity extends FragmentActivity
 					public void run()
 					{
 						renovations3D = new Renovations3D(Renovations3DActivity.this);
-						imageAcquireManager.clear();
 
 						if (mRenovations3DPagerAdapter != null)
 						{
@@ -914,6 +913,41 @@ public class Renovations3DActivity extends FragmentActivity
 
 						mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 						//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+
+
+						//after the home is loaded check for an import wizard wanted
+						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
+						{
+							@Override
+							public void onHomeLoaded(Home home, final HomeController homeController)
+							{
+								switch (importDestination)
+								{
+									case IMPORT_TEXTURE:
+										Handler handler = new Handler(Looper.getMainLooper());
+										handler.post(new Runnable()
+										{
+											public void run()
+											{
+												homeController.importTexture();
+											}
+										});
+										break;
+									case IMPORT_BACKGROUND:
+										Handler handler2 = new Handler(Looper.getMainLooper());
+										handler2.post(new Runnable()
+										{
+											public void run()
+											{
+												homeController.importBackgroundImage();
+											}
+										});
+										break;
+								}
+								importDestination = null;
+							}
+						});
+
 
 						// load home and trigger the new views
 						if (homeFile != null)
@@ -1533,34 +1567,19 @@ public class Renovations3DActivity extends FragmentActivity
 		return this.userPreferences;
 	}
 
+
+	private ImageAcquireManager.Destination importDestination = null;
+
 	public void showImportTextureWizard()
 	{
 		if (getHomeController() != null)
 		{
 			getHomeController().importTexture();
+			importDestination = null;
 		}
 		else
 		{
-			if (renovations3D != null)
-			{
-				//the home is still loading need to call the import statement when the controller is not null
-				renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
-				{
-					@Override
-					public void onHomeLoaded(Home home, HomeController homeController)
-					{
-						renovations3D.removeOnHomeLoadedListener(this);
-						Handler handler = new Handler(Looper.getMainLooper());
-						handler.post(new Runnable()
-						{
-							public void run()
-							{
-								renovations3D.getHomeController().importTexture();
-							}
-						});
-					}
-				});
-			}
+			importDestination = ImageAcquireManager.Destination.IMPORT_TEXTURE;
 		}
 	}
 
@@ -1569,29 +1588,11 @@ public class Renovations3DActivity extends FragmentActivity
 		if (getHomeController() != null)
 		{
 			getHomeController().importBackgroundImage();
+			importDestination = null;
 		}
 		else
 		{
-			if (renovations3D != null)
-			{
-				//the home is still loading need to call the import statement when the controller is not null
-				renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
-				{
-					@Override
-					public void onHomeLoaded(Home home, HomeController homeController)
-					{
-						renovations3D.removeOnHomeLoadedListener(this);
-						Handler handler = new Handler(Looper.getMainLooper());
-						handler.post(new Runnable()
-						{
-							public void run()
-							{
-								renovations3D.getHomeController().importBackgroundImage();
-							}
-						});
-					}
-				});
-			}
+			importDestination = ImageAcquireManager.Destination.IMPORT_BACKGROUND;
 		}
 	}
 

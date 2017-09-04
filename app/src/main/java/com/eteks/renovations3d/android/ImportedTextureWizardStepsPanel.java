@@ -113,8 +113,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 	private LinearLayout imageChoiceTopPanel;
 	private LinearLayout attributesPanel;
 
-	private Activity activity;
-
   /**
    * Creates a view for texture image choice and attributes. 
    */
@@ -125,6 +123,9 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 										 Activity activity)
   {
 	  super(activity, R.layout.jpanel_import_texture_wizard);
+
+	  Renovations3DActivity.logFireBaseContent("ImportedTextureWizardStepsPanel started");
+
 	  final float scale = getResources().getDisplayMetrics().density;
 	  IMAGE_PREFERRED_SIZE_PX = (int) (IMAGE_PREFERRED_SIZE_DP * scale + 0.5f);
     this.controller = controller;

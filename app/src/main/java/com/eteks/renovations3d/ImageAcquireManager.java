@@ -81,6 +81,7 @@ public class ImageAcquireManager
 
 	public void pickImage(ImageReceiver imageReceiver, Destination destination)
 	{
+		clear();
 		this.imageReceiver = imageReceiver;
 		this.imageDestination = destination;
 		Intent intent = new Intent();
@@ -103,6 +104,7 @@ public class ImageAcquireManager
 
 	public void takeImage(ImageReceiver imageReceiver, Destination destination)
 	{
+		clear();
 		this.imageReceiver = imageReceiver;
 		this.imageDestination = destination;
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

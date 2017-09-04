@@ -112,8 +112,6 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 	private LinearLayout LL_SCALE;
 	private LinearLayout LL_ORIGIN;
 
-	private Activity activity;
-
 	/**
 	 * Creates a view for background image choice, scale and origin.
 	 */
@@ -123,7 +121,9 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 										   Activity activity)
 	{
 		super(activity, R.layout.jpanel_background_image_wizard);
-		this.activity = activity;
+
+		Renovations3DActivity.logFireBaseContent("BackgroundImageWizardStepsPanel started");
+
 		final float scale = getResources().getDisplayMetrics().density;
 		POINT_RADIUS_PX = (int) (POINT_RADIUS_DP * scale + 0.5f);
 
