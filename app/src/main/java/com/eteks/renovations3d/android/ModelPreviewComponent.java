@@ -20,6 +20,9 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
 
 
@@ -30,7 +33,9 @@ import javaawt.Graphics2D;
 import javaawt.GraphicsConfiguration;
 import javaawt.GraphicsEnvironment;
 import javaawt.image.BufferedImage;
+import javaawt.image.VMBufferedImage;
 import javaawt.imageio.ImageIO;
+import javaxswing.ImageIcon;
 
 
 import java.io.File;
@@ -80,6 +85,7 @@ import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.TemporaryURLContent;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.opengl.GLWindow;
 import com.mindblowing.renovations3d.R;
 import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JPanel;
@@ -146,12 +152,17 @@ public class ModelPreviewComponent extends JPanel
     	//PJPJPJPJ
       createComponent3D(null,//graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration(), 
           yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
+
+	  // taken from ancestor below
+	  createUniverse();
 //    }
 
     // Add an ancestor listener to create 3D component and its universe once this component is made visible 
     // and clean up universe once its parent frame is disposed
-    //addAncestorListener(yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
+    addAncestorListener(yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
   }
+
+
 
   /**
    * Returns component preferred size.
@@ -215,15 +226,36 @@ public class ModelPreviewComponent extends JPanel
  // JComponent getComponent3D() {
  //   return this.component3DPanel;
 //  }
-  
+
+
+
+
   /**
    * Adds an ancestor listener to this component to manage the creation of the 3D component and its universe 
    * and clean up the universe.  
    */
-/*  private void addAncestorListener(final boolean yawChangeSupported,
+  private void addAncestorListener(final boolean yawChangeSupported,
                                    final boolean pitchChangeSupported,
                                    final boolean scaleChangeSupported) {
-    addAncestorListener(new AncestorListener() {
+
+	  this.addOnAttachStateChangeListener(new OnAttachStateChangeListener()
+	  {
+		  @Override
+		  public void onViewAttachedToWindow(android.view.View v)
+		  {
+
+		  }
+
+		  @Override
+		  public void onViewDetachedFromWindow(android.view.View v)
+		  {
+			  disposeUniverse();
+		  }
+	  });
+
+	  // PJ note the create is just moved to the constructor
+
+    /*addAncestorListener(new AncestorListener() {
         public void ancestorAdded(AncestorEvent ev) {
           if (component3D == null) {
         	  //PJPJPJPJPJ
@@ -250,8 +282,8 @@ public class ModelPreviewComponent extends JPanel
         
         public void ancestorMoved(AncestorEvent ev) {
         }        
-      });
-  }*/
+      });*/
+  }
   
   /**
    * Creates the 3D component associated with the given <code>configuration</code> device.
@@ -260,6 +292,10 @@ public class ModelPreviewComponent extends JPanel
                                  boolean yawChangeSupported, 
                                  boolean pitchChangeSupported,
                                  boolean scaleChangeSupported) {
+
+	  //TODO: notice this was in fact an on screen canvas3D!
+	  canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
+
 	  //PJPJPJPJPJ
 /*    if (Boolean.getBoolean("com.eteks.sweethome3d.j3d.useOffScreen3DView")) {
       GraphicsConfigTemplate3D gc = new GraphicsConfigTemplate3D();
@@ -298,8 +334,8 @@ public class ModelPreviewComponent extends JPanel
     // Layout 3D component
     this.component3DPanel.setLayout(new GridLayout());
     this.component3DPanel.add(this.component3D);
-    this.component3D.setFocusable(false);
-    addMouseListeners(this.component3D, yawChangeSupported, pitchChangeSupported, scaleChangeSupported);*/
+    this.component3D.setFocusable(false);*/
+    addMouseListeners(this.canvas3D.getGLWindow(), yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
     
   }
 
@@ -325,13 +361,13 @@ public class ModelPreviewComponent extends JPanel
   /**
    * Adds an AWT mouse listener to component that will update view platform transform.  
    */
-/*  private void addMouseListeners(final Component component3D,
+  private void addMouseListeners(final GLWindow component3D,
                                  final boolean yawChangeSupported, 
                                  final boolean pitchChangeSupported,
                                  final boolean scaleChangeSupported) {
     final float ANGLE_FACTOR = 0.02f;
     final float ZOOM_FACTOR = 0.02f;
-    MouseInputAdapter mouseListener = new MouseInputAdapter() {
+  /*  MouseInputAdapter mouseListener = new MouseInputAdapter() {
         private int xLastMouseMove;
         private int yLastMouseMove;
         
@@ -409,15 +445,17 @@ public class ModelPreviewComponent extends JPanel
             l.mouseClicked(SwingUtilities.convertMouseEvent(component3D, ev, ModelPreviewComponent.this));
           }
         });
-    }
-  }*/
+    }*/
+  }
 
   /**
    * Creates universe bound to the 3D component.
    */
   private void createUniverse() {
-   /* Canvas3D canvas3D;
-    if (this.component3D instanceof Canvas3D) {
+
+	  //PJPJPJ already create in createComponent3D
+  /*  Canvas3D canvas3D;
+   if (this.component3D instanceof Canvas3D) {
       canvas3D = (Canvas3D)this.component3D;
     } else {
       try {
@@ -860,88 +898,40 @@ public class ModelPreviewComponent extends JPanel
    * Returns the icon image matching the displayed view.  
    */
   private BufferedImage getIconImage(int maxWaitingDelay) {
-	  //FIXME: this needs to work like the plan component gear!
-/*    Color backgroundColor = getBackground();
-    
-    BufferedImage imageWithWhiteBackgound = null;
-    BufferedImage imageWithBlackBackgound = null;
-    
-    this.iconImageLock = new Object();
-    try {
-      // Instead of using off screen images that may cause some problems
-      // use Robot to capture canvas 3D image 
-      Point component3DOrigin = new Point();
-      SwingUtilities.convertPointToScreen(component3DOrigin, this.component3D);
-      
-      Robot robot = new Robot();
-      // Render scene with a white background
-      if (this.iconImageLock != null) {
-        synchronized (this.iconImageLock) {
-          setBackground(Color.WHITE);
-          try {
-            this.iconImageLock.wait(maxWaitingDelay / 2);
-            if (OperatingSystem.isMacOSX()) {
-              // Under Mac OS X, sleep an additional time to ensure the screen got refreshed
-              Thread.sleep(30);
-            }
-          } catch (InterruptedException ex) {
-            ex.printStackTrace();
-          }
-        }
-      }
-      imageWithWhiteBackgound = robot.createScreenCapture(
-          new Rectangle(component3DOrigin, this.component3D.getSize()));
-      
-      // Render scene with a black background
-      if (this.iconImageLock != null) {
-        synchronized (this.iconImageLock) {
-          setBackground(Color.BLACK);
-          try {
-            this.iconImageLock.wait(maxWaitingDelay / 2);
-            if (OperatingSystem.isMacOSX()) {
-              // Under Mac OS X, sleep an additional time to ensure the screen got refreshed
-              Thread.sleep(30);
-            }
-          } catch (InterruptedException ex) {
-            ex.printStackTrace();
-          }
-        }
-      }
-      imageWithBlackBackgound = robot.createScreenCapture(
-          new Rectangle(component3DOrigin, this.component3D.getSize()));
-    } catch (AWTException ex) {
-      throw new RuntimeException(ex);
-    } finally {
-      this.iconImageLock = null;
-      setBackground(backgroundColor);
-    }
 
-    int [] imageWithWhiteBackgoundPixels = imageWithWhiteBackgound.getRGB(
-        0, 0, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), null,
-        0, imageWithWhiteBackgound.getWidth());
-    int [] imageWithBlackBackgoundPixels = imageWithBlackBackgound.getRGB(
-        0, 0, imageWithBlackBackgound.getWidth(), imageWithBlackBackgound.getHeight(), null,
-        0, imageWithBlackBackgound.getWidth());
-    
-    // Create an image with transparent pixels where model isn't drawn
-    for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
-      if (imageWithBlackBackgoundPixels [i] != imageWithWhiteBackgoundPixels [i]
-          && imageWithBlackBackgoundPixels [i] == 0xFF000000
-          && imageWithWhiteBackgoundPixels [i] == 0xFFFFFFFF) {
-        imageWithWhiteBackgoundPixels [i] = 0;
-      }           
-    }
+	  setBackground(Color.WHITE);
+	  canvas3D.renderOffScreenBuffer();
+	  canvas3D.waitForOffScreenRendering();
 
-    BufferedImage iconImage = new BufferedImage(imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), 
-        BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g2D = (Graphics2D)iconImage.getGraphics();
-    g2D.drawImage(Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(
-        imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), 
-        imageWithWhiteBackgoundPixels, 0, imageWithWhiteBackgound.getWidth())), null, null);
-    g2D.dispose();
+	  if(canvas3D != null)
+	  {
+		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
+		  int[] imageWithWhiteBackgoundPixels = PlanComponent.getImagePixels(imageWithWhiteBackgound);
+		  // Render scene with a black background
+		  setBackground(Color.BLACK);
+		  canvas3D.renderOffScreenBuffer();
+		  canvas3D.waitForOffScreenRendering();
+		  if (canvas3D != null)
+		  {
+			  BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+			  int[] imageWithBlackBackgoundPixels = PlanComponent.getImagePixels(imageWithBlackBackgound);
+			  // Create an image with transparent pixels where model isn't drawn
+			  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
+			  {
+				  if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
+						  && imageWithBlackBackgoundPixels[i] == 0xFF000000
+						  && imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
+				  {
+					  imageWithWhiteBackgoundPixels[i] = 0;
+				  }
+			  }
 
-    return iconImage;*/
-return null;
+			  Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
+			  VMBufferedImage img = new VMBufferedImage(bm);
+			  return img;
+		  }
+	  }
+	  return null;
   }
 
   /**

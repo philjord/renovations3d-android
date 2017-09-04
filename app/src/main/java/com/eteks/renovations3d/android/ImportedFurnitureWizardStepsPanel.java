@@ -1328,6 +1328,9 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private void setReadingState() {
 	  EventQueue.invokeLater(new Runnable(){public void run(){
     modelChoiceOrChangeButton.setEnabled(false);}});
+
+	  //TODO: I need to throw up a wait dialog
+
 /*    Component rootPane = SwingUtilities.getRoot(ImportedFurnitureWizardStepsPanel.this);
     if (rootPane != null) {
       if (this.defaultCursor == null) {
@@ -1358,6 +1361,9 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private void setDefaultState() {
     if (EventQueue.isDispatchThread()) {
       this.modelChoiceOrChangeButton.setEnabled(true);
+
+		//TODO: this would remove teh wait dialog set above (if set)
+
 /*      Component rootPane = SwingUtilities.getRoot(ImportedFurnitureWizardStepsPanel.this);
       if (rootPane != null) {
         rootPane.setCursor(this.defaultCursor);
