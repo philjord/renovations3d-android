@@ -921,30 +921,33 @@ public class Renovations3DActivity extends FragmentActivity
 							@Override
 							public void onHomeLoaded(Home home, final HomeController homeController)
 							{
-								switch (importDestination)
+								if(importDestination != null)
 								{
-									case IMPORT_TEXTURE:
-										Handler handler = new Handler(Looper.getMainLooper());
-										handler.post(new Runnable()
-										{
-											public void run()
+									switch (importDestination)
+									{
+										case IMPORT_TEXTURE:
+											Handler handler = new Handler(Looper.getMainLooper());
+											handler.post(new Runnable()
 											{
-												homeController.importTexture();
-											}
-										});
-										break;
-									case IMPORT_BACKGROUND:
-										Handler handler2 = new Handler(Looper.getMainLooper());
-										handler2.post(new Runnable()
-										{
-											public void run()
+												public void run()
+												{
+													homeController.importTexture();
+												}
+											});
+											break;
+										case IMPORT_BACKGROUND:
+											Handler handler2 = new Handler(Looper.getMainLooper());
+											handler2.post(new Runnable()
 											{
-												homeController.importBackgroundImage();
-											}
-										});
-										break;
+												public void run()
+												{
+													homeController.importBackgroundImage();
+												}
+											});
+											break;
+									}
+									importDestination = null;
 								}
-								importDestination = null;
 							}
 						});
 

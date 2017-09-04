@@ -30,6 +30,7 @@ import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -422,8 +423,11 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				savePhoto(false);
 			}
 		});
+		this.saveButton.setEnabled(false);
+
 		this.shareButton = new JButton(activity, activity.getResources().getString(R.string.share));
 		shareButton.setOnClickListener(new View.OnClickListener(){public void onClick(View view){savePhoto(true);}});
+		this.shareButton.setEnabled(false);
 
 		this.closeButton = new JButton(activity,
 				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "CLOSE.Name"));
@@ -434,7 +438,6 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				close();
 			}
 		});
-
 
 		setComponentTexts(preferences);
 		updateRatioComponents();
@@ -564,7 +567,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	 */
 	public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView)
 	{
-
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		this.setOnDismissListener(new OnDismissListener()
 		{
 			@Override
