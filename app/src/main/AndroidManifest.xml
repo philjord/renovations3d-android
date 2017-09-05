@@ -2,6 +2,7 @@
 <manifest
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:versionCode="2220"
     android:versionName="2.22">
 
@@ -36,6 +37,7 @@
 
     <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with teh Jogl renderering -->
     <application
+        tools:replace="android:hardwareAccelerated"
         android:hardwareAccelerated="false"
         android:icon="@drawable/renovations3dicon"
         android:label="@string/app_name"
@@ -141,5 +143,9 @@
         <activity
             android:name="com.mindblowing.j3d.utils.JoglStatusActivity"
             android:label="@string/app_name"/>
+
+        <!--mobfox interstitial activity-->
+        <activity android:name="com.mobfox.sdk.interstitialads.InterstitialActivity" android:hardwareAccelerated="true" />
+        <service android:name="com.mobfox.sdk.services.MobFoxService" android:launchMode="singleTop" />
     </application>
 </manifest>

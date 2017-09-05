@@ -83,4 +83,12 @@
 -dontwarn com.google.android.gms.**
 -keep class com.google.android.gms.** { *; }
 
+-keep class com.google.ads.mediation.admob.AdMobAdapter {  *;}
+-keep class com.google.ads.mediation.AdUrlAdapter { *;}
+
+
+-keep class com.mobfox.** { *; }
+-keep class com.mobfox.adapter.** {*;}
+-keep class com.mobfox.sdk.** {*;}
+
 

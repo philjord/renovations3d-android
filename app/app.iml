@@ -102,14 +102,18 @@
     <orderEntry type="library" exported="" name="sweethome3D-tools" level="project" />
     <orderEntry type="library" exported="" name="sunflow-0.07.3pj" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="MobFox-Android-AdMob-Adapter" level="project" />
     <orderEntry type="library" exported="" name="sweethome3D-android" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="MobFox-Android-SDK-Core-3.2.7d" level="project" />
     <orderEntry type="library" exported="" name="play-services-gass-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="ambilwarna-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-clearcut-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="videocache-2.7.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-lite-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.21" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-fragment-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-10.0.1" level="project" />
@@ -119,6 +123,7 @@
     <orderEntry type="library" exported="" name="jogl-all-android" level="project" />
     <orderEntry type="library" exported="" name="jogamp-natives" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-android-1.7.21" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-10.0.1" level="project" />

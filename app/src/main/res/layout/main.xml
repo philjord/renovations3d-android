@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:ads="http://schemas.android.com/apk/res-auto"
+                xmlns:mobfox="http://schemas.android.com/apk/lib/com.mobfox.sdk"
                 android:id="@+id/mainLayout"
                 android:orientation="vertical"
                 android:padding="0px"
@@ -9,11 +10,9 @@
                 android:layout_height="match_parent">
 
     <com.mindblowing.utils.EdgeViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.mindblowing.utils.EdgeViewPager>
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -26,9 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/lower_banner_ad_unit_id"
-            >
-        </com.google.android.gms.ads.AdView>
+            ads:adUnitId="@string/lower_banner_ad_unit_id"/>
     </LinearLayout>
 </RelativeLayout>
 
