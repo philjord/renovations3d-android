@@ -443,10 +443,14 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
         this.modifyTextureButton.setEnabled(false);
         this.modifyTextureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-
-				int c = availableTexturesList.getCheckedItemPosition();
-				CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
-				controller.modifyTexture(ct);
+				if(previewTexture != null && previewTexture instanceof CatalogTexture)
+				{
+					controller.modifyTexture((CatalogTexture) previewTexture);
+				}
+				//PJ this can be broken if search is touched
+				//int c = availableTexturesList.getCheckedItemPosition();
+				//CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
+				//controller.modifyTexture(ct);
               //controller.modifyTexture((CatalogTexture)availableTexturesList.getSelectedItem());
             }
           });
@@ -457,9 +461,14 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             public void actionPerformed(ActionEvent ev) {
 				// this will include a blocking confirm so we must get off the EDT thread
 				Thread t = new Thread(){public void run(){
-						int c = availableTexturesList.getCheckedItemPosition();
-						CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
-						controller.deleteTexture(ct);
+					if(previewTexture != null && previewTexture instanceof CatalogTexture)
+					{
+						controller.deleteTexture((CatalogTexture) previewTexture);
+					}
+					//PJ this can be broken if search is touched
+					//	int c = availableTexturesList.getCheckedItemPosition();
+					//	CatalogTexture ct = (CatalogTexture)availableTexturesList.getItemAtPosition(c);
+					//	controller.deleteTexture(ct);
 					//controller.deleteTexture((CatalogTexture)availableTexturesList.getSelectedItem());
 					}};
 				t.start();

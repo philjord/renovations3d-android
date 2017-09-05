@@ -2,8 +2,8 @@
 <manifest
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="2210"
-    android:versionName="2.21">
+    android:versionCode="2220"
+    android:versionName="2.22">
 
     <uses-sdk
         android:minSdkVersion="16"
