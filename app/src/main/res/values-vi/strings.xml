@@ -110,5 +110,6 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="goToCameraPosition">Đi tới vị trí máy ảnh</string>
     <string name="tutorialWellDone">Làm tốt!</string>
     <string name="share">Chia sẻ</string>
+    <string name="set_to_device_location">Sử dụng vị trí thiết bị</string>
 
 </resources>

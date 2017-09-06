@@ -117,6 +117,7 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="goToCameraPosition">Vai alla posizione della fotocamera</string>
     <string name="tutorialWellDone">Ben fatto!</string>
     <string name="share">Condividere</string>
+    <string name="set_to_device_location">Utilizza la posizione del dispositivo</string>
 
 
 </resources>

@@ -109,5 +109,6 @@
     <string name="goToCameraPosition">转到相机位置</string>
     <string name="tutorialWellDone">做得好！</string>
     <string name="share">分享</string>
+    <string name="set_to_device_location">使用设备位置</string>
 
 </resources>

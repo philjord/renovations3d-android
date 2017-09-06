@@ -109,5 +109,6 @@
     <string name="tutStepFinishText">Добра работа, сега можеш да отидеш да погледнеш вратата си в 3d? Или да даде някакъв цвят на стените? По-късно можете да видите дали ще можете да направите снимка на вашия дом ...</string>
     <string name="tutorialWellDone">Много добре!</string>
     <string name="share">Дял</string>
+    <string name="set_to_device_location">Използвайте местоположението на устройството</string>
 
 </resources>

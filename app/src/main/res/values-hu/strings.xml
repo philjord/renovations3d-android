@@ -109,5 +109,6 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="goToCameraPosition">Menj a kamera helyzetébe</string>
     <string name="tutorialWellDone">Szép munka!</string>
     <string name="share">Ossza meg</string>
+    <string name="set_to_device_location">Az eszköz helyének használata</string>
 
 </resources>

@@ -116,6 +116,7 @@
     <string name="goToCameraPosition">카메라 위치로 이동</string>
     <string name="tutorialWellDone">잘 했어!</string>
     <string name="share">몫</string>
+    <string name="set_to_device_location">기기 위치 사용</string>
 
 
 </resources>

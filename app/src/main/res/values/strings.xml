@@ -112,5 +112,6 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="tutStepFinishTitle">Tutorial Finished</string>
     <string name="tutStepFinishText">Good work, now you could go look at your door in 3d? Or give the walls some color? Later you could see if you work out how to make a photo of your home...</string>
     <string name="share">Share</string>
+    <string name="set_to_device_location">Use device location</string>
 
 </resources>

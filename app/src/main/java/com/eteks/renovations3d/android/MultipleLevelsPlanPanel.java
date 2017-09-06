@@ -361,6 +361,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
 		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
+		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
+
 
 
 		String subMenuTile = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController.class, "wizard.title");
@@ -592,6 +594,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		boolean canModLevel = ((Renovations3DActivity) getActivity()).getHome() != null && ((Renovations3DActivity) getActivity()).getHome().getSelectedLevel() != null;
 		menu.findItem(R.id.planModifyLevel).setEnabled(canModLevel);
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
+		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
 
 		MenuItem redo = menu.findItem(R.id.editRedo);
 		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
@@ -651,6 +654,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				return true;
 			case R.id.planDeleteLevel:
 				planController.deleteSelectedLevel();
+				return true;
+			case R.id.planModifyCompass:
+				planController.modifyCompass();
 				return true;
 			case R.id.controlKeyOneTimer:
 				//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create

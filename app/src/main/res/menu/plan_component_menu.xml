@@ -47,6 +47,9 @@
             <item android:id="@+id/planDeleteLevel"
                 android:title="planDeleteLevel"
                 />
+            <item android:id="@+id/planModifyCompass"
+                  android:title="planModifyCompass"
+                />
         </menu>
     </item>
 

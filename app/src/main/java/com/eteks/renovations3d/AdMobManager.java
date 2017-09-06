@@ -27,15 +27,15 @@ import com.mindblowing.renovations3d.R;
 public class AdMobManager
 {
 
-	private static final boolean ENABLE_INTERSTITIALS = false;
+	private static final boolean ENABLE_INTERSTITIALS = true;
 
 
 	private static final boolean SUPPRESS_ADS = false;//for debug and screenshots overrides force_ads
 	private static final boolean FORCE_DEBUG_ADS = true;//for debug build to still have ads <= PREFER this one! Less dangerous
 	private static final String INTERSTITIAL_POINTS = "INTERSTITIAL_POINTS";
 	private static final String INTERSTITIAL_LAST_SHOWN_TIME = "INTERSTITIAL_LAST_SHOWN_TIME";
-	private static final int INTERSTITIAL_POINTS_THRESHOLD = 10;
-	private static final long INTERSTITIAL_TIME_THRESHOLD = 2 * 24 * 60 * 60 * 1000; // 2 days in ms
+	private static final int INTERSTITIAL_POINTS_THRESHOLD = 3;//10;
+	private static final long INTERSTITIAL_TIME_THRESHOLD = 0;//2 * 24 * 60 * 60 * 1000; // 2 days in ms
 	private Renovations3DActivity renovations3DActivity;
 	private AdRequest.Builder builder = new AdRequest.Builder();
 	private AdView mBasicLowerBannerAdView;

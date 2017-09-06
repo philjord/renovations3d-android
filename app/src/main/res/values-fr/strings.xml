@@ -109,5 +109,6 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="goToCameraPosition">Aller à la position de la caméra</string>
     <string name="tutorialWellDone">Bien joué!</string>
     <string name="share">Partager</string>
+    <string name="set_to_device_location">Utiliser l\'emplacement de l\'appareil</string>
 
 </resources>
