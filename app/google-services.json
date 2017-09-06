@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "69716389910-tdk6e1dts9qr3rvat80nnqnqlruvni94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mindblowing.renovations3d",
+            "certificate_hash": "f122898b35e396cb4f7f06ae7c9a1408fa9d474c"
+          }
+        },
+        {
           "client_id": "69716389910-i93n4dkaihhf0tkgjtlmclnhu05j8lcl.apps.googleusercontent.com",
           "client_type": 3
         }

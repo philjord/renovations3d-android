@@ -28,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.LinearLayout;
 
+import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.ImageAcquireManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.mindblowing.swingish.ActionListener;
@@ -1576,4 +1577,10 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 
 	}
 
+	@Override
+	public void dismissed()
+	{
+		((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.IMPORT_BACKGROUND);
+		((Renovations3DActivity)activity).getAdMobManager().interstitialDisplayPoint();
+	}
 }

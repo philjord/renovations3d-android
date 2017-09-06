@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.ImageAcquireManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.mindblowing.swingish.ActionListener;
@@ -880,4 +881,13 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     //this.attributesPreviewComponent.repaint();
 	  postInvalidate();
   }
+
+
+
+	@Override
+	public void dismissed()
+	{
+		((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.IMPORT_TEXTURE);
+		((Renovations3DActivity)activity).getAdMobManager().interstitialDisplayPoint();
+	}
 }

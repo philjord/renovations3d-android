@@ -35,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.model.RecorderException;
 import com.mindblowing.swingish.ChangeListener;
@@ -844,6 +845,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 						ImageIO.write(photoComponent.getImage(), "PNG", photoFile);
 						Renovations3DActivity.logFireBaseLevelUp("Photo Saved as", pngFile);
 
+						((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.PHOTO_SAVE_OR_SHARE);
+
 						if(share)
 						{
 							Renovations3DActivity.logFireBaseContent("sharephoto_start", "photo name: " + photoFile.getName());
@@ -879,6 +882,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 							}
 							Renovations3DActivity.logFireBaseContent("sharephoto_end", "photo name: " + photoFile.getName());}});
 						}
+
+
 					}
 				}
 				catch (Exception ex)
@@ -896,9 +901,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
    * Manages closing of this pane.
    */
   private void close() {
-
       this.dismiss();
-
+	  ((Renovations3DActivity)activity).getAdMobManager().interstitialDisplayPoint();
   }
 
 

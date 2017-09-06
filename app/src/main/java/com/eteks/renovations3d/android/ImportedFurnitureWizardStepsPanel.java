@@ -54,6 +54,7 @@ import org.jogamp.vecmath.Matrix3f;
 import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
 
+import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.j3d.OBJWriter;
@@ -1746,4 +1747,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       this.controller.setIconYaw(viewYaw);
     }
   }
+
+  @Override
+	public void dismissed()
+	{
+		((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.IMPORT_FURNITURE);
+		((Renovations3DActivity)activity).getAdMobManager().interstitialDisplayPoint();
+	}
 }

@@ -59,4 +59,8 @@ public class JPanel extends LinearLayout
 		parent.addView(newView, index);
 	}
 
+	// useful to tell jpanel when teh parent dialog is dismissed
+	public void dismissed()
+	{
+	}
 }

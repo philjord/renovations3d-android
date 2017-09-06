@@ -147,6 +147,11 @@ public class Renovations3D extends HomeApplication
 		homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
 		parentActivity.setUpViews();
 		parentActivity.invalidateOptionsMenu();
+
+		for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners)
+		{
+			onHomeLoadedListener.onHomeLoaded(home, homeController);
+		}
 	}
 
 

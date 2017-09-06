@@ -480,6 +480,7 @@ public class Renovations3DActivity extends FragmentActivity
 				return true;
 			case R.id.menu_new:
 				newHome();
+				getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.NEW_HOME);
 				return true;
 			case R.id.menu_load:
 				loadSh3dFile();
@@ -489,9 +490,11 @@ public class Renovations3DActivity extends FragmentActivity
 				return true;
 			case R.id.menu_saveas:
 				saveAsSh3dFile();
+				getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.HOME_SAVE_AS);
 				return true;
 			case R.id.menu_share:
 				share();
+				getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.HOME_SHARE);
 				return true;
 			case R.id.menu_help_tutorial:
 				tutorial.setEnable(true);
@@ -762,6 +765,7 @@ public class Renovations3DActivity extends FragmentActivity
 					}
 
 					getHomeController().saveAndCompress();
+					getAdMobManager().interstitialDisplayPoint();
 				}
 			}
 		};
@@ -799,6 +803,7 @@ public class Renovations3DActivity extends FragmentActivity
 						getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener);
 
 					getHomeController().saveAsAndCompress();
+					getAdMobManager().interstitialDisplayPoint();
 				}
 			}
 		};
@@ -915,7 +920,7 @@ public class Renovations3DActivity extends FragmentActivity
 						//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
 
 
-						//after the home is loaded check for an import wizard wanted
+						//after the home is loaded check for an import wizard wanted and show interstitials
 						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
 						{
 							@Override
@@ -948,6 +953,8 @@ public class Renovations3DActivity extends FragmentActivity
 									}
 									importDestination = null;
 								}
+
+								getAdMobManager().interstitialDisplayPoint();
 							}
 						});
 

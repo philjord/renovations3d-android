@@ -322,7 +322,8 @@ public class WizardPane extends AndroidDialogView implements DialogView {
 		  @Override
 		  public void onDismiss(DialogInterface dialog)
 		  {
-			  // nothing perhaps?
+			  if (messagePanel != null)
+				  messagePanel.dismissed();
 		  }
 	  });
 
@@ -330,4 +331,6 @@ public class WizardPane extends AndroidDialogView implements DialogView {
 	  if(!this.isShowing())
 	  	this.show();
   }
+
+
 }
