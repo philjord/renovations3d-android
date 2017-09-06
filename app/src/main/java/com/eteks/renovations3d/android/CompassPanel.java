@@ -19,13 +19,20 @@
  */
 package com.eteks.renovations3d.android;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -401,6 +408,37 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
       });
 
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
+
+
+
+	 Button setToLocationButton = (Button)this.findViewById(R.id.compasspanel_locationButton);
+	  if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+	  {
+		  setToLocationButton.setOnClickListener(new View.OnClickListener()
+		  {
+			  @Override
+			  public void onClick(View v)
+			  {
+				  if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+				  {
+					  // Acquire a reference to the system Location Manager
+					  LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+					  //String locationProvider = LocationManager.NETWORK_PROVIDER;
+					  String locationProvider = LocationManager.GPS_PROVIDER;
+
+					  Location location = locationManager.getLastKnownLocation(locationProvider);
+					  longitudeSpinner.setValue(location.getLongitude());
+					  latitudeSpinner.setValue(location.getLatitude());
+					  longitudeSpinner.postInvalidate();
+					  latitudeSpinner.postInvalidate();
+				  }
+			  }
+		  });
+	  }
+	  else
+	  {
+		  setToLocationButton.setEnabled(false);
+	  }
   }
 
   /**

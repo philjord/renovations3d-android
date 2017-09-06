@@ -1,6 +1,11 @@
 package com.eteks.renovations3d;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +37,7 @@ public class AdMobManager
 	private static final int INTERSTITIAL_POINTS_THRESHOLD = 10;
 	private static final long INTERSTITIAL_TIME_THRESHOLD = 2 * 24 * 60 * 60 * 1000; // 2 days in ms
 	private Renovations3DActivity renovations3DActivity;
-	private AdRequest adRequest;
+	private AdRequest.Builder builder = new AdRequest.Builder();
 	private AdView mBasicLowerBannerAdView;
 	private InterstitialAd mInterstitialAd;
 
@@ -41,12 +46,12 @@ public class AdMobManager
 	{
 		this.renovations3DActivity = renovations3DActivity;
 
-		AdRequest.Builder builder = new AdRequest.Builder();
+
 		//example logcat Use AdRequest.Builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699") to get test ads on this device.
 		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");//T580
 		builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699");//I9505
 		builder.addTestDevice("F1F03BC6248C8ECF32CBB4DD027F78B9");//T210
-		adRequest = builder.build();
+
 
 		mBasicLowerBannerAdView = (AdView) renovations3DActivity.findViewById(R.id.lowerBannerAdView);
 
@@ -72,10 +77,31 @@ public class AdMobManager
 			else
 			{
 				MobileAds.initialize(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
-				mBasicLowerBannerAdView.loadAd(adRequest);
-				if(ENABLE_INTERSTITIALS)
-					mInterstitialAd.loadAd(adRequest);
+				mBasicLowerBannerAdView.loadAd(builder.build());
+				if (ENABLE_INTERSTITIALS)
+					mInterstitialAd.loadAd(builder.build());
 			}
+		}
+	}
+
+	public void locationPermission(boolean granted)
+	{
+		if (granted && renovations3DActivity != null)
+		{
+			if (ActivityCompat.checkSelfPermission(renovations3DActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+			{
+				// Acquire a reference to the system Location Manager
+				LocationManager locationManager = (LocationManager) renovations3DActivity.getSystemService(Context.LOCATION_SERVICE);
+				//String locationProvider = LocationManager.NETWORK_PROVIDER;
+				String locationProvider = LocationManager.GPS_PROVIDER;
+
+				builder.setLocation(locationManager.getLastKnownLocation(locationProvider));
+
+				mBasicLowerBannerAdView.loadAd(builder.build());
+				if (ENABLE_INTERSTITIALS)
+					mInterstitialAd.loadAd(builder.build());
+			}
+
 		}
 	}
 
@@ -128,6 +154,8 @@ public class AdMobManager
 			}
 		}
 	}
+
+
 
 
 	// interstital support
@@ -197,7 +225,7 @@ public class AdMobManager
 								public void onAdClosed() {
 									//This is how I would load the next ad, but because of the time threshold removed to reduce overhead
 									// Load the next interstitial.
-									//mInterstitialAd.loadAd(adRequest);
+									//mInterstitialAd.loadAd(builder.build());
 								}
 								@Override
 								public void onAdFailedToLoad(int errorCode) {

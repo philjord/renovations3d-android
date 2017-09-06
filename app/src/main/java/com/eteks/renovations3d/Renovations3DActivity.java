@@ -55,7 +55,6 @@ import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -110,6 +109,8 @@ public class Renovations3DActivity extends FragmentActivity
 	public static boolean writeExternalStorageGranted = false;
 	public static File downloadsLocation;
 
+	public static boolean locationPermission = false;
+
 	private final Timer autoSaveTimer = new Timer("autosave", true);
 
 	private BillingManager billingManager;
@@ -118,6 +119,7 @@ public class Renovations3DActivity extends FragmentActivity
 	private Tutorial tutorial;
 
 	private Renovations3D renovations3D; // for plan undo redo, now for import statements too
+
 
 	// Description of original
 	// Renovations3D|HomeApplication
@@ -276,7 +278,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 		this.setIntent(intent);
 		mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), renovations3D);
-		permissionGranted();
+		storagePermission();
 	}*/
 
 	public void onCreate(Bundle savedInstanceState)
@@ -353,16 +355,16 @@ public class Renovations3DActivity extends FragmentActivity
 			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED)
 			{
-				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
+				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
 			}
 			else
 			{
-				permissionGranted();
+				storagePermission(true);
 			}
 		}
 		else
 		{
-			permissionGranted();
+			storagePermission(true);
 		}
 	}
 
@@ -1104,37 +1106,63 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	private void permissionGranted()
+	private void storagePermission(boolean granted)
 	{
-		writeExternalStorageGranted = true;
-		downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-		JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer()
+		if(granted)
 		{
-			@Override
-			public File reviewFolder(File folder)
+			writeExternalStorageGranted = true;
+			downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+			JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer()
 			{
-				if (folder == null)
+				@Override
+				public File reviewFolder(File folder)
 				{
-					folder = downloadsLocation;
+					if (folder == null)
+					{
+						folder = downloadsLocation;
+					}
+					else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME))
+					{
+						// extra care in case the caller is trying to use a app cache file location, which is invalid
+						folder = downloadsLocation;
+					}
+					return folder;
 				}
-				else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME))
-				{
-					// extra care in case the caller is trying to use a app cache file location, which is invalid
-					folder = downloadsLocation;
-				}
-				return folder;
-			}
-		});
+			});
 
-		//possibly the ext is not mounted
-		if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+			//possibly the ext is not mounted
+			if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+			{
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
+			}
+
+		}
+
+		if (Build.VERSION.SDK_INT >= M)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
+			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+			{
+				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSION_LOCATION);
+			}
+			else
+			{
+				locationPermission(true);
+			}
+		}
+		else
+		{
+			locationPermission(true);
 		}
 
 		invalidateOptionsMenu();
 		loadUpContent();
+	}
+
+	private void locationPermission(boolean granted)
+	{
+		this.locationPermission = true;
+		this.adMobManager.locationPermission(granted);
 	}
 
 	private void loadUpContent()
@@ -1621,32 +1649,43 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 
-	final private int REQUEST_CODE_ASK_PERMISSIONS = 123;//just has to match from request to response below
+	final private int REQUEST_CODE_ASK_PERMISSION_STORAGE = 123;//just has to match from request to response below
+	final private int  REQUEST_CODE_ASK_PERMISSION_LOCATION = 124;
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
 	{
 		switch (requestCode)
 		{
-			case REQUEST_CODE_ASK_PERMISSIONS:
+			case REQUEST_CODE_ASK_PERMISSION_STORAGE:
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				{
 					// Permission Granted
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Granted");
-					permissionGranted();
+					storagePermission(true);
 				}
 				else
 				{
 					// Permission Denied
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
 
-					//TODO: mention that teh save location of homes will be in a private area making sharing of them more difficult
 					// use that web site example dialogs
 					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
 							.show();
 
-					invalidateOptionsMenu();
-					loadUpContent();
+					storagePermission(false);
+				}
+				break;
+			case REQUEST_CODE_ASK_PERMISSION_LOCATION:
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+				{
+					Renovations3DActivity.logFireBaseContent("location permission Granted");
+					locationPermission(true);
+				}
+				else
+				{
+					Renovations3DActivity.logFireBaseContent("location permission Denied");
+					locationPermission(false);
 				}
 				break;
 			default:

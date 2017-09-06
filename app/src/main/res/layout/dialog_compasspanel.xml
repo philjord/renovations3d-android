@@ -118,6 +118,12 @@
             </TableRow>
 
         </TableLayout>
+        <Button
+            android:id="@+id/compasspanel_locationButton"
+            android:text="Set to device location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"/>
         <TextView
             android:id="@+id/compasspanel_northDirectionComponent"
             android:text="northDirectionComponent"
