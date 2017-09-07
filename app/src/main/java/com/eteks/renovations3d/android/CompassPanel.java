@@ -423,14 +423,21 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 				  {
 					  // Acquire a reference to the system Location Manager
 					  LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-					  //String locationProvider = LocationManager.NETWORK_PROVIDER;
-					  String locationProvider = LocationManager.GPS_PROVIDER;
 
-					  Location location = locationManager.getLastKnownLocation(locationProvider);
-					  longitudeSpinner.setValue(location.getLongitude());
-					  latitudeSpinner.setValue(location.getLatitude());
-					  longitudeSpinner.postInvalidate();
-					  latitudeSpinner.postInvalidate();
+					  Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					  if(location == null)
+					  {
+						  location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					  }
+
+					  // possibly nothing has been returned
+					  if(location != null)
+					  {
+						  longitudeSpinner.setValue(location.getLongitude());
+						  latitudeSpinner.setValue(location.getLatitude());
+						  longitudeSpinner.postInvalidate();
+						  latitudeSpinner.postInvalidate();
+					  }
 				  }
 			  }
 		  });
