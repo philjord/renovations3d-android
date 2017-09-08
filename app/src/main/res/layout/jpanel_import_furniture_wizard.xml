@@ -43,18 +43,13 @@
             </TableRow>
         </TableLayout>
 
-        <ScrollView
+        <ImageView
+            android:id="@+id/ifw_modelPreviewComponent"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fillViewport="true">
+            android:layout_height="match_parent"
+            android:text="modelPreviewComponent"
+            />
 
-            <ImageView
-                android:id="@+id/ifw_modelPreviewComponent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="modelPreviewComponent"
-                />
-        </ScrollView>
 
     </LinearLayout>
 
@@ -65,12 +60,12 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ifw_orientationLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="ifw_orientationLabel"/>
+        <!--  <TextView
+              android:id="@+id/ifw_orientationLabel"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:text="ifw_orientationLabel"/>-->
 
         <TableLayout
             android:layout_width="match_parent"
@@ -80,6 +75,11 @@
             <TableRow>
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+
+                <TextView
                     android:id="@+id/ifw_turnUpButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -87,29 +87,41 @@
                     android:text="ifw_turnUpButton"/>
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
                     android:id="@+id/ifw_turnLeftButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_turnLeftButton"/>
-            </TableRow>
 
-            <TableRow>
                 <TextView
                     android:id="@+id/ifw_defaultOrientationButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_defaultOrientationButton"/>
-            </TableRow>
 
-            <TableRow>
                 <TextView
                     android:id="@+id/ifw_turnRightButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_turnRightButton"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
 
                 <TextView
                     android:id="@+id/ifw_turnDownButton"
@@ -117,37 +129,48 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_turnDownButton"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
+
                 <TextView
                     android:id="@+id/ifw_backFaceShownLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_backFaceShownLabel"/>
+            </TableRow>
+
+            <TableRow>
 
                 <CheckBox
                     android:id="@+id/ifw_backFaceShownCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical"/>
             </TableRow>
 
         </TableLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/ifw_rotationPreviewComponent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="ifw_rotationPreviewComponent"
-                />
-        </ScrollView>
+        <ImageView
+            android:id="@+id/ifw_rotationPreviewComponent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="ifw_rotationPreviewComponent"
+            />
+
 
     </LinearLayout>
 
@@ -157,12 +180,12 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-        <TextView
+    <!--    <TextView
             android:id="@+id/ifw_attributesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="ifw_attributesLabel"/>
+            android:text="ifw_attributesLabel"/>-->
 
         <TableLayout
             android:layout_width="match_parent"
@@ -187,16 +210,6 @@
 
             <TableRow>
 
-                <CheckBox
-                    android:id="@+id/ifw_addToCatalogCheckBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:text="ifw_addToCatalogCheckBox"/>
-            </TableRow>
-
-            <TableRow>
-
                 <TextView
                     android:id="@+id/ifw_categoryLabel"
                     android:layout_width="0dp"
@@ -210,6 +223,30 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/ifw_addToCatalogCheckBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_addToCatalogCheckBox"/>
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
 
             <TableRow>
 
@@ -255,6 +292,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
@@ -262,9 +305,16 @@
                     android:id="@+id/ifw_keepProportionsCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_vertical"
                     android:text="ifw_keepProportionsCheckBox"/>
             </TableRow>
+
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
@@ -274,9 +324,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="ifw_elevationLabel"/>
-            </TableRow>
-
-            <TableRow>
 
                 <NumberPicker
                     android:id="@+id/ifw_elevationSpinner"
@@ -284,6 +331,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
@@ -291,7 +344,7 @@
                     android:id="@+id/ifw_movableCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_vertical"
                     android:text="ifw_movableCheckBox"/>
             </TableRow>
 
@@ -301,7 +354,7 @@
                     android:id="@+id/ifw_doorOrWindowCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_vertical"
                     android:text="ifw_doorOrWindowCheckBox"/>
             </TableRow>
 
@@ -311,9 +364,15 @@
                     android:id="@+id/ifw_staircaseCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center_vertical"
                     android:text="ifw_staircaseCheckBox"/>
             </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
@@ -340,18 +399,14 @@
             </TableRow>
         </TableLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/ifw_attributesPreviewComponent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="ifw_attributesPreviewComponent"
-                />
-        </ScrollView>
+        <ImageView
+            android:id="@+id/ifw_attributesPreviewComponent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="ifw_attributesPreviewComponent"
+            />
+
 
     </LinearLayout>
 

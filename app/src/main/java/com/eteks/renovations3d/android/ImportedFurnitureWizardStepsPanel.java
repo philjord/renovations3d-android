@@ -100,7 +100,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private JButton                           findModelsButton;
   private JLabel                            modelChoiceErrorLabel;
   private ModelPreviewComponent             modelPreviewComponent;
-  private JLabel                            orientationLabel;
+  //private JLabel                            orientationLabel;
   private JButton                           defaultOrientationButton;
   private JButton                           turnLeftButton;
   private JButton                           turnRightButton;
@@ -113,11 +113,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private RotationPreviewComponent          rotationPreviewComponent;
   private JLabel                            backFaceShownLabel;
   private JCheckBox backFaceShownCheckBox;
-  private JLabel                            attributesLabel;
+  //private JLabel                            attributesLabel;
   private JLabel                            nameLabel;
   private JTextField nameTextField;
   private JCheckBox                         addToCatalogCheckBox;
-  private JLabel                            categoryLabel;
+  //private JLabel                            categoryLabel;
   private JComboBox categoryComboBox;
   private JLabel                            widthLabel;
   private JSpinner widthSpinner;
@@ -137,7 +137,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private JButton                           clearColorButton;
   private JLabel                            iconLabel;
   private IconPreviewComponent              iconPreviewComponent;
-  private Cursor defaultCursor;
+  //private Cursor defaultCursor;
   private Executor                          modelLoader;
 
 
@@ -315,12 +315,13 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	 // ImportedFurnitureWizardStepsPanel.TURN_DOWN.SmallIcon=resources/icons/tango/go-down.png
 
     // Orientation panel components
-	  String messageLessStyle3 = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "orientationLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
-	  this.orientationLabel = new JLabel(activity, "");
-	  this.orientationLabel.setText(Html.fromHtml(messageLessStyle3, null, new JOptionPane.ListTagHandler()));
+	  //PJ removed as wrong and too large
+	//  String messageLessStyle3 = preferences.getLocalizedString(
+	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "orientationLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	//  this.orientationLabel = new JLabel(activity, "");
+	//  this.orientationLabel.setText(Html.fromHtml(messageLessStyle3, null, new JOptionPane.ListTagHandler()));
 
-    this.defaultOrientationButton = new JButton(activity, "DEFAULT");
+    this.defaultOrientationButton = new JButton(activity, "□");
 	  this.defaultOrientationButton.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent ev) {
@@ -332,8 +333,8 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     //final String angleTooltipFormat = preferences.getLocalizedString(
 	//		com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "angleTooltipFeedback");
     //this.orientationToolTip = new JToolTip();
-	  //FIXME: all of the below should be lovely jogspinners
-    this.turnLeftButton = new JButton(activity, "LEFT");
+	  //FIXME: all of the below should be lovely jogspinners, but left right up down  would need to be merged
+    this.turnLeftButton = new JButton(activity, "←");
 	  this.turnLeftButton.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionListener.ActionEvent ev) {
@@ -350,7 +351,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           verticalAngle = 0;
         }
       });
-    this.turnRightButton = new JButton(activity,  "RIGHT");
+    this.turnRightButton = new JButton(activity,  "→");
 	  this.turnRightButton.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent ev) {
@@ -367,7 +368,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           verticalAngle = 0;
         }
       });
-    this.turnUpButton = new JButton(activity,  "UP");
+    this.turnUpButton = new JButton(activity,  "↑");
 	  this.turnUpButton.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent ev) {
@@ -384,7 +385,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           horizontalAngle = 0;
         }
       });
-    this.turnDownButton = new JButton(activity, "DOWN");
+    this.turnDownButton = new JButton(activity, "↓");
 	  this.turnDownButton.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent ev) {
@@ -404,6 +405,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
 	  String messageLessStyle4 = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "backFaceShownLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	  messageLessStyle4 = messageLessStyle4.replace("<br>", " ");
 	  this.backFaceShownLabel = new JLabel(activity, "");
 	  this.backFaceShownLabel.setText(Html.fromHtml(messageLessStyle4, null, new JOptionPane.ListTagHandler()));
 
@@ -426,9 +428,9 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     // Attributes panel components
 	  String messageLessStyle = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "attributesLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
-
-    this.attributesLabel = new JLabel(activity, "");
-	  this.attributesLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
+	  messageLessStyle = messageLessStyle.replace("<br>", " ");
+    //this.attributesLabel = new JLabel(activity, "");
+	//  this.attributesLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "nameLabel.text"));
     this.nameTextField = new JTextField(activity, "");
@@ -488,8 +490,8 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       });
 
 
-    this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "categoryLabel.text"));
+   // this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+	//		com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "categoryLabel.text"));
 	  ArrayList<FurnitureCategory> cats = new ArrayList<FurnitureCategory>(preferences.getFurnitureCatalog().getCategories());
 	  this.categoryComboBox = new JComboBox(activity, cats);
 	  categoryComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(activity, android.R.layout.simple_list_item_1, cats)
@@ -591,7 +593,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     final float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, Math.min(controller.getWidth(), minimumLength), maximumLength);
-    this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel);
+    this.widthSpinner = new NullableSpinner(activity, widthSpinnerModel, true);
     widthSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           widthSpinnerModel.removeChangeListener(this);
@@ -613,7 +615,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "depthLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, Math.min(controller.getDepth(), minimumLength), maximumLength);
-    this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel);
+    this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel, true);
     depthSpinnerModel.addChangeListener(new ChangeListener () {
         public void stateChanged(ChangeEvent ev) {
           depthSpinnerModel.removeChangeListener(this);
@@ -635,7 +637,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "heightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, Math.min(controller.getHeight(), minimumLength), maximumLength);
-    this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel);
+    this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
     heightSpinnerModel.addChangeListener(new ChangeListener () {
         public void stateChanged(ChangeEvent ev) {
           heightSpinnerModel.removeChangeListener(this);
@@ -772,6 +774,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     // Icon panel components
 	  String messageLessStyle2 = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "iconLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	  messageLessStyle2 = messageLessStyle2.replace("<br>", " ");
 	  this.iconLabel = new JLabel(activity, "");
 	  this.iconLabel.setText(Html.fromHtml(messageLessStyle2, null, new JOptionPane.ListTagHandler()));
 
@@ -941,8 +944,8 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	  swapOut(this.modelPreviewComponent, R.id.ifw_modelPreviewComponent);
     
     orientationPanel = (LinearLayout) inflatedView.findViewById(R.id.ifw_orientationPanel);
-	  swapOut(this.orientationLabel, R.id.ifw_orientationLabel);
-	  swapOut(this.rotationPreviewComponent, R.id.ifw_rotationPreviewComponent);
+	 // swapOut(this.orientationLabel, R.id.ifw_orientationLabel);
+
 	  swapOut(this.turnUpButton, R.id.ifw_turnUpButton);
 	  swapOut(this.turnLeftButton, R.id.ifw_turnLeftButton);
 	  swapOut(this.defaultOrientationButton, R.id.ifw_defaultOrientationButton);
@@ -950,15 +953,16 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	  swapOut(this.turnDownButton, R.id.ifw_turnDownButton);
 	  swapOut(this.backFaceShownLabel, R.id.ifw_backFaceShownLabel);
 	  swapOut(this.backFaceShownCheckBox, R.id.ifw_backFaceShownCheckBox);
+	  swapOut(this.rotationPreviewComponent, R.id.ifw_rotationPreviewComponent);
 
 
     attributesPanel = (LinearLayout) inflatedView.findViewById(R.id.ifw_attributesPanel);
-	  swapOut(this.attributesLabel, R.id.ifw_attributesLabel);
+	  //swapOut(this.attributesLabel, R.id.ifw_attributesLabel);
 	  swapOut(this.attributesPreviewComponent, R.id.ifw_attributesPreviewComponent);
 	  swapOut(this.nameLabel, R.id.ifw_nameLabel);
 	  swapOut(this.nameTextField, R.id.ifw_nameTextField);
 	  swapOut(this.addToCatalogCheckBox, R.id.ifw_addToCatalogCheckBox);
-	  swapOut(this.categoryLabel, R.id.ifw_categoryLabel);
+	  //swapOut(this.categoryLabel, R.id.ifw_categoryLabel);
 	  swapOut(this.categoryComboBox, R.id.ifw_categoryComboBox);
 	  swapOut(this.widthLabel, R.id.ifw_widthLabel);
 	  swapOut(this.widthSpinner, R.id.ifw_widthSpinner);
@@ -1382,10 +1386,16 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    * Updates the model displayed by preview components.  
    */
   private void updatePreviewComponentsModel(final Content model) {
+
     modelPreviewComponent.setModel(model);
     rotationPreviewComponent.setModel(model);
     attributesPreviewComponent.setModel(model);
     iconPreviewComponent.setModel(model);
+
+	  modelPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
+	  attributesPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
+	  iconPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
+
   }
 
   /**
@@ -1394,6 +1404,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
   private void setModelChangeTexts(UserPreferences preferences) {
 	  String messageLessStyle = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	  messageLessStyle = messageLessStyle.replace("<br>", " ");
 	  this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.text"));
@@ -1411,6 +1422,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
 	  String messageLessStyle = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	  messageLessStyle = messageLessStyle.replace("<br>", " ");
     this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.text"));
@@ -1519,30 +1531,38 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    */
   private static class RotationPreviewComponent extends JPanel {
     private static final int COMPONENT_PREFERRED_WIDTH = Math.round(200 * SwingTools.getResolutionScale());
-    
+
+	private JLabel                perspectiveViewLabel;
     private ModelPreviewComponent perspectiveViewComponent3D;
-    private JLabel                frontViewLabel;
-    private ModelPreviewComponent frontViewComponent3D;
-    private JLabel                sideViewLabel;
-    private ModelPreviewComponent sideViewComponent3D;
+    // private JLabel                frontViewLabel;
+   // private ModelPreviewComponent frontViewComponent3D;
+    //private JLabel                sideViewLabel;
+    //private ModelPreviewComponent sideViewComponent3D;
     private JLabel                topViewLabel;
     private ModelPreviewComponent topViewComponent3D;
-    private JLabel                perspectiveViewLabel;
+
     private BranchGroup           modelNode;
+
+	  private ImportedFurnitureWizardController controller;
 
     public RotationPreviewComponent(UserPreferences preferences, 
                                     final ImportedFurnitureWizardController controller, Activity activity) {
 
 		super(activity, R.layout.jpanel_rotation_preview_component);
+		this.controller = controller;
       createComponents(preferences, controller);
       layoutComponents();
     }
 
     public void setModel(Content model) {
       this.perspectiveViewComponent3D.setModel(model);
-      this.frontViewComponent3D.setModel(model);
-      this.sideViewComponent3D.setModel(model);
+      //this.frontViewComponent3D.setModel(model);
+      //this.sideViewComponent3D.setModel(model);
       this.topViewComponent3D.setModel(model);
+
+		perspectiveViewComponent3D.setBackFaceShown(controller.isBackFaceShown());
+		topViewComponent3D.setBackFaceShown(controller.isBackFaceShown());
+
     }
 
     /**
@@ -1555,21 +1575,21 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       this.perspectiveViewComponent3D.setBackground(backgroundColor);
       addRotationListener(this.perspectiveViewComponent3D, controller, true);
       
-      this.frontViewComponent3D = new ModelPreviewComponent(false, false, false, activity);
+     /* this.frontViewComponent3D = new ModelPreviewComponent(false, false, false, activity);
       this.frontViewComponent3D.setViewYaw(0);
       this.frontViewComponent3D.setViewPitch(0);
       this.frontViewComponent3D.setParallelProjection(true);
       this.frontViewComponent3D.setBackground(backgroundColor);
-      addRotationListener(this.frontViewComponent3D, controller, false);
+      addRotationListener(this.frontViewComponent3D, controller, false);*/
       
-      this.sideViewComponent3D = new ModelPreviewComponent(false, false, false, activity);
+     /* this.sideViewComponent3D = new ModelPreviewComponent(false, false, false, activity);
       this.sideViewComponent3D.setViewYaw(Locale.getDefault().equals(Locale.US) 
           ? -(float)Math.PI / 2 
           : (float)Math.PI / 2);
       this.sideViewComponent3D.setViewPitch(0);
       this.sideViewComponent3D.setParallelProjection(true);
       this.sideViewComponent3D.setBackground(backgroundColor);
-      addRotationListener(this.sideViewComponent3D, controller, false);
+      addRotationListener(this.sideViewComponent3D, controller, false);*/
       
       this.topViewComponent3D = new ModelPreviewComponent(false, false, false, activity);
       this.topViewComponent3D.setViewYaw(0);
@@ -1578,10 +1598,10 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       this.topViewComponent3D.setBackground(backgroundColor);
       addRotationListener(this.topViewComponent3D, controller, false);
 
-      this.frontViewLabel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "frontViewLabel.text"));
-      this.sideViewLabel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "sideViewLabel.text"));
+    //  this.frontViewLabel = new JLabel(activity, preferences.getLocalizedString(
+	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "frontViewLabel.text"));
+    //  this.sideViewLabel = new JLabel(activity, preferences.getLocalizedString(
+	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "sideViewLabel.text"));
       this.topViewLabel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "topViewLabel.text"));
       this.perspectiveViewLabel = new JLabel(activity, preferences.getLocalizedString(
@@ -1689,10 +1709,10 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 		swapOut(perspectiveViewComponent3D, R.id.rpc_perspectiveViewComponent3D);
 		swapOut(topViewLabel, R.id.rpc_topViewLabel);
 		swapOut(topViewComponent3D, R.id.rpc_topViewComponent3D);
-		swapOut(sideViewLabel, R.id.rpc_sideViewLabel);
-		swapOut(sideViewComponent3D, R.id.rpc_sideViewComponent3D);
-		swapOut(frontViewLabel, R.id.rpc_frontViewLabel);
-		swapOut(frontViewComponent3D, R.id.rpc_frontViewComponent3D);
+	//	swapOut(sideViewLabel, R.id.rpc_sideViewLabel);
+	//	swapOut(sideViewComponent3D, R.id.rpc_sideViewComponent3D);
+	//	swapOut(frontViewLabel, R.id.rpc_frontViewLabel);
+	//	swapOut(frontViewComponent3D, R.id.rpc_frontViewComponent3D);
 
     }
   }

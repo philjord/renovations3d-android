@@ -79,6 +79,9 @@ public class ScaledImageComponent extends ImageView
     //setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 	  final float scale = getResources().getDisplayMetrics().density;
 	  modelPreferredSizePx = (int) (MODEL_PREFERRED_SIZE_DP * scale + 0.5f);
+
+	  setMinimumWidth(getPreferredSize().width);
+	  setMinimumHeight(getPreferredSize().height);
   }
 
   /**
@@ -142,7 +145,7 @@ public class ScaledImageComponent extends ImageView
 	}
   protected void paintComponent(Graphics g) {
     if (isOpaque()) {
-      g.setColor(Color.WHITE);
+      g.setColor(Color.CYAN);
       g.fillRect(0, 0, getWidth(), getHeight());
     }
     paintImage(g, null);
@@ -178,6 +181,7 @@ public class ScaledImageComponent extends ImageView
    */
   public void setImage(BufferedImage image) {
     this.image = image;
+
     //revalidate();
     //repaint();
 	  postInvalidate();

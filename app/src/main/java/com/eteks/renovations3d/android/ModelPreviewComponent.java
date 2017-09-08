@@ -21,26 +21,18 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.view.ViewTreeObserver;
-import android.widget.GridLayout;
 
 
 import javaawt.Color;
 import javaawt.Dimension;
-import javaawt.EventQueue;
-import javaawt.Graphics2D;
 import javaawt.GraphicsConfiguration;
-import javaawt.GraphicsEnvironment;
 import javaawt.image.BufferedImage;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.ImageIO;
-import javaxswing.ImageIcon;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,7 +47,6 @@ import org.jogamp.java3d.BoundingSphere;
 import org.jogamp.java3d.BranchGroup;
 import org.jogamp.java3d.Canvas3D;
 import org.jogamp.java3d.DirectionalLight;
-import org.jogamp.java3d.GraphicsConfigTemplate3D;
 import org.jogamp.java3d.Group;
 import org.jogamp.java3d.Light;
 import org.jogamp.java3d.Link;
@@ -83,11 +74,9 @@ import com.eteks.sweethome3d.model.HomeMaterial;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.TemporaryURLContent;
-import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.mindblowing.renovations3d.R;
-import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JPanel;
 
 /**
@@ -113,6 +102,8 @@ public class ModelPreviewComponent extends JPanel
   private HomePieceOfFurniture    previewedPiece;
   private boolean                 internalRotationAndSize;
   private Map<Texture, Texture>   pieceTextures = new HashMap<Texture, Texture>();
+
+	private	ScaledImageComponent modelPreviewImageComponent;
 
   /**
    * Returns an 3D model preview component that lets the user change its yaw.
@@ -160,6 +151,17 @@ public class ModelPreviewComponent extends JPanel
     // Add an ancestor listener to create 3D component and its universe once this component is made visible 
     // and clean up universe once its parent frame is disposed
     addAncestorListener(yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
+
+
+
+
+	  // swap the imagePreviewCompoent out for a component that just uses the getIcon to draw an image
+	  modelPreviewImageComponent = new ScaledImageComponent(null, activity);
+	  modelPreviewImageComponent.setMinimumWidth(modelPreviewImageComponent.getPreferredSize().width);
+	  modelPreviewImageComponent.setMinimumHeight(modelPreviewImageComponent.getPreferredSize().height);
+	  this.swapOut(modelPreviewImageComponent, R.id.mpc_imagePreviewPanel);
+
+
   }
 
 
@@ -601,6 +603,11 @@ public class ModelPreviewComponent extends JPanel
     yawRotation.mul(pitchRotation);
     scale.mul(yawRotation);
     viewPlatformTransform.setTransform(scale);
+
+	  if(modelPreviewImageComponent != null)
+	  {
+		  modelPreviewImageComponent.setImage(this.getIconImage(400));
+	  }
   }
   
   /**
@@ -736,6 +743,8 @@ public class ModelPreviewComponent extends JPanel
         throw exception.get(); 
       }
     }
+
+	  modelPreviewImageComponent.setImage(this.getIconImage(400));
   }
 
   /**
@@ -757,15 +766,17 @@ public class ModelPreviewComponent extends JPanel
     
       TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
       HomePieceOfFurniture3D piece3D = new HomePieceOfFurniture3D(previewedPiece, null, true, true);
-      if (OperatingSystem.isMacOSX()) {
-        this.pieceTextures.clear();
-        cloneTextures(piece3D, this.pieceTextures); 
-      }
+     // if (OperatingSystem.isMacOSX()) {
+     //   this.pieceTextures.clear();
+     //   cloneTextures(piece3D, this.pieceTextures);
+    //  }
       modelTransformGroup.addChild(piece3D);
       if (modelTransformGroup.numChildren() > 1) {
         modelTransformGroup.removeChild(0);
       }
     }
+
+	  modelPreviewImageComponent.setImage(this.getIconImage(400));
   }
 
   /**
@@ -807,7 +818,11 @@ public class ModelPreviewComponent extends JPanel
       
       TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
       modelTransformGroup.setTransform(modelTransform);
+
+		modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
+
+
   }
   
   /**
@@ -840,7 +855,10 @@ public class ModelPreviewComponent extends JPanel
       
       TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
       modelTransformGroup.setTransform(modelTransform);
+
+		modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
+
   }
 
   /**
@@ -851,6 +869,8 @@ public class ModelPreviewComponent extends JPanel
         && this.previewedPiece.getColor() != color) {
       this.previewedPiece.setColor(color);
       getModelNode().update();
+
+		modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
   }
 
@@ -863,6 +883,8 @@ public class ModelPreviewComponent extends JPanel
       getModelNode().update();
       // Replace textures by clones because Java 3D doesn't accept all the time to share textures 
       cloneTextures(getModelNode(), this.pieceTextures);
+
+		modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
   }
 

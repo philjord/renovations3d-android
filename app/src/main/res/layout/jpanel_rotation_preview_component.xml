@@ -10,53 +10,69 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/rpc_perspectiveViewLabel"
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+            android:stretchColumns="*">
 
-        <TextView
-            android:id="@+id/rpc_perspectiveViewComponent3D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+            <TableRow>
 
-        <TextView
-            android:id="@+id/rpc_topViewLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:id="@+id/rpc_perspectiveViewLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/rpc_topViewComponent3D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/rpc_sideViewLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:id="@+id/rpc_topViewLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/rpc_sideViewComponent3D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+            </TableRow>
 
-        <TextView
-            android:id="@+id/rpc_frontViewLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+            <TableRow>
 
-        <TextView
-            android:id="@+id/rpc_frontViewComponent3D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:id="@+id/rpc_perspectiveViewComponent3D"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/rpc_topViewComponent3D"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+        <!-- <TextView
+             android:id="@+id/rpc_sideViewLabel"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical"/>
+
+         <TextView
+             android:id="@+id/rpc_sideViewComponent3D"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical"/>
+
+         <TextView
+             android:id="@+id/rpc_frontViewLabel"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical"/>
+
+         <TextView
+             android:id="@+id/rpc_frontViewComponent3D"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical"/>-->
 
 
     </LinearLayout>
