@@ -85,7 +85,8 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     controller.addPropertyChangeListener(WizardController.Property.STEP_VIEW, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            updateStepView(controller);
+			  WizardPane.this.activity.runOnUiThread(new Runnable(){public void run(){
+			  updateStepView(controller);}});
           }
         });
     
@@ -93,7 +94,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     controller.addPropertyChangeListener(WizardController.Property.STEP_ICON, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            updateStepIcon(controller);
+			  WizardPane.this.activity.runOnUiThread(new Runnable(){public void run(){updateStepIcon(controller);}});
           }
         });
   }
@@ -106,7 +107,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     controller.addPropertyChangeListener(WizardController.Property.BACK_STEP_ENABLED, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            backOptionButton.setEnabled(controller.isBackStepEnabled());
+			  WizardPane.this.activity.runOnUiThread(new Runnable(){public void run(){backOptionButton.setEnabled(controller.isBackStepEnabled());}});
           }
         });
 
@@ -115,7 +116,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     controller.addPropertyChangeListener(WizardController.Property.NEXT_STEP_ENABLED, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            nextFinishOptionButton.setEnabled(controller.isNextStepEnabled());
+			  WizardPane.this.activity.runOnUiThread(new Runnable(){public void run(){nextFinishOptionButton.setEnabled(controller.isNextStepEnabled());}});
           }
         });
     
@@ -124,7 +125,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     controller.addPropertyChangeListener(WizardController.Property.LAST_STEP, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            updateNextFinishOptionButton(controller);
+			  WizardPane.this.activity.runOnUiThread(new Runnable(){public void run(){updateNextFinishOptionButton(controller);}});
           }
         });
     

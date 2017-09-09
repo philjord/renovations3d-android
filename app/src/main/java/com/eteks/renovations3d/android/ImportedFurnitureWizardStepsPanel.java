@@ -1391,11 +1391,6 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     rotationPreviewComponent.setModel(model);
     attributesPreviewComponent.setModel(model);
     iconPreviewComponent.setModel(model);
-
-	  modelPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
-	  attributesPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
-	  iconPreviewComponent.setBackFaceShown(controller.isBackFaceShown());
-
   }
 
   /**
@@ -1559,11 +1554,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       //this.frontViewComponent3D.setModel(model);
       //this.sideViewComponent3D.setModel(model);
       this.topViewComponent3D.setModel(model);
-
-		perspectiveViewComponent3D.setBackFaceShown(controller.isBackFaceShown());
-		topViewComponent3D.setBackFaceShown(controller.isBackFaceShown());
-
-    }
+   }
 
     /**
      * Creates components displayed by this panel.

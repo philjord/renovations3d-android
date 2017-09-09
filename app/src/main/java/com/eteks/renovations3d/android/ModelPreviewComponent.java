@@ -724,14 +724,19 @@ public class ModelPreviewComponent extends JPanel
                 modelTransformGroup.setTransform(modelTransform);
 
                 HomePieceOfFurniture3D piece3D = new HomePieceOfFurniture3D(previewedPiece, null, true, true);
-                if (OperatingSystem.isMacOSX()) {
-                  cloneTextures(piece3D, pieceTextures); 
-                }
+                //if (OperatingSystem.isMacOSX()) {
+                //  cloneTextures(piece3D, pieceTextures);
+                //}
                 modelTransformGroup.addChild(piece3D);
               } catch (IllegalArgumentException ex) {
                 // Model is empty
               }
             }
+
+            //Oddly the back faces appear to start off inverted or something? not sure?
+			  // but this make 2 calls to render icon
+			  setBackFaceShown(true);
+			  setBackFaceShown(backFaceShown);
           }
           
           public void modelError(Exception ex) {
@@ -744,7 +749,7 @@ public class ModelPreviewComponent extends JPanel
       }
     }
 
-	  modelPreviewImageComponent.setImage(this.getIconImage(400));
+
   }
 
   /**
