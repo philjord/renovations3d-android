@@ -249,7 +249,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", null);
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps)", null);
 		// equal to addAncestor listeners but that's too late by far
 		gl_window.addGLEventListener(glWindowInitListener);
 
@@ -271,7 +271,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public void display(final GLAutoDrawable drawable)
 		{
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start display", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start display", null );
 
 			//odd createComponent3D calls addMouseListener which attaches this listener to the view
 			// that view is being destroyed and I'm getting back here so I have to re-add the mouse listener now
@@ -377,7 +377,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					}
 				});
 			}
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end display", null );
+			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end display", null );
 		}
 
 		@Override
@@ -426,11 +426,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onStart()
 	{
 		super.onStart();
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStart", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onStart", null );
 	}
 	public void onResume()
 	{
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onResume", null );
 		super.onResume();
 
 		// ok at this point either
@@ -467,7 +467,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	@Override
 	public void onPause()
 	{
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onPause", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onPause", null );
 
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
@@ -490,7 +490,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	@Override
 	public void onStop()
 	{
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onStop", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onStop", null );
 		// MUST output GLStatePreserved on console, or it won't restart
 		super.onStop();
 		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onStop", null );
@@ -499,7 +499,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	@Override
 	public void onDestroy()
 	{
-		Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onDestroy", null );
+		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onDestroy", null );
 		// now we want to dump the universe as this fragment is being garbage collected shortly
 		if(canvas3D2D != null)
 		{
