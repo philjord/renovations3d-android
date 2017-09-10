@@ -61,6 +61,7 @@ import com.mindblowing.renovations3d.R;
 
 
 import javaawt.BasicStroke;
+import javaawt.Color;
 import javaawt.Graphics2D;
 import javaawt.RenderingHints;
 import javaawt.VMGraphics2D;
@@ -352,6 +353,8 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 
 			Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
 
+			g2D.setColor(Color.black);
+
           g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
           g2D.translate(getWidth() / 2, getHeight() / 2);
           g2D.scale(getWidth() / 2, getWidth() / 2);
@@ -382,6 +385,9 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
           needlePath.lineTo(0.02f, 0);
           g2D.setStroke(new BasicStroke(4 / getWidth()));
           g2D.draw(needlePath);
+
+
+
         }
       };
 	  final float scale = activity.getResources().getDisplayMetrics().density;
