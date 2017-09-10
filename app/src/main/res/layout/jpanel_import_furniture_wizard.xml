@@ -25,6 +25,16 @@
             <TableRow>
 
                 <Button
+                    android:id="@+id/ifw_findModelsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="findModelsButton"/>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
                     android:id="@+id/ifw_modelChoiceOrChangeButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -32,15 +42,7 @@
                     android:text="modelChoiceOrChangeButton"/>
             </TableRow>
 
-            <TableRow>
 
-                <Button
-                    android:id="@+id/ifw_findModelsButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="findModelsButton"/>
-            </TableRow>
         </TableLayout>
 
         <ImageView
@@ -180,12 +182,12 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-    <!--    <TextView
-            android:id="@+id/ifw_attributesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="ifw_attributesLabel"/>-->
+        <!--    <TextView
+                android:id="@+id/ifw_attributesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="ifw_attributesLabel"/>-->
 
         <TableLayout
             android:layout_width="match_parent"

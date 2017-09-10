@@ -20,13 +20,22 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
-import android.database.Cursor;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,8 +47,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.Provider;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -70,6 +79,9 @@ import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.ImportedFurnitureWizardController;
 import com.eteks.sweethome3d.viewcontroller.ImportedFurnitureWizardStepsView;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.mindblowing.renovations3d.R;
 import com.mindblowing.swingish.ActionListener;
 import com.mindblowing.swingish.ChangeListener;
@@ -217,8 +229,8 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     try {
       this.findModelsButton = new JButton(activity,SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text"));
-      final String findModelsUrl = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+      //final String findModelsUrl = preferences.getLocalizedString(
+		//	  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
       this.findModelsButton.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent ev) {
             boolean documentShown = false;
@@ -234,7 +246,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
               // with a copiable URL in a message box 
 //              JTextArea findModelsMessageTextArea = new JTextArea(activity, preferences.getLocalizedString(
 //					  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text"));
-              String findModelsTitle = preferences.getLocalizedString(
+/*              String findModelsTitle = preferences.getLocalizedString(
 					  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.title");
 //              findModelsMessageTextArea.setEditable(false);
 //              findModelsMessageTextArea.setOpaque(false);
@@ -248,7 +260,10 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
               JOptionPane.showMessageDialog(activity,string
 					  , findModelsTitle,
 					  // findModelsMessageTextArea, findModelsTitle,
-                  JOptionPane.INFORMATION_MESSAGE);
+                  JOptionPane.INFORMATION_MESSAGE);*/
+
+				activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=qQviwL2opzQ")));
+				Renovations3DActivity.logFireBaseContent("findModels video showen");
             }
           }
         });
@@ -304,8 +319,6 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       });*/
     //this.modelPreviewComponent.setBorder(SwingTools.getDropableComponentBorder());
 
-
-//FIXME: the button below only have icons
 	//  ImportedFurnitureWizardStepsPanel.DEFAULT_ORIENTATION.ShortDescription=Reset to default orientation
 
 	//  ImportedFurnitureWizardStepsPanel.DEFAULT_ORIENTATION.SmallIcon=resources/icons/tango/identity.png
@@ -1397,10 +1410,18 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    * Sets the texts of label and button of model panel with change texts. 
    */
   private void setModelChangeTexts(UserPreferences preferences) {
+	  String findModelsUrl = preferences.getLocalizedString(
+			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+	  String findModelsTxt = SwingTools.getLocalizedLabelText(preferences,
+			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
 	  String messageLessStyle = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle = messageLessStyle.replace("<br>", " ");
+	  messageLessStyle += "<br><a href=\""+findModelsUrl+"\">"+findModelsTxt+"</a>";
 	  this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
+	  modelChoiceOrChangeLabel.setLinksClickable(true);
+	  modelChoiceOrChangeLabel.setMovementMethod(LinkMovementMethod.getInstance());
+
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.text"));
    /* if (!OperatingSystem.isMacOSX()) {
@@ -1414,11 +1435,18 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    * Sets the texts of label and button of model panel with choice texts. 
    */
   private void setModelChoiceTexts(UserPreferences preferences) {
-
+	  String findModelsUrl = preferences.getLocalizedString(
+			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+	  String findModelsTxt = SwingTools.getLocalizedLabelText(preferences,
+			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
 	  String messageLessStyle = preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle = messageLessStyle.replace("<br>", " ");
+	  messageLessStyle += "<br><a href=\""+findModelsUrl+"\">"+findModelsTxt+"</a>";
     this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
+	  modelChoiceOrChangeLabel.setLinksClickable(true);
+	  modelChoiceOrChangeLabel.setMovementMethod(LinkMovementMethod.getInstance());
+
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.text"));
    /* if (!OperatingSystem.isMacOSX()) {
@@ -1765,4 +1793,5 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 		((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.IMPORT_FURNITURE);
 		((Renovations3DActivity)activity).getAdMobManager().interstitialDisplayPoint();
 	}
+
 }

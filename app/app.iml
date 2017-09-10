@@ -121,6 +121,7 @@
     <orderEntry type="library" exported="" name="transitionseverywhere-1.7.4" level="project" />
     <orderEntry type="library" exported="" name="preference-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="jogl-all-android" level="project" />
+    <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
     <orderEntry type="library" exported="" name="jogamp-natives" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.21" level="project" />

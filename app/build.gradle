@@ -67,5 +67,6 @@ dependencies {
     compile 'com.andkulikov:transitionseverywhere:1.7.4'
     compile 'com.github.mobfox:MobFox-Android-SDK-Core:3.2.7d'
     compile files('libs/MobFox-Android-AdMob-Adapter.jar')
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
 apply plugin: 'com.google.gms.google-services'

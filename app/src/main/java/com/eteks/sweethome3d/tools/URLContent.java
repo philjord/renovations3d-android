@@ -57,7 +57,10 @@ public class URLContent implements Content {
   public InputStream openStream() throws IOException {
 	  //PJPJPJ Android can run under Java 5 for version 4.2 and Java 5
 	  //does not recognize %20 etc in file names inside jars correctly
-	  String path = URLDecoder.decode(getURL().toString(), "UTF-8");
+	  // also see https://stackoverflow.com/questions/43375916/urldecoder-is-converting-into-space for + problems
+	  String pathUrl = getURL().toString();
+	  pathUrl = pathUrl.replaceAll("\\+", "%2b");
+	  String path = URLDecoder.decode(pathUrl, "UTF-8");
 	  URLConnection connection = new URL(path).openConnection();
 
 	  // URLConnection connection = getURL().openConnection();
