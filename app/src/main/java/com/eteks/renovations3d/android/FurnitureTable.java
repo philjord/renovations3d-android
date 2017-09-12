@@ -858,7 +858,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 							//storeExpandedRows(home, controller);
 							//PJPJPJ note wildly expensive, must use only the value in source and update a single row
 							updateTable();
-							getView().postInvalidate();
+							if(getView()!= null)
+								getView().postInvalidate();
 						}
 					}
 				};
@@ -1334,7 +1335,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				} else {
 					updateHeader();
 					updateTable();
-					getView().postInvalidate();
+					if(getView()!= null)
+						getView().postInvalidate();
 					// Change column name and renderer from current locale
 /*					for (TableColumn tableColumn : furnitureTableColumnModel.availableColumns.values()) {
 						HomePieceOfFurniture.SortableProperty columnIdentifier =
