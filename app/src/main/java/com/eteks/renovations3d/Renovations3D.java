@@ -139,6 +139,10 @@ public class Renovations3D extends HomeApplication
 	public void newHome()
 	{
 		Renovations3DActivity.logFireBaseContent("newHome");
+
+		// force dump old pref property change support
+		this.getUserPreferences().clearPropertyChangeListeners();
+
 		currentHomeReduceVisible = false;
 		home = new Home();
 		home.setName(null);// ensures save does a save as
@@ -162,6 +166,9 @@ public class Renovations3D extends HomeApplication
 	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
 	{
 		Renovations3DActivity.logFireBaseContent("loadHomeFile", homeFile.getName());
+
+		// force dump old pref property change support
+		this.getUserPreferences().clearPropertyChangeListeners();
 
 		final String homeName = homeFile.getAbsolutePath();
 		// this guy is stolen from the HomeController.open method which does fancy stuff

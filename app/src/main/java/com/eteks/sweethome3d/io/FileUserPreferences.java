@@ -21,6 +21,7 @@ package com.eteks.sweethome3d.io;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -373,6 +374,19 @@ public class FileUserPreferences extends UserPreferences {
       this.preferences = preferences;
     }
   }
+
+	public void clearPropertyChangeListeners()
+	{
+		super.clearPropertyChangeListeners();
+		addPropertyChangeListener(Property.LANGUAGE, new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
+				// Update catalogs with new default locale
+				updateFurnitureDefaultCatalog(catalogsLoader, FileUserPreferences.this.updater);
+				updateTexturesDefaultCatalog(catalogsLoader, FileUserPreferences.this.updater);
+				updateAutoCompletionStrings();
+			}
+		});
+	}
   
   /**
    * Updates the default supported languages with languages available in plugin folder. 
