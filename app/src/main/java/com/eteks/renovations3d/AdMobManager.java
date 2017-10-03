@@ -5,16 +5,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
 
@@ -24,10 +30,6 @@ import com.mindblowing.renovations3d.R;
 
 public class AdMobManager
 {
-
-	private static final boolean ENABLE_INTERSTITIALS = false;
-
-
 	private static final boolean SUPPRESS_ADS = false;//for debug and screenshots overrides force_ads
 	private static final boolean FORCE_DEBUG_ADS = true;//for debug build to still have ads <= PREFER this one! Less dangerous
 	private static final String INTERSTITIAL_POINTS = "INTERSTITIAL_POINTS";
@@ -39,10 +41,46 @@ public class AdMobManager
 	private AdView mBasicLowerBannerAdView;
 	private InterstitialAd mInterstitialAd;
 
+	private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
-	public AdMobManager(Renovations3DActivity renovations3DActivity)
+
+	public AdMobManager(final Renovations3DActivity renovations3DActivity)
 	{
 		this.renovations3DActivity = renovations3DActivity;
+
+		mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+				.setDeveloperModeEnabled(BuildConfig.DEBUG)
+				.build();
+		mFirebaseRemoteConfig.setConfigSettings(configSettings);
+		mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+
+		long cacheExpiration = 3600; // 1 hour in seconds.
+		// If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
+		// retrieve values from the service.
+		if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+			cacheExpiration = 0;
+		}
+		// cacheExpirationSeconds is set to cacheExpiration here, indicating the next fetch request
+		// will use fetch data from the Remote Config service, rather than cached parameter values,
+		// if cached parameter values are more than cacheExpiration seconds old.
+		// See Best Practices in the README for more information.
+		mFirebaseRemoteConfig.fetch(cacheExpiration)
+				.addOnCompleteListener(renovations3DActivity, new OnCompleteListener<Void>() {
+					@Override
+					public void onComplete(@NonNull Task<Void> task) {
+						if (task.isSuccessful()) {
+							// After config data is successfully fetched, it must be activated before newly fetched
+							// values are returned.
+							mFirebaseRemoteConfig.activateFetched();
+						} else {
+						}
+					}
+				});
+
+
+
 
 		//example logcat Use AdRequest.Builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699") to get test ads on this device.
 		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");//T580
@@ -74,26 +112,26 @@ public class AdMobManager
 			{
 				MobileAds.initialize(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
 				mBasicLowerBannerAdView.loadAd(builder.build());
-				if (ENABLE_INTERSTITIALS)
+				mInterstitialAd.setAdListener(new AdListener()
 				{
-					mInterstitialAd.loadAd(builder.build());
-					mInterstitialAd.setAdListener(new AdListener()
+					@Override
+					public void onAdClosed()
 					{
-						@Override
-						public void onAdClosed()
-						{
-							//This is how I would load the next ad, but because of the time threshold removed to reduce overhead
-							// Load the next interstitial.
-							//mInterstitialAd.loadAd(builder.build());
-						}
+						//This is how I would load the next ad, but because of the time threshold removed to reduce overhead
+						// Load the next interstitial.
+						//mInterstitialAd.loadAd(builder.build());
+					}
 
-						@Override
-						public void onAdFailedToLoad(int errorCode)
-						{
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + errorCode, null);
-						}
-					});
-				}
+					@Override
+					public void onAdFailedToLoad(int errorCode)
+					{
+						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + errorCode, null);
+					}
+				});
+
+
+				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
+					mInterstitialAd.loadAd(builder.build());
 			}
 		}
 	}
@@ -112,7 +150,7 @@ public class AdMobManager
 				builder.setLocation(locationManager.getLastKnownLocation(locationProvider));
 
 				mBasicLowerBannerAdView.loadAd(builder.build());
-				if (ENABLE_INTERSTITIALS)
+				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
 					mInterstitialAd.loadAd(builder.build());
 			}
 
@@ -231,12 +269,14 @@ public class AdMobManager
 						editor.putLong(INTERSTITIAL_LAST_SHOWN_TIME, System.currentTimeMillis());
 						editor.apply();
 
-						if (ENABLE_INTERSTITIALS )
+						if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
 						{
 							if (mInterstitialAd.isLoaded())
 							{
 								Renovations3DActivity.logFireBaseContent("INTERSTITIAL SHOWN", null);
 								mInterstitialAd.show();
+
+								//if more than one per day and session then loadAd needs to be called here
 							}
 							else
 							{

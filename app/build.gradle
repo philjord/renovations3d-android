@@ -56,10 +56,11 @@ dependencies {
     compile files('libs/sunflow-0.07.3pj.jar')
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:preference-v7:25.3.1'
-    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-core:11.0.0'
     // all firebase libs versions must match
-    compile 'com.google.firebase:firebase-ads:10.0.1'
-    releaseCompile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-ads:11.0.0'
+    compile 'com.google.firebase:firebase-config:11.0.0'
+    releaseCompile 'com.google.firebase:firebase-crash:11.0.0'
     compile 'com.github.yukuku:ambilwarna:2.0.1'
     //color picker dialog
     //compile 'com.google.vr:sdk-audio:1.10.0'
@@ -68,5 +69,6 @@ dependencies {
     compile 'com.github.mobfox:MobFox-Android-SDK-Core:3.2.7d'
     compile files('libs/MobFox-Android-AdMob-Adapter.jar')
     compile files('libs/YouTubeAndroidPlayerApi.jar')
+
 }
 apply plugin: 'com.google.gms.google-services'
