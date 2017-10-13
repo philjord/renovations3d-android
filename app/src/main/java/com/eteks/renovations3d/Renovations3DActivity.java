@@ -464,6 +464,11 @@ public class Renovations3DActivity extends FragmentActivity
 			String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name");
 			setIconizedMenuTitle(helpMI, helpStr, android.R.drawable.ic_menu_help);
 
+
+			MenuItem onlineHelpMI = menu.findItem(R.id.menu_online_help);
+			String onlineHelpStr = getResources().getString(R.string.menu_help_online);
+			setIconizedMenuTitle(onlineHelpMI, onlineHelpStr, android.R.drawable.ic_menu_help);
+
 			MenuItem aboutMI = menu.findItem(R.id.menu_about);
 			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
 			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details);
@@ -501,7 +506,7 @@ public class Renovations3DActivity extends FragmentActivity
 			case R.id.menu_help_tutorial:
 				tutorial.setEnable(true);
 				return true;
-			case R.id.menu_help:
+			case R.id.menu_online_help:
 				showHelp();
 				return true;
 			case R.id.menu_about:

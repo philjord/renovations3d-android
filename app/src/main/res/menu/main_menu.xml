@@ -29,6 +29,7 @@
         android:orderInCategory="990"
         android:title="@string/menu_preferences"/>
     <item
+        android:id="@+id/menu_help"
         android:orderInCategory="991"
         android:title="@string/menu_help">
         <menu>
@@ -36,7 +37,7 @@
                 android:id="@+id/menu_help_tutorial"
                 android:title="@string/menu_help_tutorial"/>
             <item
-                android:id="@+id/menu_help"
+                android:id="@+id/menu_online_help"
                 android:title="@string/menu_help_online"/>
             <item
                 android:id="@+id/menu_about"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Renovations 3D</string>
-    <string name="alignment">对准</string>
-    <string name="magnetism">磁</string>
+    <string name="alignment">對準</string>
+    <string name="magnetism">具有磁性</string>
     <string name="welcometext_planview"><![CDATA[<html>
 用兩根手指拖動移動計劃，而不改變所選的內容。<br>
 雙擊任何對象進行編輯。<br>
@@ -25,21 +25,21 @@
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
     <string name="menu_show3dcaps">GPU信息</string>
-    <string name="select_multiple">选择多个</string>
-    <string name="select_lasso">选择套索</string>
+    <string name="select_multiple">全選</string>
+    <string name="select_lasso">群組</string>
     <string name="help_about"><![CDATA[<html><center><font face="sans-serif"><font size="+2"><b>Renovations 3D</b></font> <sup>&reg;</sup>
     <br><b>版本 %1$s</b>
     <br><font size="-1">Java 版本 %2$s</font>
-    <br><font size="-1">PDF 打印由 <a href="http://www.lowagie.com/iText/">iText</a> 提供</font>
-    <br><font size="-1">SVG 导出由 <a href="http://java.freehep.org/">FreeHEP</a> 提供</font>
+    <br><font size="-1">PDF 列印由 <a href="http://www.lowagie.com/iText/">iText</a> 提供</font>
+    <br><font size="-1">SVG 插入由 <a href="http://java.freehep.org/">FreeHEP</a> 提供</font>
     <br><font size="-1">照相渲染由 <a href="http://sunflow.sourceforge.net/">SunFlow</a> 提供</font>
-    <p>简体中文语言由<a href="mailto:lonely.ibm@gmail.com">赵斯聪</a>制作
-    <p>请访问 <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
-	<br>和 <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
+    <p>繁體中文語言由<a href="mailto:scleea@ms46.hinet.net">李新廠</a>製作
+    <p>請拜訪 <a href="http://www.renovations3d.com/">http://www.renovations3d.com/</a>
+    <br>和 <a href="http://www.sweethome3d.com/">http://www.sweethome3d.com/</a>
     <br>了解更多信息。
-    </p><p><font size="-2">© 版权所有 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
-    </p><p><font size="-2">建立在开源代码的基础上 © 版权所有 2006-2017 eTeks
-	</font>]]></string>
+    </p><p><font size="-2">© 版權所有 2016-2017 Mindblowing Software &lt;<a href="mailto:support@renovations3d.com">support@renovations3d.com</a>>
+    </p><p><font size="-2">建立在開源代碼的基礎上 © 版權所有 2006-2017 eTeks
+    </font>]]>\n\n</string>
     <string name="helpmenu_no_work">菜单 - >帮助目前什么都不做。</string>
     <string name="large_home_question_title">潜在的问题</string>
     <string name="large_home_question"><![CDATA[<html>
@@ -64,9 +64,9 @@
     <string name="showOtherHandles">顯示其他手柄</string>
     <string name="showPagerButtons">顯示尋呼機按鈕</string>
     <string name="useChunkyHandles">顯示大塊手柄</string>
-    <string name="menu_help_online">網上幫助</string>
-    <string name="menu_help_tutorial">教程</string>
-    <string name="tutStep0Title">教程</string>
+    <string name="menu_help_online">教學網站</string>
+    <string name="menu_help_tutorial">教學</string>
+    <string name="tutStep0Title">教學</string>
     <string name="tutStep0Text">對於錯誤使用撤消。 用一根手指拖動計劃，用縮小動作進行縮放。 現在嘗試移動計劃...（您可以隨時關閉/顯示本教程。）</string>
     <string name="tutStep10Text">移動椅子，並嘗試旋轉它。</string>
     <string name="tutStep10Title">添加椅子 - 3</string>
