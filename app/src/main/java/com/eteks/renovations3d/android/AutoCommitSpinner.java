@@ -57,7 +57,11 @@ public class AutoCommitSpinner extends JSpinner
 						   Format format, boolean allowTextEntry) {
 	super(context, model, format, allowTextEntry);
 
-	  //TODO: this has no more function a than a spinner? what's autocommit mean?
+	  //PJ autocommit means the value typed is immediately passed to any listeners so they can update as it's typed
+
+	  //TODO: this class should also set the value when edited so an inch editor should flip to
+	  // the feet display when the focus is lost, but currently it doesn't properly, to see this just manually edit
+	  // an X value with feet/inches/fractions as units
 
     /*JComponent editor = getEditor();
     if (editor instanceof JSpinner.DefaultEditor) {

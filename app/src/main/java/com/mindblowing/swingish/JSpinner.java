@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.Format;
+import java.text.ParseException;
 
 
 /**
@@ -42,7 +43,25 @@ public class JSpinner extends LinearLayout
 		{
 			try
 			{
-				model.setValue(Float.parseFloat(output.getText().toString()));
+				if (currentFormat != null)
+				{
+					try
+					{
+						Object parsed = currentFormat.parseObject(output.getText().toString());
+						if(parsed instanceof Number)
+							model.setValue(parsed);
+						else
+							model.setValue(Float.parseFloat(output.getText().toString()));
+					}
+					catch (ParseException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					model.setValue(Float.parseFloat(output.getText().toString()));
+				}
 			}catch(NumberFormatException e)
 			{
 				//possibly entering a -ve number or something, just ignore for now
@@ -63,7 +82,7 @@ public class JSpinner extends LinearLayout
 			if(output instanceof EditText)
 				output.removeTextChangedListener(textWatcher);
 
-			if(model.getValue() !=null)
+			if(model.getValue() != null)
 			{
 				if (currentFormat != null)
 					output.setText(currentFormat.format(model.getValue()));
@@ -118,10 +137,7 @@ public class JSpinner extends LinearLayout
 		if(output instanceof EditText)
 			output.addTextChangedListener(textWatcher);
 
-
 		model.addChangeListener(changerListener);
-
-
 
 		SpannableStringBuilder upSB = new SpannableStringBuilder("*");// it will replace "*" with icon
 		upSB.setSpan(new ImageSpan(context, android.R.drawable.arrow_up_float), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
