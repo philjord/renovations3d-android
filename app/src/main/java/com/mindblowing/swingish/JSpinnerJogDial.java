@@ -70,7 +70,8 @@ public class JSpinnerJogDial extends NumberPicker
 
 	private int valueToDisplayIndex()
 	{
-		return valueToDisplayIndex(((Number)getModel().getValue()).doubleValue());
+		double value = model.getValue() == null ? 0 : ((Number)model.getValue()).doubleValue();
+		return valueToDisplayIndex(value);
 	}
 
 	private int valueToDisplayIndex(double v)
@@ -91,7 +92,9 @@ public class JSpinnerJogDial extends NumberPicker
 	{
 		double displayMin = model.getMinimum();
 		double displayMax = model.getMaximum();
-		double value = ((Number)model.getValue()).doubleValue();
+
+		// null means no current value to be shown, but jog dial can't handle that
+		double value = model.getValue() == null ? 0 : ((Number)model.getValue()).doubleValue();
 		double stepSize = model.getStepSize().doubleValue();
 
 		int maxSteps = 500; // cos anything big should actually be jspinner2 now

@@ -1,115 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/levelsSpinner"
-          android:title="Level"
-          android:showAsAction="always"
-          android:actionViewClass="android.widget.Spinner"
+    <item
+        android:id="@+id/levelsSpinner"
+        android:actionViewClass="android.widget.Spinner"
+        android:showAsAction="always"
+        android:title="Level"
         />
 
-    <item android:id="@+id/toolSelectSpinner"
-          android:title="CurrentTool"
-          android:showAsAction="always"
-          android:actionViewClass="android.widget.Spinner"
+    <item
+        android:id="@+id/toolSelectSpinner"
+        android:actionViewClass="android.widget.Spinner"
+        android:showAsAction="always"
+        android:title="CurrentTool"
         />
 
-    <item android:id="@+id/editUndo"
-            android:title="undo"
-            android:icon="@drawable/edit_undo"
-            android:showAsAction="always"
+    <item
+        android:id="@+id/editUndo"
+        android:icon="@drawable/edit_undo"
+        android:showAsAction="always"
+        android:title="undo"
         />
 
-    <item android:id="@+id/delete"
-        android:title="delete"
+    <item
+        android:id="@+id/delete"
         android:icon="@drawable/user_trash"
         android:showAsAction="always"
+        android:title="delete"
         />
 
-    <item android:id="@+id/planGoto3D"
-        android:title="3D"
+    <item
+        android:id="@+id/planGoto3D"
         android:icon="@drawable/plan_goto_3d"
         android:showAsAction="always"
+        android:title="3D"
         />
 
-    <item android:id="@+id/planLevelMenu"
-          android:title="planLevels"
-          android:showAsAction="never">
+
+    <item
+        android:id="@+id/planModifyMenu"
+        android:showAsAction="never"
+        android:title="planModifyMenu">
         <menu>
-            <item android:id="@+id/planAddLevel"
-              android:title="planAddLevel"
+            <item
+                android:id="@+id/planModifyFurniture"
+                android:title="planModifyFurniture"
                 />
-            <item android:id="@+id/planAddLevelAtSame"
-                  android:title="planAddLevelAtSame"
+            <item
+                android:id="@+id/planModifyWalls"
+                android:title="planModifyWalls"
                 />
-            <item android:id="@+id/planModifyLevel"
-                  android:title="planModifyLevel"
+            <item
+                android:id="@+id/planModifyRooms"
+                android:title="planModifyRooms"
                 />
-            <item android:id="@+id/planDeleteLevel"
+            <item
+                android:id="@+id/planModifyPolylines"
+                android:title="planModifyPolylines"
+                />
+            <item
+                android:id="@+id/planModifyText"
+                android:title="planModifyText"
+                />
+            <item
+                android:id="@+id/planModifyCompass"
+                android:title="planModifyCompass"
+                />
+            <item
+                android:id="@+id/lockBasePlanCheck"
+                android:checkable="true"
+                android:title="lockBasePlanCheck"
+                />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/planLevelMenu"
+        android:showAsAction="never"
+        android:title="planLevelMenu">
+        <menu>
+            <item
+                android:id="@+id/planAddLevel"
+                android:title="planAddLevel"
+                />
+            <item
+                android:id="@+id/planAddLevelAtSame"
+                android:title="planAddLevelAtSame"
+                />
+            <item
+                android:id="@+id/planModifyLevel"
+                android:title="planModifyLevel"
+                />
+            <item
+                android:id="@+id/planDeleteLevel"
                 android:title="planDeleteLevel"
                 />
-            <item android:id="@+id/planModifyCompass"
-                  android:title="planModifyCompass"
-                />
         </menu>
     </item>
 
-    <item android:id="@+id/editRedo"
-          android:title="redo"
-          android:icon="@drawable/edit_redo"
-          android:showAsAction="never"
-        />
-    <item android:id="@+id/controlKeyOneTimer"
-          android:title="Cntl"
-          android:icon="@drawable/edit_copy_selector"
-          android:checkable="true"
-          android:showAsAction="never"
-        />
-
-    <item android:id="@+id/planSelectLasso"
-        android:title="@string/select_lasso"
-        android:checkable="true"
+    <item
+        android:id="@+id/planEdit"
         android:showAsAction="never"
-        />
-
-    <item android:id="@+id/planSelectMultiple"
-        android:title="@string/select_multiple"
-        android:checkable="true"
-        android:showAsAction="never"
-        />
-
-    <item android:id="@+id/lockCheck"
-        android:title="lock"
-        android:icon="@drawable/lockcheck"
-        android:checkable="true"
-        android:showAsAction="never"
-        />
-
-    <item android:id="@+id/bgImageMenu"
-          android:title="bgImage"
-          android:showAsAction="never">
+        android:title="planEdit">
         <menu>
-            <item android:id="@+id/bgImageImportModify"
-                  android:title="bgImageImportModify"
+            <item
+                android:id="@+id/editRedo"
+                android:title="editRedo"
                 />
-            <item android:id="@+id/bgImageToggleVis"
-                  android:title="bgImageToggleVis"
+
+            <item
+                android:id="@+id/controlKeyOneTimer"
+                android:checkable="true"
+                android:title="controlKeyOneTimer"
                 />
-            <item android:id="@+id/bgImageDelete"
-                  android:title="bgImageDelete"
+
+            <item
+                android:id="@+id/planSelectLasso"
+                android:checkable="true"
+                android:title="@string/select_lasso"
+                />
+
+            <item
+                android:id="@+id/planSelectMultiple"
+                android:checkable="true"
+                android:title="@string/select_multiple"
+                />
+
+            <item
+                android:id="@+id/planAlignment"
+                android:checkable="true"
+                android:title="@string/alignment"
+                />
+
+            <item
+                android:id="@+id/planMagnetism"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/magnetism"
                 />
         </menu>
     </item>
 
-    <item android:id="@+id/alignment"
-          android:title="@string/alignment"
-          android:checkable="true"
-          android:showAsAction="never"
-        />
-
-    <item android:id="@+id/magnetism"
-          android:title="@string/magnetism"
-          android:checkable="true"
-          android:checked="true"
-          android:showAsAction="never"
-        />
+    <item
+        android:id="@+id/bgImageMenu"
+        android:showAsAction="never"
+        android:title="bgImageMenu">
+        <menu>
+            <item
+                android:id="@+id/bgImageImportModify"
+                android:title="bgImageImportModify"
+                />
+            <item
+                android:id="@+id/bgImageToggleVis"
+                android:title="bgImageToggleVis"
+                />
+            <item
+                android:id="@+id/bgImageDelete"
+                android:title="bgImageDelete"
+                />
+        </menu>
+    </item>
 </menu>

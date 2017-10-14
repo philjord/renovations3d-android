@@ -624,15 +624,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		MenuItem deletePov = menu.findItem(R.id.delete_camera_position);
 		String deletePovStr =  getActivity().getString(R.string.deleteCameraPosition);
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(deletePov, deletePovStr, R.drawable.ic_videocam_off_black_24dp);
+		Renovations3DActivity.setIconizedMenuTitle(deletePov, deletePovStr, R.drawable.ic_videocam_off_black_24dp, getContext());
 
 		MenuItem cameraMenu = menu.findItem(R.id.cameraMenu);
 		String cameraMenuStr = "...";
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(cameraMenu, cameraMenuStr, R.drawable.ic_videocam_black_24dp);
+		Renovations3DActivity.setIconizedMenuTitle(cameraMenu, cameraMenuStr, R.drawable.ic_videocam_black_24dp, getContext());
 
 		MenuItem modVV = menu.findItem(R.id.modify_virtual_visitor);
 		String modVVStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name");
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(modVV, modVVStr, R.drawable.view3d_view_from_observer);
+		Renovations3DActivity.setIconizedMenuTitle(modVV, modVVStr, R.drawable.view3d_view_from_observer, getContext());
 
 		menu.findItem(R.id.viewalllevels).setTitle(preferences.getLocalizedString(
 			com.eteks.sweethome3d.android_props.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
@@ -642,7 +642,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		MenuItem createPhoto = menu.findItem(R.id.createPhoto);
 		String createPhotoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name");
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(createPhoto, createPhotoStr, R.drawable.ic_add_a_photo_black_24dp);
+		Renovations3DActivity.setIconizedMenuTitle(createPhoto, createPhotoStr, R.drawable.ic_add_a_photo_black_24dp, getContext());
 
 		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));

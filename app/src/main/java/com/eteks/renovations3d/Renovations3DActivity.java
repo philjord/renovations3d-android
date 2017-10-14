@@ -417,8 +417,7 @@ public class Renovations3DActivity extends FragmentActivity
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-
-		// these three always on, but saave location modified
+		// these three always on, but save location modified
 		menu.findItem(R.id.menu_load).setEnabled(true);
 
 		boolean homeLoaded = renovations3D != null && renovations3D.getHomeController() != null;
@@ -435,43 +434,51 @@ public class Renovations3DActivity extends FragmentActivity
 		{
 			MenuItem removeAdsMI = menu.findItem(R.id.basic_remove_ads);
 			String removeAdsStr = this.getString(R.string.basic_remove_ads);
-			setIconizedMenuTitle(removeAdsMI, removeAdsStr, R.drawable.ic_shopping_cart_black_24dp);
+			setIconizedMenuTitle(removeAdsMI, removeAdsStr, R.drawable.ic_shopping_cart_black_24dp, this);
 		}
 
 		if (renovations3D != null)
 		{
+			MenuItem fileMI = menu.findItem(R.id.menu_file);
+			String fileStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FILE_MENU.Name");
+			fileMI.setTitle(fileStr + "...");
+			fileMI.setTitleCondensed(fileStr);
+
 			MenuItem newMI = menu.findItem(R.id.menu_new);
 			String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name");
-			setIconizedMenuTitle(newMI, newStr, android.R.drawable.ic_input_add);
+			setIconizedMenuTitle(newMI, newStr, android.R.drawable.ic_input_add, this);
 
 			MenuItem loadMI = menu.findItem(R.id.menu_load);
 			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
-			setIconizedMenuTitle(loadMI, loadStr, R.drawable.ic_open_in_new_black_24dp);
+			setIconizedMenuTitle(loadMI, loadStr, R.drawable.ic_open_in_new_black_24dp, this);
 
 			MenuItem  saveMI = menu.findItem(R.id.menu_save);
 			String  saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name");
-			setIconizedMenuTitle(saveMI, saveStr, android.R.drawable.ic_menu_save);
+			setIconizedMenuTitle(saveMI, saveStr, android.R.drawable.ic_menu_save, this);
 
 			MenuItem saveAsMI = menu.findItem(R.id.menu_saveas);
 			String saveAsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name");
-			setIconizedMenuTitle(saveAsMI, saveAsStr, R.drawable.ic_menu_save_as);
+			setIconizedMenuTitle(saveAsMI, saveAsStr, R.drawable.ic_menu_save_as, this);
+
+			MenuItem shareMI = menu.findItem(R.id.menu_share);
+			String shareStr = getResources().getString(R.string.share);
+			setIconizedMenuTitle(shareMI, shareStr, R.drawable.ic_send_black_24dp, this);
 
 			MenuItem prefsMI = menu.findItem(R.id.menu_preferences);
 			String prefsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name");
-			setIconizedMenuTitle(prefsMI, prefsStr, android.R.drawable.ic_menu_preferences);
+			setIconizedMenuTitle(prefsMI, prefsStr, android.R.drawable.ic_menu_preferences, this);
 
 			MenuItem helpMI = menu.findItem(R.id.menu_help);
 			String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name");
-			setIconizedMenuTitle(helpMI, helpStr, android.R.drawable.ic_menu_help);
-
+			setIconizedMenuTitle(helpMI, helpStr, android.R.drawable.ic_menu_help, this);
 
 			MenuItem onlineHelpMI = menu.findItem(R.id.menu_online_help);
 			String onlineHelpStr = getResources().getString(R.string.menu_help_online);
-			setIconizedMenuTitle(onlineHelpMI, onlineHelpStr, android.R.drawable.ic_menu_help);
+			setIconizedMenuTitle(onlineHelpMI, onlineHelpStr, android.R.drawable.ic_menu_help, this);
 
 			MenuItem aboutMI = menu.findItem(R.id.menu_about);
 			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
-			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details);
+			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details, this);
 		}
 		return true;
 	}
@@ -1639,7 +1646,7 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	public void setIconizedMenuTitle(MenuItem menuItem, String title, int iconId)
+	public static void setIconizedMenuTitle(MenuItem menuItem, String title, int iconId, Context context)
 	{
 		// NOTE use of setTitleCondensed as well as setTitle
 		//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
@@ -1647,7 +1654,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 		SpannableStringBuilder builder = new SpannableStringBuilder("* " + title);
-		builder.setSpan(new ImageSpan(this, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		builder.setSpan(new ImageSpan(context, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		menuItem.setTitle(builder);
 		menuItem.setTitleCondensed(title);
 		//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwsie there 2 icons

@@ -51,7 +51,7 @@ public class AutoCommitSpinnerJogDial extends JSpinnerJogDial
 								  Format format) {
 	super(context, model, format);
 
-	  //TODO: this has no more function a than a spinner? what's autocommit mean?
+	  //PJ autocommit means the value typed is immediately passed to any listeners so they can update as it's typed
 
     /*JComponent editor = getEditor();
     if (editor instanceof JSpinner.DefaultEditor) {

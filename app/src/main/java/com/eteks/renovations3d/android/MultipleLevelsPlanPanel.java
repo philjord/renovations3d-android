@@ -353,17 +353,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		menu.findItem(R.id.editUndo).setEnabled(false);// nothing to undo at first
 
-
-		// use the new default name without teh number format
-		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
-		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
-		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
-		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
-		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
-		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
-		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
-
-
+		// titles are all set on prepare
 
 		String subMenuTile = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController.class, "wizard.title");
 		//TODO: localize this properly not this madness
@@ -377,14 +367,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 		sortOutBackgroundMenu(menu);
 
-		MenuItem editRedo = menu.findItem(R.id.editRedo);
-		String editRedoStr = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name");
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(editRedo, editRedoStr, R.drawable.edit_redo);
-		menu.findItem(R.id.editRedo).setEnabled(false);// nothing to redo at first
-
-		MenuItem copy = menu.findItem(R.id.controlKeyOneTimer);
-		String copyStr = getActivity().getResources().getString(android.R.string.copy);
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(copy, copyStr, R.drawable.edit_copy);
 
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
 
@@ -533,15 +515,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	{
 		mOptionsMenu = menu;
 
-		MenuItem itemLocked = menu.findItem(R.id.lockCheck);
-		itemLocked.setChecked(home.isBasePlanLocked());
-
-		int iconId = itemLocked.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
-		String actionName = itemLocked.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
-		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(itemLocked, lockedText, iconId );
-		sortOutBackgroundMenu(menu);
-
 
 		MenuItem cntlMI = menu.findItem(R.id.controlKeyOneTimer);
 		if (planController.getMode() == PlanController.Mode.WALL_CREATION || planController.getMode() == PlanController.Mode.POLYLINE_CREATION)
@@ -555,7 +528,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		else if (planController.getMode() == PlanController.Mode.SELECTION)
 		{
 			String cntlText = getActivity().getResources().getString(android.R.string.copy);
-			((Renovations3DActivity)getActivity()).setIconizedMenuTitle(cntlMI, cntlText, R.drawable.edit_copy );
+			Renovations3DActivity.setIconizedMenuTitle(cntlMI, cntlText, R.drawable.edit_copy, getContext() );
 			cntlMI.setEnabled(true);
 		}
 		else
@@ -565,12 +538,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			cntlMI.setEnabled(false);
 		}
 
-		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
-		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
-
-		menu.findItem(R.id.alignment).setChecked(this.planComponent.alignmentActivated);
-		menu.findItem(R.id.magnetism).setEnabled(preferences.isMagnetismEnabled());
-		menu.findItem(R.id.magnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
 
 		if (resetToSelectTool && planController.getMode() != PlanController.Mode.PANNING)
 		{
@@ -585,6 +552,35 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		// undo doesn't get text updated as it is just an icon
 		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);
 
+		MenuItem redo = menu.findItem(R.id.editRedo);
+		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
+		Renovations3DActivity.setIconizedMenuTitle(redo, redoStr, R.drawable.edit_redo, getContext());
+		redo.setEnabled(redoEnabled);
+
+		menu.findItem(R.id.planModifyMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name"));
+
+		String modifyFurniture = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name").replace("...", "") + " "
+				+ preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FURNITURE_MENU.Name") + "...";
+		menu.findItem(R.id.planModifyFurniture).setTitle(modifyFurniture);
+		menu.findItem(R.id.planModifyFurniture).setEnabled(!Home.getFurnitureSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planModifyWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_WALL.Name"));
+		menu.findItem(R.id.planModifyWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planModifyRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_ROOM.Name"));
+		menu.findItem(R.id.planModifyRooms).setEnabled(!Home.getRoomsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planModifyPolylines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_POLYLINE.Name"));
+		menu.findItem(R.id.planModifyPolylines).setEnabled(!Home.getPolylinesSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planModifyText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LABEL.Name"));
+		menu.findItem(R.id.planModifyText).setEnabled(!Home.getLabelsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
+
+		MenuItem itemLocked = menu.findItem(R.id.lockBasePlanCheck);
+		itemLocked.setChecked(home.isBasePlanLocked());
+
+		int iconId = itemLocked.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
+		String actionName = itemLocked.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
+		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
+		Renovations3DActivity.setIconizedMenuTitle(itemLocked, lockedText, iconId, getContext() );
+
 		// use the new default name without the number format
 		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
 		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
@@ -596,10 +592,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
 
-		MenuItem redo = menu.findItem(R.id.editRedo);
-		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
-		((Renovations3DActivity)getActivity()).setIconizedMenuTitle(redo, redoStr, R.drawable.edit_redo);
-		redo.setEnabled(redoEnabled);
+
+		menu.findItem(R.id.planEdit).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EDIT_MENU.Name") + "...");
+		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
+		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
+
+		menu.findItem(R.id.planAlignment).setChecked(this.planComponent.alignmentActivated);
+		menu.findItem(R.id.planMagnetism).setEnabled(preferences.isMagnetismEnabled());
+		menu.findItem(R.id.planMagnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
+
+		sortOutBackgroundMenu(menu);
+
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -643,6 +646,24 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.planGoto3D:
 				renovations3DActivity.getViewPager().setCurrentItem(3, true);
 				return true;
+			case R.id.planModifyFurniture:
+				planController.modifySelectedFurniture();
+				return true;
+			case R.id.planModifyWalls:
+				planController.modifySelectedWalls();
+				return true;
+			case R.id.planModifyRooms:
+				planController.modifySelectedRooms();
+				return true;
+			case R.id.planModifyPolylines:
+				planController.modifySelectedPolylines();
+				return true;
+			case R.id.planModifyText:
+				planController.modifySelectedLabels();
+				return true;
+			case R.id.planModifyCompass:
+				planController.modifyCompass();
+				return true;
 			case R.id.planAddLevel:
 				planController.addLevel();
 				return true;
@@ -655,20 +676,11 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.planDeleteLevel:
 				planController.deleteSelectedLevel();
 				return true;
-			case R.id.planModifyCompass:
-				planController.modifyCompass();
-				return true;
-			case R.id.controlKeyOneTimer:
-				//TODO: this guy needs to reflect the control option on anything, so duplication for select, but curve wall for create
-				item.setChecked(!item.isChecked());
-				return true;
-			case R.id.lockCheck:
-				item.setChecked(!item.isChecked());
 
-				int iconId = item.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
-				String actionName = item.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
-				String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
-				((Renovations3DActivity)getActivity()).setIconizedMenuTitle(item, lockedText, iconId );
+
+			case R.id.lockBasePlanCheck:
+				item.setChecked(!item.isChecked());
+				//menu closes now, on reopen it will recalc display
 
 				if (item.isChecked())
 					planController.lockBasePlan();
@@ -699,13 +711,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 					renovations3DActivity.getHomeController().deleteBackgroundImage();
 				return true;
 
-			case R.id.alignment:
+			case R.id.controlKeyOneTimer:
 				item.setChecked(!item.isChecked());
-				this.planComponent.alignmentActivated = item.isChecked();
-				return true;
-			case R.id.magnetism:
-				item.setChecked(!item.isChecked());
-				this.planComponent.magnetismToggled = !item.isChecked();// careful toggle != checked!
 				return true;
 			case R.id.planSelectLasso:
 				item.setChecked(!item.isChecked());
@@ -714,6 +721,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.planSelectMultiple:
 				item.setChecked(!item.isChecked());
 				this.planComponent.selectMultiple = item.isChecked();
+				return true;
+			case R.id.planAlignment:
+				item.setChecked(!item.isChecked());
+				this.planComponent.alignmentActivated = item.isChecked();
+				return true;
+			case R.id.planMagnetism:
+				item.setChecked(!item.isChecked());
+				this.planComponent.magnetismToggled = !item.isChecked();// careful toggle != checked!
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -1110,7 +1125,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
 				if (redoItem != null)
 				{
-					((Renovations3DActivity)getActivity()).setIconizedMenuTitle(redoItem, redoText, R.drawable.edit_redo );
+					Renovations3DActivity.setIconizedMenuTitle(redoItem, redoText, R.drawable.edit_redo, getContext());
 				}
 			}
 		}
