@@ -571,6 +571,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planModifyPolylines).setEnabled(!Home.getPolylinesSubList(this.home.getSelectedItems()).isEmpty());
 		menu.findItem(R.id.planModifyText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LABEL.Name"));
 		menu.findItem(R.id.planModifyText).setEnabled(!Home.getLabelsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planSplitWall).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SPLIT_WALL.Name"));
+		menu.findItem(R.id.planSplitWall).setEnabled(Home.getWallsSubList(this.home.getSelectedItems()).size() == 1);
 		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
 
 		MenuItem itemLocked = menu.findItem(R.id.lockBasePlanCheck);
@@ -660,6 +662,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				return true;
 			case R.id.planModifyText:
 				planController.modifySelectedLabels();
+				return true;
+			case R.id.planSplitWall:
+				planController.splitSelectedWall();
 				return true;
 			case R.id.planModifyCompass:
 				planController.modifyCompass();

@@ -63,6 +63,10 @@
                 android:title="planModifyText"
                 />
             <item
+                android:id="@+id/planSplitWall"
+                android:title="planSplitWall"
+                />
+            <item
                 android:id="@+id/planModifyCompass"
                 android:title="planModifyCompass"
                 />

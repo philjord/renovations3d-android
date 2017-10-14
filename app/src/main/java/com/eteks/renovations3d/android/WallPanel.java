@@ -737,9 +737,6 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     // Use same font for label as tooltips
     //this.wallOrientationLabel.setFont(UIManager.getFont("ToolTip.font"));
 
-
-//FIXME:	  add the split wall here button now!
-    
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "wall.title");
   }
 
