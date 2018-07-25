@@ -21,6 +21,7 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -44,7 +45,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * Label editing panel.
- * @author Emmanuel Puybaret
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 public class LabelPanel extends AndroidDialogView implements DialogView {
   private final boolean         labelModification;
@@ -197,7 +198,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     //}
     this.colorButton.setColorDialogTitle(preferences
         .getLocalizedString(com.eteks.sweethome3d.android_props.LabelPanel.class, "colorDialog.title"));
-    this.colorButton.setColor(controller.getColor());
+    this.colorButton.setColor(controller.getColor() != null ? controller.getColor() : Color.BLACK);
     this.colorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           controller.setColor(colorButton.getColor());
@@ -265,8 +266,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     // Create elevation label and its spinner bound to ELEVATION controller property
     this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "elevationLabel.text", unitName));
-
-	  final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
+    final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 			  preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
     this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel, true);
     elevationSpinnerModel.setNullable(controller.getElevation() == null);
@@ -292,7 +292,6 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
         modification 
             ? "labelModification.title"
             : "labelCreation.title");
-
   }
 
   private void update3DViewComponents(LabelController controller) {
@@ -308,7 +307,12 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
       }
     }
   }
-  
+
+	/**
+	 * Sets components mnemonics and label / component associations.
+	 */
+	private void setMnemonics(UserPreferences preferences) {
+	}
 
   /**
    * Layouts panel components in panel with their labels. 

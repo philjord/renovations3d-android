@@ -78,7 +78,7 @@ import javaawt.imageio.ImageIO;
 
 /**
  * Wizard panel for background image choice. 
- * @author Emmanuel Puybaret
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks.sweethome3d.viewcontroller.View {
 	//PJPJ increased these sizes a bit, because reduction always happens now, as mobiles have tight limtis
@@ -90,26 +90,26 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
   private static int IMAGE_PREFERRED_SIZE_PX = 200;
 
   private final ImportedTextureWizardController controller;
-  private JLabel imageChoiceOrChangeLabel;
-  private JButton imageChoiceOrChangeButtonFile;
-  private JButton imageChoiceOrChangeButtonCamera;
-
+  private JLabel 						  imageChoiceOrChangeLabel;
+  private JButton 						  imageChoiceOrChangeButtonFile;
+  private JButton 						  imageChoiceOrChangeButtonCamera;
   //private JButton                         findImagesButton;
   private JLabel                          imageChoiceErrorLabel;
   private ScaledImageComponent            imageChoicePreviewComponent;
   private JLabel                          attributesLabel;
   private JLabel                          nameLabel;
-  private JTextField nameTextField;
+  private JTextField 					  nameTextField;
   private JLabel                          categoryLabel;
-  private JComboBox categoryComboBox;
+  private JComboBox 					  categoryComboBox;
+  private JLabel                          creatorLabel;
+  private JTextField                      creatorTextField;
   private JLabel                          widthLabel;
-  private JSpinner widthSpinner;
+  private JSpinner 						  widthSpinner;
   private JLabel                          heightLabel;
   private JSpinner                        heightSpinner;
   private ScaledImageComponent            attributesPreviewComponent;
   private Executor                        imageLoader;
-  private static BufferedImage waitImage;
-
+  private static BufferedImage 			  waitImage;
 
 	private LinearLayout imageChoiceTopPanel;
 	private LinearLayout attributesPanel;
@@ -121,8 +121,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                                          String textureName, 
                                          UserPreferences preferences, 
                                          final ImportedTextureWizardController controller,
-										 Activity activity)
-  {
+										 Activity activity) {
 	  super(activity, R.layout.jpanel_import_texture_wizard);
 
 	  Renovations3DActivity.logFireBaseContent("ImportedTextureWizardStepsPanel started");
@@ -136,18 +135,12 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     updateController(catalogTexture, preferences);
     if (textureName != null) {
       updateController(textureName, controller.getContentManager(), preferences, true);
-    }
-    else
-	{
+    } else {
 		String pendingImageName = ((Renovations3DActivity) activity).getImageAcquireManager().requestPendingChosenImageFile(ImageAcquireManager.Destination.IMPORT_TEXTURE);
-		if (pendingImageName != null)
-		{
-			try
-			{
+		if (pendingImageName != null) {
+			try {
 				updatePreviewComponentsWithWaitImage(preferences);
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			updateController(pendingImageName, controller.getContentManager(), preferences, true);
@@ -173,21 +166,16 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     // Image choice panel components
     this.imageChoiceOrChangeLabel = new JLabel(activity, "");
     this.imageChoiceOrChangeButtonFile = new JButton(activity, "");
-    this.imageChoiceOrChangeButtonFile.addActionListener(new ActionListener()
-	{
-		public void actionPerformed(ActionEvent ev)
-		{
+    this.imageChoiceOrChangeButtonFile.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent ev) {
 				/*String imageName = showImageChoiceDialog(preferences, controller.getContentManager());
 				if (imageName != null)
 				{
 					updateController(imageName, controller.getContentManager(), preferences, false);
 				}*/
-			try
-			{
+			try {
 				updatePreviewComponentsWithWaitImage(preferences);
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			//PJ replaced with intent system
@@ -210,12 +198,9 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			  if (imageName != null) {
 				  updateController(imageName, controller.getContentManager(), preferences, false);
 			  }*/
-			  try
-			  {
+			  try {
 				  updatePreviewComponentsWithWaitImage(preferences);
-			  }
-			  catch (IOException e)
-			  {
+			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
 			  //PJ replaced with intent system
@@ -231,7 +216,8 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			  , ImageAcquireManager.Destination.IMPORT_TEXTURE);
 		  }
 	  });
-   /* try {
+	  /*
+      try {
       this.findImagesButton = new JButton(SwingTools.getLocalizedLabelText(preferences, 
           ImportedTextureWizardStepsPanel.class, "findImagesButton.text"));
       final String findImagesUrl = preferences.getLocalizedString(
@@ -438,11 +424,10 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
             // If category changes update category combo box
             TexturesCategory category = controller.getCategory();
             if (category != null) {
-				// on desktop if the jcombobox is free form edited this call will add it (e.g. USer catagory
+				// on desktop if the jcombobox is free form edited this call will add it (e.g. User catagory
 				// however on Android spinners no edit, no select until adapter updated
 				ArrayAdapter aa = ((ArrayAdapter)categoryComboBox.getAdapter());
-				if(aa.getPosition(category) == -1)
-				{
+				if(aa.getPosition(category) == -1) {
 					aa.add(category);
 					aa.notifyDataSetChanged();
 				}
@@ -507,6 +492,11 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     controller.addPropertyChangeListener(ImportedTextureWizardController.Property.HEIGHT, imageAttributesListener);
   }
 
+	/**
+	 * Sets components mnemonics and label / component associations.
+	 */
+	private void setMnemonics(UserPreferences preferences) {
+	}
   
   /**
    * Layouts components in 3 panels added to this panel as cards. 
@@ -528,6 +518,8 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 	  swapOut(this.nameTextField, R.id.itw_nameTextField);
 	  swapOut(this.categoryLabel, R.id.itw_categoryLabel);
 	  swapOut(this.categoryComboBox, R.id.itw_categoryComboBox);
+	  swapOut(this.creatorLabel, R.id.itw_creatorLabel);
+	  swapOut(this.creatorTextField, R.id.itw_creatorTextField);
 	  swapOut(this.widthLabel, R.id.itw_widthLabel);
 	  swapOut(this.widthSpinner, R.id.itw_widthSpinner);
 	  swapOut(this.heightLabel, R.id.itw_heightLabel);
@@ -581,6 +573,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                     controller.setImage(catalogTexture.getImage());
                     controller.setName(catalogTexture.getName());
                     controller.setCategory(catalogTexture.getCategory());
+                    controller.setCreator(catalogTexture.getCreator());
                     controller.setWidth(catalogTexture.getWidth());
                     controller.setHeight(catalogTexture.getHeight());
                   } else {
@@ -666,6 +659,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                     }
                   }
                   controller.setCategory(userCategory);
+                  controller.setCreator(null);
                   float defaultWidth = 20;
                   LengthUnit lengthUnit = preferences.getLengthUnit();
                   if (lengthUnit == LengthUnit.INCH
@@ -826,7 +820,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
 	  this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
-
   }
 
   /**
@@ -840,7 +833,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
 	  this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
-
   }
   
   /**
@@ -881,8 +873,6 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     //this.attributesPreviewComponent.repaint();
 	  postInvalidate();
   }
-
-
 
 	@Override
 	public void dismissed()

@@ -195,7 +195,6 @@
             android:stretchColumns="*">
 
             <TableRow>
-
                 <TextView
                     android:id="@+id/ifw_nameLabel"
                     android:layout_width="0dp"
@@ -211,7 +210,6 @@
             </TableRow>
 
             <TableRow>
-
                 <TextView
                     android:id="@+id/ifw_categoryLabel"
                     android:layout_width="0dp"
@@ -221,6 +219,20 @@
 
                 <Spinner
                     android:id="@+id/ifw_categoryComboBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/ifw_creatorLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="ifw_creatorLabel"/>
+
+                <EditText
+                    android:id="@+id/ifw_creatorTextField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>

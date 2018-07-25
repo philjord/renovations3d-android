@@ -95,6 +95,19 @@
             </TableRow>
             <TableRow>
                 <TextView
+                    android:id="@+id/itw_creatorLabel"
+                    android:text="itw_creatorLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <EditText
+                    android:id="@+id/itw_creatorTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
                     android:id="@+id/itw_widthLabel"
                     android:text="bgiw_nameLabel"
                     android:layout_width="0dp"

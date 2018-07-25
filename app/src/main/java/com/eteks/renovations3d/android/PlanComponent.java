@@ -36,9 +36,11 @@ import android.view.ViewGroup;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
-import com.mindblowing.swingish.JViewPort;
-import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
+
+import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.j3d.ModelManager;
+import com.eteks.sweethome3d.j3d.Object3DBranch;
+import com.eteks.sweethome3d.j3d.Object3DBranchFactory;
 import com.eteks.sweethome3d.j3d.TextureManager;
 import com.eteks.sweethome3d.model.BackgroundImage;
 import com.eteks.sweethome3d.model.Camera;
@@ -69,11 +71,12 @@ import com.eteks.sweethome3d.model.TextureImage;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.tools.OperatingSystem;
+import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.mindblowing.swingish.JComponent;
-import com.eteks.renovations3d.j3d.Component3DManager;
 import com.mindblowing.renovations3d.R;
+import com.mindblowing.swingish.JViewPort;
 import com.mindblowing.utils.LongHoldHandler;
 
 import org.jogamp.java3d.AmbientLight;
@@ -106,7 +109,9 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.security.AccessControlException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,6 +124,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -163,25 +169,11 @@ import javaxswing.ImageIcon;
 
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 
-
 /**
  * A component displaying the plan of a home.
- * @author Emmanuel Puybaret
- *
- * Composites for alpha image drawing are disbaled for now
- *
- * insets are  padding from view, but seem to be all 0's
- *
- * Notice this.getView has OnFocusChangeListener stuff
- *
- * Composite this.getView has a get and set alpha (not sure) the VMGraphics@D now has data but does little with it
- *
- * this.getView has dispatch scroll so possibly the scrolly stuff
- * ScrollView scroller = new ScrollView(getActivity()); see https://developer.android.com/reference/android/app/Fragment.html
- *
- *
+ * @author Emmanuel Puybaret and Philip Jordan
  */
-public class PlanComponent extends JViewPort implements PlanView,   Printable {
+public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 	public static boolean SHOW_CHUNKY_HANDLES = true;
 	public static boolean SHOW_HANDLES_THAT_NEED_TOOLTIPS = false;
@@ -221,6 +213,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     public static final IndicatorType MOVE_TEXT     = new IndicatorType("MOVE_TEXT");
     public static final IndicatorType ROTATE_TEXT   = new IndicatorType("ROTATE_TEXT");
     public static final IndicatorType ROTATE_PITCH  = new IndicatorType("ROTATE_PITCH");
+    public static final IndicatorType ROTATE_ROLL   = new IndicatorType("ROTATE_ROLL");
 
     private final String name;
 
@@ -238,13 +231,14 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
   };
 
-  private static float MARGIN_DP = 40;
-  private static float MARGIN_PX = 40;
+  private static float 					MARGIN_DP = 40;
+  private static float 					MARGIN_PX = 40;
 	
-  private static float inverseSize = 2;// for some reason things are very small on screen
+  private static float 					inverseSize = 2;// for some reason things are very small on screen
 
-  private  Home            home;
-  private  UserPreferences preferences;
+  private Home            			home;
+  private UserPreferences 			preferences;
+	private Object3DFactory object3dFactory;
   private float                 scale = 1.0f * SwingTools.getResolutionScale();
   private boolean               selectedItemsOutlinePainted = true;
   private boolean               backgroundPainted = true;
@@ -252,8 +246,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private PlanRulerComponent    horizontalRuler;
   private PlanRulerComponent    verticalRuler;
 
-
-	//PJPJPJ cursor gone, replaced with highlight of tool selected (already in place basically)
 /*  private final Cursor          rotationCursor;
   private final Cursor          elevationCursor;
   private final Cursor          heightCursor;
@@ -274,6 +266,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private List<Selectable>      draggedItemsFeedback;
   private List<DimensionLine>   dimensionLinesFeedback;
   private boolean               selectionScrollUpdated;
+	private boolean               wallsDoorsOrWindowsModification;
  // private JToolTip              toolTip;
   //private JWindow               toolTipWindow;
   private boolean               resizeIndicatorVisible;
@@ -288,6 +281,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
   private Rectangle2D                       planBoundsCache;
   private boolean                           planBoundsCacheValid = false;
+	private Rectangle2D                       invalidPlanBounds;
   private BufferedImage                     backgroundImageCache;
   private Map<TextureImage, BufferedImage>  patternImagesCache;
   private List<Wall>                        otherLevelsWallsCache;
@@ -297,13 +291,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private Color                             wallsPatternBackgroundCache;
   private Color                             wallsPatternForegroundCache;
   private Map<Collection<Wall>, Area>       wallAreasCache;
-  private Map<RotatedTextureKey, BufferedImage> floorTextureImagesCache;
+	private Map<HomeDoorOrWindow, Area>       doorOrWindowWallThicknessAreasCache;
+	private Map<HomeTexture, BufferedImage>   floorTextureImagesCache;
   private Map<HomePieceOfFurniture, PieceOfFurnitureTopViewIcon> furnitureTopViewIconsCache;
+
 
   private static ExecutorService            backgroundImageLoader;
 
   private static final Shape       POINT_INDICATOR;
   private static final GeneralPath FURNITURE_ROTATION_INDICATOR;
+  private static final GeneralPath FURNITURE_PITCH_ROTATION_INDICATOR;
+  private static final Shape       FURNITURE_ROLL_ROTATION_INDICATOR;
   private static final GeneralPath FURNITURE_RESIZE_INDICATOR;
   private static final GeneralPath ELEVATION_INDICATOR;
   private static final Shape       ELEVATION_POINT_INDICATOR;
@@ -315,7 +313,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private static final Shape       WALL_POINT;
   private static final GeneralPath WALL_AND_LINE_RESIZE_INDICATOR;
   private static final Shape       CAMERA_YAW_ROTATION_INDICATOR;
-  private static final GeneralPath CAMERA_PITCH_ROTATION_INDICATOR;
+  private static final Shape 			 CAMERA_PITCH_ROTATION_INDICATOR;
   private static final GeneralPath CAMERA_ELEVATION_INDICATOR;
   private static final Shape       CAMERA_BODY;
   private static final Shape       CAMERA_HEAD;
@@ -339,9 +337,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private static final BufferedImage ERROR_TEXTURE_IMAGE;
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
 
-
 	public static float dpiMinSpanForZoom = 1.0f;
 	public static float dpiIndicatorTouchSize = 0.04f;
+
+	private PlanController controller;
+	private MultipleLevelsPlanPanel parentFragment;
 
 	//menu item options
 	public boolean alignmentActivated = false;
@@ -360,6 +360,25 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     FURNITURE_ROTATION_INDICATOR.moveTo(2.66f, -5.66f);
     FURNITURE_ROTATION_INDICATOR.lineTo(5.66f, -5.66f);
     FURNITURE_ROTATION_INDICATOR.lineTo(4f, -8.3f);
+
+    // Create a path used as pitch rotation indicator
+    // at bottom left of a piece of furniture rotated around pitch
+    FURNITURE_PITCH_ROTATION_INDICATOR = new GeneralPath();
+    FURNITURE_PITCH_ROTATION_INDICATOR.append(POINT_INDICATOR, false);
+    FURNITURE_PITCH_ROTATION_INDICATOR.moveTo(-4.5f, 0);
+    FURNITURE_PITCH_ROTATION_INDICATOR.lineTo(-5.2f, 0);
+    FURNITURE_PITCH_ROTATION_INDICATOR.moveTo(-9f, 0);
+    FURNITURE_PITCH_ROTATION_INDICATOR.lineTo(-10, 0);
+    FURNITURE_PITCH_ROTATION_INDICATOR.append(new Arc2D.Float(-12, -8, 5, 16, 200, 320, Arc2D.OPEN), false);
+    FURNITURE_PITCH_ROTATION_INDICATOR.moveTo(-10f, -4.5f);
+    FURNITURE_PITCH_ROTATION_INDICATOR.lineTo(-12.3f, -2f);
+    FURNITURE_PITCH_ROTATION_INDICATOR.lineTo(-12.8f, -5.8f);
+
+    // Create a path used as pitch rotation indicator
+    // at bottom left of a piece of furniture rotated around roll axis
+    AffineTransform transform = AffineTransform.getRotateInstance(-Math.PI / 2);
+    transform.concatenate(AffineTransform.getScaleInstance(1, -1));
+    FURNITURE_ROLL_ROTATION_INDICATOR = FURNITURE_PITCH_ROTATION_INDICATOR.createTransformedShape(transform);
 
     ELEVATION_POINT_INDICATOR = new Rectangle2D.Float(-1.5f, -1.5f, 3f, 3f);
 
@@ -448,20 +467,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     WALL_AND_LINE_RESIZE_INDICATOR.lineTo(8.7f, 1.8f);
 
     // Create a path used as yaw rotation indicator for the camera
-    AffineTransform transform = AffineTransform.getRotateInstance(-Math.PI / 4);
+    transform = AffineTransform.getRotateInstance(-Math.PI / 4);
     CAMERA_YAW_ROTATION_INDICATOR = FURNITURE_ROTATION_INDICATOR.createTransformedShape(transform);
 
     // Create a path used as pitch rotation indicator for the camera
-    CAMERA_PITCH_ROTATION_INDICATOR = new GeneralPath();
-    CAMERA_PITCH_ROTATION_INDICATOR.append(POINT_INDICATOR, false);
-    CAMERA_PITCH_ROTATION_INDICATOR.moveTo(4.5f, 0);
-    CAMERA_PITCH_ROTATION_INDICATOR.lineTo(5.2f, 0);
-    CAMERA_PITCH_ROTATION_INDICATOR.moveTo(9f, 0);
-    CAMERA_PITCH_ROTATION_INDICATOR.lineTo(10, 0);
-    CAMERA_PITCH_ROTATION_INDICATOR.append(new Arc2D.Float(7, -8, 5, 16, 20, 320, Arc2D.OPEN), false);
-    CAMERA_PITCH_ROTATION_INDICATOR.moveTo(10f, 4.5f);
-    CAMERA_PITCH_ROTATION_INDICATOR.lineTo(12.3f, 2f);
-    CAMERA_PITCH_ROTATION_INDICATOR.lineTo(12.8f, 5.8f);
+    transform = AffineTransform.getRotateInstance(Math.PI);
+    CAMERA_PITCH_ROTATION_INDICATOR = FURNITURE_PITCH_ROTATION_INDICATOR.createTransformedShape(transform);
 
     // Create a path that draws a line with one arrow as an elevation indicator
     // at the back of the camera
@@ -588,11 +599,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     g.dispose();
   }
 
-
 	@Override
 	public android.view.View onCreateView(LayoutInflater inflater,
-										  ViewGroup container, Bundle savedInstanceState)
-	{
+										  ViewGroup container, Bundle savedInstanceState) {
 		throw new RuntimeException("PlanComponent isn't an on screen thing at all!");
 	}
 
@@ -601,13 +610,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	 * @return
 	 */
 	@Override
-	public View getView()
-	{
+	public View getView() {
 		return getDrawableView();
 	}
 	@Override
-	public void setDrawableView(DrawableView dv)
-	{
+	public void setDrawableView(DrawableView dv) {
 		super.setDrawableView(dv);
 
 		// Now determine a fat fingers size for the indicators
@@ -638,22 +645,42 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		}
 	}
 
-	private PlanController controller;
-	private MultipleLevelsPlanPanel parentFragment;
+
+			/**
+			 * Creates a new plan that displays <code>home</code>.
+			 * @param home the home to display
+			 * @param preferences user preferences to retrieve used unit, grid visibility...
+			 * @param controller the optional controller used to manage home items modification
+			 */
+  public void init(Home home,
+									 UserPreferences preferences,
+									 PlanController controller, MultipleLevelsPlanPanel parentFragment) {
+  	init(home, preferences, null, controller, parentFragment);
+  }
+
+			/**
+			 * Creates a new plan that displays <code>home</code>.
+			 * @param home the home to display
+			 * @param preferences user preferences to retrieve used unit, grid visibility...
+			 * @param object3dFactory a factory able to create 3D objects from <code>home</code> furniture.
+			 *            The {@link Object3DFactory#createObject3D(Home, Selectable, boolean) createObject3D} of
+			 *            this factory is expected to return an instance of {@link Object3DBranch} in current implementation.
+			 * @param controller the optional controller used to manage home items modification
+			 */
+  public void init(Home home,
+							UserPreferences preferences,
+							Object3DFactory  object3dFactory,
+							PlanController controller, MultipleLevelsPlanPanel parentFragment) {
+		this.home = home;
+		this.preferences = preferences;
+		this.object3dFactory = object3dFactory == null && !Boolean.getBoolean("com.eteks.sweethome3d.no3D")
+					? new Object3DBranchFactory()
+					: object3dFactory;
 
 
-		/**
-		 * Creates a new plan that displays <code>home</code>.
-		 */
-    public void init(Home home,
-                       UserPreferences preferences,
-                       PlanController controller,
-					 MultipleLevelsPlanPanel parentFragment) {
-      this.home = home;
-      this.preferences = preferences;
-
-	  this.controller = controller;
+		this.controller = controller;
 		this.parentFragment = parentFragment;
+
 
 	  //PJPJPJ Cursors dropped
  /*   this.rotationCursor = createCustomCursor("resources/cursors/rotation16x16.png",
@@ -673,16 +700,15 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     this.duplicationCursor = DragSource.DefaultCopyDrop;*/
     this.patternImagesCache = new HashMap<TextureImage, BufferedImage>();
     // Install default colors using same colors as a text field
-
 	  //PJPJPJ general colors setting can just come form the UI manager, unless I'm drawing a label
    // super.setForeground(UIManager.getColor("TextField.foreground"));
    // super.setBackground(UIManager.getColor("TextField.background"));
 
 	  //PJ taken from HomePane
-	Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
-	setScrolledX(viewportX != null ?  viewportX.intValue() : 0);
-	Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
-	setScrolledY(viewportY != null? viewportY.intValue(): 0);
+		Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
+		setScrolledX(viewportX != null ?  viewportX.intValue() : 0);
+		Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
+		setScrolledY(viewportY != null? viewportY.intValue(): 0);
 
   }
 
@@ -694,25 +720,51 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                                  final PlanController controller) {
     // Add listener to update plan when furniture changes
     final PropertyChangeListener furnitureChangeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
+        public void propertyChange(final PropertyChangeEvent ev) {
           if (furnitureTopViewIconsCache != null
+              && (HomePieceOfFurniture.Property.ROLL.name().equals(ev.getPropertyName())
+                  || HomePieceOfFurniture.Property.PITCH.name().equals(ev.getPropertyName())
+                  || (HomePieceOfFurniture.Property.WIDTH_IN_PLAN.name().equals(ev.getPropertyName())
+                      || HomePieceOfFurniture.Property.DEPTH_IN_PLAN.name().equals(ev.getPropertyName())
+                      || HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName()))
+                     && (((HomePieceOfFurniture)ev.getSource()).isHorizontallyRotated()
+                         || ((HomePieceOfFurniture)ev.getSource()).getTexture() != null))) {
+            if (HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName())) {
+              sortedLevelFurniture = null;
+            }
+            if (controller == null || !controller.isModificationState()) {
+              invalidateFurnitureTopViewIcon((HomePieceOfFurniture)ev.getSource());
+            } else {
+              // Delay computing of new top view icon
+              controller.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener() {
+                  public void propertyChange(PropertyChangeEvent ev2) {
+                    invalidateFurnitureTopViewIcon((HomePieceOfFurniture)ev.getSource());
+                    controller.removePropertyChangeListener(PlanController.Property.MODIFICATION_STATE, this);
+                  }
+                });
+            }
+            revalidate();
+          } else if (furnitureTopViewIconsCache != null
               && (HomePieceOfFurniture.Property.COLOR.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.TEXTURE.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.MODEL_MATERIALS.name().equals(ev.getPropertyName())
-                  || HomePieceOfFurniture.Property.SHININESS.name().equals(ev.getPropertyName())
-                  || (HomePieceOfFurniture.Property.WIDTH.name().equals(ev.getPropertyName())
-                      || HomePieceOfFurniture.Property.DEPTH.name().equals(ev.getPropertyName())
-                      || HomePieceOfFurniture.Property.HEIGHT.name().equals(ev.getPropertyName()))
-                     && ((HomePieceOfFurniture)ev.getSource()).getTexture() != null)) {
-            for (HomePieceOfFurniture piece : getFurnitureWithoutGroups((HomePieceOfFurniture)ev.getSource())) {
-              furnitureTopViewIconsCache.remove(piece);
-            }
-            repaint();
+                  || HomePieceOfFurniture.Property.SHININESS.name().equals(ev.getPropertyName()))) {
+            invalidateFurnitureTopViewIcon((HomePieceOfFurniture)ev.getSource());
           } else if (HomePieceOfFurniture.Property.ELEVATION.name().equals(ev.getPropertyName())
                      || HomePieceOfFurniture.Property.LEVEL.name().equals(ev.getPropertyName())
-                     || HomePieceOfFurniture.Property.HEIGHT.name().equals(ev.getPropertyName())) {
+                     || HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName())) {
             sortedLevelFurniture = null;
             repaint();
+          } else if (doorOrWindowWallThicknessAreasCache != null
+                     && doorOrWindowWallThicknessAreasCache.containsKey(ev.getSource())
+                     && (HomePieceOfFurniture.Property.WIDTH.name().equals(ev.getPropertyName())
+                         || HomePieceOfFurniture.Property.DEPTH.name().equals(ev.getPropertyName())
+                         || HomePieceOfFurniture.Property.ANGLE.name().equals(ev.getPropertyName())
+                         || HomePieceOfFurniture.Property.X.name().equals(ev.getPropertyName())
+                         || HomePieceOfFurniture.Property.Y.name().equals(ev.getPropertyName())
+                         || HomePieceOfFurniture.Property.LEVEL.name().equals(ev.getPropertyName()))) {
+            doorOrWindowWallThicknessAreasCache.remove(ev.getSource());
+            revalidate();
           } else {
             revalidate();
           }
@@ -767,6 +819,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
               otherLevelsWallsCache = null;
             }
             wallAreasCache = null;
+            doorOrWindowWallThicknessAreasCache = null;
             revalidate();
           } else if (Wall.Property.LEVEL.name().equals(propertyName)
               || Wall.Property.HEIGHT.name().equals(propertyName)
@@ -791,6 +844,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           otherLevelsWallAreaCache = null;
           otherLevelsWallsCache = null;
           wallAreasCache = null;
+          doorOrWindowWallThicknessAreasCache = null;
           revalidate();
         }
       });
@@ -921,6 +975,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             otherLevelsRoomsCache = null;
             otherLevelsRoomAreaCache = null;
             wallAreasCache = null;
+            doorOrWindowWallThicknessAreasCache = null;
             sortedLevelFurniture = null;
             sortedLevelRooms = null;
             repaint();
@@ -993,6 +1048,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           otherLevelsRoomsCache = null;
           otherLevelsRoomAreaCache = null;
           wallAreasCache = null;
+          doorOrWindowWallThicknessAreasCache = null;
           sortedLevelRooms = null;
           sortedLevelFurniture = null;
           repaint();
@@ -1008,10 +1064,22 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         new UserPreferencesChangeListener(this));
     preferences.addPropertyChangeListener(UserPreferences.Property.FURNITURE_VIEWED_FROM_TOP,
         new UserPreferencesChangeListener(this));
+    preferences.addPropertyChangeListener(UserPreferences.Property.FURNITURE_MODEL_ICON_SIZE,
+        new UserPreferencesChangeListener(this));
     preferences.addPropertyChangeListener(UserPreferences.Property.ROOM_FLOOR_COLORED_OR_TEXTURED,
         new UserPreferencesChangeListener(this));
     preferences.addPropertyChangeListener(UserPreferences.Property.WALL_PATTERN,
         new UserPreferencesChangeListener(this));
+  }
+
+  /**
+   * Remove the top view icon of the given piece from cache and repaints this plan.
+   */
+  private void invalidateFurnitureTopViewIcon(HomePieceOfFurniture updatedPiece) {
+    for (HomePieceOfFurniture piece : getFurnitureWithoutGroups(updatedPiece)) {
+      furnitureTopViewIconsCache.remove(piece);
+    }
+    repaint();
   }
 
   /**
@@ -1051,7 +1119,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         switch (property) {
           case LANGUAGE :
           case UNIT :
-			  //PJPJPJ tooltips gone
             // Update format of tool tip text fields
        /*     for (Map.Entry<PlanController.EditableProperty, JFormattedTextField> toolTipTextFieldEntry :
               planComponent.toolTipEditableTextFields.entrySet()) {
@@ -1078,6 +1145,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                 && !preferences.isFurnitureViewedFromTop()) {
               planComponent.furnitureTopViewIconsCache = null;
             }
+            break;
+          case FURNITURE_MODEL_ICON_SIZE :
+            planComponent.furnitureTopViewIconsCache = null;
             break;
           default:
             break;
@@ -1134,7 +1204,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         }
       }
     }*/
-
 
 	  //PJPJPJ note as the rulers aren't in the scrollpane anymore, this does nothing
     if (this.horizontalRuler != null) {
@@ -1386,14 +1455,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		public void mousePressed(View v, MotionEvent ev)
 		{
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
-			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null || !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing())
-			{
+			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
+							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);
 				final float y = MotionEventCompat.getY(ev, pointerIndex);
 				this.lastMousePressedLocation = new Point((int) x, (int) y);
-				if (isEnabled())
-				{
+				if (isEnabled()) {
 					//requestFocusInWindow();
 					//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
 					{
@@ -1419,13 +1487,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 						else
 							lastMouseReleasedTime = 0;
 
-						try
-						{
+						try {
 							controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
 									clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
-						}
-						catch (ArrayIndexOutOfBoundsException e)
-						{
+						} catch (ArrayIndexOutOfBoundsException e) {
 							// TODO this happens :
 							//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 							//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
@@ -1439,23 +1504,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 			}
 		}
 
-
-		public void mouseReleased(View v, MotionEvent ev)
-		{
+		public void mouseReleased(View v, MotionEvent ev) {
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
-			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null || !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing())
-			{
+			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
+							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
 				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 				final float x = MotionEventCompat.getX(ev, pointerIndex);
 				final float y = MotionEventCompat.getY(ev, pointerIndex);
-				if (isEnabled())
-				{
-					try
-					{
+				if (isEnabled()) {
+					try {
 						controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-					}
-					catch (ArrayIndexOutOfBoundsException e)
-					{
+					} catch (ArrayIndexOutOfBoundsException e) {
 						// TODO this happens :
 						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
@@ -1468,48 +1527,38 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 			}
 		}
 
-
-		public void mouseMoved(View v, MotionEvent ev)
-		{
+		public void mouseMoved(View v, MotionEvent ev) {
 			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 			final float x = MotionEventCompat.getX(ev, pointerIndex);
 			final float y = MotionEventCompat.getY(ev, pointerIndex);
 			// Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
 			if (this.lastMousePressedLocation != null
-					&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y)))
-			{
+					&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y))) {
 				this.lastMousePressedLocation = null;
 			}
-			if (this.lastMousePressedLocation == null)
-			{
-				if (isEnabled())
-				{
-					try{
+			if (this.lastMousePressedLocation == null) {
+				if (isEnabled()) {
+					try {
 					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
-				}catch(ArrayIndexOutOfBoundsException e)
-				{
-					// TODO this happens :
-					//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-					//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
-					//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
-					//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
-					//ignore for now, investigate later
-					e.printStackTrace();
-				}
+					} catch(ArrayIndexOutOfBoundsException e) {
+						// TODO this happens :
+						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
+						//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+						//ignore for now, investigate later
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 
-		public void mouseDragged(View v, MotionEvent ev)
-		{
-			if (isEnabled())
-			{
+		public void mouseDragged(View v, MotionEvent ev) {
+			if (isEnabled()) {
 				mouseMoved(v, ev);
 			}
 		}
 	}
-
-
 
 	private ScaleGestureDetector mScaleDetector;
 
@@ -1594,8 +1643,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		}
 	}
 
-	protected void scrollRectToVisible(Rectangle shapePixelBounds)
-	{
+	protected void scrollRectToVisible(Rectangle shapePixelBounds) {
 		//so the shape that arrives here start x and y as mouse moved, and both are passed through convertXPixelToModel
 		// eg at scale 1 scrollxy 0,0 plan min -160,-22 margin 60 : a move 331,208 gets here as 110,125
 		// eg at scale 1 scrollxy 102,5 plan min -160,-22 margin 60 : a move 351,258 gets here as 232,180
@@ -1613,11 +1661,67 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		super.scrollRectToVisible(shapePixelBounds);
 	}
 
+	/**
+	 * Adds a listener to the controller to follow changes in base plan modification state.
+	 */
+	private void addControllerListener(final PlanController controller) {
+		controller.addPropertyChangeListener(PlanController.Property.BASE_PLAN_MODIFICATION_STATE,
+						new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent ev) {
+								boolean wallsDoorsOrWindowsModification = controller.isBasePlanModificationState();
+								if (wallsDoorsOrWindowsModification) {
+									// Limit base plan modification state to walls creation/handling and doors or windows handling
+									if (controller.getMode() != PlanController.Mode.WALL_CREATION) {
+										for (Selectable item : (draggedItemsFeedback != null ? draggedItemsFeedback : home.getSelectedItems())) {
+											if (!(item instanceof Wall)
+															&& !(item instanceof HomePieceOfFurniture && ((HomePieceOfFurniture)item).isDoorOrWindow())) {
+												wallsDoorsOrWindowsModification = false;
+											}
+										}
+									}
+								}
+								if (PlanComponent.this.wallsDoorsOrWindowsModification != wallsDoorsOrWindowsModification) {
+									PlanComponent.this.wallsDoorsOrWindowsModification = wallsDoorsOrWindowsModification;
+									repaint();
+								}
+							}
+						});
+	}
 
+	/**
+	 * Installs keys bound to actions during edition.
+	 */
 
-  /**
-   * Returns the preferred size of this component.
-   */
+	/**
+	 * Installs default keys bound to actions.
+	 */
+	private void installDefaultKeyboardActions() {
+	}
+
+	/**
+	 * Creates actions that calls back <code>controller</code> methods.
+	 */
+	private void createActions(final PlanController controller) {
+	}
+
+	/**
+	 * Creates the text fields used in tool tip and their label.
+	 */
+	private void createToolTipTextFields(UserPreferences preferences,
+																			 final PlanController controller) {
+	}
+
+	/**
+	 * Returns a custom cursor with a hot spot point at center of cursor.
+	 */
+
+	/**
+	 * Returns a custom cursor created from images in parameters.
+	 */
+
+	/**
+	 * Returns the preferred size of this component.
+	 */
 	//PJPJ removed as layout is totally different and always fullscreen
 /*  @Override
   public Dimension getPreferredSize() {
@@ -1641,8 +1745,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     if (!this.planBoundsCacheValid) {
       // Always enlarge plan bounds only when plan component is a child of a scroll pane
       if (this.planBoundsCache == null
-			    || true)//PJPJ  that is always true -> !(getParent() instanceof JViewport))
-	  {
+			    || true) {//PJPJ  that is always true -> !(getParent() instanceof JViewport))
         // Ensure plan bounds are 10 x 10 meters wide at minimum
         this.planBoundsCache = new Rectangle2D.Float(0, 0, 1000, 1000);
       }
@@ -1890,19 +1993,18 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       }
       if (textStyle.isItalic()) {
         fontStyle |= Font.ITALIC;
-      }*/
+      }
       if (defaultFont == null
           || this.preferences.getDefaultFontName() != null
           || textStyle.getFontName() != null) {
-        //String fontName = textStyle.getFontName();
-        //if (fontName == null) {
-        //  fontName = this.preferences.getDefaultFontName();
-        //}
-        //defaultFont = new Font(fontName, fontStyle, 1);
-		  //defaultFont = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
+        String fontName = textStyle.getFontName();
+        if (fontName == null) {
+          fontName = this.preferences.getDefaultFontName();
+        }
+        defaultFont = new Font(fontName, fontStyle, 1);
       }
-      //font = defaultFont.deriveFont(fontStyle, textStyle.getFontSize());
-		font = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
+      //font = defaultFont.deriveFont(fontStyle, textStyle.getFontSize());*/
+			font = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
       this.fonts.put(textStyle, font);
     }
     return font;
@@ -1979,7 +2081,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 				insets.top + ((MARGIN_PX - planBounds.getMinY()) * paintScale) - getScrolledY());
 		g2D.scale(paintScale, paintScale);
 		setRenderingHints(g2D);
-
 		try {
 			paintContent(g2D, paintScale, PaintMode.PAINT);
 		} catch (InterruptedIOException ex) {
@@ -2128,6 +2229,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   }
 
   /**
+   * Returns an image of selected items in plan for transfer purpose.
+   */
+  public Object createTransferData(DataType dataType) {
+    if (dataType == DataType.PLAN_IMAGE) {
+      return getClipboardImage();
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * Returns an image of the selected items displayed by this component
    * (camera excepted) with no outline at scale 1/1 (1 pixel = 1cm).
    */
@@ -2156,6 +2268,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         paintContent(g2D, clipboardScale, PaintMode.CLIPBOARD);
       } catch (InterruptedIOException ex) {
         // Ignore exception because it may happen only in EXPORT paint mode
+        return null;
       }
       g2D.dispose();
       return image;
@@ -2163,18 +2276,34 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   }
 
   /**
+   * Returns <code>true</code> if the given format is SVG.
+   */
+  public boolean isFormatTypeSupported(FormatType formatType) {
+    return formatType == FormatType.SVG;
+  }
+
+  /**
+   * Writes this plan in the given output stream at SVG (Scalable Vector Graphics) format if this is the requested format.
+   */
+  public void exportData(OutputStream out, FormatType formatType, Properties settings) throws IOException {
+    if  (formatType == FormatType.SVG) {
+      exportToSVG(out);
+    } else {
+      throw new UnsupportedOperationException("Unsupported format " + formatType);
+    }
+  }
+
+  /**
    * Writes this plan in the given output stream at SVG (Scalable Vector Graphics) format.
    */
-	//PJPJ
- // public void exportToSVG(OutputStream outputStream) throws IOException {
+  public void exportToSVG(OutputStream outputStream) throws IOException {
   //  SVGSupport.exportToSVG(outputStream, this);
-  //}
+  }
 
   /**
    * Separated static class to be able to exclude FreeHEP library from classpath
    * in case the application doesn't use export to SVG format.
    */
-	//PJPJ
  /* private static class SVGSupport {
     public static void exportToSVG(OutputStream outputStream,
                                    PlanComponent planComponent) throws IOException {
@@ -2297,13 +2426,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         g2D.scale(backgroundImage.getScale(), backgroundImage.getScale());
         Composite oldComposite = null;
         if (!prepareBackgroundImageWithAlphaInMemory) {
-			oldComposite = setTransparency(g2D, 0.7f);
+					oldComposite = setTransparency(g2D, 0.7f);
         }
         g2D.drawImage(this.backgroundImageCache != null
             ? this.backgroundImageCache
             : readBackgroundImage(backgroundImage.getImage(), prepareBackgroundImageWithAlphaInMemory), 0, 0, null);
         if (!prepareBackgroundImageWithAlphaInMemory) {
-			g2D.setComposite(oldComposite);
+					g2D.setComposite(oldComposite);
         }
         g2D.setTransform(previousTransform);
       }
@@ -2554,7 +2683,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                               float xMin, float xMax, float yMin, float yMax,
                               float gridSize, float mainGridSize) {
 	  //TODO: ummm controlShadow color?
-	  //PJPJ
     g2D.setColor(new Color(0.3f,0.3f,0.3f));//UIManager.getColor("controlShadow"));
     g2D.setStroke(new BasicStroke(0.5f / gridScale));
     // Draw vertical lines
@@ -2802,7 +2930,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    * Returns the color used to draw selection outlines.
    */
   protected Color getSelectionColor() {
-	  //PJPJ
   /*  if (OperatingSystem.isMacOSX()) {
       if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
         Window window = SwingUtilities.getWindowAncestor(this);
@@ -2822,7 +2949,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       return   UIManager.getColor("textHighlight");
     } else {*/
       // On systems different from Mac OS X, take a darker color
-	  //PJPJ
 	  // Form desktop r=0,g=84,b=150
       return  new Color(0.0f,84f/255f,150f/255f);// UIManager.getColor("textHighlight").darker();
    // }
@@ -2876,6 +3002,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       if (paintMode != PaintMode.CLIPBOARD
           || selectedRoom) {
         g2D.setPaint(defaultFillPaint);
+        float textureAngle = 0;
         if (this.preferences.isRoomFloorColoredOrTextured()
             && room.isFloorVisible()) {
           // Use room floor color or texture image
@@ -2885,12 +3012,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             final HomeTexture floorTexture = room.getFloorTexture();
             if (floorTexture != null) {
               if (this.floorTextureImagesCache == null) {
-                this.floorTextureImagesCache = new WeakHashMap<RotatedTextureKey, BufferedImage>();
+                this.floorTextureImagesCache = new WeakHashMap<HomeTexture, BufferedImage>();
               }
-              double cos = Math.cos(floorTexture.getAngle());
-              double sin = Math.sin(floorTexture.getAngle());
-              final RotatedTextureKey floorRotatedTextureKey = new RotatedTextureKey(floorTexture);
-              BufferedImage textureImage = this.floorTextureImagesCache.get(floorRotatedTextureKey);
+              BufferedImage textureImage = this.floorTextureImagesCache.get(floorTexture);
               if (textureImage == null
                   || textureImage == WAIT_TEXTURE_IMAGE) {
                 final boolean waitForTexture = paintMode != PaintMode.PAINT;
@@ -2908,8 +3032,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                       floorTexture.getImage(), floorTexture.getAngle(), waitForTexture,
                       new TextureManager.TextureObserver() {
                         public void textureUpdated(Texture texture) {
-                          floorTextureImagesCache.put(floorRotatedTextureKey,
-                              (BufferedImage) ((ImageComponent2D)texture.getImage(0)).getImage());
+                          floorTextureImagesCache.put(floorTexture,
+                              ((ImageComponent2D)texture.getImage(0)).getImage());
                           if (!waitForTexture) {
                             repaint();
                           }
@@ -2948,27 +3072,37 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                     this.floorTextureImagesCache.put(floorRotatedTextureKey, textureIconImage);
                   }
                 }*/
-                textureImage = this.floorTextureImagesCache.get(floorRotatedTextureKey);
+                textureImage = this.floorTextureImagesCache.get(floorTexture);
               }
 
               float textureWidth = floorTexture.getWidth();
               float textureHeight = floorTexture.getHeight();
-              if (floorTexture.getAngle() != 0) {
-                textureWidth = (int)Math.round(Math.abs(floorTexture.getWidth() * cos) + Math.abs(floorTexture.getHeight() * sin));
-                textureHeight = (int)Math.round(Math.abs(floorTexture.getWidth() * sin) + Math.abs(floorTexture.getHeight() * cos));
+              if (textureWidth == -1 || textureHeight == -1) {
+                textureWidth = 100;
+                textureHeight = 100;
               }
-              g2D.setPaint(new TexturePaint(textureImage, new Rectangle2D.Float(0, 0, textureWidth, textureHeight)));
+              float textureScale = floorTexture.getScale();
+              g2D.setPaint(new TexturePaint(textureImage,
+                  new Rectangle2D.Float(0, 0, textureWidth * textureScale, textureHeight * textureScale)));
+              textureAngle = floorTexture.getAngle();
             }
           }
         }
 
-		Composite oldComposite = setTransparency(g2D, 0.75f);
-        Shape roomShape = getShape(room.getPoints(), true);
+				Composite oldComposite = setTransparency(g2D, 0.75f);
+        // Rotate graphics to rotate texture with requested angle
+        // and draw shape rotated with the opposite angle
+        g2D.rotate(textureAngle, 0, 0);
+        AffineTransform rotation = textureAngle != 0
+            ? AffineTransform.getRotateInstance(-textureAngle, 0, 0)
+            : null;
+        Shape roomShape = getShape(room.getPoints(), true, rotation);
         fillShape(g2D, roomShape, paintMode);
-		g2D.setComposite(oldComposite);
+				g2D.setComposite(oldComposite);
 
         g2D.setPaint(foregroundColor);
         g2D.draw(roomShape);
+        g2D.rotate(-textureAngle, 0, 0);
       }
     }
   }
@@ -2980,7 +3114,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     if (paintMode == PaintMode.PRINT
         && g2D.getPaint() instanceof TexturePaint
         && OperatingSystem.isMacOSX()
-        && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
+        && OperatingSystem.isJavaVersionBetween("1.7", "1.8.0_152")) {
       Shape clip = g2D.getClip();
       g2D.setClip(shape);
       TexturePaint paint = (TexturePaint)g2D.getPaint();
@@ -3080,7 +3214,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     if (style == null) {
       style = this.preferences.getDefaultTextStyle(selectableClass);
     }
-
     //FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
     Rectangle2D textBounds;// = defaultFont.getStringBounds(text); //PJ reobtained below as font is not right yet
     g2D.translate(x, y);
@@ -3091,23 +3224,21 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       TextStyle outlineStyle = style.deriveStyle(style.getFontSize() - stroke.getLineWidth());
       Font font = getFont(defaultFont, outlineStyle);
       g2D.setFont(font);
-		setFont(font);//PJPJ make font setting consistent
-		textBounds = font.getStringBounds(text);//PJ
+			setFont(font);//PJPJ make font setting consistent
+			textBounds = font.getStringBounds(text);//PJ
       Color defaultColor = g2D.getColor();
       g2D.setColor(new Color(outlineColor));
       g2D.setStroke(stroke);
       g2D.translate(-(float)textBounds.getWidth() / 2 + stroke.getLineWidth() / 2, 0);
-
-		//PJPJPJPJ what is a TextLayout and it's outline?
+			//PJPJPJPJ what is a TextLayout and it's outline?
       //TextLayout textLayout = new TextLayout(text, font, g2D.getFontRenderContext());
       //g2D.draw(textLayout.getOutline(null));
-
       g2D.setColor(defaultColor);
     } else {
       g2D.setFont(getFont(defaultFont, style));
-		setFont(getFont(defaultFont, style));//PJPJ make font setting consistent
-		textBounds = getFont(defaultFont, style).getStringBounds(text);//PJ
-		((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
+			setFont(getFont(defaultFont, style));//PJPJ make font setting consistent
+			textBounds = getFont(defaultFont, style).getStringBounds(text);//PJ
+			((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
       g2D.translate(-(float)textBounds.getWidth() / 2, 0);
     }
     // Draw text
@@ -3130,17 +3261,17 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       if (isViewableAtSelectedLevel(room)) {
         g2D.setPaint(selectionOutlinePaint);
         g2D.setStroke(selectionOutlineStroke);
-        g2D.draw(getShape(room.getPoints(), true));
+        g2D.draw(getShape(room.getPoints(), true, null));
 
         if (indicatorPaint != null) {
           g2D.setPaint(indicatorPaint);
           // Draw points of the room
           for (float [] point : room.getPoints()) {
-			  AffineTransform previousTransform = g2D.getTransform();
+			  		AffineTransform previousTransform = g2D.getTransform();
             g2D.translate(point [0], point [1]);
             //g2D.scale(scaleInverse, scaleInverse);
             g2D.setStroke(POINT_STROKE);
-			  ((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
+			  		((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
             g2D.setTransform(previousTransform);
           }
         }
@@ -3152,7 +3283,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     g2D.setStroke(new BasicStroke(getStrokeWidth(Room.class, PaintMode.PAINT) / planScale));
     for (Room room : rooms) {
       if (isViewableAtSelectedLevel(room)) {
-        g2D.draw(getShape(room.getPoints(), true));
+        g2D.draw(getShape(room.getPoints(), true, null));
       }
     }
 
@@ -3187,7 +3318,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       float scaleInverse = inverseSize / planScale;
       float [][] points = item.getPoints();
       Shape resizeIndicator = getIndicator(item, IndicatorType.RESIZE);
-      for (int i = 0; i < points.length; i++) {AffineTransform previousTransform = g2D.getTransform();
+      for (int i = 0; i < points.length; i++) {
+      	AffineTransform previousTransform = g2D.getTransform();
         // Draw resize indicator at point
         float [] point = points [i];
         g2D.translate(point[0], point[1]);
@@ -3225,17 +3357,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         }
         g2D.rotate(angle);
 
-		  if (!SHOW_CHUNKY_HANDLES)
-		  {
-			  ((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-		  }
-		  else
-		  {
-			  g2D.scale(scaleInverse, scaleInverse);
-			  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		  }
-
+				if (!SHOW_CHUNKY_HANDLES) {
+					((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+				} else {
+					g2D.scale(scaleInverse, scaleInverse);
+					Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+					((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+				}
         g2D.setTransform(previousTransform);
       }
     }
@@ -3280,7 +3408,15 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     } else if (IndicatorType.ROTATE_TEXT.equals(indicatorType)) {
       return TEXT_ANGLE_INDICATOR;
     } else if (IndicatorType.ROTATE_PITCH.equals(indicatorType)) {
+      if (item instanceof HomePieceOfFurniture) {
+        return FURNITURE_PITCH_ROTATION_INDICATOR;
+      } else if (item instanceof Camera) {
       return CAMERA_PITCH_ROTATION_INDICATOR;
+    }
+    } else if (IndicatorType.ROTATE_ROLL.equals(indicatorType)) {
+      if (item instanceof HomePieceOfFurniture) {
+        return FURNITURE_ROLL_ROTATION_INDICATOR;
+      }
     }
     return null;
   }
@@ -3333,44 +3469,35 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       float scaleInverse = inverseSize / planScale;
       g2D.translate(x, y);
       g2D.rotate(angle);
-     //PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
+     	//PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
       if (Label.class.isAssignableFrom(selectableClass)) {
-		  ((VMGraphics2D)g2D).draw(LABEL_CENTER_INDICATOR, scaleInverse);
+		  	((VMGraphics2D)g2D).draw(LABEL_CENTER_INDICATOR, scaleInverse);
       } else {
-
-		  if (!SHOW_CHUNKY_HANDLES)
-		  {
-			  ((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.MOVE_TEXT), scaleInverse);
-		  }
-		  else
-		  {
-			  g2D.scale(scaleInverse, scaleInverse);
-			  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_move)).getBitmap();
-			  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		  }
+				if (!SHOW_CHUNKY_HANDLES) {
+					((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.MOVE_TEXT), scaleInverse);
+				} else {
+					g2D.scale(scaleInverse, scaleInverse);
+					Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_move)).getBitmap();
+					((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+				}
       }
       if (style == null) {
         style = this.preferences.getDefaultTextStyle(selectableClass);
       }
-		FontMetrics fontMetrics = getFontMetrics(g2D.getFont(), style);
+			FontMetrics fontMetrics = getFontMetrics(g2D.getFont(), style);
       g2D.setTransform(previousTransform);
-		AffineTransform previousTransform2 = g2D.getTransform();
+			AffineTransform previousTransform2 = g2D.getTransform();
       g2D.translate(x, y);
       g2D.rotate(angle);
-		//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
+			//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
       g2D.translate(0, fontMetrics.ascent * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
-		//PJ replaced with scale in draw g2D.scale(scaleInverse, scaleInverse);
-
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.ROTATE_TEXT), scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_rotator)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(null, IndicatorType.ROTATE_TEXT), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.text_rotator)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform2);
     }
   }
@@ -3392,12 +3519,23 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     float wallPaintScale = paintMode == PaintMode.PRINT
         ? planScale / 72 * 150 // Adjust scale to 150 dpi for print
         : planScale;
+  /*  Composite oldComposite = null;
+    if (paintMode == PaintMode.PAINT
+        && this.backgroundPainted
+        && this.backgroundImageCache != null
+        && this.wallsDoorsOrWindowsModification) {
+      // Paint walls with half transparent paint when a wall or a door/window in the base plan is being handled
+      oldComposite = setTransparency(g2D, 0.5f);
+    }*/
     for (Map.Entry<Collection<Wall>, Area> areaEntry : wallAreas.entrySet()) {
       TextureImage wallPattern = areaEntry.getKey().iterator().next().getPattern();
       fillAndDrawWallsArea(g2D, areaEntry.getValue(), planScale,
           getWallPaint(wallPaintScale, backgroundColor, foregroundColor,
               wallPattern != null ? wallPattern : this.preferences.getWallPattern()), foregroundColor, paintMode);
     }
+   /* if (oldComposite != null) {
+      g2D.setComposite(oldComposite);
+    }*/
   }
 
   /**
@@ -3425,21 +3563,20 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     Collection<Wall> walls = Home.getWallsSubList(items);
     //AffineTransform previousTransform = g2D.getTransform();
     for (Wall wall : walls) {
-
       if (isViewableAtSelectedLevel(wall)) {
         // Draw selection border
         g2D.setPaint(selectionOutlinePaint);
         g2D.setStroke(selectionOutlineStroke);
-        g2D.draw(getShape(wall.getPoints(), true));
+        g2D.draw(getShape(wall.getPoints(), true, null));
 
         if (indicatorPaint != null) {
-			AffineTransform previousTransform = g2D.getTransform();
+					AffineTransform previousTransform = g2D.getTransform();
           // Draw start point of the wall
           g2D.translate(wall.getXStart(), wall.getYStart());
           //g2D.scale(scaleInverse, scaleInverse);
           g2D.setPaint(indicatorPaint);
           g2D.setStroke(POINT_STROKE);
-			((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
+					((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
 
           Float arcExtent = wall.getArcExtent();
           double indicatorAngle;
@@ -3484,13 +3621,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             g2D.rotate(indicatorAngle);
             g2D.translate(8, 0);
           }
-			((VMGraphics2D)g2D).draw(WALL_ORIENTATION_INDICATOR, scaleInverse);
+					((VMGraphics2D)g2D).draw(WALL_ORIENTATION_INDICATOR, scaleInverse);
           g2D.setTransform(previousTransform);
-			AffineTransform previousTransform2 = g2D.getTransform();
+					AffineTransform previousTransform2 = g2D.getTransform();
           // Draw end point of the wall
           g2D.translate(wall.getXEnd(), wall.getYEnd());
           //g2D.scale(scaleInverse, scaleInverse);
-			((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
+					((VMGraphics2D)g2D).fill(WALL_POINT, scaleInverse);
           if (distanceAtScale >= 30) {
             if (arcExtent != null) {
               indicatorAngle += arcExtent;
@@ -3498,7 +3635,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             // Draw orientation indicator at end of the wall
             g2D.rotate(indicatorAngle);
             g2D.translate(-10, 0);
-			  ((VMGraphics2D)g2D).draw(WALL_ORIENTATION_INDICATOR, scaleInverse);
+			  		((VMGraphics2D)g2D).draw(WALL_ORIENTATION_INDICATOR, scaleInverse);
           }
           g2D.setTransform(previousTransform2);
         }
@@ -3560,19 +3697,16 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.translate(wall.getXEnd(), wall.getYEnd());
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(indicatorAngle);
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
 
       g2D.setTransform(previousTransform);
-		AffineTransform previousTransform2 = g2D.getTransform();
+			AffineTransform previousTransform2 = g2D.getTransform();
       if (arcExtent != null) {
         indicatorAngle += Math.PI - arcExtent;
       } else {
@@ -3583,16 +3717,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.translate(wall.getXStart(), wall.getYStart());
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(indicatorAngle);
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(wall, IndicatorType.RESIZE), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform2);
     }
   }
@@ -3667,7 +3798,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   private Area getItemsArea(Collection<? extends Selectable> items) {
     Area itemsArea = new Area();
     for (Selectable item : items) {
-      itemsArea.add(new Area(getShape(item.getPoints(), true)));
+      itemsArea.add(new Area(getShape(item.getPoints(), true, null)));
     }
     return itemsArea;
   }
@@ -3716,11 +3847,15 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           } else if (paintMode != PaintMode.CLIPBOARD
                     || selectedPiece) {
             // In clipboard paint mode, paint piece only if it is selected
-            Shape pieceShape = getShape(piece.getPoints(), true);
+            Shape pieceShape = getShape(piece.getPoints(), true, null);
             Shape pieceShape2D;
             if (piece instanceof HomeDoorOrWindow) {
               HomeDoorOrWindow doorOrWindow = (HomeDoorOrWindow)piece;
-              pieceShape2D = getDoorOrWindowShapeAtWallIntersection(doorOrWindow);
+              pieceShape2D = getDoorOrWindowWallPartShape(doorOrWindow);
+              if (this.draggedItemsFeedback == null
+                  || !this.draggedItemsFeedback.contains(piece)) {
+                paintDoorOrWindowWallThicknessArea(g2D, doorOrWindow, planScale, backgroundColor, foregroundColor, paintMode);
+              }
               paintDoorOrWindowSashes(g2D, doorOrWindow, planScale, foregroundColor, paintMode);
             } else {
               pieceShape2D = pieceShape;
@@ -3733,8 +3868,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                 viewedFromTop = true;
               } else {
                 if (allFurnitureViewedFromTop == null) {
-					//PJPJ I feel this is more true
-					allFurnitureViewedFromTop = true;
+									//PJPJ I feel this is more true
+									allFurnitureViewedFromTop = true;
                  /* try {
                     // Evaluate allFurnitureViewedFromTop value as late as possible to avoid mandatory dependency towards Java 3D
                     allFurnitureViewedFromTop = !Boolean.getBoolean("com.eteks.sweethome3d.no3D")
@@ -3793,20 +3928,33 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   }
 
   /**
-   * Returns the shape of a door or a window at wall intersection.
+   * Returns the shape of the wall part of a door or a window.
    */
-  private Shape getDoorOrWindowShapeAtWallIntersection(HomeDoorOrWindow doorOrWindow) {
-    // For doors and windows, compute rectangle at wall intersection
-    float wallThickness = doorOrWindow.getDepth() * doorOrWindow.getWallThickness();
-    float wallDistance  = doorOrWindow.getDepth() * doorOrWindow.getWallDistance();
+  private Shape getDoorOrWindowWallPartShape(HomeDoorOrWindow doorOrWindow) {
+    Rectangle2D doorOrWindowWallPartRectangle = getDoorOrWindowRectangle(doorOrWindow, true);
+    // Apply rotation to the rectangle
+    AffineTransform rotation = AffineTransform.getRotateInstance(
+        doorOrWindow.getAngle(), doorOrWindow.getX(), doorOrWindow.getY());
+    PathIterator it = doorOrWindowWallPartRectangle.getPathIterator(rotation);
+    GeneralPath doorOrWindowWallPartShape = new GeneralPath();
+    doorOrWindowWallPartShape.append(it, false);
+    return doorOrWindowWallPartShape;
+  }
+
+  /**
+   * Returns the rectangle of a door or a window.
+   */
+  private Rectangle2D getDoorOrWindowRectangle(HomeDoorOrWindow doorOrWindow, boolean onlyWallPart) {
+    // Doors and windows can't be rotated along horizontal axes
+    float wallThickness = doorOrWindow.getDepth() * (onlyWallPart ? doorOrWindow.getWallThickness() : 1);
+    float wallDistance  = doorOrWindow.getDepth() * (onlyWallPart ? doorOrWindow.getWallDistance()  : 0);
     String cutOutShape = doorOrWindow.getCutOutShape();
     float width = doorOrWindow.getWidth();
     float x;
     if (cutOutShape != null
         && !"M0,0 v1 h1 v-1 z".equals(cutOutShape)) {
       // In case of a complex cut out, compute location and width of the window hole at wall intersection
-    	//PJPJPJPJ
-      javaawt.Shape shape = ModelManager.getInstance().getShape(cutOutShape);
+      Shape shape = ModelManager.getInstance().getShape(cutOutShape);
       Rectangle2D bounds = new Rectangle2D.Double(shape.getBounds2D().getX(),shape.getBounds2D().getY(),shape.getBounds2D().getWidth(),shape.getBounds2D().getHeight());
       if (doorOrWindow.isModelMirrored()) {
         x = doorOrWindow.getX() + (float)(0.5 - bounds.getX() - bounds.getWidth()) * width;
@@ -3817,17 +3965,69 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     } else {
       x = doorOrWindow.getX() - width / 2;
     }
-    Rectangle2D doorOrWindowRectangle = new Rectangle2D.Float(
-        x, doorOrWindow.getY() - doorOrWindow.getDepth() / 2 + wallDistance,
-        width, wallThickness);
-    // Apply rotation to the rectangle
-    AffineTransform rotation = AffineTransform.getRotateInstance(
-        doorOrWindow.getAngle(), doorOrWindow.getX(), doorOrWindow.getY());
-    PathIterator it = doorOrWindowRectangle.getPathIterator(rotation);
-    GeneralPath doorOrWindowShape = new GeneralPath();
-    doorOrWindowShape.append(it, false);
-    return doorOrWindowShape;
-  }
+		Rectangle2D doorOrWindowWallPartRectangle = new Rectangle2D.Float(
+						x, doorOrWindow.getY() - doorOrWindow.getDepth() / 2 + wallDistance,
+						width, wallThickness);
+		return doorOrWindowWallPartRectangle;
+	}
+
+	/**
+	 * Paints the shape of a door or a window in the thickness of the wall it intersects.
+	 */
+	private void paintDoorOrWindowWallThicknessArea(Graphics2D g2D, HomeDoorOrWindow doorOrWindow, float planScale,
+																									Color backgroundColor, Color foregroundColor, PaintMode paintMode) {
+		if (doorOrWindow.isWallCutOutOnBothSides()) {
+			Area doorOrWindowWallArea = null;
+			if (this.doorOrWindowWallThicknessAreasCache != null) {
+				doorOrWindowWallArea = this.doorOrWindowWallThicknessAreasCache.get(doorOrWindow);
+			}
+
+			if (doorOrWindowWallArea == null) {
+				Rectangle2D doorOrWindowRectangle = getDoorOrWindowRectangle(doorOrWindow, false);
+				// Apply rotation to the rectangle
+				AffineTransform rotation = AffineTransform.getRotateInstance(
+								doorOrWindow.getAngle(), doorOrWindow.getX(), doorOrWindow.getY());
+				PathIterator it = doorOrWindowRectangle.getPathIterator(rotation);
+				GeneralPath doorOrWindowWallPartShape = new GeneralPath();
+				doorOrWindowWallPartShape.append(it, false);
+				Area doorOrWindowWallPartArea = new Area(doorOrWindowWallPartShape);
+
+				doorOrWindowWallArea = new Area();
+				for (Wall wall : home.getWalls()) {
+					if (wall.isAtLevel(doorOrWindow.getLevel())
+									&& doorOrWindow.isParallelToWall(wall)) {
+						Shape wallShape = getShape(wall.getPoints(), true, null);
+						Area wallArea = new Area(wallShape);
+						wallArea.intersect(doorOrWindowWallPartArea);
+						if (!wallArea.isEmpty()) {
+							Rectangle2D doorOrWindowExtendedRectangle = new Rectangle2D.Float(
+											(float)doorOrWindowRectangle.getX(),
+											(float)doorOrWindowRectangle.getY() - 2 * wall.getThickness(),
+											(float)doorOrWindowRectangle.getWidth(),
+											(float)doorOrWindowRectangle.getWidth() + 4 * wall.getThickness());
+							it = doorOrWindowExtendedRectangle.getPathIterator(rotation);
+							GeneralPath path = new GeneralPath();
+							path.append(it, false);
+							wallArea = new Area(wallShape);
+							wallArea.intersect(new Area(path));
+							doorOrWindowWallArea.add(wallArea);
+						}
+					}
+				}
+			}
+
+			if (this.doorOrWindowWallThicknessAreasCache == null) {
+				this.doorOrWindowWallThicknessAreasCache = new WeakHashMap<HomeDoorOrWindow, Area>();
+			}
+			this.doorOrWindowWallThicknessAreasCache.put(doorOrWindow, doorOrWindowWallArea);
+
+			g2D.setPaint(backgroundColor);
+			g2D.fill(doorOrWindowWallArea);
+			g2D.setPaint(foregroundColor);
+			g2D.setStroke(new BasicStroke(getStrokeWidth(HomePieceOfFurniture.class, paintMode) / planScale));
+			g2D.draw(doorOrWindowWallArea);
+		}
+	}
 
   /**
    * Paints the sashes of a door or a window.
@@ -3847,6 +4047,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    */
   private GeneralPath getDoorOrWindowSashShape(HomeDoorOrWindow doorOrWindow,
                                                Sash sash) {
+    // Doors and windows can't be rotated along horizontal axes
     float modelMirroredSign = doorOrWindow.isModelMirrored() ? -1 : 1;
     float xAxis = modelMirroredSign * sash.getXAxis() * doorOrWindow.getWidth();
     float yAxis = sash.getYAxis() * doorOrWindow.getDepth();
@@ -3934,12 +4135,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         if (homePieceOfFurniture != piece) {
           Area groupArea = null;
           if (lastGroup != homePieceOfFurniture) {
-            Shape groupShape = getShape(homePieceOfFurniture.getPoints(), true);
+            Shape groupShape = getShape(homePieceOfFurniture.getPoints(), true, null);
             groupArea = new Area(groupShape);
             // Enlarge group area
             groupArea.add(new Area(furnitureGroupsStroke.createStrokedShape(groupShape)));
           }
-          Area pieceArea = new Area(getShape(piece.getPoints(), true));
+          Area pieceArea = new Area(getShape(piece.getPoints(), true, null));
           if (furnitureGroupsArea == null) {
             furnitureGroupsArea = groupArea;
             furnitureInGroupsArea = pieceArea;
@@ -3967,7 +4168,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
     for (HomePieceOfFurniture piece : furniture) {
       float [][] points = piece.getPoints();
-      Shape pieceShape = getShape(points, true);
+      Shape pieceShape = getShape(points, true, null);
 
       // Draw selection border
       g2D.setPaint(selectionOutlinePaint);
@@ -4035,12 +4236,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     // Translate to piece center
     final Rectangle bounds = pieceShape2D.getBounds();
     g2D.translate(bounds.getCenterX(), bounds.getCenterY());
-    float pieceDepth = piece.getDepth();
+    float pieceDepth = piece.getDepthInPlan();
     if (piece instanceof HomeDoorOrWindow) {
       pieceDepth *= ((HomeDoorOrWindow)piece).getWallThickness();
     }
     // Scale icon to fit in its area
-    float minDimension = Math.min(piece.getWidth(), pieceDepth);
+    float minDimension = Math.min(piece.getWidthInPlan(), pieceDepth);
     float iconScale = Math.min(1 / planScale, minDimension / icon.getIconHeight());
     // If piece model is mirrored, inverse x scale
     if (piece.isModelMirrored()) {
@@ -4072,12 +4273,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
            && paintMode != PaintMode.PAINT) {
       PlanComponent waitingComponent = paintMode == PaintMode.PAINT ? this : null;
       // Prefer use plan icon if it exists
-
-		//PJPJ just go for model icon
       if (piece.getPlanIcon() != null) {
         icon = new PieceOfFurniturePlanIcon(piece, waitingComponent);
       } else {
-        icon = new PieceOfFurnitureModelIcon(piece, waitingComponent);
+        icon = new PieceOfFurnitureModelIcon(piece, this.object3dFactory, waitingComponent, this.preferences.getFurnitureModelIconSize());
       }
       this.furnitureTopViewIconsCache.put(piece, icon);
     }
@@ -4093,13 +4292,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       final Rectangle bounds = pieceShape2D.getBounds();
       g2D.translate(bounds.getCenterX(), bounds.getCenterY());
       g2D.rotate(piece.getAngle());
-      float pieceDepth = piece.getDepth();
+      float pieceDepth = piece.getDepthInPlan();
       // Scale icon to fit in its area
       if (piece.isModelMirrored()) {
         // If piece model is mirrored, inverse x scale
-        g2D.scale(-piece.getWidth() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
+        g2D.scale(-piece.getWidthInPlan() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
       } else {
-        g2D.scale(piece.getWidth() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
+        g2D.scale(piece.getWidthInPlan() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
       }
       // Paint piece icon
       icon.paintIcon(this, g2D, -icon.getIconWidth() / 2, -icon.getIconHeight() / 2);
@@ -4124,36 +4323,34 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       float scaleInverse = inverseSize / planScale;
       float pieceAngle = piece.getAngle();
       Shape rotationIndicator = getIndicator(piece, IndicatorType.ROTATE);
-      if (rotationIndicator != null) {AffineTransform previousTransform2 = g2D.getTransform();
+      if (rotationIndicator != null) {
+      	AffineTransform previousTransform = g2D.getTransform();
       	// Draw rotation indicator at top left point of the piece
         g2D.translate(piecePoints [0][0], piecePoints [0][1]);
-		g2D.rotate(pieceAngle);
+        //g2D.scale(scaleInverse, scaleInverse);
+				g2D.rotate(pieceAngle);
 
-		if(!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D) g2D).draw(rotationIndicator, scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.handle_rotator)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+				if(!SHOW_CHUNKY_HANDLES) {
+					((VMGraphics2D) g2D).draw(rotationIndicator, scaleInverse);
+				} else {
+					g2D.scale(scaleInverse, scaleInverse);
+					Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.handle_rotator)).getBitmap();
+					((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+				}
 
-        g2D.setTransform(previousTransform2);
+        g2D.setTransform(previousTransform);
       }
-		if(SHOW_HANDLES_THAT_NEED_TOOLTIPS)
-		{
+		if(SHOW_HANDLES_THAT_NEED_TOOLTIPS) {
+			AffineTransform previousTransform = g2D.getTransform();
 			Shape elevationIndicator = getIndicator(piece, IndicatorType.ELEVATE);
-			if (elevationIndicator != null)
-			{
+			if (elevationIndicator != null) {
 				AffineTransform previousTransform2 = g2D.getTransform();
 				// Draw elevation indicator at top right point of the piece
 				g2D.translate(piecePoints[1][0], piecePoints[1][1]);
+				//g2D.scale(scaleInverse, scaleInverse);
 				g2D.rotate(pieceAngle);
 
-				if (!SHOW_CHUNKY_HANDLES)
-				{
+				if (!SHOW_CHUNKY_HANDLES) {
 					// TODO: what's this??
 					((VMGraphics2D) g2D).draw(ELEVATION_POINT_INDICATOR, scaleInverse);
 				}
@@ -4162,59 +4359,56 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 				g2D.translate(6.5f, -6.5f);
 				g2D.rotate(-pieceAngle);
 
-				if (!SHOW_CHUNKY_HANDLES)
-				{
+				if (!SHOW_CHUNKY_HANDLES) {
 					((VMGraphics2D) g2D).draw(elevationIndicator, scaleInverse);
-				}
-				else
-				{
+				} else {
 					g2D.scale(scaleInverse, scaleInverse);
 					Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_target)).getBitmap();
 					((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
 				}
 				g2D.setTransform(previousTransform2);
 			}
-		}
 
-      if (piece.isResizable()) {AffineTransform previousTransform = g2D.getTransform();
-        // Draw height indicator at bottom left point of the piece
-        g2D.translate(piecePoints [3][0], piecePoints [3][1]);
-        g2D.rotate(pieceAngle);
+			// Draw pitch, roll, light or height indicator at bottom left point of the piece
+			g2D.translate(piecePoints [3][0], piecePoints [3][1]);
+			//g2D.scale(scaleInverse, scaleInverse);
+			g2D.rotate(pieceAngle);
+			if (piece.getPitch() != 0
+							&& isFurnitureSizeInPlanSupported()) {
+				Shape pitchIndicator = getIndicator(piece, IndicatorType.ROTATE_PITCH);
+				if (pitchIndicator != null) {
+					((VMGraphics2D) g2D).draw(pitchIndicator, scaleInverse);
+				}
+			} else if (piece.getRoll() != 0
+							&& isFurnitureSizeInPlanSupported()) {
+				Shape rollIndicator = getIndicator(piece, IndicatorType.ROTATE_ROLL);
+				if (rollIndicator != null) {
+					((VMGraphics2D) g2D).draw(rollIndicator, scaleInverse);
+				}
+			} else if (piece instanceof HomeLight) {
+				Shape powerIndicator = getIndicator(piece, IndicatorType.CHANGE_POWER);
+				if (powerIndicator != null) {
+					if(!SHOW_CHUNKY_HANDLES) {
+						//TODO:?? what's this
+						((VMGraphics2D) g2D).draw(LIGHT_POWER_POINT_INDICATOR, scaleInverse);
+					}
+					// Place power indicator farther but don't rotate it
+					g2D.translate(-7.5f, 7.5f);
+					g2D.rotate(-pieceAngle);
 
-		  //NOTE light power is not useful wihtout teh tooptips as well
-		  if(SHOW_HANDLES_THAT_NEED_TOOLTIPS)
-		  {
-        if (piece instanceof HomeLight) {
-          Shape powerIndicator = getIndicator(piece, IndicatorType.CHANGE_POWER);
-          if (powerIndicator != null) {
-
-			  if(!SHOW_CHUNKY_HANDLES)
-			  {
-				  //TODO:?? what's this
-				  ((VMGraphics2D) g2D).draw(LIGHT_POWER_POINT_INDICATOR, scaleInverse);
-			  }
-            // Place power indicator farther but don't rotate it
-            g2D.translate(-7.5f, 7.5f);
-            g2D.rotate(-pieceAngle);
-
-			  if(!SHOW_CHUNKY_HANDLES)
-			  {
-				  ((VMGraphics2D)g2D).draw(powerIndicator, scaleInverse);
-			  }
-			  else
-			  {
-				  g2D.scale(scaleInverse, scaleInverse);
-				  Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_target)).getBitmap();
-				  ((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-			  }
-          }
-        } else {
-
+					if(!SHOW_CHUNKY_HANDLES) {
+						((VMGraphics2D)g2D).draw(powerIndicator, scaleInverse);
+					} else {
+						g2D.scale(scaleInverse, scaleInverse);
+						Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_target)).getBitmap();
+						((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+					}
+				}
+			} else if (piece.isResizable()
+							&& !piece.isHorizontallyRotated()) {
 				Shape heightIndicator = getIndicator(piece, IndicatorType.RESIZE_HEIGHT);
-				if (heightIndicator != null)
-				{
-					if (!SHOW_CHUNKY_HANDLES)
-					{
+				if (heightIndicator != null) {
+					if (!SHOW_CHUNKY_HANDLES) {
 						//TODO:?? what's this
 						g2D.draw(FURNITURE_HEIGHT_POINT_INDICATOR);
 					}
@@ -4222,38 +4416,33 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 					g2D.translate(-7.5f, 7.5f);
 					g2D.rotate(-pieceAngle);
 
-					if (!SHOW_CHUNKY_HANDLES)
-					{
+					if (!SHOW_CHUNKY_HANDLES) {
 						((VMGraphics2D) g2D).draw(heightIndicator, scaleInverse);
-					}
-					else
-					{
+					} else {
 						g2D.scale(scaleInverse, scaleInverse);
 						Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.ambilwarna_arrow_down)).getBitmap();
 						((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
 					}
 				}
 			}
-        }
-        g2D.setTransform(previousTransform);
+			g2D.setTransform(previousTransform);
+		} //end if(SHOW_HANDLES_THAT_NEED_TOOLTIPS)
 
+     if (piece.isResizable()) {
         Shape resizeIndicator = getIndicator(piece, IndicatorType.RESIZE);
-        if (resizeIndicator != null) {AffineTransform previousTransform2 = g2D.getTransform();
+        if (resizeIndicator != null) {
+        	AffineTransform previousTransform2 = g2D.getTransform();
           // Draw resize indicator at top left point of the piece
           g2D.translate(piecePoints [2][0], piecePoints [2][1]);
           //g2D.scale(scaleInverse, scaleInverse);
           g2D.rotate(pieceAngle);
-			if(!SHOW_CHUNKY_HANDLES)
-			{
-				((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-			}
-			else
-			{
-				g2D.scale(scaleInverse, scaleInverse);
-				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.handle_resizer)).getBitmap();
-				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-			}
-
+					if(!SHOW_CHUNKY_HANDLES) {
+						((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+					} else {
+						g2D.scale(scaleInverse, scaleInverse);
+						Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.handle_resizer)).getBitmap();
+						((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+					}
           g2D.setTransform(previousTransform2);
         }
       }
@@ -4365,7 +4554,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       }
       return polylineShape;
     } else {
-      return getShape(points, closedPath);
+      return getShape(points, closedPath, null);
     }
   }
 
@@ -4390,11 +4579,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         case OPEN :
           //g2D.scale(0.9, 0.9);
           g2D.setStroke(new BasicStroke((float)(thickness), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			((VMGraphics2D)g2D).draw(ARROW, (float)scale);
+					((VMGraphics2D)g2D).draw(ARROW, (float)scale);
           break;
         case DELTA :
           g2D.translate(1.65f, 0);
-			((VMGraphics2D)g2D).fill(ARROW, (float)scale);
+					((VMGraphics2D)g2D).fill(ARROW, (float)scale);
           break;
         default:
           break;
@@ -4508,7 +4697,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       }
     }
     g2D.setFont(previousFont);
-
     // Paint resize indicator of selected dimension line
     if (selectedItems.size() == 1
         && selectedItems.get(0) instanceof DimensionLine
@@ -4540,36 +4728,30 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       g2D.rotate(Math.PI);
       //g2D.scale(scaleInverse, scaleInverse);
       Shape resizeIndicator = getIndicator(dimensionLine, IndicatorType.RESIZE);
-		((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-		if (!SHOW_CHUNKY_HANDLES)
-		{
 			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform);
-		AffineTransform previousTransform2 = g2D.getTransform();
+			AffineTransform previousTransform2 = g2D.getTransform();
       // Draw resize indicator at the end of dimension line
       g2D.translate(dimensionLine.getXEnd(), dimensionLine.getYEnd());
       g2D.rotate(wallAngle);
       g2D.translate(0, dimensionLine.getOffset());
       //g2D.scale(scaleInverse, scaleInverse);
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform2);
-		AffineTransform previousTransform3 = g2D.getTransform();
+			AffineTransform previousTransform3 = g2D.getTransform();
       // Draw resize indicator at the middle of dimension line
       g2D.translate((dimensionLine.getXStart() + dimensionLine.getXEnd()) / 2,
           (dimensionLine.getYStart() + dimensionLine.getYEnd()) / 2);
@@ -4579,16 +4761,13 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           ? Math.PI / 2
           : -Math.PI / 2);
       //g2D.scale(scaleInverse, scaleInverse);
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(resizeIndicator, scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.wall_and_point_resizer)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform3);
     }
   }
@@ -4628,7 +4807,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             g2D.setPaint(selectionOutlinePaint);
             g2D.setStroke(selectionOutlineStroke);
             float [][] textBounds = getTextBounds(labelText, labelStyle, xLabel, yLabel, labelAngle);
-            g2D.draw(getShape(textBounds, true));
+            g2D.draw(getShape(textBounds, true, null));
             g2D.setPaint(foregroundColor);
             if (indicatorPaint != null
                 && selectedItems.size() == 1
@@ -4646,11 +4825,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
                   float scaleInverse = inverseSize / planScale;
                   //g2D.scale(scaleInverse, scaleInverse);
                   g2D.rotate(label.getAngle());
-					((VMGraphics2D)g2D).draw(ELEVATION_POINT_INDICATOR, scaleInverse);
+									((VMGraphics2D)g2D).draw(ELEVATION_POINT_INDICATOR, scaleInverse);
                   // Place elevation indicator farther but don't rotate it
                   g2D.translate(0, 10f);
                   g2D.rotate(-label.getAngle());
-					((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
+									((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
                   g2D.setTransform(previousTransform);
                 }
               }
@@ -4678,8 +4857,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       //PJ blurry g2D.scale(diameter, diameter);
       g2D.setColor(foregroundColor);
        //PJ g2D.fill(COMPASS);
-		((VMGraphics2D)g2D).fill(COMPASS, diameter);
-	  g2D.setTransform(previousTransform);
+			((VMGraphics2D)g2D).fill(COMPASS, diameter);
+	  	g2D.setTransform(previousTransform);
     }
   }
 
@@ -4700,10 +4879,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
       g2D.setPaint(selectionOutlinePaint);
       g2D.setStroke(new BasicStroke((5.5f + planScale) / diameter / planScale));
-		((VMGraphics2D)g2D).draw(COMPASS_DISC, diameter);
+			((VMGraphics2D)g2D).draw(COMPASS_DISC, diameter);
       g2D.setColor(foregroundColor);
       g2D.setStroke(new BasicStroke(1f / diameter / planScale));
-		((VMGraphics2D)g2D).draw(COMPASS_DISC, diameter);
+			((VMGraphics2D)g2D).draw(COMPASS_DISC, diameter);
       g2D.setTransform(previousTransform);
 
       // Paint indicators of the compass
@@ -4731,34 +4910,28 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(compass.getNorthDirection());
 
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.ROTATE), scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_rotator)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.ROTATE), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_rotator)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform);
-		AffineTransform previousTransform2 = g2D.getTransform();
+			AffineTransform previousTransform2 = g2D.getTransform();
       // Draw resize indicator at middle of second and third point of compass
       g2D.translate((compassPoints [1][0] + compassPoints [2][0]) / 2,
           (compassPoints [1][1] + compassPoints [2][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(compass.getNorthDirection());
 
-		if (!SHOW_CHUNKY_HANDLES)
-		{
-			((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.RESIZE), scaleInverse);
-		}
-		else
-		{
-			g2D.scale(scaleInverse, scaleInverse);
-			Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_resize)).getBitmap();
-			((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
-		}
+			if (!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(compass, IndicatorType.RESIZE), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_resize)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
 
       g2D.setTransform(previousTransform2);
     }
@@ -5260,26 +5433,27 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           (cameraPoints [0][1] + cameraPoints [3][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(camera.getYaw());
-		((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE), scaleInverse);
+			((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE), scaleInverse);
       g2D.setTransform(previousTransform);
-		AffineTransform previousTransform2 = g2D.getTransform();
+			AffineTransform previousTransform2 = g2D.getTransform();
       // Draw pitch rotation indicator at middle of second and third point of camera
       g2D.translate((cameraPoints [1][0] + cameraPoints [2][0]) / 2,
           (cameraPoints [1][1] + cameraPoints [2][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(camera.getYaw());
-		((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE_PITCH), scaleInverse);
+			((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE_PITCH), scaleInverse);
       g2D.setTransform(previousTransform2);
 
       Shape elevationIndicator = getIndicator(camera, IndicatorType.ELEVATE);
-      if (elevationIndicator != null) { AffineTransform previousTransform3 = g2D.getTransform();
+      if (elevationIndicator != null) {
+      	AffineTransform previousTransform3 = g2D.getTransform();
         // Draw elevation indicator at middle of first and second point of camera
         g2D.translate((cameraPoints [0][0] + cameraPoints [1][0]) / 2,
             (cameraPoints [0][1] + cameraPoints [1][1]) / 2);
         //g2D.scale(scaleInverse, scaleInverse);
         g2D.draw(POINT_INDICATOR);
         g2D.translate(Math.sin(camera.getYaw()) * 8, -Math.cos(camera.getYaw()) * 8);
-		  ((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
+		  	((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
         g2D.setTransform(previousTransform3);
       }
     }
@@ -5301,7 +5475,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   /**
    * Returns the shape matching the coordinates in <code>points</code> array.
    */
-  private Shape getShape(float [][] points, boolean closedPath) {
+  private Shape getShape(float [][] points, boolean closedPath, AffineTransform transform) {
     GeneralPath path = new GeneralPath();
     path.moveTo(points [0][0], points [0][1]);
     for (int i = 1; i < points.length; i++) {
@@ -5309,6 +5483,9 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
     if (closedPath) {
       path.closePath();
+    }
+    if (transform != null) {
+      path.transform(transform);
     }
     return path;
   }
@@ -5348,8 +5525,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
   }
 
-
-
   /**
    * Returns the bounds of the selected items.
    */
@@ -5371,15 +5546,10 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
   }
 
-
-
 	/**
-	 *
 	 * Moves the view from (dx, dy) unit in the scrolling zone it belongs to.
 	 */
   public void moveView(float dx, float dy) {
-
-	  //PJPJ
    /* if (this instanceof JViewport) {
       JViewport viewport = (JViewport)getParent();
       Rectangle viewRectangle = viewport.getViewRect();
@@ -5420,7 +5590,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       //Rectangle viewRectangle = null;
       float xViewCenterPosition = 0;
       float yViewCenterPosition = 0;
-		//PJPJ
   /*    if (this instanceof JViewport) {
         parent = (JViewport)getParent();
         viewRectangle = parent.getViewRect();
@@ -5452,7 +5621,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 
 		//System.out.println("scrolledX " +scrolledX + " getDrawableView().getWidth() " +getDrawableView().getWidth());
 		//System.out.println("newxViewCenterPosition " +newxViewCenterPosition + " xViewCenterPosition " +xViewCenterPosition);
-		//TODO: this may work now I understand teh scrollign and converting better
+		//TODO: this may work now I understand the scrolling and converting better
 		//scrolledX += convertYModelToPixel(newxViewCenterPosition-xViewCenterPosition);
 		//scrolledY += convertYModelToPixel(newyViewCenterPosition-yViewCenterPosition);
 */
@@ -5468,7 +5637,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
    return (x + getScrolledX() - insets.left) / getScale() - MARGIN_PX + (float)planBounds.getMinX();
-
   }
 
   /**
@@ -5478,7 +5646,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
     return (y + getScrolledY() - insets.top) / getScale() - MARGIN_PX + (float)planBounds.getMinY();
-
   }
 
   /**
@@ -5497,7 +5664,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 	Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
 	return (int)Math.round((y - planBounds.getMinY() + MARGIN_PX ) * getScale() + insets.top - getScrolledY());
-
   }
 
   /**
@@ -5505,7 +5671,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    */
   public int convertXModelToScreen(float x) {
     Point point = new Point(convertXModelToPixel(x), 0);
- 	SwingTools.convertPointToScreen(point, this);
+ 		SwingTools.convertPointToScreen(point, this);
     return point.x;
   }
 
@@ -5681,10 +5847,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   public void setToolTipEditedProperties(final PlanController.EditableProperty [] toolTipEditedProperties,
                                          Object [] toolTipPropertyValues,
                                          float x, float y) {
-
 	  //TODO: find out what the tooptip edition is??
-
-
 /*    final JPanel toolTipPropertiesPanel = new JPanel(new GridBagLayout());
     // Reuse tool tip look
     Border border = UIManager.getBorder("ToolTip.border");
@@ -5919,6 +6082,33 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     return true;
   }
 
+  /**
+   * Returns the size of the given piece of furniture in the horizontal plan,
+   * or <code>null</code> if the view isn't able to compute such a value.
+   */
+  public float [] getPieceOfFurnitureSizeInPlan(HomePieceOfFurniture piece) {
+    if (piece.getRoll() == 0 && piece.getPitch() == 0) {
+      return new float [] {piece.getWidth(), piece.getDepth(), piece.getHeight()};
+    } else if (!isFurnitureSizeInPlanSupported()) {
+      return null;
+    } else {
+      return PieceOfFurnitureModelIcon.computePieceOfFurnitureSizeInPlan(piece, this.object3dFactory);
+    }
+  }
+
+  /**
+   * Returns <code>true</code> if this component is able to compute the size of horizontally rotated furniture.
+   */
+  public boolean isFurnitureSizeInPlanSupported() {
+    try {
+      return !Boolean.getBoolean("com.eteks.sweethome3d.no3D");
+    } catch (AccessControlException ex) {
+      // If com.eteks.sweethome3d.no3D can't be read,
+      // security manager won't allow to access to Java 3D DLLs required by ModelManager class too
+      return false;
+    }
+  }
+
   // Scrollable implementation
 /*  public Dimension getPreferredScrollableViewportSize() {
     return getPreferredSize();
@@ -5957,7 +6147,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    */
   public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler() {
     if (this.horizontalRuler == null) {
-      this.horizontalRuler = new PlanRulerComponent();horizontalRuler.init(HORIZONTAL,this);
+      this.horizontalRuler = new PlanRulerComponent();
+      horizontalRuler.init(HORIZONTAL,this);
     }
     return this.horizontalRuler;
   }
@@ -5975,16 +6166,12 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   /**
    * A component displaying the plan horizontal or vertical ruler associated to this plan.
    */
-
-  //PJPJ note this guy is added to a scroll pane like this
-	//planScrollPane.setColumnHeaderView(
-		//	(JComponent)controller.getPlanController().getHorizontalRulerView());
-	  // in HomePane
+  //PJPJ note this guy is added to a scroll pane like this, in HomePane
+	//planScrollPane.setColumnHeaderView((JComponent)controller.getPlanController().getHorizontalRulerView());
   public static class PlanRulerComponent extends JComponent implements com.eteks.sweethome3d.viewcontroller.View {
-    private int   orientation;
+		private PlanComponent pc;
+  	private int   orientation;
     private Point mouseLocation;
-
-	  private PlanComponent pc;
 
     /**
      * Creates a plan ruler.
@@ -5992,8 +6179,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
      *                    <code>SwingConstants.VERTICAL</code>.
      */
     public void init(int orientation, PlanComponent pc) {
-      this.orientation = orientation;
-		this.pc = pc;
+			this.pc = pc;
+    	this.orientation = orientation;
       setOpaque(true);
       // Use same font as tool tips
       setFont(new VMFont(Typeface.DEFAULT, 12));//UIManager.getFont("ToolTip.font"));
@@ -6189,18 +6376,18 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
         // Draw big ticks
         if (this.orientation == HORIZONTAL) {
           for (double x = ((int)(xMin / mainGridSize) - 1) * mainGridSize; x < xMax; x += mainGridSize) {
-			  AffineTransform previousTransform = g2D.getTransform();
+			  		AffineTransform previousTransform = g2D.getTransform();
             g2D.draw(new Line2D.Double(x, yMax + mainTickSize, x, yMax));//PJ - to + not sure why needed
             // Draw unit text
             g2D.translate(x, yMax - mainTickSize);
             g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
-			  g2D.setFont(getFont());
+			  		g2D.setFont(getFont());
             g2D.drawString(getFormattedTickText(format, x), 3, fontAscent - 1);
             g2D.setTransform(previousTransform);
           }
         } else {
           for (double y = ((int)(yMin / mainGridSize) - 1) * mainGridSize; y < yMax; y += mainGridSize) {
-			  AffineTransform previousTransform = g2D.getTransform();
+			  		AffineTransform previousTransform = g2D.getTransform();
             String yText = getFormattedTickText(format, y);
             if (leftToRightOriented) {
               g2D.draw(new Line2D.Double(xMax + mainTickSize, y, xMax, y));//PJ - to + not sure why needed
@@ -6208,8 +6395,8 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
               g2D.translate(xMax - mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
               g2D.rotate(-Math.PI / 2);
-				g2D.setFont(getFont());
-				g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
+							g2D.setFont(getFont());
+							g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
               //PJ swapped for above g2D.drawString(yText, -metrics.stringWidth(yText) - 3, fontAscent - 1);
             } else {
               g2D.draw(new Line2D.Double(xMin, y, xMin - mainTickSize, y));//PJ + to - not sure why needed
@@ -6217,7 +6404,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
               g2D.translate(xMin + mainTickSize, y);
               g2D.scale(inverseSize / rulerScale, inverseSize / rulerScale);
               g2D.rotate(Math.PI / 2);
-				g2D.setFont(getFont());
+							g2D.setFont(getFont());
               g2D.drawString(yText, 3, fontAscent - 1);
             }
             g2D.setTransform(previousTransform);
@@ -6264,35 +6451,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
   }
 
   /**
-   * Key used to ensure rotated content uniqueness per texture.
-   */
-  public class RotatedTextureKey {
-    private HomeTexture texture;
-
-    public RotatedTextureKey(HomeTexture texture) {
-      this.texture = texture;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      } else if (obj instanceof RotatedTextureKey) {
-        RotatedTextureKey rotatedTextureKey = (RotatedTextureKey)obj;
-        return this.texture.getImage().equals(rotatedTextureKey.texture.getImage())
-            && this.texture.getAngle() == rotatedTextureKey.texture.getAngle();
-      }
-      return false;
-    }
-
-    @Override
-    public int hashCode() {
-      return this.texture.getImage().hashCode()
-          + Float.floatToIntBits(this.texture.getAngle());
-    }
-  }
-
-  /**
    * A proxy for the furniture icon seen from top.
    */
   public static abstract  class PieceOfFurnitureTopViewIcon implements Icon {
@@ -6303,11 +6461,11 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
     }
 
     public int getIconWidth() {
-      return this.icon !=null ? this.icon.getIconWidth() : 0;
+      return this.icon != null ? this.icon.getIconWidth() : 0;
     }
 
     public int getIconHeight() {
-      return this.icon !=null ? this.icon.getIconHeight() : 0;
+      return this.icon != null ? this.icon.getIconHeight() : 0;
     }
 
     public void paintIcon(Object c, Graphics g, int x, int y) {
@@ -6397,7 +6555,7 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
             TextureManager.getInstance().loadTexture(this.pieceTexture.getImage(), true,
                 new TextureManager.TextureObserver() {
                   public void textureUpdated(Texture texture) {
-                    setTexturedIcon(c, (BufferedImage) ((ImageComponent2D)texture.getImage(0)).getImage(), pieceTexture.getAngle());
+                    setTexturedIcon(c, ((ImageComponent2D)texture.getImage(0)).getImage(), pieceTexture.getAngle());
                   }
                 });
           } else {
@@ -6447,103 +6605,23 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
    * A proxy for the furniture top view icon generated from its 3D model.
    */
   public static class PieceOfFurnitureModelIcon extends PieceOfFurnitureTopViewIcon {
-	private static Canvas3D        canvas3D;
-	private static SimpleUniverse universe;
+	  private static Canvas3D        canvas3D;
+	  private static SimpleUniverse  universe;
     private static BranchGroup     sceneRoot;
-    private static ExecutorService iconsCreationExecutor = Executors.newSingleThreadExecutor();
-
-	  private static Semaphore offScreenRenderSemaphore = new Semaphore(1, true);
-	  public static void pauseOffScreenRendering()
-	  {
-		  if(offScreenRenderSemaphore != null)
-		  {
-			  try
-			  {
-				  offScreenRenderSemaphore.acquire();
-			  }
-			  catch (InterruptedException e)
-			  {
-			  }
-		  }
-	  }
-	  public static void unpauseOffScreenRendering()
-	  {
-		  if(offScreenRenderSemaphore != null)
-		  {
-			  offScreenRenderSemaphore.release();
-		  }
-	  }
-
-	  public static void destroyUniverse()
-	  {
-		  if(universe != null)
-		  {
-			  pauseOffScreenRendering();
-			  try
-			  {
-				  universe.cleanup();
-			  }catch(Exception e)
-			  {
-				  // in production I don't care about exceptions now, but I do care about crashing.
-				  e.printStackTrace();
-			  }
-			  universe = null;
-			  canvas3D = null;
-			  sceneRoot = null;
-			  unpauseOffScreenRendering();
-		  }
-	  }
-    private static void ensureUniverseCreated()
-	{
-		if(canvas3D == null)
-		{
-
-			// Create the universe used to compute top view icons
-			canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
-			universe = new SimpleUniverse(canvas3D);
-			ViewingPlatform viewingPlatform = universe.getViewingPlatform();
-			// View model from top
-			TransformGroup viewPlatformTransform = viewingPlatform.getViewPlatformTransform();
-			Transform3D rotation = new Transform3D();
-			rotation.rotX(-Math.PI / 2);
-			Transform3D transform = new Transform3D();
-			transform.setTranslation(new Vector3f(0, 5, 0));
-			transform.mul(rotation);
-			viewPlatformTransform.setTransform(transform);
-			// Use parallel projection
-			Viewer viewer = viewingPlatform.getViewers()[0];
-			org.jogamp.java3d.View view = viewer.getView();
-			view.setProjectionPolicy(org.jogamp.java3d.View.PARALLEL_PROJECTION);
-			sceneRoot = new BranchGroup();
-			// Prepare scene root
-			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-			sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-			Background background = new Background(1.1f, 1.1f, 1.1f);
-			background.setCapability(Background.ALLOW_COLOR_WRITE);
-			background.setApplicationBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
-			sceneRoot.addChild(background);
-			Light[] lights = {new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(1.5f, -0.8f, -1)),
-					new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(-1.5f, -0.8f, -1)),
-					new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(0, -0.8f, 1)),
-					new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
-			for (Light light : lights)
-			{
-				light.setInfluencingBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
-				sceneRoot.addChild(light);
-			}
-			universe.addBranchGraph(sceneRoot);
-		}
-    }
+    private static ExecutorService iconsCreationExecutor;
+	  private static Semaphore 			 offScreenRenderSemaphore = new Semaphore(1, true);
 
     /**
      * Creates a top view icon proxy for a <code>piece</code> of furniture.
      * @param piece an object containing a 3D content
      * @param waitingComponent a waiting component. If <code>null</code>, the returned icon will
      *            be read immediately in the current thread.
+     * @param iconSize the size in pixels of the generated icon
      */
     public PieceOfFurnitureModelIcon(final HomePieceOfFurniture piece,
-                                     final JComponent waitingComponent) {
+																		 final Object3DFactory object3dFactory,
+                                     final JComponent waitingComponent,
+																		 final int iconSize) {
       super(IconManager.getInstance().getWaitIcon());
       ModelManager.getInstance().loadModel(piece.getModel(), waitingComponent == null,
           new ModelManager.ModelObserver() {
@@ -6555,25 +6633,29 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
               if (normalizedPiece.isResizable()) {
                 normalizedPiece.setModelMirrored(false);
               }
+              final float pieceWidth = normalizedPiece.getWidthInPlan();
+              final float pieceDepth = normalizedPiece.getDepthInPlan();
+              final float pieceHeight = normalizedPiece.getHeightInPlan();
               normalizedPiece.setX(0);
               normalizedPiece.setY(0);
-              normalizedPiece.setElevation(-normalizedPiece.getHeight() / 2);
+              normalizedPiece.setElevation(-pieceHeight / 2);
+              normalizedPiece.setLevel(null);
               normalizedPiece.setAngle(0);
-              final float pieceWidth = normalizedPiece.getWidth();
-              final float pieceDepth = normalizedPiece.getDepth();
-              final float pieceHeight = normalizedPiece.getHeight();
               if (waitingComponent != null) {
                 // Generate icons in an other thread to avoid blocking EDT during offscreen rendering
+                if (iconsCreationExecutor == null) {
+                  iconsCreationExecutor = Executors.newSingleThreadExecutor();
+                }
                 iconsCreationExecutor.execute(new Runnable() {
                     public void run() {
-                      setIcon(createIcon(new HomePieceOfFurniture3D(normalizedPiece, null, true, true),
-                          pieceWidth, pieceDepth, pieceHeight));
+                      setIcon(createIcon((Object3DBranch)object3dFactory.createObject3D(null, normalizedPiece, true),
+                          pieceWidth, pieceDepth, pieceHeight, iconSize));
                       waitingComponent.repaint();
                     }
                   });
               } else {
-                setIcon(createIcon(new HomePieceOfFurniture3D(normalizedPiece, null, true, true),
-                    pieceWidth, pieceDepth, pieceHeight));
+                setIcon(createIcon((Object3DBranch)object3dFactory.createObject3D(null, normalizedPiece, true),
+                    pieceWidth, pieceDepth, pieceHeight, iconSize));
               }
             }
 
@@ -6587,90 +6669,147 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
           });
     }
 
+		public static void pauseOffScreenRendering() {
+			if(offScreenRenderSemaphore != null) {
+				try {
+					offScreenRenderSemaphore.acquire();
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+
+		public static void unpauseOffScreenRendering() {
+			if(offScreenRenderSemaphore != null) {
+				offScreenRenderSemaphore.release();
+			}
+		}
+
+		public static void destroyUniverse() {
+			if(universe != null) {
+				pauseOffScreenRendering();
+				try {
+					universe.cleanup();
+				} catch(Exception e) {
+					// in production I don't care about exceptions now, but I do care about crashing.
+					e.printStackTrace();
+				}
+				universe = null;
+				canvas3D = null;
+				sceneRoot = null;
+				unpauseOffScreenRendering();
+			}
+		}
+		/**
+		 * Returns the branch group bound to a universe and a canvas for the given resolution.
+		 */
+		private static void ensureUniverseCreated() {
+			if(canvas3D == null) {
+				// Create the universe used to compute top view icons
+				//TODO: this nice icon size value MUST be used
+				canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(128, 128);
+				universe = new SimpleUniverse(canvas3D);
+				ViewingPlatform viewingPlatform = universe.getViewingPlatform();
+				// View model from top
+				TransformGroup viewPlatformTransform = viewingPlatform.getViewPlatformTransform();
+				Transform3D rotation = new Transform3D();
+				rotation.rotX(-Math.PI / 2);
+				Transform3D transform = new Transform3D();
+				transform.setTranslation(new Vector3f(0, 5, 0));
+				transform.mul(rotation);
+				viewPlatformTransform.setTransform(transform);
+				// Use parallel projection
+				Viewer viewer = viewingPlatform.getViewers()[0];
+				org.jogamp.java3d.View view = viewer.getView();
+				view.setProjectionPolicy(org.jogamp.java3d.View.PARALLEL_PROJECTION);
+				sceneRoot = new BranchGroup();
+				// Prepare scene root
+				sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+				sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+				sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+				Background background = new Background(1.1f, 1.1f, 1.1f);
+				background.setCapability(Background.ALLOW_COLOR_WRITE);
+				background.setApplicationBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+				sceneRoot.addChild(background);
+				Light[] lights = {new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(1.5f, -0.8f, -1)),
+								new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(-1.5f, -0.8f, -1)),
+								new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(0, -0.8f, 1)),
+								new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
+				for (Light light : lights) {
+					light.setInfluencingBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+					sceneRoot.addChild(light);
+				}
+				universe.addBranchGraph(sceneRoot);
+			}
+		}
     /**
      * Returns an icon created and scaled from piece model content.
      */
-    private Icon createIcon(BranchGroup modelNode,
-                            float pieceWidth, float pieceDepth, float pieceHeight) {
-
-		ensureUniverseCreated();
+    private Icon createIcon(Object3DBranch pieceNode,
+                            float pieceWidth, float pieceDepth, float pieceHeight,
+														int iconSize) {
+			ensureUniverseCreated();
       // Add piece model scene to a normalized transform group
       Transform3D scaleTransform = new Transform3D();
       scaleTransform.setScale(new Vector3d(2 / pieceWidth, 2 / pieceHeight, 2 / pieceDepth));
       TransformGroup modelTransformGroup = new TransformGroup();
       modelTransformGroup.setTransform(scaleTransform);
-      modelTransformGroup.addChild(modelNode);
+      modelTransformGroup.addChild(pieceNode);
       // Replace model textures by clones because Java 3D doesn't accept all the time
       // to share textures between offscreen and onscreen environments
-	  cloneTexture(modelNode, new IdentityHashMap<Texture, Texture>());
+	  	cloneTexture(pieceNode, new IdentityHashMap<Texture, Texture>());
 
       BranchGroup model = new BranchGroup();
       model.setCapability(BranchGroup.ALLOW_DETACH);
       model.addChild(modelTransformGroup);
+			try {
+				offScreenRenderSemaphore.acquire();
+				// we may have been disposed of
+				if(canvas3D != null && sceneRoot != null) {
+					sceneRoot.addChild(model);
 
-
-		try
-		{
-			offScreenRenderSemaphore.acquire();
-			// we may have been disposed of
-			if(canvas3D != null && sceneRoot !=null)
-			{
-
-				sceneRoot.addChild(model);
-				// Render scene with a white background
-				Background background = (Background) sceneRoot.getChild(0);
-				background.setColor(1, 1, 1);
-				canvas3D.renderOffScreenBuffer();
-				canvas3D.waitForOffScreenRendering();
-
-				//I have bug report stating canvas3D has become null after this wait, I'm not sure how as the semaphore should protect
-				// https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/46677556?duration=2592000000
-				if(canvas3D != null && sceneRoot !=null)
-				{
-					BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
-					int[] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
-					// Render scene with a black background
-					background.setColor(0, 0, 0);
+					// Render scene with a white background
+					Background background = (Background) sceneRoot.getChild(0);
+					background.setColor(1, 1, 1);
 					canvas3D.renderOffScreenBuffer();
 					canvas3D.waitForOffScreenRendering();
-					if(canvas3D != null && sceneRoot !=null)
-					{
-						BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-						int[] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
-						// Create an image with transparent pixels where model isn't drawn
-						for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
-						{
-							if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
-									&& imageWithBlackBackgoundPixels[i] == 0xFF000000
-									&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
-							{
-								imageWithWhiteBackgoundPixels[i] = 0;
-							}
-						}
-						sceneRoot.removeChild(model);
 
-						Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-						VMBufferedImage img = new VMBufferedImage(bm);
-						return new ImageIcon(img);
+					//I have bug report stating canvas3D has become null after this wait, I'm not sure how as the semaphore should protect
+					// https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/46677556?duration=2592000000
+					if(canvas3D != null && sceneRoot != null) {
+						BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
+						int[] imageWithWhiteBackgoundPixels = getImagePixels(imageWithWhiteBackgound);
+
+						// Render scene with a black background
+						background.setColor(0, 0, 0);
+						canvas3D.renderOffScreenBuffer();
+						canvas3D.waitForOffScreenRendering();
+						if(canvas3D != null && sceneRoot != null) {
+							BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+							int[] imageWithBlackBackgoundPixels = getImagePixels(imageWithBlackBackgound);
+
+							// Create an image with transparent pixels where model isn't drawn
+							for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
+								if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
+										&& imageWithBlackBackgoundPixels[i] == 0xFF000000
+										&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF) {
+									imageWithWhiteBackgoundPixels[i] = 0;
+								}
+							}
+
+							sceneRoot.removeChild(model);
+							return new ImageIcon(new VMBufferedImage(Bitmap.createBitmap(imageWithWhiteBackgoundPixels,
+											imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(),
+											Bitmap.Config.ARGB_8888)));
+						}
 					}
 				}
+			} catch (InterruptedException e) {
 			}
-		}
-		catch (InterruptedException e)
-		{
-		}
-		finally
-		{
-			offScreenRenderSemaphore.release();
-		}
-		return null;
-		//PJPJPJPJ
-     // return new ImageIcon(Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(
-      //    imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(),
-       //   imageWithWhiteBackgoundPixels, 0, imageWithWhiteBackgound.getWidth())));
+			finally {
+				offScreenRenderSemaphore.release();
+			}
+			return null;
     }
-
-
 
     /**
      * Replace the textures set on node shapes by clones.
@@ -6700,8 +6839,6 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
       }
     }
 
-
-  }
 	/**
 	 * Returns the pixels of the given <code>image</code>.
 	 */
@@ -6716,4 +6853,39 @@ public class PlanComponent extends JViewPort implements PlanView,   Printable {
 		}
 	}
 
+    /**
+     * Returns the size of the given piece computed from its vertices.
+     */
+    private static float [] computePieceOfFurnitureSizeInPlan(HomePieceOfFurniture piece,
+                                                              Object3DFactory object3dFactory) {
+      Transform3D horizontalRotation = new Transform3D();
+      if (piece.getPitch() != 0) {
+        horizontalRotation.rotX(-piece.getPitch());
+      } else {
+        horizontalRotation.rotZ(-piece.getRoll());
+      }
+      // Compute bounds of a piece centered at the origin and rotated around the target horizontal angle
+      piece = piece.clone();
+      piece.setX(0);
+      piece.setY(0);
+      piece.setElevation(-piece.getHeight() / 2);
+      piece.setLevel(null);
+      piece.setAngle(0);
+      piece.setRoll(0);
+      piece.setPitch(0);
+      piece.setWidthInPlan(piece.getWidth());
+      piece.setDepthInPlan(piece.getDepth());
+      piece.setHeightInPlan(piece.getHeight());
+      BoundingBox bounds = ModelManager.getInstance().getBounds(
+          (Object3DBranch)object3dFactory.createObject3D(null, piece, true), horizontalRotation);
+      Point3d lower = new Point3d();
+      bounds.getLower(lower);
+      Point3d upper = new Point3d();
+      bounds.getUpper(upper);
+      return new float [] {
+          Math.max(0.001f, (float)(upper.x - lower.x)), // width in plan
+          Math.max(0.001f, (float)(upper.z - lower.z)), // depth in plan
+          Math.max(0.001f, (float)(upper.y - lower.y))}; // height in plan
+    }
+  }
 }

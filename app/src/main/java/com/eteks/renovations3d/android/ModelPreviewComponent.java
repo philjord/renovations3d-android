@@ -22,7 +22,6 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.graphics.Bitmap;
 
-
 import javaawt.Color;
 import javaawt.Dimension;
 import javaawt.GraphicsConfiguration;
@@ -30,15 +29,12 @@ import javaawt.image.BufferedImage;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.ImageIO;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
-
 
 import org.jogamp.java3d.AmbientLight;
 import org.jogamp.java3d.Appearance;
@@ -82,17 +78,13 @@ import com.mindblowing.swingish.JPanel;
 /**
  * Super class of 3D preview component for model. 
  */
-public class ModelPreviewComponent extends JPanel
-{
+public class ModelPreviewComponent extends JPanel {
   private static final int MODEL_PREFERRED_SIZE = Math.round(200 * SwingTools.getResolutionScale());
   
   private SimpleUniverse          universe;
 //  private JPanel component3DPanel;
-  
 //  private Component               component3D;
-//PJPJPJPJPJ
-  private Canvas3D               canvas3D;
-  
+  private Canvas3D                canvas3D;
   private BranchGroup             sceneTree;
   private float                   viewYaw   = (float) Math.PI / 8;
   private float                   viewPitch = -(float) Math.PI / 16;
@@ -103,7 +95,7 @@ public class ModelPreviewComponent extends JPanel
   private boolean                 internalRotationAndSize;
   private Map<Texture, Texture>   pieceTextures = new HashMap<Texture, Texture>();
 
-	private	ScaledImageComponent modelPreviewImageComponent;
+  private ScaledImageComponent 	  modelPreviewImageComponent;
 
   /**
    * Returns an 3D model preview component that lets the user change its yaw.
@@ -152,15 +144,11 @@ public class ModelPreviewComponent extends JPanel
     // and clean up universe once its parent frame is disposed
     addAncestorListener(yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
 
-
-
-
-	  // swap the imagePreviewCompoent out for a component that just uses the getIcon to draw an image
+	  // swap the imagePreviewComponent out for a component that just uses the getIcon to draw an image
 	  modelPreviewImageComponent = new ScaledImageComponent(null, activity);
 	  modelPreviewImageComponent.setMinimumWidth(modelPreviewImageComponent.getPreferredSize().width);
 	  modelPreviewImageComponent.setMinimumHeight(modelPreviewImageComponent.getPreferredSize().height);
 	  this.swapOut(modelPreviewImageComponent, R.id.mpc_imagePreviewPanel);
-
 
   }
 
@@ -229,9 +217,6 @@ public class ModelPreviewComponent extends JPanel
  //   return this.component3DPanel;
 //  }
 
-
-
-
   /**
    * Adds an ancestor listener to this component to manage the creation of the 3D component and its universe 
    * and clean up the universe.  
@@ -240,17 +225,13 @@ public class ModelPreviewComponent extends JPanel
                                    final boolean pitchChangeSupported,
                                    final boolean scaleChangeSupported) {
 
-	  this.addOnAttachStateChangeListener(new OnAttachStateChangeListener()
-	  {
+	  this.addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
 		  @Override
-		  public void onViewAttachedToWindow(android.view.View v)
-		  {
-
+		  public void onViewAttachedToWindow(android.view.View v) {
 		  }
 
 		  @Override
-		  public void onViewDetachedFromWindow(android.view.View v)
-		  {
+		  public void onViewDetachedFromWindow(android.view.View v) {
 			  disposeUniverse();
 		  }
 	  });
@@ -338,7 +319,6 @@ public class ModelPreviewComponent extends JPanel
     this.component3DPanel.add(this.component3D);
     this.component3D.setFocusable(false);*/
     addMouseListeners(this.canvas3D.getGLWindow(), yawChangeSupported, pitchChangeSupported, scaleChangeSupported);
-    
   }
 
   /**
@@ -454,7 +434,6 @@ public class ModelPreviewComponent extends JPanel
    * Creates universe bound to the 3D component.
    */
   private void createUniverse() {
-
 	  //PJPJPJ already create in createComponent3D
   /*  Canvas3D canvas3D;
    if (this.component3D instanceof Canvas3D) {
@@ -748,8 +727,6 @@ public class ModelPreviewComponent extends JPanel
         throw exception.get(); 
       }
     }
-
-
   }
 
   /**
@@ -781,7 +758,7 @@ public class ModelPreviewComponent extends JPanel
       }
     }
 
-	  modelPreviewImageComponent.setImage(this.getIconImage(400));
+    modelPreviewImageComponent.setImage(this.getIconImage(400));
   }
 
   /**
@@ -824,10 +801,8 @@ public class ModelPreviewComponent extends JPanel
       TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
       modelTransformGroup.setTransform(modelTransform);
 
-		modelPreviewImageComponent.setImage(this.getIconImage(400));
+      modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
-
-
   }
   
   /**
@@ -861,9 +836,8 @@ public class ModelPreviewComponent extends JPanel
       TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
       modelTransformGroup.setTransform(modelTransform);
 
-		modelPreviewImageComponent.setImage(this.getIconImage(400));
+      modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
-
   }
 
   /**
@@ -875,7 +849,7 @@ public class ModelPreviewComponent extends JPanel
       this.previewedPiece.setColor(color);
       getModelNode().update();
 
-		modelPreviewImageComponent.setImage(this.getIconImage(400));
+      modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
   }
 
@@ -889,7 +863,7 @@ public class ModelPreviewComponent extends JPanel
       // Replace textures by clones because Java 3D doesn't accept all the time to share textures 
       cloneTextures(getModelNode(), this.pieceTextures);
 
-		modelPreviewImageComponent.setImage(this.getIconImage(400));
+      modelPreviewImageComponent.setImage(this.getIconImage(400));
     }
   }
 
@@ -930,25 +904,21 @@ public class ModelPreviewComponent extends JPanel
 	  canvas3D.renderOffScreenBuffer();
 	  canvas3D.waitForOffScreenRendering();
 
-	  if(canvas3D != null)
-	  {
+	  if(canvas3D != null) {
 		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
-		  int[] imageWithWhiteBackgoundPixels = PlanComponent.getImagePixels(imageWithWhiteBackgound);
+		  int[] imageWithWhiteBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithWhiteBackgound);
 		  // Render scene with a black background
 		  setBackground(Color.BLACK);
 		  canvas3D.renderOffScreenBuffer();
 		  canvas3D.waitForOffScreenRendering();
-		  if (canvas3D != null)
-		  {
+		  if (canvas3D != null) {
 			  BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-			  int[] imageWithBlackBackgoundPixels = PlanComponent.getImagePixels(imageWithBlackBackgound);
+			  int[] imageWithBlackBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithBlackBackgound);
 			  // Create an image with transparent pixels where model isn't drawn
-			  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++)
-			  {
+			  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
 				  if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
 						  && imageWithBlackBackgoundPixels[i] == 0xFF000000
-						  && imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF)
-				  {
+						  && imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF) {
 					  imageWithWhiteBackgoundPixels[i] = 0;
 				  }
 			  }

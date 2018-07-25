@@ -66,19 +66,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <CheckBox
-                    android:id="@+id/texture_choice_angle0"
+                    android:id="@+id/texture_choice_angleSpinner"
                     android:text="0 deg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/texture_choice_scaleLabel"
+                    android:text="Scale"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
                 <CheckBox
-                    android:id="@+id/texture_choice_angle45"
-                    android:text="45 deg"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
-                <CheckBox
-                    android:id="@+id/texture_choice_angle90"
+                    android:id="@+id/texture_choice_scaleSpinner"
                     android:text="90 deg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

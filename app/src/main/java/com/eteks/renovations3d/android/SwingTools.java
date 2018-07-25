@@ -54,8 +54,7 @@ import javaxswing.ImageIcon;
 
 /**
  * Gathers some useful tools for Swing.
- *
- * @author Emmanuel Puybaret
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 public class SwingTools
 {
@@ -63,8 +62,7 @@ public class SwingTools
 	//private static Border unfocusedViewBorder;
 	//private static Border focusedViewBorder;
 
-	private SwingTools()
-	{
+	private SwingTools() {
 		// This class contains only tools
 	}
 
@@ -119,16 +117,14 @@ public class SwingTools
 	/**
 	 * Updates the Swing resource bundles in use from the default Locale and class loader.
 	 */
-	public static void updateSwingResourceLanguage()
-	{
+  public static void updateSwingResourceLanguage() {
 		updateSwingResourceLanguage(Arrays.asList(new ClassLoader[]{SwingTools.class.getClassLoader()}), null);
 	}
 
 	/**
 	 * Updates the Swing resource bundles in use from the preferences Locale and the class loaders of preferences.
 	 */
-	public static void updateSwingResourceLanguage(UserPreferences preferences)
-	{
+  public static void updateSwingResourceLanguage(UserPreferences preferences) {
 		updateSwingResourceLanguage(preferences.getResourceClassLoaders(), preferences.getLanguage());
 	}
 
@@ -136,8 +132,7 @@ public class SwingTools
 	 * Updates the Swing resource bundles in use from the preferences Locale and class loaders.
 	 */
 	private static void updateSwingResourceLanguage(List<ClassLoader> classLoaders,
-													String language)
-	{
+                                                  String language) {
 		// Clear resource cache
 /*		UIManager.getDefaults().removeResourceBundle(null);
 		UIManager.getDefaults().setDefaultLocale(Locale.getDefault());
@@ -157,8 +152,7 @@ public class SwingTools
 	 */
 	private static void updateSwingResourceBundle(String swingResource,
 												  List<ClassLoader> classLoaders,
-												  String language)
-	{
+												  String language) {
 /*		ResourceBundle resource;
 		try {
 			Locale defaultLocale = language == null
@@ -218,8 +212,7 @@ public class SwingTools
 	public static String getLocalizedLabelText(UserPreferences preferences,
 											   Class<?> resourceClass,
 											   String resourceKey,
-											   Object... resourceParameters)
-	{
+											   Object... resourceParameters) {
 		String localizedString = preferences.getLocalizedString(resourceClass, resourceKey, resourceParameters);
 		// Under Mac OS X, remove bracketed upper case roman letter used in oriental languages to indicate mnemonic
 	/*	String language = Locale.getDefault().getLanguage();
@@ -347,10 +340,8 @@ public class SwingTools
 	 */
 	public static BufferedImage getPatternImage(TextureImage pattern,
 												Color backgroundColor,
-												Color foregroundColor)
-	{
-		if (patternImages == null)
-		{
+												Color foregroundColor) {
+		if (patternImages == null) {
 			patternImages = new HashMap<TextureImage, BufferedImage>();
 		}
 		BufferedImage image = new BufferedImage(
@@ -360,17 +351,13 @@ public class SwingTools
 		imageGraphics.fillRect(0, 0, image.getWidth(), image.getHeight());
 		// Get pattern image from cache
 		BufferedImage patternImage = patternImages.get(pattern);
-		if (patternImage == null)
-		{
-			try
-			{
+		if (patternImage == null) {
+			try {
 				InputStream imageInput = pattern.getImage().openStream();
 				patternImage = ImageIO.read(imageInput);
 				imageInput.close();
 				patternImages.put(pattern, patternImage);
-			}
-			catch (IOException ex)
-			{
+			} catch (IOException ex) {
 				throw new IllegalArgumentException("Can't read pattern image " + pattern.getName());
 			}
 		}
@@ -409,15 +396,59 @@ public class SwingTools
 		return border;
 	}*/
 
+	/**
+	 * Displays the image referenced by <code>imageUrl</code> in an AWT window
+	 * disposed once an instance of <code>JFrame</code> or <code>JDialog</code> is displayed.
+	 * If the <code>imageUrl</code> is incorrect, nothing happens.
+	 */
+	public static void showSplashScreenWindow(URL imageUrl) {
+	}
+
+	/**
+	 * Returns a new panel with a border and the given <code>title</code>
+	 */
+
+	/**
+	 * Returns a scroll pane containing the given <code>component</code>
+	 * that always displays scroll bars under Mac OS X.
+	 */
+
+	/**
+	 * Returns a scroll bar adjustment listener bound to the given <code>scrollPane</code> view
+	 * that updates view tool tip when its vertical scroll bar is adjusted.
+	 */
+
+	/**
+	 * Returns <code>true</code> if a tool tip is showing.
+	 */
+
+	/**
+	 * Adds a listener that will update the given popup menu to hide disabled menu items.
+	 */
+
+	/**
+	 * A popup menu listener that displays only enabled menu items.
+	 */
+
+	/**
+	 * Makes useless menu items invisible.
+	 */
+
+	/**
+	 * Makes useless separators invisible.
+	 */
+
+	/**
+	 * Returns <code>true</code> if the given <code>menu</code> contains
+	 * at least one enabled menu item.
+	 */
 
 	/**
 	 * Attempts to display the given <code>url</code> in a browser and returns <code>true</code>
 	 * if it was done successfully.
 	 */
-	public static boolean showDocumentInBrowser(URL url)
-	{
-		//PJPJPJPJ TODO:
-		return false;
+	public static boolean showDocumentInBrowser(URL url) {
+		return false; //PJPJPJPJ TODO: showDocumentInBrowser fully possible on Android
 //    return BrowserSupport.showDocumentInBrowser(url);
 	}
 
@@ -522,17 +553,6 @@ public class SwingTools
 		InputStream in = null;
 		try {
 			in = image.openStream();
-			/*ImageInputStream iis = ImageIO.createImageInputStream(in);
-			Iterator<ImageReader> it = ImageIO.getImageReaders(iis);
-			if (it.hasNext()) {
-				ImageReader reader = (ImageReader)it.next();
-				reader.setInput(iis);
-				int imageWidth = reader.getWidth(reader.getMinIndex());
-				int imageHeight = reader.getHeight(reader.getMinIndex());
-				reader.dispose();
-				return new Dimension(imageWidth, imageHeight);
-			}*/
-
 			//http://stackoverflow.com/questions/12018620/getting-a-bitmaps-dimensions-in-android-without-reading-the-entire-file
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
@@ -554,9 +574,7 @@ public class SwingTools
 	public static Stroke getStroke(float thickness,
 								   Polyline.CapStyle capStyle,
 								   Polyline.JoinStyle joinStyle,
-								   Polyline.DashStyle dashStyle)
-	{
-
+								   Polyline.DashStyle dashStyle) {
 		int strokeCapStyle;
 		switch (capStyle) {
 			case ROUND :
@@ -606,22 +624,20 @@ public class SwingTools
 		return new BasicStroke(thickness, strokeCapStyle, strokeJoinStyle, 10, strokeDashes, 0);
 	}
 
+	/**
+	 * Updates Swing components default size according to resolution scale.
+	 */
 
 
 	/**
 	 * Returns a scale factor used to adapt user interface items to screen resolution.
 	 */
-	public static float getResolutionScale()
-	{
+	public static float getResolutionScale() {
 		String resolutionScaleProperty = System.getProperty("com.eteks.sweethome3d.resolutionScale");
-		if (resolutionScaleProperty != null)
-		{
-			try
-			{
+		if (resolutionScaleProperty != null) {
+			try {
 				return Float.parseFloat(resolutionScaleProperty.trim());
-			}
-			catch (NumberFormatException ex)
-			{
+			} catch (NumberFormatException ex) {
 				// Ignore resolution
 			}
 		}
@@ -632,24 +648,17 @@ public class SwingTools
 	/**
 	 * Returns an image icon scaled according to the value returned by {@link #getResolutionScale()}.
 	 */
-	public static ImageIcon getScaledImageIcon(URL imageUrl)
-	{
+	public static ImageIcon getScaledImageIcon(URL imageUrl) {
 		float resolutionScale = getResolutionScale();
-		if (resolutionScale == 1)
-		{
+		if (resolutionScale == 1) {
 			return new ImageIcon(imageUrl);
-		}
-		else
-		{
-			try
-			{
+		} else {
+			try {
 				BufferedImage image = ImageIO.read(imageUrl.openStream());
 				Image scaledImage = image.getScaledInstance(Math.round(image.getWidth() * resolutionScale),
 						Math.round(image.getHeight() * resolutionScale), 0);//Image.SCALE_SMOOTH);
 				return new ImageIcon(scaledImage);
-			}
-			catch (IOException ex)
-			{
+			} catch (IOException ex) {
 				return null;
 			}
 		}

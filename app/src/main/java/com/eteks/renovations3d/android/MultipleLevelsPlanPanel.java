@@ -1,3 +1,22 @@
+/*
+ * MultipleLevelsPlanPanel.java 23 oct. 2011
+ *
+ * Sweet Home 3D, Copyright (c) 2011 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 package com.eteks.renovations3d.android;
 
 import android.content.res.Configuration;
@@ -50,9 +69,12 @@ import org.jogamp.vecmath.Point2f;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import javaawt.Graphics;
 import javaawt.Graphics2D;
@@ -60,9 +82,11 @@ import javaawt.geom.AffineTransform;
 import javaawt.print.PageFormat;
 import javaawt.print.PrinterException;
 
-
-public class MultipleLevelsPlanPanel extends JComponent implements PlanView
-{
+/**
+ * A panel for multiple levels plans where users can select the displayed level.
+ * @author Emmanuel Puybaret and Philip Jordan
+ */
+public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	public static final String WELCOME_SCREEN_UNWANTED = "PLAN_WELCOME_SCREEN_UNWANTED";
 	public static final int TOOLS_WIDE_MIN_DP = 550;
 	public static final int LEVELS_WIDE_MIN_DP = 350;
@@ -89,15 +113,12 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
-							 ViewGroup container, Bundle savedInstanceState)
-	{
+							 ViewGroup container, Bundle savedInstanceState) {
 		// TODO: find out why a new home gets a double onViewCreate
-		if (rootView == null)
-		{
+		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.multiple_level_plan_panel, container, false);
 
-			if (initialized)
-			{
+			if (initialized) {
 				this.setHasOptionsMenu(true);
 
 				drawableView = (DrawableView) rootView.findViewById(R.id.drawableView);
@@ -116,20 +137,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 			// make the left and right swipers work
 			ImageButton planLeftSwiper = (ImageButton) rootView.findViewById(R.id.planLeftSwiper);
-			planLeftSwiper.setOnClickListener(new View.OnClickListener()
-			{
+			planLeftSwiper.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v)
-				{
+				public void onClick(View v) {
 					((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(0, true);
 				}
 			});
 			ImageButton planRightSwiper = (ImageButton) rootView.findViewById(R.id.planRightSwiper);
-			planRightSwiper.setOnClickListener(new View.OnClickListener()
-			{
+			planRightSwiper.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v)
-				{
+				public void onClick(View v) {
 					((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(2, true);
 				}
 			});
@@ -139,30 +156,23 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	}
 
 	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser)
-	{
+	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 
-		if (isVisibleToUser)
-		{
+		if (isVisibleToUser) {
 			// this gets called heaps of time, wait until we have an activity
-			if (getActivity() != null)
-			{
+			if (getActivity() != null) {
 				WelcomeDialog.possiblyShowWelcomeScreen((Renovations3DActivity) getActivity(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_planview, preferences);
 			}
 
 			resetToSelectTool = true;
 
 
-			if (rootView != null)
-			{
-				if (Renovations3DActivity.SHOW_PAGER_BUTTONS)
-				{
+			if (rootView != null) {
+				if (Renovations3DActivity.SHOW_PAGER_BUTTONS) {
 					rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.VISIBLE);
 					rootView.findViewById(R.id.planRightSwiper).setVisibility(View.VISIBLE);
-				}
-				else
-				{
+				} else {
 					rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
 					rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
 				}
@@ -594,7 +604,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
 		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
 
-
 		menu.findItem(R.id.planEdit).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EDIT_MENU.Name") + "...");
 		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
@@ -604,7 +613,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		menu.findItem(R.id.planMagnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
 
 		sortOutBackgroundMenu(menu);
-
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -681,7 +689,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			case R.id.planDeleteLevel:
 				planController.deleteSelectedLevel();
 				return true;
-
 
 			case R.id.lockBasePlanCheck:
 				item.setChecked(!item.isChecked());
@@ -781,7 +788,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 						//TODO: this should set the names of the menu options just once now
 					}
 				});
-
 	}
 
 	/**
@@ -814,39 +820,31 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				((Graphics2D) g).setTransform(previousTransform2);
 			}
 		}
-
 	}
 
 	/**
 	 * Creates components displayed by this panel.
 	 */
 	private void createComponents(final Home home,
-								  final UserPreferences preferences, final PlanController controller)
-	{
+								  final UserPreferences preferences, final PlanController controller) {
 		// moved to init
 		//this.planComponent = createPlanComponent(home, preferences, controller);
 
 		List<Level> levels = home.getLevels();
 
 		createTabs(home, preferences);
-
-		final ChangeListener changeListener = new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent ev)
-			{
+		final ChangeListener changeListener = new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
 				LevelLabel selectedComponent = levelSpinnerControl.getSelectedComponent();
 				controller.setSelectedLevel(selectedComponent.getLevel());
 			}
 		};
 		this.levelSpinnerControl.addChangeListener(changeListener);
-		this.levelSpinnerControl.addOnLongClickListener(new View.OnLongClickListener()
-		{
+		this.levelSpinnerControl.addOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public boolean onLongClick(View v)
-			{
+			public boolean onLongClick(View v) {
 				LevelLabel selectedComponent = levelSpinnerControl.getSelectedComponent();
-				if (selectedComponent != null)
-				{
+				if (selectedComponent != null) {
 					controller.setSelectedLevel(selectedComponent.getLevel());
 					controller.modifySelectedLevel();
 				}
@@ -855,50 +853,37 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		});
 
 		// Add listeners to levels to maintain tabs name and order
-		final PropertyChangeListener levelChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
-				if (Level.Property.NAME.name().equals(ev.getPropertyName()))
-				{
+		final PropertyChangeListener levelChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
+				if (Level.Property.NAME.name().equals(ev.getPropertyName())) {
 					int index = home.getLevels().indexOf(ev.getSource());
 					levelSpinnerControl.setTitleAt(index, (String) ev.getNewValue());
 					updateTabComponent(home, index);
-				}
-				else if (Level.Property.VIEWABLE.name().equals(ev.getPropertyName()))
-				{
+				} else if (Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
 					updateTabComponent(home, home.getLevels().indexOf(ev.getSource()));
-				}
-				else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
-						|| Level.Property.ELEVATION_INDEX.name().equals(ev.getPropertyName()))
-				{
+				} else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
+						|| Level.Property.ELEVATION_INDEX.name().equals(ev.getPropertyName())) {
 					levelSpinnerControl.removeChangeListener(changeListener);
 					levelSpinnerControl.removeAll();
 					createTabs(home, preferences);
 					updateSelectedTab(home);
 					levelSpinnerControl.addChangeListener(changeListener);
 				}
-				getActivity().runOnUiThread(new Runnable()
-				{
+				getActivity().runOnUiThread(new Runnable() {
 					@Override
-					public void run()
-					{
+					public void run() {
 						getActivity().invalidateOptionsMenu();
 					}
 				});
 			}
 		};
-		for (Level level : levels)
-		{
+		for (Level level : levels) {
 			level.addPropertyChangeListener(levelChangeListener);
 		}
-		home.addLevelsListener(new CollectionListener<Level>()
-		{
-			public void collectionChanged(CollectionEvent<Level> ev)
-			{
+		home.addLevelsListener(new CollectionListener<Level>() {
+			public void collectionChanged(CollectionEvent<Level> ev) {
 				levelSpinnerControl.removeChangeListener(changeListener);
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
 						levelSpinnerControl.insertTab(ev.getItem().getName(), null, new LevelLabel(ev.getItem()), ev.getIndex());
 						Renovations3DActivity.logFireBaseLevelUp("AddLevel", ev.getItem().getName());
@@ -914,8 +899,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				updateLayout(home);
 				levelSpinnerControl.addChangeListener(changeListener);
 
-				getActivity().runOnUiThread(new Runnable()
-				{
+				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run()
 					{
@@ -925,20 +909,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 			}
 		});
 
-		home.addPropertyChangeListener(Home.Property.SELECTED_LEVEL, new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+		home.addPropertyChangeListener(Home.Property.SELECTED_LEVEL, new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				levelSpinnerControl.removeChangeListener(changeListener);
 				updateSelectedTab(home);
 				levelSpinnerControl.addChangeListener(changeListener);
 			}
 		});
 
-		home.addPropertyChangeListener(Home.Property.ALL_LEVELS_SELECTION, new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+		home.addPropertyChangeListener(Home.Property.ALL_LEVELS_SELECTION, new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				planComponent.repaint();
 			}
 		});
@@ -947,20 +927,15 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				new LanguageChangeListener(this));
 
 		// auto reset for label creates
-		home.addLabelsListener(new CollectionListener<Label>()
-		{
+		home.addLabelsListener(new CollectionListener<Label>() {
 			@Override
-			public void collectionChanged(CollectionEvent<Label> collectionEvent)
-			{
-				if (planController.getMode() == PlanController.Mode.LABEL_CREATION)
-				{
+			public void collectionChanged(CollectionEvent<Label> collectionEvent) {
+				if (planController.getMode() == PlanController.Mode.LABEL_CREATION) {
 					// run this code after everything has finished in the controller (invoke later)
 					Handler h = new Handler();
-					h.post(new Runnable()
-					{
+					h.post(new Runnable() {
 						@Override
-						public void run()
-						{
+						public void run() {
 							setMode(PlanController.Mode.SELECTION);
 							resetToolSpinnerToMode();
 						}
@@ -970,14 +945,11 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 		});
 
 		// auto reset for room creates
-		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new  PropertyChangeListener()
-		{
+		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new  PropertyChangeListener() {
 			@Override
-			public void propertyChange(PropertyChangeEvent evt)
-			{
+			public void propertyChange(PropertyChangeEvent evt) {
 				if (planController.getMode() == PlanController.Mode.ROOM_CREATION &&
-						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue())
-				{
+						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue()) {
 					// run this code after everything has finished in the controller (invoke later)
 					Handler h = new Handler();
 					h.post(new Runnable()
@@ -1070,7 +1042,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 				}
 			}
 		});
-
 	}
 
 
@@ -1078,15 +1049,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Creates and returns the main plan component displayed and layout by this component.
 	 */
 	protected PlanComponent createPlanComponent(final Home home, final UserPreferences preferences,
-												final PlanController controller)
-	{
+												final PlanController controller) {
 		PlanComponent pc = new PlanComponent();
 		pc.init(home, preferences, controller, this);
 		return pc;
 	}
 
-	private void updateTabComponent(final Home home, int i)
-	{
+  /**
+   * Updates tab component with a label that will display tab text outlined by selection color
+   * when all objects are selected at all levels.
+   */
+	private void updateTabComponent(final Home home, int i) {
 		//TODO: this should in fact ensure the tab/level is selected in the drop down and also on screen
 	}
 
@@ -1098,21 +1071,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	public void setEnabled(HomeView.ActionType actionType, boolean enabled)
 	{
-		if (actionType == HomeView.ActionType.UNDO)
-		{
+		if (actionType == HomeView.ActionType.UNDO) {
 			undoEnabled = enabled;
-			if (mOptionsMenu != null)
-			{
+			if (mOptionsMenu != null) {
 				MenuItem undoItem = mOptionsMenu.findItem(R.id.editUndo);
 				if (undoItem != null)
 					undoItem.setEnabled(enabled);
 			}
-		}
-		else if (actionType == HomeView.ActionType.REDO)
-		{
+		} else if (actionType == HomeView.ActionType.REDO) {
 			redoEnabled = enabled;
-			if (mOptionsMenu != null)
-			{
+			if (mOptionsMenu != null) {
 				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
 				if (redoItem != null)
 					redoItem.setEnabled(enabled);
@@ -1122,20 +1090,15 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 
 	public void setNameAndShortDescription(HomeView.ActionType actionType, String text)
 	{
-		if (actionType == HomeView.ActionType.REDO)
-		{
+		if (actionType == HomeView.ActionType.REDO) {
 			redoText = text != null ? text.replace("redoText ", "") : null;
-			if (mOptionsMenu != null && text != null)
-			{
+			if (mOptionsMenu != null && text != null) {
 				MenuItem redoItem = mOptionsMenu.findItem(R.id.editRedo);
-				if (redoItem != null)
-				{
+				if (redoItem != null) {
 					Renovations3DActivity.setIconizedMenuTitle(redoItem, redoText, R.drawable.edit_redo, getContext());
 				}
 			}
-		}
-		else
-		{
+		} else {
 			//System.out.println("Action text updated " + actionType + " " + text );
 		}
 	}
@@ -1144,32 +1107,24 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Preferences property listener bound to this component with a weak reference to avoid
 	 * strong link between preferences and this component.
 	 */
-	private static class LanguageChangeListener implements PropertyChangeListener
-	{
+	private static class LanguageChangeListener implements PropertyChangeListener {
 		private WeakReference<MultipleLevelsPlanPanel> planPanel;
 
-		public LanguageChangeListener(MultipleLevelsPlanPanel planPanel)
-		{
+		public LanguageChangeListener(MultipleLevelsPlanPanel planPanel) {
 			this.planPanel = new WeakReference<MultipleLevelsPlanPanel>(planPanel);
 		}
 
-		public void propertyChange(PropertyChangeEvent ev)
-		{
+		public void propertyChange(PropertyChangeEvent ev) {
 			// If help pane was garbage collected, remove this listener from preferences
 			MultipleLevelsPlanPanel planPanel = this.planPanel.get();
 			UserPreferences preferences = (UserPreferences) ev.getSource();
-			if (planPanel == null)
-			{
+			if (planPanel == null) {
 				preferences.removePropertyChangeListener(UserPreferences.Property.LANGUAGE, this);
-			}
-			else
-			{
+			} else {
 				// Update create level tooltip in new locale
-				//PJPJPJ tooltips removed
 				//String createNewLevelTooltip = preferences.getLocalizedString(MultipleLevelsPlanPanel.class, "ADD_LEVEL.ShortDescription");
 				//planPanel.multipleLevelsTabbedPane.setToolTipTextAt(planPanel.multipleLevelsTabbedPane.getTabCount() - 1, createNewLevelTooltip);
 
-				//PJ
 				planPanel.updateToolNames();
 			}
 		}
@@ -1178,11 +1133,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	/**
 	 * Creates the tabs from <code>home</code> levels.
 	 */
-	private void createTabs(Home home, UserPreferences preferences)
-	{
+	private void createTabs(Home home, UserPreferences preferences) {
 		List<Level> levels = home.getLevels();
-		for (int i = 0; i < levels.size(); i++)
-		{
+		for (int i = 0; i < levels.size(); i++) {
 			Level level = levels.get(i);
 			this.levelSpinnerControl.addTab(level.getName(), new LevelLabel(level));
 			updateTabComponent(home, i);
@@ -1192,12 +1145,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	/**
 	 * Selects the tab matching the selected level in <code>home</code>.
 	 */
-	private void updateSelectedTab(Home home)
-	{
+	private void updateSelectedTab(Home home) {
 		List<Level> levels = home.getLevels();
 		Level selectedLevel = home.getSelectedLevel();
-		if (levels.size() >= 2 && selectedLevel != null)
-		{
+		if (levels.size() >= 2 && selectedLevel != null) {
 			this.levelSpinnerControl.setSelectedIndex(levels.indexOf(selectedLevel));
 			displayPlanComponentAtSelectedIndex(home);
 		}
@@ -1207,100 +1158,80 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	/**
 	 * Display the plan component at the selected tab index.
 	 */
-	private void displayPlanComponentAtSelectedIndex(Home home)
-	{
+	private void displayPlanComponentAtSelectedIndex(Home home) {
 		//FIXME: this should select the drop down and load the right plan
 	}
 
 	/**
 	 * Switches between a simple plan component view and a tabbed pane for multiple levels.
 	 */
-	private void updateLayout(Home home)
-	{
+	private void updateLayout(Home home) {
 		//PJPJPJ card layout just dropped as there is only the multi system now
 	}
 
 	/**
 	 * Layouts the components displayed by this panel.
 	 */
-	private void layoutComponents()
-	{
-		//PJPJPJ I only use the ulti system now
+	private void layoutComponents() {
+		//PJPJPJ I only use the multiple system now
 	}
 
 /*	@Override
-	public void setTransferHandler(TransferHandler newHandler)
-	{
+	public void setTransferHandler(TransferHandler newHandler) {
 		this.planComponent.setTransferHandler(newHandler);
-	}*/
+	}
 
-/*	@Override
-	public void setComponentPopupMenu(JPopupMenu popup)
-	{
+	@Override
+	public void setComponentPopupMenu(JPopupMenu popup) {
 		this.planComponent.setComponentPopupMenu(popup);
-	}*/
+	}
 
-/*	@Override
-	public void addMouseMotionListener(final MouseMotionListener l)
-	{
-		this.planComponent.addMouseMotionListener(new MouseMotionListener()
-		{
-			public void mouseMoved(MouseEvent ev)
-			{
+	@Override
+	public void addMouseMotionListener(final MouseMotionListener l) {
+		this.planComponent.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseMoved(MouseEvent ev) {
 				l.mouseMoved(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 
-			public void mouseDragged(MouseEvent ev)
-			{
+			public void mouseDragged(MouseEvent ev) {
 				l.mouseDragged(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 		});
-	}*/
+	}
 
-/*	@Override
-	public void addMouseListener(final MouseListener l)
-	{
-		this.planComponent.addMouseListener(new MouseListener()
-		{
-			public void mouseReleased(MouseEvent ev)
-			{
+	@Override
+	public void addMouseListener(final MouseListener l) {
+		this.planComponent.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent ev) {
 				l.mouseReleased(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 
-			public void mousePressed(MouseEvent ev)
-			{
+			public void mousePressed(MouseEvent ev) {
 				l.mousePressed(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 
-			public void mouseExited(MouseEvent ev)
-			{
+			public void mouseExited(MouseEvent ev) {
 				l.mouseExited(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 
-			public void mouseEntered(MouseEvent ev)
-			{
+			public void mouseEntered(MouseEvent ev) {
 				l.mouseEntered(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 
-			public void mouseClicked(MouseEvent ev)
-			{
+			public void mouseClicked(MouseEvent ev) {
 				l.mouseClicked(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
 			}
 		});
-	}*/
+	}
 
-/*	@Override
-	public void addFocusListener(final FocusListener l)
-	{
-		FocusListener componentFocusListener = new FocusListener()
-		{
-			public void focusGained(FocusEvent ev)
-			{
+	@Override
+	public void addFocusListener(final FocusListener l) {
+		FocusListener componentFocusListener = new FocusListener() {
+			public void focusGained(FocusEvent ev) {
 				l.focusGained(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_GAINED, ev.isTemporary(), ev.getOppositeComponent()));
 			}
 
-			public void focusLost(FocusEvent ev)
-			{
+			public void focusLost(FocusEvent ev) {
 				l.focusLost(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_LOST, ev.isTemporary(), ev.getOppositeComponent()));
 			}
 		};
@@ -1309,10 +1240,30 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	}*/
 
 	/**
+	 * Returns an image of the plan for transfer purpose.
+	 */
+	public Object createTransferData(DataType dataType) {
+		return this.planComponent.createTransferData(dataType);
+	}
+
+	/**
+	 * Returns <code>true</code> if the plan component supports the given format type.
+	 */
+	public boolean isFormatTypeSupported(FormatType formatType) {
+		return this.planComponent.isFormatTypeSupported(formatType);
+	}
+
+	/**
+	 * Writes the plan in the given output stream at SVG (Scalable Vector Graphics) format if this is the requested format.
+	 */
+	public void exportData(OutputStream out, FormatType formatType, Properties settings) throws IOException {
+		this.planComponent.exportData(out, formatType, settings);
+	}
+
+	/**
 	 * Sets rectangle selection feedback coordinates.
 	 */
-	public void setRectangleFeedback(float x0, float y0, float x1, float y1)
-	{
+	public void setRectangleFeedback(float x0, float y0, float x1, float y1) {
 		this.planComponent.setRectangleFeedback(x0, y0, x1, y1);
 	}
 
@@ -1320,8 +1271,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Ensures selected items are visible in the plan displayed by this component and moves
 	 * its scroll bars if needed.
 	 */
-	public void makeSelectionVisible()
-	{
+	public void makeSelectionVisible() {
 		this.planComponent.makeSelectionVisible();
 	}
 
@@ -1329,72 +1279,63 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Ensures the point at (<code>x</code>, <code>y</code>) is visible in the plan displayed by this component,
 	 * moving its scroll bars if needed.
 	 */
-	public void makePointVisible(float x, float y)
-	{
+	public void makePointVisible(float x, float y) {
 		this.planComponent.makePointVisible(x, y);
 	}
 
 	/**
 	 * Returns the scale used to display the plan displayed by this component.
 	 */
-	public float getScale()
-	{
+	public float getScale() {
 		return this.planComponent.getScale();
 	}
 
 	/**
 	 * Sets the scale used to display the plan displayed by this component.
 	 */
-	public void setScale(float scale)
-	{
+	public void setScale(float scale) {
 		this.planComponent.setScale(scale);
 	}
 
 	/**
 	 * Moves the plan displayed by this component from (dx, dy) unit in the scrolling zone it belongs to.
 	 */
-	public void moveView(float dx, float dy)
-	{
+	public void moveView(float dx, float dy) {
 		this.planComponent.moveView(dx, dy);
 	}
 
 	/**
 	 * Returns <code>x</code> converted in model coordinates space.
 	 */
-	public float convertXPixelToModel(int x)
-	{
+	public float convertXPixelToModel(int x) {
 		return this.planComponent.convertXPixelToModel(SwingTools.convertPoint(this, x, 0, this.planComponent).x);
 	}
 
 	/**
 	 * Returns <code>y</code> converted in model coordinates space.
 	 */
-	public float convertYPixelToModel(int y)
-	{
+	public float convertYPixelToModel(int y) {
 		return this.planComponent.convertYPixelToModel(SwingTools.convertPoint(this, 0, y, this.planComponent).y);
 	}
 
 	/**
 	 * Returns <code>x</code> converted in screen coordinates space.
 	 */
-	public int convertXModelToScreen(float x)
-	{
+	public int convertXModelToScreen(float x) {
 		return this.planComponent.convertXModelToScreen(x);
 	}
 
 	/**
 	 * Returns <code>y</code> converted in screen coordinates space.
 	 */
-	public int convertYModelToScreen(float y)
-	{
+	public int convertYModelToScreen(float y) {
 		return this.planComponent.convertYModelToScreen(y);
 	}
 
 	/**
 	 * Returns the length in centimeters of a pixel with the current scale.
 	 */
-	public float getPixelLength()
-	{
+	public float getPixelLength() {
 		return this.planComponent.getPixelLength();
 	}
 
@@ -1402,16 +1343,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Returns the coordinates of the bounding rectangle of the <code>text</code> displayed at
 	 * the point (<code>x</code>,<code>y</code>).
 	 */
-	public float[][] getTextBounds(String text, TextStyle style, float x, float y, float angle)
-	{
+	public float[][] getTextBounds(String text, TextStyle style, float x, float y, float angle) {
 		return this.planComponent.getTextBounds(text, style, x, y, angle);
 	}
 
 	/**
 	 * Sets the cursor of this component.
 	 */
-	public void setCursor(CursorType cursorType)
-	{
+	public void setCursor(CursorType cursorType) {
 		this.planComponent.setCursor(cursorType);
 	}
 
@@ -1419,8 +1358,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Sets the cursor of this component.
 	 */
 /*	@Override
-	public void setCursor(Cursor cursor)
-	{
+	public void setCursor(Cursor cursor) {
 		this.planComponent.setCursor(cursor);
 	}*/
 
@@ -1428,16 +1366,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Returns the cursor of this component.
 	 */
 /*	@Override
-	public Cursor getCursor()
-	{
+	public Cursor getCursor() {
 		return this.planComponent.getCursor();
 	}*/
 
 	/**
 	 * Sets tool tip text displayed as feedback.
 	 */
-	public void setToolTipFeedback(String toolTipFeedback, float x, float y)
-	{
+	public void setToolTipFeedback(String toolTipFeedback, float x, float y) {
 		this.planComponent.setToolTipFeedback(toolTipFeedback, x, y);
 	}
 
@@ -1445,16 +1381,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Set properties edited in tool tip.
 	 */
 	public void setToolTipEditedProperties(EditableProperty[] toolTipEditedProperties, Object[] toolTipPropertyValues,
-										   float x, float y)
-	{
+										   float x, float y) {
 		this.planComponent.setToolTipEditedProperties(toolTipEditedProperties, toolTipPropertyValues, x, y);
 	}
 
 	/**
 	 * Deletes tool tip text from screen.
 	 */
-	public void deleteToolTipFeedback()
-	{
+	public void deleteToolTipFeedback() {
 		this.planComponent.deleteToolTipFeedback();
 	}
 
@@ -1462,8 +1396,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Sets whether the resize indicator of selected wall or piece of furniture
 	 * should be visible or not.
 	 */
-	public void setResizeIndicatorVisible(boolean visible)
-	{
+	public void setResizeIndicatorVisible(boolean visible) {
 		this.planComponent.setResizeIndicatorVisible(visible);
 	}
 
@@ -1471,16 +1404,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Sets the location point for alignment feedback.
 	 */
 	public void setAlignmentFeedback(Class<? extends Selectable> alignedObjectClass, Selectable alignedObject, float x,
-									 float y, boolean showPoint)
-	{
+									 float y, boolean showPoint) {
 		this.planComponent.setAlignmentFeedback(alignedObjectClass, alignedObject, x, y, showPoint);
 	}
 
 	/**
 	 * Sets the points used to draw an angle in the plan displayed by this component.
 	 */
-	public void setAngleFeedback(float xCenter, float yCenter, float x1, float y1, float x2, float y2)
-	{
+	public void setAngleFeedback(float xCenter, float yCenter, float x1, float y1, float x2, float y2) {
 		this.planComponent.setAngleFeedback(xCenter, yCenter, x1, y1, x2, y2);
 	}
 
@@ -1488,32 +1419,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	 * Sets the feedback of dragged items drawn during a drag and drop operation,
 	 * initiated from outside of the plan displayed by this component.
 	 */
-	public void setDraggedItemsFeedback(List<Selectable> draggedItems)
-	{
+	public void setDraggedItemsFeedback(List<Selectable> draggedItems) {
 		this.planComponent.setDraggedItemsFeedback(draggedItems);
 	}
 
 	/**
 	 * Sets the given dimension lines to be drawn as feedback.
 	 */
-	public void setDimensionLinesFeedback(List<DimensionLine> dimensionLines)
-	{
+	public void setDimensionLinesFeedback(List<DimensionLine> dimensionLines) {
 		this.planComponent.setDimensionLinesFeedback(dimensionLines);
 	}
 
 	/**
 	 * Deletes all elements shown as feedback.
 	 */
-	public void deleteFeedback()
-	{
+	public void deleteFeedback() {
 		this.planComponent.deleteFeedback();
 	}
 
 	/**
 	 * Returns <code>true</code> if the given coordinates belong to the plan displayed by this component.
 	 */
-	public boolean canImportDraggedItems(List<Selectable> items, int x, int y)
-	{
+	public boolean canImportDraggedItems(List<Selectable> items, int x, int y) {
 		//	JViewport viewport = this.planScrollPane.getViewport();
 		//	Point point = SwingUtilities.convertPoint(this, x, y, viewport);
 		//	return viewport.contains(point);
@@ -1521,56 +1448,60 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView
 	}
 
 	/**
+	 * Returns the size of the given piece of furniture in the horizontal plan.
+	 */
+	public float [] getPieceOfFurnitureSizeInPlan(HomePieceOfFurniture piece) {
+		return this.planComponent.getPieceOfFurnitureSizeInPlan(piece);
+	}
+
+	/**
+	 * Returns <code>true</code> if this component is able to compute the size of horizontally rotated furniture.
+	 */
+	public boolean isFurnitureSizeInPlanSupported() {
+		return this.planComponent.isFurnitureSizeInPlanSupported();
+	}
+
+	/**
 	 * Returns the component used as an horizontal ruler for the plan displayed by this component.
 	 */
-	public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler()
-	{
+	public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler() {
 		return this.planComponent.getHorizontalRuler();
 	}
 
 	/**
 	 * Returns the component used as a vertical ruler for the plan displayed by this component.
 	 */
-	public com.eteks.sweethome3d.viewcontroller.View getVerticalRuler()
-	{
+	public com.eteks.sweethome3d.viewcontroller.View getVerticalRuler() {
 		return this.planComponent.getVerticalRuler();
 	}
 
 	/**
 	 * Prints the plan component.
 	 */
-	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException
-	{
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 		return this.planComponent.print(graphics, pageFormat, pageIndex);
 	}
 
 	/**
 	 * Returns the preferred scale to print the plan component.
 	 */
-	public float getPrintPreferredScale(Graphics graphics, PageFormat pageFormat)
-	{
+	public float getPrintPreferredScale(Graphics graphics, PageFormat pageFormat) {
 		return this.planComponent.getPrintPreferredScale(graphics, pageFormat);
 	}
 
 	/**
 	 * A dummy label used to track tabs matching levels.
 	 */
-	public static class LevelLabel //extends JLabel
-	{
+	public static class LevelLabel  {
 		private final Level level;
 
-		public LevelLabel(Level level)
-		{
+		public LevelLabel(Level level) {
 			this.level = level;
 
 		}
 
-		public Level getLevel()
-		{
+		public Level getLevel() {
 			return this.level;
 		}
-
 	}
-
-
 }

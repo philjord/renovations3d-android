@@ -37,6 +37,7 @@ import com.mindblowing.renovations3d.R;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javaawt.Graphics;
@@ -56,13 +58,16 @@ import javaawt.print.PrinterException;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
+import com.eteks.sweethome3d.viewcontroller.ExportableView;
+import com.eteks.sweethome3d.viewcontroller.TransferableView;
 
 /**
- * Created by phil on 11/22/2016.
+ * A table displaying home furniture.
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 
-public class FurnitureTable extends JTable implements com.eteks.sweethome3d.viewcontroller.View, Printable
-{
+public class FurnitureTable extends JTable implements TransferableView, ExportableView, Printable {
+	private static final String EXPANDED_ROWS_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.ExpandedGroups";
 	// if we are not initialized then ignore onCreateViews
 	private boolean initialized = false;
 
@@ -327,8 +332,12 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		}
 	}
 
-	public void init(Home home, UserPreferences preferences, FurnitureController controller)
-	{
+	/**
+	 * Creates a table controlled by <code>controller</code>
+	 * that displays furniture of <code>home</code>.
+	 */
+	public void init(Home home, UserPreferences preferences,
+					 FurnitureController controller) {
 		initialized = true;
 		this.home = home;
 		this.preferences = preferences;
@@ -350,7 +359,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		addHomeListener(home, controller);
 		addUserPreferencesListener(preferences);
 
-	/*	if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
+	/*
+		if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
 			try {
 				// Call Java 6 setDropMode(DropMode.INSERT_ROWS) by reflection to avoid changing selected row during a drag and drop
 				Class<?> dropModeEnum = Class.forName("javax.swing.DropMode");
@@ -363,7 +373,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				// Shouldn't happen
 				ex.printStackTrace();
 			}
-		}*/
+		}
+		*/
 	}
 
 	private FurnitureTreeTableModel furnitureTreeTableModel;
@@ -438,8 +449,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				//storeExpandedRows(home, controller);
 			}
 		};
-
-	/*	this.tableSelectionListener = new ListSelectionListener () {
+	/*
+		this.tableSelectionListener = new ListSelectionListener () {
 			public void valueChanged(ListSelectionEvent ev) {
 				selectionByUser = true;
 				int [] selectedRows = getSelectedRows();
@@ -794,8 +805,6 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				UserPreferences.Property.LANGUAGE, new UserPreferencesChangeListener(this));
 	}
 
-
-
 	/**
 	 * Preferences property listener bound to this table with a weak reference to avoid
 	 * strong link between user preferences and this table.
@@ -821,13 +830,12 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					furnitureTable.updateTable();
 					furnitureTable.getView().postInvalidate();
 				}
-
 			}
 		}
 	}
 
 	/**
-	 * Adds <code>PropertyChange</code> and { FurnitureListener FurnitureListener} listeners
+   * Adds <code>PropertyChange</code> and {@link FurnitureListener FurnitureListener} listeners
 	 * to home to update furniture sort in table when <code>furnitureSortedProperty</code>,
 	 * <code>furnitureAscendingSorted</code> or furniture in <code>home</code> changes.
 	 */
@@ -849,8 +857,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		final PropertyChangeListener changeListener =
 				new PropertyChangeListener () {
 					public void propertyChange(PropertyChangeEvent ev) {
-						if(FurnitureTable.this.getUserVisibleHint())
-						{
+						if(FurnitureTable.this.getUserVisibleHint()) {
 							// As furniture properties values change may alter sort order and filter, update the whole table
 							((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
 							// Update selected rows
@@ -1101,7 +1108,30 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				}
 			}
 		}
-	}*/
+  }*/
+
+  /**
+   * Returns <code>true</code> if the given format is CSV.
+   */
+  public boolean isFormatTypeSupported(FormatType formatType) {
+    return formatType == FormatType.CSV;
+  }
+
+  /**
+   * Writes in the given stream the content of the table at CSV format if this is the requested format.
+   */
+  public void exportData(OutputStream out, FormatType formatType, Properties settings) throws IOException {
+  /*  if  (formatType == FormatType.CSV) {
+      OutputStreamWriter writer = new OutputStreamWriter(out);
+      char fieldSeparator = settings != null
+          ? settings.getProperty("fieldSeparator", "\t").charAt(0)
+          : '\t';
+      exportToCSV(writer, fieldSeparator);
+      writer.flush();
+    } else {
+      throw new UnsupportedOperationException("Unsupported format " + formatType);
+    }*/
+  }
 
 	/**
 	 * Writes in the given stream the content of the table at CSV format.
@@ -1154,6 +1184,14 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					case NAME :
 						// Copy piece name
 						writer.write(copiedPiece.getName());
+            break;
+          case CREATOR :
+            // Copy piece creators
+            String creators = ((JLabel)column.getCellRenderer().getTableCellRendererComponent(
+                this, copiedPiece, false, false, rowIndex, columnIndex)).getText();
+            if (creators != null) {
+              writer.write(creators);
+            }
 						break;
 					case LEVEL :
 						// Copy level name
@@ -1191,6 +1229,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 						writer.write(sizeFormat.format(copiedPiece.getElevation()));
 						break;
 					case ANGLE :
+          case MODEL_SIZE :
 					case PRICE :
 					case VALUE_ADDED_TAX_PERCENTAGE :
 					case VALUE_ADDED_TAX :
@@ -1230,9 +1269,20 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	}*/
 
 	/**
-	 * Returns a CSV formatted text describing the selected pieces of <code>furniture</code>.
+   * Returns a CSV formatted text describing the selected pieces for transfer purpose.
 	 */
-/*	public String getClipboardCSV() {
+  public Object createTransferData(DataType dataType) {
+    //if (dataType == DataType.FURNITURE_LIST) {
+    //  return getClipboardCSV();
+   // } else {
+      return null;
+   // }
+  }
+
+  /**
+   * Returns a CSV formatted text describing the selected pieces of furniture.
+   */
+ /* public String getClipboardCSV() {
 		StringWriter writer = new StringWriter();
 		try {
 			exportHeaderToCSV(writer, '\t');
@@ -1298,11 +1348,11 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		 */
 		private void addHomeListener(final Home home) {
 			home.addPropertyChangeListener(Home.Property.FURNITURE_VISIBLE_PROPERTIES,
-					new PropertyChangeListener() {
-						public void propertyChange(PropertyChangeEvent ev) {
-							updateModelColumns(home.getFurnitureVisibleProperties());
-						}
-					});
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent ev) {
+						updateModelColumns(home.getFurnitureVisibleProperties());
+					}
+				});
 		}
 
 		/**
@@ -1311,7 +1361,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 		 */
 		private void addLanguageListener(UserPreferences preferences) {
 			preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
-					new LanguageChangeListener(this));
+				new LanguageChangeListener(this));
 		}
 
 		/**
@@ -1389,6 +1439,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "catalogIdColumn");
 				case NAME :
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "nameColumn");
+				case CREATOR :
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "creatorColumn");
 				case WIDTH :
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "widthColumn");
 				case DEPTH :
@@ -1405,6 +1457,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "angleColumn");
 				case LEVEL :
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "levelColumn");
+				case MODEL_SIZE :
+					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "modelSizeColumn");
 				case COLOR :
 					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "colorColumn");
 				case TEXTURE :
@@ -1436,12 +1490,15 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 				case CATALOG_ID :
 				case NAME :
 					return 120;
+        		case CREATOR :
+          			return 80;
 				case WIDTH :
 				case DEPTH :
 				case HEIGHT :
 				case X :
 				case Y :
 				case ELEVATION :
+        		case MODEL_SIZE :
 					return 50;
 				case ANGLE :
 					return 35;
@@ -1474,6 +1531,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					return getCatalogIdRenderer();
 				case NAME :
 					return getNameWithIconRenderer();
+        		case CREATOR :
+          			return getCreatorRenderer();
 				case WIDTH :
 					return getSizeRenderer(HomePieceOfFurniture.SortableProperty.WIDTH, preferences);
 				case DEPTH :
@@ -1490,6 +1549,8 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					return getAngleRenderer();
 				case LEVEL :
 					return getLevelRenderer();
+        		case MODEL_SIZE :
+          			return getModelSizeRenderer();
 				case COLOR :
 					return getColorRenderer();
 				case TEXTURE :
@@ -1554,6 +1615,51 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 /*		private TableCellRenderer getNameWithIconRenderer() {
 			return new TreeTableNameCellRenderer();
 		}*/
+
+	/**
+	 * Returns a renderer that displays the creator of a piece of furniture and its textures if any.
+	 */
+	/*private TableCellRenderer getCreatorRenderer() {
+		return new DefaultTableCellRenderer() {
+			@Override
+			public Component getTableCellRendererComponent(JTable table,
+														   Object value, boolean isSelected, boolean hasFocus,
+														   int row, int column) {
+				HomePieceOfFurniture piece = (HomePieceOfFurniture)value;
+				String creator = piece.getCreator();
+				if (creator != null) {
+					HomeTexture texture = piece.getTexture();
+					if (texture != null) {
+						String textureCreator = texture.getCreator();
+						if (textureCreator != null
+								&& !creator.equals(textureCreator)) {
+							creator += ", " + textureCreator;
+						}
+					} else {
+						String modelCreator = creator;
+						HomeMaterial[] materials = piece.getModelMaterials();
+						if (materials != null) {
+							for (HomeMaterial material : materials) {
+								if (material != null) {
+									HomeTexture materialTexture = material.getTexture();
+									if (materialTexture != null) {
+										String textureCreator = materialTexture.getCreator();
+										if (textureCreator != null
+												&& !modelCreator.equals(textureCreator)
+												&& creator.indexOf(", " + textureCreator) == -1) {
+											creator += ", " + textureCreator;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				return super.getTableCellRendererComponent(
+						table, creator, isSelected, hasFocus, row, column);
+			}
+		};
+	}*/
 
 		/**
 		 * Returns a renderer that converts the displayed <code>property</code> of a piece of furniture
@@ -1753,6 +1859,29 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			};
 		}*/
 
+	/**
+	 * Returns a renderer that displays the model size property of a piece of furniture.
+	 */
+/*	private TableCellRenderer getModelSizeRenderer() {
+		return new DefaultTableCellRenderer() {
+			private TableCellRenderer integerRenderer;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table,
+														   Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				if (this.integerRenderer == null) {
+					this.integerRenderer = table.getDefaultRenderer(Integer.class);
+				}
+				HomePieceOfFurniture piece = (HomePieceOfFurniture)value;
+				Integer modelSize = piece != null && piece.getModelSize() != null && piece.getModelSize() > 0
+						? Math.max(1, (int)Math.round(piece.getModelSize() / 1000.))
+						: null;
+				return this.integerRenderer.getTableCellRendererComponent(
+						table, modelSize, isSelected, hasFocus, row, column);
+			}
+		};
+	}*/
+
 		/**
 		 * Returns a renderer that displays the value added tax percentage property of a piece of furniture.
 		 */
@@ -1816,7 +1945,7 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 							table, color, isSelected, hasFocus, row, column);
 					if (color != null) {
 						label.setText(null);
-						label.setIcon(squareIcon);
+						label.setIcon(this.squareIcon);
 						label.setForeground(new Color(color));
 					} else {
 						if (value != null) {
@@ -1953,9 +2082,9 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 					if (getColumn(column).getIdentifier().equals(home.getFurnitureSortedProperty())) {
 						label.setHorizontalTextPosition(JLabel.LEADING);
 						if (home.isFurnitureDescendingSorted()) {
-							label.setIcon(descendingSortIcon);
+							label.setIcon(this.descendingSortIcon);
 						} else {
-							label.setIcon(ascendingSortIcon);
+							label.setIcon(this.ascendingSortIcon);
 						}
 					} else {
 						label.setIcon(null);
@@ -2241,9 +2370,6 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 			}
 		}
 	}*/
-
-
-
 
 	/**
 	 * Model used by this table.
@@ -2628,11 +2754,11 @@ public class FurnitureTable extends JTable implements com.eteks.sweethome3d.view
 	/**
 	 * The super type used to specify how furniture should be filtered in furniture table.
 	 */
-	public interface FurnitureFilter {
+  public static interface FurnitureFilter {
 		/**
 		 * Returns <code>true</code> if the given <code>piece</code> should be shown,
 		 * otherwise returns <code>false</code> if the <code>piece</code> should be hidden.
 		 */
-		public boolean include(Home home, HomePieceOfFurniture piece);
+      public abstract boolean include(Home home, HomePieceOfFurniture piece);
 	}
 }

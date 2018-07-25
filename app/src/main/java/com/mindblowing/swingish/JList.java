@@ -5,7 +5,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.eteks.renovations3d.android.TextureChoiceComponent;
+import com.eteks.sweethome3d.model.CatalogTexture;
+import com.eteks.sweethome3d.model.CollectionEvent;
+import com.eteks.sweethome3d.model.CollectionListener;
+import com.eteks.sweethome3d.model.TexturesCatalog;
+import com.eteks.sweethome3d.model.TexturesCategory;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+
+import javaawt.EventQueue;
 
 /**
  * Created by phil on 2/10/2017.
@@ -14,12 +25,10 @@ import java.util.List;
 public class JList extends ListView
 {
 	private AbstractListModel listModel;
-	public JList(AbstractListModel listModel, Context context)
+	public JList(Context context, AbstractListModel listModel)
 	{
 		super(context);
 		this.listModel = listModel;
-
-
 		listModel.list = this;
 	}
 
@@ -45,6 +54,9 @@ public class JList extends ListView
 		public static final int SINGLE_SELECTION = 0;
 	}
 
+	/**
+	 * do NOT share models
+	 */
 	public static abstract class AbstractListModel
 	{
 		public abstract Object getElementAt(int index);
@@ -53,7 +65,7 @@ public class JList extends ListView
 
 		public abstract List toList();
 
-
+		// for the JList itself to set a reference when using this model
 		JList list;
 		public void fireContentsChanged(Object source, int start, int end)
 		{
@@ -68,6 +80,29 @@ public class JList extends ListView
 					list.postInvalidate();
 				}
 			}
+		}
+	}
+
+
+	public static class DefaultListModel extends AbstractListModel
+	{
+		private List<?>   data;
+
+		public DefaultListModel(List data) {
+			this.data = data;
+		}
+
+		public Object getElementAt(int index) {
+			return this.data.get(index);
+		}
+
+		public int getSize() {
+			return this.data.size();
+		}
+
+		public List<?> toList()
+		{
+			return data;
 		}
 	}
 }

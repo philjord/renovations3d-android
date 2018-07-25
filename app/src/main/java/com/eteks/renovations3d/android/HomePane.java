@@ -20,9 +20,12 @@
 package com.eteks.renovations3d.android;
 
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
@@ -31,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -43,6 +47,8 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.AccessControlException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -56,7 +62,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
 
+import javaawt.Color;
 import javaawt.EventQueue;
+import javaawt.Font;
+import javaawt.Graphics2D;
+import javaawt.VMFont;
+import javaawt.VMGraphics2D;
 import javaawt.VMImage;
 import javaawt.geom.Rectangle2D;
 import javaxswing.Icon;
@@ -64,8 +75,18 @@ import javaxswing.ImageIcon;
 
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.android.utils.CheckableImageView;
+import com.eteks.sweethome3d.model.CatalogTexture;
+import com.eteks.sweethome3d.model.HomeDescriptor;
+import com.eteks.sweethome3d.tools.URLContent;
+import com.eteks.sweethome3d.viewcontroller.PlanController;
+import com.jogamp.newt.event.MouseAdapter;
+import com.jogamp.newt.event.MouseEvent;
 import com.mindblowing.swingish.JComboBox;
 import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JList;
+import com.mindblowing.swingish.JPanel;
+import com.mindblowing.swingish.JTextArea;
 import com.mindblowing.swingish.JTextField;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.OBJWriter;
@@ -95,20 +116,16 @@ import com.mindblowing.renovations3d.R;
 
 import org.jogamp.java3d.Node;
 
-/**
- * ONLY used for dialogs and menu item enabling
+// ONLY used for dialogs and menu item enabling
+ /**
  * The MVC view that edits a home.
- *
  * @author Emmanuel Puybaret
  */
 public class HomePane implements HomeView
 {
-	private enum MenuActionType
-	{
-		FILE_MENU, EDIT_MENU, FURNITURE_MENU, PLAN_MENU, VIEW_3D_MENU, HELP_MENU,
+	private enum MenuActionType{FILE_MENU, EDIT_MENU, FURNITURE_MENU, PLAN_MENU, VIEW_3D_MENU, HELP_MENU,
 		OPEN_RECENT_HOME_MENU, ALIGN_OR_DISTRIBUTE_MENU, SORT_HOME_FURNITURE_MENU, DISPLAY_HOME_FURNITURE_PROPERTY_MENU,
-		MODIFY_TEXT_STYLE, GO_TO_POINT_OF_VIEW, SELECT_OBJECT_MENU, TOGGLE_SELECTION_MENU
-	}
+		MODIFY_TEXT_STYLE, GO_TO_POINT_OF_VIEW, SELECT_OBJECT_MENU, TOGGLE_SELECTION_MENU}
 
 	private static final String MAIN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.MainPaneDividerLocation";
 	private static final String CATALOG_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.CatalogPaneDividerLocation";
@@ -129,7 +146,7 @@ public class HomePane implements HomeView
 	private final UserPreferences preferences;
 	private final HomeController controller;
 	private JComponent lastFocusedComponent;
-	private Mode previousPlanControllerMode;
+	private PlanController.Mode previousPlanControllerMode;
 	//private TransferHandler       catalogTransferHandler;
 	//private TransferHandler       furnitureTransferHandler;
 	// private TransferHandler       planTransferHandler;
@@ -140,54 +157,53 @@ public class HomePane implements HomeView
 	// private ActionMap             menuActionMap;
 	// private List<Action>          pluginActions;
 
-
 	private Renovations3DActivity activity;
 
 	/**
 	 * Creates home view associated with its controller.
 	 */
 	public HomePane(Home home, UserPreferences preferences,
-					final HomeController controller, Renovations3DActivity activity)
-	{
+					final HomeController controller, Renovations3DActivity activity) {
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;
 
 		this.activity = activity;
-
-		//JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		//ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+/*
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 
 		createActions(home, preferences, controller);
- /*   createMenuActions(preferences, controller);
-	createPluginActions(controller instanceof HomePluginController
-        ? ((HomePluginController)controller).getPlugins()
-        : null);
-    createTransferHandlers(home, controller);
-    addHomeListener(home);
-    addLevelVisibilityListener(home);
-    addLanguageListener(preferences);
-    addPlanControllerListener(controller.getPlanController());
-    addFocusListener();
-    updateFocusTraversalPolicy();
-    addClipboardListener();
-    JMenuBar homeMenuBar = createMenuBar(home, preferences, controller);
-    setJMenuBar(homeMenuBar);
-    Container contentPane = getContentPane();
-    contentPane.add(createToolBar(home), BorderLayout.NORTH);
-    contentPane.add(createMainPane(home, preferences, controller));
-    if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
-      // Under Mac OS X 10.5, add some dummy labels at left and right borders
-      // to avoid the tool bar to be attached on these borders
-      // (segmented buttons created on this system aren't properly rendered
-      // when they are aligned vertically)
-      contentPane.add(new JLabel(), BorderLayout.WEST);
-      contentPane.add(new JLabel(), BorderLayout.EAST);
-    }*/
+ 		createMenuActions(preferences, controller);
+		createPluginActions(controller instanceof HomePluginController
+			? ((HomePluginController)controller).getPlugins()
+			: null);
+		createTransferHandlers(home, controller);
+		addHomeListener(home);
+		addLevelVisibilityListener(home);
+		addLanguageListener(preferences);
+		addPlanControllerListener(controller.getPlanController());
+		addFocusListener();
+		updateFocusTraversalPolicy();
+		addClipboardListener();
+		JMenuBar homeMenuBar = createMenuBar(home, preferences, controller);
+		setJMenuBar(homeMenuBar);
+		Container contentPane = getContentPane();
+		contentPane.add(createToolBar(home), BorderLayout.NORTH);
+		contentPane.add(createMainPane(home, preferences, controller));
+		if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
+		  // Under Mac OS X 10.5, add some dummy labels at left and right borders
+		  // to avoid the tool bar to be attached on these borders
+		  // (segmented buttons created on this system aren't properly rendered
+		  // when they are aligned vertically)
+		  contentPane.add(new JLabel(), BorderLayout.WEST);
+		  contentPane.add(new JLabel(), BorderLayout.EAST);
+		}
 
-		//disableMenuItemsDuringDragAndDrop(controller.getPlanController().getView(), homeMenuBar);
+		disableMenuItemsDuringDragAndDrop(controller.getPlanController().getView(), homeMenuBar);
 		// Change component orientation
-		//applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+		applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+		*/
 	}
 
 	/**
@@ -195,9 +211,10 @@ public class HomePane implements HomeView
 	 */
 	private void createActions(Home home,
 							   UserPreferences preferences,
-							   final HomeController controller)
-	{
-  /*  createAction(ActionType.NEW_HOME, preferences, controller, "newHome");
+							   final HomeController controller) {
+  /*
+  	createAction(ActionType.NEW_HOME, preferences, controller, "newHome");
+    createAction(ActionType.NEW_HOME_FROM_EXAMPLE, preferences, controller, "newHomeFromExample");
     createAction(ActionType.OPEN, preferences, controller, "open");
     createAction(ActionType.DELETE_RECENT_HOMES, preferences, controller, "deleteRecentHomes");
     createAction(ActionType.CLOSE, preferences, controller, "close");
@@ -251,7 +268,9 @@ public class HomePane implements HomeView
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.CATALOG_ID);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_NAME, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.NAME);
-    createAction(ActionType.SORT_HOME_FURNITURE_BY_WIDTH, preferences, 
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_CREATOR, preferences,
+        furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.CREATOR);
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_WIDTH, preferences,
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.WIDTH);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_DEPTH, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.DEPTH);
@@ -267,7 +286,9 @@ public class HomePane implements HomeView
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.ANGLE);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_LEVEL, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.LEVEL);
-    createAction(ActionType.SORT_HOME_FURNITURE_BY_COLOR, preferences, 
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_MODEL_SIZE, preferences,
+        furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.MODEL_SIZE);
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_COLOR, preferences,
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.COLOR);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_TEXTURE, preferences, 
         furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.TEXTURE);
@@ -291,7 +312,9 @@ public class HomePane implements HomeView
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.CATALOG_ID);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_NAME, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.NAME);
-    createAction(ActionType.DISPLAY_HOME_FURNITURE_WIDTH, preferences, 
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_CREATOR, preferences,
+        furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.CREATOR);
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_WIDTH, preferences,
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.WIDTH);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_DEPTH, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.DEPTH);
@@ -307,7 +330,9 @@ public class HomePane implements HomeView
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.ANGLE);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_LEVEL, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.LEVEL);
-    createAction(ActionType.DISPLAY_HOME_FURNITURE_COLOR, preferences, 
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_MODEL_SIZE, preferences,
+        furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.MODEL_SIZE);
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_COLOR, preferences,
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.COLOR);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_TEXTURE, preferences, 
         furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.TEXTURE);
@@ -331,20 +356,20 @@ public class HomePane implements HomeView
     if (planController.getView() != null) {
       createAction(ActionType.SELECT_ALL_AT_ALL_LEVELS, preferences, planController, "selectAllAtAllLevels"); 
       ButtonGroup modeGroup = new ButtonGroup();
-      createToggleAction(ActionType.SELECT, planController.getMode() == Mode.SELECTION, modeGroup,
-          preferences, controller, "setMode", Mode.SELECTION);
-      createToggleAction(ActionType.PAN, planController.getMode() == Mode.PANNING, modeGroup,
-          preferences, controller, "setMode", Mode.PANNING);
-      createToggleAction(ActionType.CREATE_WALLS, planController.getMode() == Mode.WALL_CREATION, modeGroup,
-          preferences, controller, "setMode", Mode.WALL_CREATION);
-      createToggleAction(ActionType.CREATE_ROOMS, planController.getMode() == Mode.ROOM_CREATION, modeGroup,
-          preferences, controller, "setMode", Mode.ROOM_CREATION);
-      createToggleAction(ActionType.CREATE_POLYLINES, planController.getMode() == Mode.POLYLINE_CREATION, modeGroup,
-          preferences, controller, "setMode", Mode.POLYLINE_CREATION);
-      createToggleAction(ActionType.CREATE_DIMENSION_LINES, planController.getMode() == Mode.DIMENSION_LINE_CREATION, modeGroup,
-          preferences, controller, "setMode", Mode.DIMENSION_LINE_CREATION);
-      createToggleAction(ActionType.CREATE_LABELS, planController.getMode() == Mode.LABEL_CREATION, modeGroup,
-          preferences, controller, "setMode", Mode.LABEL_CREATION);
+      createToggleAction(ActionType.SELECT, planController.getMode() == PlanController.Mode.SELECTION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.SELECTION);
+      createToggleAction(ActionType.PAN, planController.getMode() == PlanController.Mode.PANNING, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.PANNING);
+      createToggleAction(ActionType.CREATE_WALLS, planController.getMode() == PlanController.Mode.WALL_CREATION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.WALL_CREATION);
+      createToggleAction(ActionType.CREATE_ROOMS, planController.getMode() == PlanController.Mode.ROOM_CREATION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.ROOM_CREATION);
+      createToggleAction(ActionType.CREATE_POLYLINES, planController.getMode() == PlanController.Mode.POLYLINE_CREATION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.POLYLINE_CREATION);
+      createToggleAction(ActionType.CREATE_DIMENSION_LINES, planController.getMode() == PlanController.Mode.DIMENSION_LINE_CREATION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.DIMENSION_LINE_CREATION);
+      createToggleAction(ActionType.CREATE_LABELS, planController.getMode() == PlanController.Mode.LABEL_CREATION, modeGroup,
+          preferences, controller, "setMode", PlanController.Mode.LABEL_CREATION);
       createAction(ActionType.DELETE_SELECTION, preferences, planController, "deleteSelection");
       createAction(ActionType.LOCK_BASE_PLAN, preferences, planController, "lockBasePlan");
       createAction(ActionType.UNLOCK_BASE_PLAN, preferences, planController, "unlockBasePlan");
@@ -364,6 +389,7 @@ public class HomePane implements HomeView
       toggleBoldAction.putValue(ResourceAction.TOGGLE_BUTTON_MODEL, createBoldStyleToggleModel(home, preferences));
       Action toggleItalicAction = createAction(ActionType.TOGGLE_ITALIC_STYLE, preferences, planController, "toggleItalicStyle");
       toggleItalicAction.putValue(ResourceAction.TOGGLE_BUTTON_MODEL, createItalicStyleToggleModel(home, preferences));
+      createAction(ActionType.JOIN_WALLS, preferences, planController, "joinSelectedWalls");
       createAction(ActionType.REVERSE_WALL_DIRECTION, preferences, planController, "reverseSelectedWallsDirection");
       createAction(ActionType.SPLIT_WALL, preferences, planController, "splitSelectedWall");
       createAction(ActionType.IMPORT_BACKGROUND_IMAGE, preferences, controller, "importBackgroundImage");
@@ -380,9 +406,10 @@ public class HomePane implements HomeView
       createAction(ActionType.ZOOM_IN, preferences, controller, "zoomIn");
       createAction(ActionType.ZOOM_OUT, preferences, controller, "zoomOut");
       createAction(ActionType.EXPORT_TO_SVG, preferences, controller, "exportToSVG");
-    }*/
-    
-   /* if (homeController3D.getView() != null) {
+    }
+    */
+   /*
+   	  if (homeController3D.getView() != null) {
       ButtonGroup viewGroup = new ButtonGroup();
       createToggleAction(ActionType.VIEW_FROM_TOP, home.getCamera() == home.getTopCamera(), viewGroup, 
           preferences, homeController3D, "viewFromTop");
@@ -420,7 +447,8 @@ public class HomePane implements HomeView
     }
 
     createAction(ActionType.HELP, preferences, controller, "help");
-    createAction(ActionType.ABOUT, preferences, controller, "about");*/
+    createAction(ActionType.ABOUT, preferences, controller, "about");
+    */
 	}
 
 	/**
@@ -601,8 +629,7 @@ public class HomePane implements HomeView
    * Adds a property change listener to <code>preferences</code> to update
    * actions when preferred language changes.
    */
-	private void addLanguageListener(UserPreferences preferences)
-	{
+	private void addLanguageListener(UserPreferences preferences) {
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
 				new LanguageChangeListener(this));
 	}
@@ -611,26 +638,20 @@ public class HomePane implements HomeView
 	 * Preferences property listener bound to this component with a weak reference to avoid
 	 * strong link between preferences and this component.
 	 */
-	private static class LanguageChangeListener implements PropertyChangeListener
-	{
+	private static class LanguageChangeListener implements PropertyChangeListener {
 		private WeakReference<HomePane> homePane;
 
-		public LanguageChangeListener(HomePane homePane)
-		{
+		public LanguageChangeListener(HomePane homePane) {
 			this.homePane = new WeakReference<HomePane>(homePane);
 		}
 
-		public void propertyChange(PropertyChangeEvent ev)
-		{
+		public void propertyChange(PropertyChangeEvent ev) {
 			// If home pane was garbage collected, remove this listener from preferences
 			HomePane homePane = this.homePane.get();
-			if (homePane == null)
-			{
+			if (homePane == null) {
 				((UserPreferences) ev.getSource()).removePropertyChangeListener(
 						UserPreferences.Property.LANGUAGE, this);
-			}
-			else
-			{
+			} else {
 				SwingTools.updateSwingResourceLanguage((UserPreferences) ev.getSource());
 			}
 		}
@@ -645,13 +666,13 @@ public class HomePane implements HomeView
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             Mode mode = planController.getMode();
-            setToggleButtonModelSelected(ActionType.SELECT, mode == Mode.SELECTION);
-            setToggleButtonModelSelected(ActionType.PAN, mode == Mode.PANNING);
-            setToggleButtonModelSelected(ActionType.CREATE_WALLS, mode == Mode.WALL_CREATION);
-            setToggleButtonModelSelected(ActionType.CREATE_ROOMS, mode == Mode.ROOM_CREATION);
-            setToggleButtonModelSelected(ActionType.CREATE_POLYLINES, mode == Mode.POLYLINE_CREATION);
-            setToggleButtonModelSelected(ActionType.CREATE_DIMENSION_LINES, mode == Mode.DIMENSION_LINE_CREATION);
-            setToggleButtonModelSelected(ActionType.CREATE_LABELS, mode == Mode.LABEL_CREATION);
+            setToggleButtonModelSelected(ActionType.SELECT, mode == PlanController.Mode.SELECTION);
+            setToggleButtonModelSelected(ActionType.PAN, mode == PlanController.Mode.PANNING);
+            setToggleButtonModelSelected(ActionType.CREATE_WALLS, mode == PlanController.Mode.WALL_CREATION);
+            setToggleButtonModelSelected(ActionType.CREATE_ROOMS, mode == PlanController.Mode.ROOM_CREATION);
+            setToggleButtonModelSelected(ActionType.CREATE_POLYLINES, mode == PlanController.Mode.POLYLINE_CREATION);
+            setToggleButtonModelSelected(ActionType.CREATE_DIMENSION_LINES, mode == PlanController.Mode.DIMENSION_LINE_CREATION);
+            setToggleButtonModelSelected(ActionType.CREATE_LABELS, mode == PlanController.Mode.LABEL_CREATION);
           }
         });
   }
@@ -760,12 +781,12 @@ public class HomePane implements HomeView
         if (ev.getKeyCode() == KeyEvent.VK_SPACE 
             && (ev.getModifiers() & (KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK | KeyEvent.META_MASK)) == 0
             && getActionMap().get(ActionType.PAN).getValue(Action.NAME) != null 
-            && planController.getMode() != Mode.PANNING
+            && planController.getMode() != PlanController.Mode.PANNING
             && !planController.isModificationState()
             && SwingUtilities.isDescendingFrom(lastFocusedComponent, HomePane.this)
             && !isSpaceUsedByComponent(lastFocusedComponent)) {
           previousPlanControllerMode = planController.getMode();
-          planController.setMode(Mode.PANNING);
+          planController.setMode(PlanController.Mode.PANNING);
           ev.consume();
         } else if (OperatingSystem.isMacOSX() 
             && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
@@ -790,14 +811,21 @@ public class HomePane implements HomeView
       
       @Override
       public void keyTyped(KeyEvent ev) {
-        // This listener manages accelerator keys that may require the use of shift key 
+        if (ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+        // This listener manages accelerator keys that may require the use of shift key
         // depending on keyboard layout (like + - or ?) 
         ActionMap actionMap = getActionMap();
-        Action [] specialKeyActions = {actionMap.get(ActionType.ZOOM_IN), 
+          List<Action> specialKeyActions = Arrays.asList(actionMap.get(ActionType.ZOOM_IN),
                                        actionMap.get(ActionType.ZOOM_OUT), 
                                        actionMap.get(ActionType.INCREASE_TEXT_SIZE), 
                                        actionMap.get(ActionType.DECREASE_TEXT_SIZE), 
-                                       actionMap.get(ActionType.HELP)};
+              actionMap.get(ActionType.HELP));
+          if (!Boolean.getBoolean("apple.laf.useScreenMenuBar")
+              && Boolean.getBoolean("sweethome3d.bundle")) {
+            // Manage preferences accelerator only for bundle applications without screen menu bar
+            specialKeyActions = new ArrayList<Action>(specialKeyActions);
+            specialKeyActions.add(actionMap.get(ActionType.PREFERENCES));
+          }
         int modifiersMask = KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK | KeyEvent.META_MASK;
         for (Action specialKeyAction : specialKeyActions) {
           KeyStroke actionKeyStroke = (KeyStroke)specialKeyAction.getValue(Action.ACCELERATOR_KEY);
@@ -810,6 +838,7 @@ public class HomePane implements HomeView
             ev.consume();
           }
         }
+      }
       }
     };
 
@@ -859,6 +888,9 @@ public class HomePane implements HomeView
     // Create File menu
     JMenu fileMenu = new JMenu(this.menuActionMap.get(MenuActionType.FILE_MENU));
     addActionToMenu(ActionType.NEW_HOME, fileMenu);
+    if (preferences.getHomeExamples().size() > 0) {
+      addActionToMenu(ActionType.NEW_HOME_FROM_EXAMPLE, fileMenu);
+    }
     addActionToMenu(ActionType.OPEN, fileMenu);
     
     
@@ -961,6 +993,7 @@ public class HomePane implements HomeView
     }
     addActionToMenu(ActionType.MODIFY_COMPASS, planMenu);
     addActionToMenu(ActionType.MODIFY_WALL, planMenu);
+    addActionToMenu(ActionType.JOIN_WALLS, planMenu);
     addActionToMenu(ActionType.REVERSE_WALL_DIRECTION, planMenu);
     addActionToMenu(ActionType.SPLIT_WALL, planMenu);
     addActionToMenu(ActionType.MODIFY_ROOM, planMenu);
@@ -1021,7 +1054,9 @@ public class HomePane implements HomeView
     // Create Help menu
     JMenu helpMenu = new JMenu(this.menuActionMap.get(MenuActionType.HELP_MENU));
     addActionToMenu(ActionType.HELP, helpMenu);      
-    if (!OperatingSystem.isMacOSX()) {
+    if (!OperatingSystem.isMacOSX()
+        || !Boolean.getBoolean("apple.laf.useScreenMenuBar")
+        || OperatingSystem.isJavaVersionGreaterOrEqual("1.9")) {
       addActionToMenu(ActionType.ABOUT, helpMenu);      
     }
     
@@ -1063,21 +1098,22 @@ public class HomePane implements HomeView
     }
 
     // Add EXIT action at end to ensure it's the last item of file menu
-    if (!OperatingSystem.isMacOSX()) {
+    if (!OperatingSystem.isMacOSX()
+        || !Boolean.getBoolean("apple.laf.useScreenMenuBar")) {
       fileMenu.addSeparator();
       addActionToMenu(ActionType.EXIT, fileMenu);
     }
 
     removeUselessSeparatorsAndEmptyMenus(menuBar);    
     return menuBar;
-  }*/
+  }
 
 	/**
 	 * Adds the given action to <code>menu</code>.
 	 */
 /*  private void addActionToMenu(ActionType actionType, JMenu menu) {
     addActionToMenu(actionType, false, menu);
-  }*/
+  }
 
 	/**
 	 * Adds the given action to <code>menu</code>.
@@ -1091,7 +1127,7 @@ public class HomePane implements HomeView
           ? new ResourceAction.PopupMenuItemAction(action)
           : new ResourceAction.MenuItemAction(action));
     }
-  }*/
+  }
 
 	/**
 	 * Adds to <code>menu</code> the menu item matching the given <code>actionType</code>.
@@ -1100,7 +1136,7 @@ public class HomePane implements HomeView
                                      boolean radioButton,
                                      JMenu menu) {
     addToggleActionToMenu(actionType, false, radioButton, menu);
-  }*/
+  }
 
 	/**
 	 * Adds to <code>menu</code> the menu item matching the given <code>actionType</code>.
@@ -1113,7 +1149,7 @@ public class HomePane implements HomeView
     if (action != null && action.getValue(Action.NAME) != null) {
       menu.add(createToggleMenuItem(action, popup, radioButton));
     }
-  }*/
+  }
 
 	/**
 	 * Creates a menu item for a toggle action.
@@ -1134,7 +1170,7 @@ public class HomePane implements HomeView
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action));
     return menuItem;
-  }*/
+  }
 
 	/**
 	 * Adds the given action to <code>menu</code>.
@@ -1146,7 +1182,7 @@ public class HomePane implements HomeView
       return (JMenuItem)menu.getComponent(menu.getComponentCount() - 1);
     }
     return null;
-  }*/
+  }
 
 	/**
 	 * Adds to <code>menu</code> the menu item matching the given <code>actionType</code>
@@ -1159,7 +1195,7 @@ public class HomePane implements HomeView
     if (action != null && action.getValue(Action.NAME) != null) {
       menu.add(createToggleMenuItem(action, true, radioButton));
     }
-  }*/
+  }
 
 	/**
 	 * Removes the useless separators and empty menus among children of component.
@@ -1186,7 +1222,7 @@ public class HomePane implements HomeView
         && component.getComponent(0) instanceof JSeparator) {
       component.remove(0);
     }
-  }*/
+  }
 
 	/**
 	 * Returns align or distribute menu.
@@ -1207,7 +1243,7 @@ public class HomePane implements HomeView
     addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_HORIZONTALLY, popup, alignOrDistributeMenu);
     addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_VERTICALLY, popup, alignOrDistributeMenu);
     return alignOrDistributeMenu;
-  }*/
+  }
 
 	/**
 	 * Returns furniture sort menu.
@@ -1225,7 +1261,9 @@ public class HomePane implements HomeView
     }
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_NAME, 
         sortActions, HomePieceOfFurniture.SortableProperty.NAME); 
-    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_WIDTH, 
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_CREATOR,
+        sortActions, HomePieceOfFurniture.SortableProperty.CREATOR);
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_WIDTH,
         sortActions, HomePieceOfFurniture.SortableProperty.WIDTH);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_DEPTH, 
         sortActions, HomePieceOfFurniture.SortableProperty.DEPTH);
@@ -1241,7 +1279,9 @@ public class HomePane implements HomeView
         sortActions, HomePieceOfFurniture.SortableProperty.ANGLE);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_LEVEL, 
         sortActions, HomePieceOfFurniture.SortableProperty.LEVEL);
-    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_COLOR, 
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_MODEL_SIZE,
+        sortActions, HomePieceOfFurniture.SortableProperty.MODEL_SIZE);
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_COLOR,
         sortActions, HomePieceOfFurniture.SortableProperty.COLOR);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_TEXTURE, 
         sortActions, HomePieceOfFurniture.SortableProperty.TEXTURE);
@@ -1297,7 +1337,7 @@ public class HomePane implements HomeView
       sortMenu.add(sortOrderCheckBoxMenuItem);
     }
     return sortMenu;
-  }*/
+  }
 
 	/**
 	 * Adds to <code>actions</code> the action matching <code>actionType</code>.
@@ -1309,7 +1349,7 @@ public class HomePane implements HomeView
     if (action != null && action.getValue(Action.NAME) != null) {
       actions.put(key, action);
     }
-  }*/
+  }
 
 	/**
 	 * Returns furniture display property menu.
@@ -1328,7 +1368,9 @@ public class HomePane implements HomeView
     }
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_NAME, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.NAME); 
-    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_WIDTH, 
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_CREATOR,
+        displayPropertyActions, HomePieceOfFurniture.SortableProperty.CREATOR);
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_WIDTH,
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.WIDTH);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_DEPTH, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.DEPTH);
@@ -1344,7 +1386,9 @@ public class HomePane implements HomeView
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.ANGLE);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_LEVEL, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.LEVEL);
-    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_COLOR, 
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_MODEL_SIZE,
+        displayPropertyActions, HomePieceOfFurniture.SortableProperty.MODEL_SIZE);
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_COLOR,
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.COLOR);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_TEXTURE, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.TEXTURE);
@@ -1383,7 +1427,7 @@ public class HomePane implements HomeView
       displayPropertyMenu.add(displayPropertyMenuItem);
     }
     return displayPropertyMenu;
-  }*/
+  }
 
 	/**
 	 * Returns Lock / Unlock base plan menu item.
@@ -1411,7 +1455,7 @@ public class HomePane implements HomeView
     } else {
       return null;
     }
-  }*/
+  }
 
 	/**
 	 * Returns the action active on Lock / Unlock base plan menu item.
@@ -1424,7 +1468,7 @@ public class HomePane implements HomeView
     return popup 
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action);
-  }*/
+  }
 
 	/**
 	 * Returns Lock / Unlock base plan button.
@@ -1458,7 +1502,7 @@ public class HomePane implements HomeView
     } else {
       return null;
     }
-  }*/
+  }
 
 	/**
 	 * Returns text style menu.
@@ -1474,7 +1518,7 @@ public class HomePane implements HomeView
     addToggleActionToMenu(ActionType.TOGGLE_BOLD_STYLE, popup, false, modifyTextStyleMenu);
     addToggleActionToMenu(ActionType.TOGGLE_ITALIC_STYLE, popup, false, modifyTextStyleMenu);
     return modifyTextStyleMenu;
-  }*/
+  }
 
 	/**
 	 * Creates a toggle button model that is selected when all the text of the
@@ -2025,17 +2069,13 @@ public class HomePane implements HomeView
 		//  if (action != null) {
 		//    action.setEnabled(enabled);
 		//  }
-		//PJPJPJP but we are interested in teh REDO and Undo items being enabled or disabled!
-		if (actionType == ActionType.UNDO || actionType == ActionType.REDO)
-		{
+		//PJPJPJP but we are interested in thh REDO and Undo items being enabled or disabled!
+		if (actionType == ActionType.UNDO || actionType == ActionType.REDO) {
 			HomeController homeController = activity.getHomeController();
-			if(homeController != null)
-			{
+			if(homeController != null) {
 				((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setEnabled(actionType, enabled);
 			}
 		}
-
-
 	}
 
 	/**
@@ -2043,17 +2083,9 @@ public class HomePane implements HomeView
 	 * of undo and redo actions. If a parameter is null,
 	 * the properties will be reset to their initial values.
 	 */
-	public void setUndoRedoName(String undoText, String redoText)
-	{
-		// setNameAndShortDescription(ActionType.UNDO, undoText);
-		// setNameAndShortDescription(ActionType.REDO, redoText);
-		//PJPJP we want this bad bad right here!
-		HomeController homeController = activity.getHomeController();
-		if(homeController != null)
-		{
-			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(ActionType.UNDO, undoText);
-			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(ActionType.REDO, redoText);
-		}
+	public void setUndoRedoName(String undoText, String redoText) {
+		setNameAndShortDescription(ActionType.UNDO, undoText);
+		setNameAndShortDescription(ActionType.REDO, redoText);
 	}
 
 	/**
@@ -2061,15 +2093,19 @@ public class HomePane implements HomeView
 	 * matching <code>actionType</code>. If <code>name</code> is null,
 	 * the properties will be reset to their initial values.
 	 */
-/*  private void setNameAndShortDescription(ActionType actionType, String name) {
-    Action action = getActionMap().get(actionType);
+  private void setNameAndShortDescription(ActionType actionType, String name) {
+ /*   Action action = getActionMap().get(actionType);
     if (action != null) {
       if (name == null) {
         name = (String)action.getValue(Action.DEFAULT);
       }
       action.putValue(Action.NAME, name);
       action.putValue(Action.SHORT_DESCRIPTION, name);
-    }
+    }*/
+    HomeController homeController = activity.getHomeController();
+	if(homeController != null) {
+		((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(actionType, name);
+	}
   }
 
   /**
@@ -2077,18 +2113,15 @@ public class HomePane implements HomeView
    */
 	public void setTransferEnabled(boolean enabled)
 	{
-		boolean dragAndDropWithTransferHandlerSupported;
-		try
-		{
+	/*	boolean dragAndDropWithTransferHandlerSupported;
+		try {
 			// Don't use transfer handlers for drag and drop with Plugin2 under Mac OS X or when in an unsigned applet
 			dragAndDropWithTransferHandlerSupported = !Boolean.getBoolean("com.eteks.sweethome3d.dragAndDropWithoutTransferHandler");
-		}
-		catch (AccessControlException ex)
-		{
+		} catch (AccessControlException ex) {
 			dragAndDropWithTransferHandlerSupported = false;
 		}
     
-  /*  JComponent catalogView = (JComponent)this.controller.getFurnitureCatalogController().getView();
+    JComponent catalogView = (JComponent)this.controller.getFurnitureCatalogController().getView();
     JComponent furnitureView = (JComponent)this.controller.getFurnitureController().getView();
     JComponent planView = (JComponent)this.controller.getPlanController().getView();
     if (enabled) {
@@ -2161,7 +2194,7 @@ public class HomePane implements HomeView
         private TransferHandler         transferHandler;
         private boolean                 autoscrolls;
         private Cursor                  previousCursor;
-        private VCView                    previousView;
+        private VCView                  previousView;
         private boolean                 escaped; 
         
         {
@@ -2529,6 +2562,7 @@ public class HomePane implements HomeView
             }
           });
         ((JViewport)furnitureView.getParent()).setComponentPopupMenu(furnitureViewPopup);
+
         furnitureView = furnitureScrollPane;
       }
     }
@@ -2553,46 +2587,38 @@ public class HomePane implements HomeView
    * Preferences property listener bound to this component with a weak reference to avoid
    * strong link between preferences and this component.  
    */
-	private static class FurnitureCatalogViewChangeListener implements PropertyChangeListener
-	{
+	private static class FurnitureCatalogViewChangeListener implements PropertyChangeListener {
 		private WeakReference<HomePane> homePane;
 		private WeakReference<JComponent> furnitureCatalogView;
 
-		public FurnitureCatalogViewChangeListener(HomePane homePane, JComponent furnitureCatalogView)
-		{
+		public FurnitureCatalogViewChangeListener(HomePane homePane, JComponent furnitureCatalogView) {
 			this.homePane = new WeakReference<HomePane>(homePane);
 			this.furnitureCatalogView = new WeakReference<JComponent>(furnitureCatalogView);
 		}
 
-		public void propertyChange(PropertyChangeEvent ev)
-		{
+		public void propertyChange(PropertyChangeEvent ev) {
 			// If home pane was garbage collected, remove this listener from preferences
 			HomePane homePane = this.homePane.get();
-			if (homePane == null)
-			{
+			if (homePane == null) {
 				((UserPreferences) ev.getSource()).removePropertyChangeListener(
 						UserPreferences.Property.FURNITURE_CATALOG_VIEWED_IN_TREE, this);
-			}
-			else
-			{
+			} else {
 				// Replace previous furniture catalog view by the new one
 				JComponent oldFurnitureCatalogView = this.furnitureCatalogView.get();
-				if (oldFurnitureCatalogView != null)
-				{
+				if (oldFurnitureCatalogView != null) {
 					boolean transferHandlerEnabled = homePane.transferHandlerEnabled;
 					homePane.setTransferEnabled(false);
 					JComponent newFurnitureCatalogView = (JComponent) homePane.controller.getFurnitureCatalogController().getView();
 					//PJ newFurnitureCatalogView.setComponentPopupMenu(oldFurnitureCatalogView.getComponentPopupMenu());
 					homePane.setTransferEnabled(transferHandlerEnabled);
-          /*JComponent splitPaneTopComponent = newFurnitureCatalogView;
-          if (newFurnitureCatalogView instanceof Scrollable) {
-            splitPaneTopComponent = SwingTools.createScrollPane(newFurnitureCatalogView);
-          } else
-			{
-            splitPaneTopComponent = newFurnitureCatalogView;
-          }
-          ((JSplitPane)SwingUtilities.getAncestorOfClass(JSplitPane.class, oldFurnitureCatalogView)).
-              setTopComponent(splitPaneTopComponent);*/
+				  /*JComponent splitPaneTopComponent = newFurnitureCatalogView;
+				  if (newFurnitureCatalogView instanceof Scrollable) {
+					splitPaneTopComponent = SwingTools.createScrollPane(newFurnitureCatalogView);
+				  } else {
+					splitPaneTopComponent = newFurnitureCatalogView;
+				  }
+				  ((JSplitPane)SwingUtilities.getAncestorOfClass(JSplitPane.class, oldFurnitureCatalogView)).
+					  setTopComponent(splitPaneTopComponent);*/
 					this.furnitureCatalogView = new WeakReference<JComponent>(newFurnitureCatalogView);
 				}
 			}
@@ -2670,6 +2696,7 @@ public class HomePane implements HomeView
       addActionToPopupMenu(ActionType.RESET_FURNITURE_ELEVATION, planViewPopup);
       addActionToPopupMenu(ActionType.MODIFY_COMPASS, planViewPopup);
       addActionToPopupMenu(ActionType.MODIFY_WALL, planViewPopup);
+      addActionToPopupMenu(ActionType.JOIN_WALLS, planViewPopup);
       addActionToPopupMenu(ActionType.REVERSE_WALL_DIRECTION, planViewPopup);
       addActionToPopupMenu(ActionType.SPLIT_WALL, planViewPopup);
       addActionToPopupMenu(ActionType.MODIFY_ROOM, planViewPopup);
@@ -3193,10 +3220,9 @@ public class HomePane implements HomeView
   /**
    * Detaches the given <code>view</code> from home view.
    */
-	public void detachView(final com.eteks.sweethome3d.viewcontroller.View view)
-	{
-		JComponent component = (JComponent) view;
-/*    Container parent = component.getParent();
+	public void detachView(final com.eteks.sweethome3d.viewcontroller.View view) {
+/*		JComponent component = (JComponent) view;
+    Container parent = component.getParent();
     if (parent instanceof JViewport) {
       component = (JComponent)parent.getParent();
       parent = component.getParent();
@@ -3388,8 +3414,7 @@ public class HomePane implements HomeView
   /**
    * Attaches the given <code>view</code> to home view.
    */
-	public void attachView(final com.eteks.sweethome3d.viewcontroller.View view)
-	{
+	public void attachView(final com.eteks.sweethome3d.viewcontroller.View view) {
   /*  this.controller.setHomeProperty(view.getClass().getName() + DETACHED_VIEW_VISUAL_PROPERTY, String.valueOf(false));
 
     JComponent dummyComponent = (JComponent)findChild(this, view.getClass().getName());
@@ -3444,27 +3469,178 @@ public class HomePane implements HomeView
 	/**
 	 * Displays a content chooser open dialog to choose the name of a home.
 	 */
-	public String showOpenDialog()
-	{
+	public String showOpenDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openHomeDialog.title"),
 				ContentManager.ContentType.SWEET_HOME_3D);
 	}
 
+  /**
+   * Displays a dialog to let the user choose a home example.
+   */
+  public String showNewHomeFromExampleDialog() {
+    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.message");
+    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.title");
+    final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.useSelectedExample");
+    String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
+    String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.cancel");
+    final ListView homeExamplesList = new ListView(activity);
+    homeExamplesList.setAdapter(new HomeExamplesListCellRenderer(activity, this.preferences.getHomeExamples()));
+    homeExamplesList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+    /*
+     final JList homeExamplesList = new JList(activity, this.preferences.getHomeExamples().toArray()) {
+        @Override
+        public String getToolTipText(MouseEvent ev) {
+          int index = locationToIndex(ev.getPoint());
+          // Display full name in tool tip in case label renderer is too short
+          return index != -1
+              ? ((HomeDescriptor)getModel().getElementAt(index)).getName()
+              : null;
+        }
+      };
+    homeExamplesList.setSelectionModel(new DefaultListSelectionModel() {
+        @Override
+        public void removeSelectionInterval(int index0, int index1) {
+          // Do nothing, to avoid empty selection in case of Ctrl or cmd + click
+        }
+      });
+    homeExamplesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    homeExamplesList.setSelectedIndex(0);
+    homeExamplesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+    homeExamplesList.setVisibleRowCount(3);
+    final int iconWidth = 192;
+    homeExamplesList.setFixedCellWidth(iconWidth + 8);
+    homeExamplesList.setCellRenderer(new DefaultListCellRenderer() {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                                                      boolean cellHasFocus) {
+          HomeDescriptor home = (HomeDescriptor)value;
+          super.getListCellRendererComponent(list, home.getName(), index, isSelected, cellHasFocus);
+          setIcon(IconManager.getInstance().getIcon(home.getIcon(), iconWidth * 3 / 4, homeExamplesList));
+          setHorizontalAlignment(CENTER);
+          setHorizontalTextPosition(CENTER);
+          setVerticalTextPosition(BOTTOM);
+          setBorder(BorderFactory.createCompoundBorder(getBorder(), BorderFactory.createEmptyBorder(2, 0, 2, 0)));
+          return this;
+        }
+      });
+    homeExamplesList.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent ev) {
+          if (ev.getClickCount() == 2) {
+            ((JOptionPane)SwingUtilities.getAncestorOfClass(JOptionPane.class, ev.getComponent())).setValue(useSelectedHome);
+          }
+        }
+      });
+     */
+
+
+    LinearLayout homeExamplesPanel = new LinearLayout(activity);
+    homeExamplesPanel.setOrientation(LinearLayout.VERTICAL);
+    homeExamplesPanel.setPadding(10,10,10,10);
+    homeExamplesPanel.addView(new JLabel(activity, Html.fromHtml(message)));
+    final float scale = activity.getResources().getDisplayMetrics().density;
+    int heightPx = (int) (150 * scale + 0.5f);
+    ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
+    homeExamplesPanel.addView(homeExamplesList, listLP);
+
+    ScrollView sv = new ScrollView(activity);
+    sv.addView(homeExamplesPanel);
+
+    Object [] options = findMoreExamples.length() > 0
+        ? new Object [] {useSelectedHome, findMoreExamples, cancel}
+        : new Object [] {useSelectedHome, cancel};
+    int option = JOptionPane.showOptionDialog(activity, sv, title,
+        findMoreExamples.length() > 0 ? JOptionPane.YES_NO_CANCEL_OPTION : JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+        null, options, useSelectedHome);
+    switch (option) {
+      // Convert showOptionDialog answer to SaveAnswer enum constants
+      case JOptionPane.YES_OPTION:
+        Content homeContent = ((HomeDescriptor)homeExamplesList.getSelectedItem()).getContent();
+        return homeContent instanceof URLContent
+            ? ((URLContent)homeContent).getURL().toString()
+            : null;
+      case JOptionPane.NO_OPTION:
+        String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
+        boolean documentShown = false;
+        try {
+          // Display Find more demos (gallery) page in browser
+          documentShown = SwingTools.showDocumentInBrowser(new URL(findModelsUrl));
+        } catch (MalformedURLException ex) {
+          // Document isn't shown
+        }
+        if (!documentShown) {
+          // If the document wasn't shown, display a message
+          // with a copiable URL in a message box
+          String findMoreExamplesMessageText = preferences.getLocalizedString(
+				  com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamplesMessage.text");
+          String findMoreExamplesTitle = preferences.getLocalizedString(
+				  com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamplesMessage.title");
+          JOptionPane.showMessageDialog(activity,
+              findMoreExamplesMessageText, findMoreExamplesTitle, JOptionPane.INFORMATION_MESSAGE);
+        }
+        // No break
+      default :
+        return null;
+    }
+  }
+
+	private class HomeExamplesListCellRenderer extends ArrayAdapter<HomeDescriptor>
+	{
+		public int namePadBottomPx = 6;
+		public HomeExamplesListCellRenderer(Context context, List<HomeDescriptor> examples)
+		{
+			super(context, android.R.layout.simple_list_item_1, examples);
+		}
+
+		@Override
+		public android.view.View getView(int position, android.view.View convertView, ViewGroup parent)
+		{
+			return getDropDownView(position, convertView, parent);
+		}
+		@Override
+		public android.view.View getDropDownView (final int position, android.view.View convertView, ViewGroup parent)
+		{
+			final int iconWidth = 192;
+			final HomeDescriptor home = this.getItem(position);
+			final Icon icon = IconManager.getInstance().getIcon(home.getIcon(), iconWidth * 3 / 4, null);
+			ImageView ret = new CheckableImageView(getContext())
+			{
+				public void onDraw(Canvas canvas)
+				{
+					Graphics2D g2D = new VMGraphics2D(canvas);
+					icon.paintIcon(null, g2D, 0, 0);
+
+					String value = home.getName();
+					g2D.setColor(Color.BLACK);
+					g2D.drawString(value, 0, this.getHeight() - namePadBottomPx);// at the bottom
+					if (isChecked())
+					{
+						g2D.setColor(Color.DARK_GRAY);
+						g2D.drawRect(0, 0, this.getWidth(), this.getHeight());
+					}
+				}
+			};
+			ret.setMinimumWidth(icon.getIconWidth());//or just 96?
+			ret.setMinimumHeight(icon.getIconHeight() + namePadBottomPx); // or 96 + pad
+
+			return ret;
+
+		}
+	}
+
 	/**
 	 * Displays a dialog that lets user choose what he wants to do with a damaged home he tries to open it.
-	 *
-	 * @return {@link OpenDamagedHomeAnswer#REMOVE_DAMAGED_ITEMS}
+   * @return {@link com.eteks.sweethome3d.viewcontroller.HomeView.OpenDamagedHomeAnswer#REMOVE_DAMAGED_ITEMS}
 	 * if the user chose to remove damaged items,
-	 * {@link OpenDamagedHomeAnswer#REPLACE_DAMAGED_ITEMS}
+   * {@link com.eteks.sweethome3d.viewcontroller.HomeView.OpenDamagedHomeAnswer#REPLACE_DAMAGED_ITEMS}
 	 * if he doesn't want to replace damaged items by red images and red boxes,
-	 * or {@link OpenDamagedHomeAnswer#DO_NOT_OPEN_HOME}
+   * or {@link com.eteks.sweethome3d.viewcontroller.HomeView.OpenDamagedHomeAnswer#DO_NOT_OPEN_HOME}
 	 * if he doesn't want to open damaged home.
 	 */
 	public OpenDamagedHomeAnswer confirmOpenDamagedHome(String homeName,
 														Home damagedHome,
-														List<Content> invalidContent)
-	{
+														List<Content> invalidContent) {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.message",
 				homeName, Math.max(1, invalidContent.size()));
@@ -3473,26 +3649,22 @@ public class HomePane implements HomeView
 		String replaceDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.replaceDamagedItems");
 		String doNotOpenHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.doNotOpenHome");
 
-		switch (showOptionDialog(activity, message, title,
+		switch (JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-				null, new Object[]{removeDamagedItems, replaceDamagedItems, doNotOpenHome}, doNotOpenHome))
-		{
+				null, new Object[]{removeDamagedItems, replaceDamagedItems, doNotOpenHome}, doNotOpenHome)) {
 			// Convert showOptionDialog answer to SaveAnswer enum constants
 			case JOptionPane.YES_OPTION:
 				return OpenDamagedHomeAnswer.REMOVE_DAMAGED_ITEMS;
 			case JOptionPane.NO_OPTION:
 				return OpenDamagedHomeAnswer.REPLACE_DAMAGED_ITEMS;
-			default:
-				return OpenDamagedHomeAnswer.DO_NOT_OPEN_HOME;
+      		default : return OpenDamagedHomeAnswer.DO_NOT_OPEN_HOME;
 		}
-
 	}
 
 	/**
 	 * Displays a content chooser open dialog to choose a language library.
 	 */
-	public String showImportLanguageLibraryDialog()
-	{
+	public String showImportLanguageLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importLanguageLibraryDialog.title"),
 				ContentManager.ContentType.LANGUAGE_LIBRARY);
@@ -3502,8 +3674,7 @@ public class HomePane implements HomeView
 	 * Displays a dialog that lets user choose whether he wants to overwrite
 	 * an existing language library or not.
 	 */
-	public boolean confirmReplaceLanguageLibrary(String languageLibraryName)
-	{
+	public boolean confirmReplaceLanguageLibrary(String languageLibraryName) {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.message",
 				this.controller.getContentManager().getPresentationName(languageLibraryName, ContentManager.ContentType.LANGUAGE_LIBRARY));
@@ -3511,7 +3682,7 @@ public class HomePane implements HomeView
 		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.replace");
 		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.doNotReplace");
 
-		return showOptionDialog(activity,
+		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
 
@@ -3520,8 +3691,7 @@ public class HomePane implements HomeView
 	/**
 	 * Displays a content chooser open dialog to choose a furniture library.
 	 */
-	public String showImportFurnitureLibraryDialog()
-	{
+	public String showImportFurnitureLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importFurnitureLibraryDialog.title"),
 				ContentManager.ContentType.FURNITURE_LIBRARY);
@@ -3531,8 +3701,7 @@ public class HomePane implements HomeView
 	 * Displays a dialog that lets user choose whether he wants to overwrite
 	 * an existing furniture library or not.
 	 */
-	public boolean confirmReplaceFurnitureLibrary(String furnitureLibraryName)
-	{
+	public boolean confirmReplaceFurnitureLibrary(String furnitureLibraryName) {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.message",
 				this.controller.getContentManager().getPresentationName(furnitureLibraryName, ContentManager.ContentType.FURNITURE_LIBRARY));
@@ -3540,17 +3709,15 @@ public class HomePane implements HomeView
 		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.replace");
 		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.doNotReplace");
 
-		return showOptionDialog(activity,
+		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
-
 	}
 
 	/**
 	 * Displays a content chooser open dialog to choose a textures library.
 	 */
-	public String showImportTexturesLibraryDialog()
-	{
+	public String showImportTexturesLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importTexturesLibraryDialog.title"),
 				ContentManager.ContentType.TEXTURES_LIBRARY);
@@ -3560,8 +3727,7 @@ public class HomePane implements HomeView
 	 * Displays a dialog that lets user choose whether he wants to overwrite
 	 * an existing textures library or not.
 	 */
-	public boolean confirmReplaceTexturesLibrary(String texturesLibraryName)
-	{
+	public boolean confirmReplaceTexturesLibrary(String texturesLibraryName) {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.message",
 				this.controller.getContentManager().getPresentationName(texturesLibraryName, ContentManager.ContentType.TEXTURES_LIBRARY));
@@ -3569,7 +3735,7 @@ public class HomePane implements HomeView
 		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.replace");
 		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.doNotReplace");
 
-		return showOptionDialog(activity,
+		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
 	}
@@ -3578,8 +3744,7 @@ public class HomePane implements HomeView
 	 * Displays a dialog that lets user choose whether he wants to overwrite
 	 * an existing plug-in or not.
 	 */
-	public boolean confirmReplacePlugin(String pluginName)
-	{
+	public boolean confirmReplacePlugin(String pluginName) {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.message",
 				this.controller.getContentManager().getPresentationName(pluginName, ContentManager.ContentType.PLUGIN));
@@ -3587,7 +3752,7 @@ public class HomePane implements HomeView
 		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.replace");
 		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.doNotReplace");
 
-		return showOptionDialog(activity,
+		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{replace, doNotReplace}, doNotReplace) == JOptionPane.OK_OPTION;
 	}
@@ -3595,8 +3760,7 @@ public class HomePane implements HomeView
 	/**
 	 * Displays a content chooser save dialog to choose the name of a home.
 	 */
-	public String showSaveDialog(String homeName)
-	{
+	public String showSaveDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "saveHomeDialog.title"),
 				ContentManager.ContentType.SWEET_HOME_3D, homeName);
@@ -3605,29 +3769,27 @@ public class HomePane implements HomeView
 	/**
 	 * Displays <code>message</code> in an error message box.
 	 */
-	public void showError(String message)
-	{
+	public void showError(String message) {
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "error.title");
-		JOptionPane.showMessageDialog(activity, message, title, JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(activity, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
 	 * Displays <code>message</code> in a message box.
 	 */
-	public void showMessage(String message)
-	{
+	public void showMessage(String message) {
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "message.title");
-		JOptionPane.showMessageDialog(activity, message, title, JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(activity, message, title,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
 	 * Displays the tip matching <code>actionTipKey</code> and
 	 * returns <code>true</code> if the user chose not to display again the tip.
 	 */
-	public boolean showActionTipMessage(String actionTipKey)
-	{
-		if (Looper.getMainLooper().getThread() == Thread.currentThread())
-		{
+	public boolean showActionTipMessage(String actionTipKey) {
+		if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			new Throwable().printStackTrace();
 			System.err.println("HomePane asked to showActionTipMessage on EDT thread you MUST not as I will block!");
 			return false;
@@ -3659,7 +3821,8 @@ public class HomePane implements HomeView
       
       SwingTools.showMessageDialog(this, tipPanel, title, 
           JOptionPane.INFORMATION_MESSAGE, doNotDisplayTipCheckBox);
-      return doNotDisplayTipCheckBox.isSelected();*/
+      return doNotDisplayTipCheckBox.isSelected();
+      */
 
 			final String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
 			final String closeAndNoShow = SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
@@ -3667,38 +3830,30 @@ public class HomePane implements HomeView
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
 					null, new String[]{closeAndNoShow, close}, close) == JOptionPane.OK_OPTION;
 			return noShow;
-		}
-		else
-		{
+		} else {
 			// Ignore untranslated tips
 			return true;
 		}
-
 	}
 
 	/**
 	 * Displays a dialog that lets user choose whether he wants to save
 	 * the current home or not.
-	 *
-	 * @return {@link SaveAnswer#SAVE}
+   * @return {@link com.eteks.sweethome3d.viewcontroller.HomeView.SaveAnswer#SAVE}
 	 * if the user chose to save home,
-	 * {@link SaveAnswer#DO_NOT_SAVE}
+   * {@link com.eteks.sweethome3d.viewcontroller.HomeView.SaveAnswer#DO_NOT_SAVE}
 	 * if he doesn't want to save home,
-	 * or {@link SaveAnswer#CANCEL}
+   * or {@link com.eteks.sweethome3d.viewcontroller.HomeView.SaveAnswer#CANCEL}
 	 * if he doesn't want to continue current operation.
 	 */
-	public SaveAnswer confirmSave(String homeName)
-	{
+    public SaveAnswer confirmSave(String homeName) {
 		// Retrieve displayed text in buttons and message
 		String message;
-		if (homeName != null)
-		{
+		if (homeName != null) {
 			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.message",
 					"\"" + this.controller.getContentManager().getPresentationName(
 							homeName, ContentManager.ContentType.SWEET_HOME_3D) + "\"");
-		}
-		else
-		{
+		} else {
 			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.message", "");
 		}
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.title");
@@ -3706,28 +3861,24 @@ public class HomePane implements HomeView
 		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.doNotSave");
 		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.cancel");
 
-		switch (showOptionDialog(activity, message, title,
+		switch (JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, new Object[]{save, doNotSave, cancel}, save))
-		{
+				null, new Object[]{save, doNotSave, cancel}, save)) {
 			// Convert showOptionDialog answer to SaveAnswer enum constants
 			case JOptionPane.YES_OPTION:
 				return SaveAnswer.SAVE;
 			case JOptionPane.NO_OPTION:
 				return SaveAnswer.DO_NOT_SAVE;
-			default:
-				return SaveAnswer.CANCEL;
+			default: return SaveAnswer.CANCEL;
 		}
 	}
 
 	/**
 	 * Displays a dialog that let user choose whether he wants to save
 	 * a home that was created with a newer version of Sweet Home 3D.
-	 *
 	 * @return <code>true</code> if user confirmed to save.
 	 */
-	public boolean confirmSaveNewerHome(String homeName)
-	{
+	public boolean confirmSaveNewerHome(String homeName) {
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.message",
 				this.controller.getContentManager().getPresentationName(
 						homeName, ContentManager.ContentType.SWEET_HOME_3D));
@@ -3735,7 +3886,7 @@ public class HomePane implements HomeView
 		String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.save");
 		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.doNotSave");
 
-		return showOptionDialog(activity, message, title,
+		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{save, doNotSave}, doNotSave) == JOptionPane.YES_OPTION;
 	}
@@ -3743,17 +3894,15 @@ public class HomePane implements HomeView
 	/**
 	 * Displays a dialog that let user choose whether he wants to exit
 	 * application or not.
-	 *
 	 * @return <code>true</code> if user confirmed to exit.
 	 */
-	public boolean confirmExit()
-	{
+	public boolean confirmExit() {
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.title");
 		String quit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.quit");
 		String doNotQuit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.doNotQuit");
 
-		return showOptionDialog(activity, message, title,
+		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{quit, doNotQuit}, doNotQuit) == JOptionPane.YES_OPTION;
 	}
@@ -3761,32 +3910,24 @@ public class HomePane implements HomeView
 	/**
 	 * Displays an about dialog.
 	 */
-	public void showAboutDialog()
-	{
+	public void showAboutDialog() {
 		//String messageFormat = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.message");
 		String aboutMessageHtml = activity.getString(R.string.help_about);
 
 		String aboutVersion = this.controller.getVersion();
-		try
-		{
+		try {
 			PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
 			aboutVersion = pInfo.versionName;
-		}
-		catch (PackageManager.NameNotFoundException e)
-		{
+		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		String javaVersion = System.getProperty("java.version");
 		String dataModel = System.getProperty("sun.arch.data.model");
-		if (dataModel != null)
-		{
-			try
-			{
+		if (dataModel != null) {
+			try {
 				javaVersion += " / " + Integer.parseInt(dataModel) + " bit";
-			}
-			catch (NumberFormatException ex)
-			{
+			} catch (NumberFormatException ex) {
 				// Don't display data model
 			}
 		}
@@ -3804,22 +3945,22 @@ public class HomePane implements HomeView
 		//try {
 		String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
     /*  String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.showLibraries");
-      List<Library> libraries = this.preferences.getLibraries();
-     /* if (!libraries.isEmpty()) {
-        if (JOptionPane.showOptionDialog(this, messagePane, title,
-              JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-              icon, new Object [] {close, showLibraries}, close) == JOptionPane.NO_OPTION) {
-          showLibrariesDialog(libraries);
-        }
-        return;
-      }
-    } catch (UnsupportedOperationException ex) {
-      // Environment doesn't support libraries
-    } catch (IllegalArgumentException ex) {
-      // Unknown about.close or about.libraries libraries
-    }*/
-		//JOptionPane.showMessageDialog(this, messagePane, title, JOptionPane.INFORMATION_MESSAGE, icon);
-
+		  List<Library> libraries = this.preferences.getLibraries();
+		  if (!libraries.isEmpty()) {
+			if (JOptionPane.showOptionDialog(this, messagePane, title,
+				  JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				  icon, new Object [] {close, showLibraries}, close) == JOptionPane.NO_OPTION) {
+			  showLibrariesDialog(libraries);
+			}
+			return;
+		  }
+		} catch (UnsupportedOperationException ex) {
+		  // Environment doesn't support libraries
+		} catch (IllegalArgumentException ex) {
+		  // Unknown about.close or about.libraries libraries
+		}
+		JOptionPane.showMessageDialog(this, messagePane, title, JOptionPane.INFORMATION_MESSAGE, icon);
+	*/
 
 		TextView textView = new TextView(activity);
 		textView.setPadding(10,10,10,10);
@@ -3848,7 +3989,6 @@ public class HomePane implements HomeView
       }
     });
     return messagePane;
-
   }
 
   /**
@@ -4060,8 +4200,7 @@ public class HomePane implements HomeView
    *                    again shown updates will be shown. 
    */
 	public boolean showUpdatesMessage(String updatesMessage,
-									  boolean showOnlyMessage)
-	{
+									  boolean showOnlyMessage) {
  /*   if (!showOnlyMessage) {
       // Ignore the request if a frame in the program different from the ancestor of this pane 
       // is already showing a dialog box 
@@ -4117,15 +4256,13 @@ public class HomePane implements HomeView
 
 	/**
 	 * Shows a print dialog to print the home displayed by this pane.
-	 *
 	 * @return a print task to execute or <code>null</code> if the user canceled print.
 	 * The <code>call</code> method of the returned task may throw a
 	 * {@link RecorderException RecorderException} exception if print failed
 	 * or an {@link InterruptedRecorderException InterruptedRecorderException}
 	 * exception if it was interrupted.
 	 */
-	public Callable<Void> showPrintDialog()
-	{
+	public Callable<Void> showPrintDialog() {
  /*   PageFormat pageFormat = HomePrintableComponent.getPageFormat(this.home.getPrint());
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
     printerJob.setPrintable(new HomePrintableComponent(this.home, this.controller, getFont()), pageFormat);
@@ -4157,8 +4294,7 @@ public class HomePane implements HomeView
 	/**
 	 * Shows a content chooser save dialog to print a home in a PDF file.
 	 */
-	public String showPrintToPDFDialog(String homeName)
-	{
+	public String showPrintToPDFDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "printToPDFDialog.title"),
 				ContentManager.ContentType.PDF, homeName);
@@ -4169,8 +4305,7 @@ public class HomePane implements HomeView
 	 * to write to another kind of output stream.
 	 * Caution !!! This method may be called from an other thread than EDT.
 	 */
-	public void printToPDF(String pdfFile) throws RecorderException
-	{
+	public void printToPDF(String pdfFile) throws RecorderException {
 /*    OutputStream outputStream = null;
     boolean printInterrupted = false;
     try {
@@ -4201,8 +4336,7 @@ public class HomePane implements HomeView
 	/**
 	 * Shows a content chooser save dialog to export furniture list in a CSV file.
 	 */
-	public String showExportToCSVDialog(String homeName)
-	{
+	public String showExportToCSVDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToCSVDialog.title"),
 				ContentManager.ContentType.CSV, homeName);
@@ -4212,8 +4346,7 @@ public class HomePane implements HomeView
 	 * Exports furniture list to a given CSV file.
 	 * Caution !!! This method may be called from an other thread than EDT.
 	 */
-	public void exportToCSV(String csvFile) throws RecorderException
-	{
+	public void exportToCSV(String csvFile) throws RecorderException {
 /*    VCView furnitureView = this.controller.getFurnitureController().getView();
     FurnitureTable furnitureTable;
     if (furnitureView instanceof FurnitureTable) {
@@ -4251,8 +4384,7 @@ public class HomePane implements HomeView
 	/**
 	 * Shows a content chooser save dialog to export a home plan in a SVG file.
 	 */
-	public String showExportToSVGDialog(String homeName)
-	{
+	public String showExportToSVGDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
 				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToSVGDialog.title"),
 				ContentManager.ContentType.SVG, homeName);
@@ -4262,8 +4394,7 @@ public class HomePane implements HomeView
 	 * Exports the plan objects to a given SVG file.
 	 * Caution !!! This method may be called from an other thread than EDT.
 	 */
-	public void exportToSVG(String svgFile) throws RecorderException
-	{
+	public void exportToSVG(String svgFile) throws RecorderException {
  /*   VCView planView = this.controller.getPlanController().getView();
     final PlanComponent planComponent;
     if (planView instanceof PlanComponent) {
@@ -4301,8 +4432,7 @@ public class HomePane implements HomeView
 	/**
 	 * Shows a content chooser save dialog to export a 3D home in a OBJ file.
 	 */
-	public String showExportToOBJDialog(String homeName)
-	{
+	public String showExportToOBJDialog(String homeName) {
 		homeName = this.controller.getContentManager().showSaveDialog(this,
 			this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToOBJDialog.title"),
 			ContentManager.ContentType.OBJ, homeName);
@@ -4310,11 +4440,9 @@ public class HomePane implements HomeView
 		//PJPJPJ
 		// For tidiness sake if the selected file does not exist we create a sub folder and point to the file in that
 		// this is so all the many mtl and png files are kept tidy
-		if (homeName != null && homeName.replace(".obj", "").length() > 0)
-		{
+		if (homeName != null && homeName.replace(".obj", "").length() > 0) {
 			File objFile = new File(homeName);
-			if (!objFile.exists())
-			{
+			if (!objFile.exists()) {
 				File objFolder = new File(homeName.replace(".obj", ""));
 				objFolder.mkdir();
 				homeName = new File(objFolder, objFile.getName()).getAbsolutePath();
@@ -4347,8 +4475,7 @@ public class HomePane implements HomeView
 	 * Exports the objects of the 3D view to the given OBJ file.
 	 * Caution !!! This method may be called from an other thread than EDT.
 	 */
-	public void exportToOBJ(String objFile) throws RecorderException
-	{
+	public void exportToOBJ(String objFile) throws RecorderException {
 		exportToOBJ(objFile, new Object3DBranchFactory());
 	}
 
@@ -4356,16 +4483,15 @@ public class HomePane implements HomeView
 	 * Exports to an OBJ file the objects of the 3D view created with the given factory.
 	 * Caution !!! This method may be called from an other thread than EDT.
 	 */
-	protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException
-	{
-    String header = this.preferences != null
-        ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, 
+	protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException {
+    	String header = this.preferences != null
+        	? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class,
                                               "exportToOBJ.header", new Date())
-        : "";
+        	: "";
         
-    // Use a clone of home to ignore selection and for thread safety
-    OBJExporter.exportHomeToFile(cloneHomeInEventDispatchThread(this.home), 
-        objFile, header, this.exportAllToOBJ, object3dFactory);
+    	// Use a clone of home to ignore selection and for thread safety
+    	OBJExporter.exportHomeToFile(cloneHomeInEventDispatchThread(this.home),
+        	objFile, header, this.exportAllToOBJ, object3dFactory);
 	}
 
 	/**
@@ -4530,26 +4656,23 @@ public class HomePane implements HomeView
    * the selected furniture from catalog or not.
    * @return <code>true</code> if user confirmed to delete.
    */
-	public boolean confirmDeleteCatalogSelection()
-	{
+	public boolean confirmDeleteCatalogSelection() {
 		// Retrieve displayed text in buttons and message
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.title");
 		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.delete");
 		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.cancel");
 
-		return showOptionDialog(activity, message, title,
+		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{delete, cancel}, cancel) == JOptionPane.OK_OPTION;
 	}
 
 	/**
 	 * Displays a dialog that lets the user choose a name for the current camera.
-	 *
 	 * @return the chosen name or <code>null</code> if the user canceled.
 	 */
-	public String showStoreCameraDialog(final String cameraName)
-	{
+	public String showStoreCameraDialog(final String cameraName) {
 		// Retrieve displayed text in dialog
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.title");
@@ -4559,12 +4682,9 @@ public class HomePane implements HomeView
 		cameraNamePanel.setPadding(10,10,10,10);
 		cameraNamePanel.addView(new JLabel(activity, Html.fromHtml(message)));
 
-
-
 		final List<Camera> storedCameras = new ArrayList<Camera>(home.getStoredCameras());
 		// sort them so this list is consistent
-		Collections.sort(storedCameras, new Comparator<Camera>()
-		{
+		Collections.sort(storedCameras, new Comparator<Camera>() {
 			@Override
 			public int compare(Camera o1, Camera o2)
 			{
@@ -4584,7 +4704,6 @@ public class HomePane implements HomeView
 				cameraNamePanel.addView(cameraNameTextComponent);
 				if (!storedCameras.isEmpty())
 				{
-
 					// If cameras are already stored in home propose an editable combo box to user
 					// to let him choose more easily an existing one if he want to overwrite it
 					String[] storedCameraNames = new String[storedCameras.size() + 1];
@@ -4615,12 +4734,11 @@ public class HomePane implements HomeView
 		});
 
 
-		boolean confirmed = showOptionDialog(activity,
+		boolean confirmed = JOptionPane.showOptionDialog(activity,
 				cameraNamePanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object[]{"Ok", "Cancel"}, "Cancel") == JOptionPane.OK_OPTION;
 
-		if (confirmed)
-		{
+		if (confirmed) {
 			//notice get by index due to need to only construct on the main looper
 			String newCameraName = ((JTextField)cameraNamePanel.getChildAt(1)).getText().toString().trim();
 			return newCameraName.length() > 0 ? newCameraName : null;
@@ -4662,15 +4780,17 @@ public class HomePane implements HomeView
       if (cameraName.length() > 0) {
         return cameraName;
       }
-    } */
+    }
+
+    return null;
+    */
 	}
 
 	/**
 	 * Displays a dialog showing the list of cameras stored in home
 	 * and returns the ones selected by the user to be deleted.
 	 */
-	public List<Camera> showDeletedCamerasDialog()
-	{
+	public List<Camera> showDeletedCamerasDialog() {
 		// Retrieve displayed text in dialog
 		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.message");
 		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.title");
@@ -4733,7 +4853,7 @@ public class HomePane implements HomeView
   /*  List<Camera> storedCameras = this.home.getStoredCameras();
     final List<Camera> selectedCameras = new ArrayList<Camera>();
     final JList camerasList = new JList(storedCameras.toArray());
-    camerasList.setCellRenderer(new DefaultListCellRenderer() {
+    camerasList.setCellRenderer(new ListCellRenderer() {
         private JCheckBox cameraCheckBox = new JCheckBox();
         
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
@@ -4795,8 +4915,9 @@ public class HomePane implements HomeView
             null, new Object [] {delete, cancel}, cancel) == JOptionPane.OK_OPTION) {
         return selectedCameras;
       }
-    } */
-
+    }
+      return null;
+    */
 	}
 
 	/**
@@ -4835,24 +4956,18 @@ public class HomePane implements HomeView
    * Returns <code>true</code> if clipboard doesn't contain data that
    * components are able to handle.
    */
-	public boolean isClipboardEmpty()
-	{
-		if (OperatingSystem.isMacOSX() && !OperatingSystem.isJavaVersionGreaterOrEqual("1.8.0_60"))
-		{
-			try
-			{
+	public boolean isClipboardEmpty() {
+		if (OperatingSystem.isMacOSX() && !OperatingSystem.isJavaVersionGreaterOrEqual("1.8.0_60")) {
+			try {
 				checkClipboardContainsHomeItemsOrFiles();
-			}
-			catch (AccessControlException ex)
-			{
+			} catch (AccessControlException ex) {
 				// If clipboard can't be accessed, update clipboardEmpty only when explicit copy actions are performed
 			}
 		}
 		return this.clipboardEmpty;
 	}
 
-	private void checkClipboardContainsHomeItemsOrFiles()
-	{
+	private void checkClipboardContainsHomeItemsOrFiles() {
 		//  Clipboard clipboard = getToolkit().getSystemClipboard();
 		// this.clipboardEmpty = !(clipboard.isDataFlavorAvailable(HomeTransferableList.HOME_FLAVOR)
 		//    || clipboard.isDataFlavorAvailable(DataFlavor.javaFileListFlavor));
@@ -4863,8 +4978,7 @@ public class HomePane implements HomeView
 	 * or <code>null</code> if clipboard doesn't contain any selectable item.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Selectable> getClipboardItems()
-	{
+	public List<Selectable> getClipboardItems() {
  /*   try {
       Clipboard clipboard = getToolkit().getSystemClipboard();
       if (clipboard.isDataFlavorAvailable(HomeTransferableList.HOME_FLAVOR)) {
@@ -4882,16 +4996,16 @@ public class HomePane implements HomeView
 	 * that manages toolkit events.
 	 */
 
-	//PJPJPJPJ this guy is used by the 3 import methods (furniture texture adn language)
-	// along wiht the open dialog
+	//PJPJPJPJ this guy is used by the 3 import methods (furniture texture and language)
+	// along with the open dialog
 	// and the set mode, so possibly if I make it non EDT they can all go back to using the controller method
-	// rather than teh version pulled out to the Renovations3D object
+	// rather than the version pulled out to the Renovations3D object
 	public void invokeLater(Runnable runnable)
 	{
 		// These methods generally invoke blocking dialogs, so on Android I must explicitly NOT be EDT
 		//EventQueue.invokeLater(runnable);
-		Thread t2 = new Thread(runnable);
-		t2.start();
+		Thread t = new Thread(runnable);
+		t.start();
 	}
 
 
@@ -5044,6 +5158,6 @@ public class HomePane implements HomeView
       // Copy last mouse move location in case mouseExited is called while popup menu is displayed
       this.mouseLocation = this.lastMouseMoveLocation;      
     }
-  }*/
-
+  }
+  */
 }

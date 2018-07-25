@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
@@ -63,7 +64,6 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
-import com.mindblowing.utils.LongHoldHandler;
 
 import org.jogamp.java3d.Alpha;
 import org.jogamp.java3d.AmbientLight;
@@ -81,9 +81,13 @@ import org.jogamp.java3d.Group;
 import org.jogamp.java3d.JoglesPipeline;
 import org.jogamp.java3d.Light;
 import org.jogamp.java3d.Link;
+import org.jogamp.java3d.Material;
 import org.jogamp.java3d.Node;
+import org.jogamp.java3d.RenderingAttributes;
 import org.jogamp.java3d.Shape3D;
+import org.jogamp.java3d.TexCoordGeneration;
 import org.jogamp.java3d.Texture;
+import org.jogamp.java3d.TextureAttributes;
 import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.TransformInterpolator;
@@ -100,6 +104,7 @@ import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.TexCoord2f;
 import org.jogamp.vecmath.Vector3f;
+import org.jogamp.vecmath.Vector4f;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -132,12 +137,10 @@ import jogamp.newt.driver.android.WindowDriver;
 import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 import static com.eteks.renovations3d.android.utils.WelcomeDialog.possiblyShowWelcomeScreen;
 
-
-
 /**
- * Created by phil on 11/22/2016.
+ * A component that displays home walls, rooms and furniture with Java 3D.
+ * @author Emmanuel Puybaret and Philip Jordan
  */
-
 public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweethome3d.viewcontroller.View
 {
 
@@ -876,33 +879,35 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	}
 
-	private enum ActionType
-	{
-		MOVE_CAMERA_FORWARD, MOVE_CAMERA_FAST_FORWARD, MOVE_CAMERA_BACKWARD, MOVE_CAMERA_FAST_BACKWARD, MOVE_CAMERA_LEFT, MOVE_CAMERA_FAST_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_FAST_RIGHT, ROTATE_CAMERA_YAW_LEFT, ROTATE_CAMERA_YAW_FAST_LEFT, ROTATE_CAMERA_YAW_RIGHT, ROTATE_CAMERA_YAW_FAST_RIGHT, ROTATE_CAMERA_PITCH_UP, ROTATE_CAMERA_PITCH_FAST_UP, ROTATE_CAMERA_PITCH_DOWN, ROTATE_CAMERA_PITCH_FAST_DOWN, ELEVATE_CAMERA_UP, ELEVATE_CAMERA_FAST_UP, ELEVATE_CAMERA_DOWN, ELEVATE_CAMERA_FAST_DOWN
-	}
+	private enum ActionType {MOVE_CAMERA_FORWARD, MOVE_CAMERA_FAST_FORWARD, MOVE_CAMERA_BACKWARD, MOVE_CAMERA_FAST_BACKWARD,
+		MOVE_CAMERA_LEFT, MOVE_CAMERA_FAST_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_FAST_RIGHT,
+		ROTATE_CAMERA_YAW_LEFT, ROTATE_CAMERA_YAW_FAST_LEFT, ROTATE_CAMERA_YAW_RIGHT, ROTATE_CAMERA_YAW_FAST_RIGHT,
+		ROTATE_CAMERA_PITCH_UP, ROTATE_CAMERA_PITCH_FAST_UP, ROTATE_CAMERA_PITCH_DOWN, ROTATE_CAMERA_PITCH_FAST_DOWN,
+		ELEVATE_CAMERA_UP, ELEVATE_CAMERA_FAST_UP, ELEVATE_CAMERA_DOWN, ELEVATE_CAMERA_FAST_DOWN}
 
 	//private static final boolean JAVA3D_1_5 = VirtualUniverse.getProperties().get("j3d.version") != null
-	//		&& ((String) VirtualUniverse.getProperties().get("j3d.version")).startsWith("1.5");
+	//		&& ((String)VirtualUniverse.getProperties().get("j3d.version")).startsWith("1.5");
 
 	private Home home;
 	private boolean displayShadowOnFloor;
 	private Object3DFactory object3dFactory;
 	private final Map<Selectable, Object3DBranch> homeObjects = new HashMap<Selectable, Object3DBranch>();
-	private Light[] defaultLights;
+  	private Light [] sceneLights;
 	private Collection<Selectable> homeObjectsToUpdate;
 	private Collection<Selectable> lightScopeObjectsToUpdate;
 	//private Component component3D;
-	//PJPJPJPJ
-	private Canvas3D2D canvas3D2D;
+	private Canvas3D2D canvas3D2D;//PJ component3D swapped to direct Canvas3D2D
 	private SimpleUniverse onscreenUniverse;
 	private Camera camera;
 	// Listeners bound to home that updates 3D scene objects
 	private PropertyChangeListener cameraChangeListener;
 	private PropertyChangeListener homeCameraListener;
-	private PropertyChangeListener skyColorListener;
+  	private PropertyChangeListener backgroundChangeListener;
 	private PropertyChangeListener groundChangeListener;
+  	private PropertyChangeListener backgroundLightColorListener;
 	private PropertyChangeListener lightColorListener;
 	private PropertyChangeListener subpartSizeListener;
+  	private PropertyChangeListener  elevationChangeListener;
 	private PropertyChangeListener wallsAlphaListener;
 	private PropertyChangeListener drawingModeListener;
 	private CollectionListener<Level> levelListener;
@@ -915,19 +920,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private PropertyChangeListener roomChangeListener;
 	private CollectionListener<Label> labelListener;
 	private PropertyChangeListener labelChangeListener;
-
 	private SelectionListener selectionOutliningListener;
-
 	// Offscreen printed image cache
 	// Creating an offscreen buffer is a quite lengthy operation so we keep the last printed image in this field
 	// This image should be set to null each time the 3D view changes
-	private BufferedImage printedImageCache;
+	//private BufferedImage printedImageCache;
 	private BoundingBox approximateHomeBoundsCache;
 	private SimpleUniverse offscreenUniverse;
 
-	//PJ private JComponent navigationPanel;
-	//PJ private ComponentListener navigationPanelListener;
-	//PJ private BufferedImage navigationPanelImage;
+	//private JComponent navigationPanel;
+	//private ComponentListener navigationPanelListener;
+	//private BufferedImage navigationPanelImage;
 	private Area lightScopeOutsideWallsAreaCache;
 
 
@@ -939,48 +942,43 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture,
 	 * with no controller.
-	 *
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home)
-	{
+	public void init(Home home)	{
 		init(home, null);
 	}
 
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture.
-	 *
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home, HomeController3D controller)
-	{
+	public void init(Home home, HomeController3D controller) {
 		init(home, null, controller);
 	}
 
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture,
 	 * with shadows on the floor.
-	 *
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home, UserPreferences preferences, boolean displayShadowOnFloor)
-	{
+	public void init(Home home,
+					 UserPreferences preferences,
+					 boolean displayShadowOnFloor) {
 		init(home, preferences, new Object3DBranchFactory(), displayShadowOnFloor, null);
 	}
 
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture.
-	 *
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home, UserPreferences preferences, HomeController3D controller)
-	{
+	public void init(Home home,
+					 UserPreferences preferences,
+					 HomeController3D controller) {
 		init(home, preferences, new Object3DBranchFactory(), false, controller);
 	}
 
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture.
-	 *
 	 * @param home            the home to display in this component
 	 * @param preferences     user preferences
 	 * @param object3dFactory a factory able to create 3D objects from <code>home</code> items.
@@ -989,31 +987,34 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * @param controller      the controller that manages modifications in <code>home</code>.
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home, UserPreferences preferences, Object3DFactory object3dFactory, HomeController3D controller)
-	{
+	public void init(Home home,
+					 UserPreferences preferences,
+					 Object3DFactory object3dFactory,
+					 HomeController3D controller) {
 		init(home, preferences, object3dFactory, false, controller);
 	}
 
 	/**
 	 * Creates a 3D component that displays <code>home</code> walls, rooms and furniture.
-	 *
 	 * @throws IllegalStateException if the 3D component couldn't be created.
 	 */
-	public void init(Home home, UserPreferences preferences, Object3DFactory object3dFactory, boolean displayShadowOnFloor,
-					 HomeController3D controller)
-	{
+	public void init(Home home,
+					 UserPreferences preferences,
+					 Object3DFactory object3dFactory,
+					 boolean displayShadowOnFloor,
+					 HomeController3D controller) {
 		initialized = true;
 		//record for init
 		this.preferences = preferences;
 		this.controller = controller;
 
-
 		this.home = home;
 		this.displayShadowOnFloor = displayShadowOnFloor;
-		this.object3dFactory = object3dFactory != null ? object3dFactory : new Object3DBranchFactory();
+    	this.object3dFactory = object3dFactory != null
+        	? object3dFactory
+        	: new Object3DBranchFactory();
 
-		if (controller != null)
-		{
+    	if (controller != null) {
 			createActions(controller);
 			installKeyboardActions();
 			// Let this component manage focus
@@ -1021,24 +1022,20 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			//PJ SwingTools.installFocusBorder(this);
 		}
 
-		//GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		//if (graphicsEnvironment.getScreenDevices().length == 1)
-		{
+		//PJPJ deferred to gl window init
+		/*GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (graphicsEnvironment.getScreenDevices().length == 1)	{
 			// If only one screen device is available, create canvas 3D immediately,
 			// otherwise create it once the screen device of the parent is known
-
-			//PJPJ defferred to gl window init
-			//createComponent3D(null//graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration()
-			//		, preferences, controller);
-		}
+			createComponent3D(null//graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration(), preferences, controller);
+		}*/
 
 		// Add an ancestor listener to create canvas 3D and its universe once this component is made visible
 		// and clean up universe once its parent frame is disposed
-		//PJPJP put into gl window listener
+		//PJ put into gl window listener
 		//addAncestorListener(preferences, controller, displayShadowOnFloor);
 
-
-		//PJPJPJ for outlining
+		//PJ for outlining
 		selectionOutliningListener = new SelectionOutliningListener();
 		home.addSelectionListener(selectionOutliningListener);
 	}
@@ -1059,47 +1056,42 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}
 
-	private void addAncestorListener(final UserPreferences preferences, final HomeController3D controller,
-									 final boolean displayShadowOnFloor)
-	{
+  /**
+   * Adds an ancestor listener to this component to manage the creation of the canvas and its universe
+   * and clean up the universe.
+   */
+	private void addAncestorListener(final UserPreferences preferences,
+									 final HomeController3D controller,
+									 final boolean displayShadowOnFloor) {
 		//the base calls here are moved into the gl window listener at onCreate so the display is not lost
-
-
 	}
 
 	/**
 	 * Creates the 3D component associated with the given <code>configuration</code> device.
 	 */
-	private void createComponent3D(GraphicsConfiguration configuration, UserPreferences preferences, HomeController3D controller)
-	{
-		//PJPJPJPJ
-		canvas3D2D = Component3DManager.getInstance().getOnscreenCanvas3D(gl_window, new Component3DManager.RenderingObserver()
-		{
-			//PJPJPJ
+	private void createComponent3D(GraphicsConfiguration configuration,
+								   UserPreferences preferences,
+								   HomeController3D controller) {
+		//PJ construction is very different
+		canvas3D2D = Component3DManager.getInstance().getOnscreenCanvas3D(gl_window,
+				new Component3DManager.RenderingObserver() {
 			//private Shape3D dummyShape;
 
-			public void canvas3DSwapped(Canvas3D canvas3D)
-			{
-				//System.out.println("canvas3DSwapped");
+			public void canvas3DSwapped(Canvas3D canvas3D) {
 			}
 
-			public void canvas3DPreRendered(Canvas3D canvas3D)
-			{
-				//System.out.println("canvas3DPreRendered");
+			public void canvas3DPreRendered(Canvas3D canvas3D) {
 			}
 
-			public void canvas3DPostRendered(Canvas3D canvas3D)
-			{
-				//System.out.println("canvas3DPostRendered");
+			public void canvas3DPostRendered(Canvas3D canvas3D) {
 			}
 		});
 
-		//moved into gl_window display call for life cycle clarity
-		//canvas3D2D.addNotify();
-
-
-		if (controller != null)
-		{
+		//canvasPanel.add(this.component3D);
+		//setLayout(new GridLayout());
+		//add(canvasPanel);
+		//replaced with canvas3D2D.addNotify() but also moved into gl_window display call for life cycle clarity
+		if (controller != null)	{
 			addMouseListeners(controller, this.canvas3D2D);
 
 			//createActions(controller);
@@ -1110,14 +1102,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}
 
+	//PJ JCanvas3DWithNavigationPanel removed completely but commnet left to assist code comparison
+	/**
+	 * A <code>JCanvas</code> canvas that displays the navigation panel of a home component 3D upon it.
+	 */
 
-
-//	@Override
-/*	public void setVisible(boolean visible)
-	{
+/*	@Override
+	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		if (this.component3D != null)
-		{
+		if (this.component3D != null) {
 			this.component3D.setVisible(visible);
 
 			//PJPJPJPJ do something interesting here
@@ -1125,13 +1118,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}*/
 
+ 	// Comments left in to facilitate code comparision
+	/**
+	 * Preferences property listener bound to this component with a weak reference to avoid
+	 * strong link between preferences and this component.
+	 */
 
+	/**
+	 * Sets the component that will be drawn upon the heavyweight 3D component shown by this component.
+	 * Mouse events will targeted to the navigation panel when needed.
+	 * Supports transparent components.
+	 */
+
+	/**
+	 * Updates the image of the components that may overlap canvas 3D
+	 * (with a Z order smaller than the one of the canvas 3D).
+	 */
 
 	/**
 	 * Returns a new 3D universe that displays <code>home</code> objects.
 	 */
-	private SimpleUniverse createUniverse(boolean displayShadowOnFloor, boolean listenToHomeUpdates, boolean waitForLoading)
-	{
+	private SimpleUniverse createUniverse(boolean displayShadowOnFloor,
+										  boolean listenToHomeUpdates,
+										  boolean waitForLoading) {
 		// Create a universe bound to no canvas 3D
 		ViewingPlatform viewingPlatform = new ViewingPlatform();
 		// Add an interpolator to view transform to get smooth transition
@@ -1148,19 +1157,19 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		view.setTransparencySortingPolicy(View.TRANSPARENCY_SORT_GEOMETRY);
 
 		// Update field of view from current camera
-		updateView(view, this.home.getCamera(), this.home.getTopCamera() == this.home.getCamera());
+    	updateView(view, this.home.getCamera());
 
 		// Update point of view from current camera
 		updateViewPlatformTransform(viewPlatformTransform, this.home.getCamera(), false);
 
 		// Add camera listeners to update later point of view from camera
-		if (listenToHomeUpdates)
-		{
+    	if (listenToHomeUpdates) {
 			addCameraListeners(view, viewPlatformTransform);
 		}
 
 		// Link scene matching home to universe
-		universe.addBranchGraph(createSceneTree(displayShadowOnFloor, listenToHomeUpdates, waitForLoading));
+		universe.addBranchGraph(createSceneTree(
+				displayShadowOnFloor, listenToHomeUpdates, waitForLoading));
 
 		return universe;
 	}
@@ -1168,49 +1177,46 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Remove all listeners bound to home that updates 3D scene objects.
 	 */
-	private void removeHomeListeners()
-	{
+	private void removeHomeListeners() {
 		this.home.removePropertyChangeListener(Home.Property.CAMERA, this.homeCameraListener);
 		HomeEnvironment homeEnvironment = this.home.getEnvironment();
-		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.SKY_COLOR, this.skyColorListener);
-		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.SKY_TEXTURE, this.skyColorListener);
+    	homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.SKY_COLOR, this.backgroundChangeListener);
+    	homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.SKY_TEXTURE, this.backgroundChangeListener);
+    	homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_COLOR, this.backgroundChangeListener);
+    	homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_TEXTURE, this.backgroundChangeListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_COLOR, this.groundChangeListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_TEXTURE, this.groundChangeListener);
+    	homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.LIGHT_COLOR, this.backgroundLightColorListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.LIGHT_COLOR, this.lightColorListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.WALLS_ALPHA, this.wallsAlphaListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.DRAWING_MODE, this.drawingModeListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.SUBPART_SIZE_UNDER_LIGHT, this.subpartSizeListener);
 		this.home.getCamera().removePropertyChangeListener(this.cameraChangeListener);
+    	this.home.removePropertyChangeListener(Home.Property.CAMERA, this.elevationChangeListener);
+    	this.home.getCamera().removePropertyChangeListener(this.elevationChangeListener);
 		this.home.removeLevelsListener(this.levelListener);
-		for (Level level : this.home.getLevels())
-		{
+    	for (Level level : this.home.getLevels()) {
 			level.removePropertyChangeListener(this.levelChangeListener);
 		}
 		this.home.removeWallsListener(this.wallListener);
-		for (Wall wall : this.home.getWalls())
-		{
+    	for (Wall wall : this.home.getWalls()) {
 			wall.removePropertyChangeListener(this.wallChangeListener);
 		}
 		this.home.removeFurnitureListener(this.furnitureListener);
-		for (HomePieceOfFurniture piece : this.home.getFurniture())
-		{
+    	for (HomePieceOfFurniture piece : this.home.getFurniture()) {
 			piece.removePropertyChangeListener(this.furnitureChangeListener);
-			if (piece instanceof HomeFurnitureGroup)
-			{
-				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture())
-				{
+			if (piece instanceof HomeFurnitureGroup) {
+				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
 					childPiece.removePropertyChangeListener(this.furnitureChangeListener);
 				}
 			}
 		}
 		this.home.removeRoomsListener(this.roomListener);
-		for (Room room : this.home.getRooms())
-		{
+		for (Room room : this.home.getRooms()) {
 			room.removePropertyChangeListener(this.roomChangeListener);
 		}
 		this.home.removeLabelsListener(this.labelListener);
-		for (Label label : this.home.getLabels())
-		{
+		for (Label label : this.home.getLabels()) {
 			label.removePropertyChangeListener(this.labelChangeListener);
 		}
 	}
@@ -1218,41 +1224,35 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Prints this component to make it fill <code>pageFormat</code> imageable size.
 	 */
-	/*public int print(Graphics g, PageFormat pageFormat, int pageIndex)
-	{
-		if (pageIndex == 0)
-		{
-			// Compute printed image size to render 3D view in 150 dpi
-			double printSize = Math.min(pageFormat.getImageableWidth(), pageFormat.getImageableHeight());
-			int printedImageSize = (int) (printSize / 72 * 150);
-			if (this.printedImageCache == null || this.printedImageCache.getWidth() != printedImageSize)
-			{
-				try
-				{
-					this.printedImageCache = getOffScreenImage(printedImageSize, printedImageSize);
-				}
-				catch (IllegalRenderingStateException ex)
-				{
-					// If off screen canvas failed, consider that 3D view page doesn't exist
-					return NO_SUCH_PAGE;
-				}
-			}
+	/*public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
+		if (pageIndex == 0) {
+      // Compute printed image size to render 3D view in 150 dpi
+      double printSize = Math.min(pageFormat.getImageableWidth(),
+          pageFormat.getImageableHeight());
+      int printedImageSize = (int)(printSize / 72 * 150);
+      if (this.printedImageCache == null
+          || this.printedImageCache.getWidth() != printedImageSize) {
+        try {
+          this.printedImageCache = getOffScreenImage(printedImageSize, printedImageSize);
+        } catch (IllegalRenderingStateException ex) {
+          // If off screen canvas failed, consider that 3D view page doesn't exist
+          return NO_SUCH_PAGE;
+        }
+      }
 
-			Graphics2D g2D = (Graphics2D) g.create();
-			// Center the 3D view in component
-			g2D.translate(pageFormat.getImageableX() + (pageFormat.getImageableWidth() - printSize) / 2,
-					pageFormat.getImageableY() + (pageFormat.getImageableHeight() - printSize) / 2);
-			double scale = printSize / printedImageSize;
-			g2D.scale(scale, scale);
-			g2D.drawImage(this.printedImageCache, 0, 0, this);
-			g2D.dispose();
+      Graphics2D g2D = (Graphics2D)g.create();
+      // Center the 3D view in component
+      g2D.translate(pageFormat.getImageableX() + (pageFormat.getImageableWidth() - printSize) / 2,
+          pageFormat.getImageableY() + (pageFormat.getImageableHeight() - printSize) / 2);
+      double scale = printSize / printedImageSize;
+      g2D.scale(scale, scale);
+      g2D.drawImage(this.printedImageCache, 0, 0, this);
+      g2D.dispose();
 
-			return PAGE_EXISTS;
-		}
-		else
-		{
-			return NO_SUCH_PAGE;
-		}
+      return PAGE_EXISTS;
+    } else {
+      return NO_SUCH_PAGE;
+    }
 	}*/
 
 	/**
@@ -1260,20 +1260,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Once off screen images are generated with {@link #getOffScreenImage(int, int) getOffScreenImage},
 	 * call {@link #endOffscreenImagesCreation() endOffscreenImagesCreation} method to free resources.
 	 */
-	public void startOffscreenImagesCreation()
-	{
-		if (this.offscreenUniverse == null)
-		{
-			if (this.onscreenUniverse != null)
-			{
+	public void startOffscreenImagesCreation() {
+		if (this.offscreenUniverse == null) {
+			if (this.onscreenUniverse != null) {
 				throw new IllegalStateException("Can't listen to home changes offscreen and onscreen at the same time");
 			}
 			this.offscreenUniverse = createUniverse(this.displayShadowOnFloor, true, true);
 			// Replace textures by clones because Java 3D doesn't accept all the time
 			// to share textures between offscreen and onscreen environments
 			Map<Texture, Texture> replacedTextures = new HashMap<Texture, Texture>();
-			for (Iterator<BranchGroup> it = this.offscreenUniverse.getLocale().getAllBranchGraphs(); it.hasNext(); )
-			{
+			for (Iterator<BranchGroup> it = this.offscreenUniverse.getLocale().getAllBranchGraphs(); it.hasNext(); ) {
 				cloneTexture((Node) it.next(), replacedTextures);
 			}
 		}
@@ -1282,50 +1278,39 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns an image of the home viewed by this component at the given size.
 	 */
-	public BufferedImage getOffScreenImage(int width, int height)
-	{
+	public BufferedImage getOffScreenImage(int width, int height) {
 		List<Selectable> selectedItems = this.home.getSelectedItems();
 		SimpleUniverse offScreenImageUniverse = null;
-		try
-		{
+		try {
 			View view;
-			if (this.offscreenUniverse == null)
-			{
+			if (this.offscreenUniverse == null) {
 				offScreenImageUniverse = createUniverse(this.displayShadowOnFloor, false, true);
 				view = offScreenImageUniverse.getViewer().getView();
 				// Replace textures by clones because Java 3D doesn't accept all the time
 				// to share textures between offscreen and onscreen environments
 
 				//PJPJPJ this does not appear necessary on android
-
 				/*Map<Texture, Texture> replacedTextures = new HashMap<Texture, Texture>();
-				for (Iterator<BranchGroup> it = offScreenImageUniverse.getLocale().getAllBranchGraphs(); it.hasNext(); )
-				{
+				for (Iterator<BranchGroup> it = offScreenImageUniverse.getLocale().getAllBranchGraphs(); it.hasNext(); ) {
 					cloneTexture(it.next(), replacedTextures);
 				}*/
-			}
-			else
-			{
+			} else {
 				view = this.offscreenUniverse.getViewer().getView();
 			}
+
+      		updateView(view, this.home.getCamera(), width, height);
 
 			// Empty temporarily selection to create the off screen image
 			List<Selectable> emptySelection = Collections.emptyList();
 			this.home.setSelectedItems(emptySelection);
-			//PJPJPJ
 			return Component3DManager.getInstance().getOffScreenImage(view, width, height);
-		}
-		finally
-		{
+		} finally {
 			// Restore selection
 			this.home.setSelectedItems(selectedItems);
-			if (offScreenImageUniverse != null)
-			{
-				try
-				{
+			if (offScreenImageUniverse != null) {
+				try {
 					offScreenImageUniverse.cleanup();
-				}catch(Exception e)
-				{
+				}catch(Exception e) {
 					// in production I don't care about exceptions now, but I do care about crashing.
 					e.printStackTrace();
 				}
@@ -1336,32 +1321,22 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Replace the textures set on node shapes by clones.
 	 */
-	private void cloneTexture(Node node, Map<Texture, Texture> replacedTextures)
-	{
-		if (node instanceof Group)
-		{
+	private void cloneTexture(Node node, Map<Texture, Texture> replacedTextures) {
+		if (node instanceof Group) {
 			// Enumerate children
 			Iterator<Node> enumeration = ((Group) node).getAllChildren();
-			while (enumeration.hasNext())
-			{
+			while (enumeration.hasNext()) {
 				cloneTexture( enumeration.next(), replacedTextures);
 			}
-		}
-		else if (node instanceof Link)
-		{
+		} else if (node instanceof Link) {
 			cloneTexture(((Link) node).getSharedGroup(), replacedTextures);
-		}
-		else if (node instanceof Shape3D)
-		{
+		} else if (node instanceof Shape3D) {
 			Appearance appearance = ((Shape3D) node).getAppearance();
-			if (appearance != null)
-			{
+			if (appearance != null) {
 				Texture texture = appearance.getTexture();
-				if (texture != null)
-				{
+				if (texture != null) {
 					Texture replacedTexture = replacedTextures.get(texture);
-					if (replacedTexture == null)
-					{
+					if (replacedTexture == null) {
 						replacedTexture = (Texture) texture.cloneNodeComponent(false);
 						replacedTextures.put(texture, replacedTexture);
 					}
@@ -1374,10 +1349,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Frees unnecessary resources after the creation of a sequence of multiple offscreen images.
 	 */
-	public void endOffscreenImagesCreation()
-	{
-		if (this.offscreenUniverse != null)
-		{
+	public void endOffscreenImagesCreation() {
+		if (this.offscreenUniverse != null) {
 			this.offscreenUniverse.cleanup();
 			removeHomeListeners();
 			this.offscreenUniverse = null;
@@ -1387,30 +1360,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Adds listeners to home to update point of view from current camera.
 	 */
-	private void addCameraListeners(final View view, final TransformGroup viewPlatformTransform)
-	{
-		this.cameraChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addCameraListeners(final View view,
+									final TransformGroup viewPlatformTransform) {
+		this.cameraChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				// Update view transform later to avoid flickering in case of multiple camera changes
-				EventQueue.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						updateView(view, home.getCamera(), home.getTopCamera() == home.getCamera());
-						updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), false);//PJPJ treu made fale, which removed a jitter effect
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+              			updateView(view, home.getCamera());
+              			updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true);
 					}
 				});
 			}
 		};
 		this.home.getCamera().addPropertyChangeListener(this.cameraChangeListener);
-		this.homeCameraListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
-				updateView(view, home.getCamera(), home.getTopCamera() == home.getCamera());
-				//PJPJPJ false change to true and animate lengthed for cool effect
+		this.homeCameraListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
+				updateView(view, home.getCamera());
+				//PJPJPJ false changed to true and animation lengthed for cool effect
 				updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true, 750);
 				// Add camera change listener to new active camera
 				((Camera) ev.getOldValue()).removePropertyChangeListener(cameraChangeListener);
@@ -1423,187 +1390,285 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Updates <code>view</code> from <code>camera</code> field of view.
 	 */
-	private void updateView(View view, Camera camera, boolean topCamera)
-	{
+	private void updateView(View view, Camera camera) {
+		updateView(view, camera, this.canvas3D2D.getWidth(), this.canvas3D2D.getHeight());
+    	//if (this.component3D != null) {
+      	//	updateView(view, camera, this.component3D.getWidth(), this.component3D.getHeight());
+    	//} else {
+      	//	updateView(view, camera, 0, 0);
+    	//}
+  	}
+
+  private void updateView(View view, Camera camera, int width, int height) {
 		float fieldOfView = camera.getFieldOfView();
-		if (fieldOfView == 0)
-		{
+		if (fieldOfView == 0) {
 			fieldOfView = (float) (Math.PI * 63 / 180);
 		}
 		view.setFieldOfView(fieldOfView);
-		double frontClipDistance;
-		double backClipDistance;
-		if (topCamera)
-		{
-			BoundingBox approximateHomeBounds = getApproximateHomeBoundsCache();
-			if (approximateHomeBounds == null)
-			{
-				frontClipDistance = 5;
-			}
-			else
-			{
-				Point3d lower = new Point3d();
-				approximateHomeBounds.getLower(lower);
-				Point3d upper = new Point3d();
-				approximateHomeBounds.getUpper(upper);
-				// Use a variable front clip distance for top camera depending on the distance to home objects center
-				frontClipDistance = 1 + Math.sqrt(Math.pow((lower.x + upper.x) / 2 - camera.getX(), 2)
-						+ Math.pow((lower.y + upper.y) / 2 - camera.getY(), 2) + Math.pow((lower.z + upper.z) / 2 - camera.getZ(), 2))
-						/ 100;
-			}
-			// It's recommended to keep ratio between back and front clip distances under 3000
-			backClipDistance = frontClipDistance * 3000;
-		}
-		else
-		{
-			// Use a variable front clip distance for observer camera depending on the elevation
-			// Caution: check that a white zone doesn't appear at the horizon in off screen images
-			// when camera is at an intermediate elevation
-
-			// Under 125 cm keep a front clip distance equal to 2.5 cm
-			frontClipDistance = 2.5;
-			backClipDistance = frontClipDistance * 5000;
-			final float minElevation = 125;
-			if (camera.getZ() > minElevation)
-			{
-				final float intermediateGrowFactor = 1 / 250f;
-				BoundingBox approximateHomeBounds = getApproximateHomeBoundsCache();
-				float highestPoint = 0;
-				if (approximateHomeBounds != null)
-				{
-					Point3d upper = new Point3d();
-					approximateHomeBounds.getUpper(upper);
-					highestPoint = Math.min((float) upper.z, 10000f);
-				}
-				if (camera.getZ() < highestPoint + minElevation)
-				{
-					// Between 200 cm and the highest point, make front clip distance grow slowly and increase front/back ratio
-					frontClipDistance += (camera.getZ() - minElevation) * intermediateGrowFactor;
-					backClipDistance += (frontClipDistance - 2.5) * 25000;
-				}
-				else
-				{
-					// Above, make front clip distance grow faster
-					frontClipDistance += highestPoint * intermediateGrowFactor + (camera.getZ() - highestPoint - minElevation) / 50;
-					backClipDistance += +(highestPoint * intermediateGrowFactor) * 25000
-							+ (frontClipDistance - highestPoint * intermediateGrowFactor - 2.5) * 5000;
-				}
+    	double frontClipDistance = 2.5f;
+		// It's recommended to keep ratio between back and front clip distances under 3000
+    	final float frontBackDistanceRatio = 3000;
+    	BoundingBox approximateHomeBounds = getApproximateHomeBounds();
+    	// If camera is out of home bounds, adjust the front clip distance to the distance to home bounds
+    	if (approximateHomeBounds != null
+        	&& !approximateHomeBounds.intersect(new Point3d(camera.getX(), camera.getY(), camera.getZ()))) {
+      		float distanceToClosestBoxSide = getDistanceToBox(camera.getX(), camera.getY(), camera.getZ(), approximateHomeBounds);
+      		if (!Float.isNaN(distanceToClosestBoxSide)) {
+        		frontClipDistance = Math.max(frontClipDistance, 0.1f * distanceToClosestBoxSide);
 			}
 		}
-
+    	if (camera.getZ() > 0 && width != 0 && height != 0) {
+      		float halfVerticalFieldOfView = (float)Math.atan(Math.tan(fieldOfView / 2) * height / width);
+      		float fieldOfViewBottomAngle = camera.getPitch() + halfVerticalFieldOfView;
+      		// If the horizon is above the frustrum bottom, take into account the distance to the ground
+      		if (fieldOfViewBottomAngle > 0) {
+        		float distanceToGroundAtFieldOfViewBottomAngle = (float)(camera.getZ() / Math.sin(fieldOfViewBottomAngle));
+        		frontClipDistance = Math.min(frontClipDistance, 0.35f * distanceToGroundAtFieldOfViewBottomAngle);
+        		if (frontClipDistance * frontBackDistanceRatio < distanceToGroundAtFieldOfViewBottomAngle) {
+          			// Ensure the ground is always visible at the back clip distance
+          			frontClipDistance = distanceToGroundAtFieldOfViewBottomAngle / frontBackDistanceRatio;
+				}
+      		}
+    	}
 		// Update front and back clip distance
 		view.setFrontClipDistance(frontClipDistance);
-		view.setBackClipDistance(backClipDistance);
+    	view.setBackClipDistance(frontClipDistance * frontBackDistanceRatio);
 		clearPrintedImageCache();
 	}
 
 	/**
 	 * Returns quickly computed bounds of the objects in home.
 	 */
-	private BoundingBox getApproximateHomeBoundsCache()
-	{
-		if (this.approximateHomeBoundsCache == null)
-		{
-			BoundingBox approximateHomeBounds = null;
-			for (HomePieceOfFurniture piece : this.home.getFurniture())
-			{
-				if (piece.isVisible() && (piece.getLevel() == null || piece.getLevel().isViewable()))
-				{
-					Point3d pieceLocation = new Point3d(piece.getX(), piece.getY(), piece.getGroundElevation());
-					if (approximateHomeBounds == null)
-					{
-						approximateHomeBounds = new BoundingBox(pieceLocation, pieceLocation);
-					}
-					else
-					{
-						approximateHomeBounds.combine(pieceLocation);
-					}
+  private BoundingBox getApproximateHomeBounds() {
+  	if (this.approximateHomeBoundsCache == null) {
+		BoundingBox approximateHomeBounds = null;
+      	for (HomePieceOfFurniture piece : this.home.getFurniture()) {
+        	if (piece.isVisible()
+            	&& (piece.getLevel() == null
+                	|| piece.getLevel().isViewable())) {
+				float halfMaxDimension = Math.max(piece.getWidthInPlan(), piece.getDepthInPlan()) / 2;
+				float elevation = piece.getGroundElevation();
+				Point3d pieceLocation = new Point3d(
+				  piece.getX() - halfMaxDimension, piece.getY() - halfMaxDimension, elevation);
+				if (approximateHomeBounds == null) {
+					approximateHomeBounds = new BoundingBox(pieceLocation, pieceLocation);
+				} else {
+					approximateHomeBounds.combine(pieceLocation);
 				}
+				approximateHomeBounds.combine(new Point3d(
+				  piece.getX() + halfMaxDimension, piece.getY() + halfMaxDimension, elevation + piece.getHeightInPlan()));
 			}
-			for (Wall wall : this.home.getWalls())
-			{
-				if (wall.getLevel() == null || wall.getLevel().isViewable())
-				{
-					Point3d startPoint = new Point3d(wall.getXStart(), wall.getYStart(),
-							wall.getLevel() != null ? wall.getLevel().getElevation() : 0);
-					if (approximateHomeBounds == null)
-					{
-						approximateHomeBounds = new BoundingBox(startPoint, startPoint);
-					}
-					else
-					{
-						approximateHomeBounds.combine(startPoint);
-					}
-					approximateHomeBounds.combine(new Point3d(wall.getXEnd(), wall.getYEnd(),
-							startPoint.z + (wall.getHeight() != null ? wall.getHeight() : this.home.getWallHeight())));
-				}
-			}
-			for (Room room : this.home.getRooms())
-			{
-				if (room.getLevel() == null || room.getLevel().isViewable())
-				{
-					Point3d center = new Point3d(room.getXCenter(), room.getYCenter(),
-							room.getLevel() != null ? room.getLevel().getElevation() : 0);
-					if (approximateHomeBounds == null)
-					{
-						approximateHomeBounds = new BoundingBox(center, center);
-					}
-					else
-					{
-						approximateHomeBounds.combine(center);
-					}
-				}
-			}
-			for (Label label : this.home.getLabels())
-			{
-				if ((label.getLevel() == null || label.getLevel().isViewable()) && label.getPitch() != null)
-				{
-					Point3d center = new Point3d(label.getX(), label.getY(), label.getGroundElevation());
-					if (approximateHomeBounds == null)
-					{
-						approximateHomeBounds = new BoundingBox(center, center);
-					}
-					else
-					{
-						approximateHomeBounds.combine(center);
-					}
-				}
-			}
-			this.approximateHomeBoundsCache = approximateHomeBounds;
 		}
-		return this.approximateHomeBoundsCache;
+      	for (Wall wall : this.home.getWalls()) {
+        	if (wall.getLevel() == null
+            	|| wall.getLevel().isViewable()) {
+				Point3d startPoint = new Point3d(wall.getXStart(), wall.getYStart(),
+					wall.getLevel() != null ? wall.getLevel().getElevation() : 0);
+          	if (approximateHomeBounds == null) {
+				approximateHomeBounds = new BoundingBox(startPoint, startPoint);
+          	} else {
+				approximateHomeBounds.combine(startPoint);
+          	}
+				approximateHomeBounds.combine(new Point3d(wall.getXEnd(), wall.getYEnd(),
+					startPoint.z + (wall.getHeight() != null ? wall.getHeight() : this.home.getWallHeight())));
+			}
+		}
+      	for (Room room : this.home.getRooms()) {
+        	if (room.getLevel() == null
+            	|| room.getLevel().isViewable()) {
+				Point3d center = new Point3d(room.getXCenter(), room.getYCenter(),
+					room.getLevel() != null ? room.getLevel().getElevation() : 0);
+				if (approximateHomeBounds == null) {
+					approximateHomeBounds = new BoundingBox(center, center);
+				} else {
+					approximateHomeBounds.combine(center);
+				}
+			}
+      	}
+      	for (Label label : this.home.getLabels()) {
+        	if ((label.getLevel() == null
+              || label.getLevel().isViewable())
+            	&& label.getPitch() != null) {
+				Point3d center = new Point3d(label.getX(), label.getY(), label.getGroundElevation());
+				if (approximateHomeBounds == null) {
+					approximateHomeBounds = new BoundingBox(center, center);
+				} else {
+					approximateHomeBounds.combine(center);
+				}
+			}
+		}
+		this.approximateHomeBoundsCache = approximateHomeBounds;
+		}
+	  return this.approximateHomeBoundsCache;
 	}
+
+  /**
+   * Returns the distance between the point at the given coordinates (x,y,z) and the closest side of <code>box</code>.
+   */
+  private float getDistanceToBox(float x, float y, float z, BoundingBox box) {
+    Point3f point = new Point3f(x, y, z);
+    Point3d lower = new Point3d();
+    box.getLower(lower);
+    Point3d upper = new Point3d();
+    box.getUpper(upper);
+    Point3f [] boxVertices = {
+      new Point3f((float)lower.x, (float)lower.y, (float)lower.z),
+      new Point3f((float)upper.x, (float)lower.y, (float)lower.z),
+      new Point3f((float)lower.x, (float)upper.y, (float)lower.z),
+      new Point3f((float)upper.x, (float)upper.y, (float)lower.z),
+      new Point3f((float)lower.x, (float)lower.y, (float)upper.z),
+      new Point3f((float)upper.x, (float)lower.y, (float)upper.z),
+      new Point3f((float)lower.x, (float)upper.y, (float)upper.z),
+      new Point3f((float)upper.x, (float)upper.y, (float)upper.z)};
+    float [] distancesToVertex = new float [boxVertices.length];
+    for (int i = 0; i < distancesToVertex.length; i++) {
+      distancesToVertex [i] = point.distanceSquared(boxVertices [i]);
+    }
+    float [] distancesToSide = {
+        getDistanceToSide(point, boxVertices, distancesToVertex, 0, 1, 3, 2, 2),
+        getDistanceToSide(point, boxVertices, distancesToVertex, 0, 1, 5, 4, 1),
+        getDistanceToSide(point, boxVertices, distancesToVertex, 0, 2, 6, 4, 0),
+        getDistanceToSide(point, boxVertices, distancesToVertex, 4, 5, 7, 6, 2),
+        getDistanceToSide(point, boxVertices, distancesToVertex, 2, 3, 7, 6, 1),
+        getDistanceToSide(point, boxVertices, distancesToVertex, 1, 3, 7, 5, 0)};
+    float distance = distancesToSide [0];
+    for (int i = 1; i < distancesToSide.length; i++) {
+      distance = Math.min(distance, distancesToSide [i]);
+    }
+    return distance;
+  }
+
+  /**
+   * Returns the distance between the given <code>point</code> and the plane defined by four vertices.
+   */
+  private float getDistanceToSide(Point3f point, Point3f [] boxVertices, float [] distancesSquaredToVertex,
+                                  int index1, int index2, int index3, int index4, int axis) {
+    switch (axis) {
+      case 0 : // Normal along x axis
+        if (point.y <= boxVertices [index1].y) {
+          if (point.z <= boxVertices [index1].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index1]);
+          } else if (point.z >= boxVertices [index4].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index4]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index1], boxVertices [index4]);
+          }
+        } else if (point.y >= boxVertices [index2].y) {
+          if (point.z <= boxVertices [index2].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index2]);
+          } else if (point.z >= boxVertices [index3].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index3]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index2], boxVertices [index3]);
+          }
+        } else if (point.z <= boxVertices [index1].z) {
+          return getDistanceToLine(point, boxVertices [index1], boxVertices [index2]);
+        } else if (point.z >= boxVertices [index4].z) {
+          return getDistanceToLine(point, boxVertices [index3], boxVertices [index4]);
+        }
+        break;
+      case 1 : // Normal along y axis
+        if (point.x <= boxVertices [index1].x) {
+          if (point.z <= boxVertices [index1].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index1]);
+          } else if (point.z >= boxVertices [index4].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index4]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index1], boxVertices [index4]);
+          }
+        } else if (point.x >= boxVertices [index2].x) {
+          if (point.z <= boxVertices [index2].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index2]);
+          } else if (point.z >= boxVertices [index3].z) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index3]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index2], boxVertices [index3]);
+          }
+        } else if (point.z <= boxVertices [index1].z) {
+          return getDistanceToLine(point, boxVertices [index1], boxVertices [index2]);
+        } else if (point.z >= boxVertices [index4].z) {
+          return getDistanceToLine(point, boxVertices [index3], boxVertices [index4]);
+        }
+        break;
+      case 2 : // Normal along z axis
+        if (point.x <= boxVertices [index1].x) {
+          if (point.y <= boxVertices [index1].y) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index1]);
+          } else if (point.y >= boxVertices [index4].y) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index4]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index1], boxVertices [index4]);
+          }
+        } else if (point.x >= boxVertices [index2].x) {
+          if (point.y <= boxVertices [index2].y) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index2]);
+          } else if (point.y >= boxVertices [index3].y) {
+            return (float)Math.sqrt(distancesSquaredToVertex [index3]);
+          } else {
+            return getDistanceToLine(point, boxVertices [index2], boxVertices [index3]);
+          }
+        } else if (point.y <= boxVertices [index1].y) {
+          return getDistanceToLine(point, boxVertices [index1], boxVertices [index2]);
+        } else if (point.y >= boxVertices [index4].y) {
+          return getDistanceToLine(point, boxVertices [index3], boxVertices [index4]);
+        }
+        break;
+    }
+
+    // Return distance to plane
+    // from https://fr.wikipedia.org/wiki/Distance_d%27un_point_�_un_plan
+    Vector3f vector1 = new Vector3f(boxVertices [index2].x - boxVertices [index1].x,
+        boxVertices [index2].y - boxVertices [index1].y,
+        boxVertices [index2].z - boxVertices [index1].z);
+    Vector3f vector2 = new Vector3f(boxVertices [index3].x - boxVertices [index1].x,
+        boxVertices [index3].y - boxVertices [index1].y,
+        boxVertices [index3].z - boxVertices [index1].z);
+    Vector3f normal = new Vector3f();
+    normal.cross(vector1, vector2);
+    return Math.abs(normal.dot(new Vector3f(boxVertices [index1].x - point.x, boxVertices [index1].y - point.y, boxVertices [index1].z - point.z))) /
+        normal.length();
+  }
+
+  /**
+   * Returns the distance between the given <code>point</code> and the line defined by two points.
+   */
+  private float getDistanceToLine(Point3f point, Point3f point1, Point3f point2) {
+    // From https://fr.wikipedia.org/wiki/Distance_d%27un_point_�_une_droite#Dans_l.27espace
+    Vector3f lineDirection = new Vector3f(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
+    Vector3f vector = new Vector3f(point.x - point1.x, point.y - point1.y, point.z - point1.z);
+    Vector3f crossProduct = new Vector3f();
+    crossProduct.cross(lineDirection, vector);
+    return crossProduct.length() / lineDirection.length();
+  }
 
 	/**
 	 * Frees printed image kept in cache.
 	 */
-	private void clearPrintedImageCache()
-	{
-		this.printedImageCache = null;
+	private void clearPrintedImageCache() {
+		//this.printedImageCache = null;
 	}
 
 	/**
 	 * Updates <code>viewPlatformTransform</code> transform from <code>camera</code> angles and location.
 	 */
-	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform, Camera camera, boolean updateWithAnimation)
-	{
+	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform,
+											 Camera camera, boolean updateWithAnimation) {
 		updateViewPlatformTransform(viewPlatformTransform,  camera,  updateWithAnimation, CameraInterpolator.DEFAULT_ANIMATE_LEN);
 	}
 
-	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform, Camera camera, boolean updateWithAnimation, long animateTime)
-	{
-		if (updateWithAnimation)
-		{
+	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform,
+											 Camera camera, boolean updateWithAnimation,
+											 long animateTime) {
+		if (updateWithAnimation) {
 			// Get the camera interpolator
-			CameraInterpolator cameraInterpolator = (CameraInterpolator) viewPlatformTransform
-					.getChild(viewPlatformTransform.numChildren() - 1);
+			CameraInterpolator cameraInterpolator =
+					(CameraInterpolator) viewPlatformTransform.getChild(viewPlatformTransform.numChildren() - 1);
 			cameraInterpolator.setLenAnimationMS(animateTime);
 			cameraInterpolator.moveCamera(camera);
-		}
-		else
-		{
+		} else {
 			Transform3D transform = new Transform3D();
-			updateViewPlatformTransform(transform, camera.getX(), camera.getY(), camera.getZ(), camera.getYaw(), camera.getPitch());
+			updateViewPlatformTransform(transform, camera.getX(), camera.getY(),
+					camera.getZ(), camera.getYaw(), camera.getPitch());
 			viewPlatformTransform.setTransform(transform);
 		}
 		clearPrintedImageCache();
@@ -1612,8 +1677,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * An interpolator that computes smooth camera moves.
 	 */
-	private class CameraInterpolator extends TransformInterpolator
-	{
+	private class CameraInterpolator extends TransformInterpolator {
 		public static final long DEFAULT_ANIMATE_LEN = 150;
 		private final ScheduledExecutorService scheduledExecutor;
 		private Camera initialCamera;
@@ -1626,13 +1690,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		public static final float fivepi = (float)Math.PI * 5f;
 
 
-		public CameraInterpolator(TransformGroup transformGroup)
-		{
+		public CameraInterpolator(TransformGroup transformGroup) {
 			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 			setTarget(transformGroup);
 		}
-		public void setLenAnimationMS(long lenAnimationMS)
-		{
+		public void setLenAnimationMS(long lenAnimationMS) {
 			this.lenAnimationMS = lenAnimationMS;
 		}
 
@@ -1640,50 +1702,42 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		/**
 		 * Moves the camera to a new location.
 		 */
-		public void moveCamera(Camera finalCamera)
-		{
-			if (this.finalCamera == null || this.finalCamera.getX() != finalCamera.getX() || this.finalCamera.getY() != finalCamera.getY()
-					|| this.finalCamera.getZ() != finalCamera.getZ() || this.finalCamera.getYaw() != finalCamera.getYaw()
-					|| this.finalCamera.getPitch() != finalCamera.getPitch())
-			{
-				synchronized (this)
-				{
-					//PJ note mod 2pi added to stopp crazy spins as camera values are not wrapped
+		public void moveCamera(Camera finalCamera) {
+			if (this.finalCamera == null
+					|| this.finalCamera.getX() != finalCamera.getX()
+					|| this.finalCamera.getY() != finalCamera.getY()
+					|| this.finalCamera.getZ() != finalCamera.getZ()
+					|| this.finalCamera.getYaw() != finalCamera.getYaw()
+					|| this.finalCamera.getPitch() != finalCamera.getPitch()) {
+				synchronized (this) {
+					//PJ note modulo twopi below to stop crazy spins as camera values are not wrapped
 					Alpha alpha = getAlpha();
-					if (alpha == null || alpha.finished())
-					{
-						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(), camera.getYaw() % twopi, camera.getPitch(),
-								camera.getFieldOfView());
-					}
-					else if (alpha.value() < 0.1)
-					{
+					if (alpha == null || alpha.finished()) {
+						this.initialCamera = new Camera(camera.getX(), camera.getY(), camera.getZ(),
+								camera.getYaw() % twopi, camera.getPitch(), camera.getFieldOfView());
+					} else if (alpha.value() < 0.1) { // dropped from 0.3 to 0.1 to reduce final pop to resting place
 						Transform3D finalTransformation = new Transform3D();
 						// Jump directly to final location
 						updateViewPlatformTransform(finalTransformation, this.finalCamera.getX(), this.finalCamera.getY(),
 								this.finalCamera.getZ(), this.finalCamera.getYaw() % twopi, this.finalCamera.getPitch());
 						getTarget().setTransform(finalTransformation);
 						this.initialCamera = this.finalCamera;
-					}
-					else
-					{
+					} else {
 						// Compute initial location from current alpha value
-						float shortest_angle=((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
-						this.initialCamera = new Camera(
-								this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha.value(),
+						float shortest_angle = ((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
+						this.initialCamera = new Camera(this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha.value(),
 								this.initialCamera.getY() + (this.finalCamera.getY() - this.initialCamera.getY()) * alpha.value(),
 								this.initialCamera.getZ() + (this.finalCamera.getZ() - this.initialCamera.getZ()) * alpha.value(),
 								this.initialCamera.getYaw() % twopi + (shortest_angle * alpha.value()),
-								this.initialCamera.getPitch()
-										+ (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha.value(),
+								this.initialCamera.getPitch() + (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha.value(),
 								finalCamera.getFieldOfView());
 					}
-					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(), finalCamera.getYaw() % twopi,
-							finalCamera.getPitch(), finalCamera.getFieldOfView());
+					this.finalCamera = new Camera(finalCamera.getX(), finalCamera.getY(), finalCamera.getZ(),
+							finalCamera.getYaw() % twopi, finalCamera.getPitch(), finalCamera.getFieldOfView());
 
 					// Create an animation that will interpolate camera location
 					// between initial camera and final camera in 150 ms
-					if (alpha == null)
-					{
+					if (alpha == null) {
 						alpha = new Alpha(1, lenAnimationMS);
 						setAlpha(alpha);
 					}
@@ -1691,12 +1745,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					alpha.setStartTime(System.currentTimeMillis());
 					// In case system is overloaded computeTransform won't be called
 					// ensure final location will always be set after 150 ms
-					this.scheduledExecutor.schedule(new Runnable()
-					{
-						public void run()
-						{
-							if (getAlpha().value() == 1)
-							{
+					this.scheduledExecutor.schedule(new Runnable() {
+						public void run() {
+							if (getAlpha().value() == 1) {
 								Transform3D transform = new Transform3D();
 								computeTransform(1, transform);
 								getTarget().setTransform(transform);
@@ -1708,10 +1759,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		@Override
-		public synchronized void computeTransform(float alpha, Transform3D transform)
-		{
-
-			float shortest_angle=((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
+		public synchronized void computeTransform(float alpha, Transform3D transform) {
+			float shortest_angle = ((((this.finalCamera.getYaw() - this.initialCamera.getYaw()) % twopi) + fivepi) % twopi) - onepi;
 			updateViewPlatformTransform(transform,
 					this.initialCamera.getX() + (this.finalCamera.getX() - this.initialCamera.getX()) * alpha,
 					this.initialCamera.getY() + (this.finalCamera.getY() - this.initialCamera.getY()) * alpha,
@@ -1724,9 +1773,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Updates <code>viewPlatformTransform</code> transform from camera angles and location.
 	 */
-	private void updateViewPlatformTransform(Transform3D transform, float cameraX, float cameraY, float cameraZ, float cameraYaw,
-											 float cameraPitch)
-	{
+	private void updateViewPlatformTransform(Transform3D transform,
+											 float cameraX, float cameraY, float cameraZ,
+											 float cameraYaw, float cameraPitch) {
 		Transform3D yawRotation = new Transform3D();
 		yawRotation.rotY(-cameraYaw + Math.PI);
 
@@ -1744,8 +1793,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Adds AWT mouse listeners to <code>component3D</code> that calls back <code>controller</code> methods.
 	 */
-	private void addMouseListeners(final HomeController3D controller, final Canvas3D component3D)
-	{
+	private void addMouseListeners(final HomeController3D controller, final Canvas3D component3D) {
 		// This has been moved to the GLWindow display method as the HomeComponent3D doesn't get a recreate
 		// call on a resume, but needs these listeners re-added
 		//this.getView().setOnTouchListener(new TouchyListener());
@@ -1805,9 +1853,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		// The ‘active pointer’ is the one currently moving our object.
 		private int mActivePointerId = INVALID_POINTER_ID;
-		private float xLastMouseMove1 = -1;
-		private float yLastMouseMove1 = -1;
+		// for single finger moves
+		private float xLastMouseMove = -1;
+		private float yLastMouseMove = -1;
 
+		// for 2 fingers
 		private float xLastMouseMove2 = -1;
 		private float yLastMouseMove2 = -1;
 
@@ -1821,9 +1871,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				if (mScaleDetector.isInProgress())
 					return true;
 			}
-
-
-
 
 			// let the selection handler have a go first, if it's working then stop there
 			// note it has a tiny waver factor, it returns false on any down ever though it will use it later
@@ -1849,8 +1896,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					if( ev.getPointerCount() == 1 )
 					{
 						fingerCount = 1;
-						this.xLastMouseMove1 = ev.getX();
-						this.yLastMouseMove1 = ev.getY();
+						this.xLastMouseMove = ev.getX();
+						this.yLastMouseMove = ev.getY();
 
 						this.xLastMouseMove2 = -1;
 						this.yLastMouseMove2 = -1;
@@ -1875,32 +1922,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				case MotionEvent.ACTION_MOVE:
 				{
 					dragging = true;
-					if (ev.getPointerCount() == 1)
-					{
+					if (ev.getPointerCount() == 1) {
 						fingerCount = 1;
-						if(this.xLastMouseMove1 != -1 && this.yLastMouseMove1 != -1)
-						{
-							final float PITCH_REDUCTION = 0.4f; // pitch is across 180 only, and is less "wanted"
+						if(this.xLastMouseMove != -1 && this.yLastMouseMove != -1) {
 							final float ANGLE_FACTOR = 0.0025f;
 							// Mouse move along X axis changes camera yaw
-							float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove1);
+							float yawDelta = ANGLE_FACTOR * (ev.getX() - this.xLastMouseMove);
 
-							// inside is made into a slower drag
+							// inside camera is a slower turn rate
 							float factor = home.getCamera() == home.getObserverCamera() ? -0.5f : 1f;
-
-							controller.rotateCameraYaw(factor * yawDelta);
+							yawDelta *= factor;
+							controller.rotateCameraYaw(yawDelta);
 
 							// Mouse move along Y axis changes camera pitch
-							float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove1) * PITCH_REDUCTION;
-							controller.rotateCameraPitch(factor * pitchDelta);
+							float pitchDelta = ANGLE_FACTOR * (ev.getY() - this.yLastMouseMove);
+							final float PITCH_REDUCTION = 0.4f; // pitch is across 180 only, and is less "desirable"
+							pitchDelta *= PITCH_REDUCTION;
+							pitchDelta *= factor;
+							controller.rotateCameraPitch(pitchDelta);
 
 
 							// tell the tutorial
 							Point2f data = new Point2f(yawDelta, pitchDelta);
 							((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.CAMERA_MOVED_3D, data);
 						}
-						this.xLastMouseMove1 = ev.getX();
-						this.yLastMouseMove1 = ev.getY();
+						this.xLastMouseMove = ev.getX();
+						this.yLastMouseMove = ev.getY();
 					}
 					else if (ev.getPointerCount() > 1)
 					{
@@ -1935,8 +1982,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// make sure this isn't the exit of a double touch too
 					//if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
 					{
-						this.xLastMouseMove1 = -1;
-						this.yLastMouseMove1 = -1;
+						this.xLastMouseMove = -1;
+						this.yLastMouseMove = -1;
 
 						this.xLastMouseMove2 = -1;
 						this.yLastMouseMove2 = -1;
@@ -1951,8 +1998,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 					mActivePointerId = INVALID_POINTER_ID;
 
-					this.xLastMouseMove1 = -1;
-					this.yLastMouseMove1 = -1;
+					this.xLastMouseMove = -1;
+					this.yLastMouseMove = -1;
 
 					this.xLastMouseMove2 = -1;
 					this.yLastMouseMove2 = -1;
@@ -1978,8 +2025,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					}
 
 					// reduce the jitter when leaving 2 finger mode
-					this.xLastMouseMove1 = -1;
-					this.yLastMouseMove1 = -1;
+					this.xLastMouseMove = -1;
+					this.yLastMouseMove = -1;
 
 					fingerCount = ev.getPointerCount() - 1;
 					break;
@@ -1990,78 +2037,50 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}
 
+	//PJ retargetMouseEventToNavigationPanelChildren removed, but comment left in to assit code comparision
+	/**
+	 * Retargets to the first component of navigation panel able to manage the given event
+	 * and returns <code>true</code> if a component consumed the event
+	 * or needs to be repainted (meaning its state changed).
+	 * This implementation doesn't cover all the possible cases (mouseEntered and mouseExited
+	 * events are managed only during mouseDragged event).
+	 */
 
 	/**
 	 * Installs keys bound to actions.
 	 */
-	private void installKeyboardActions()
-	{
-		/*InputMap inputMap = getInputMap(WHEN_FOCUSED);
-		// Tolerate alt modifier for forward and backward moves with UP and DOWN keys to avoid
-		// the user to release the alt key when he wants to alternate forward/backward and sideways moves
-		inputMap.put(KeyStroke.getKeyStroke("shift UP"), ActionType.MOVE_CAMERA_FAST_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift alt UP"), ActionType.MOVE_CAMERA_FAST_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift W"), ActionType.MOVE_CAMERA_FAST_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("UP"), ActionType.MOVE_CAMERA_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("alt UP"), ActionType.MOVE_CAMERA_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("W"), ActionType.MOVE_CAMERA_FORWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift DOWN"), ActionType.MOVE_CAMERA_FAST_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift alt DOWN"), ActionType.MOVE_CAMERA_FAST_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift S"), ActionType.MOVE_CAMERA_FAST_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("DOWN"), ActionType.MOVE_CAMERA_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("alt DOWN"), ActionType.MOVE_CAMERA_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("S"), ActionType.MOVE_CAMERA_BACKWARD);
-		inputMap.put(KeyStroke.getKeyStroke("shift alt LEFT"), ActionType.MOVE_CAMERA_FAST_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("alt LEFT"), ActionType.MOVE_CAMERA_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("shift alt RIGHT"), ActionType.MOVE_CAMERA_FAST_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("alt RIGHT"), ActionType.MOVE_CAMERA_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("shift LEFT"), ActionType.ROTATE_CAMERA_YAW_FAST_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("shift A"), ActionType.ROTATE_CAMERA_YAW_FAST_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("LEFT"), ActionType.ROTATE_CAMERA_YAW_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("A"), ActionType.ROTATE_CAMERA_YAW_LEFT);
-		inputMap.put(KeyStroke.getKeyStroke("shift RIGHT"), ActionType.ROTATE_CAMERA_YAW_FAST_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("shift D"), ActionType.ROTATE_CAMERA_YAW_FAST_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("RIGHT"), ActionType.ROTATE_CAMERA_YAW_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("D"), ActionType.ROTATE_CAMERA_YAW_RIGHT);
-		inputMap.put(KeyStroke.getKeyStroke("shift PAGE_UP"), ActionType.ROTATE_CAMERA_PITCH_FAST_UP);
-		inputMap.put(KeyStroke.getKeyStroke("PAGE_UP"), ActionType.ROTATE_CAMERA_PITCH_UP);
-		inputMap.put(KeyStroke.getKeyStroke("shift PAGE_DOWN"), ActionType.ROTATE_CAMERA_PITCH_FAST_DOWN);
-		inputMap.put(KeyStroke.getKeyStroke("PAGE_DOWN"), ActionType.ROTATE_CAMERA_PITCH_DOWN);
-		inputMap.put(KeyStroke.getKeyStroke("shift HOME"), ActionType.ELEVATE_CAMERA_FAST_UP);
-		inputMap.put(KeyStroke.getKeyStroke("HOME"), ActionType.ELEVATE_CAMERA_UP);
-		inputMap.put(KeyStroke.getKeyStroke("shift END"), ActionType.ELEVATE_CAMERA_FAST_DOWN);
-		inputMap.put(KeyStroke.getKeyStroke("END"), ActionType.ELEVATE_CAMERA_DOWN);*/
+	private void installKeyboardActions() {
 	}
 
 	/**
 	 * Creates actions that calls back <code>controller</code> methods.
 	 */
-	private void createActions(final HomeController3D controller)
-	{
+	private void createActions(final HomeController3D controller) {
 	}
 
 	/**
 	 * Returns a new scene tree root.
 	 */
-	private BranchGroup createSceneTree(boolean displayShadowOnFloor, boolean listenToHomeUpdates, boolean waitForLoading)
-	{
+	private BranchGroup createSceneTree(boolean displayShadowOnFloor,
+										boolean listenToHomeUpdates,
+										boolean waitForLoading) {
 		BranchGroup root = new BranchGroup();
 		root.setName("Universe Root");
 		root.setPickable(true);
 
 		// Build scene tree
 		root.addChild(createHomeTree(displayShadowOnFloor, listenToHomeUpdates, waitForLoading));
-		root.addChild(createBackgroundNode(listenToHomeUpdates, waitForLoading));
-		//PJPJPJ a 100km seems big enough and reduces rounding issues on small devices
+		Node backgroundNode = createBackgroundNode(listenToHomeUpdates, waitForLoading);
+		root.addChild(backgroundNode);
+		//PJ a 100km seems big enough and reduces rounding issues on small devices
 		Node groundNode = createGroundNode(-0.5E5f, -0.5E5f, 1E5f, 1E5f, listenToHomeUpdates, waitForLoading);
 		root.addChild(groundNode);
 
-		this.defaultLights = createLights(groundNode, listenToHomeUpdates);
-		for (Light light : this.defaultLights)
-		{
+    	this.sceneLights = createLights(groundNode, listenToHomeUpdates);
+    	for (Light light : this.sceneLights) {
 			root.addChild(light);
 		}
-		//PJPJPJ called compile manually
+		//PJ called compile manually, and left a debug output call ready
 		//root.outputTraversal();
 		root.compile();
 		return root;
@@ -2070,44 +2089,111 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns a new background node.
 	 */
-	private Node createBackgroundNode(boolean listenToHomeUpdates, final boolean waitForLoading)
-	{
-		final SimpleShaderAppearance backgroundAppearance = new SimpleShaderAppearance();
-		ColoringAttributes backgroundColoringAttributes = new ColoringAttributes();
-		backgroundAppearance.setColoringAttributes(backgroundColoringAttributes);
-		// Allow background color and texture to change
-		backgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
-		backgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
-		backgroundColoringAttributes.setCapability(ColoringAttributes.ALLOW_COLOR_WRITE);
+	private Node createBackgroundNode(boolean listenToHomeUpdates, final boolean waitForLoading) {
+		final SimpleShaderAppearance skyBackgroundAppearance = new SimpleShaderAppearance();
+		skyBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
+		ColoringAttributes skyBackgroundColoringAttributes = new ColoringAttributes();
+		skyBackgroundAppearance.setColoringAttributes(skyBackgroundColoringAttributes);
+		// Allow sky color and texture to change
+		skyBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
+		skyBackgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
+		skyBackgroundColoringAttributes.setCapability(ColoringAttributes.ALLOW_COLOR_WRITE);
 
-		//PJPJPJPJ allow updatable shader building
-		backgroundAppearance.setUpdatableCapabilities();
-
-		Geometry halfSphereGeometry = createHalfSphereGeometry(true);
-		final Shape3D halfSphere = new Shape3D(halfSphereGeometry, backgroundAppearance);
+		Geometry topHalfSphereGeometry = createHalfSphereGeometry(true);
+		final Shape3D topHalfSphere = new Shape3D(topHalfSphereGeometry, skyBackgroundAppearance);
 		BranchGroup backgroundBranch = new BranchGroup();
-		backgroundBranch.addChild(halfSphere);
-		//PJPJP what the hell was this no appearance shape doing exactly?
-		//backgroundBranch.addChild(new Shape3D(createHalfSphereGeometry(false)));
+		backgroundBranch.addChild(topHalfSphere);
+
+		final SimpleShaderAppearance bottomAppearance = new SimpleShaderAppearance();
+		bottomAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
+		final RenderingAttributes bottomRenderingAttributes = new RenderingAttributes();
+		bottomRenderingAttributes.setVisible(false);
+		bottomAppearance.setRenderingAttributes(bottomRenderingAttributes);
+		bottomRenderingAttributes.setCapability(RenderingAttributes.ALLOW_VISIBLE_WRITE);
+		Shape3D bottomHalfSphere = new Shape3D(createHalfSphereGeometry(false), bottomAppearance);
+		backgroundBranch.addChild(bottomHalfSphere);
+
+		// Add two planes at ground level to complete landscape at the horizon when camera is above horizon
+		// (one at y = -0.01 to fill the horizon and a lower one to fill the lower part of the scene)
+		final SimpleShaderAppearance groundBackgroundAppearance = new SimpleShaderAppearance();
+		groundBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
+		TextureAttributes groundBackgroundTextureAttributes = new TextureAttributes();
+		groundBackgroundTextureAttributes.setTextureMode(TextureAttributes.MODULATE);
+		groundBackgroundAppearance.setTextureAttributes(groundBackgroundTextureAttributes);
+
+		//PJWARNING WARNING WARNING LOOK INTO THIS!! TEX COORD GEN
+		groundBackgroundAppearance.setTexCoordGeneration(
+			new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_2,
+				new Vector4f(1E5f, 0, 0, 0), new Vector4f(0, 0, 1E5f, 0)));
+		final RenderingAttributes groundRenderingAttributes = new RenderingAttributes();
+		groundBackgroundAppearance.setRenderingAttributes(groundRenderingAttributes);
+		// Allow ground color and texture to change
+		groundBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
+		groundBackgroundAppearance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
+		groundRenderingAttributes.setCapability(RenderingAttributes.ALLOW_VISIBLE_WRITE);
+
+    GeometryInfo geometryInfo = new GeometryInfo (GeometryInfo.QUAD_ARRAY);
+		geometryInfo.setCoordinates(new Point3f [] {
+          new Point3f(-1f, -0.01f, -1f),
+          new Point3f(-1f, -0.01f, 1f),
+          new Point3f(1f, -0.01f, 1f),
+          new Point3f(1f, -0.01f, -1f),
+		  	new Point3f(-1f, -0.1f, -1f),
+		  	new Point3f(-1f, -0.1f, 1f),
+		  	new Point3f(1f, -0.1f, 1f),
+		  	new Point3f(1f, -0.1f, -1f)});
+		geometryInfo.setCoordinateIndices(new int [] {0, 1, 2, 3, 4, 5, 6, 7});
+		geometryInfo.setNormals(new Vector3f [] {new Vector3f(0, 1, 0)});
+		geometryInfo.setNormalIndices(new int [] {0, 0, 0, 0, 0, 0, 0, 0});
+
+		//PJ quads not supported, better get call
+		geometryInfo.convertToIndexedTriangles();
+		Shape3D groundBackground = new Shape3D(geometryInfo.getIndexedGeometryArray(true,true,true,true,true), groundBackgroundAppearance);
+		backgroundBranch.addChild(groundBackground);
+
+		// Add its own lights to background to ensure they have an effect
+		for (Light light : createBackgroundLights(listenToHomeUpdates)) {
+		  backgroundBranch.addChild(light);
+		}
 
 		final Background background = new Background(backgroundBranch);
-		updateBackgroundColorAndTexture(backgroundAppearance, this.home, waitForLoading);
-		background.setImageScaleMode(Background.SCALE_FIT_ALL);
-		//PJPJ used an isInfinite version
-		background.setApplicationBounds(new BoundingSphere(new Point3d(0,0,0), Double.POSITIVE_INFINITY));
+    	updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, this.home, waitForLoading);
+    	background.setApplicationBounds(new BoundingBox(
+        new Point3d(-1E7, -1E7, -1E7),
+        new Point3d(1E7, 1E7, 1E7)));
 
-		if (listenToHomeUpdates)
-		{
+		if (listenToHomeUpdates) {
 			// Add a listener on sky color and texture properties change
-			this.skyColorListener = new PropertyChangeListener()
-			{
-				public void propertyChange(PropertyChangeEvent ev)
-				{
-					updateBackgroundColorAndTexture(backgroundAppearance, home, waitForLoading);
-				}
+		  this.backgroundChangeListener = new PropertyChangeListener() {
+			  public void propertyChange(PropertyChangeEvent ev) {
+				updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, home, waitForLoading);
+			  }
 			};
-			this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.SKY_COLOR, this.skyColorListener);
-			this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.SKY_TEXTURE, this.skyColorListener);
+		  this.home.getEnvironment().addPropertyChangeListener(
+			  HomeEnvironment.Property.SKY_COLOR, this.backgroundChangeListener);
+		  this.home.getEnvironment().addPropertyChangeListener(
+			  HomeEnvironment.Property.SKY_TEXTURE, this.backgroundChangeListener);
+		  this.home.getEnvironment().addPropertyChangeListener(
+			  HomeEnvironment.Property.GROUND_COLOR, this.backgroundChangeListener);
+		  this.home.getEnvironment().addPropertyChangeListener(
+			  HomeEnvironment.Property.GROUND_TEXTURE, this.backgroundChangeListener);
+		  // Make groundBackground invisible and bottom half sphere visible if camera is below the ground
+		  this.elevationChangeListener = new PropertyChangeListener() {
+			  public void propertyChange(PropertyChangeEvent ev) {
+				if (ev.getSource() == home) {
+				  // Move listener to the new camera
+				  ((Camera)ev.getOldValue()).removePropertyChangeListener(this);
+				  home.getCamera().addPropertyChangeListener(this);
+				}
+				if (ev.getSource() == home
+					|| Camera.Property.Z.name().equals(ev.getPropertyName())) {
+				  groundRenderingAttributes.setVisible(home.getCamera().getZ() >= 0);
+				  bottomRenderingAttributes.setVisible(home.getCamera().getZ() < 0);
+				}
+					}
+				};
+		  this.home.getCamera().addPropertyChangeListener(this.elevationChangeListener);
+		  this.home.addPropertyChangeListener(Home.Property.CAMERA, this.elevationChangeListener);
 		}
 		return background;
 	}
@@ -2116,36 +2202,31 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Returns a half sphere oriented inward and with texture ordinates
 	 * that spread along an hemisphere.
 	 */
-	private Geometry createHalfSphereGeometry(boolean top)
-	{
+	private Geometry createHalfSphereGeometry(boolean top) {
 		final int divisionCount = 48;
 		Point3f[] coords = new Point3f[divisionCount * divisionCount];
 		TexCoord2f[] textureCoords = top ? new TexCoord2f[divisionCount * divisionCount] : null;
 		Color3f[] colors = top ? null : new Color3f[divisionCount * divisionCount];
-		for (int i = 0, k = 0; i < divisionCount; i++)
-		{
+		for (int i = 0, k = 0; i < divisionCount; i++) {
 			double alpha = i * 2 * Math.PI / divisionCount;
 			float cosAlpha = (float) Math.cos(alpha);
 			float sinAlpha = (float) Math.sin(alpha);
 			double nextAlpha = (i + 1) * 2 * Math.PI / divisionCount;
 			float cosNextAlpha = (float) Math.cos(nextAlpha);
 			float sinNextAlpha = (float) Math.sin(nextAlpha);
-			for (int j = 0; j < divisionCount / 4; j++)
-			{
+			for (int j = 0; j < divisionCount / 4; j++) {
 				double beta = 2 * j * Math.PI / divisionCount;
 				float cosBeta = (float) Math.cos(beta);
 				float sinBeta = (float) Math.sin(beta);
 				// Correct the bottom of the hemisphere to avoid seeing a bottom hemisphere at the horizon
 				float y = j != 0 ? (top ? sinBeta : -sinBeta) : -0.01f;
 				double nextBeta = 2 * (j + 1) * Math.PI / divisionCount;
-				if (!top)
-				{
+				if (!top) {
 					nextBeta = -nextBeta;
 				}
 				float cosNextBeta = (float) Math.cos(nextBeta);
 				float sinNextBeta = (float) Math.sin(nextBeta);
-				if (top)
-				{
+				if (top) {
 					coords[k] = new Point3f(cosAlpha * cosBeta, y, sinAlpha * cosBeta);
 					textureCoords[k++] = new TexCoord2f((float) i / divisionCount, sinBeta);
 
@@ -2157,9 +2238,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 					coords[k] = new Point3f(cosAlpha * cosNextBeta, sinNextBeta, sinAlpha * cosNextBeta);
 					textureCoords[k++] = new TexCoord2f((float) i / divisionCount, sinNextBeta);
-				}
-				else
-				{
+				} else {
 					coords[k] = new Point3f(cosAlpha * cosBeta, y, sinAlpha * cosBeta);
 					float color1 = .9f + y * .5f;
 					colors[k++] = new Color3f(color1, color1, color1);
@@ -2179,17 +2258,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		GeometryInfo geometryInfo = new GeometryInfo(GeometryInfo.QUAD_ARRAY);
 		geometryInfo.setCoordinates(coords);
-		if (textureCoords != null)
-		{
+		if (textureCoords != null) {
 			geometryInfo.setTextureCoordinateParams(1, 2);
 			geometryInfo.setTextureCoordinates(0, textureCoords);
 		}
-		if (colors != null)
-		{
+		if (colors != null) {
 			geometryInfo.setColors(colors);
 		}
 
-		//PJPJPJPJ
+		//PJPJPJPJ quads not supported, better get call
 		geometryInfo.convertToIndexedTriangles();
 
 		//geometryInfo.indexify();
@@ -2203,35 +2280,55 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Updates <code>backgroundAppearance</code> color and texture from <code>home</code> sky color and texture.
 	 */
-	private void updateBackgroundColorAndTexture(final Appearance backgroundAppearance, Home home, boolean waitForLoading)
-	{
+  private void updateBackgroundColorAndTexture(final Appearance skyBackgroundAppearance,
+                                               final Appearance groundBackgroundAppearance,
+											   Home home,
+											   boolean waitForLoading) {
 		Color c = new Color(home.getEnvironment().getSkyColor());
-		Color3f skyColor = new Color3f(c.getRed() /255f, c.getGreen() / 255f, c.getBlue() /  255f);
-		backgroundAppearance.getColoringAttributes().setColor(skyColor);
+		Color3f skyColor = new Color3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
+	  	skyBackgroundAppearance.getColoringAttributes().setColor(skyColor);
 		HomeTexture skyTexture = home.getEnvironment().getSkyTexture();
-		if (skyTexture != null)
-		{
+		if (skyTexture != null) {
 			TextureManager textureManager = TextureManager.getInstance();
-			if (waitForLoading)
-			{
+			if (waitForLoading) {
 				// Don't share the background texture otherwise if might not be rendered correctly
-				backgroundAppearance.setTexture(textureManager.loadTexture(skyTexture.getImage()));
-			}
-			else
-			{
-				textureManager.loadTexture(skyTexture.getImage(), waitForLoading, new TextureManager.TextureObserver()
-				{
-					public void textureUpdated(Texture texture)
-					{
+				skyBackgroundAppearance.setTexture(textureManager.loadTexture(skyTexture.getImage()));
+			} else {
+				textureManager.loadTexture(skyTexture.getImage(), waitForLoading,
+						new TextureManager.TextureObserver() {
+					public void textureUpdated(Texture texture) {
 						// Use a copy of the texture in case it's used in an other universe
-						backgroundAppearance.setTexture((Texture) texture.cloneNodeComponent(false));
+						skyBackgroundAppearance.setTexture((Texture) texture.cloneNodeComponent(false));
 					}
 				});
 			}
+		} else {
+			skyBackgroundAppearance.setTexture(null);
 		}
-		else
-		{
-			backgroundAppearance.setTexture(null);
+
+		HomeTexture groundTexture = home.getEnvironment().getGroundTexture();
+		if (groundTexture != null) {
+		  groundBackgroundAppearance.setMaterial(new Material(
+			  new Color3f(1, 1, 1), new Color3f(), new Color3f(1, 1, 1), new Color3f(0, 0, 0), 1));
+		  TextureManager textureManager = TextureManager.getInstance();
+		  if (waitForLoading) {
+			groundBackgroundAppearance.setTexture(textureManager.loadTexture(groundTexture.getImage()));
+		  } else {
+			textureManager.loadTexture(groundTexture.getImage(), waitForLoading,
+				new TextureManager.TextureObserver() {
+					public void textureUpdated(Texture texture) {
+					  // Use a copy of the texture in case it's used in an other universe
+					  groundBackgroundAppearance.setTexture((Texture)texture.cloneNodeComponent(false));
+					}
+				  });
+		  }
+		} else {
+		  int groundColor = home.getEnvironment().getGroundColor();
+		  Color3f color = new Color3f(((groundColor >>> 16) & 0xFF) / 255.f,
+									  ((groundColor >>> 8) & 0xFF) / 255.f,
+									   (groundColor & 0xFF) / 255.f);
+		  groundBackgroundAppearance.setMaterial(new Material(color, new Color3f(), color, new Color3f(0, 0, 0), 1));
+		  groundBackgroundAppearance.setTexture(null);
 		}
 
 		clearPrintedImageCache();
@@ -2240,31 +2337,28 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns a new ground node.
 	 */
-	private Node createGroundNode(final float groundOriginX, final float groundOriginY, final float groundWidth, final float groundDepth,
-								  boolean listenToHomeUpdates, boolean waitForLoading)
-	{
-		final Ground3D ground3D = new Ground3D(this.home, groundOriginX, groundOriginY, groundWidth, groundDepth, waitForLoading);
+	private Node createGroundNode(final float groundOriginX,
+								  final float groundOriginY,
+								  final float groundWidth,
+								  final float groundDepth,
+								  boolean listenToHomeUpdates,
+								  boolean waitForLoading) {
+		final Ground3D ground3D = new Ground3D(this.home,
+				groundOriginX, groundOriginY, groundWidth, groundDepth, waitForLoading);
 		Transform3D translation = new Transform3D();
 		translation.setTranslation(new Vector3f(0, -0.2f, 0));
 		TransformGroup transformGroup = new TransformGroup(translation);
 		transformGroup.addChild(ground3D);
 
-		if (listenToHomeUpdates)
-		{
+		if (listenToHomeUpdates) {
 			// Add a listener on ground color and texture properties change
-			this.groundChangeListener = new PropertyChangeListener()
-			{
+			this.groundChangeListener = new PropertyChangeListener() {
 				private Runnable updater;
-
-				public void propertyChange(PropertyChangeEvent ev)
-				{
-					if (this.updater == null)
-					{
+				public void propertyChange(PropertyChangeEvent ev) {
+					if (this.updater == null) {
 						// Group updates
-						EventQueue.invokeLater(this.updater = new Runnable()
-						{
-							public void run()
-							{
+						EventQueue.invokeLater(this.updater = new Runnable() {
+							public void run() {
 								ground3D.update();
 								updater = null;
 							}
@@ -2274,25 +2368,63 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				}
 			};
 			HomeEnvironment homeEnvironment = this.home.getEnvironment();
-			homeEnvironment.addPropertyChangeListener(HomeEnvironment.Property.GROUND_COLOR, this.groundChangeListener);
-			homeEnvironment.addPropertyChangeListener(HomeEnvironment.Property.GROUND_TEXTURE, this.groundChangeListener);
+			homeEnvironment.addPropertyChangeListener(
+					HomeEnvironment.Property.GROUND_COLOR, this.groundChangeListener);
+			homeEnvironment.addPropertyChangeListener(
+					HomeEnvironment.Property.GROUND_TEXTURE, this.groundChangeListener);
 		}
 
 		return transformGroup;
 	}
 
+  /**
+   * Returns the lights used for the background.
+   */
+  private Light [] createBackgroundLights(boolean listenToHomeUpdates) {
+    final Light [] lights = {
+        // Use just one direct light for background because only one horizontal plane is under light
+        new DirectionalLight(new Color3f(1.435f, 1.435f, 1.435f), new Vector3f(0f, -1f, 0f)),
+        new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
+    for (int i = 0; i < lights.length - 1; i++) {
+      // Allow directional lights color and influencing bounds to change
+      lights [i].setCapability(DirectionalLight.ALLOW_COLOR_WRITE);
+      // Store default color in user data
+      Color3f defaultColor = new Color3f();
+      lights [i].getColor(defaultColor);
+      lights [i].setUserData(defaultColor);
+      updateLightColor(lights [i]);
+    }
+
+    final Bounds defaultInfluencingBounds = new BoundingSphere(new Point3d(), 2);
+    for (Light light : lights) {
+      light.setInfluencingBounds(defaultInfluencingBounds);
+    }
+
+    if (listenToHomeUpdates) {
+      // Add a listener on light color property change to home
+      this.backgroundLightColorListener = new PropertyChangeListener() {
+          public void propertyChange(PropertyChangeEvent ev) {
+            updateLightColor(lights [0]);
+          }
+        };
+      this.home.getEnvironment().addPropertyChangeListener(
+          HomeEnvironment.Property.LIGHT_COLOR, this.backgroundLightColorListener);
+    }
+
+    return lights;
+  }
+
 	/**
 	 * Returns the lights of the scene.
 	 */
-	private Light[] createLights(final Node groundNode, boolean listenToHomeUpdates)
-	{
-		final Light[] lights = {new DirectionalLight(new Color3f(1, 1, 1), new Vector3f(1.5f, -0.8f, -1)),
+	private Light[] createLights(final Node groundNode, boolean listenToHomeUpdates) {
+		final Light[] lights = {
+				new DirectionalLight(new Color3f(1, 1, 1), new Vector3f(1.5f, -0.8f, -1)),
 				new DirectionalLight(new Color3f(1, 1, 1), new Vector3f(-1.5f, -0.8f, -1)),
 				new DirectionalLight(new Color3f(1, 1, 1), new Vector3f(0, -0.8f, 1)),
 				new DirectionalLight(new Color3f(0.7f, 0.7f, 0.7f), new Vector3f(0, 1f, 0)),
 				new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
-		for (int i = 0; i < lights.length - 1; i++)
-		{
+		for (int i = 0; i < lights.length - 1; i++) {
 			// Allow directional lights color and influencing bounds to change
 			lights[i].setCapability(DirectionalLight.ALLOW_COLOR_WRITE);
 			lights[i].setCapability(DirectionalLight.ALLOW_SCOPE_WRITE);
@@ -2304,34 +2436,27 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		final Bounds defaultInfluencingBounds = new BoundingSphere(new Point3d(), 1E7);
-		for (Light light : lights)
-		{
+		for (Light light : lights) {
 			light.setInfluencingBounds(defaultInfluencingBounds);
 		}
 
-		if (listenToHomeUpdates)
-		{
+		if (listenToHomeUpdates) {
 			// Add a listener on light color property change to home
-			this.lightColorListener = new PropertyChangeListener()
-			{
-				public void propertyChange(PropertyChangeEvent ev)
-				{
-					for (int i = 0; i < lights.length - 1; i++)
-					{
+			this.lightColorListener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent ev) {
+					for (int i = 0; i < lights.length - 1; i++) {
 						updateLightColor(lights[i]);
 					}
 					updateObjects(getHomeObjects(HomeLight.class));
 				}
 			};
-			this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.LIGHT_COLOR, this.lightColorListener);
+			this.home.getEnvironment().addPropertyChangeListener(
+					HomeEnvironment.Property.LIGHT_COLOR, this.lightColorListener);
 
 			// Add a listener on subpart size property change to home
-			this.subpartSizeListener = new PropertyChangeListener()
-			{
-				public void propertyChange(PropertyChangeEvent ev)
-				{
-					if (ev != null)
-					{
+			this.subpartSizeListener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent ev) {
+					if (ev != null) {
 						// Update 3D objects if not at initialization
 						Collection<Selectable> homeItems = new ArrayList<Selectable>(home.getWalls());
 						homeItems.addAll(home.getRooms());
@@ -2342,23 +2467,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 					// Update default lights scope
 					List<Group> scope = null;
-					if (home.getEnvironment().getSubpartSizeUnderLight() > 0)
-					{
+					if (home.getEnvironment().getSubpartSizeUnderLight() > 0) {
 						Area lightScopeOutsideWallsArea = getLightScopeOutsideWallsArea();
 						scope = new ArrayList<Group>();
-						for (Wall wall : home.getWalls())
-						{
+						for (Wall wall : home.getWalls()) {
 							Object3DBranch wall3D = homeObjects.get(wall);
-							if (wall3D instanceof Wall3D)
-							{
+							if (wall3D instanceof Wall3D) {
 								// Add left and/or right side of the wall to scope
 								float[][] points = wall.getPoints();
-								if (!lightScopeOutsideWallsArea.contains(points[0][0], points[0][1]))
-								{
+								if (!lightScopeOutsideWallsArea.contains(points[0][0], points[0][1])) {
 									scope.add((Group) wall3D.getChild(1));
 								}
-								if (!lightScopeOutsideWallsArea.contains(points[points.length - 1][0], points[points.length - 1][1]))
-								{
+								if (!lightScopeOutsideWallsArea.contains(points[points.length - 1][0], points[points.length - 1][1])) {
 									scope.add((Group) wall3D.getChild(4));
 								}
 							}
@@ -2370,16 +2490,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 						List<Selectable> otherItems = new ArrayList<Selectable>(home.getRooms());
 						otherItems.addAll(getHomeObjects(HomePieceOfFurniture.class));
-						for (Selectable item : otherItems)
-						{
+						for (Selectable item : otherItems) {
 							// Add item to scope if one of its points don't belong to lightScopeWallsArea
-							for (float[] point : item.getPoints())
-							{
-								if (!lightScopeOutsideWallsArea.contains(point[0], point[1]))
-								{
+							for (float[] point : item.getPoints()) {
+								if (!lightScopeOutsideWallsArea.contains(point[0], point[1])) {
 									Group object3D = homeObjects.get(item);
-									if (object3D instanceof HomePieceOfFurniture3D)
-									{
+									if (object3D instanceof HomePieceOfFurniture3D) {
 										// Add the direct parent of the shape that will be added once loaded
 										// otherwise scope won't be updated automatically
 										object3D = (Group) object3D.getChild(0);
@@ -2389,22 +2505,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								}
 							}
 						}
-					}
-					else
-					{
+					} else {
 						lightScopeOutsideWallsAreaCache = null;
 					}
 
-					for (Light light : lights)
-					{
-						if (light instanceof DirectionalLight)
-						{
+					for (Light light : lights) {
+						if (light instanceof DirectionalLight) {
 							light.removeAllScopes();
-							if (scope != null)
-							{
+							if (scope != null) {
 								light.addScope((Group) groundNode);
-								for (Group group : scope)
-								{
+								for (Group group : scope) {
 									light.addScope(group);
 								}
 							}
@@ -2412,8 +2522,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					}
 				}
 			};
-			this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.SUBPART_SIZE_UNDER_LIGHT,
-					this.subpartSizeListener);
+
+			this.home.getEnvironment().addPropertyChangeListener(
+					HomeEnvironment.Property.SUBPART_SIZE_UNDER_LIGHT,this.subpartSizeListener);
 			this.subpartSizeListener.propertyChange(null);
 		}
 
@@ -2423,55 +2534,47 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns the home objects displayed by this component of the given class.
 	 */
-	private <T> List<T> getHomeObjects(Class<T> objectClass)
-	{
+	private <T> List<T> getHomeObjects(Class<T> objectClass) {
 		return Home.getSubList(new ArrayList<Selectable>(homeObjects.keySet()), objectClass);
 	}
 
 	/**
 	 * Updates<code>light</code> color from <code>home</code> light color.
 	 */
-	private void updateLightColor(Light light)
-	{
+	private void updateLightColor(Light light) {
 		Color3f defaultColor = (Color3f) light.getUserData();
 		int lightColor = this.home.getEnvironment().getLightColor();
 		light.setColor(new Color3f(((lightColor >>> 16) & 0xFF) / 255f * defaultColor.x,
-				((lightColor >>> 8) & 0xFF) / 255f * defaultColor.y, (lightColor & 0xFF) / 255f * defaultColor.z));
+									((lightColor >>> 8) & 0xFF) / 255f * defaultColor.y,
+											(lightColor & 0xFF) / 255f * defaultColor.z));
 		clearPrintedImageCache();
 	}
 
 	/**
 	 * Returns walls area used for light scope outside.
 	 */
-	private Area getLightScopeOutsideWallsArea()
-	{
-		if (this.lightScopeOutsideWallsAreaCache == null)
-		{
+	private Area getLightScopeOutsideWallsArea() {
+		if (this.lightScopeOutsideWallsAreaCache == null) {
 			// Compute a smaller area surrounding all walls at all levels
 			Area wallsPath = new Area();
-			for (Wall wall : home.getWalls())
-			{
+			for (Wall wall : home.getWalls()) {
 				Wall thinnerWall = wall.clone();
 				thinnerWall.setThickness(Math.max(thinnerWall.getThickness() - 0.1f, 0.08f));
 				wallsPath.add(new Area(getShape(thinnerWall.getPoints())));
 			}
 			Area lightScopeOutsideWallsArea = new Area();
 			List<float[]> points = new ArrayList<float[]>();
-			for (PathIterator it = wallsPath.getPathIterator(null, 1); !it.isDone(); it.next())
-			{
+			for (PathIterator it = wallsPath.getPathIterator(null, 1); !it.isDone(); it.next()) {
 				float[] point = new float[2];
-				switch (it.currentSegment(point))
-				{
+				switch (it.currentSegment(point)) {
 					case PathIterator.SEG_MOVETO:
 					case PathIterator.SEG_LINETO:
 						points.add(point);
 						break;
 					case PathIterator.SEG_CLOSE:
-						if (points.size() > 2)
-						{
+						if (points.size() > 2) {
 							float[][] pointsArray = points.toArray(new float[points.size()][]);
-							if (new Room(pointsArray).isClockwise())
-							{
+							if (new Room(pointsArray).isClockwise()) {
 								lightScopeOutsideWallsArea.add(new Area(getShape(pointsArray)));
 							}
 						}
@@ -2488,48 +2591,38 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Returns a <code>home</code> new tree node, with branches for each wall
 	 * and piece of furniture of <code>home</code>.
 	 */
-	private Node createHomeTree(boolean displayShadowOnFloor, boolean listenToHomeUpdates, boolean waitForLoading)
-	{
+	private Node createHomeTree(boolean displayShadowOnFloor,
+								boolean listenToHomeUpdates,
+								boolean waitForLoading) {
 		Group homeRoot = createHomeRoot();
 		// Add walls, pieces, rooms and labels already available
-		for (Label label : this.home.getLabels())
-		{
+		for (Label label : this.home.getLabels()) {
 			addObject(homeRoot, label, listenToHomeUpdates, waitForLoading);
 		}
-		for (Room room : this.home.getRooms())
-		{
+		for (Room room : this.home.getRooms()) {
 			addObject(homeRoot, room, listenToHomeUpdates, waitForLoading);
 		}
-		for (Wall wall : this.home.getWalls())
-		{
+		for (Wall wall : this.home.getWalls()) {
 			addObject(homeRoot, wall, listenToHomeUpdates, waitForLoading);
 		}
 		Map<HomePieceOfFurniture, Node> pieces3D = new HashMap<HomePieceOfFurniture, Node>();
-		for (HomePieceOfFurniture piece : this.home.getFurniture())
-		{
-			if (piece instanceof HomeFurnitureGroup)
-			{
-				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture())
-				{
-					if (!(childPiece instanceof HomeFurnitureGroup))
-					{
+		for (HomePieceOfFurniture piece : this.home.getFurniture()) {
+			if (piece instanceof HomeFurnitureGroup) {
+				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
+					if (!(childPiece instanceof HomeFurnitureGroup)) {
 						pieces3D.put(childPiece, addObject(homeRoot, childPiece, listenToHomeUpdates, waitForLoading));
 					}
 				}
-			}
-			else
-			{
+			} else {
 				pieces3D.put(piece, addObject(homeRoot, piece, listenToHomeUpdates, waitForLoading));
 			}
 		}
 
-		if (displayShadowOnFloor)
-		{
+		if (displayShadowOnFloor) {
 			addShadowOnFloor(homeRoot, pieces3D);
 		}
 
-		if (listenToHomeUpdates)
-		{
+		if (listenToHomeUpdates) {
 			// Add level, wall, furniture, room listeners to home for further update
 			addLevelListener(homeRoot);
 			addWallListener(homeRoot);
@@ -2548,8 +2641,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns a new group at home subtree root.
 	 */
-	private Group createHomeRoot()
-	{
+	private Group createHomeRoot() {
 		Group homeGroup = new Group();
 		homeGroup.setName("Home Root");
 		//  Allow group to have new children
@@ -2564,41 +2656,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a level listener to home levels that updates the children of the given
 	 * <code>group</code>, each time a level is added, updated or deleted.
 	 */
-	private void addLevelListener(final Group group)
-	{
-		this.levelChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addLevelListener(final Group group) {
+		this.levelChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
 						|| Level.Property.VISIBLE.name().equals(ev.getPropertyName())
-						|| Level.Property.VIEWABLE.name().equals(ev.getPropertyName()))
-				{
+						|| Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
 					updateObjects(homeObjects.keySet());
 					groundChangeListener.propertyChange(null);
-				}
-				else if (Level.Property.FLOOR_THICKNESS.name().equals(ev.getPropertyName()))
-				{
+				} else if (Level.Property.FLOOR_THICKNESS.name().equals(ev.getPropertyName())) {
 					updateObjects(home.getWalls());
 					updateObjects(home.getRooms());
-				}
-				else if (Level.Property.HEIGHT.name().equals(ev.getPropertyName()))
-				{
+				} else if (Level.Property.HEIGHT.name().equals(ev.getPropertyName())) {
 					updateObjects(home.getRooms());
 				}
 			}
 		};
-		for (Level level : this.home.getLevels())
-		{
+		for (Level level : this.home.getLevels()) {
 			level.addPropertyChangeListener(this.levelChangeListener);
 		}
-		this.levelListener = new CollectionListener<Level>()
-		{
-			public void collectionChanged(CollectionEvent<Level> ev)
-			{
+		this.levelListener = new CollectionListener<Level>() {
+			public void collectionChanged(CollectionEvent<Level> ev) {
 				Level level = ev.getItem();
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
 						level.addPropertyChangeListener(levelChangeListener);
 						break;
@@ -2617,63 +2697,49 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a wall listener to home walls that updates the children of the given
 	 * <code>group</code>, each time a wall is added, updated or deleted.
 	 */
-	private void addWallListener(final Group group)
-	{
+	private void addWallListener(final Group group) {
 
-		//Wait no, I just need a single
+		// I want need a single
 		//updateObjects(home.getRooms());
 		// and
 		//updateObjects(home.getWalls());
 		// fired on 3d made visible!
-		this.wallChangeListener = new PropertyChangeListener()
-		{
+		this.wallChangeListener = new PropertyChangeListener() {
 			private ArrayList<Wall> wallsNeedingUpdate = new ArrayList<Wall>();
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+			public void propertyChange(PropertyChangeEvent ev) {
 				String propertyName = ev.getPropertyName();
-				if( RUN_UPDATES.equals(propertyName))
-				{
-					for( Wall updatedWall: wallsNeedingUpdate )
-					{
+				if( RUN_UPDATES.equals(propertyName)) {
+					for( Wall updatedWall: wallsNeedingUpdate ) {
 						updateWall(updatedWall);
 					}
 					wallsNeedingUpdate.clear();
 
 					// all uses of this removed and called one time here
-					if(fullRoomUpdateRequired)
-					{
+					if(fullRoomUpdateRequired) {
 						updateObjects(home.getRooms());
 						fullRoomUpdateRequired = false;
 
 					}
-					if(fullWallUpdateRequired)
-					{
+					if(fullWallUpdateRequired) {
 						updateObjects(home.getWalls());
 						fullRoomUpdateRequired = false;
 					}
-				}
-				else if (!Wall.Property.PATTERN.name().equals(propertyName))
-				{
+				} else if (!Wall.Property.PATTERN.name().equals(propertyName)) {
 					Wall updatedWall = (Wall) ev.getSource();
 					//PJ updating walls is crazy expensive, lots of geometry create and normal creates (too many some might say)
 					// so if we aren't displaying 3d then defer update until then and just take the last one for each wall
-					if(HomeComponent3D.this.getUserVisibleHint())
-					{
+					if(HomeComponent3D.this.getUserVisibleHint()) {
 						updateWall(updatedWall);
-					}
-					else
-					{
+					} else {
 						if(!wallsNeedingUpdate.contains(updatedWall))
 							wallsNeedingUpdate.add(updatedWall);
 					}
 
 					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
-					if (updatedWall.getLevel() != null && updatedWall.getLevel().getElevation() < 0)
-					{
+					if (updatedWall.getLevel() != null && updatedWall.getLevel().getElevation() < 0) {
 						groundChangeListener.propertyChange(null);
 					}
-					if (home.getEnvironment().getSubpartSizeUnderLight() > 0)
-					{
+					if (home.getEnvironment().getSubpartSizeUnderLight() > 0) {
 						if (Wall.Property.X_START.name().equals(propertyName) || Wall.Property.Y_START.name().equals(propertyName)
 								|| Wall.Property.X_END.name().equals(propertyName) || Wall.Property.Y_END.name().equals(propertyName)
 								|| Wall.Property.ARC_EXTENT.name().equals(propertyName)
@@ -2684,20 +2750,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						}
 					}
 				}
-
 			}
 		};
-		for (Wall wall : this.home.getWalls())
-		{
+		for (Wall wall : this.home.getWalls()) {
 			wall.addPropertyChangeListener(this.wallChangeListener);
 		}
-		this.wallListener = new CollectionListener<Wall>()
-		{
-			public void collectionChanged(CollectionEvent<Wall> ev)
-			{
+		this.wallListener = new CollectionListener<Wall>() {
+			public void collectionChanged(CollectionEvent<Wall> ev) {
 				Wall wall = ev.getItem();
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
 						addObject(group, wall, true, false);
 						wall.addPropertyChangeListener(wallChangeListener);
@@ -2721,130 +2782,100 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a furniture listener to home that updates the children of the given <code>group</code>,
 	 * each time a piece of furniture is added, updated or deleted.
 	 */
-	private void addFurnitureListener(final Group group)
-	{
-		this.furnitureChangeListener = new PropertyChangeListener()
-		{
-			private ArrayList<HomePieceOfFurniture> furnitureNeedingUpdate = new ArrayList<HomePieceOfFurniture>();
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addFurnitureListener(final Group group) {
+		this.furnitureChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				HomePieceOfFurniture updatedPiece = (HomePieceOfFurniture) ev.getSource();
 				String propertyName = ev.getPropertyName();
 				if (HomePieceOfFurniture.Property.X.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.Y.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.ANGLE.name().equals(propertyName)
+              			|| HomePieceOfFurniture.Property.ROLL.name().equals(propertyName)
+              			|| HomePieceOfFurniture.Property.PITCH.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.WIDTH.name().equals(propertyName)
-						|| HomePieceOfFurniture.Property.DEPTH.name().equals(propertyName))
-				{
+						|| HomePieceOfFurniture.Property.DEPTH.name().equals(propertyName)) {
 					updatePieceOfFurnitureGeometry(updatedPiece);
 					updateObjectsLightScope(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
-				}
-				else if (HomePieceOfFurniture.Property.HEIGHT.name().equals(propertyName)
+				} else if (HomePieceOfFurniture.Property.HEIGHT.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.ELEVATION.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MIRRORED.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.VISIBLE.name().equals(propertyName)
-						|| HomePieceOfFurniture.Property.LEVEL.name().equals(propertyName))
-				{
+						|| HomePieceOfFurniture.Property.LEVEL.name().equals(propertyName)) {
 					updatePieceOfFurnitureGeometry(updatedPiece);
-				}
-				else if (HomePieceOfFurniture.Property.COLOR.name().equals(propertyName)
+				} else if (HomePieceOfFurniture.Property.COLOR.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.TEXTURE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MATERIALS.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.SHININESS.name().equals(propertyName)
-						|| (HomeLight.Property.POWER.name().equals(propertyName) && home.getEnvironment().getSubpartSizeUnderLight() > 0))
-				{
+						|| (HomeLight.Property.POWER.name().equals(propertyName)
+						&& home.getEnvironment().getSubpartSizeUnderLight() > 0)) {
 					updateObjects(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
 				}
 			}
 
-			private void updatePieceOfFurnitureGeometry(HomePieceOfFurniture piece)
-			{
+			private void updatePieceOfFurnitureGeometry(HomePieceOfFurniture piece) {
 				updateObjects(Arrays.asList(new HomePieceOfFurniture[]{piece}));
 				// If piece is or contains a door or a window, update walls that intersect with piece
-				if (containsDoorsAndWindows(piece))
-				{
+				if (containsDoorsAndWindows(piece)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getWalls());
 					fullWallUpdateRequired = true;
-				}
-				else if (containsStaircases(piece))
-				{
+				} else if (containsStaircases(piece)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
 					fullRoomUpdateRequired = true;
 				}
-				if (piece.getLevel() != null && piece.getLevel().getElevation() < 0)
-				{
+				if (piece.getLevel() != null && piece.getLevel().getElevation() < 0) {
 					groundChangeListener.propertyChange(null);
 				}
 			}
 		};
-		for (HomePieceOfFurniture piece : this.home.getFurniture())
-		{
-			if (piece instanceof HomeFurnitureGroup)
-			{
-				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture())
-				{
+		for (HomePieceOfFurniture piece : this.home.getFurniture()) {
+			if (piece instanceof HomeFurnitureGroup) {
+				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
 					childPiece.addPropertyChangeListener(this.furnitureChangeListener);
 				}
-			}
-			else
-			{
+			} else {
 				piece.addPropertyChangeListener(this.furnitureChangeListener);
 			}
 		}
-		this.furnitureListener = new CollectionListener<HomePieceOfFurniture>()
-		{
-			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> ev)
-			{
+		this.furnitureListener = new CollectionListener<HomePieceOfFurniture>() {
+			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> ev) {
 				HomePieceOfFurniture piece = (HomePieceOfFurniture) ev.getItem();
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
-						if (piece instanceof HomeFurnitureGroup)
-						{
-							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture())
-							{
-								if (!(childPiece instanceof HomeFurnitureGroup))
-								{
+						if (piece instanceof HomeFurnitureGroup) {
+							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
+								if (!(childPiece instanceof HomeFurnitureGroup)) {
 									addObject(group, childPiece, true, false);
 									childPiece.addPropertyChangeListener(furnitureChangeListener);
 								}
 							}
-						}
-						else
-						{
+						} else {
 							addObject(group, piece, true, false);
 							piece.addPropertyChangeListener(furnitureChangeListener);
 						}
 						break;
 					case DELETE:
-						if (piece instanceof HomeFurnitureGroup)
-						{
-							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture())
-							{
-								if (!(childPiece instanceof HomeFurnitureGroup))
-								{
+						if (piece instanceof HomeFurnitureGroup) {
+							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
+								if (!(childPiece instanceof HomeFurnitureGroup)) {
 									deleteObject(childPiece);
 									childPiece.removePropertyChangeListener(furnitureChangeListener);
 								}
 							}
-						}
-						else
-						{
+						} else {
 							deleteObject(piece);
 							piece.removePropertyChangeListener(furnitureChangeListener);
 						}
 						break;
 				}
 				// If piece is or contains a door or a window, update walls that intersect with piece
-				if (containsDoorsAndWindows(piece))
-				{
+				if (containsDoorsAndWindows(piece)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getWalls());
 					fullWallUpdateRequired = true;
-				}
-				else if (containsStaircases(piece))
-				{
+				} else if (containsStaircases(piece)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
 					fullRoomUpdateRequired = true;
+				} else {
+					approximateHomeBoundsCache = null;
 				}
 				groundChangeListener.propertyChange(null);
 				updateObjectsLightScope(Arrays.asList(new HomePieceOfFurniture[]{piece}));
@@ -2856,21 +2887,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns <code>true</code> if the given <code>piece</code> is or contains a door or window.
 	 */
-	private boolean containsDoorsAndWindows(HomePieceOfFurniture piece)
-	{
-		if (piece instanceof HomeFurnitureGroup)
-		{
-			for (HomePieceOfFurniture groupPiece : ((HomeFurnitureGroup) piece).getFurniture())
-			{
-				if (containsDoorsAndWindows(groupPiece))
-				{
+	private boolean containsDoorsAndWindows(HomePieceOfFurniture piece) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture groupPiece : ((HomeFurnitureGroup) piece).getFurniture()) {
+				if (containsDoorsAndWindows(groupPiece)) {
 					return true;
 				}
 			}
 			return false;
-		}
-		else
-		{
+		} else {
 			return piece.isDoorOrWindow();
 		}
 	}
@@ -2879,21 +2904,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Returns <code>true</code> if the given <code>piece</code> is or contains a staircase
 	 * with a top cut out shape.
 	 */
-	private boolean containsStaircases(HomePieceOfFurniture piece)
-	{
-		if (piece instanceof HomeFurnitureGroup)
-		{
-			for (HomePieceOfFurniture groupPiece : ((HomeFurnitureGroup) piece).getFurniture())
-			{
-				if (containsStaircases(groupPiece))
-				{
+	private boolean containsStaircases(HomePieceOfFurniture piece) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture groupPiece : ((HomeFurnitureGroup) piece).getFurniture()) {
+				if (containsStaircases(groupPiece)) {
 					return true;
 				}
 			}
 			return false;
-		}
-		else
-		{
+		} else {
 			return piece.getStaircaseCutOutShape() != null;
 		}
 	}
@@ -2902,68 +2921,53 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a room listener to home rooms that updates the children of the given
 	 * <code>group</code>, each time a room is added, updated or deleted.
 	 */
-	private void addRoomListener(final Group group)
-	{
-		this.roomChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addRoomListener(final Group group) {
+		this.roomChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				Room updatedRoom = (Room) ev.getSource();
 				String propertyName = ev.getPropertyName();
-				if (Room.Property.FLOOR_COLOR.name().equals(propertyName) || Room.Property.FLOOR_TEXTURE.name().equals(propertyName)
+				if (Room.Property.FLOOR_COLOR.name().equals(propertyName)
+						|| Room.Property.FLOOR_TEXTURE.name().equals(propertyName)
 						|| Room.Property.FLOOR_SHININESS.name().equals(propertyName)
 						|| Room.Property.CEILING_COLOR.name().equals(propertyName)
 						|| Room.Property.CEILING_TEXTURE.name().equals(propertyName)
-						|| Room.Property.CEILING_SHININESS.name().equals(propertyName))
-				{
+						|| Room.Property.CEILING_SHININESS.name().equals(propertyName)) {
 					updateObjects(Arrays.asList(new Room[]{updatedRoom}));
-				}
-				else if (Room.Property.FLOOR_VISIBLE.name().equals(propertyName)
-						|| Room.Property.CEILING_VISIBLE.name().equals(propertyName) || Room.Property.LEVEL.name().equals(propertyName))
-				{
+				} else if (Room.Property.FLOOR_VISIBLE.name().equals(propertyName)
+						|| Room.Property.CEILING_VISIBLE.name().equals(propertyName)
+						|| Room.Property.LEVEL.name().equals(propertyName)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
 					fullRoomUpdateRequired = true;
 					groundChangeListener.propertyChange(null);
-				}
-				else if (Room.Property.POINTS.name().equals(propertyName))
-				{
-					if (homeObjectsToUpdate != null)
-					{
+				} else if (Room.Property.POINTS.name().equals(propertyName)) {
+					if (homeObjectsToUpdate != null) {
 						// Don't try to optimize if more than one room to update
 						// deferred to visible see RUN_UPDATES updateObjects(home.getRooms());
 						fullRoomUpdateRequired = true;
-					}
-					else
-					{
+					} else {
 						updateObjects(Arrays.asList(new Room[]{updatedRoom}));
 						updateObjects(getHomeObjects(HomeLight.class));
 						// Search the rooms that overlap the updated one
 						Area oldArea = new Area(getShape((float[][]) ev.getOldValue()));
 						Area newArea = new Area(getShape((float[][]) ev.getNewValue()));
 						Level updatedRoomLevel = updatedRoom.getLevel();
-						for (Room room : home.getRooms())
-						{
+						for (Room room : home.getRooms()) {
 							Level roomLevel = room.getLevel();
 							//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/656a58a5?duration=2592000000
 							// added || updatedRoomLevel == null
-							if (room != updatedRoom && (roomLevel == null || updatedRoomLevel == null
-									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight()
-									- (roomLevel.getElevation() + roomLevel.getHeight())) < 1E-5
-									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight()
-									- (roomLevel.getElevation() - roomLevel.getFloorThickness())) < 1E-5))
-							{
+							if (room != updatedRoom
+									&& (roomLevel == null
+									|| updatedRoomLevel == null
+									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight() - (roomLevel.getElevation() + roomLevel.getHeight())) < 1E-5
+									|| Math.abs(updatedRoomLevel.getElevation() + updatedRoomLevel.getHeight() - (roomLevel.getElevation() - roomLevel.getFloorThickness())) < 1E-5)) {
 								Area roomAreaIntersectionWithOldArea = new Area(getShape(room.getPoints()));
 								Area roomAreaIntersectionWithNewArea = new Area(roomAreaIntersectionWithOldArea);
 								roomAreaIntersectionWithNewArea.intersect(newArea);
-								if (!roomAreaIntersectionWithNewArea.isEmpty())
-								{
+								if (!roomAreaIntersectionWithNewArea.isEmpty()) {
 									updateObjects(Arrays.asList(new Room[]{room}));
-								}
-								else
-								{
+								} else {
 									roomAreaIntersectionWithOldArea.intersect(oldArea);
-									if (!roomAreaIntersectionWithOldArea.isEmpty())
-									{
+									if (!roomAreaIntersectionWithOldArea.isEmpty()) {
 										updateObjects(Arrays.asList(new Room[]{room}));
 									}
 								}
@@ -2976,17 +2980,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				}
 			}
 		};
-		for (Room room : this.home.getRooms())
-		{
+		for (Room room : this.home.getRooms()) {
 			room.addPropertyChangeListener(this.roomChangeListener);
 		}
-		this.roomListener = new CollectionListener<Room>()
-		{
-			public void collectionChanged(CollectionEvent<Room> ev)
-			{
+		this.roomListener = new CollectionListener<Room>() {
+			public void collectionChanged(CollectionEvent<Room> ev) {
 				Room room = ev.getItem();
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
 						// Add room to its group at the index indicated by the event
 						// to ensure the 3D rooms are drawn in the same order as in the plan
@@ -3011,12 +3011,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns the path matching points.
 	 */
-	private GeneralPath getShape(float[][] points)
-	{
+	private GeneralPath getShape(float[][] points) {
 		GeneralPath path = new GeneralPath();
 		path.moveTo(points[0][0], points[0][1]);
-		for (int i = 1; i < points.length; i++)
-		{
+		for (int i = 1; i < points.length; i++) {
 			path.lineTo(points[i][0], points[i][1]);
 		}
 		path.closePath();
@@ -3027,27 +3025,20 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a label listener to home labels that updates the children of the given
 	 * <code>group</code>, each time a label is added, updated or deleted.
 	 */
-	private void addLabelListener(final Group group)
-	{
-		this.labelChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addLabelListener(final Group group) {
+		this.labelChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				Label label = (Label) ev.getSource();
 				updateObjects(Arrays.asList(new Label[]{label}));
 			}
 		};
-		for (Label label : this.home.getLabels())
-		{
+		for (Label label : this.home.getLabels()) {
 			label.addPropertyChangeListener(this.labelChangeListener);
 		}
-		this.labelListener = new CollectionListener<Label>()
-		{
-			public void collectionChanged(CollectionEvent<Label> ev)
-			{
+		this.labelListener = new CollectionListener<Label>() {
+			public void collectionChanged(CollectionEvent<Label> ev) {
 				Label label = ev.getItem();
-				switch (ev.getType())
-				{
+				switch (ev.getType()) {
 					case ADD:
 						addObject(group, label, true, false);
 						label.addPropertyChangeListener(labelChangeListener);
@@ -3066,33 +3057,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds a walls alpha change listener and drawing mode change listener to home
 	 * environment that updates the home scene objects appearance.
 	 */
-	private void addEnvironmentListeners()
-	{
-		this.wallsAlphaListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+	private void addEnvironmentListeners() {
+		this.wallsAlphaListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				updateObjects(home.getWalls());
 				updateObjects(home.getRooms());
 			}
 		};
-		this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.WALLS_ALPHA, this.wallsAlphaListener);
-		this.drawingModeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+		this.home.getEnvironment().addPropertyChangeListener(
+				HomeEnvironment.Property.WALLS_ALPHA, this.wallsAlphaListener);
+		this.drawingModeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				updateObjects(home.getWalls());
 				updateObjects(getHomeObjects(HomePieceOfFurniture.class));
 			}
 		};
-		this.home.getEnvironment().addPropertyChangeListener(HomeEnvironment.Property.DRAWING_MODE, this.drawingModeListener);
+		this.home.getEnvironment().addPropertyChangeListener(
+				HomeEnvironment.Property.DRAWING_MODE, this.drawingModeListener);
 	}
 
 	/**
 	 * Adds to <code>group</code> a branch matching <code>homeObject</code>.
 	 */
-	private Node addObject(Group group, Selectable homeObject, boolean listenToHomeUpdates, boolean waitForLoading)
-	{
+	private Node addObject(Group group, Selectable homeObject, boolean listenToHomeUpdates, boolean waitForLoading) {
 		return addObject(group, homeObject, -1, listenToHomeUpdates, waitForLoading);
 	}
 
@@ -3100,19 +3087,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Adds to <code>group</code> a branch matching <code>homeObject</code> at a given <code>index</code>.
 	 * If <code>index</code> is equal to -1, <code>homeObject</code> will be added at the end of the group.
 	 */
-	private Node addObject(Group group, Selectable homeObject, int index, boolean listenToHomeUpdates, boolean waitForLoading)
-	{
+	private Node addObject(Group group, Selectable homeObject, int index,
+						   boolean listenToHomeUpdates, boolean waitForLoading) {
 		Object3DBranch object3D = createObject3D(homeObject, waitForLoading);
-		if (listenToHomeUpdates)
-		{
+		if (listenToHomeUpdates) {
 			this.homeObjects.put(homeObject, object3D);
 		}
-		if (index == -1)
-		{
+		if (index == -1) {
 			group.addChild(object3D);
-		}
-		else
-		{
+		} else {
 			group.insertChild(object3D, index);
 		}
 		clearPrintedImageCache();
@@ -3122,20 +3105,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns the 3D object matching the given home object. If <code>waitForLoading</code>
 	 * is <code>true</code> the resources used by the returned 3D object should be ready to be displayed.
-	 *
 	 * @deprecated Subclasses which used to override this method must be updated to create an instance of
 	 * a {@link Object3DFactory factory} and give it as parameter to the constructor of this class.
 	 */
-	private Object3DBranch createObject3D(Selectable homeObject, boolean waitForLoading)
-	{
+	private Object3DBranch createObject3D(Selectable homeObject,
+										  boolean waitForLoading) {
 		return (Object3DBranch) this.object3dFactory.createObject3D(this.home, homeObject, waitForLoading);
 	}
 
 	/**
 	 * Detaches from the scene the branch matching <code>homeObject</code>.
 	 */
-	private void deleteObject(Selectable homeObject)
-	{
+	private void deleteObject(Selectable homeObject) {
 		this.homeObjects.get(homeObject).detach();
 		this.homeObjects.remove(homeObject);
 		clearPrintedImageCache();
@@ -3144,26 +3125,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Updates <code>objects</code> later. Should be invoked from Event Dispatch Thread.
 	 */
-	private void updateObjects(Collection<? extends Selectable> objects)
-	{
-		if (this.homeObjectsToUpdate != null)
-		{
+	private void updateObjects(Collection<? extends Selectable> objects) {
+		if (this.homeObjectsToUpdate != null) {
 			this.homeObjectsToUpdate.addAll(objects);
-		}
-		else
-		{
+		} else {
 			this.homeObjectsToUpdate = new HashSet<Selectable>(objects);
 			// Invoke later the update of objects of homeObjectsToUpdate
-			EventQueue.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					for (Selectable object : homeObjectsToUpdate)
-					{
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					for (Selectable object : homeObjectsToUpdate) {
 						Object3DBranch objectBranch = homeObjects.get(object);
 						// Check object wasn't deleted since updateObjects call
-						if (objectBranch != null)
-						{
+						if (objectBranch != null) {
 							objectBranch.update();
 						}
 					}
@@ -3179,16 +3152,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Updates <code>wall</code> geometry,
 	 * and the walls at its end or start.
 	 */
-	private void updateWall(Wall wall)
-	{
+	private void updateWall(Wall wall) {
 		Collection<Wall> wallsToUpdate = new ArrayList<Wall>(3);
 		wallsToUpdate.add(wall);
-		if (wall.getWallAtStart() != null)
-		{
+		if (wall.getWallAtStart() != null) {
 			wallsToUpdate.add(wall.getWallAtStart());
 		}
-		if (wall.getWallAtEnd() != null)
-		{
+		if (wall.getWallAtEnd() != null) {
 			wallsToUpdate.add(wall.getWallAtEnd());
 		}
 		updateObjects(wallsToUpdate);
@@ -3197,77 +3167,51 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Updates the <code>object</code> scope under light later. Should be invoked from Event Dispatch Thread.
 	 */
-	private void updateObjectsLightScope(Collection<? extends Selectable> objects)
-	{
-		if (home.getEnvironment().getSubpartSizeUnderLight() > 0)
-		{
-			if (this.lightScopeObjectsToUpdate != null)
-			{
-				if (objects == null)
-				{
+	private void updateObjectsLightScope(Collection<? extends Selectable> objects) {
+		if (home.getEnvironment().getSubpartSizeUnderLight() > 0) {
+			if (this.lightScopeObjectsToUpdate != null) {
+				if (objects == null) {
 					this.lightScopeObjectsToUpdate.clear();
 					this.lightScopeObjectsToUpdate.add(null);
-				}
-				else if (!this.lightScopeObjectsToUpdate.contains(null))
-				{
+				} else if (!this.lightScopeObjectsToUpdate.contains(null)) {
 					this.lightScopeObjectsToUpdate.addAll(objects);
 				}
-			}
-			else
-			{
+			} else {
 				this.lightScopeObjectsToUpdate = new HashSet<Selectable>();
-				if (objects == null)
-				{
+				if (objects == null) {
 					this.lightScopeObjectsToUpdate.add(null);
-				}
-				else
-				{
+				} else {
 					this.lightScopeObjectsToUpdate.addAll(objects);
 				}
 				// Invoke later the update of objects of lightScopeObjectsToUpdate
-				EventQueue.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						if (lightScopeObjectsToUpdate.contains(null))
-						{
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						if (lightScopeObjectsToUpdate.contains(null)) {
 							subpartSizeListener.propertyChange(null);
-						}
-						else if (home.getEnvironment().getSubpartSizeUnderLight() > 0)
-						{
+						} else if (home.getEnvironment().getSubpartSizeUnderLight() > 0) {
 							Area lightScopeOutsideWallsArea = getLightScopeOutsideWallsArea();
-							for (Selectable object : lightScopeObjectsToUpdate)
-							{
+							for (Selectable object : lightScopeObjectsToUpdate) {
 								Group object3D = homeObjects.get(object);
-								if (object3D instanceof HomePieceOfFurniture3D)
-								{
+								if (object3D instanceof HomePieceOfFurniture3D) {
 									// Add the direct parent of the shape that will be added once loaded
 									// otherwise scope won't be updated automatically
 									object3D = (Group) object3D.getChild(0);
 								}
 								// Check object wasn't deleted since updateObjects call
-								if (object3D != null)
-								{
+								if (object3D != null) {
 									// Add item to scope if one of its points don't belong to lightScopeOutsideWallsArea
 									boolean objectInOutsideLightScope = false;
-									for (float[] point : object.getPoints())
-									{
-										if (!lightScopeOutsideWallsArea.contains(point[0], point[1]))
-										{
+									for (float[] point : object.getPoints()) {
+										if (!lightScopeOutsideWallsArea.contains(point[0], point[1])) {
 											objectInOutsideLightScope = true;
 											break;
 										}
 									}
-									for (Light light : defaultLights)
-									{
-										if (light instanceof DirectionalLight)
-										{
-											if (objectInOutsideLightScope && light.indexOfScope(object3D) == -1)
-											{
+									for (Light light : sceneLights){
+										if (light instanceof DirectionalLight){
+											if (objectInOutsideLightScope && light.indexOfScope(object3D) == -1){
 												light.addScope(object3D);
-											}
-											else if (!objectInOutsideLightScope && light.indexOfScope(object3D) != -1)
-											{
+											} else if (!objectInOutsideLightScope && light.indexOfScope(object3D) != -1) {
 												light.removeScope(object3D);
 											}
 										}
@@ -3285,40 +3229,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Adds to <code>homeRoot</code> shapes matching the shadow of furniture at their level.
 	 */
-	private void addShadowOnFloor(Group homeRoot, Map<HomePieceOfFurniture, Node> pieces3D)
-	{
-		Comparator<Level> levelComparator = new Comparator<Level>()
-		{
-			public int compare(Level level1, Level level2)
-			{
+	private void addShadowOnFloor(Group homeRoot, Map<HomePieceOfFurniture, Node> pieces3D) {
+		Comparator<Level> levelComparator = new Comparator<Level>() {
+			public int compare(Level level1, Level level2) {
 				return Float.compare(level1.getElevation(), level2.getElevation());
 			}
 		};
 		Map<Level, Area> areasOnLevel = new TreeMap<Level, Area>(levelComparator);
 		// Compute union of the areas of pieces at ground level that are not lights, doors or windows
-		for (Map.Entry<HomePieceOfFurniture, Node> object3DEntry : pieces3D.entrySet())
-		{
-			if (object3DEntry.getKey() instanceof HomePieceOfFurniture)
-			{
+		for (Map.Entry<HomePieceOfFurniture, Node> object3DEntry : pieces3D.entrySet()) {
+			if (object3DEntry.getKey() instanceof HomePieceOfFurniture) {
 				HomePieceOfFurniture piece = object3DEntry.getKey();
 				// This operation can be lengthy, so give up if thread is interrupted
-				if (Thread.currentThread().isInterrupted())
-				{
+				if (Thread.currentThread().isInterrupted()) {
 					return;
 				}
-				if (piece.getElevation() == 0 && !piece.isDoorOrWindow() && !(piece instanceof com.eteks.sweethome3d.model.Light))
-				{
+				if (piece.getElevation() == 0
+						&& !piece.isDoorOrWindow()
+						&& !(piece instanceof com.eteks.sweethome3d.model.Light)) {
 					Area pieceAreaOnFloor = ModelManager.getInstance().getAreaOnFloor(object3DEntry.getValue());
 					Level level = piece.getLevel();
-					if (piece.getLevel() == null)
-					{
+					if (piece.getLevel() == null) {
 						level = new Level("Dummy", 0, 0, 0);
 					}
-					if (level.isViewableAndVisible())
-					{
+					if (level.isViewableAndVisible()) {
 						Area areaOnLevel = areasOnLevel.get(level);
-						if (areaOnLevel == null)
-						{
+						if (areaOnLevel == null) {
 							areaOnLevel = new Area();
 							areasOnLevel.put(level, areaOnLevel);
 						}
@@ -3330,34 +3266,27 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		// Create the 3D shape matching computed areas
 		Shape3D shadow = new Shape3D();
-		for (Map.Entry<Level, Area> levelArea : areasOnLevel.entrySet())
-		{
+		for (Map.Entry<Level, Area> levelArea : areasOnLevel.entrySet()) {
 			List<Point3f> coords = new ArrayList<Point3f>();
 			List<Integer> stripCounts = new ArrayList<Integer>();
 			int pointsCount = 0;
 			float[] modelPoint = new float[2];
-			for (PathIterator it = levelArea.getValue().getPathIterator(null); !it.isDone(); )
-			{
-				if (it.currentSegment(modelPoint) == PathIterator.SEG_CLOSE)
-				{
+			for (PathIterator it = levelArea.getValue().getPathIterator(null); !it.isDone(); ) {
+				if (it.currentSegment(modelPoint) == PathIterator.SEG_CLOSE) {
 					stripCounts.add(pointsCount);
 					pointsCount = 0;
-				}
-				else
-				{
+				} else {
 					coords.add(new Point3f(modelPoint[0], levelArea.getKey().getElevation() + 0.49f, modelPoint[1]));
 					pointsCount++;
 				}
 				it.next();
 			}
 
-			if (coords.size() > 0)
-			{
+			if (coords.size() > 0) {
 				GeometryInfo geometryInfo = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
 				geometryInfo.setCoordinates(coords.toArray(new Point3f[coords.size()]));
 				int[] stripCountsArray = new int[stripCounts.size()];
-				for (int i = 0; i < stripCountsArray.length; i++)
-				{
+				for (int i = 0; i < stripCountsArray.length; i++) {
 					stripCountsArray[i] = stripCounts.get(i);
 				}
 				geometryInfo.setStripCounts(stripCountsArray);

@@ -31,9 +31,11 @@ import com.mindblowing.swingish.JSpinnerJogDial;
 import com.mindblowing.swingish.JSpinner;
 import com.mindblowing.swingish.SpinnerNumberModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
+
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.eteks.sweethome3d.viewcontroller.ObserverCameraController;
+import com.eteks.sweethome3d.viewcontroller.View;
 import com.mindblowing.renovations3d.R;
 
 import java.beans.PropertyChangeEvent;
@@ -41,24 +43,24 @@ import java.beans.PropertyChangeListener;
 
 /**
  * Observer camera editing panel.
- * @author Emmanuel Puybaret
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 public class ObserverCameraPanel extends AndroidDialogView implements DialogView {
   private final ObserverCameraController controller;
-  private JLabel xLabel;
-  private JSpinner xSpinner;
-  private JLabel        yLabel;
-  private JSpinner ySpinner;
-  private JLabel        elevationLabel;
-  private JSpinner elevationSpinner;
-  private JLabel        yawLabel;
+  private JLabel 					xLabel;
+  private JSpinner 				xSpinner;
+  private JLabel        	yLabel;
+  private JSpinner 				ySpinner;
+  private JLabel        	elevationLabel;
+  private JSpinner 				elevationSpinner;
+  private JLabel        	yawLabel;
   private JSpinnerJogDial yawSpinner;
-  private JLabel        pitchLabel;
+  private JLabel        	pitchLabel;
   private JSpinnerJogDial pitchSpinner;
-  private JLabel        fieldOfViewLabel;
+  private JLabel        	fieldOfViewLabel;
   private JSpinnerJogDial fieldOfViewSpinner;
-  private JCheckBox adjustObserverCameraElevationCheckBox;
-  private String        dialogTitle;
+  private JCheckBox 			adjustObserverCameraElevationCheckBox;
+  private String        	dialogTitle;
 
   /**
    * Creates a panel that displays observer camera attributes data according to the units 
@@ -67,8 +69,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
    * @param controller the controller of this panel
    */
   public ObserverCameraPanel(UserPreferences preferences,
-                             ObserverCameraController controller,
-  								Activity activity) {
+                             ObserverCameraController controller, Activity activity) {
 	  super(preferences, activity, R.layout.dialog_observercamera);
     this.controller = controller;
     createComponents(preferences, controller);
@@ -153,7 +154,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
           controller.setYawInDegrees(((Number)yawSpinnerModel.getValue()).intValue());
         }
       });
-    controller.addPropertyChangeListener(ObserverCameraController.Property.YAW_IN_DEGREES, 
+    controller.addPropertyChangeListener(ObserverCameraController.Property.YAW_IN_DEGREES,
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             yawSpinnerModel.setValue(controller.getYawInDegrees() % 360);
@@ -213,9 +214,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     controller.addPropertyChangeListener(ObserverCameraController.Property.MINIMUM_ELEVATION, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
-            //if (elevationSpinnerModel.getLength() != null) {
+            if (elevationSpinnerModel.getLength() != null) {
               elevationSpinnerModel.setLength(Math.max(elevationSpinnerModel.getLength(), controller.getMinimumElevation()));
-           // }
+            }
             elevationSpinnerModel.setMinimum(controller.getMinimumElevation());
           }
         });
@@ -223,6 +224,12 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     this.dialogTitle = preferences.getLocalizedString(
 			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "observerCamera.title");
   }
+
+	/**
+	 * Sets components mnemonics and label / component associations.
+	 */
+	private void setMnemonics(UserPreferences preferences) {
+	}
 
   /**
    * Layouts panel components in panel with their labels. 
@@ -250,12 +257,9 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 	  swapOut(this.fieldOfViewLabel, R.id.observercamera_fieldOfViewLabel);
 	  swapOut(this.fieldOfViewSpinner, R.id.observercamera_fieldOfViewSpinner);
 
-	  if (controller.isObserverCameraElevationAdjustedEditable())
-	  {
+	  if (controller.isObserverCameraElevationAdjustedEditable()) {
 		  swapOut(this.adjustObserverCameraElevationCheckBox, R.id.observercamera_adjustObserverCameraElevationCheckBox);
-	  }
-	  else
-	  {
+	  } else {
 		  removeView(R.id.observercamera_adjustObserverCameraElevationCheckBox);
 	  }
 
@@ -266,8 +270,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
   /**
    * Displays this panel in a modal dialog box. 
    */
-  public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView)
-  {
+  public void displayView(View parentView) {
    /* JFormattedTextField elevationSpinnerTextField =
         ((JSpinner.DefaultEditor)this.elevationSpinner.getEditor()).getTextField();
     if (SwingTools.showConfirmDialog((JComponent)parentView, this, this.dialogTitle,
@@ -276,13 +279,10 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
       this.controller.modifyObserverCamera();
     }*/
 	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-	  this.setOnDismissListener(new OnDismissListener()
-	  {
+	  this.setOnDismissListener(new OnDismissListener() {
 		  @Override
-		  public void onDismiss(DialogInterface dialog)
-		  {
-			  if (controller != null)
-			  {
+		  public void onDismiss(DialogInterface dialog) {
+			  if (controller != null) {
 				  controller.modifyObserverCamera();
 			  }
 		  }

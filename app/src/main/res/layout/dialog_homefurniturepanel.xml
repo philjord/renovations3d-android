@@ -130,6 +130,47 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_verticalRotationLabel"
+                    android:text="verticalRotationLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/furniture_panel_horizontalRotationLabel"
+                    android:text="horizontalRotationLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_pitchRadioButton"
+                    android:text="pitchRadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/furniture_panel_rollRadioButton"
+                    android:text="rollRadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_pitchSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_rollSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
             <CheckBox
                 android:id="@+id/furniture_panel_basePlanItemCheckBox"
                 android:text="Part of base plan"

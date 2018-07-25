@@ -48,15 +48,31 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/prefs_arialCenterLabel"
-                android:text="Name"
+                android:id="@+id/prefs_aerialViewCenteredOnSelectionLabel"
+                android:text="aerialViewCenteredOnSelectionLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 />
             <CheckBox
-                android:id="@+id/prefs_arialCenterRadioButton"
-                android:text="Color:"
+                android:id="@+id/prefs_aerialViewCenteredOnSelectionCheckBox"
+                android:text="aerialViewCenteredOnSelectionCheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/prefs_observerCameraSelectedAtChangeLabel"
+                android:text="observerCameraSelectedAtChangeLabel"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                />
+            <CheckBox
+                android:id="@+id/prefs_observerCameraSelectedAtChangeCheckBox"
+                android:text="observerCameraSelectedAtChangeCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

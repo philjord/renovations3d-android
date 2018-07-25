@@ -86,6 +86,7 @@ public class AdMobManager
 		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");//T580
 		builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699");//I9505
 		builder.addTestDevice("F1F03BC6248C8ECF32CBB4DD027F78B9");//T210
+		builder.addTestDevice("3A757DEE674365779CF90E1E82546B04");//samsung 9
 
 		mBasicLowerBannerAdView = (AdView) renovations3DActivity.findViewById(R.id.lowerBannerAdView);
 

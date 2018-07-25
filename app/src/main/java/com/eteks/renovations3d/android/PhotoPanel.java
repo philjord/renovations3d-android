@@ -706,7 +706,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				image = homeComponent3D.getOffScreenImage(imageWidth, imageHeight);
 
 				// must be carefully swapped to get BGRA to RGBA
-				int[] imagePixels = PlanComponent.getImagePixels(image);
+				int[] imagePixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(image);
 				Bitmap bm = Bitmap.createBitmap(imagePixels, image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
 				image = new VMBufferedImage(bm);
 

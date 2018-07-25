@@ -35,10 +35,9 @@ import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.WizardController;
 import com.mindblowing.renovations3d.R;
 
-
 /**
  * Wizard pane. 
- * @author Emmanuel Puybaret
+ * @author Emmanuel Puybaret and Philip Jordan
  */
 public class WizardPane extends AndroidDialogView implements DialogView {
   private final UserPreferences  preferences;
@@ -54,8 +53,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
    * Creates a wizard view controlled by <code>controller</code>.
    */
   public WizardPane(UserPreferences preferences,
-                    final WizardController controller, Activity activity)
-  {
+                    final WizardController controller, Activity activity){
 	  super(preferences, activity, R.layout.dialog_wizard_pane, true);
     this.preferences = preferences;
     this.controller = controller;
@@ -152,7 +150,6 @@ public class WizardPane extends AndroidDialogView implements DialogView {
         }
       });
 
-
 	  //PJPJ add them to the gui
 	  swapOut(backOptionButton, R.id.wizard_pane_back);
 	  swapOut(nextFinishOptionButton, R.id.wizard_pane_next);
@@ -172,11 +169,9 @@ public class WizardPane extends AndroidDialogView implements DialogView {
   /**
    * Updates the step view displayed by this wizard view.
    */
-  private void updateStepView(WizardController controller)
-  {
+  private void updateStepView(WizardController controller) {
 	  // Clean previous step view
-	  if( messagePanel != null)
-	  {
+	  if( messagePanel != null) {
 		  messagePanel.setVisibility(android.view.View.GONE);
 	  }
 
@@ -302,7 +297,6 @@ public class WizardPane extends AndroidDialogView implements DialogView {
           }
         });
 
-    
  /*   this.dialog.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
     this.dialog.setResizable(this.controller.isResizable());
     this.controller.addPropertyChangeListener(WizardController.Property.RESIZABLE, 
@@ -318,11 +312,9 @@ public class WizardPane extends AndroidDialogView implements DialogView {
     this.dialog.setVisible(true);
     this.dialog.dispose();*/
 
-	  this.setOnDismissListener(new OnDismissListener()
-	  {
+	  this.setOnDismissListener(new OnDismissListener() {
 		  @Override
-		  public void onDismiss(DialogInterface dialog)
-		  {
+		  public void onDismiss(DialogInterface dialog) {
 			  if (messagePanel != null)
 				  messagePanel.dismissed();
 		  }
@@ -332,6 +324,4 @@ public class WizardPane extends AndroidDialogView implements DialogView {
 	  if(!this.isShowing())
 	  	this.show();
   }
-
-
 }

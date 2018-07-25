@@ -50,7 +50,7 @@ public class FileContentManager implements ContentManager {
   /**
    * Supported OBJ filter.
    */
-  private static final FileFilter[] OBJ_FILTER = {
+  private static final FileFilter [] OBJ_FILTER = {
       new FileFilter() {
         @Override
         public boolean accept(File file) {
@@ -83,6 +83,7 @@ public class FileContentManager implements ContentManager {
                 || file.getName().toLowerCase().endsWith(LWS_EXTENSION);
        }
    
+
        public String getDescription() {
          return "LWS - LightWave Scene";
        }
@@ -186,7 +187,7 @@ public class FileContentManager implements ContentManager {
       new FileFilter() {
         @Override
         public boolean accept(File file) {
-          // Accept directories and .sh3d files
+          // Accept directories and .bmp files
           return file.isDirectory()
                  || file.getName().toLowerCase().endsWith(BMP_EXTENSION)
                  || file.getName().toLowerCase().endsWith(WBMP_EXTENSION);
@@ -301,17 +302,15 @@ private Renovations3DActivity activity;//for dialogs etc
   public FileContentManager(final UserPreferences preferences, Renovations3DActivity activity) {
    this. activity = activity;
     this.preferences = preferences;
-
-	  //use class with same name but inside the jar
     this.sweetHome3DFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension");
-	  String homeExtension2;
-	  try {
-		  // Get optional second extension
-		  homeExtension2 = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension2");
-	  } catch (IllegalArgumentException ex) {
-		  homeExtension2 = null;
-	  }
-	  this.sweetHome3DFileExtension2 = homeExtension2;
+    String homeExtension2;
+    try {
+      // Get optional second extension
+      homeExtension2 = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension2");
+    } catch (IllegalArgumentException ex) {
+      homeExtension2 = null;
+    }
+    this.sweetHome3DFileExtension2 = homeExtension2;
     this.languageLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "languageLibraryExtension");
     this.furnitureLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "furnitureLibraryExtension");
     this.texturesLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "texturesLibraryExtension");
@@ -330,22 +329,22 @@ private Renovations3DActivity activity;//for dialogs etc
     this.fileFilters.put(ContentType.SVG, SVG_FILTER);
     this.fileFilters.put(ContentType.OBJ, OBJ_FILTER);
     this.fileFilters.put(ContentType.SWEET_HOME_3D, new FileFilter [] {
-			new FileFilter() {
-				@Override
-				public boolean accept(File file) {
-					// Accept directories, .sh3d and .sh3x files
-					return file.isDirectory()
-							|| file.getName().toLowerCase().endsWith(sweetHome3DFileExtension)
-							|| (sweetHome3DFileExtension2 != null
-							&& file.getName().toLowerCase().endsWith(sweetHome3DFileExtension2));
-				}
+        new FileFilter() {
+          @Override
+          public boolean accept(File file) {
+            // Accept directories, .sh3d and .sh3x files
+            return file.isDirectory()
+                || file.getName().toLowerCase().endsWith(sweetHome3DFileExtension)
+                || (sweetHome3DFileExtension2 != null
+                     && file.getName().toLowerCase().endsWith(sweetHome3DFileExtension2));
+          }
 
 
-				public String getDescription() {
-					return preferences.getLocalizedString(FileContentManager.class, "homeDescription");
-				}
-			}
-	});
+          public String getDescription() {
+            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeDescription");
+          }
+        }
+      });
     this.fileFilters.put(ContentType.LANGUAGE_LIBRARY, new FileFilter [] {
         new FileFilter() {
           @Override
@@ -423,11 +422,14 @@ private Renovations3DActivity activity;//for dialogs etc
 
     // Fill file default extension map
     this.fileExtensions = new HashMap<ContentType, String []>();
-    this.fileExtensions.put(ContentType.SWEET_HOME_3D,     new String [] {sweetHome3DFileExtension});
-    this.fileExtensions.put(ContentType.LANGUAGE_LIBRARY,  new String [] {languageLibraryFileExtension});
-    this.fileExtensions.put(ContentType.FURNITURE_LIBRARY, new String [] {furnitureLibraryFileExtension});
-    this.fileExtensions.put(ContentType.TEXTURES_LIBRARY,  new String [] {texturesLibraryFileExtension});
-    this.fileExtensions.put(ContentType.PLUGIN,            new String [] {pluginFileExtension});
+    String [] sweetHome3DFileExtensions = this.sweetHome3DFileExtension2 != null
+        ? new String [] {this.sweetHome3DFileExtension, this.sweetHome3DFileExtension2}
+        : new String [] {this.sweetHome3DFileExtension};
+    this.fileExtensions.put(ContentType.SWEET_HOME_3D,     sweetHome3DFileExtensions);
+    this.fileExtensions.put(ContentType.LANGUAGE_LIBRARY,  new String [] {this.languageLibraryFileExtension});
+    this.fileExtensions.put(ContentType.FURNITURE_LIBRARY, new String [] {this.furnitureLibraryFileExtension});
+    this.fileExtensions.put(ContentType.TEXTURES_LIBRARY,  new String [] {this.texturesLibraryFileExtension});
+    this.fileExtensions.put(ContentType.PLUGIN,            new String [] {this.pluginFileExtension});
     this.fileExtensions.put(ContentType.PNG,               new String [] {PNG_EXTENSION});
     this.fileExtensions.put(ContentType.JPEG,              new String [] {JPEG_EXTENSION});
     this.fileExtensions.put(ContentType.MOV,               new String [] {MOV_EXTENSION});
@@ -518,8 +520,9 @@ private Renovations3DActivity activity;//for dialogs etc
    */
   public boolean isAcceptable(String contentPath, 
                               ContentType contentType) {
+    File file = new File(contentPath);
     for (FileFilter filter : getFileFilter(contentType)) {
-      if (filter.accept(new File(contentPath))) {
+      if (filter.accept(file)) {
         return true;
       }
     }
