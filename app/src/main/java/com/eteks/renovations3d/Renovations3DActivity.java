@@ -448,6 +448,10 @@ public class Renovations3DActivity extends FragmentActivity
 			String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name");
 			setIconizedMenuTitle(newMI, newStr, android.R.drawable.ic_input_add, this);
 
+			MenuItem newFromExampleMI = menu.findItem(R.id.menu_new_from_example);
+			String newFromExampleStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME_FROM_EXAMPLE.Name");
+			setIconizedMenuTitle(newFromExampleMI, newFromExampleStr, android.R.drawable.ic_input_add, this);
+
 			MenuItem loadMI = menu.findItem(R.id.menu_load);
 			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
 			setIconizedMenuTitle(loadMI, loadStr, R.drawable.ic_open_in_new_black_24dp, this);
@@ -495,6 +499,9 @@ public class Renovations3DActivity extends FragmentActivity
 			case R.id.menu_new:
 				newHome();
 				getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.NEW_HOME);
+				return true;
+			case R.id.menu_new_from_example:
+				newHomeFromExample();
 				return true;
 			case R.id.menu_load:
 				loadSh3dFile();
@@ -825,6 +832,52 @@ public class Renovations3DActivity extends FragmentActivity
 
 	}
 
+	private void newHomeFromExample()
+	{
+		if (getHomeController() != null)
+			getHomeController().close();
+
+		// to be safe get this back onto the ui thread
+		Renovations3DActivity.this.runOnUiThread(new Runnable()
+		{
+			public void run() {
+				//TODO: this is a copy of the load method below, I'm not sure if these fragment leak issues are happening here, rudimentary tests suggest not
+				// adding these renovations3D lines in causes the dialog to never show...
+				//renovations3D = new Renovations3D(Renovations3DActivity.this);
+
+				if (mRenovations3DPagerAdapter != null) {
+					// discard the old view first
+					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+					mRenovations3DPagerAdapter.notifyDataSetChanged();
+				}
+
+				// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
+				//mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+
+				//mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
+				//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
+
+				Thread t = new Thread(new Runnable()
+				{
+					public void run()
+					{
+						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
+							@Override
+							public void onHomeLoaded(Home home, final HomeController homeController) {
+								mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+								mRenovations3DPagerAdapter.notifyDataSetChanged();
+							}
+						});
+						renovations3D.newHomeFromExample();
+						recordHomeStateInPrefs("", false, "");
+					}}
+				);
+				t.start();
+
+
+			}});
+	}
+
 	private void loadSh3dFile()
 	{
 		// get off EDT for showOpenDialog call
@@ -905,6 +958,9 @@ public class Renovations3DActivity extends FragmentActivity
 	 */
 	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
 	{
+
+
+
 		// must get off the EDT thread as the close may ask for a save
 		Thread t2 = new Thread()
 		{

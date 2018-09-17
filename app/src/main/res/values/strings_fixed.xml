@@ -8,6 +8,7 @@
     <string name="menu_save_as" translatable="false">Save as&#8230;</string>
     <string name="menu_about" translatable="false">About</string>
     <string name="menu_new" translatable="false">New home</string>
+    <string name="menu_new_from_example" translatable="false">New home from example</string>
     <string name="menu_preferences" translatable="false">Preferences</string>
     <string name="importFurnitureLib" translatable="false">Import furniture library&#8230;</string>
     <string name="importTextureLib" translatable="false">Import texture library&#8230;</string>

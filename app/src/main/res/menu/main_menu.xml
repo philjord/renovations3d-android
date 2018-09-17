@@ -14,6 +14,9 @@
                 android:id="@+id/menu_new"
                 android:title="@string/menu_new"/>
             <item
+                android:id="@+id/menu_new_from_example"
+                android:title="@string/menu_new_from_example"/>
+            <item
                 android:id="@+id/menu_load"
                 android:enabled="false"
                 android:title="@string/menu_load"/>

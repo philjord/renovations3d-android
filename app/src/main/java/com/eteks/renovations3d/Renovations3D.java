@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.android.HomePane;
+import com.eteks.sweethome3d.model.HomeFurnitureGroup;
+import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.swingish.JOptionPane;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
@@ -39,9 +41,11 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.prefs.BackingStoreException;
@@ -158,6 +162,71 @@ public class Renovations3D extends HomeApplication
 		}
 	}
 
+	// this is a butchery of HomeController.newHomeFromExample() like the loadHome below
+	public void newHomeFromExample()
+	{
+		if (getHomeController() != null)
+		{
+			HomeController controller = getHomeController();
+			final String exampleName = controller.getView().showNewHomeFromExampleDialog();
+			if (exampleName != null)
+			{
+				Renovations3DActivity.logFireBaseContent("newHomeFromExample", exampleName);
+
+				// force dump old pref property change support
+				this.getUserPreferences().clearPropertyChangeListeners();
+
+				Callable<Void> openTask = new Callable<Void>() {
+					public Void call() throws RecorderException {
+						home = getHomeRecorder().readHome(exampleName);
+						homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
+						homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
+						EventQueue.invokeLater(new Runnable()
+						{
+							public void run()
+							{
+								parentActivity.setUpViews();
+								parentActivity.invalidateOptionsMenu();
+							}
+						});
+
+						for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners)
+						{
+							onHomeLoadedListener.onHomeLoaded(home, homeController);
+						}
+
+						Map<String, String> furnitureNames = homeController.getCatalogFurnitureNames(getUserPreferences().getFurnitureCatalog());
+						String groupName = getUserPreferences().getLocalizedString(HomeController.class, "defaultGroupName", new Object[0]);
+						Iterator var5 = home.getFurniture().iterator();
+
+						while (var5.hasNext()) {
+							HomePieceOfFurniture piece = (HomePieceOfFurniture) var5.next();
+							homeController.renameToCatalogName(piece, furnitureNames, groupName);
+						}
+
+						home.setName((String) null);
+						return null;
+					}
+				};
+				ThreadedTaskController.ExceptionHandler exceptionHandler = new ThreadedTaskController.ExceptionHandler() {
+					public void handleException(Exception ex) {
+						if (!(ex instanceof InterruptedRecorderException)) {
+							ex.printStackTrace();
+							if (ex instanceof RecorderException) {
+								String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", new Object[]{exampleName});
+								new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
+							}
+						}
+
+					}
+				};
+				(new ThreadedTaskController(openTask,
+								getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+								getUserPreferences(), this.viewFactory)).executeTask(new View(){});
+			}
+		}
+
+	}
 
 
 	/**
@@ -175,8 +244,6 @@ public class Renovations3D extends HomeApplication
 		// Read home in a threaded task
 		Callable<Void> openTask = new Callable<Void>()
 		{
-
-
 			public Void call() throws RecorderException
 			{
 				currentHomeReduceVisible = false;
@@ -257,14 +324,10 @@ public class Renovations3D extends HomeApplication
 						}
 					}
 				};
-		new ThreadedTaskController(openTask,
+		(new ThreadedTaskController(openTask,
 				getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
-				getUserPreferences(), this.viewFactory).executeTask(new View()
-		{
-		});
-
+				getUserPreferences(), this.viewFactory)).executeTask(new View(){});
 	}
-
 
 
 	//new singleton hand outerer
@@ -288,7 +351,7 @@ public class Renovations3D extends HomeApplication
 		// Initialize homeRecorder lazily
 		if (this.homeRecorder == null)
 		{
-			this.homeRecorder = new HomeFileRecorder(0, false, getUserPreferences(), false, true);
+			this.homeRecorder = new HomeFileRecorder(0, false, getUserPreferences(), false, true, true);
 		}
 		return this.homeRecorder;
 	}
@@ -301,7 +364,7 @@ public class Renovations3D extends HomeApplication
 			// Initialize compressedHomeRecorder lazily
 			if (this.compressedHomeRecorder == null)
 			{
-				this.compressedHomeRecorder = new HomeFileRecorder(9, false, getUserPreferences(), false, true);
+				this.compressedHomeRecorder = new HomeFileRecorder(9, false, getUserPreferences(), false, true, true);
 			}
 			return this.compressedHomeRecorder;
 		}

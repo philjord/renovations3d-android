@@ -20,12 +20,17 @@
 package com.eteks.renovations3d.android;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
@@ -59,6 +64,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -3479,63 +3485,18 @@ public class HomePane implements HomeView
    * Displays a dialog to let the user choose a home example.
    */
   public String showNewHomeFromExampleDialog() {
-    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.message");
-    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.title");
-    final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.useSelectedExample");
-    String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
-    String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.cancel");
-    final ListView homeExamplesList = new ListView(activity);
-    homeExamplesList.setAdapter(new HomeExamplesListCellRenderer(activity, this.preferences.getHomeExamples()));
-    homeExamplesList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-    /*
-     final JList homeExamplesList = new JList(activity, this.preferences.getHomeExamples().toArray()) {
-        @Override
-        public String getToolTipText(MouseEvent ev) {
-          int index = locationToIndex(ev.getPoint());
-          // Display full name in tool tip in case label renderer is too short
-          return index != -1
-              ? ((HomeDescriptor)getModel().getElementAt(index)).getName()
-              : null;
-        }
-      };
-    homeExamplesList.setSelectionModel(new DefaultListSelectionModel() {
-        @Override
-        public void removeSelectionInterval(int index0, int index1) {
-          // Do nothing, to avoid empty selection in case of Ctrl or cmd + click
-        }
-      });
-    homeExamplesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    homeExamplesList.setSelectedIndex(0);
-    homeExamplesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-    homeExamplesList.setVisibleRowCount(3);
-    final int iconWidth = 192;
-    homeExamplesList.setFixedCellWidth(iconWidth + 8);
-    homeExamplesList.setCellRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-                                                      boolean cellHasFocus) {
-          HomeDescriptor home = (HomeDescriptor)value;
-          super.getListCellRendererComponent(list, home.getName(), index, isSelected, cellHasFocus);
-          setIcon(IconManager.getInstance().getIcon(home.getIcon(), iconWidth * 3 / 4, homeExamplesList));
-          setHorizontalAlignment(CENTER);
-          setHorizontalTextPosition(CENTER);
-          setVerticalTextPosition(BOTTOM);
-          setBorder(BorderFactory.createCompoundBorder(getBorder(), BorderFactory.createEmptyBorder(2, 0, 2, 0)));
-          return this;
-        }
-      });
-    homeExamplesList.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent ev) {
-          if (ev.getClickCount() == 2) {
-            ((JOptionPane)SwingUtilities.getAncestorOfClass(JOptionPane.class, ev.getComponent())).setValue(useSelectedHome);
-          }
-        }
-      });
-     */
+    final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.message");
+    final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.title");
+    //final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.useSelectedExample");
+    //String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
+    //String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.cancel");
+    final JList homeExamplesList = new JList(activity, new JList.DefaultListModel(this.preferences.getHomeExamples()));
+		final HomeExamplesListCellRenderer adapter = new HomeExamplesListCellRenderer(activity, this.preferences.getHomeExamples());
+    homeExamplesList.setAdapter(adapter);
+    homeExamplesList.setSelectionMode(JList.ListSelectionModel.SINGLE_SELECTION);
 
 
-    LinearLayout homeExamplesPanel = new LinearLayout(activity);
+    final LinearLayout homeExamplesPanel = new LinearLayout(activity);
     homeExamplesPanel.setOrientation(LinearLayout.VERTICAL);
     homeExamplesPanel.setPadding(10,10,10,10);
     homeExamplesPanel.addView(new JLabel(activity, Html.fromHtml(message)));
@@ -3544,53 +3505,77 @@ public class HomePane implements HomeView
     ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
     homeExamplesPanel.addView(homeExamplesList, listLP);
 
-    ScrollView sv = new ScrollView(activity);
-    sv.addView(homeExamplesPanel);
+		if(Looper.getMainLooper().getThread() == Thread.currentThread())
+		{
+			new Throwable().printStackTrace();
+			System.err.println("JOptionPane asked to showOptionDialog (View root) on EDT thread you MUST not as I will block!");
+			return null;
+		}
 
-    Object [] options = findMoreExamples.length() > 0
-        ? new Object [] {useSelectedHome, findMoreExamples, cancel}
-        : new Object [] {useSelectedHome, cancel};
-    int option = JOptionPane.showOptionDialog(activity, sv, title,
-        findMoreExamples.length() > 0 ? JOptionPane.YES_NO_CANCEL_OPTION : JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
-        null, options, useSelectedHome);
-    switch (option) {
-      // Convert showOptionDialog answer to SaveAnswer enum constants
-      case JOptionPane.YES_OPTION:
-        Content homeContent = ((HomeDescriptor)homeExamplesList.getSelectedItem()).getContent();
-        return homeContent instanceof URLContent
-            ? ((URLContent)homeContent).getURL().toString()
-            : null;
-      case JOptionPane.NO_OPTION:
-        String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
-        boolean documentShown = false;
-        try {
-          // Display Find more demos (gallery) page in browser
-          documentShown = SwingTools.showDocumentInBrowser(new URL(findModelsUrl));
-        } catch (MalformedURLException ex) {
-          // Document isn't shown
-        }
-        if (!documentShown) {
-          // If the document wasn't shown, display a message
-          // with a copiable URL in a message box
-          String findMoreExamplesMessageText = preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamplesMessage.text");
-          String findMoreExamplesTitle = preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamplesMessage.title");
-          JOptionPane.showMessageDialog(activity,
-              findMoreExamplesMessageText, findMoreExamplesTitle, JOptionPane.INFORMATION_MESSAGE);
-        }
-        // No break
-      default :
-        return null;
-    }
+
+
+		final Semaphore dialogSemaphore = new Semaphore(0, true);
+		final String[] selectedHome = new String[1];
+
+		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.post(new Runnable()
+		{
+			public void run()
+			{
+				AlertDialog.Builder dialog = new AlertDialog.Builder(activity) ;
+				dialog.setTitle(title);
+				dialog.setView(homeExamplesPanel);
+				final AlertDialog alertDialog = dialog.create();
+
+				homeExamplesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
+						Content homeContent = ((HomeDescriptor) homeExamplesList.getItemAtPosition(position)).getContent();
+						selectedHome[0] = homeContent instanceof URLContent
+										? ((URLContent) homeContent).getURL().toString()
+										: null;
+						if(homeExamplesPanel.getParent() != null)
+							((ViewGroup)homeExamplesPanel.getParent()).removeView(homeExamplesPanel);//oddly dismiss doesn't do this
+						alertDialog.dismiss();
+						dialogSemaphore.release();
+					}
+				});
+
+				if(!(activity).isFinishing())
+				{
+					alertDialog.show();
+				}
+			}
+		});
+
+		try
+		{
+			dialogSemaphore.acquire();
+		}
+		catch (InterruptedException e)
+		{
+		}
+		return selectedHome[0];
   }
+
 
 	private class HomeExamplesListCellRenderer extends ArrayAdapter<HomeDescriptor>
 	{
-		public int namePadBottomPx = 6;
+		private int ICON_WIDTH_DP = 128;
+		private int iconWidthPx = 192;
+		public int namePadBottomPx = 42;
+		//see these to translate medium to pixel
+		//https://stackoverflow.com/questions/6263250/convert-pixels-to-sp
+		//https://stackoverflow.com/questions/11590538/dpi-value-of-default-large-medium-and-small-text-views-android
+		public Font defaultFont;
 		public HomeExamplesListCellRenderer(Context context, List<HomeDescriptor> examples)
 		{
 			super(context, android.R.layout.simple_list_item_1, examples);
+			int px = (int)(18 * context.getResources().getDisplayMetrics().scaledDensity);
+			defaultFont = new VMFont(Typeface.DEFAULT, px);
+			namePadBottomPx = (int)(px * 1.5);
+			iconWidthPx = (int) (ICON_WIDTH_DP * context.getResources().getDisplayMetrics().density + 0.5f);
 		}
 
 		@Override
@@ -3601,10 +3586,9 @@ public class HomePane implements HomeView
 		@Override
 		public android.view.View getDropDownView (final int position, android.view.View convertView, ViewGroup parent)
 		{
-			final int iconWidth = 192;
 			final HomeDescriptor home = this.getItem(position);
-			final Icon icon = IconManager.getInstance().getIcon(home.getIcon(), iconWidth * 3 / 4, null);
-			ImageView ret = new CheckableImageView(getContext())
+			final Icon icon = IconManager.getInstance().getIcon(home.getIcon(), iconWidthPx * 3 / 4, null);
+			ImageView ret = new android.support.v7.widget.AppCompatImageView(getContext())
 			{
 				public void onDraw(Canvas canvas)
 				{
@@ -3613,16 +3597,12 @@ public class HomePane implements HomeView
 
 					String value = home.getName();
 					g2D.setColor(Color.BLACK);
-					g2D.drawString(value, 0, this.getHeight() - namePadBottomPx);// at the bottom
-					if (isChecked())
-					{
-						g2D.setColor(Color.DARK_GRAY);
-						g2D.drawRect(0, 0, this.getWidth(), this.getHeight());
-					}
+					g2D.setFont(defaultFont);
+					g2D.drawString(value, 0, this.getHeight() - (namePadBottomPx / 4));// at the bottom, but notice this is the lower edge of text
 				}
 			};
-			ret.setMinimumWidth(icon.getIconWidth());//or just 96?
-			ret.setMinimumHeight(icon.getIconHeight() + namePadBottomPx); // or 96 + pad
+			ret.setMinimumWidth(icon.getIconWidth());
+			ret.setMinimumHeight(icon.getIconHeight() + namePadBottomPx);
 
 			return ret;
 

@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
 
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         multiDexEnabled = true
         // SM-T210 didn't like this setting, presumably the proguard sorts this out
         //http://stackoverflow.com/questions/32723590/generate-maindexlist-multidex-for-maven/39771419#39771419
