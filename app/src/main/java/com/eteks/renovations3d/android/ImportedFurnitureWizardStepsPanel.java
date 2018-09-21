@@ -429,7 +429,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	//  this.attributesLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "nameLabel.text"));
-    this.nameTextField = new JTextField(activity, "");
+    this.nameTextField = new JTextField(activity, 10);
 //    if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
  //     SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
  //   }
