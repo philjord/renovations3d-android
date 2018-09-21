@@ -261,7 +261,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     private JLabel                  availableTexturesLabel;
     private JList 									availableTexturesList;
     private JLabel                  angleLabel;
-    private JSpinnerJogDial 				angleSpinner;
+    private JSpinner 				 				angleSpinner;
     private JLabel                  scaleLabel;
     private JSpinner                scaleSpinner;
     private JButton 								importTextureButton;
@@ -359,7 +359,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             Graphics2D g2D = (Graphics2D)g;
             Shape oldClip = g2D.getClip();
             AffineTransform oldTransform = g2D.getTransform();
-						g2D.rotate(Math.toRadians(((Number)angleSpinner.getValue()).doubleValue()), getWidth() / 2, getHeight() / 2);
+						g2D.rotate(Math.toRadians(((Number)angleSpinner.getModel().getValue()).doubleValue()), getWidth() / 2, getHeight() / 2);
             super.paintComponent(g);
             g2D.setTransform(oldTransform);
             g2D.setClip(oldClip);
@@ -402,17 +402,23 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             "angleLabel.text"));
 				final NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 								0, 0, 360, 15);
-				this.angleSpinner = new NullableSpinnerJogDial(activity, angleSpinnerModel);
+				//this.angleSpinner = new NullableSpinnerJogDial(activity, angleSpinnerModel);
+				this.angleSpinner = new AutoCommitSpinner(activity, angleSpinnerModel,true);
 				angleSpinnerModel.addChangeListener(new ChangeListener() {
 					public void stateChanged(ChangeEvent ev) {
 						texturePreviewComponent.postInvalidate();
 					}
 				});
 
-				this.scaleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, TextureChoiceComponent.class,
+				this.scaleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class,
 								"scaleLabel.text"));
 				final SpinnerNumberModel scaleSpinnerModel = new SpinnerNumberModel(new Float(100f), new Float(1f), new Float(10000f), new Float(5f));
-				this.scaleSpinner = new AutoCommitSpinner(activity, scaleSpinnerModel);
+				this.scaleSpinner = new AutoCommitSpinner(activity, scaleSpinnerModel,true);
+				scaleSpinnerModel.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent ev) {
+						texturePreviewComponent.postInvalidate();
+					}
+				});
 
         this.importTextureButton = new JButton(activity, importTextureButtonText);
         this.importTextureButton.addActionListener(new ActionListener() {
@@ -483,9 +489,9 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       HomeTexture texture = controller.getTexture();
       setPreviewTexture(texture);
       if (texture instanceof HomeTexture) {
-        this.angleSpinner.setValue((int)Math.toDegrees(texture.getAngle()));
+        this.angleSpinner.setValue(new Float(Math.toDegrees(texture.getAngle())));
         this.scaleSpinner.setValue(new Float(texture.getScale() * 100f));
-        }
+			}
      // Insets insets = new Insets(5,5,5,5);//border.getBorderInsets(this.texturePreviewComponent);
      // this.texturePreviewComponent.setPreferredSize(
      //     new Dimension(PREVIEW_ICON_SIZE + insets.left + insets.right, PREVIEW_ICON_SIZE + insets.top + insets.bottom));
@@ -844,8 +850,8 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       if (previewTexture == null) {
         return null;
       } else {
-        float angleInRadians = (float)Math.toRadians(((Number)this.angleSpinner.getValue()).doubleValue());
-        float scale = ((Number)this.scaleSpinner.getModel().getValue()).floatValue() / 100f;
+        float angleInRadians = (float)Math.toRadians(((Number)this.angleSpinner.getModel().getValue()).doubleValue());
+				float scale = ((Number)this.scaleSpinner.getModel().getValue()).floatValue() / 100f;
         return new HomeTexture(previewTexture, angleInRadians, scale, true);
       }
     }

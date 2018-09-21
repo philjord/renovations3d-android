@@ -60,39 +60,39 @@ import javaxswing.ImageIcon;
  */
 public class HomeFurniturePanel extends AndroidDialogView implements DialogView {
   private final HomeFurnitureController controller;
-  private JLabel 				  nameLabel;
-  private JTextField 			  nameTextField;
+  private JLabel 				  				nameLabel;
+  private JTextField 			  			nameTextField;
   private JLabel                  descriptionLabel;
   private JTextField              descriptionTextField;
-  private NullableCheckBox 		  nameVisibleCheckBox;
+  private NullableCheckBox 		  	nameVisibleCheckBox;
   private JLabel                  priceLabel;
-  private JSpinner 				  priceSpinner;
+  private JSpinner 				  			priceSpinner;
   private JLabel                  xLabel;
-  private JSpinner 				  xSpinner;
+  private JSpinner 				  			xSpinner;
   private JLabel                  yLabel;
-  private JSpinner 				  ySpinner;
+  private JSpinner 				  			ySpinner;
   private JLabel                  elevationLabel;
-  private JSpinner 				  elevationSpinner;
+  private JSpinner 				  			elevationSpinner;
   private NullableCheckBox        basePlanItemCheckBox;
   private JLabel                  angleLabel;
-  private JSpinnerJogDial 		  angleSpinner;
+  private JSpinner 		  					angleSpinner;
   private JRadioButton            rollRadioButton;
-  private JSpinnerJogDial         rollSpinner;
+  private JSpinner			          rollSpinner;
   private JRadioButton            pitchRadioButton;
-  private JSpinnerJogDial         pitchSpinner;
+  private JSpinner         				pitchSpinner;
   private JLabel                  widthLabel;
-  private JSpinner 				  widthSpinner;
+  private JSpinner 				  			widthSpinner;
   private JLabel                  depthLabel;
-  private JSpinner 				  depthSpinner;
+  private JSpinner 				  			depthSpinner;
   private JLabel                  heightLabel;
-  private JSpinner 				  heightSpinner;
-  private JCheckBox 		 	  keepProportionsCheckBox;
+  private JSpinner 				  			heightSpinner;
+  private JCheckBox 		 	  			keepProportionsCheckBox;
   private NullableCheckBox        mirroredModelCheckBox;
-  private JRadioButton 			  defaultColorAndTextureRadioButton;
+  private JRadioButton 			  		defaultColorAndTextureRadioButton;
   private JRadioButton            colorRadioButton;
   private ColorButton             colorButton;
   private JRadioButton            textureRadioButton;
-  private JButton 				  textureComponent;
+  private JButton 				  			textureComponent;
   private JRadioButton            modelMaterialsRadioButton;
   private JButton              	  modelMaterialsComponent;
   private JRadioButton            defaultShininessRadioButton;
@@ -100,7 +100,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JRadioButton            shinyRadioButton;
   private NullableCheckBox        visibleCheckBox;
   private JLabel                  lightPowerLabel;
-  private JSpinnerJogDial 		  lightPowerSpinner;
+  private JSpinner 		  					lightPowerSpinner;
   private String                  dialogTitle;
 
   /**
@@ -381,7 +381,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  "angleLabel.text"));
 		  final NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 				  0, 0, 360, 1);
-		  this.angleSpinner = new NullableSpinnerJogDial(activity, angleSpinnerModel);
+		  this.angleSpinner = new NullableSpinner(activity, angleSpinnerModel, true);
 		  Float angle = controller.getAngle();
 		  angleSpinnerModel.setNullable(angle == null);
 		  angleSpinnerModel.setValue(angle != null ? new Float((float) Math.toDegrees(angle)) : null);
@@ -423,7 +423,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 			  final NullableSpinnerNumberModel rollSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 					  0, 0, 360, 1);
-			  this.rollSpinner = new NullableSpinnerJogDial(activity, rollSpinnerModel);
+			  this.rollSpinner = new NullableSpinner(activity, rollSpinnerModel, true);
 			  Float roll = controller.getRoll();
 			  rollSpinnerModel.setNullable(roll == null);
 			  rollSpinnerModel.setValue(roll != null ? new Float((float) Math.toDegrees(roll)) : null);
@@ -465,7 +465,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 			  final NullableSpinnerNumberModel pitchSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 					  0, 0, 360, 1);
-			  this.pitchSpinner = new NullableSpinnerJogDial(activity, pitchSpinnerModel);
+			  this.pitchSpinner = new NullableSpinner(activity, pitchSpinnerModel, true);
 			  Float pitch = controller.getPitch();
 			  pitchSpinnerModel.setNullable(pitch == null);
 			  pitchSpinnerModel.setValue(pitch != null ? new Float((float) Math.toDegrees(pitch)) : null);
@@ -847,7 +847,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  "lightPowerLabel.text", unitName));
 		  final NullableSpinnerNumberModel lightPowerSpinnerModel = new NullableSpinnerNumberModel(
 				  0, 0, 100, 5);
-		  this.lightPowerSpinner = new NullableSpinnerJogDial(activity, lightPowerSpinnerModel);
+		  this.lightPowerSpinner = new NullableSpinner(activity, lightPowerSpinnerModel, true);
 		  lightPowerSpinnerModel.setNullable(controller.getLightPower() == null);
 		  lightPowerSpinnerModel.setValue(controller.getLightPower() != null
 				  ? Math.round(controller.getLightPower() * 100)
@@ -1068,16 +1068,15 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  }
 	  if (orientationPanelDisplayed) {
 		  // Orientation panel
-		 // JLabel orientationPanel = new JLabel(activity, preferences.getLocalizedString(
-			//	  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationPanel.title"));
-		  //swapOut(orientationPanel, R.id.furniture_panel_orientationPanel);
-
+		  JLabel orientationPanel = new JLabel(activity, preferences.getLocalizedString(
+				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationPanel.title"));
+		  swapOut(orientationPanel, R.id.furniture_panel_orientationPanel);
 		  JLabel verticalRotationLabel = new JLabel(activity, preferences.getLocalizedString(
 				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "verticalRotationLabel.text"));
 		  JLabel horizontalRotationLabel = new JLabel(activity, preferences.getLocalizedString(
 				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "horizontalRotationLabel.text"));
 		  //JLabel orientationLabel = new JLabel(activity, preferences.getLocalizedString(
-		//		  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationLabel.text"));
+			//	  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationLabel.text"));
 		  swapOut(verticalRotationLabel, R.id.furniture_panel_verticalRotationLabel);
 		  swapOut(horizontalRotationLabel, R.id.furniture_panel_horizontalRotationLabel);
 		 // swapOut(orientationLabel, R.id.furniture_panel_orientationLabel);
@@ -1113,7 +1112,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  	//left in to make code comparison better
 		  }
 	  } else {
-		 // removeView(R.id.furniture_panel_orientationPanel);
+		  // removeView(R.id.furniture_panel_orientationPanel);
 		  removeView(R.id.furniture_panel_verticalRotationLabel);
 		  removeView(R.id.furniture_panel_horizontalRotationLabel);
 		 // removeView(R.id.furniture_panel_orientationLabel);
@@ -1180,11 +1179,13 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  removeView(R.id.furniture_panel_textureButton);
 		  }
 		  if (this.modelMaterialsComponent != null) {
-			  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
+			  //swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
 			  //TODO:  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
+				removeView(R.id.furniture_panel_modelMaterialsRadioButton);
+				removeView(R.id.furniture_panel_modelMaterialsButton);
 		  } else {
 			  removeView(R.id.furniture_panel_modelMaterialsRadioButton);
-			  //TODO:  removeView(R.id.furniture_panel_modelMaterialsButton);
+				removeView(R.id.furniture_panel_modelMaterialsButton);
 		  }
 		  swapOut(paintPanel, R.id.furniture_panel_paintPanel);
 

@@ -3,8 +3,8 @@
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="2250"
-    android:versionName="2.25">
+    android:versionCode="5700"
+    android:versionName="5.70">
 
     <uses-sdk
         android:minSdkVersion="16"

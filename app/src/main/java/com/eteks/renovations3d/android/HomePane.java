@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
@@ -3488,7 +3490,7 @@ public class HomePane implements HomeView
     final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.message");
     final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.title");
     //final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.useSelectedExample");
-    //String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
+    final String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
     //String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.cancel");
     final JList homeExamplesList = new JList(activity, new JList.DefaultListModel(this.preferences.getHomeExamples()));
 		final HomeExamplesListCellRenderer adapter = new HomeExamplesListCellRenderer(activity, this.preferences.getHomeExamples());
@@ -3513,7 +3515,6 @@ public class HomePane implements HomeView
 		}
 
 
-
 		final Semaphore dialogSemaphore = new Semaphore(0, true);
 		final String[] selectedHome = new String[1];
 
@@ -3523,9 +3524,27 @@ public class HomePane implements HomeView
 		{
 			public void run()
 			{
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which){
+							case DialogInterface.BUTTON_POSITIVE:
+								String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
+									// Display Find more demos (gallery) page in browser
+									activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(findModelsUrl)));
+
+								//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/1ac9ba79?duration=2592000000&appVersions=190
+								if(homeExamplesPanel.getParent() != null)
+									((ViewGroup)homeExamplesPanel.getParent()).removeView(homeExamplesPanel);//oddly dismiss doesn't do this
+								dialogSemaphore.release();
+								break;
+						}
+					}
+				};
 				AlertDialog.Builder dialog = new AlertDialog.Builder(activity) ;
 				dialog.setTitle(title);
 				dialog.setView(homeExamplesPanel);
+				dialog.setPositiveButton(findMoreExamples, dialogClickListener);
 				final AlertDialog alertDialog = dialog.create();
 
 				homeExamplesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

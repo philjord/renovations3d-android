@@ -101,12 +101,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-            <TextView
-                android:id="@+id/furniture_panel_angleLabel"
-                android:text="Angle (o):"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
             <TableRow>
             <NumberPicker
@@ -124,11 +118,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"/>
-            <NumberPicker
-                android:id="@+id/furniture_panel_angleSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <CheckBox
+                android:id="@+id/furniture_panel_basePlanItemCheckBox"
+                android:text="Part of base plan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TextView
+                android:id="@+id/furniture_panel_orientationPanel"
+                android:text="Orientation"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TableRow>
+                <TextView  android:layout_width="0dp"
+                           android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/furniture_panel_angleLabel"
+                    android:text="Angle (o):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -137,6 +152,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_angleSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
                 <TextView
                     android:id="@+id/furniture_panel_horizontalRotationLabel"
                     android:text="horizontalRotationLabel"
@@ -170,12 +192,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
-
-            <CheckBox
-                android:id="@+id/furniture_panel_basePlanItemCheckBox"
-                android:text="Part of base plan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         <TableLayout
@@ -296,7 +312,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"/>
                 <Button
-                    android:id="@+id/furniture_panel_materialButton"
+                    android:id="@+id/furniture_panel_modelMaterialsButton"
                     android:text=""
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

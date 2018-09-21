@@ -61,26 +61,26 @@ import com.mindblowing.renovations3d.R;
 public class WallPanel extends AndroidDialogView implements DialogView {
   private final WallController controller;
   private JLabel               xStartLabel;
-  private JSpinner xStartSpinner;
+  private JSpinner 						 xStartSpinner;
   private JLabel               yStartLabel;
-  private JSpinner yStartSpinner;
+  private JSpinner 						 yStartSpinner;
   private JLabel               xEndLabel;
-  private JSpinner xEndSpinner;
+  private JSpinner 						 xEndSpinner;
   private JLabel               yEndLabel;
-  private JSpinner yEndSpinner;
+  private JSpinner 						 yEndSpinner;
   private JLabel               distanceToEndPointLabel;
-  private JSpinner distanceToEndPointSpinner;
+  private JSpinner 						 distanceToEndPointSpinner;
   private JRadioButton         leftSideColorRadioButton;
   private ColorButton          leftSideColorButton;
   private JRadioButton         leftSideTextureRadioButton;
-  private JButton           leftSideTextureComponent;
+  private JButton           	 leftSideTextureComponent;
   private JRadioButton         leftSideMattRadioButton;
   private JButton              leftSideBaseboardButton;
   private JRadioButton         leftSideShinyRadioButton;
   private JRadioButton         rightSideColorRadioButton;
   private ColorButton          rightSideColorButton;
   private JRadioButton         rightSideTextureRadioButton;
-  private JButton           rightSideTextureComponent;
+  private JButton           	 rightSideTextureComponent;
   private JRadioButton         rightSideMattRadioButton;
   private JRadioButton         rightSideShinyRadioButton;
   private JButton              rightSideBaseboardButton;
@@ -92,16 +92,16 @@ public class WallPanel extends AndroidDialogView implements DialogView {
   private ColorButton          topColorButton;
   private JRadioButton         rectangularWallRadioButton;
   private JLabel               rectangularWallHeightLabel;
-  private JSpinner rectangularWallHeightSpinner;
+  private JSpinner 						 rectangularWallHeightSpinner;
   private JRadioButton         slopingWallRadioButton;
   private JLabel               slopingWallHeightAtStartLabel;
-  private JSpinner slopingWallHeightAtStartSpinner;
+  private JSpinner 						 slopingWallHeightAtStartSpinner;
   private JLabel               slopingWallHeightAtEndLabel;
-  private JSpinner slopingWallHeightAtEndSpinner;
+  private JSpinner 						 slopingWallHeightAtEndSpinner;
   private JLabel               thicknessLabel;
-  private JSpinner thicknessSpinner;
+  private JSpinner 						 thicknessSpinner;
   private JLabel               arcExtentLabel;
-  private JSpinnerJogDial arcExtentSpinner;
+  private JSpinner						 arcExtentSpinner;
   private JLabel               wallOrientationLabel;
   private String               dialogTitle;
 
@@ -708,7 +708,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.text", unitName));
     final NullableSpinnerNumberModel arcExtentSpinnerModel =
         new NullableSpinnerNumberModel(new Float(0), new Float(-270), new Float(270), new Float(5));
-    this.arcExtentSpinner = new NullableSpinnerJogDial(activity, arcExtentSpinnerModel);
+    this.arcExtentSpinner = new NullableSpinner(activity, arcExtentSpinnerModel, true);
     arcExtentSpinnerModel.setNullable(controller.getArcExtentInDegrees() == null);
     arcExtentSpinnerModel.setValue(controller.getArcExtentInDegrees());
     final PropertyChangeListener arcExtentChangeListener = new PropertyChangeListener() {
