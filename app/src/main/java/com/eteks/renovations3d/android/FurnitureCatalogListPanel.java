@@ -869,7 +869,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 		//PJPJ moved to hint this.searchLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences, FurnitureCatalogListPanel.class, "searchLabel.text"));
 
-		this.searchTextField = new JTextField(getActivity(), "");
+		this.searchTextField = new JTextField(getActivity(), 5);
 		searchTextField.setHint(R.string.search_hint);
 		searchTextField.addTextChangedListener(new TextWatcher(){
 			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {

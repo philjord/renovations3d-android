@@ -216,6 +216,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			  , ImageAcquireManager.Destination.IMPORT_TEXTURE);
 		  }
 	  });
+	  //TODO: find images url can be easily navigated to now, perhaps put this button back in?
 	  /*
       try {
       this.findImagesButton = new JButton(SwingTools.getLocalizedLabelText(preferences, 
@@ -302,7 +303,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "attributesLabel.text").replace("<br>", " ")));
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "nameLabel.text"));
-    this.nameTextField = new JTextField(activity, "");
+    this.nameTextField = new JTextField(activity, 10);
 	  nameTextField.addTextChangedListener(new TextWatcher(){
 		  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
 		  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
@@ -424,17 +425,54 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
             // If category changes update category combo box
             TexturesCategory category = controller.getCategory();
             if (category != null) {
-				// on desktop if the jcombobox is free form edited this call will add it (e.g. User catagory
-				// however on Android spinners no edit, no select until adapter updated
-				ArrayAdapter aa = ((ArrayAdapter)categoryComboBox.getAdapter());
-				if(aa.getPosition(category) == -1) {
-					aa.add(category);
-					aa.notifyDataSetChanged();
-				}
+							// on desktop if the jcombobox is free form edited this call will add it (e.g. User catagory
+							// however on Android spinners no edit, no select until adapter updated
+							ArrayAdapter aa = ((ArrayAdapter)categoryComboBox.getAdapter());
+							if(aa.getPosition(category) == -1) {
+								aa.add(category);
+								aa.notifyDataSetChanged();
+							}
               categoryComboBox.setSelectedItem(category);
             }
           }
         });
+    this.creatorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+						com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "creatorLabel.text"));
+		this.creatorTextField = new JTextField(activity,10);
+		creatorTextField.addTextChangedListener(new TextWatcher(){
+			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
+			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
+			public void afterTextChanged(Editable arg0) {
+				creatorTextField.removeTextChangedListener(this);
+				controller.setCreator(creatorTextField.getText().toString().trim());
+				creatorTextField.addTextChangedListener(this);
+			}
+		});
+		/*DocumentListener creatorListener = new DocumentListener() {
+			public void changedUpdate(DocumentEvent ev) {
+				creatorTextField.getDocument().removeDocumentListener(this);
+				controller.setCreator(creatorTextField.getText().trim());
+				creatorTextField.getDocument().addDocumentListener(this);
+			}
+
+			public void insertUpdate(DocumentEvent ev) {
+				changedUpdate(ev);
+			}
+
+			public void removeUpdate(DocumentEvent ev) {
+				changedUpdate(ev);
+			}
+		};
+		this.creatorTextField.getDocument().addDocumentListener(creatorListener);*/
+		controller.addPropertyChangeListener(ImportedTextureWizardController.Property.CREATOR,
+						new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent ev) {
+								// If creator changes update creator text field
+								if (!creatorTextField.getText().toString().trim().equals(controller.getCreator())) {
+									creatorTextField.setText(controller.getCreator());
+								}
+							}
+				});
 
     this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "widthLabel.text", unitName));

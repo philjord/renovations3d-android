@@ -584,16 +584,16 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
 	  this.creatorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "creatorLabel.text"));
-	  this.creatorTextField = new JTextField(activity,"");
+	  this.creatorTextField = new JTextField(activity,10);
 	  /*if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
 		  SwingTools.addAutoSelectionOnFocusGain(this.creatorTextField);
 	  }*/
-	  nameTextField.addTextChangedListener(new TextWatcher(){
+		creatorTextField.addTextChangedListener(new TextWatcher(){
 		  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
 		  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
 		  public void afterTextChanged(Editable arg0) {
 			  creatorTextField.removeTextChangedListener(this);
-			  controller.setName(nameTextField.getText().toString().trim());
+			  controller.setCreator(creatorTextField.getText().toString().trim());
 			  creatorTextField.addTextChangedListener(this);
 		  }
 	  });

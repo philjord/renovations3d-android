@@ -15,12 +15,10 @@ import android.widget.TextView;
 public class JTextField extends EditText
 {
 
-	public JTextField(Context context, String text)
+	public JTextField(Context context)
 	{
 		super(context);
-		setText(text);
 		setSingleLine();
-
 		//JTextField default to assume no next type options
 		setImeOptions(EditorInfo.IME_ACTION_DONE);
 		setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -28,11 +26,27 @@ public class JTextField extends EditText
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if(actionId==EditorInfo.IME_ACTION_DONE){
 					InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-							Context.INPUT_METHOD_SERVICE);
+									Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(getApplicationWindowToken(), 0);
 				}
 				return false;
 			}
 		});
+	}
+	public JTextField(Context context, int minEMS)
+	{
+		this(context);
+		this.setMinEms(minEMS);
+	}
+	public JTextField(Context context, String text)
+	{
+		this(context);
+		setText(text);
+	}
+	public JTextField(Context context, String text, int minEMS)
+	{
+		this(context);
+		setText(text);
+		this.setMinEms(minEMS);
 	}
 }
