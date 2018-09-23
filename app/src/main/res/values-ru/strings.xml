@@ -103,7 +103,7 @@
     <string name="tutStep8Title">Добавить стул - 1</string>
     <string name="tutStep9Text">Длительное нажатие на стул, и оно будет добавлено к вашему плану.</string>
     <string name="tutStep9Title">Добавить стул - 2</string>
-    <string name="tutStepFinishText">Хорошая работа, теперь вы можете взглянуть на свою дверь в 3d? Или дать стенам какой-то цвет? Позже вы могли увидеть, как вы работаете, как сделать фотографию своего дома ...</string>
+    <string name="tutStepFinishText">Хорошая работа, теперь вам может потребоваться загрузить домой из демонстрационного файла, меню-> Файл-> Новое из демонстрационного файла.\nПозже вы можете использовать генератор фотографий в 3D-представлении для «Создать фотографию ...»</string>
     <string name="tutStepFinishTitle">Учебник завершен</string>
     <string name="addCameraPosition">Добавить положение камеры</string>
     <string name="deleteCameraPosition">Удалить позицию камеры</string>

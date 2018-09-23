@@ -102,7 +102,7 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="tutStep8Title">Voeg een stoel toe - 1</string>
     <string name="tutStep9Text">Lang druk op een stoel, en het wordt toegevoegd aan uw plan.</string>
     <string name="tutStep9Title">Voeg een stoel toe - 2</string>
-    <string name="tutStepFinishText">Goed werk, nu kun je naar je deur kijken in 3d? Of geef de muren wat kleur? Later kun je zien of je uitkomt hoe je een foto van je huis kunt maken ...</string>
+    <string name="tutStepFinishText">Goed werk, nu wil je misschien een huis laden vanuit een demobestand, Menu-> Bestand-> Nieuw van demo.\nLater kon je de fotogenerator in de 3D-weergave gebruiken om \"Foto maken ...\" te maken.</string>
     <string name="tutStepFinishTitle">Tutorial klaar</string>
     <string name="addCameraPosition">Voeg camera positie toe</string>
     <string name="deleteCameraPosition">Verwijder de camera positie</string>

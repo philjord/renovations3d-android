@@ -103,7 +103,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="tutStep8Title">Dodaj krzesło - 1</string>
     <string name="tutStep9Text">Długie naciśnięcie na krześle i zostanie dodane do planu.</string>
     <string name="tutStep9Title">Dodaj krzesło - 2</string>
-    <string name="tutStepFinishText">Dobra robota, teraz możesz spojrzeć na swoje drzwi w 3D? Albo dać ściany trochę koloru? Później zobaczysz, czy wypracujesz jak zrobić zdjęcie swojego domu ...</string>
+    <string name="tutStepFinishText">Dobra robota, możesz teraz załadować dom z pliku demonstracyjnego, Menu-> Plik-> Nowy z wersji demo.\nPóźniej możesz użyć generatora zdjęć w widoku 3D do \"Utwórz zdjęcie ...\"</string>
     <string name="tutStepFinishTitle">Ukończony samouczek</string>
     <string name="addCameraPosition">Dodaj pozycję kamery</string>
     <string name="deleteCameraPosition">Usuń pozycję kamery</string>

@@ -102,7 +102,7 @@
     <string name="tutStep8Title">添加椅子 - 1</string>
     <string name="tutStep9Text">長按一把椅子，它會被添加到你的計劃。</string>
     <string name="tutStep9Title">添加椅子 - 2</string>
-    <string name="tutStepFinishText">好的工作，現在你可以去看看你的門在3d？還是給牆壁一些顏色？後來你可以看到你是否找出如何製作你家的照片？</string>
+    <string name="tutStepFinishText">幹得好，現在您可能想從演示文件中加載一個家，菜單 - >文件 - >從演示文件中新建。\n稍後您可以在3D視圖中使用照片生成器來“創建照片......”</string>
     <string name="tutStepFinishTitle">教程完成</string>
     <string name="addCameraPosition">添加相機位置</string>
     <string name="deleteCameraPosition">刪除相機位置</string>

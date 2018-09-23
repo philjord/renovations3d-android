@@ -1360,7 +1360,7 @@ public class Renovations3DActivity extends FragmentActivity
 		//https://www.dropbox.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d?dl=0
 
 		// notice the files actual url not the sexy page offering the file
-		String[] urls = new String[]{
+	/*	String[] urls = new String[]{
 				"https://dl.dropboxusercontent.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d",
 				"https://dl.dropboxusercontent.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d"};
 		String[] fileNames = new String[]{
@@ -1419,7 +1419,7 @@ public class Renovations3DActivity extends FragmentActivity
 					}
 				}
 			}
-		}
+		}*/
 
 
 		if (!firstOpening)
@@ -1477,17 +1477,17 @@ public class Renovations3DActivity extends FragmentActivity
 		else
 		{
 
-			File autoOpenFile = new File(downloadsLocation, autoOpenFirstOpen);
+		/*	File autoOpenFile = new File(downloadsLocation, autoOpenFirstOpen);
 			if (autoOpenFile.exists())
 			{
 				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getName());
 				loadHome(autoOpenFile);
 			}
 			else
-			{
+			{*/
 				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile");
 				newHome();
-			}
+//			}
 		}
 
 

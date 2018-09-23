@@ -109,7 +109,7 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="tutStep7Text">Upravte nový pokoj dvojitým poklepáním na něj, vyberte texturu podlahy a upravte ji na dlažbu. Zavřete dialogová okna.</string>
     <string name="tutStep8Text">Zobrazte katalog nábytku stisknutím šipky.</string>
     <string name="tutStep9Text">Dlouhým stiskem na židli se přidá k vašemu plánu.</string>
-    <string name="tutStepFinishText">Dobrá práce, teď byste se mohli jít podívat před vchodové dveře ve 3D? Nebo dáte stěnám nějakou barvu? Později zjistíme, jestli se rozhodnete udělat fotku svého domu ...</string>
+    <string name="tutStepFinishText">Dobrá práce, nyní byste si chtěli načíst domov z demo souboru Menu-> File-> New z demo.\nPozději můžete použít generátor fotografií v 3D zobrazení na \"Vytvořit fotografii ...\"</string>
     <string name="tutorialWellDone">Výborně!</string>
     <string name="share">Podíl</string>
     <string name="set_to_device_location">Použijte umístění zařízení</string>

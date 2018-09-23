@@ -104,7 +104,7 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="tutStep8Title">Añadir una silla - 1</string>
     <string name="tutStep9Text">Prensa larga en una silla, y se agregará a su plan.</string>
     <string name="tutStep9Title">Añadir una silla - 2</string>
-    <string name="tutStepFinishText">Buen trabajo, ahora podrías ir a mirar tu puerta en 3d? ¿O darle a las paredes algún color? Más tarde se puede ver si se trabaja cómo hacer una foto de su casa ...</string>
+    <string name="tutStepFinishText">Buen trabajo, ahora es posible que desee cargar una casa desde un archivo de demostración, Menú-> Archivo-> Nuevo desde la demostración. Más tarde, puede usar el generador de fotos en la vista 3D para \"Crear foto ...\"</string>
     <string name="tutStepFinishTitle">Tutorial Terminado</string>
     <string name="addCameraPosition">Añadir posición de cámara</string>
     <string name="deleteCameraPosition">Eliminar la posición de la cámara</string>

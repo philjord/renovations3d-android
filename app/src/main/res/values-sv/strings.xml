@@ -104,7 +104,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="tutStep8Title">Lägg till en stol - 1</string>
     <string name="tutStep9Text">Långt tryck på en stol, och det kommer att läggas till din plan.</string>
     <string name="tutStep9Title">Lägg till en stol - 2</string>
-    <string name="tutStepFinishText">Bra jobb, nu kan du gå och titta på din dörr i 3d? Eller ge väggarna lite färg? Senare kunde du se om du tränar hur man gör ett foto av ditt hem ...</string>
+    <string name="tutStepFinishText">Bra jobb, nu kanske du vill ladda hem ett hem från en demofil, Meny-> Fil-> Ny från demo.\nSenare kan du använda fotogeneratorn i 3D-vyn till \"Skapa foto ...\"</string>
     <string name="tutStepFinishTitle">Handledning Slutförd</string>
     <string name="addCameraPosition">Lägg till kamerans position</string>
     <string name="deleteCameraPosition">Ta bort kamerans position</string>

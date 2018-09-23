@@ -105,7 +105,7 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="tutStep8Title">Adicione uma cadeira - 1</string>
     <string name="tutStep9Text">Pressione uma cadeira, e ela será adicionada ao seu plano.</string>
     <string name="tutStep9Title">Adicione uma cadeira - 2</string>
-    <string name="tutStepFinishText">Bom trabalho, agora você poderia olhar para sua porta em 3d? Ou dê alguma cor às paredes? Mais tarde, você pode ver se você trabalha como fazer uma foto de sua casa ...</string>
+    <string name="tutStepFinishText">Bom trabalho, agora você pode querer carregar uma casa a partir de um arquivo de demonstração, Menu-> File-> New from demo.\nMais tarde, você poderia usar o gerador de fotos na visualização 3D para \"Criar foto ...\"</string>
     <string name="tutStepFinishTitle">Tutorial concluído</string>
     <string name="addCameraPosition">Adicionar posição da câmera</string>
     <string name="deleteCameraPosition">Eliminar a posição da câmera</string>

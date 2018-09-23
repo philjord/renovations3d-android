@@ -102,7 +102,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="tutStep8Title">Szék hozzáadása - 1</string>
     <string name="tutStep9Text">Hosszan nyomja meg a széket, és hozzáadódik a tervhez.</string>
     <string name="tutStep9Title">Add hozzá egy széket - 2</string>
-    <string name="tutStepFinishText">Jó munka, most megnézheted az ajtót 3d-ben? Vagy színt adjon a falaknak? Később láthattad, hogy ki tudja-e kitalálni, hogyan készíthet fényképet otthonról ...</string>
+    <string name="tutStepFinishText">Jó munka, most szeretne egy otthont betölteni egy demófájlból, a Menü-> Fájl-> Új a demóból.\nKésőbb a fotó-generátort a 3D-s nézetben \"Fénykép készítése ...\"</string>
     <string name="tutStepFinishTitle">A bemutató elkészült</string>
     <string name="addCameraPosition">Adja hozzá a kamera helyzetét</string>
     <string name="deleteCameraPosition">Törölje a kamera helyzetét</string>

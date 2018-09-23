@@ -107,7 +107,7 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="tutStep7Text">Bearbeiten Sie das neue Zimmer, indem Sie es doppelt klopfen, wählen Sie die Bodenstruktur, machen Sie es gefliest. Schließen Sie die Dialoge.</string>
     <string name="tutStep8Text">Zeigen Sie den Möbelkatalog, indem Sie den Pfeil drücken.</string>
     <string name="tutStep9Text">Lange Presse auf einen Stuhl, und es wird zu Ihrem Plan hinzugefügt werden.</string>
-    <string name="tutStepFinishText">Gute Arbeit, jetzt könntest du deine Tür in 3d sehen? Oder die Wände etwas Farbe? Später könntest du sehen, ob du kommst, wie du ein Foto von deinem Zuhause machst ...</string>
+    <string name="tutStepFinishText">Gute Arbeit, jetzt möchtest du vielleicht ein Zuhause aus einer Demo-Datei laden, Menü-> Datei-> Neu von Demo.\nSpäter könnten Sie den Fotogenerator in der 3D-Ansicht verwenden, um \"Foto erstellen ...\" zu erstellen.</string>
     <string name="tutorialWellDone">Gut gemacht!</string>
     <string name="share">Aktie</string>
     <string name="set_to_device_location">Geräteort verwenden</string>

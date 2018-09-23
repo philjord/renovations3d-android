@@ -102,7 +102,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="tutStep8Title">Ajouter une chaise - 1</string>
     <string name="tutStep9Text">Appuyez longuement sur une chaise, et cela sera ajouté à votre plan.</string>
     <string name="tutStep9Title">Ajouter une chaise - 2</string>
-    <string name="tutStepFinishText">Bon travail, maintenant vous pouvez regarder votre porte en 3d? Ou donner des murs de couleur? Plus tard, vous pouvez voir si vous travaillez comment faire une photo de votre maison ...</string>
+    <string name="tutStepFinishText">Bon travail, maintenant vous voudrez peut-être charger une maison à partir d\'un fichier de démonstration, Menu-> Fichier-> Nouveau à partir de la démo.\nPlus tard, vous pouvez utiliser le générateur de photos dans la vue 3D pour \"Créer une photo ...\"</string>
     <string name="tutStepFinishTitle">Didacticiel terminé</string>
     <string name="addCameraPosition">Ajouter la position de la caméra</string>
     <string name="deleteCameraPosition">Supprimer la position de la caméra</string>

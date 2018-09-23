@@ -102,7 +102,7 @@
     <string name="tutStep8Title">椅子を追加する - 1</string>
     <string name="tutStep9Text">椅子を長押しすると、それがあなたの計画に追加されます。</string>
     <string name="tutStep9Title">椅子を追加する - 2</string>
-    <string name="tutStepFinishText">良い仕事、今あなたは3dであなたのドアを見ることができますか？または壁に色を付けますか？後であなたはあなたの家の写真を作る方法を考えているかどうかを見ることができます...</string>
+    <string name="tutStepFinishText">うまくいきました。デモファイルから家を読み込みたい場合は、デモからMenu-> File-> Newをロードしてください。\n後で、3Dビューでフォトジェネレータを使用して[写真を作成...]することができます</string>
     <string name="tutStepFinishTitle">チュートリアルが完了しました</string>
     <string name="addCameraPosition">カメラ位置を追加する</string>
     <string name="deleteCameraPosition">カメラの位置を削除する</string>

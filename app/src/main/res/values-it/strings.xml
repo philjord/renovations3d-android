@@ -110,7 +110,7 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="tutStep8Title">Aggiungi una sedia - 1</string>
     <string name="tutStep9Text">Pressa lunga su una sedia e sarà aggiunta al tuo piano.</string>
     <string name="tutStep9Title">Aggiungi una sedia - 2</string>
-    <string name="tutStepFinishText">Buon lavoro, ora potresti andare a guardare la tua porta in 3d? O dare le pareti un po \'di colore? Più tardi si poteva vedere se si parla di come fare una foto della tua casa &#8230;</string>
+    <string name="tutStepFinishText">Buon lavoro, ora potresti voler caricare una casa da un file demo, Menu-> File-> Nuovo dalla demo.\nIn seguito è possibile utilizzare il generatore di foto nella vista 3D per \"Creare foto ...\"</string>
     <string name="tutStepFinishTitle">Tutorial finito</string>
     <string name="addCameraPosition">Aggiungi la posizione della fotocamera</string>
     <string name="deleteCameraPosition">Eliminare la posizione della fotocamera</string>

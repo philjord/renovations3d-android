@@ -109,7 +109,7 @@
     <string name="tutStep8Title">의자 추가 - 1</string>
     <string name="tutStep9Text">의자를 길게 누르면 계획에 추가됩니다.</string>
     <string name="tutStep9Title">의자 추가 - 2</string>
-    <string name="tutStepFinishText">잘하셨습니다. 이제 문을 3D로 볼 수 있습니까? 아니면 벽에 약간의 색깔을 주시겠습니까? 나중에 집 사진을 만드는 법을 배울 수 있습니다.</string>
+    <string name="tutStepFinishText">이제는 데모 파일에서 홈 -> 파일 -> 데모에서 새로 만들기를로드하는 것이 좋습니다.\n나중에 3D보기에서 사진 생성기를 사용하여 \"사진 만들기 ...\"</string>
     <string name="tutStepFinishTitle">튜토리얼 완료</string>
     <string name="addCameraPosition">카메라 위치 추가</string>
     <string name="deleteCameraPosition">카메라 위치 삭제</string>
