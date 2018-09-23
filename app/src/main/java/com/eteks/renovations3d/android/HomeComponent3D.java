@@ -2786,6 +2786,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		this.furnitureChangeListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent ev) {
 				HomePieceOfFurniture updatedPiece = (HomePieceOfFurniture) ev.getSource();
+
+				//tell the tutorial about updates
+				((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_UPDATED, updatedPiece);
+
 				String propertyName = ev.getPropertyName();
 				if (HomePieceOfFurniture.Property.X.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.Y.name().equals(propertyName)
@@ -2810,6 +2814,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						&& home.getEnvironment().getSubpartSizeUnderLight() > 0)) {
 					updateObjects(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
 				}
+
+
 			}
 
 			private void updatePieceOfFurnitureGeometry(HomePieceOfFurniture piece) {

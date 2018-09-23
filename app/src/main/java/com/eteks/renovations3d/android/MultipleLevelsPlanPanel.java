@@ -1007,15 +1007,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		});
 
 		//tutorial listener
-		final PropertyChangeListener furnitureChangeListener =
-				new PropertyChangeListener () {
-					public void propertyChange(PropertyChangeEvent ev) {
-						HomePieceOfFurniture piece = (HomePieceOfFurniture)ev.getSource();
-						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_UPDATED, piece);
-					}
-				};
-
-		//tutorial listener
 		home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>()
 		{
 			@Override
@@ -1031,14 +1022,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 					{
 						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.FURNITURE_ADDED);
 					}
-				}
-
-				//also listen for x,y events, note x y events only get reported for NEWLY added furniture, not loaded from file
-				HomePieceOfFurniture piece = collectionEvent.getItem();
-				if (collectionEvent.getType() == CollectionEvent.Type.ADD) {
-					piece.addPropertyChangeListener(furnitureChangeListener);
-				} else {
-					piece.removePropertyChangeListener(furnitureChangeListener);
 				}
 			}
 		});

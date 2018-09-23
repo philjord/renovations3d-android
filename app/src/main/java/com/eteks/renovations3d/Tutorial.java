@@ -795,7 +795,7 @@ public class Tutorial
 		{
 			if (tutorialAction == TutorialAction.FURNITURE_UPDATED && data instanceof HomeDoorOrWindow)
 			{
-				HomeDoorOrWindow piece = (HomeDoorOrWindow) data;
+				final HomeDoorOrWindow piece = (HomeDoorOrWindow) data;
 
 				if (piece == watchedPiece)
 				{
@@ -805,11 +805,20 @@ public class Tutorial
 					{
 						movedEnough = true;
 					}
-					Point2f currentDims = new Point2f(piece.getWidth(), piece.getDepth());
-					if (movedEnough && !currentDims.equals(startDims))
-					{
-						completed();
-					}
+
+					// We get here through an x or y change that has just a moment ago wiped the wall bound state coming from the plancontroller
+					// but the next call in that controller after this returns is to set the wall bound state back to true (if it is)
+					// so this tutorial needs to get off this thread and check the state in 500mms when it should be about right
+					Thread t = new Thread(){public void run() {
+						try {
+							Thread.sleep(500);
+							if (!completed && movedEnough && piece.isBoundToWall())
+							{
+								completed();
+							}
+						}catch(InterruptedException e){}
+					}};
+					t.start();
 				}
 				else
 				{
