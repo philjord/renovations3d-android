@@ -94,17 +94,39 @@ public class LevelSpinnerControl
 				TextView view = getTextView(position, levelsWide);
 				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
 
-				// more, then 3 buttons then tools, *2 to give margin each side buttons
-				float othersSpace = 40 + (3 * (36 * 2)) + (toolsWide ? 300 : 50);
+				//https://stackoverflow.com/questions/11244918/action-bar-icon-size
+				// state a 48dp per item (with a icon inside of 24)
 
-				float dpAllowed = 40 + Math.max(screenWidthDp - othersSpace, 0);
+
+				//https://developer.android.com/guide/practices/ui_guidelines/icon_design_action_bar
+				//has a list at different *DPI
+				//												ldpi (120 dpi)	mdpi (160 dpi)	hdpi (240 dpi)	xhdpi (320 dpi)
+				//Action Bar Icon Size 	18 x 18 px 			24 x 24 px 				36 x 36 px 			48 x 48 px
+				//density = getResources().getDisplayMetrics().density;
+
+				// return 0.75 if it's LDPI
+				// return 1.0 if it's MDPI
+				// return 1.5 if it's HDPI
+				// return 2.0 if it's XHDPI
+				// return 3.0 if it's XXHDPI
+				// return 4.0 if it's XXXHDPI
+
+				// that supports the 48dp per item
+
+				//tools wide = 550, 4*58=232 +200 for tools = 432 leave at least 118 for levels
+
+				// size of more menu and it's margin then 3 buttons with 24 gaps then tools
+				float othersSpace = (48+10) + (3 * (48+10)) + (toolsWide ? 200 : 60);
+
+				// give it at least an spinner space, (max ensure no negatives)
+				float dpAllowed = Math.max(screenWidthDp - othersSpace, 60);
 				float density = getContext().getResources().getDisplayMetrics().density;
 				float pixel = dpAllowed * density;
 				view.setMaxWidth((int)pixel);
 
-				//System.out.println("setMaxWidth toolsWide " + toolsWide + "=" + (toolsWide ? 300 : 50) );
-				//System.out.println("setMaxWidth (3 * R.dimen.button_dp) " + (3 * context.getResources().getDimension(R.dimen.button_dp))  );
+				//System.out.println("setMaxWidth toolsWide " + toolsWide + "=" + (toolsWide ? 200 : 60) );
 				//System.out.println("setMaxWidth screenWidthDp " + screenWidthDp  );
+				//System.out.println("setMaxWidth density " + density );
 				//System.out.println("setMaxWidth othersSpace " + othersSpace  );
 				//System.out.println("setMaxWidth dpAllowed " + dpAllowed + "=" + pixel );
 				return view;
