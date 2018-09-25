@@ -449,7 +449,7 @@ public class Renovations3D extends HomeApplication
 		{
 			try
 			{
-				return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationId");
+				return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D_props.class, "applicationId");
 			}
 			catch (IllegalArgumentException ex)
 			{
@@ -464,7 +464,7 @@ public class Renovations3D extends HomeApplication
 	@Override
 	public String getName()
 	{
-		return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationName");
+		return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D_props.class, "applicationName");
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class Renovations3D extends HomeApplication
 		else
 		{
 			// note use a class from the jar, not this class, but matching simple name (so the right property is pulled form teh resource once loaded
-			return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D.class, "applicationVersion");
+			return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D_props.class, "applicationVersion");
 		}
 	}
 
