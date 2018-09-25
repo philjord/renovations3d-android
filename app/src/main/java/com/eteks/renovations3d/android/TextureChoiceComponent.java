@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.eteks.renovations3d.android.utils.CheckableImageView;
 import com.mindblowing.swingish.ActionListener;
@@ -715,8 +716,9 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 				swapOut(this.scaleSpinner, R.id.texture_choice_scaleSpinner);
 				// Fifth row
 			} else {
-					// remove the holding views
-				removeView(R.id.texture_choice_angleLabel);
+				// remove the holding views
+				// table rows can't be empty and I can't work out how to remove them
+				swapOut(new TextView(activity),R.id.texture_choice_angleLabel);
 				removeView(R.id.texture_choice_angleSpinner);
 				removeView(R.id.texture_choice_scaleLabel);
 				removeView(R.id.texture_choice_scaleSpinner);
