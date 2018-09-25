@@ -333,8 +333,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
             }
           });
     }
-
-    if (controller.isPropertyEditable(UserPreferencesController.Property.OBSERVER_CAMERA_SELECTED_AT_CHANGE)) {
+		//NOTICE disabled to avoid observer selection removing 3d selection
+    if (false && controller.isPropertyEditable(UserPreferencesController.Property.OBSERVER_CAMERA_SELECTED_AT_CHANGE)) {
       // Create observerCameraSelectedAtChangeLabel label and check box bound to controller OBSERVER_CAMERA_SELECTED_AT_CHANGE property
       this.observerCameraSelectedAtChangeLabel = new JLabel(activity, preferences.getLocalizedString(
 				com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "observerCameraSelectedAtChangeLabel.text"));
@@ -934,12 +934,14 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_aerialViewCenteredOnSelectionLabel);
 			removeView(R.id.prefs_aerialViewCenteredOnSelectionCheckBox);
 		}
+		//NOTICE disabled in create above to avoid observer selection removing 3d selection
 		if (this.observerCameraSelectedAtChangeLabel != null) {
 			// Seventh row
 			swapOut(this.observerCameraSelectedAtChangeLabel, R.id.prefs_observerCameraSelectedAtChangeLabel);
 			swapOut(this.observerCameraSelectedAtChangeCheckBox, R.id.prefs_observerCameraSelectedAtChangeCheckBox);
 		} else {
-			removeView(R.id.prefs_observerCameraSelectedAtChangeLabel);
+			// note can't leave table rows empty
+			swapOut(new TextView(activity), R.id.prefs_observerCameraSelectedAtChangeLabel);
 			removeView(R.id.prefs_observerCameraSelectedAtChangeCheckBox);
 		}
 		if (this.magnetismLabel != null) {
