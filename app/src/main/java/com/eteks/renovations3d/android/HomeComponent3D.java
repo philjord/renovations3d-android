@@ -542,32 +542,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, RUN_UPDATES, null, null));
 		}
 
-
-		// we don't want the camera listening to update while non visible (it's expensive)
-		// so exit and enter current based on visibility
-		if( home != null )
-		{
-			if(isVisibleToUser)
-			{
-				if(cameraPriorToUpdatePause != null)
-				{
-					home.setCamera(cameraPriorToUpdatePause);
-					cameraPriorToUpdatePause = null;
-				}
-			}
-			else
-			{
-				// we may already be paused so we don't want to grab the -1 fov camera
-				if(cameraPriorToUpdatePause == null)
-				{
-					cameraPriorToUpdatePause = home.getCamera();
-					Camera noupdate = cameraPriorToUpdatePause.clone();
-					noupdate.setFieldOfView(-1);
-					home.setCamera(noupdate);
-				}
-			}
-		}
-
 		if(isVisibleToUser && getContext() != null)
 		{
 			possiblyShowWelcomeScreen((Renovations3DActivity) getContext(), WELCOME_SCREEN_UNWANTED, R.string.welcometext_component3dview, preferences);
@@ -575,7 +549,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			// tell the tutorial we've been shown
 			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.VIEW_SHOWN_3D);
 		}
-
 
 		if (canvas3D2D != null)
 		{
@@ -592,7 +565,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.setUserVisibleHint(isVisibleToUser);
 	}
 
-	private Camera cameraPriorToUpdatePause = null;
+
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

@@ -5433,7 +5433,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           (cameraPoints [0][1] + cameraPoints [3][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(camera.getYaw());
-			((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE), scaleInverse);
+			if (true||!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.handle_rotator)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform);
 			AffineTransform previousTransform2 = g2D.getTransform();
       // Draw pitch rotation indicator at middle of second and third point of camera
@@ -5441,7 +5447,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           (cameraPoints [1][1] + cameraPoints [2][1]) / 2);
       //g2D.scale(scaleInverse, scaleInverse);
       g2D.rotate(camera.getYaw());
-			((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE_PITCH), scaleInverse);
+			if (true||!SHOW_CHUNKY_HANDLES) {
+				((VMGraphics2D)g2D).draw(getIndicator(camera, IndicatorType.ROTATE_PITCH), scaleInverse);
+			} else {
+				g2D.scale(scaleInverse, scaleInverse);
+				Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_rotator)).getBitmap();
+				((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+			}
       g2D.setTransform(previousTransform2);
 
       Shape elevationIndicator = getIndicator(camera, IndicatorType.ELEVATE);
@@ -5453,7 +5465,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         //g2D.scale(scaleInverse, scaleInverse);
         g2D.draw(POINT_INDICATOR);
         g2D.translate(Math.sin(camera.getYaw()) * 8, -Math.cos(camera.getYaw()) * 8);
-		  	((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
+				if (true||!SHOW_CHUNKY_HANDLES) {
+					((VMGraphics2D)g2D).draw(elevationIndicator, scaleInverse);
+				} else {
+					g2D.scale(scaleInverse, scaleInverse);
+					Bitmap bitmap = ((BitmapDrawable) getDrawableView().getResources().getDrawable(R.drawable.compass_resize)).getBitmap();
+					((Canvas) g2D.getDelegate()).drawBitmap(bitmap, -bitmap.getWidth() * 0.5f, -bitmap.getHeight() * 0.5f, ((VMGraphics2D) g2D).canvasPaint);
+				}
         g2D.setTransform(previousTransform3);
       }
     }

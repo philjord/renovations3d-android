@@ -288,8 +288,7 @@ public class FileUserPreferences extends UserPreferences {
         defaultPreferences.isNavigationPanelVisible()));
     setAerialViewCenteredOnSelectionEnabled(preferences.getBoolean(AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED, 
         defaultPreferences.isAerialViewCenteredOnSelectionEnabled()));
-    setObserverCameraSelectedAtChange(preferences.getBoolean(OBSERVER_CAMERA_SELECTED_AT_CHANGE,
-        defaultPreferences.isObserverCameraSelectedAtChange()));
+    setObserverCameraSelectedAtChange(false);// always false on the android, override to remove loaded values
     setMagnetismEnabled(preferences.getBoolean(MAGNETISM_ENABLED, true));
     setRulersVisible(preferences.getBoolean(RULERS_VISIBLE, defaultPreferences.isRulersVisible()));
     setGridVisible(preferences.getBoolean(GRID_VISIBLE, defaultPreferences.isGridVisible()));
