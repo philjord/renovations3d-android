@@ -236,6 +236,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   private static float 					inverseSize = 3;// density * 3 to make handles big
 
+	public static float dpiMinSpanForZoom = 1.0f; //TODO: this is used to control if a scale should happen, not sure why it's so damn complex though
+
+
   private Home            			home;
   private UserPreferences 			preferences;
 	private Object3DFactory 			object3dFactory;
@@ -336,8 +339,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private static final BufferedImage ERROR_TEXTURE_IMAGE;
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
 
-	public static float dpiMinSpanForZoom = 1.0f; //TODO: this is used to control if a scale should happen, not sure why it's so damn complex though
-	public static float dpiIndicatorTouchSize = 0.04f;// TODO: this is nonsense, why is this not density based!!!
+
 
 	private PlanController controller;
 	private MultipleLevelsPlanPanel parentFragment;
@@ -618,19 +620,16 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		densityScale = this.getDrawableView().getResources().getDisplayMetrics().density;
 
+		// used for removing the plan scale and enlargening the handles in one step
+		inverseSize = densityScale * 3;//TODO: is this *3 shared with any other sizing if so make it a variable
 
-		// TODO: this is nonsense, why is this not density based!!!
-
-
-		// Now determine a fat fingers size for the indicators
-		DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
-		controller.PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*1.5f);// for things to be selected or touch each other
-		controller.INDICATOR_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*3);// for selection handle touching
-		controller.WALL_ENDS_PIXEL_MARGIN = (int)(mDisplayMetrics.densityDpi*dpiIndicatorTouchSize*4);// just for wall start or end weld
+		// Now determine a finger interface size for the indicators
+		//used for isItemSelectedAt, getSelectablesItesmAt, furnitureOnWall, various magnetized calls
+		controller.PIXEL_MARGIN = 4 * (int)(densityScale * 3);
+		controller.INDICATOR_PIXEL_MARGIN = 5 * (int)(densityScale * 3);// for selection handle touching and polyline resize and room resize
+		controller.WALL_ENDS_PIXEL_MARGIN = 2 * (int)(densityScale * 3);// just for wall start or end welding together
 
 		MARGIN_PX = (int) (MARGIN_DP * densityScale + 0.5f);
-
-		inverseSize = densityScale * 3;
 
 		// Set JComponent default properties
 		setOpaque(true);
