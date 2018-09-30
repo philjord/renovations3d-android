@@ -1803,10 +1803,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		{
 			if(getView() != null)
 			{
-				DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
+				//2 finger move disabled to make pinch action smoother
+				///RIGHT RIGHT! is to allow 2 finger drags to work I see
+				// so this is not about how far the scale move, just about how close the fingers are
+				// when deciding if this is a 2 drag or not
+			/*	DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
 				float mDPI = (float) mDisplayMetrics.densityDpi;
 				float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-				return measurement > PlanComponent.dpiMinSpanForZoom;
+				return measurement > PlanComponent.dpiMinSpanForZoom;*/
+				return true;
 			}
 			return false;
 		}
@@ -2064,37 +2069,36 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private Node createBackgroundNode(boolean listenToHomeUpdates, final boolean waitForLoading) {
 		final SimpleShaderAppearance skyBackgroundAppearance = new SimpleShaderAppearance();
-		skyBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
+
 		ColoringAttributes skyBackgroundColoringAttributes = new ColoringAttributes();
 		skyBackgroundAppearance.setColoringAttributes(skyBackgroundColoringAttributes);
 		// Allow sky color and texture to change
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
 		skyBackgroundColoringAttributes.setCapability(ColoringAttributes.ALLOW_COLOR_WRITE);
-
+		skyBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
 		Geometry topHalfSphereGeometry = createHalfSphereGeometry(true);
 		final Shape3D topHalfSphere = new Shape3D(topHalfSphereGeometry, skyBackgroundAppearance);
 		BranchGroup backgroundBranch = new BranchGroup();
 		backgroundBranch.addChild(topHalfSphere);
 
 		final SimpleShaderAppearance bottomAppearance = new SimpleShaderAppearance();
-		bottomAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
 		final RenderingAttributes bottomRenderingAttributes = new RenderingAttributes();
 		bottomRenderingAttributes.setVisible(false);
 		bottomAppearance.setRenderingAttributes(bottomRenderingAttributes);
 		bottomRenderingAttributes.setCapability(RenderingAttributes.ALLOW_VISIBLE_WRITE);
+		bottomAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
 		Shape3D bottomHalfSphere = new Shape3D(createHalfSphereGeometry(false), bottomAppearance);
 		backgroundBranch.addChild(bottomHalfSphere);
 
 		// Add two planes at ground level to complete landscape at the horizon when camera is above horizon
 		// (one at y = -0.01 to fill the horizon and a lower one to fill the lower part of the scene)
 		final SimpleShaderAppearance groundBackgroundAppearance = new SimpleShaderAppearance();
-		groundBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
+
 		TextureAttributes groundBackgroundTextureAttributes = new TextureAttributes();
 		groundBackgroundTextureAttributes.setTextureMode(TextureAttributes.MODULATE);
 		groundBackgroundAppearance.setTextureAttributes(groundBackgroundTextureAttributes);
 
-		//PJWARNING WARNING WARNING LOOK INTO THIS!! TEX COORD GEN
 		groundBackgroundAppearance.setTexCoordGeneration(
 			new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_2,
 				new Vector4f(1E5f, 0, 0, 0), new Vector4f(0, 0, 1E5f, 0)));
@@ -2104,6 +2108,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		groundBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
 		groundBackgroundAppearance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
 		groundRenderingAttributes.setCapability(RenderingAttributes.ALLOW_VISIBLE_WRITE);
+		groundBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
 
     GeometryInfo geometryInfo = new GeometryInfo (GeometryInfo.QUAD_ARRAY);
 		geometryInfo.setCoordinates(new Point3f [] {

@@ -223,19 +223,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
-
         <Button
             android:id="@+id/prefs_resetTipsButton"
             android:text="resetTips"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"/>
-        <CheckBox
-            android:id="@+id/prefs_useChunkyHandles"
-            android:text="prefs_useChunkyHandles"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
         <CheckBox
             android:id="@+id/prefs_showOtherHandles"
             android:text="prefs_showOtherHandles"

@@ -122,7 +122,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	//private JLabel           autoSaveDelayForRecoveryUnitLabel;
 	private JButton          resetDisplayedActionTipsButton;
 
-	private JCheckBox        useChunkyHandles;
 	private JCheckBox        showOtherHandles;
 	private JCheckBox        showPagerButtons;
 
@@ -726,19 +725,9 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     	});
 
 	  //PJ----------------------------new refs for Renovations, using the local prefs storage system
-	  boolean SHOW_CHUNKY_HANDLES = settings.getBoolean(PlanComponent.SHOW_CHUNKY_HANDLES_PREF, true);
 	  boolean SHOW_HANDLES_THAT_NEED_TOOLTIPS = settings.getBoolean(PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS_PREF, false);
 	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, true);
 
-	  this.useChunkyHandles = new JCheckBox(activity, getContext().getString(R.string.useChunkyHandles), SHOW_CHUNKY_HANDLES);
-	  this.useChunkyHandles.addChangeListener(new ChangeListener() {
-		  public void stateChanged(ChangeEvent ev) {
-			  SharedPreferences.Editor editor = settings.edit();
-			  editor.putBoolean(PlanComponent.SHOW_CHUNKY_HANDLES_PREF, useChunkyHandles.isSelected());
-			  editor.apply();
-			  PlanComponent.SHOW_CHUNKY_HANDLES = useChunkyHandles.isSelected();
-		  }
-	  });
 	  this.showOtherHandles = new JCheckBox(activity, getContext().getString(R.string.showOtherHandles), SHOW_HANDLES_THAT_NEED_TOOLTIPS);
 	  this.showOtherHandles.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {
@@ -1084,7 +1073,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_resetTipsButton);
 		}
 
-		swapOut(this.useChunkyHandles, R.id.prefs_useChunkyHandles);
 		swapOut(this.showOtherHandles, R.id.prefs_showOtherHandles);
 		swapOut(this.showPagerButtons, R.id.prefs_showPagerButtons);
 
