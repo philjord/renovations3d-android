@@ -625,7 +625,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		// Now determine a finger interface size for the indicators
 		//used for isItemSelectedAt, getSelectablesItesmAt, furnitureOnWall, various magnetized calls
-		controller.PIXEL_MARGIN = 4 * (int)(densityScale * 3);
+		controller.PIXEL_MARGIN = 2 * (int)(densityScale * 3);
 		controller.INDICATOR_PIXEL_MARGIN = 5 * (int)(densityScale * 3);// for selection handle touching and polyline resize and room resize
 		controller.WALL_ENDS_PIXEL_MARGIN = 2 * (int)(densityScale * 3);// just for wall start or end welding together
 
@@ -1303,8 +1303,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 							System.out.println("potentialSinglePress != null seen during action down, look into this");
 						}
 
-						lastMousePressedTime = System.currentTimeMillis();
-
 						fingers = 1;
 
 						// this will be fired on a move or an up or another single down
@@ -1317,7 +1315,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 				case MotionEvent.ACTION_POINTER_DOWN:
 				{
-					//System.out.println("ACTION_POINTER_DOWN");
 					// second finger down now
 					// cancel any pending single down as we are now firmly in double finger mode
 					fingers = 2;
@@ -1327,7 +1324,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 				case MotionEvent.ACTION_MOVE:
 				{
-					//System.out.println("ACTION_MOVE");
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final float x = MotionEventCompat.getX(ev, pointerIndex);
 					final float y = MotionEventCompat.getY(ev, pointerIndex);
@@ -1350,42 +1346,38 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						}
 					}
 
-
 					if (ev.getPointerCount() == 1)
 					{
-						//the touch interface is wildly sensitive, only issue moves 100ms after a down and ignore those few immediately after
-						if((System.currentTimeMillis() - lastMousePressedTime) > msAllowedBetweenTouchForDouble)
+						// stops any double taps
+						lastMouseReleasedTime = 0;
+
+						// this is a major divergence from the desktop function! Single finger pan during selection mode if the move is over nothing
+						if (!selectLasso && controller.getMode() == PlanController.Mode.SELECTION &&
+						//TODO: this is nearly better but not try again
+										//PlanComponent.this.controller.getSelectableItemsAt(convertXPixelToModel((int) x), convertYPixelToModel((int) y)).size() == 0)
+										home.getSelectedItems().size() == 0)
 						{
-							// stops any double taps
-							lastMouseReleasedTime = 0;
+							final float dx = x - mLastTouchX;
+							final float dy = y - mLastTouchY;
 
-							// this is a major divergence from the desktop function! Single finger pan during selection mode
-							if(!selectLasso && controller.getMode() == PlanController.Mode.SELECTION && home.getSelectedItems().size() == 0)
-							{
-								final float dx = x - mLastTouchX;
-								final float dy = y - mLastTouchY;
+							float s = getScale();
+							// pan operation wants the move to be div scale as moveview does a multiply, so...
+							moveView(-dx/s, -dy/s);
 
-								float s = getScale();
-								// pan operation wants the move to be div scale as moveview does a multiply, so...
-								moveView(-dx/s, -dy/s);
-
-								// we also cancel any pending press cos that's been confirmed unwanted
-								potentialSinglePress = null;
-
-							}
-							else
-							{
-								// if we have a pending click we'd better fire it off now before moving
-								if(potentialSinglePress != null)
-								{
-									mousePressed(v, potentialSinglePress);
-									potentialSinglePress = null;
-								}
-
-								mouseMoved(v, ev);
-							}
-							fingers = 1;
+							// we also cancel any pending press cos that's been confirmed unwanted
+							potentialSinglePress = null;
 						}
+						else
+						{
+							// if we have a pending click we'd better fire it off now before moving
+							if (potentialSinglePress != null)
+							{
+								mousePressed(v, potentialSinglePress);
+								potentialSinglePress = null;
+							}
+							mouseMoved(v, ev);
+						}
+						fingers = 1;
 					}
 
 					mLastTouchX = x;
@@ -1395,7 +1387,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 				case MotionEvent.ACTION_UP:
 				{
-					//System.out.println("ACTION_UP");
 					mActivePointerId = INVALID_POINTER_ID;
 					// make sure this isn't the exit of a double touch too
 					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
@@ -1425,7 +1416,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 				case MotionEvent.ACTION_POINTER_UP:
 				{
-					//System.out.println("ACTION_POINTER_UP");
 					//second finger has been released
 					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
@@ -1434,8 +1424,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 					if (pointerId == mActivePointerId)
 					{
-						// This was our active pointer going up. Choose a new
-						// active pointer and adjust accordingly.
+						// This was our active pointer going up. Choose a new active pointer and adjust accordingly.
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
 						mLastTouchX = MotionEventCompat.getX(ev, newPointerIndex);
 						mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
@@ -1448,8 +1437,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			return true;
 		}
 
-		private final long msAllowedBetweenTouchForDouble = 200;
-		private long lastMousePressedTime = 0;
 		private long lastMouseReleasedTime = 0;
 		private Point lastMousePressedLocation = null;
 
@@ -1480,7 +1467,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && PlanComponent.this.selectMultiple;
 
-						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 350 ? 2 : 1);
+						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 250 ? 2 : 1);
 
 						// if it's a double, ensure triple != double twice
 						if (clickCount == 1)
@@ -1580,10 +1567,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
 			float measurement = mScaleDetector.getCurrentSpan() / (float) mDisplayMetrics.densityDpi;
 
-			if(PlanComponent.this.controller.getMode() == PlanController.Mode.PANNING ||
+		/*	if(PlanComponent.this.controller.getMode() == PlanController.Mode.PANNING ||
 							PlanComponent.this.controller.getMode() == PlanController.Mode.SELECTION )
 				return true;
-			else
+			else*/
 				return measurement > dpiMinSpanForZoom;
 
 		}
