@@ -110,5 +110,6 @@
     <string name="tutorialWellDone">よくやった！</string>
     <string name="share">シェア</string>
     <string name="set_to_device_location">デバイスの場所を使用する</string>
+    <string name="menu_privacy">プライバシー</string>
 
 </resources>

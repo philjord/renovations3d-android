@@ -112,5 +112,6 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="tutorialWellDone">¡Bien hecho!</string>
     <string name="share">Compartir</string>
     <string name="set_to_device_location">Usar la ubicación del dispositivo</string>
+    <string name="menu_privacy">Intimidad</string>
 
 </resources>

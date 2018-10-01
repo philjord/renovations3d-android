@@ -113,5 +113,6 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="tutStepFinishText">Good work, now you might like to load a home from a demo file, Menu->File->New from demo.\nLater you could use the photo generator in the 3D view to \"Create photo...\"</string>
     <string name="share">Share</string>
     <string name="set_to_device_location">Use device location</string>
+    <string name="menu_privacy">Privacy</string>
 
 </resources>

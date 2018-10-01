@@ -110,5 +110,6 @@
     <string name="tutorialWellDone">做得好！</string>
     <string name="share">分享</string>
     <string name="set_to_device_location">使用設備位置</string>
+    <string name="menu_privacy">隱私</string>
 
 </resources>

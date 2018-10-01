@@ -113,5 +113,6 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="tutorialWellDone">Bem feito!</string>
     <string name="share">Compartilhar</string>
     <string name="set_to_device_location">Use a localização do dispositivo</string>
+    <string name="menu_privacy">Privacidade</string>
 
 </resources>

@@ -110,5 +110,6 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="tutorialWellDone">Aferin!</string>
     <string name="share">Pay</string>
     <string name="set_to_device_location">Aygıt konumunu kullan</string>
+    <string name="menu_privacy">Gizlilik</string>
 
 </resources>

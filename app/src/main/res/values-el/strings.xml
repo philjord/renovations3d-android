@@ -112,4 +112,5 @@
     <string name="tutorialWellDone">Μπράβο!</string>
     <string name="share">Μερίδιο</string>
     <string name="set_to_device_location">Χρησιμοποιήστε τη θέση της συσκευής</string>
+    <string name="menu_privacy">Μυστικότητα</string>
 </resources>

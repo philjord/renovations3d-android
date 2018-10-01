@@ -480,7 +480,7 @@ public class Renovations3D extends HomeApplication
 		}
 		else
 		{
-			// note use a class from the jar, not this class, but matching simple name (so the right property is pulled form teh resource once loaded
+			// note use a class from the jar, not this class, but matching simple name (so the right property is pulled form the resource once loaded
 			return getUserPreferences().getLocalizedString(com.eteks.sweethome3d.Renovations3D_props.class, "applicationVersion");
 		}
 	}

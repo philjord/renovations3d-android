@@ -483,6 +483,8 @@ public class Renovations3DActivity extends FragmentActivity
 			MenuItem aboutMI = menu.findItem(R.id.menu_about);
 			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
 			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details, this);
+
+
 		}
 		return true;
 	}
@@ -527,6 +529,18 @@ public class Renovations3DActivity extends FragmentActivity
 				Renovations3DActivity.logFireBaseLevelUp("menu_about");
 				if (renovations3D != null && renovations3D.getHomeController() != null)
 					renovations3D.getHomeController().about();
+				return true;
+
+			case R.id.menu_privacy:
+				Renovations3DActivity.logFireBaseLevelUp("menu_privacy");
+				//TODO: localize the page and make this like menu_help
+				String urlStr = "https://sites.google.com/view/renovations3d";
+				Uri webpage = Uri.parse(urlStr);
+				Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+				if (intent.resolveActivity(getPackageManager()) != null)
+				{
+					startActivity(intent);
+				}
 				return true;
 			case R.id.menu_preferences:
 				Renovations3DActivity.logFireBaseLevelUp("menu_preferences");

@@ -112,5 +112,6 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="tutorialWellDone">Bra gjort!</string>
     <string name="share">Dela med sig</string>
     <string name="set_to_device_location">Använd enhetsplatsen</string>
+    <string name="menu_privacy">Integritet</string>
 
 </resources>

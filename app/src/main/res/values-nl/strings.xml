@@ -110,5 +110,6 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="tutorialWellDone">Goed gedaan!</string>
     <string name="share">Delen</string>
     <string name="set_to_device_location">Gebruik de locatie van de apparaat</string>
+    <string name="menu_privacy">Privacy</string>
 
 </resources>

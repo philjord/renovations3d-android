@@ -111,5 +111,6 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="tutorialWellDone">Gut gemacht!</string>
     <string name="share">Aktie</string>
     <string name="set_to_device_location">Geräteort verwenden</string>
+    <string name="menu_privacy">Privatsphäre</string>
 
 </resources>

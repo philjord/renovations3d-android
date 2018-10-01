@@ -110,5 +110,6 @@
     <string name="tutorialWellDone">Много добре!</string>
     <string name="share">Дял</string>
     <string name="set_to_device_location">Използвайте местоположението на устройството</string>
+    <string name="menu_privacy">поверителност</string>
 
 </resources>

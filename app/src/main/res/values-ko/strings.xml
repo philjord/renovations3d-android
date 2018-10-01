@@ -117,6 +117,7 @@
     <string name="tutorialWellDone">잘 했어!</string>
     <string name="share">몫</string>
     <string name="set_to_device_location">기기 위치 사용</string>
+    <string name="menu_privacy">은둔</string>
 
 
 </resources>
