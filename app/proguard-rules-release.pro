@@ -72,10 +72,14 @@
 
 #in fact flag it
 -keep class com.eteks.sweethome3d.** { *; }
--keep class renovations3d.** { *; }
+-keep class com.eteks.renovations3d.** { *; }
 -keep class javaawt.** { *; }
 -keep class javaswing.** { *; }
 -keep class sun.util.calendar.ZoneInfo { *; }
+
+#keep the properties files too
+-keeppackagenames com.eteks.sweethome3d.**
+
 
 
 
