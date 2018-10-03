@@ -1125,7 +1125,8 @@ public class Renovations3DActivity extends FragmentActivity
 							break;
 					}
 
-					Toast.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
+					if(!Renovations3DActivity.this.isFinishing())
+						Toast.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
 					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
 				}
 			}
@@ -1249,9 +1250,6 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void loadUpContent()
 	{
-
-
-
 		// set up the auto save system now as various things below call return
 		final TimerTask autoSaveTask = new TimerTask()
 		{
@@ -1274,84 +1272,78 @@ public class Renovations3DActivity extends FragmentActivity
 			{
 				String scheme = intent.getScheme();
 				//ContentResolver resolver = getContentResolver();
+				if(scheme != null) {
+					if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0) {
+						//Uri uri = intent.getData();
+						//String name = getContentName(resolver, uri);
+						//Log.v("tag", "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+						//Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+						//InputStream input = resolver.openInputStream(uri);
+						//TODO: clicking an http content fires off the http version and this one??
+						//inputStreamToFile(input, Environment.DIRECTORY_DOWNLOADS + "/" + name);
+						//loadHome(new File(Environment.DIRECTORY_DOWNLOADS + "/" + name));
 
-				if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0)
-				{
-					//Uri uri = intent.getData();
-					//String name = getContentName(resolver, uri);
-					//Log.v("tag", "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-					//Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
-					//InputStream input = resolver.openInputStream(uri);
-					//TODO: clicking an http content fires off the http version and this one??
-					//inputStreamToFile(input, Environment.DIRECTORY_DOWNLOADS + "/" + name);
-					//loadHome(new File(Environment.DIRECTORY_DOWNLOADS + "/" + name));
-
-					setIntent(null);
-					return;
-				}
-				else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0)
-				{
-					Uri uri = intent.getData();
-					String name = uri.getLastPathSegment();
-
-					Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-					Toast.makeText(Renovations3DActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
-
-					File inFile = new File(uri.getPath());
-					loadFile(inFile);
-
-					setIntent(null);
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", intent.getDataString());
-					return;
-				}
-				else if (scheme.compareTo("http") == 0)
-				{
-					Toast.makeText(Renovations3DActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
-
-					Uri uri = intent.getData();
-					final String fileName = uri.getLastPathSegment();
-
-					Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
-					Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
-					DownloadManager.Request request = new DownloadManager.Request(uri);
-					request.setDescription(fileName + "_download");
-					request.setTitle(fileName);
-
-					request.allowScanningByMediaScanner();
-					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-					try
-					{
-						if (writeExternalStorageGranted)
-						{
-							request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-						}
-						else
-						{
-							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
-						}
-
-						// get download service and enqueue file
-						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-						manager.enqueue(request);
-						registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 						setIntent(null);
-						Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
-						Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
+						return;
+					}	else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
+						Uri uri = intent.getData();
+						String name = uri.getLastPathSegment();
+
+						Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+						if (!Renovations3DActivity.this.isFinishing())
+							Toast.makeText(Renovations3DActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+
+						File inFile = new File(uri.getPath());
+						loadFile(inFile);
+
+						setIntent(null);
+						Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", intent.getDataString());
+						return;
+					} else if (scheme.compareTo("http") == 0) {
+						if (!Renovations3DActivity.this.isFinishing())
+							Toast.makeText(Renovations3DActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+
+						Uri uri = intent.getData();
+						final String fileName = uri.getLastPathSegment();
+
+						Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
+						if (!Renovations3DActivity.this.isFinishing())
+							Toast.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
+						DownloadManager.Request request = new DownloadManager.Request(uri);
+						request.setDescription(fileName + "_download");
+						request.setTitle(fileName);
+
+						request.allowScanningByMediaScanner();
+						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+						try {
+							if (writeExternalStorageGranted) {
+								request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+							} else {
+								request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
+							}
+
+							// get download service and enqueue file
+							DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+							manager.enqueue(request);
+							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+							setIntent(null);
+							if (!Renovations3DActivity.this.isFinishing())
+								Toast.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
+							Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
+						}
+						catch (IllegalStateException e) {
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IllegalStateException during http intent", intent.getDataString());
+						}
+						return;
+					} else if (scheme.compareTo("ftp") == 0) {
+						Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", intent.getDataString());
+						// TODO Import from FTP!
+						if (!Renovations3DActivity.this.isFinishing())
+							Toast.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
+						setIntent(null);
+						return;
 					}
-					catch (IllegalStateException e)
-					{
-						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IllegalStateException during http intent", intent.getDataString());
-					}
-					return;
-				}
-				else if (scheme.compareTo("ftp") == 0)
-				{
-					Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", intent.getDataString());
-					// TODO Import from FTP!
-					Toast.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
-					setIntent(null);
-					return;
 				}
 
 			}
@@ -1752,8 +1744,8 @@ public class Renovations3DActivity extends FragmentActivity
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
 
 					// use that web site example dialogs
-					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT)
-							.show();
+					if(!Renovations3DActivity.this.isFinishing())
+					Toast.makeText(Renovations3DActivity.this, "WRITE_EXTERNAL_STORAGE Denied", Toast.LENGTH_SHORT).show();
 
 					storagePermission(false);
 				}

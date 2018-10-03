@@ -170,13 +170,15 @@ public class BillingManager
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - RemoteException", null);
-				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				if(!renovations3DActivity.isFinishing())
+					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - no service", null);
-			Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+			if(!renovations3DActivity.isFinishing())
+				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -204,7 +206,8 @@ public class BillingManager
 				else
 				{
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - null pendingIntent", null);
-					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+					if(!renovations3DActivity.isFinishing())
+						Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -212,19 +215,22 @@ public class BillingManager
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - RemoteException", null);
-				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				if(!renovations3DActivity.isFinishing())
+					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 			catch (IntentSender.SendIntentException e)
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - IntentSender.SendIntentException", null);
-				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				if(!renovations3DActivity.isFinishing())
+					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - no service", null);
-			Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+			if(!renovations3DActivity.isFinishing())
+				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 

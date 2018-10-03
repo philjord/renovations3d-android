@@ -899,12 +899,11 @@ public class ModelPreviewComponent extends JPanel {
    * Returns the icon image matching the displayed view.  
    */
   private BufferedImage getIconImage(int maxWaitingDelay) {
+		if(canvas3D != null) {
+	  	setBackground(Color.WHITE);
+	  	canvas3D.renderOffScreenBuffer();
+	  	canvas3D.waitForOffScreenRendering();
 
-	  setBackground(Color.WHITE);
-	  canvas3D.renderOffScreenBuffer();
-	  canvas3D.waitForOffScreenRendering();
-
-	  if(canvas3D != null) {
 		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
 		  int[] imageWithWhiteBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithWhiteBackgound);
 		  // Render scene with a black background

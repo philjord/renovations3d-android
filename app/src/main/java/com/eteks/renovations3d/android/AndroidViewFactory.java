@@ -476,7 +476,8 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	{
 		//NOTE this method is not linked to the help button, that buttons opens the sweethome3d.com help page
 		String helpMessage = activity.getString(R.string.helpmenu_no_work);
-		Toast.makeText(this.activity, helpMessage, Toast.LENGTH_LONG).show();
+		if(!this.activity.isFinishing())
+			Toast.makeText(this.activity, helpMessage, Toast.LENGTH_LONG).show();
 		return new HelpView(){public void displayView(){}};
 		//return new HelpPane(preferences, helpController);
 	}

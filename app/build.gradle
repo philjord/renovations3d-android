@@ -61,7 +61,7 @@ dependencies {
     // all firebase libs versions must match
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.google.firebase:firebase-config:16.0.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
     //color picker dialog
     //implementation 'com.google.vr:sdk-audio:1.10.0'

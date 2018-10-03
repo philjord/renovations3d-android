@@ -43,6 +43,7 @@ import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
+import com.jogamp.opengl.GLException;
 import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.j3d.utils.InfoText3D;
 import com.mindblowing.j3d.utils.JoglStatusActivity;
@@ -200,7 +201,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		setDeoptomize(deoptomize);
 
-		caps = new GLCapabilities(null);
+		try {
+			caps = new GLCapabilities(null);
+		} catch (GLException e) {
+			//E.g. Profile GL_DEFAULT is not available on EGLGraphicsDevice[type .egl, v1.4.0, connection decon, unitID 0, handle 0x1, owner true, NullToolkitLock[obj 0x163357fd]], but: []
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "new GLCapabilities(null) GLException", null );
+			String message = getActivity().getString(R.string.insufficient3dResourcesMessage);
+			String title = getActivity().getString(R.string.insufficient3dResourcesTitle);
+			JOptionPane.showMessageDialog(getActivity(), message, title, JOptionPane.ERROR_MESSAGE);
+			// after we return lord knows what will happen with the component generally
+			return;
+		}
 		caps.setDoubleBuffered(true);
 		caps.setDepthBits(16);
 		caps.setStencilBits(8);
@@ -797,7 +808,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					item.setChecked(!item.isChecked());
 					setDeoptomize(item.isChecked());
 					Renovations3DActivity.logFireBaseLevelUp("setDeoptomizeMenu", "deoptomize " + item.isChecked());
-					Toast.makeText(getContext(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
+					if(!getActivity().isFinishing())
+						Toast.makeText(getContext(), "This requires a reload of your home to take effect.", Toast.LENGTH_LONG).show();
 					break;
 				case R.id.show_jogl_status:
 					Intent myIntent = new Intent(this.getContext(), JoglStatusActivity.class);

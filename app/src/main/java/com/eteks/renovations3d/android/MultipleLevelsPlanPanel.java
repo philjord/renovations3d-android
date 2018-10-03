@@ -208,27 +208,27 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 						break;
 					case 1://createWalls:
 						finishCurrentMode();
-						if (!tutorial.isEnabled())
-							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						if (!tutorial.isEnabled() && getActivity().isFinishing())
+							Toast.makeText(getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.WALL_CREATION);
 						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_WALL_TOOL_SELECTED);
 						break;
 					case 2://createRooms:
 						finishCurrentMode();
-						if (!tutorial.isEnabled())
+						if (!tutorial.isEnabled() && getActivity().isFinishing())
 							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.ROOM_CREATION);
 						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_ROOM_TOOL_SELECTED);
 						break;
 					case 3://createPolyLines:
 						finishCurrentMode();
-						if (!tutorial.isEnabled())
+						if (!tutorial.isEnabled() && getActivity().isFinishing())
 							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 						planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 						break;
 					case 4://createDimensions:
 						finishCurrentMode();
-						if (!tutorial.isEnabled())
+						if (!tutorial.isEnabled() && getActivity().isFinishing())
 							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 						break;

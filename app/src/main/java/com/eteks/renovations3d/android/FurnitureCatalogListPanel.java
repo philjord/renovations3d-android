@@ -489,13 +489,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	private void importTextureLibrary()
 	{
-
-		Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), getActivity().getString(R.string.pleaseSelectSh3t) , Toast.LENGTH_LONG).show();
+		if(!getActivity().isFinishing())
+			Toast.makeText(getActivity(), getActivity().getString(R.string.pleaseSelectSh3t) , Toast.LENGTH_LONG).show();
 		Thread t3 = new Thread()
 		{
 			public void run()
 			{
-				HomeController controller2 = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
+				HomeController controller2 = ((Renovations3DActivity) getActivity()).getHomeController();
 				if (controller2 != null)
 				{
 					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
@@ -523,12 +523,13 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	private void importFurnitureLibrary()
 	{
 		// so this business is only when the dialog last "Other" item is selected
-		Toast.makeText(FurnitureCatalogListPanel.this.getActivity(), getActivity().getString(R.string.pleaseSelectSh3f) , Toast.LENGTH_LONG).show();
+		if(!getActivity().isFinishing())
+			Toast.makeText(getActivity(), getActivity().getString(R.string.pleaseSelectSh3f) , Toast.LENGTH_LONG).show();
 		Thread t2 = new Thread()
 		{
 			public void run()
 			{
-				HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
+				HomeController controller = ((Renovations3DActivity) getActivity()).getHomeController();
 				if (controller != null)
 				{
 					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out

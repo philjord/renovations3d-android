@@ -131,8 +131,8 @@ public class Renovations3D extends HomeApplication
 					if (supportedLanguages.contains(language))
 					{
 						getUserPreferences().setLanguage(language);
-
-						Toast.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
+						if(!parentActivity.isFinishing())
+							Toast.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
 					}
 				}
 			});

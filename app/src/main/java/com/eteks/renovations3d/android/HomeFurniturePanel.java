@@ -1079,10 +1079,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			//	  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationLabel.text"));
 		  swapOut(verticalRotationLabel, R.id.furniture_panel_verticalRotationLabel);
 		  swapOut(horizontalRotationLabel, R.id.furniture_panel_horizontalRotationLabel);
-		 // swapOut(orientationLabel, R.id.furniture_panel_orientationLabel);
+		 	// swapOut(orientationLabel, R.id.furniture_panel_orientationLabel);
 		  // There are two possible layout depending whether horizontal and vertical rotation label are defined or not
-		  boolean layoutWithHorizontalVerticalLabels = verticalRotationLabel.getText().length() > 0
-				  && horizontalRotationLabel.getText().length() > 0;
+		  //boolean layoutWithHorizontalVerticalLabels = verticalRotationLabel.getText().length() > 0
+			//	  && horizontalRotationLabel.getText().length() > 0;
 		  if (this.angleLabel != null) {
 			  // Row 0 may contain verticalRotationLabel
 			  swapOut(this.angleLabel, R.id.furniture_panel_angleLabel);
@@ -1116,6 +1116,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  removeView(R.id.furniture_panel_verticalRotationLabel);
 		  removeView(R.id.furniture_panel_horizontalRotationLabel);
 		 // removeView(R.id.furniture_panel_orientationLabel);
+			removeView(R.id.furniture_panel_pitchRadioButton);
+			removeView(R.id.furniture_panel_pitchSpinner);
+			removeView(R.id.furniture_panel_rollRadioButton);
+			removeView(R.id.furniture_panel_rollSpinner);
 	  }
 
 	  // Size panel
