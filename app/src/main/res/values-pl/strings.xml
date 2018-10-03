@@ -44,8 +44,8 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="helpmenu_no_work">Menu-> Pomoc Obecnie nic nie robi.</string>
     <string name="large_home_question_title">Potencjalny problem</string>
     <string name="large_home_question"><![CDATA[<html>
-     Ten dom ma rozmiar %1, rozmiar ten może być za duży, aby mógł być płynnie edytowany w programie Renowacje 3D, czy chcesz zacząć od widocznego ustawienia nie wybranego poziomu? (Zalecane) <br>
-     Aby wyświetlić te poziomy, musisz dwukrotnie dotknąć nazwy poziomu i zaznaczyć opcję Wyświetlaj, pamiętaj, że w przypadku dużych domów wskazane jest, aby minimalny poziom widocznych wyświetleń był minimalny. <br>
+     Ten dom ma rozmiar %1, który może być zbyt duży, aby można go było płynnie edytować w programie Renovations 3D, czy chcesz wyłączyć widoczność dużych elementów mebli? (Zalecane) <br>
+     Aby wyświetlić te elementy, możesz zmienić ich widoczność w tabeli mebli znajdującej się po lewej stronie widoku planu 2D. <br>
      ]]></string>
     <string name="double_tap_finish">Kliknij dwukrotnie, aby zakończyć</string>
     <string name="long_process_title">Długi proces</string>

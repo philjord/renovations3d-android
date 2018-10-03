@@ -45,8 +45,8 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="helpmenu_no_work">Menú-> Ayuda Actualmente no hace nada.</string>
     <string name="large_home_question_title">Problema potencial</string>
     <string name="large_home_question"><![CDATA[<html>
-     Esta casa tiene un tamaño de 1%, este tamaño puede ser demasiado grande para ser editado con suavidad en Renovations 3D.  ¿Desea comenzar con el ajuste visible para niveles no seleccionados? (Recomendado) <br>
-     Para ver esos niveles necesitará doblar el nombre del nivel y marcar en la opción visible, tenga en cuenta que es recomendable mantener el número de niveles visibles como mínimo para grandes hogares como este.<br>
+     Esta casa es %1, que puede ser demasiado grande para ser fácilmente editada en Renovations 3D, ¿le gustaría desactivar la visibilidad para muebles grandes? (Recomendado) <br>
+     Para ver estos elementos, puede cambiar su visibilidad en la tabla de muebles ubicada a la izquierda de la vista en planta 2D. <br>
 ]]></string>
     <string name="double_tap_finish">Doble toque para terminar</string>
     <string name="long_process_title">Proceso de larga duración</string>

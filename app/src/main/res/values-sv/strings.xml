@@ -45,8 +45,8 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="helpmenu_no_work">Meny-> Hjälp närvarande ingenting.</string>
     <string name="large_home_question_title">Potentiellt problem</string>
     <string name="large_home_question"><![CDATA[<html>
-     Detta hem är %1 i storlek, kan denna storlek vara för stor för att smidigt redigeras i Renoveringar 3D, skulle du vilja börja med den synliga inställningen för icke-valda planar ut? (Rekommenderas) <br>
-     För att se dessa nivåer måste du dubbeltrycka nivån namn och kryssa på den synliga alternativet notera att det är lämpligt att hålla antalet visningsbara nivåer till ett minimum för stora hem som denna. <br>
+     Detta hus är %1, vilket kan vara för stort för att enkelt kunna redigeras i Renovations 3D, vill du stänga av synligheten för stora möbler? (Rekommenderas) <br>
+     För att se dessa element kan du ändra sin synlighet i möbelbordet till vänster om 2D planvy. <br>
      ]]></string>
     <string name="double_tap_finish">Dubbeltryck för att avsluta</string>
     <string name="long_process_title">Långdragna process</string>

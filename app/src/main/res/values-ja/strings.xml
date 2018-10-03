@@ -43,8 +43,8 @@
     <string name="helpmenu_no_work">"メニュー - >現在、何もしないのに役立ちます。 "</string>
     <string name="large_home_question_title">潜在的な問題</string>
     <string name="large_home_question"><![CDATA[<html>
-     この家はサイズが ％1 ですが、このサイズが大きすぎてRenovations 3Dでスムーズに編集できない場合は、非選択レベルの表示可能な設定をオフにしますか？ （推奨）<br>
-     これらのレベルを表示するには、レベル名をダブルタップして[表示可能]オプションをオンにする必要があります。このような大規模な家庭では、表示可能なレベルの数を最小限に抑えることが推奨されます。<br>
+     この家は大きさが ％1 ですが、Renovations 3Dでスムーズに編集するには大きすぎる場合があります。大きな家具のアイテムの表示をオフにしますか？ （推奨）<br>
+     これらのアイテムを表示するには、2D平面図ビューの左側にある家具テーブルでその表示を変更することができます。<br>
      ]]></string>
     <string name="double_tap_finish">ダブルタップして終了</string>
     <string name="long_process_title">長期実行プロセス</string>

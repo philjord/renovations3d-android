@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">3D rekonstrukce</string>
+    <string name="app_name">Renovations 3D</string>
     <string name="alignment">zarovnání</string>
     <string name="magnetism">magnetismus</string>
     <string name="welcometext_planview"><![CDATA[<html>
@@ -46,8 +46,8 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="helpmenu_no_work">Menu-> Nápověda V současné době nic nedělá.</string>
     <string name="large_home_question_title">Potenciální problém</string>
     <string name="large_home_question"><![CDATA[<html>
-     Tento dům je %1 ve velikosti, tato velikost může být příliš velký, aby se bez problémů upravovat ve 3D rekonstrukci byste chtěli začít s viditelná nastavení pro non-zvolen úrovní off? (Doporučeno) <br>
-     Chcete-li zobrazit tyto úrovně, budete muset zdvojnásobit klepnout na název úrovně a klíště na viditelném volby, na vědomí, že je vhodné, aby počet viditelných úrovní na minimum velkých domech, jako je tento. <br>
+     Tento domov je %1 ve velikosti, který může být příliš velký, aby byl hladce upravován v Renovations 3D, chcete vypnout viditelnost u velkých nábytkových předmětů? (Doporučeno) <br>
+    Chcete-li zobrazit tyto položky, můžete změnit jejich viditelnost v Tabulce nábytku na levé straně výřezu 2D <br>
      ]]></string>
     <string name="double_tap_finish">Ukončete dvojitým poklepáním</string>
     <string name="long_process_title">Tohle chvíli potrvá...</string>

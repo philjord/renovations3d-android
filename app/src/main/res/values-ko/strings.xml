@@ -49,8 +49,8 @@
     <string name="helpmenu_no_work">메뉴 -> 도움말은 현재 아무 것도하지 않습니다.</string>
     <string name="large_home_question_title">잠재적 인 문제</string>
     <string name="large_home_question"><![CDATA[<html>
-     이 집의 크기는 %1 입니다.이 크기가 너무 커서 Renovations 3D에서 부드럽게 편집 할 수없는 경우 선택되지 않은 레벨에 대한 가시적 인 설정으로 시작하겠습니까? (권장) <br>
-     레벨을 보려면 레벨 이름을 두 번 탭하고 볼 수있는 옵션을 선택해야합니다. 이렇게 큰 집에서는 볼 수있는 레벨의 수를 최소한으로 유지하는 것이 좋습니다. <br>
+     이 집의 크기는 %1 입니다.이 크기가 너무 커서 Renovations 3D에서 원활하게 편집 할 수없는 경우가 있습니다. 대형 가구 항목의 가시성을 끄시겠습니까? (권장) <br>
+     이러한 항목을 보려면 2D 평면보기의 왼쪽에있는 가구 테이블에서 해당 항목의 가시성을 변경할 수 있습니다. <br>
      ]]></string>
 
     <string name="double_tap_finish">완료하려면 두 번 탭하십시오.</string>

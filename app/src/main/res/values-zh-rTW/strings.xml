@@ -43,8 +43,8 @@
     <string name="helpmenu_no_work">菜单 - >帮助目前什么都不做。</string>
     <string name="large_home_question_title">潜在的问题</string>
     <string name="large_home_question"><![CDATA[<html>
-     这个家庭的大小是 ％1，这个大小可能太大，无法在装修3D中顺利编辑，你想从非选择级别的可视设置开始吗？ （推荐）<br>
-     要查看这些级别，您需要双击级别名称并在“可见”选项上勾选，请注意，建议将可见级别的数量保持在最低限度，以满足大型家庭的需求。<br>
+     這個房子的大小是 ％1，可能太大而無法在Renovations 3D中進行平滑編輯，您想要關閉大型家具的可見性嗎？（推薦）<br>
+    要查看這些項目，您可以在2D平面視圖左側的家具表中更改其可見性。<br>
      ]]></string>
     <string name="double_tap_finish">双击完成</string>
     <string name="long_process_title">长时间运行的过程</string>

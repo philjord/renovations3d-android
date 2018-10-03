@@ -44,8 +44,8 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="helpmenu_no_work">Menü-> Hilfe Zur Zeit nichts tut.</string>
     <string name="large_home_question_title">Potenzielle Frage</string>
     <string name="large_home_question"><![CDATA[<html>
-     Dieses Haus ist %1 in Größe, diese Größe kann zu groß sein, um reibungslos in Renovations 3D bearbeitet zu werden, möchten Sie mit der sichtbaren Einstellung für nicht ausgewählte Levels beginnen? (Empfohlen) <br>
-     Um diese Ebenen zu sehen, musst du doppelt auf den Levelnamen tippen und auf die Option Viewable ticken, beachten Sie, dass es ratsam ist, die Anzahl der sichtbaren Levels auf ein Minimum für große Häuser wie diese zu halten
+     Dieses Home ist %1 groß, was zu groß sein könnte, um in Renovations 3D problemlos bearbeitet zu werden. Möchten Sie die Sichtbarkeit für große Möbelelemente deaktivieren? (Empfohlen) <br>
+    Um diese Elemente anzuzeigen, können Sie ihre Sichtbarkeit in der Möbeltabelle links neben der 2D-Planansicht ändern. <br>
      ]]></string>
     <string name="double_tap_finish">Doppeltippen, um zu beenden</string>
     <string name="long_process_title">Lange Laufzeit</string>

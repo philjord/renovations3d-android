@@ -43,8 +43,8 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="helpmenu_no_work">Menü-> Şu anda hiçbir şey yapar yardımcı olur.</string>
     <string name="large_home_question_title">Olası sorun</string>
     <string name="large_home_question"><![CDATA[<html>
-     Bu evin boyutu %1, bu boyut Renovations 3D\'de düzgün şekilde düzenlenemeyecek kadar büyük olabilir, seçili olmayan seviyeler için görüntülenebilir ayarını kapatmak mı istiyorsunuz? (Önerilen) <br>
-     Bu düzeyleri görüntülemek için, düzey adını çift tıklamanız ve Görüntülenebilir seçeneği işaretlemek zorunda kalmanız gerekir; bunun gibi büyük evler için görüntülenebilir düzeylerin sayısını en az seviyede tutmanız önerilir. <br>
+     Bu ev %1, Renovations 3D\'de kolayca düzenlenebilecek kadar büyük olabilir, büyük mobilya parçaları için görünürlüğü kapatmak ister misiniz? (Önerilen) <br>
+     Bu öğeleri görüntülemek için, görünürlüklerini 2B plan görünümünün solunda bulunan mobilya tablosunda değiştirebilirsiniz. <br>
      ]]></string>
     <string name="double_tap_finish">Bitirmek için iki kez hafifçe dokunun</string>
     <string name="long_process_title">Uzun süren süreç</string>

@@ -44,8 +44,8 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="helpmenu_no_work">Menu-> Help Hiện nay Liệu có gì.</string>
     <string name="large_home_question_title">Vấn đề tiềm ẩn</string>
     <string name="large_home_question"><![CDATA[<html>
-     Nhà này có kích thước %1, kích thước này có thể quá lớn để được chỉnh sửa mượt mà trong Renovations 3D, bạn có muốn bắt đầu với cài đặt có thể xem đối với các cấp không được chọn không? (Đề nghị) <br>
-     Để xem các cấp độ đó, bạn sẽ cần nhấn đúp vào tên cấp và đánh dấu vào tùy chọn Chế độ xem được, lưu ý rằng bạn nên giữ số lượng cấp độ có thể xem ở mức tối thiểu cho những ngôi nhà lớn như thế này <br>
+     Ngôi nhà này là %1, có thể quá lớn để có thể dễ dàng chỉnh sửa trong Renovations 3D, bạn có muốn tắt chế độ hiển thị cho các đồ nội thất lớn không? (Được khuyến nghị) <br>
+     Để xem các yếu tố này, bạn có thể thay đổi chế độ hiển thị của chúng trong bảng đồ nội thất nằm ở bên trái của giao diện kế hoạch 2D. <br>
      ]]></string>
     <string name="double_tap_finish">Nhấn đúp để kết thúc</string>
     <string name="long_process_title">Quá trình chạy dài</string>

@@ -46,9 +46,9 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="helpmenu_no_work">Menu-> Ajuda Actualmente não faz nada.</string>
     <string name="large_home_question_title">Problema potencial</string>
     <string name="large_home_question"><![CDATA[<html>
-     Esta casa tem um tamanho de %1, este tamanho pode ser muito grande para ser editado suavemente em Renovations 3D, você gostaria de começar com a configuração visível para níveis não selecionados? (Recomendado) <br>
-     Para exibir esses níveis, você precisará tocar duas vezes no nome do nível e marcar na opção Visível, observe que é aconselhável manter o número de níveis visíveis no mínimo para grandes casas como esta.<br>
-]]></string>
+    Esta casa tem %1 de tamanho, o que pode ser muito grande para ser suavemente editado no Renovations 3D, você gostaria de desativar a visibilidade de itens de mobiliário de grande porte? (Recomendado) <br>
+    Para visualizar esses itens, você pode alterar sua visibilidade na Tabela de Móveis, localizada à esquerda da visualização do Plano 2D. <br>
+    ]]></string>
     <string name="double_tap_finish">Toque duas vezes para terminar</string>
     <string name="long_process_title">Processo de longa duração</string>
     <string name="high_quality_photo_notice">Alta qualidade de processamento de fotos pode levar muito tempo para calcular, em alguns casos, mais de uma hora, por favor, esteja ciente disso.</string>

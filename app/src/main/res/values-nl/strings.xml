@@ -43,8 +43,8 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="helpmenu_no_work">Menu-> Hulp Op dit moment doet niets.</string>
     <string name="large_home_question_title">Potentiële probleem</string>
     <string name="large_home_question"><![CDATA[<html>
-     Dit huis is %1 in omvang, kan deze grootte te groot zijn om soepel worden bewerkt in Renovaties 3D zijn, zou u willen beginnen met het zichtbare instelling voor niet-geselecteerde levels uit? (Aanbevolen) <br>
-     Om deze niveaus te bekijken, moet u het dubbele tik op de naam niveau en vink op het zichtbare optie, er rekening mee dat het raadzaam is om het aantal zichtbare niveaus tot een minimum voor grote huizen als deze te houden. <br>
+    Dit huis is %1 groot, wat te groot kan zijn om soepel te worden bewerkt in Renovations 3D, wilt u de zichtbaarheid van grote meubelstukken uitschakelen? (Aanbevolen) <br>
+	Als u die items wilt weergeven, kunt u hun zichtbaarheid wijzigen in de Meubeltabel aan de linkerkant van de 2D-plattegrond. <br>
      ]]></string>
     <string name="double_tap_finish">Double tap om te voltooien</string>
     <string name="long_process_title">Lang lopend proces</string>

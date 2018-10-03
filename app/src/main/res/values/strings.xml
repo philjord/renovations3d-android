@@ -45,8 +45,8 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="helpmenu_no_work">Menu->Help does nothing currently.</string>
     <string name="large_home_question_title">Potential issue</string>
     <string name="large_home_question"><![CDATA[<html>
-    This home is %1 in size, this size may be too large to be smoothly edited in Renovations 3D, would you like to start with the viewable setting for non-selected levels off? (Recommended)<br>
-    To view those levels you will need to double tap the level name and tick on the Viewable option, note that it is advisable to keep the number of viewable levels to a minimum for large homes like this.<br>
+    This home is %1 in size, which may be too large to be smoothly edited in Renovations 3D, would you like to turn off visibility for large furniture items? (Recommended)<br>
+    To view those items you can change their visibility in the Furniture Table found to the left of the 2D Plan view.<br>
     ]]></string>
 
     <string name="double_tap_finish">Double tap to finish</string>

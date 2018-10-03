@@ -43,8 +43,8 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="helpmenu_no_work">Le menu Aide ne fait actuellement rien.</string>
     <string name="large_home_question_title">Problème potentiel</string>
     <string name="large_home_question"><![CDATA[<html>
-     Cette maison a une taille de %1, cette taille peut être trop grande pour être modifiée en douceur dans Renovations 3D, souhaitez-vous commencer par le réglage visible des niveaux non sélectionnés? (Recommandé) <br>
-     Pour récupérer la visibilité des niveaux, cliquez deux fois sur le nom du niveau et sélectionnez l\'option “Visible”. Veillez cependant à garder un nombre limité de niveaux visibles pour de grands fichiers comme celui-ci. <br>
+     La taille de cette maison est de %1; il est peut-être trop grand pour être édité en douceur dans Renovations 3D. Désirez-vous désactiver la visibilité des gros meubles? (Recommandé) <br>
+     Pour afficher ces éléments, vous pouvez modifier leur visibilité dans la table des meubles située à gauche de la vue en plan 2D. <br>
      ]]></string>
     <string name="double_tap_finish">Double-cliquez pour finir</string>
     <string name="long_process_title">Processus à long terme</string>

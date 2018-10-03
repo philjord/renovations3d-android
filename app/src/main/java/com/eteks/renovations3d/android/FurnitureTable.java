@@ -78,17 +78,46 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	private FurnitureController controller;
 
 	// terrible but it'll do
-	private int[] minWidthsDp = new int[]{80,200,80,80,80,80};
-	private int[] widthsPx = new int[]{80,200,80,80,80,80};
+	private int[] minWidthsDp = new int[]{80,200,80,80,80,80,80,80,80,200};
+	private int[] widthsPx = new int[]{80,200,80,80,80,80,80,80,80,200};
 
-	private float[] percentWidth = new float[]{0.1f,0.4f,0.1f,0.1f,0.1f,0.1f};
+	private float[] percentWidth = new float[]{0.1f,0.4f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.4f};
 
 	private static int ICON_HEIGHT_DP = 24;
 	private int iconHeightPx = 24;
 
 	private HomePieceOfFurniture.SortableProperty[] headerNames = new HomePieceOfFurniture.SortableProperty[]{
-			HomePieceOfFurniture.SortableProperty.TEXTURE,HomePieceOfFurniture.SortableProperty.NAME,HomePieceOfFurniture.SortableProperty.WIDTH,
-			HomePieceOfFurniture.SortableProperty.DEPTH,HomePieceOfFurniture.SortableProperty.HEIGHT,HomePieceOfFurniture.SortableProperty.VISIBLE};
+					HomePieceOfFurniture.SortableProperty.TEXTURE,HomePieceOfFurniture.SortableProperty.NAME,HomePieceOfFurniture.SortableProperty.VISIBLE,
+					HomePieceOfFurniture.SortableProperty.WIDTH,HomePieceOfFurniture.SortableProperty.DEPTH,HomePieceOfFurniture.SortableProperty.HEIGHT,
+					HomePieceOfFurniture.SortableProperty.MODEL_SIZE,
+					HomePieceOfFurniture.SortableProperty.MOVABLE,
+					HomePieceOfFurniture.SortableProperty.DOOR_OR_WINDOW,
+					HomePieceOfFurniture.SortableProperty.CREATOR,};
+
+	/*CATALOG_ID,
+	-NAME,
+	-WIDTH,
+	-DEPTH,
+	-HEIGHT,
+	-MOVABLE,
+	-DOOR_OR_WINDOW,
+	COLOR,
+	-TEXTURE,
+	-VISIBLE,
+	X,
+	Y,
+	ELEVATION,
+	ANGLE,
+	-MODEL_SIZE,
+	-CREATOR,
+	PRICE,
+	VALUE_ADDED_TAX,
+	VALUE_ADDED_TAX_PERCENTAGE,
+	PRICE_VALUE_ADDED_TAX_INCLUDED,
+	LEVEL*/
+
+
+
 	private TableLayout tableLayout;
 	private LinearLayout header;
 	private View rootView;
@@ -105,11 +134,9 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 			updateTable();
 
-
 			final float scale = getResources().getDisplayMetrics().density;
 			iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
 		}
-
 
 		// make the right swiper work
 		ImageButton furnitureTableRightSwiper = (ImageButton)rootView.findViewById(R.id.furnitureTableRightSwiper);
@@ -124,6 +151,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 		return rootView;
 	}
+
 
 
 	private void updateHeader()
@@ -205,14 +233,21 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				tv.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv);
 
+				VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
+				vcb.setBackgroundColor(Color.WHITE);
+				vcb.setPadding(10, 10, 10, 10);
+				vcb.setWidth(widthsPx[2]);
+				vcb.setOnClickListener(tableSelectionListener);
+				tableRow.addView(vcb);
+
 
 				TextView tv2 = new TextView(this.getContext());
 				tv2.setBackgroundColor(Color.WHITE);
 				tv2.setTextColor(Color.BLACK);
 				tv2.setPadding(10, 10, 10, 10);
 				tv2.setGravity(Gravity.CENTER);
-				tv2.setText("" + piece.getWidth());
-				tv2.setWidth(widthsPx[2]);
+				tv2.setText("" + String.format("%.2f", piece.getWidth()));
+				tv2.setWidth(widthsPx[3]);
 				tv2.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv2);
 
@@ -221,8 +256,8 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				tv3.setTextColor(Color.BLACK);
 				tv3.setPadding(10, 10, 10, 10);
 				tv3.setGravity(Gravity.CENTER);
-				tv3.setText("" + piece.getDepth());
-				tv3.setWidth(widthsPx[3]);
+				tv3.setText(String.format("%.2f",piece.getDepth()));
+				tv3.setWidth(widthsPx[4]);
 				tv3.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv3);
 
@@ -231,17 +266,47 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				tv4.setTextColor(Color.BLACK);
 				tv4.setPadding(10, 10, 10, 10);
 				tv4.setGravity(Gravity.CENTER);
-				tv4.setText("" + piece.getHeight());
-				tv4.setWidth(widthsPx[4]);
+				tv4.setText(String.format("%.2f",piece.getHeight()));
+				tv4.setWidth(widthsPx[5]);
 				tv4.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv4);
 
-				VisibilityCheckBox vcb = new VisibilityCheckBox(this.getContext(), piece);
-				vcb.setBackgroundColor(Color.WHITE);
-				vcb.setPadding(10, 10, 10, 10);
-				vcb.setWidth(widthsPx[5]);
-				vcb.setOnClickListener(tableSelectionListener);
-				tableRow.addView(vcb);
+				TextView tv5 = new TextView(this.getContext());
+				tv5.setBackgroundColor(Color.WHITE);
+				tv5.setTextColor(Color.BLACK);
+				tv5.setPadding(10, 10, 10, 10);
+				tv5.setGravity(Gravity.CENTER);
+				tv5.setText("" + piece.getModelSize());
+				tv5.setWidth(widthsPx[6]);
+				tv5.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv5);
+				TextView tv6 = new TextView(this.getContext());
+				tv6.setBackgroundColor(Color.WHITE);
+				tv6.setTextColor(Color.BLACK);
+				tv6.setPadding(10, 10, 10, 10);
+				tv6.setGravity(Gravity.CENTER);
+				tv6.setText("" + piece.isMovable());
+				tv6.setWidth(widthsPx[7]);
+				tv6.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv6);
+				TextView tv7 = new TextView(this.getContext());
+				tv7.setBackgroundColor(Color.WHITE);
+				tv7.setTextColor(Color.BLACK);
+				tv7.setPadding(10, 10, 10, 10);
+				tv7.setGravity(Gravity.CENTER);
+				tv7.setText("" + piece.isDoorOrWindow());
+				tv7.setWidth(widthsPx[8]);
+				tv7.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv7);
+				TextView tv8 = new TextView(this.getContext());
+				tv8.setBackgroundColor(Color.WHITE);
+				tv8.setTextColor(Color.BLACK);
+				tv8.setPadding(10, 10, 10, 10);
+				tv8.setGravity(Gravity.CENTER);
+				tv8.setText("" + piece.getCreator());
+				tv8.setWidth(widthsPx[9]);
+				tv8.setOnClickListener(tableSelectionListener);
+				tableRow.addView(tv8);
 
 				tableLayout.addView(tableRow);
 
@@ -935,11 +1000,14 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		scrollRectToVisible(includingRectangle);
 	}*/
 
+
+
 	/**
 	 * Adds a mouse listener on table header that will call <code>controller</code> sort method.
 	 */
 	private void addTableHeaderListener(final FurnitureController controller) {
 		// Sort on click in column header
+
 /*		getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent ev) {

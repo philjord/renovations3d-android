@@ -51,8 +51,8 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="helpmenu_no_work">Menu->Help è attualmente vuoto.</string>
     <string name="large_home_question_title">File di grandi dimensioni</string>
     <string name="large_home_question"><![CDATA[<html>
-    Questa casa è %1, questa dimensione potrebbe essere troppo grande per essere modificata senza rallentamenti da Renovations 3D, vuoi iniziare con il disabilitare i livelli non selezionati? (Consigliato)<br>
-    Per vedere quei livelli dovrai premere due volte sul nome del livello ed attivarlo, nota che è consigliato tenere il numero dei livelli visibli al minimo per case di grandi dimensioni.<br>
+    Questa casa è di dimensioni %1, che potrebbe essere troppo grande per essere modificata in Rinnovamenti 3D, se desideri disattivare la visibilità per mobili di grandi dimensioni? (Consigliata) <br>
+    Per visualizzare tali elementi è possibile modificare la loro visibilità nella tabella dei mobili che si trova a sinistra della vista in pianta 2D. <br>
     ]]></string>
     <string name="double_tap_finish">Doppio tap per finire</string>
     <string name="long_process_title">processo in esecuzione lungo</string>
