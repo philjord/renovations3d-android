@@ -55,6 +55,8 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 	private LongHoldHandler longHoldHandler;
 
+	private boolean enabled = true;
+
 	public HomeComponent3DMouseHandler(Home home, UserPreferences preferences, HomeController3D controller,  Renovations3DActivity activity)
 	{
 		this.home = home;
@@ -74,6 +76,10 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 	 */
 	public boolean onTouch(android.view.View v, MotionEvent ev)
 	{
+		// fast exit when disabled
+		if(!enabled)
+			return false;
+
 		if(longHoldHandler == null)
 		{
 			longHoldHandler = new LongHoldHandler(v.getResources().getDisplayMetrics(), 750, 100, longHoldHandlerCallback);
@@ -299,4 +305,12 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 			}
 		}
 	};
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 }

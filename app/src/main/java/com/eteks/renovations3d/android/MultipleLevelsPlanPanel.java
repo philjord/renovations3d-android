@@ -19,13 +19,9 @@
  */
 package com.eteks.renovations3d.android;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,14 +29,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
+import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
 import com.mindblowing.swingish.ChangeListener;
 import com.mindblowing.swingish.JComponent;
 import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
@@ -110,6 +105,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 	private PlanComponent planComponent;
 	private LevelSpinnerControl levelSpinnerControl;
+	private ToolSpinnerControl toolSpinnerControl;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -127,6 +123,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				planComponent.setDrawableView(drawableView);
 
 				this.levelSpinnerControl = new LevelSpinnerControl(this.getContext());
+				this.toolSpinnerControl = new ToolSpinnerControl(this.getContext());
 
 				// from the constructor but placed here now so views are set
 				createComponents(home, preferences, planController);
@@ -355,6 +352,37 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	}
 
 
+	private int[] toolIcon = new int[]{
+					R.drawable.plan_select,
+					R.drawable.plan_create_walls,
+					R.drawable.plan_create_rooms,
+					R.drawable.plan_create_polylines,
+					R.drawable.plan_create_dimension_lines,
+					R.drawable.plan_create_labels,
+					R.drawable.plan_pan
+	};
+	private PlanController.Mode[] modesInSpinnerOrder = new PlanController.Mode[]{
+					PlanController.Mode.SELECTION,
+					PlanController.Mode.WALL_CREATION,
+					PlanController.Mode.ROOM_CREATION,
+					PlanController.Mode.POLYLINE_CREATION,
+					PlanController.Mode.DIMENSION_LINE_CREATION,
+					PlanController.Mode.LABEL_CREATION,
+					PlanController.Mode.PANNING
+	};
+	private String[] toolNames;
+	private void updateToolNames()
+	{
+		toolNames = new String[]{
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
+		};
+	}
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		mOptionsMenu = menu;
@@ -377,52 +405,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		sortOutBackgroundMenu(menu);
 
-
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
 
 		updateToolNames();
-
-		toolSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.toolSelectSpinner));
+		toolSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.planToolSelectSpinner));
 		toolSpinner.setPadding(toolSpinner.getPaddingLeft(), 0, toolSpinner.getPaddingRight(), toolSpinner.getPaddingBottom());
-		toolSpinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toolNames)
-		{
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
-				Configuration configuration = getContext().getResources().getConfiguration();
-				int screenWidthDp = configuration.screenWidthDp;
-				boolean toolsWide = screenWidthDp > TOOLS_WIDE_MIN_DP;
-
-				View view = getTextView(position, toolsWide);
-				view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
-
-				return view;
-			}
-
-			@Override
-			public View getDropDownView(int position, View convertView, ViewGroup parent)
-			{
-				return getTextView(position, true);
-			}
-
-			public View getTextView(int position, boolean withText)
-			{
-				TextView ret = new TextView(getContext());
-				ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
-				String spanText = "* " + (withText ? toolNames[position] : "");
-				int drawRes = toolIcon[position];
-				SpannableStringBuilder builder = new SpannableStringBuilder(spanText);// it will replace "*" with icon
-				builder.setSpan(new ImageSpan(getContext(), drawRes), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				ret.setText(builder);
-
-				return ret;
-			}
-		}); // set the adapter to provide layout of rows and content
-		toolSpinner.setOnItemSelectedListener(planToolSpinnerListener);
+		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
+		if (toolSpinnerControl != null)
+			toolSpinnerControl.setSpinner(toolSpinner, toolNames, toolIcon);
 
 		levelsSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.levelsSpinner));
-		// PJ no icons no need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
-
+		// no icons do not need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
 		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		if (levelSpinnerControl != null)
 			levelSpinnerControl.setSpinner(levelsSpinner);
@@ -477,40 +470,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		menu.findItem(R.id.bgImageDelete).setEnabled(backgroundImage != null);
 	}
 
-
-	private void updateToolNames()
-	{
-		toolNames = new String[]{
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"),
-				preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
-		};
-	}
-
-	private String[] toolNames;
-	private int[] toolIcon = new int[]{
-			R.drawable.plan_select,
-			R.drawable.plan_create_walls,
-			R.drawable.plan_create_rooms,
-			R.drawable.plan_create_polylines,
-			R.drawable.plan_create_dimension_lines,
-			R.drawable.plan_create_labels,
-			R.drawable.plan_pan
-	};
-	private PlanController.Mode[] modesInSpinnerOrder = new PlanController.Mode[]{
-			PlanController.Mode.SELECTION,
-			PlanController.Mode.WALL_CREATION,
-			PlanController.Mode.ROOM_CREATION,
-			PlanController.Mode.POLYLINE_CREATION,
-			PlanController.Mode.DIMENSION_LINE_CREATION,
-			PlanController.Mode.LABEL_CREATION,
-			PlanController.Mode.PANNING
-	};
-
 	private void resetToolSpinnerToMode()
 	{
 		PlanController.Mode mode = planController.getMode();
@@ -547,7 +506,6 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			cntlMI.setTitleCondensed("");
 			cntlMI.setEnabled(false);
 		}
-
 
 		if (resetToSelectTool && planController.getMode() != PlanController.Mode.PANNING)
 		{

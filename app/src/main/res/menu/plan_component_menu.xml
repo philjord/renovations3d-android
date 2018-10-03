@@ -9,7 +9,7 @@
         />
 
     <item
-        android:id="@+id/toolSelectSpinner"
+        android:id="@+id/planToolSelectSpinner"
         android:actionViewClass="android.widget.Spinner"
         android:showAsAction="always"
         android:title="CurrentTool"

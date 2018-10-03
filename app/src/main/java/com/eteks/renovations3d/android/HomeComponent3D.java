@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,10 +35,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
+import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
+import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.j3d.utils.InfoText3D;
 import com.mindblowing.j3d.utils.JoglStatusActivity;
@@ -182,6 +187,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private ScaleGestureDetector mScaleDetector;
 
 	private Menu mOptionsMenu;
+	private ToolSpinnerControl toolSpinnerControl;
 
 	private GLCapabilities caps;
 	private GLWindow gl_window;
@@ -377,6 +383,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(initialized) {
 			this.setHasOptionsMenu(true);
+			this.toolSpinnerControl = new ToolSpinnerControl(this.getContext());
 		}
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
 		return rootView;
@@ -516,8 +523,69 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		menu.findItem(R.id.deoptomize).setChecked(deoptomize);
 
+		toolSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.home3dToolSelectSpinner));
+		toolSpinner.setPadding(toolSpinner.getPaddingLeft(), 0, toolSpinner.getPaddingRight(), toolSpinner.getPaddingBottom());
+		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
+		updateToolNames();
+		if (toolSpinnerControl != null)
+			toolSpinnerControl.setSpinner(toolSpinner, toolNames, toolIcon);
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
+
+
+	private void updateToolNames() {
+		toolNames = new String[]{
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
+		};
+	}
+
+	private Spinner toolSpinner;
+	private String[] toolNames;
+	private int[] toolIcon = new int[]{
+					R.drawable.plan_select,
+					R.drawable.plan_pan
+	};
+
+
+	private void setMode(PlanController.Mode mode) {
+		if(homeComponent3DMouseHandler != null)
+			homeComponent3DMouseHandler.setEnabled(mode == PlanController.Mode.SELECTION);
+
+		HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+		if(homeController != null) {
+			PlanController planController = homeController.getPlanController();
+			planController.setMode(mode);
+			toolSpinner.setOnItemSelectedListener(null);
+			// only select or panning, non selection defaults to panning
+			int position = mode == PlanController.Mode.SELECTION ? 0 : 1;
+			toolSpinner.setSelection(position);
+			toolSpinner.setOnItemSelectedListener(planToolSpinnerListener);
+		}
+	}
+	AdapterView.OnItemSelectedListener planToolSpinnerListener = new AdapterView.OnItemSelectedListener()
+	{
+		@Override
+		public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id)
+		{
+			if (getActivity() != null) {
+				switch (position) {
+					case 0:
+						setMode(PlanController.Mode.SELECTION);
+						break;
+					case 1:
+						setMode(PlanController.Mode.PANNING);
+						break;
+				}
+			}
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) {
+			// this should never happen, no real plan here
+		}
+	};
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
@@ -529,6 +597,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//both on action bar
 		menu.findItem(R.id.go_to_camera_position).setTitle(R.string.goToCameraPosition);
 		menu.findItem(R.id.store_camera_position).setTitle(R.string.addCameraPosition);
+
+		// tools on action bar now
+		HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+		if(homeController != null) {
+			setMode(homeController.getPlanController().getMode());
+		}
 
 		MenuItem deletePov = menu.findItem(R.id.delete_camera_position);
 		String deletePovStr =  getActivity().getString(R.string.deleteCameraPosition);
@@ -618,7 +692,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				// this is below in the onOptionsItemSelected
 				//goToPointOfViewMenu.add(new AbstractAction(camera.getName()) {
 				//			public void actionPerformed(ActionEvent e) {
-				//				controller.getHomeController3D().goToCamera(camera);
+				//				controller.goToCamera(camera);
 				//			}
 				//		});
 			}
@@ -633,9 +707,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			List<Camera> storedCameras = home.getStoredCameras();
 			for (final Camera camera : storedCameras) {
 				if(cameraName.equals(camera.getName())) {
-					HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
-					if(homeController != null) {
-						homeController.getHomeController3D().goToCamera(camera);
+					if(controller != null) {
+						controller.goToCamera(camera);
 						// update the check box item nicely
 						MenuItem vv = mOptionsMenu.findItem(R.id.virtual_visit);
 						vv.setChecked(home.getCamera() == home.getObserverCamera());
@@ -660,7 +733,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					} else {
 						controller.viewFromTop();
 					}
-
 					break;
 				case R.id.go_to_camera_position:
 					// do nothing it just nicely opens the list for us
