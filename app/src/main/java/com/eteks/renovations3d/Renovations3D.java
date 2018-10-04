@@ -258,19 +258,19 @@ public class Renovations3D extends HomeApplication {
 				//temp saves already have the reduce visibility choices in them inherently
 				//TODO: More correctly I want to know the zipped size, but home getHomeRecorder().readHome(homeName); above works out zip-ness but does not record that fact
 				if(!loadedFromTemp && homeFile.length() > largeHomeSize) {
-					boolean hasModleToMakeInvisible = false;
+					boolean hasModelToMakeInvisible = false;
 					for(HomePieceOfFurniture f : home.getFurniture()) {
 						if(f.getModelSize() > largeModelSize) {
-							hasModleToMakeInvisible = true;
+							hasModelToMakeInvisible = true;
 						}
 					}
-					if(hasModleToMakeInvisible) {
+					if(hasModelToMakeInvisible) {
 						String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
 						String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
 						String messageHtml = warningMessageHtml.replace("%1", size);
 
-						int result = JOptionPane.showOptionDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
-										JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Ok", "No"}, "OK");
+						int result = JOptionPane.showConfirmDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
+										JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE );
 
 						currentHomeReduceVisibleModels = result == JOptionPane.OK_OPTION;
 					}

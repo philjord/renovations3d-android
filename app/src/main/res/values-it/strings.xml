@@ -119,6 +119,8 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="share">Condividere</string>
     <string name="set_to_device_location">Utilizza la posizione del dispositivo</string>
     <string name="menu_privacy">vita privata</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
 
 
 </resources>

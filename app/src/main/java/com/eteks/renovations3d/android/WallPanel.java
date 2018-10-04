@@ -824,24 +824,19 @@ public class WallPanel extends AndroidDialogView implements DialogView {
    */
   private void editBaseboard(final JComponent parent, final String title, 
                              final BaseboardChoiceController baseboardChoiceController) {
-
 	  // we can't display the view in two dialog at the same time
 	  if(baseBoardDialogShowing)
 		  return;
-
-
-    // Add baseboard component to a panel with a flow layout to avoid it getting too large
-	 final LinearLayout view = (LinearLayout)baseboardChoiceController.getView();
+	  // Add baseboard component to a panel with a flow layout to avoid it getting too large
+	 	final LinearLayout view = (LinearLayout)baseboardChoiceController.getView();
 
     //JPanel panel = new JPanel();
     //panel.add(view);
-   // if (SwingTools.showConfirmDialog(parent, panel, title, (JComponent)view.getComponent(0)) != JOptionPane.OK_OPTION) {
+    // if (SwingTools.showConfirmDialog(parent, panel, title, (JComponent)view.getComponent(0)) != JOptionPane.OK_OPTION) {
 
-	//I must get off the EDT and ask the question in a blocking manner
-	  Thread t2 = new Thread()
-	  {
-		  public void run()
-		  {
+	  //I must get off the EDT and ask the question in a blocking manner
+	  Thread t2 = new Thread() {
+		  public void run() {
 			  Boolean visible = baseboardChoiceController.getVisible();
 			  Integer color = baseboardChoiceController.getColor();
 			  HomeTexture texture = baseboardChoiceController.getTextureController().getTexture();
@@ -850,9 +845,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 			  Float height = baseboardChoiceController.getHeight();
 
 			  baseBoardDialogShowing = true;
-			  boolean confirmed = JOptionPane.showOptionDialog(activity, view, title,
-					  JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-					  null, new Object [] {"OK", "cancel"}, "cancel") == JOptionPane.OK_OPTION;
+			  boolean confirmed = JOptionPane.showConfirmDialog(activity, view, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE ) == JOptionPane.OK_OPTION;
 			  baseBoardDialogShowing = false;
 			  if(!confirmed)
 			  {
@@ -864,10 +857,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 				  baseboardChoiceController.setThickness(thickness);
 				  baseboardChoiceController.setHeight(height);
 			  }
-		  }
+		 }
 	  };
 	  t2.start();
-
   }
   
 

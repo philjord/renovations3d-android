@@ -111,5 +111,7 @@
     <string name="share">分享</string>
     <string name="set_to_device_location">使用設備位置</string>
     <string name="menu_privacy">隱私</string>
+    <string name="yes">是</string>
+    <string name="no">沒有</string>
 
 </resources>

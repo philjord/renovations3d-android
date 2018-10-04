@@ -4733,9 +4733,8 @@ public class HomePane implements HomeView
 		});
 
 
-		boolean confirmed = JOptionPane.showOptionDialog(activity,
-				cameraNamePanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, new Object[]{"Ok", "Cancel"}, "Cancel") == JOptionPane.OK_OPTION;
+		boolean confirmed = JOptionPane.showConfirmDialog(activity,
+				cameraNamePanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION;
 
 		if (confirmed) {
 			//notice get by index due to need to only construct on the main looper
@@ -4828,10 +4827,10 @@ public class HomePane implements HomeView
 		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.delete");
 		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.cancel");
 
-		ScrollView sv = new ScrollView(activity);
-		sv.addView(camerasPanel);
+		ScrollView scrollViewRoot = new ScrollView(activity);
+		scrollViewRoot.addView(camerasPanel);
 
-		boolean confirmed = JOptionPane.showOptionDialog(activity, sv, title,
+		boolean confirmed = JOptionPane.showOptionDialog(activity, scrollViewRoot, title,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object [] {delete, cancel}, cancel) == JOptionPane.OK_OPTION;
 

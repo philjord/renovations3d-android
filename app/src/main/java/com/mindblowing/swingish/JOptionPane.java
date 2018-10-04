@@ -13,6 +13,8 @@ import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mindblowing.renovations3d.R;
+
 import org.xml.sax.XMLReader;
 
 import java.util.concurrent.Semaphore;
@@ -74,16 +76,13 @@ public class JOptionPane
 	/** No icon is used. */
 	public static final int   PLAIN_MESSAGE = -1;
 
-	public static void showMessageDialog(Context context, String message, String title, int type)
-	{
+	public static void showMessageDialog(Context context, String message, String title, int type) {
 		showMessageDialog(context, message, title, type, null, "OK");
 	}
-	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon)
-	{
+	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon) {
 		showMessageDialog(context, message, title, type, icon, "OK");
 	}
-	public static void showMessageDialog(Context context, String message, String title, int type, final String closeText)
-	{
+	public static void showMessageDialog(Context context, String message, String title, int type, final String closeText) {
 		showMessageDialog(context, message, title, type, null, closeText);
 	}
 
@@ -95,8 +94,7 @@ public class JOptionPane
 	 * @param type ignored
 	 * @param icon must be an ImageIcon
 	 */
-	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon, final String closeText)
-	{
+	public static void showMessageDialog(final Context context, final String message, final String title, final int type, final Icon icon, final String closeText) {
 		Handler handler = new Handler(Looper.getMainLooper());
 		handler.post(new Runnable()
 		{
@@ -104,8 +102,7 @@ public class JOptionPane
 			{
 				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 				dialog.setTitle(title);
-				if (icon != null && icon instanceof ImageIcon)
-				{
+				if (icon != null && icon instanceof ImageIcon) {
 					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
 					dialog.setIcon(bmd);
 				}
@@ -114,24 +111,21 @@ public class JOptionPane
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
-				if(!((Activity) context).isFinishing())
-				{
+				if(!((Activity) context).isFinishing()) {
 					dialog.create().show();
 				}
-
 		}	});
 	}
 
 	/**
 	 *
 	 * @param context
-	 * @param root a text view
-	 * @param title
+	 * @param root a view of any sort
+	 * @param title across the top of the dialog
 	 * @param type ignored
 	 * @param icon must be an ImageIcon
 	 */
-	public static void showMessageDialog(final Context context, final View root, final String title, final int type, final Icon icon, final String closeText)
-	{
+	public static void showMessageDialog(final Context context, final View root, final String title, final int type, final Icon icon, final String closeText) {
 		Handler handler = new Handler(Looper.getMainLooper());
 		handler.post(new Runnable()
 		{
@@ -139,8 +133,7 @@ public class JOptionPane
 			{
 				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 				dialog.setTitle(title);
-				if (icon != null && icon instanceof ImageIcon)
-				{
+				if (icon != null && icon instanceof ImageIcon) {
 					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
 					dialog.setIcon(bmd);
 				}
@@ -148,99 +141,33 @@ public class JOptionPane
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
-				if(!((Activity) context).isFinishing())
-				{
+				if(!((Activity) context).isFinishing()) {
 					dialog.create().show();
 				}
 			}	});
 	}
 
-	public static int showConfirmDialog(final Context context, final String message, final String title, final int options, final int type)
-	{
-		//TODO: for teh null case I should use those real localized proeprty file values
-		return showOptionDialog(context, message, title, options, type, null, null, null);
+	public static int showConfirmDialog(final Context context, final String message, final String title, final int options, final int type) {
+		return showOptionDialog(context, null, message, title, options, type, null, null, null);
+	}
+	public static int showConfirmDialog(final Context context, final View root, final String title, final int options, final int type) {
+		return showOptionDialog(context, root, null, title, options, type,	 null, null, null);
 	}
 
 	public static int showOptionDialog(final Context context, final String message, final String title, final int options, final int type,
-									   final Icon icon, final Object [] optionsText, Object defaultText)
-	{
-		if(Looper.getMainLooper().getThread() == Thread.currentThread())
-		{
-			new Throwable().printStackTrace();
-			System.err.println("JOptionPane asked to showOptionDialog (String message) on EDT thread you MUST not as I will block!");
-			// In this case you likely want just a new Thread (not the handler version)
-			return NO_OPTION;
-		}
-
-		final int[] selectedOption = new int[]{CANCEL_OPTION};
-		final Semaphore dialogSemaphore = new Semaphore(0, true);
-
-		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
-		Handler handler = new Handler(Looper.getMainLooper());
-		handler.post(new Runnable()
-					 {
-						 public void run()
-						 {
-							 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-								 @Override
-								 public void onClick(DialogInterface dialog, int which) {
-									 switch (which){
-										 case DialogInterface.BUTTON_POSITIVE:
-											 selectedOption[0] = OK_OPTION;
-											 dialogSemaphore.release();
-											 break;
-										 case DialogInterface.BUTTON_NEGATIVE:
-											 selectedOption[0] = NO_OPTION;
-											 dialogSemaphore.release();
-											 break;
-									 }
-								 }
-							 };
-
-							 AlertDialog.Builder dialog = new AlertDialog.Builder(context) ;
-							 dialog.setTitle(title);
-							 if (icon != null && icon instanceof ImageIcon)
-							 {
-								 BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
-								 dialog.setIcon(bmd);
-							 }
-
-							 // remove the style tags
-							 String messageLessStyle = message.replaceAll("<style([\\s\\S]+?)</style>", "");
-							 dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
-
-								//TODO: for the null case I should use those real localized proeprty file values
-							 dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
-							 dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
-							 dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
-							 if(!((Activity) context).isFinishing())
-							 {
-								 dialog.create().show();
-							 }
-						 }
-					 });
-
-		try
-		{
-			dialogSemaphore.acquire();
-		}
-		catch (InterruptedException e)
-		{
-		}
-
-		return selectedOption[0] ;
-
+									   final Icon icon, final Object [] optionsText, Object defaultText) {
+		return showOptionDialog(context, null, message, title, options, type, icon, optionsText, defaultText);
 	}
 
-
-
-
-
 	public static int showOptionDialog(final Context context, final View root, final String title, final int options, final int type,
+																		 final Icon icon, final Object [] optionsText, Object defaultText) {
+		return showOptionDialog(context, root, null, title, options, type,	 icon, optionsText, defaultText);
+	}
+	// only one of root or message can be non null
+	private static int showOptionDialog(final Context context, final View root, final String message, final String title, final int options, final int type,
 									   final Icon icon, final Object [] optionsText, Object defaultText)
 	{
-		if(Looper.getMainLooper().getThread() == Thread.currentThread())
-		{
+		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			new Throwable().printStackTrace();
 			System.err.println("JOptionPane asked to showOptionDialog (View root) on EDT thread you MUST not as I will block!");
 			return NO_OPTION;
@@ -251,25 +178,21 @@ public class JOptionPane
 
 		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
 		Handler handler = new Handler(Looper.getMainLooper());
-		handler.post(new Runnable()
-		{
-			public void run()
-			{
+		handler.post(new Runnable() {
+			public void run() {
 				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which){
 							case DialogInterface.BUTTON_POSITIVE:
 								selectedOption[0] = OK_OPTION;
-
-								//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/1ac9ba79?duration=2592000000&appVersions=190
-								if(root.getParent() != null)
+								if(root != null && root.getParent() != null)
 									((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
 							case DialogInterface.BUTTON_NEGATIVE:
 								selectedOption[0] = NO_OPTION;
-								if(root.getParent() != null)
+								if(root != null && root.getParent() != null)
 									((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
 								dialogSemaphore.release();
 								break;
@@ -277,75 +200,82 @@ public class JOptionPane
 					}
 				};
 
-				AlertDialog.Builder dialog = new AlertDialog.Builder(context) ;
+				AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 				dialog.setTitle(title);
-				if (icon != null && icon instanceof ImageIcon)
-				{
+				if (icon != null && icon instanceof ImageIcon) {
 					BitmapDrawable bmd = new BitmapDrawable(context.getResources(), (Bitmap) ((ImageIcon) icon).getImage().getDelegate());
 					dialog.setIcon(bmd);
 				}
-				dialog.setView(root);
 
-				dialog.setPositiveButton((String)((optionsText!=null && optionsText.length>0)?optionsText[0]:"Yes"), dialogClickListener);
-				dialog.setNegativeButton((String)((optionsText!=null && optionsText.length>1)?optionsText[1]:"No"), dialogClickListener);
-				dialog.setCancelable(options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
-				if(!((Activity) context).isFinishing())
-				{
+				if(root != null) {
+					dialog.setView(root);
+				} else {
+					// remove the style tags
+					String messageLessStyle = message.replaceAll("<style([\\s\\S]+?)</style>", "");
+					dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
+				}
+
+				if(optionsText == null || optionsText.length == 0 ) {
+					if (options == YES_NO_CANCEL_OPTION || options == YES_NO_OPTION) {
+						dialog.setPositiveButton(context.getString(R.string.yes), dialogClickListener);
+						dialog.setNegativeButton(context.getString(R.string.no), dialogClickListener);
+					}	else {
+						// just default to OK_CANCEL in all other cases
+						dialog.setPositiveButton(context.getString(android.R.string.yes), dialogClickListener);// this resource is in fact "ok"
+						dialog.setNegativeButton(context.getString(android.R.string.no), dialogClickListener);// this resource is in fact "cancel"
+					}
+				}	else {
+					dialog.setPositiveButton((String)optionsText[0], dialogClickListener);
+					dialog.setNegativeButton((String)optionsText[1], dialogClickListener);
+				}
+				//Cancel is always allowed
+				dialog.setCancelable(options == YES_NO_CANCEL_OPTION || options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
+				if(!((Activity) context).isFinishing()) {
 					dialog.create().show();
 				}
 			}
 		});
 
-		try
-		{
+		try {
 			dialogSemaphore.acquire();
-		}
-		catch (InterruptedException e)
-		{
+		} catch (InterruptedException e) {
 		}
 
-		return selectedOption[0] ;
-
+		return selectedOption[0];
 	}
 
 
 
 
-	public static class ListTagHandler implements Html.TagHandler
-	{
+	public static class ListTagHandler implements Html.TagHandler {
 		boolean first= true;
 		String parent=null;
 		int index=1;
 		@Override
-		public void handleTag(boolean opening, String tag, Editable output,
-							  XMLReader xmlReader) {
-
+		public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
 			if(tag.equals("ul"))
 				parent="ul";
 			else if(tag.equals("ol"))
 				parent="ol";
 
-			if(tag.equals("li")){
-				if(parent.equals("ul")){
+			if(tag.equals("li")) {
+				if(parent.equals("ul")) {
 					if(first){
 						output.append("\n\t•");
 						first= false;
-					}else{
+					} else {
 						first = true;
 					}
-				}
-				else{
+				} else {
 					if(first){
 						output.append("\n\t"+index+". ");
 						first= false;
 						index++;
-					}else{
+					} else {
 						first = true;
 					}
 				}
 			}
 		}
 	}
-
-
 }

@@ -118,6 +118,8 @@
     <string name="share">몫</string>
     <string name="set_to_device_location">기기 위치 사용</string>
     <string name="menu_privacy">은둔</string>
+    <string name="yes">예</string>
+    <string name="no">아니</string>
 
 
 </resources>

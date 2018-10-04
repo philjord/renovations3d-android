@@ -112,5 +112,7 @@
     <string name="share">Поділитися</string>
     <string name="set_to_device_location">Використовуйте місце розташування пристрою</string>
     <string name="menu_privacy">Конфіденційність</string>
+    <string name="yes">Так</string>
+    <string name="no">Немає</string>
 
 </resources>

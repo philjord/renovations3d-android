@@ -112,5 +112,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="share">Dzielić</string>
     <string name="set_to_device_location">Użyj lokalizacji urządzenia</string>
     <string name="menu_privacy">Prywatność</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
 
 </resources>

@@ -111,5 +111,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="share">Ossza meg</string>
     <string name="set_to_device_location">Az eszköz helyének használata</string>
     <string name="menu_privacy">Magánélet</string>
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
 
 </resources>

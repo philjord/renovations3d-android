@@ -112,5 +112,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="share">Chia sẻ</string>
     <string name="set_to_device_location">Sử dụng vị trí thiết bị</string>
     <string name="menu_privacy">Riêng tư</string>
+    <string name="yes">Vâng</string>
+    <string name="no">Không</string>
 
 </resources>

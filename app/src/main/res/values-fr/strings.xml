@@ -111,5 +111,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="share">Partager</string>
     <string name="set_to_device_location">Utiliser l\'emplacement de l\'appareil</string>
     <string name="menu_privacy">Intimité</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 
 </resources>
