@@ -249,30 +249,36 @@ public class Renovations3D extends HomeApplication {
 				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
 
 				currentHomeReduceVisibleModels = false;
-
+				//TODO: More correctly I want to know the zipped size, but home getHomeRecorder().readHome(homeName); above works out zip-ness but does not record that fact
+				// So instead I'm just working with modelsizes which is all I can play with anyway
 				long maxMem = Runtime.getRuntime().maxMemory();
-				long largeHomeSize = (long)(LARGE_HOME_MIN_BYTES_RATIO * maxMem);
-				//512 max meme * 0.05 = 25.5Mb is large home, large model = 25.5Mb * 0.12 = 3.06Mb
-				long largeModelSize = (long)(largeHomeSize * 0.12);
+				long largeModelsLimitSize = (long)(LARGE_HOME_MIN_BYTES_RATIO * maxMem);
+				//512 max meme * 0.05 = 25.5Mb is large home, large model = 25.5Mb / 10 = 2.5Mb
+				long largeModelSize = (long)(largeModelsLimitSize * 0.1f);
 
 				//temp saves already have the reduce visibility choices in them inherently
-				//TODO: More correctly I want to know the zipped size, but home getHomeRecorder().readHome(homeName); above works out zip-ness but does not record that fact
-				if(!loadedFromTemp && homeFile.length() > largeHomeSize) {
+				if(!loadedFromTemp)
+				{
 					boolean hasModelToMakeInvisible = false;
-					for(HomePieceOfFurniture f : home.getFurniture()) {
-						if(f.getModelSize() > largeModelSize) {
+					long totalModelSize = 0;
+					for (HomePieceOfFurniture f : home.getFurniture()) {
+						totalModelSize += f.getModelSize();
+						if (f.getModelSize() > largeModelSize) {
 							hasModelToMakeInvisible = true;
 						}
 					}
-					if(hasModelToMakeInvisible) {
-						String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
-						String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
-						String messageHtml = warningMessageHtml.replace("%1", size);
+					if(totalModelSize > largeModelsLimitSize)
+					{
+						if (hasModelToMakeInvisible) {
+							String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
+							String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
+							String messageHtml = warningMessageHtml.replace("%1", size);
 
-						int result = JOptionPane.showConfirmDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
-										JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE );
+							int result = JOptionPane.showConfirmDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
+											JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-						currentHomeReduceVisibleModels = result == JOptionPane.OK_OPTION;
+							currentHomeReduceVisibleModels = result == JOptionPane.OK_OPTION;
+						}
 					}
 				}
 
