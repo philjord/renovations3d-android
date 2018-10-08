@@ -425,26 +425,70 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		}
 	}
 
+
+	//trees not included for being too big generally
+//	https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-Trees-1.6.3.zip/download
+
 	ImportInfo[] importInfos = new ImportInfo[]{
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-0-Models", "BlendSwap-CC-0", "BlendSwap-CC-0.sh3f", null,
-					"https://dl.dropboxusercontent.com/s/we0yep4m0nxu5xw/BlendSwap-CC-0.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-BY-Models-v2", "BlendSwap-CC-BY-v2", "BlendSwap-CC-BY-v2.sh3f", "ALL_LICENSEBlendSwap-CC-BY-v2.TXT",
-					"https://dl.dropboxusercontent.com/s/o4u6yy5ylxgmdl3/BlendSwap-CC-BY-v2.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ContributionsModels", "Contributions", "Contributions.sh3f", "ALL_LICENSEContributions.TXT",
-					"https://dl.dropboxusercontent.com/s/glz7vsr04yzszro/Contributions.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#KatorLegazModels", "KatorLegaz", "KatorLegaz.sh3f", "ALL_LICENSEKatorLegaz.TXT",
-					"https://dl.dropboxusercontent.com/s/ppzfsl6uldqfxy1/KatorLegaz.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#LucaPresidenteModels", "LucaPresidente", "LucaPresidente.sh3f", "ALL_LICENSELucaPresidente.TXT",
-					"https://dl.dropboxusercontent.com/s/a7jcxe0xdtkhw9b/LucaPresidente.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ReallusionModels", "Reallusion", "Reallusion.sh3f", "ALL_LICENSEReallusion.TXT",
-					"https://dl.dropboxusercontent.com/s/xrnt81rpke271jo/Reallusion.sh3f"),
-			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ScopiaModels", "Scopia", "Scopia.sh3f", "ALL_LICENSEScopia.TXT",
-					"https://dl.dropboxusercontent.com/s/ij2ly5qrau9t4la/Scopia.sh3f"),
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-0-Models", "BlendSwap-CC-0",
+							"3DModels-BlendSwap-CC-0-1.6.3.zip",
+							null,
+					//"https://dl.dropboxusercontent.com/s/we0yep4m0nxu5xw/BlendSwap-CC-0.sh3f"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-BlendSwap-CC-0-1.6.3.zip/download"),
+
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-BY-Models", "BlendSwap-CC-BY",
+							"3DModels-BlendSwap-CC-BY-1.6.3v2.sh3f",
+							"ALL_LICENSEBlendSwap-CC-BY-v2.TXT",
+					//"https://dl.dropboxusercontent.com/s/o4u6yy5ylxgmdl3/BlendSwap-CC-BY-v2.sh3f"),
+							"https://dl.dropboxusercontent.com/s/wzxvo0q4lrlncgo/BlendSwap-CC-BY-1.6.3v2.sh3f"),
+					//"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-BlendSwap-CC-BY-1.6.3.zip/download"),
+
+					// NOTE! comes from dropbox to lose the smallOven model that has a bad license
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ContributionsModels", "Contributions",
+							"3DModels-Contributions-1.6.3.zip",
+							"ALL_LICENSEContributions.TXT",
+					//"https://dl.dropboxusercontent.com/s/glz7vsr04yzszro/Contributions.sh3f"),
+							"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-Contributions-1.6.3.zip/download"),
+
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#KatorLegazModels", "KatorLegaz",
+							"3DModels-KatorLegaz-1.6.3.zip",
+							"ALL_LICENSEKatorLegaz.TXT",
+					//"https://dl.dropboxusercontent.com/s/ppzfsl6uldqfxy1/KatorLegaz.sh3f"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-KatorLegaz-1.6.3.zip/download"),
+
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#LucaPresidenteModels", "LucaPresidente",
+							"3DModels-LucaPresidente-1.6.3.zip",
+							"ALL_LICENSELucaPresidente.TXT",
+					//"https://dl.dropboxusercontent.com/s/a7jcxe0xdtkhw9b/LucaPresidente.sh3f"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-LucaPresidente-1.6.3.zip/download"),
+
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ReallusionModels", "Reallusion",
+							"3DModels-Reallusion-1.6.3.zip",
+							 "ALL_LICENSEReallusion.TXT",
+					//"https://dl.dropboxusercontent.com/s/xrnt81rpke271jo/Reallusion.sh3f"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-Reallusion-1.6.3.zip/download"),
+
+			new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ScopiaModels", "Scopia",
+							"3DModels-Scopia-1.6.3.zip",
+							"ALL_LICENSEScopia.TXT",
+					//"https://dl.dropboxusercontent.com/s/ij2ly5qrau9t4la/Scopia.sh3f"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-Scopia-1.6.3.zip/download"),
+
 			new ImportInfo(ImportType.FURNITURE, "Local_Furniture", "Local", null, null, null),
-			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#ContributionsTextures", "TextureContributions", "TextureContributions.sh3t", "ALL_LICENSETextureContributions.TXT",
-					"https://dl.dropboxusercontent.com/s/smlz0f6rwowc1gp/TextureContributions.sh3t"),
-			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#eTeksScopiaTextures", "eTeksScopia", "eTeksScopia.sh3t", "ALL_LICENSEeTeksScopia.TXT",
-					"https://dl.dropboxusercontent.com/s/5b6b0kkwlu48kui/eTeksScopia.sh3t"),
+
+
+			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#ContributionsTextures", "TextureContributions",
+							"Textures-Contributions-1.2.zip",
+							"ALL_LICENSETextureContributions.TXT",
+					//"https://dl.dropboxusercontent.com/s/smlz0f6rwowc1gp/TextureContributions.sh3t"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-textures/Textures-1.2/Textures-Contributions-1.2.zip/download"),
+
+			new ImportInfo(ImportType.TEXTURE, "SweetHome3D#eTeksScopiaTextures", "eTeksScopia",
+							"Textures-eTeksScopia-1.2.zip",
+							"ALL_LICENSEeTeksScopia.TXT",
+					//"https://dl.dropboxusercontent.com/s/5b6b0kkwlu48kui/eTeksScopia.sh3t"),
+					"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-textures/Textures-1.2/Textures-eTeksScopia-1.2.zip/download"),
+
 			new ImportInfo(ImportType.TEXTURE, "Local_Texture", "Local", null, null, null),
 	};
 
@@ -472,7 +516,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				{
 					if (lib.getId().equals(importInfo.id))
 					{
-						enable = false;
+					//	enable = false;
 						break;
 					}
 				}
@@ -482,6 +526,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			}
 			else
 			{
+				//TODO: why don't texture librariues get treated the smae as furniture?
 				textureMenu.getSubMenu().add(MENU_IMPORT_TEXTURE, menuId++, Menu.NONE, importInfo.label);
 			}
 		}

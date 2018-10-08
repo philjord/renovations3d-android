@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.FileContentManager;
+import com.eteks.sweethome3d.io.ContentRecording;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
@@ -54,7 +55,13 @@ import org.jogamp.java3d.utils.shader.SimpleShaderAppearance;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,6 +72,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Semaphore;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javaawt.EventQueue;
 import javaawt.VMEventQueue;
@@ -1092,6 +1101,10 @@ public class Renovations3DActivity extends FragmentActivity
 					String localUri = cursor.getString(localUriIndex);
 					try
 					{
+						//WHAT? local storage returns "" paht?
+						URI u = new URI(localUri);
+						String path =   u.getPath();
+
 						File file = new File(new URI(localUri).getPath());
 						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
 						loadFile(file);
@@ -1172,9 +1185,61 @@ public class Renovations3DActivity extends FragmentActivity
 			{
 				public void run()
 				{
-					if (getHomeController() != null)
-					{
-						if (inFile.getName().toLowerCase().endsWith(".sh3f"))
+					if (getHomeController() != null) {
+						// try the zip wrapped option
+						if (inFile.getName().toLowerCase().endsWith(".zip"))
+						{
+							int BUFFER = 1024;
+							ZipInputStream zipIn = null;
+							try{
+								zipIn = new ZipInputStream(new FileInputStream(inFile));
+
+								ZipEntry entry;
+								while((entry = zipIn.getNextEntry()) != null) {
+									if (entry.getName().toLowerCase().endsWith(".sh3f"))
+									{
+										int count;
+										byte data[] = new byte[1024];
+										// Write the files to the disk
+										File extractedFile = new File(inFile.getParentFile(), entry.getName());
+										FileOutputStream fos = new FileOutputStream(extractedFile);
+										BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+										while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
+											dest.write(data, 0, count);
+										}
+										dest.flush();
+										dest.close();
+										zipIn.closeEntry();
+										getHomeController().importFurnitureLibrary(extractedFile.getAbsolutePath());
+									}
+									else if (entry.getName().toLowerCase().endsWith(".sh3t"))
+									{
+										int count;
+										byte data[] = new byte[1024];
+										// Write the files to the disk
+										File extractedFile = new File(inFile.getParentFile(), entry.getName());
+										FileOutputStream fos = new FileOutputStream(extractedFile);
+										BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+										while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
+											dest.write(data, 0, count);
+										}
+										dest.flush();
+										dest.close();
+										zipIn.closeEntry();
+										getHomeController().importTexturesLibrary(extractedFile.getAbsolutePath());
+									}
+								}
+							} catch (IOException e) {
+								;
+							} finally {
+								if (zipIn != null) {
+									try {
+										zipIn.close();
+									}catch(IOException e){;}
+								}
+							}
+						}
+						else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
 						{
 							getHomeController().importFurnitureLibrary(inFile.getAbsolutePath());
 						}
