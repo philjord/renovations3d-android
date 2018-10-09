@@ -509,25 +509,24 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			if( importInfo.id.equals("Local_Furniture") || importInfo.id.equals("Local_Texture"))
 				importInfo.label = localString;
 
+			boolean enable = true;
+			for (Library lib : libs)
+			{
+				if (lib.getId().equals(importInfo.id))
+				{
+					enable = false;
+					break;
+				}
+			}
 			if (importInfo.type == ImportType.FURNITURE)
 			{
-				boolean enable = true;
-				for (Library lib : libs)
-				{
-					if (lib.getId().equals(importInfo.id))
-					{
-					//	enable = false;
-						break;
-					}
-				}
-
 				MenuItem menuitem = furnitureMenu.getSubMenu().add(MENU_IMPORT_FURNITURE, menuId++, Menu.NONE, importInfo.label);
 				menuitem.setEnabled(enable);
 			}
 			else
 			{
-				//TODO: why don't texture librariues get treated the smae as furniture?
-				textureMenu.getSubMenu().add(MENU_IMPORT_TEXTURE, menuId++, Menu.NONE, importInfo.label);
+				MenuItem menuitem = textureMenu.getSubMenu().add(MENU_IMPORT_TEXTURE, menuId++, Menu.NONE, importInfo.label);
+				menuitem.setEnabled(enable);
 			}
 		}
 	}
