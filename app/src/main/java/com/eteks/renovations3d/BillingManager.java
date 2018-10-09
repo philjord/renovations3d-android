@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import me.drakeet.support.toast.ToastCompat;
+
 import static com.mindblowing.billing.util.IabHelper.BILLING_RESPONSE_RESULT_OK;
 
 /**
@@ -170,15 +172,13 @@ public class BillingManager
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - RemoteException", null);
-				if(!renovations3DActivity.isFinishing())
-					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "cacheOwnerShip - no service", null);
-			if(!renovations3DActivity.isFinishing())
-				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+			ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -206,8 +206,7 @@ public class BillingManager
 				else
 				{
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - null pendingIntent", null);
-					if(!renovations3DActivity.isFinishing())
-						Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+					ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -215,22 +214,19 @@ public class BillingManager
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - RemoteException", null);
-				if(!renovations3DActivity.isFinishing())
-					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 			catch (IntentSender.SendIntentException e)
 			{
 				e.printStackTrace();
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - IntentSender.SendIntentException", null);
-				if(!renovations3DActivity.isFinishing())
-					Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+				ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 			}
 		}
 		else
 		{
 			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "buyBasicAdFree - no service", null);
-			if(!renovations3DActivity.isFinishing())
-				Toast.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
+			ToastCompat.makeText(renovations3DActivity, "Unable to connect to store", Toast.LENGTH_LONG).show();
 		}
 	}
 

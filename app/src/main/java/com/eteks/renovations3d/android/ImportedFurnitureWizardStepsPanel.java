@@ -235,19 +235,22 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 //              findModelsMessageTextArea.setEditable(false);
 //              findModelsMessageTextArea.setOpaque(false);
 
-				String string  = preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text");
+							String string  = preferences.getLocalizedString(
+									com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text");
 
-				string.replace("http://www.sweethome3d.com/importModels.html", "<a href=\"http://www.sweethome3d.com/importModels.html\">http://www.sweethome3d.com/importModels.html</a>");
-				string = "<html>" + string + "</html>";
+							string.replace("http://www.sweethome3d.com/importModels.html", "<a href=\"http://www.sweethome3d.com/importModels.html\">http://www.sweethome3d.com/importModels.html</a>");
+							string = "<html>" + string + "</html>";
 
-              JOptionPane.showMessageDialog(activity,string
-					  , findModelsTitle,
-					  // findModelsMessageTextArea, findModelsTitle,
-                  JOptionPane.INFORMATION_MESSAGE);*/
-
-				activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=qQviwL2opzQ")));
-				Renovations3DActivity.logFireBaseContent("findModels video showen");
+										JOptionPane.showMessageDialog(activity,string
+									, findModelsTitle,
+									// findModelsMessageTextArea, findModelsTitle,
+												JOptionPane.INFORMATION_MESSAGE);*/
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=qQviwL2opzQ"));
+							// Verify the intent will resolve to at least one activity
+							if (intent.resolveActivity(activity.getPackageManager()) != null) {
+								activity.startActivity(intent);
+							}
+							Renovations3DActivity.logFireBaseContent("findModels video shown");
             }
           }
         });

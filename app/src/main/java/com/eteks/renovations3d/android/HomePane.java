@@ -3530,9 +3530,12 @@ public class HomePane implements HomeView
 						switch (which){
 							case DialogInterface.BUTTON_POSITIVE:
 								String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
-									// Display Find more demos (gallery) page in browser
-									activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(findModelsUrl)));
-
+								// Display Find more demos (gallery) page in browser
+								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(findModelsUrl));
+								// Verify the intent will resolve to at least one activity
+								if (intent.resolveActivity(activity.getPackageManager()) != null) {
+									activity.startActivity(intent);
+								}
 								//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/1ac9ba79?duration=2592000000&appVersions=190
 								if(homeExamplesPanel.getParent() != null)
 									((ViewGroup)homeExamplesPanel.getParent()).removeView(homeExamplesPanel);//oddly dismiss doesn't do this

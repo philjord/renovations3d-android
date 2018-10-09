@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.github.mobfox:MobFox-Android-SDK-Core:3.2.7d'
     implementation files('libs/MobFox-Android-AdMob-Adapter.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'me.drakeet.support:toastcompat:1.1.0' // fix bad token exception on sdk 25
 
 }
 apply plugin: 'com.google.gms.google-services'

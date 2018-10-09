@@ -365,7 +365,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		else
 		{
 			//If it already exists in the downloads folder, just import it
-			//Toast.makeText(getActivity(), getActivity().getString(R.string.libraryExistsLocal), Toast.LENGTH_LONG).show();
 			Thread t3 = new Thread()
 			{
 				public void run()

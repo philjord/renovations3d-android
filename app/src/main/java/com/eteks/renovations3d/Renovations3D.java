@@ -64,6 +64,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javaawt.EventQueue;
+import me.drakeet.support.toast.ToastCompat;
 
 
 public class Renovations3D extends HomeApplication {
@@ -135,8 +136,7 @@ public class Renovations3D extends HomeApplication {
 					List<String> supportedLanguages = Arrays.asList(getUserPreferences().getSupportedLanguages());
 					if (supportedLanguages.contains(language)) {
 						getUserPreferences().setLanguage(language);
-						if(!parentActivity.isFinishing())
-							Toast.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
+						ToastCompat.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
@@ -573,7 +573,7 @@ public class Renovations3D extends HomeApplication {
 				if (home.isModified()) {
 					String homeName = home.getName();
 					if (homeName == null) {
-						//TODO: some sort of toast message here I wager
+						//nothing can be done this is an exit path I assume never occurs
 						//JFrame homeFrame = getHomeFrame(home);
 						//homeFrame.toFront();
 						//homeName = contentManager.showSaveDialog((View) homeFrame.getRootPane(), null,
@@ -604,13 +604,13 @@ public class Renovations3D extends HomeApplication {
 	 * Displays in a 3D error message.
 	 */
 	private void show3DError() {
-		/*TODO: definitely a toast here too
 		UserPreferences userPreferences = getUserPreferences();
 		String message = userPreferences.getLocalizedString(Renovations3D.class, "3DError.message");
 		String title = userPreferences.getLocalizedString(Renovations3D.class, "3DError.title");
+		ToastCompat.makeText(this.parentActivity, message, Toast.LENGTH_LONG).show();
 
-		JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(), message,
-				title, JOptionPane.ERROR_MESSAGE);*/
+		//JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(), message,
+		//		title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -620,16 +620,16 @@ public class Renovations3D extends HomeApplication {
 	 * @return <code>true</code> if user confirmed to save.
 	 */
 	private boolean confirmSaveAfter3DError() {
-		/*TODO: definitely a toast here too
 		UserPreferences userPreferences = getUserPreferences();
 		String message = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.message");
 		String title = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.title");
 		String save = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.save");
 		String doNotSave = userPreferences.getLocalizedString(Renovations3D.class, "confirmSaveAfter3DError.doNotSave");
 
-		return JOptionPane.showOptionDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
-				message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{save, doNotSave},
-				save) == JOptionPane.YES_OPTION;*/
+		ToastCompat.makeText(this.parentActivity, message, Toast.LENGTH_LONG).show();
+		//return JOptionPane.showOptionDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
+		//		message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{save, doNotSave},
+		//		save) == JOptionPane.YES_OPTION;
 		return false;
 	}
 
