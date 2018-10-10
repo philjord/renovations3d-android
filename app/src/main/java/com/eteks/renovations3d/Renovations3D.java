@@ -262,8 +262,9 @@ public class Renovations3D extends HomeApplication {
 					boolean hasModelToMakeInvisible = false;
 					long totalModelSize = 0;
 					for (HomePieceOfFurniture f : home.getFurniture()) {
-						totalModelSize += f.getModelSize();
-						if (f.getModelSize() > largeModelSize) {
+						long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
+						totalModelSize += modelSize;
+						if (modelSize > largeModelSize) {
 							hasModelToMakeInvisible = true;
 						}
 					}
@@ -284,7 +285,8 @@ public class Renovations3D extends HomeApplication {
 
 				if(currentHomeReduceVisibleModels == true) {
 					for(HomePieceOfFurniture f : home.getFurniture()) {
-						if(f.getModelSize() > largeModelSize) {
+						long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
+						if(modelSize > largeModelSize) {
 							f.setVisible(false);
 						}
 					}
