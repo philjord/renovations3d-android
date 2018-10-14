@@ -19,14 +19,10 @@
  */
 package com.eteks.renovations3d.android;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.view.MotionEventCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -75,7 +71,6 @@ import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
 import com.mindblowing.swingish.JComponent;
-import com.mindblowing.renovations3d.R;
 import com.mindblowing.swingish.JViewPort;
 import com.mindblowing.utils.LongHoldHandler;
 
@@ -167,7 +162,6 @@ import javaawt.print.Printable;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
-import static com.eteks.renovations3d.Renovations3DActivity.PREFS_NAME;
 
 /**
  * A component displaying the plan of a home.
@@ -338,8 +332,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   private static final BufferedImage ERROR_TEXTURE_IMAGE;
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
-
-
 
 	private PlanController controller;
 	private MultipleLevelsPlanPanel parentFragment;
@@ -683,22 +675,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		this.parentFragment = parentFragment;
 
 
-	  //PJPJPJ Cursors dropped
- /*   this.rotationCursor = createCustomCursor("resources/cursors/rotation16x16.png",
-        "resources/cursors/rotation32x32.png", "Rotation cursor", Cursor.MOVE_CURSOR);
-    this.elevationCursor = createCustomCursor("resources/cursors/elevation16x16.png",
-        "resources/cursors/elevation32x32.png", "Elevation cursor", Cursor.MOVE_CURSOR);
-    this.heightCursor = createCustomCursor("resources/cursors/height16x16.png",
-        "resources/cursors/height32x32.png", "Height cursor", Cursor.MOVE_CURSOR);
-    this.powerCursor = createCustomCursor("resources/cursors/power16x16.png",
-        "resources/cursors/power32x32.png", "Power cursor", Cursor.MOVE_CURSOR);
-    this.resizeCursor = createCustomCursor("resources/cursors/resize16x16.png",
-        "resources/cursors/resize32x32.png", "Resize cursor", Cursor.MOVE_CURSOR);
-    this.moveCursor = createCustomCursor("resources/cursors/move16x16.png",
-        "resources/cursors/move32x32.png", "Move cursor", Cursor.MOVE_CURSOR);
-    this.panningCursor = createCustomCursor("resources/cursors/panning16x16.png",
-        "resources/cursors/panning32x32.png", "Panning cursor", Cursor.HAND_CURSOR);
-    this.duplicationCursor = DragSource.DefaultCopyDrop;*/
     this.patternImagesCache = new HashMap<TextureImage, BufferedImage>();
     // Install default colors using same colors as a text field
 	  //PJPJPJ general colors setting can just come form the UI manager, unless I'm drawing a label
@@ -1241,17 +1217,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	 * used to simulate a final press when changing plancontroller state
 	 * @return
 	 */
-	public Point2f getLastDragLocation()
-  	{
+	public Point2f getLastDragLocation() {
 	  	return touchyListener.getLastDragLocation();
-  	}
+	}
+
 	TouchyListener touchyListener = new TouchyListener();
 	LongHoldHandler longHoldHandler;
-	private class TouchyListener implements android.view.View.OnTouchListener
-	{
-		// what are we currently doing finger-wise
-		private int fingers = -1;
-
+	private class TouchyListener implements android.view.View.OnTouchListener {
 		private MotionEvent potentialSinglePress = null;
 
 		private static final int INVALID_POINTER_ID = -1;
@@ -1261,139 +1233,128 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		private float mLastTouchX;
 		private float mLastTouchY;
 
-		public Point2f getLastDragLocation()
-		{
+		private long lastMouseReleasedTime = 0;
+		private Point lastMousePressedLocation;
+		private boolean lastDownTouchedSelections = false;
+
+
+		public Point2f getLastDragLocation() {
 			return new Point2f(mLastTouchX, mLastTouchY);
 		}
 
 		@Override
-		public boolean onTouch(View v, MotionEvent ev)
-		{
-			// I should use this as the previous tap time, not my time grab I reckon
+		public boolean onTouch(View v, MotionEvent ev) {
+			// TODO: I should use this as the previous tap time, not my time grab I reckon
 			//ev.getEventTime()
 
-			// Let the ScaleGestureDetector inspect all events.
-			mScaleDetector.onTouchEvent(ev);
+			if(mScaleDetector != null ) {
+				mScaleDetector.onTouchEvent(ev);
+				if (mScaleDetector.isInProgress())
+					return true;
+			}
 
-			if(longHoldHandler != null && longHoldHandler.onTouch(v,  ev))
+			if (longHoldHandler != null && longHoldHandler.onTouch(v, ev))
 				return true;
 
-			final int action = MotionEventCompat.getActionMasked(ev);
+			final int pointerIndex = ev.getActionIndex();
+			final int pointerId = ev.getPointerId(pointerIndex);
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
+			final int action = ev.getActionMasked();
 
-			switch (action & MotionEvent.ACTION_MASK)
-			{
+			switch (action & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_DOWN:
-				{
-					//System.out.println("ACTION_DOWN");
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final float x = MotionEventCompat.getX(ev, pointerIndex);
-					final float y = MotionEventCompat.getY(ev, pointerIndex);
-
 					mLastTouchX = x;
 					mLastTouchY = y;
-					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+					mActivePointerId = pointerId;
 
-					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress())
-					{
-						// we need to fire off the previous now, though lord knows how this could happen
-						if(potentialSinglePress != null)
-						{
-							mousePressed(v,potentialSinglePress);
+					if (ev.getPointerCount() == 1) {
+						// we need to fire off the previous down event now, though lord knows how this could happen
+						if (potentialSinglePress != null) {
+							mousePressed(v, potentialSinglePress);
 							potentialSinglePress = null;
-							System.out.println("potentialSinglePress != null seen during action down, look into this");
 						}
 
-						fingers = 1;
+						// have we just touched down in the selected items? If so we need to record so a move item occurs when the mouse move arrives
+						float modelX = convertXPixelToModel((int)x);
+						float modelY = convertYPixelToModel((int)y);
+						// add some margin so the handles can be used (note this cause odd behavior right next ot a selected item)
+						float margin = (float)PlanComponent.this.controller.INDICATOR_PIXEL_MARGIN / PlanComponent.this.controller.getScale();
+						List<Selectable> itemsUnderTouch = PlanComponent.this.controller.getSelectableItemsIntersectingRectangle(modelX-margin,modelY-margin, modelX+margin, modelY+margin );
+						lastDownTouchedSelections = false;
+						// contains any
+						for( Selectable s : itemsUnderTouch) {
+							if( home.getSelectedItems().contains(s)) {
+								lastDownTouchedSelections = true;
+								break;
+							}
+						}
 
 						// this will be fired on a move or an up or another single down
-						potentialSinglePress = MotionEvent.obtain(ev);
-						//mousePressed(v, ev);
+						potentialSinglePress = MotionEvent.obtain(ev); //instead of mousePressed(v, ev);
+
 					}
-
 					break;
-				}
-
 				case MotionEvent.ACTION_POINTER_DOWN:
-				{
 					// second finger down now
 					// cancel any pending single down as we are now firmly in double finger mode
-					fingers = 2;
 					potentialSinglePress = null;
 					break;
-				}
-
 				case MotionEvent.ACTION_MOVE:
-				{
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final float x = MotionEventCompat.getX(ev, pointerIndex);
-					final float y = MotionEventCompat.getY(ev, pointerIndex);
-
-					// Only move if the ScaleGestureDetector isn't processing a gesture.
-					if (!mScaleDetector.isInProgress())
-					{
-						if (ev.getPointerCount() > 1)
-						{
-							final float dx = x - mLastTouchX;
-							final float dy = y - mLastTouchY;
-
-							float s = getScale();
+					final float dx = x - mLastTouchX;
+					final float dy = y - mLastTouchY;
+					float s = getScale();
+					if (ev.getPointerCount() > 1) {
+						// might be the second finger move, we want only active moves
+						if(mActivePointerId == pointerId) {
 							// pan operation wants the move to be div scale as moveview does a multiply, so...
-							moveView(-dx/s,-dy/s);
-
-							// to be safe
-							fingers = 2;
-							potentialSinglePress = null;
+							moveView(-dx / s, -dy / s);
+							mLastTouchX = x;
+							mLastTouchY = y;
 						}
-					}
+						potentialSinglePress = null;
+					} else {
+						// pointer count (and hence finger count) == 1
 
-					if (ev.getPointerCount() == 1)
-					{
 						// stops any double taps
 						lastMouseReleasedTime = 0;
 
 						// this is a major divergence from the desktop function! Single finger pan during selection mode if the move is over nothing
-						if (!selectLasso && controller.getMode() == PlanController.Mode.SELECTION &&
-						//TODO: this is nearly better but not try again
-										//PlanComponent.this.controller.getSelectableItemsAt(convertXPixelToModel((int) x), convertYPixelToModel((int) y)).size() == 0)
-										home.getSelectedItems().size() == 0)
-						{
-							final float dx = x - mLastTouchX;
-							final float dy = y - mLastTouchY;
+						if (controller.getMode() == PlanController.Mode.PANNING ||
+										(controller.getMode() == PlanController.Mode.SELECTION && !selectLasso && !lastDownTouchedSelections	) ) {
 
-							float s = getScale();
-							// pan operation wants the move to be div scale as moveview does a multiply, so...
-							moveView(-dx/s, -dy/s);
+							if(mActivePointerId == pointerId) {
+								// pan operation wants the move to be div scale as moveview does a multiply, so...
+								moveView(-dx / s, -dy / s);
+								System.out.println("1moveView(-dx / s, -dy / s) " + (-dx / s) + ", " + (-dy / s));
+								System.out.println("pointer count " + ev.getPointerCount());
+								mLastTouchX = x;
+								mLastTouchY = y;
+							}
 
 							// we also cancel any pending press cos that's been confirmed unwanted
 							potentialSinglePress = null;
-						}
-						else
-						{
-							// if we have a pending click we'd better fire it off now before moving
-							if (potentialSinglePress != null)
-							{
+						} else {
+							// if we have a pending click fire it off now before moving
+							if (potentialSinglePress != null) {
 								mousePressed(v, potentialSinglePress);
 								potentialSinglePress = null;
 							}
-							mouseMoved(v, ev);
+							if(mActivePointerId == pointerId) {
+								mouseMoved(v, ev);
+								mLastTouchX = x;
+								mLastTouchY = y;
+							}
 						}
-						fingers = 1;
 					}
-
-					mLastTouchX = x;
-					mLastTouchY = y;
 					break;
-				}
-
 				case MotionEvent.ACTION_UP:
-				{
 					mActivePointerId = INVALID_POINTER_ID;
+					lastDownTouchedSelections = false;
 					// make sure this isn't the exit of a double touch too
-					if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
-					{
+					if (ev.getPointerCount() == 1 ) {
 						// all is good, fire off the down now
-						if(potentialSinglePress != null)
-						{
+						if (potentialSinglePress != null) {
 							mousePressed(v, potentialSinglePress);
 							potentialSinglePress = null;
 						}
@@ -1401,53 +1362,32 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						mouseReleased(v, ev);
 					}
 					break;
-				}
-
 				case MotionEvent.ACTION_CANCEL:
-				{
-					//System.out.println("ACTION_CANCEL");
 					mActivePointerId = INVALID_POINTER_ID;
-
-					// just to be safe, not really sure
-					fingers = -1;
 					potentialSinglePress = null;
 					break;
-				}
-
 				case MotionEvent.ACTION_POINTER_UP:
-				{
 					//second finger has been released
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
-
-					fingers = ev.getPointerCount();
-
-					if (pointerId == mActivePointerId)
-					{
-						// This was our active pointer going up. Choose a new active pointer and adjust accordingly.
+					// Was this our active pointer going up, if so choose a new active pointer and adjust accordingly
+					if (pointerId == mActivePointerId) {
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-						mLastTouchX = MotionEventCompat.getX(ev, newPointerIndex);
-						mLastTouchY = MotionEventCompat.getY(ev, newPointerIndex);
-						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+						mLastTouchX = ev.getX(newPointerIndex);
+						mLastTouchY = ev.getY(newPointerIndex);
+						mActivePointerId = ev.getPointerId(newPointerIndex);
 					}
 					break;
-				}
 			}
-
 			return true;
 		}
 
-		private long lastMouseReleasedTime = 0;
-		private Point lastMousePressedLocation = null;
 
-		public void mousePressed(View v, MotionEvent ev)
-		{
+		public void mousePressed(View v, MotionEvent ev) {
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
 			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
 							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
-				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-				final float x = MotionEventCompat.getX(ev, pointerIndex);
-				final float y = MotionEventCompat.getY(ev, pointerIndex);
+				final int pointerIndex = ev.getActionIndex();
+				final float x = ev.getX(pointerIndex);
+				final float y = ev.getY(pointerIndex);
 				this.lastMousePressedLocation = new Point((int) x, (int) y);
 				if (isEnabled()) {
 					//requestFocusInWindow();
@@ -1455,35 +1395,22 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 					{
 						//alignment and magnetism come from menu now
 						boolean alignmentActivated = PlanComponent.this.alignmentActivated;
-						//OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
-						//? ev.isShiftDown() : ev.isShiftDown() && !ev.isAltDown();
 						boolean duplicationActivated = ((MultipleLevelsPlanPanel) controller.getView()).getIsControlKeyOn();
-						//OperatingSystem.isMacOSX()
-						//		? ev.isAltDown() : ev.isControlDown();
 						boolean magnetismToggled = PlanComponent.this.magnetismToggled;
-						//OperatingSystem.isWindows()
-						//		? ev.isAltDown() : (OperatingSystem.isMacOSX()
-						//		? ev.isMetaDown() : ev.isShiftDown() && ev.isAltDown());
 
 						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && PlanComponent.this.selectMultiple;
 
 						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 250 ? 2 : 1);
 
 						// if it's a double, ensure triple != double twice
-						if (clickCount == 1)
-							lastMouseReleasedTime = System.currentTimeMillis();
-						else
-							lastMouseReleasedTime = 0;
+						lastMouseReleasedTime = clickCount == 1 ? System.currentTimeMillis() : 0;
 
 						try {
 							controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-									clickCount, isShiftDown, alignmentActivated, duplicationActivated, magnetismToggled);
+											clickCount, isShiftDown,
+											alignmentActivated, duplicationActivated, magnetismToggled);
 						} catch (ArrayIndexOutOfBoundsException e) {
-							// TODO this happens :
-							//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-							//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
-							//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
-							//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+							// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 							//ignore for now, investigate later
 							e.printStackTrace();
 						}
@@ -1496,18 +1423,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
 			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
 							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
-				final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-				final float x = MotionEventCompat.getX(ev, pointerIndex);
-				final float y = MotionEventCompat.getY(ev, pointerIndex);
+				final int pointerIndex = ev.getActionIndex();
+				final float x = ev.getX(pointerIndex);
+				final float y = ev.getY(pointerIndex);
 				if (isEnabled()) {
 					try {
 						controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 					} catch (ArrayIndexOutOfBoundsException e) {
-						// TODO this happens :
-						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+						// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 						//ignore for now, investigate later
 						e.printStackTrace();
 					}
@@ -1516,24 +1439,20 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		}
 
 		public void mouseMoved(View v, MotionEvent ev) {
-			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-			final float x = MotionEventCompat.getX(ev, pointerIndex);
-			final float y = MotionEventCompat.getY(ev, pointerIndex);
+			final int pointerIndex = ev.getActionIndex();
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
 			// Ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
 			if (this.lastMousePressedLocation != null
-					&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y))) {
+							&& !this.lastMousePressedLocation.equals(new Point((int) x, (int) y))) {
 				this.lastMousePressedLocation = null;
 			}
 			if (this.lastMousePressedLocation == null) {
 				if (isEnabled()) {
 					try {
-					controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+						controller.moveMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 					} catch(ArrayIndexOutOfBoundsException e) {
-						// TODO this happens :
-						//at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController.setState(PlanController.java:291)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController$SelectionState.pressMouse(PlanController.java:6716)
-						//at com.eteks.sweethome3d.viewcontroller.PlanController.pressMouse(PlanController.java:419)
+						// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 						//ignore for now, investigate later
 						e.printStackTrace();
 					}
@@ -1546,6 +1465,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				mouseMoved(v, ev);
 			}
 		}
+
+
 	}
 
 	private ScaleGestureDetector mScaleDetector;
@@ -1595,14 +1516,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			float newScale = getScale() * detector.getScaleFactor();
 			// Don't let the object get too small or too large.
 			newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
-			//controller.zoom(newScale); don't want the mouse move calls
+			//controller.zoom(newScale); //don't want the mouse move calls
 			controllerSetScale(newScale);
 
-			//controller.zoom((float)(ev.getWheelRotation() < 0
-			//		? Math.pow(1.05, -ev.getWheelRotation())
-			//		: Math.pow(0.95, ev.getWheelRotation())));
+			/*controller.zoom((float)(ev.getWheelRotation() < 0
+					? Math.pow(1.05, -ev.getWheelRotation())
+					: Math.pow(0.95, ev.getWheelRotation())));*/
 
-			if (getScale() != oldScale ){//&& getParent() instanceof JViewport) {
+			if (getScale() != oldScale ) {//&& getParent() instanceof JViewport) {
 				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
 				//((JViewport)getParent()).setViewPosition(new Point());
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
@@ -1618,7 +1539,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		}
 
 		/**
-		 * used here to avoid the unwanted mouse move call
+		 * Taken from controller.zoom()
+		 * used here to avoid the unwanted mouse move call in
 		 */
 		private void controllerSetScale(float scale)
 		{
@@ -1632,7 +1554,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 					controller.getView().setScale(scale);
 					//controller.moveMouse(controller.getView().convertXPixelToModel(x), controller.getView().convertYPixelToModel(y));
 				}
-
 				//controller.propertyChangeSupport.firePropertyChange(PlanController.Property.SCALE.name(), Float.valueOf(oldScale), Float.valueOf(scale));
 				home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(scale));
 			}

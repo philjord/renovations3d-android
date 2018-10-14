@@ -2,7 +2,6 @@ package com.mindblowing.swingish;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.view.MotionEventCompat;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -107,7 +106,7 @@ public class JTabbedPane
 			@Override
 			public boolean onTouch(View v, MotionEvent ev)
 			{
-				final int action = MotionEventCompat.getActionMasked(ev);
+				final int action = ev.getActionMasked();
 
 				switch (action & MotionEvent.ACTION_MASK)
 				{

@@ -1,15 +1,12 @@
 package com.mindblowing.utils;
 
 import android.os.Handler;
-import android.support.v4.view.MotionEventCompat;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 /**
  * Created by phil on 8/27/2017.
  */
-
-
 public class LongHoldHandler implements android.view.View.OnTouchListener
 {
 	private int JITTER_DP = 10;
@@ -52,7 +49,7 @@ public class LongHoldHandler implements android.view.View.OnTouchListener
 	@Override
 	public boolean onTouch(android.view.View v, MotionEvent ev)
 	{
-		final int action = MotionEventCompat.getActionMasked(ev);
+		final int action = ev.getActionMasked();
 
 		switch (action & MotionEvent.ACTION_MASK)
 		{
@@ -84,7 +81,7 @@ public class LongHoldHandler implements android.view.View.OnTouchListener
 								&& Math.abs(yFirstMouseDown - ev.getY()) < maxJitter)
 							return true;
 
-						// other wise fall through to stop teh long hold repeats
+						// other wise fall through to stop the long hold repeats
 					}
 				}
 			}

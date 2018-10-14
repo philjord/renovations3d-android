@@ -1,8 +1,5 @@
 package com.eteks.renovations3d.j3d.mouseover;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -11,7 +8,6 @@ import org.jogamp.java3d.CapabilityNotSetException;
 import org.jogamp.java3d.Node;
 import org.jogamp.java3d.PickInfo;
 import org.jogamp.java3d.SceneGraphPath;
-import org.jogamp.vecmath.Point2d;
 import org.jogamp.vecmath.Point2f;
 
 import com.eteks.renovations3d.Renovations3DActivity;
@@ -91,11 +87,11 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 		if (ev.getPointerCount() == 1)
 		{
-			final int action = MotionEventCompat.getActionMasked(ev);
+			final int action = ev.getActionMasked();
 
-			final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-			final float x = MotionEventCompat.getX(ev, pointerIndex);
-			final float y = MotionEventCompat.getY(ev, pointerIndex);
+			final int pointerIndex = ev.getActionIndex();
+			final float x = ev.getX(pointerIndex);
+			final float y = ev.getY(pointerIndex);
 			currentLocation.set(x, y);
 
 			switch (action & MotionEvent.ACTION_MASK)
@@ -118,7 +114,7 @@ public class HomeComponent3DMouseHandler extends MouseOverHandler
 
 				case MotionEvent.ACTION_DOWN:
 				{
-					mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+					mActivePointerId = ev.getPointerId(0);
 					lastDownTime = ev.getEventTime();
 					lastDownLocation = new Point2f(currentLocation);
 					// tell the caller they can have te event if they want too

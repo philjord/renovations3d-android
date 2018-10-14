@@ -1,7 +1,6 @@
 package com.mindblowing.utils;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -20,7 +19,6 @@ public class EdgeViewPager extends ViewPager
 		super(context);
 		final float scale = getResources().getDisplayMetrics().density;
 		gripWidthMaxPx = (int) (gripWidthMaxDp * scale + 0.5f);
-
 	}
 
 	public EdgeViewPager(Context context, AttributeSet attrs)
@@ -54,7 +52,7 @@ public class EdgeViewPager extends ViewPager
 			return false;
 		}
 
-		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
+		final int action = ev.getActionMasked();
 
 		if (action == MotionEvent.ACTION_DOWN)
 		{

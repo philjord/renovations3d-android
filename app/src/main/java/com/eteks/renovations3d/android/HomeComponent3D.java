@@ -28,6 +28,7 @@ import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MotionEventCompat;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -179,10 +180,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private boolean initialized = false;
 
 	private AndyFPSCounter fpsCounter;
-	private InfoText3D onscreenInfo;
-	private int fingerCount = 0;
-	private boolean dragging = false;
-	private String extraInfo ="";
+	private InfoText3D onscreenInfo;// not used currently
 
 	private HomeComponent3DMouseHandler homeComponent3DMouseHandler;
 	private ScaleGestureDetector mScaleDetector;
@@ -205,12 +203,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			caps = new GLCapabilities(null);
 		} catch (GLException e) {
 			//E.g. Profile GL_DEFAULT is not available on EGLGraphicsDevice[type .egl, v1.4.0, connection decon, unitID 0, handle 0x1, owner true, NullToolkitLock[obj 0x163357fd]], but: []
-			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "new GLCapabilities(null) GLException", null );
-			String message = getActivity().getString(R.string.insufficient3dResourcesMessage);
-			String title = getActivity().getString(R.string.insufficient3dResourcesTitle);
-			JOptionPane.showMessageDialog(getActivity(), message, title, JOptionPane.ERROR_MESSAGE);
-			// after we return lord knows what will happen with the component generally
-			return;
+
+			// possibly we struggle on, maybe this is a double create and so we can ignore this life cycle
 		}
 		caps.setDoubleBuffered(true);
 		caps.setDepthBits(16);
@@ -343,7 +337,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								onscreenInfo = new InfoText3D() {
 									@Override
 									protected String getText() {
-										return "F: " + fingerCount + " D: " + dragging + " " + extraInfo;
+										return "";
 									}
 								};
 								onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
@@ -487,7 +481,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			onscreenUniverse = null;
 		}
 		PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
-		super.onDestroy();
+		try {
+			super.onDestroy();
+		} catch(Exception e) {
+			//ignore as we are done
+			e.printStackTrace();
+		}
 		PlanComponent.PieceOfFurnitureModelIcon.unpauseOffScreenRendering();
 
 		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onDestroy", null );
@@ -518,8 +517,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		super.setUserVisibleHint(isVisibleToUser);
 	}
 
-
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		mOptionsMenu = menu;// for later use
@@ -534,7 +531,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		boolean deoptomize = settings.getBoolean(DEOPTOMIZE, false);
 		menu.findItem(R.id.deoptomize).setChecked(deoptomize);
 
-		toolSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.home3dToolSelectSpinner));
+		toolSpinner = (Spinner) menu.findItem(R.id.home3dToolSelectSpinner).getActionView();
 		toolSpinner.setPadding(toolSpinner.getPaddingLeft(), 0, toolSpinner.getPaddingRight(), toolSpinner.getPaddingBottom());
 		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		updateToolNames();
@@ -543,7 +540,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-
 
 	private void updateToolNames() {
 		toolNames = new String[]{
@@ -1781,8 +1777,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 
 
-	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
-	{
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+		private final float mDPI;
+		public ScaleListener() {
+			mDPI = getView().getResources().getDisplayMetrics().densityDpi;
+		}
+
 		/**
 		 * @param detector
 		 * @return
@@ -1790,15 +1790,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector) {
 			if(getView() != null) {
-				//2 finger move disabled to make pinch action smoother
 				///RIGHT RIGHT! is to allow 2 finger drags to work I see
 				// so this is not about how far the scale move, just about how close the fingers are
 				// when deciding if this is a 2 drag or not
-			/*	DisplayMetrics mDisplayMetrics = getView().getResources().getDisplayMetrics();
-				float mDPI = (float) mDisplayMetrics.densityDpi;
 				float measurement = mScaleDetector.getCurrentSpan() / mDPI;
-				return measurement > PlanComponent.dpiMinSpanForZoom;*/
-				return true;
+				return measurement > PlanComponent.dpiMinSpanForZoom;
 			}
 			return false;
 		}
@@ -1838,7 +1834,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			if(homeComponent3DMouseHandler != null && homeComponent3DMouseHandler.onTouch(v,  ev))
 				return true;
 
-			// for long hold I will only get a mouse down and nothing after it, so on a mouse donw (before even teh tapper)
+			// for long hold I will only get a mouse down and nothing after it, so on a mouse down (before even the tapper)
 			// I need to start a timer waiting for a mouse up, and after waiting for 600ms say
 			// it should just start firing off move events
 
@@ -1846,39 +1842,21 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			// a single finger long hold is forward
 			// a 2+ finger drag is forward/backward straf left/right
 
-			dragging = false;
-			extraInfo = " pc = "+ev.getPointerCount();
-			final int action = MotionEventCompat.getActionMasked(ev);
+			final int action = ev.getActionMasked();
 
 			switch (action & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_DOWN:
-				{
 					if( ev.getPointerCount() == 1 ) {
-						fingerCount = 1;
 						this.xLastMouseMove = ev.getX();
 						this.yLastMouseMove = ev.getY();
-
-						this.xLastMouseMove2 = -1;
-						this.yLastMouseMove2 = -1;
-					} else if( ev.getPointerCount() > 1 ) {
-						fingerCount = ev.getPointerCount();
-						this.xLastMouseMove2 = -1;
-						this.yLastMouseMove2 = -1;
 					}
-
+					this.xLastMouseMove2 = -1;
+					this.yLastMouseMove2 = -1;
 					break;
-				}
 				case MotionEvent.ACTION_POINTER_DOWN:
-				{
-					fingerCount = 2;
-					dragging = false;
 					break;
-				}
 				case MotionEvent.ACTION_MOVE:
-				{
-					dragging = true;
 					if (ev.getPointerCount() == 1) {
-						fingerCount = 1;
 						if(this.xLastMouseMove != -1 && this.yLastMouseMove != -1) {
 							final float ANGLE_FACTOR = 0.0025f;
 							// Mouse move along X axis changes camera yaw
@@ -1896,7 +1874,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							pitchDelta *= factor;
 							controller.rotateCameraPitch(pitchDelta);
 
-
 							// tell the tutorial
 							Point2f data = new Point2f(yawDelta, pitchDelta);
 							((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.CAMERA_MOVED_3D, data);
@@ -1904,51 +1881,21 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						this.xLastMouseMove = ev.getX();
 						this.yLastMouseMove = ev.getY();
 					} else if (ev.getPointerCount() > 1) {
-						fingerCount = ev.getPointerCount();
-
-						extraInfo = " x " +this.xLastMouseMove2 + " y " + this.yLastMouseMove2;
-
 						if(this.xLastMouseMove2 != -1 && this.yLastMouseMove2 != -1) {
 							final float STRAF_REDUCTION = 0.5f; // stafing is less "wanted"
 							final float FACTOR = 0.5f;
 							float xd = FACTOR * (ev.getX() - this.xLastMouseMove2);
 							float yd = FACTOR * (ev.getY() - this.yLastMouseMove2);
-							extraInfo += " yd "+yd;
 							controller.moveCamera(yd);
 							controller.moveCameraSideways(-xd*STRAF_REDUCTION);//note does nothing in overhead view
 						}
 
 						this.xLastMouseMove2 = ev.getX();
 						this.yLastMouseMove2 = ev.getY();
-
-
 					}
 					break;
-				}
-
-				case MotionEvent.ACTION_UP:
-				{
-					fingerCount = 0;
-					dragging = false;
-					mActivePointerId = INVALID_POINTER_ID;
-					// make sure this isn't the exit of a double touch too
-					//TODO: figure out why i removed this if conditional
-					//if (ev.getPointerCount() == 1 && !mScaleDetector.isInProgress() && fingers == 1)
-					{
-						this.xLastMouseMove = -1;
-						this.yLastMouseMove = -1;
-
-						this.xLastMouseMove2 = -1;
-						this.yLastMouseMove2 = -1;
-					}
-					break;
-				}
-
+				case MotionEvent.ACTION_UP: // fall through!
 				case MotionEvent.ACTION_CANCEL:
-				{
-					fingerCount = 0;
-					dragging = false;
-
 					mActivePointerId = INVALID_POINTER_ID;
 
 					this.xLastMouseMove = -1;
@@ -1957,15 +1904,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					this.xLastMouseMove2 = -1;
 					this.yLastMouseMove2 = -1;
 					break;
-				}
-
 				case MotionEvent.ACTION_POINTER_UP:
-				{
-					dragging = false;
-
 					//second finger has been released
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+					final int pointerIndex = ev.getActionIndex();
+					final int pointerId = ev.getPointerId(pointerIndex);
 
 					if (pointerId == mActivePointerId) {
 						// This was our active pointer going up. Choose a new
@@ -1973,16 +1915,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
 						this.xLastMouseMove2 = -1;
 						this.yLastMouseMove2 = -1;
-						mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+						mActivePointerId = ev.getPointerId(newPointerIndex);
 					}
 
 					// reduce the jitter when leaving 2 finger mode
 					this.xLastMouseMove = -1;
 					this.yLastMouseMove = -1;
 
-					fingerCount = ev.getPointerCount() - 1;
 					break;
-				}
 			}
 
 			return true;

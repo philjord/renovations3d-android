@@ -21,7 +21,6 @@ package com.eteks.renovations3d.android;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -949,7 +948,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 			@Override
 			public boolean onTouch(android.view.View v, MotionEvent ev)
 			{
-				final int action = MotionEventCompat.getActionMasked(ev);
+				final int action = ev.getActionMasked();
 
 				switch (action & MotionEvent.ACTION_MASK)
 				{
@@ -1006,11 +1005,11 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 				  this.deltaXMousePressed = (ev.getX() - translationorigin.x);
 				  this.deltaYMousePressed = (ev.getY() - translationorigin.y);
 				  if (this.distanceStartPoint) {
-					this.deltaXMousePressed -= scaleDistancePoints [0][0] * scale;
-					this.deltaYMousePressed -= scaleDistancePoints [0][1] * scale;
+						this.deltaXMousePressed -= scaleDistancePoints [0][0] * scale;
+						this.deltaYMousePressed -= scaleDistancePoints [0][1] * scale;
 				  } else {
-					this.deltaXMousePressed -= scaleDistancePoints [1][0] * scale;
-					this.deltaYMousePressed -= scaleDistancePoints [1][1] * scale;
+						this.deltaXMousePressed -= scaleDistancePoints [1][0] * scale;
+						this.deltaYMousePressed -= scaleDistancePoints [1][1] * scale;
 				  }
 				  // Set actions used to activate/deactivate alignment
 			   /*   ActionMap actionMap = getActionMap();
@@ -1226,7 +1225,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 				@Override
 				public boolean onTouch(android.view.View v, MotionEvent ev)
 				{
-					final int action = MotionEventCompat.getActionMasked(ev);
+					final int action = ev.getActionMasked();
 
 					switch (action & MotionEvent.ACTION_MASK)
 					{
@@ -1266,8 +1265,8 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 				}
 
           public void mousePressed(MotionEvent ev) {
-                if( isPointInImage((int)ev.getX(), (int)ev.getY())) {
-					mouseLocation.setLocation(ev.getX(), ev.getY());
+          	if( isPointInImage((int)ev.getX(), (int)ev.getY())) {
+							mouseLocation.setLocation(ev.getX(), ev.getY());
               updateOrigin(mouseLocation);
             }
           }
