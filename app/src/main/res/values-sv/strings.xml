@@ -6,13 +6,13 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Dra med två fingrar för att flytta planen utan att ändra vad som valts. <br>
 Dubbelklicka på något objekt för att redigera det. <br>
-Två demo hemfiler kommer att finnas i din nedladdningsmapp, använd Öppna ... i menyn. <br>
+Två demo hemfiler kommer att finnas i din nedladdningsmapp, använd Öppna … i menyn. <br>
 Du kan använda din webbläsare för att direkt öppna fler hemfiler (.sh3d) från internet, till exempel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
 Alternativt kan du länge trycka på objektet (det finns ingen dra och släpp).<br>
-Från denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek ...<br>
-	     ]]>\n</string>
+Från denna vy kan du importera möbler bibliotek katalog väljer Menu-> Importera möbler bibliotek …<br>
+	     \n]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Detta är en bild av alla möbler närvarande Placerad på din plan.<br>
 För nu den enda funktion du kan göra här är att ändra ett objekt synlighet.<br>
@@ -69,7 +69,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="menu_help_online">Online hjälp</string>
     <string name="menu_help_tutorial">Handledning</string>
     <string name="tutStep0Title">Handledning</string>
-    <string name="tutStep0Text">För misstag använd Ångra. Dra planen runt med ett finger, zooma genom att använda nypa åtgärden. Försök flytta planen nu ... (Du kan stänga / visa denna handledning när som helst.)</string>
+    <string name="tutStep0Text">För misstag använd Ångra. Dra planen runt med ett finger, zooma genom att använda nypa åtgärden. Försök flytta planen nu … (Du kan stänga / visa denna handledning när som helst.)</string>
     <string name="tutStep10Text">Flytta stolen runt och försök rotera den.</string>
     <string name="tutStep10Title">Lägg till en stol - 3</string>
     <string name="tutStep11Text">Tryck på 3D-knappen och vyn ändras till 3D-vyn.</string>
@@ -104,7 +104,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="tutStep8Title">Lägg till en stol - 1</string>
     <string name="tutStep9Text">Långt tryck på en stol, och det kommer att läggas till din plan.</string>
     <string name="tutStep9Title">Lägg till en stol - 2</string>
-    <string name="tutStepFinishText">Bra jobb, nu kanske du vill ladda hem ett hem från en demofil, Meny-> Fil-> Ny från demo.\nSenare kan du använda fotogeneratorn i 3D-vyn till \"Skapa foto ...\"</string>
+    <string name="tutStepFinishText"><![CDATA[Bra jobb, nu kanske du vill ladda hem ett hem från en demofil, Meny-> Fil-> Ny från demo.\nSenare kan du använda fotogeneratorn i 3D-vyn till \"Skapa foto …\"]]></string>
     <string name="tutStepFinishTitle">Handledning Slutförd</string>
     <string name="addCameraPosition">Lägg till kamerans position</string>
     <string name="deleteCameraPosition">Ta bort kamerans position</string>

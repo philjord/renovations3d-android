@@ -20,18 +20,15 @@
 package com.eteks.renovations3d.android;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -54,8 +51,6 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.AccessControlException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,18 +78,12 @@ import javaxswing.ImageIcon;
 
 
 import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.android.utils.CheckableImageView;
-import com.eteks.sweethome3d.model.CatalogTexture;
 import com.eteks.sweethome3d.model.HomeDescriptor;
 import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
-import com.jogamp.newt.event.MouseAdapter;
-import com.jogamp.newt.event.MouseEvent;
 import com.mindblowing.swingish.JComboBox;
 import com.mindblowing.swingish.JLabel;
 import com.mindblowing.swingish.JList;
-import com.mindblowing.swingish.JPanel;
-import com.mindblowing.swingish.JTextArea;
 import com.mindblowing.swingish.JTextField;
 import com.eteks.sweethome3d.j3d.Ground3D;
 import com.eteks.sweethome3d.j3d.OBJWriter;
@@ -114,11 +103,8 @@ import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.HomeView;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
-import com.eteks.sweethome3d.viewcontroller.PlanController.Mode;
 import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JOptionPane;
-
-import static com.mindblowing.swingish.JOptionPane.showOptionDialog;
 
 import com.mindblowing.renovations3d.R;
 

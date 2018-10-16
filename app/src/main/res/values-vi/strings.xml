@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Kéo bằng hai ngón tay để di chuyển kế hoạch mà không thay đổi những gì được chọn. <br>
 Nhấn đúp vào bất kỳ đối tượng nào để chỉnh sửa. <br>
-Hai tệp trình diễn bản demo sẽ nằm trong thư mục tải xuống của bạn, sử dụng Mở ... trong trình đơn. <br>
+Hai tệp trình diễn bản demo sẽ nằm trong thư mục tải xuống của bạn, sử dụng Mở … trong trình đơn. <br>
 Bạn có thể sử dụng trình duyệt để trực tiếp mở thêm các tệp tin nhà (.sh3d) từ internet, ví dụ như <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
 Ngoài ra bạn có thể nhấn lâu vào mục (không có kéo và thả).<br>
-Từ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu ...<br>
+Từ quan điểm này, bạn có thể nhập khẩu Danh mục thư viện đồ nội thất, chọn Menu-> Thư viện đồ nội thất nhập khẩu …<br>
    ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Đây là một quan điểm của tất cả các đồ nội thất Hiện nay Đặt trên kế hoạch của bạn.<br>
@@ -60,7 +60,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="get_image_file">Tập tin</string>
     <string name="search_hint">Tìm kiếm</string>
     <string name="basic_remove_ads">Loại bỏ các quảng cáo</string>
-    <string name="insufficient3dResourcesTitle">низькі ресурси...</string>
+    <string name="insufficient3dResourcesTitle">низькі ресурси…</string>
     <string name="insufficient3dResourcesMessage">Thiết bị này hiện không có đủ tài nguyên để làm rendering 3D, vui lòng xem xét khởi động lại.</string>
     <string name="showOtherHandles">Hiển thị các thanh khác</string>
     <string name="showPagerButtons">Hiển thị các nút máy nhắn tin</string>
@@ -68,7 +68,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="menu_help_online">Hỗ trợ trực tuyến</string>
     <string name="menu_help_tutorial">Hướng dẫn</string>
     <string name="tutStep0Title">Hướng dẫn</string>
-    <string name="tutStep0Text">Đối với những sai lầm sử dụng Hoàn tác. Kéo kế hoạch xung quanh bằng một ngón tay, phóng to bằng cách sử dụng tác vụ chụm pin. Hãy thử di chuyển kế hoạch bây giờ ... (Bạn có thể đóng / hiển thị hướng dẫn này bất kỳ lúc nào.)</string>
+    <string name="tutStep0Text">Đối với những sai lầm sử dụng Hoàn tác. Kéo kế hoạch xung quanh bằng một ngón tay, phóng to bằng cách sử dụng tác vụ chụm pin. Hãy thử di chuyển kế hoạch bây giờ … (Bạn có thể đóng / hiển thị hướng dẫn này bất kỳ lúc nào.)</string>
     <string name="tutStep10Text">Di chuyển ghế xung quanh, và thử xoay nó.</string>
     <string name="tutStep10Title">Thêm ghế - 3</string>
     <string name="tutStep11Text">Chạm vào nút 3D, và chế độ xem sẽ chuyển sang chế độ xem 3D.</string>
@@ -103,7 +103,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="tutStep8Title">Thêm ghế - 1</string>
     <string name="tutStep9Text">Nhấn lâu trên ghế, và nó sẽ được thêm vào kế hoạch của bạn.</string>
     <string name="tutStep9Title">Thêm ghế - 2</string>
-    <string name="tutStepFinishText">Tốt công việc, bây giờ bạn có thể đi nhìn vào cửa của bạn trong 3d? Hoặc cho các bức tường một số màu? Sau đó bạn có thể thấy nếu bạn làm việc ra làm thế nào để làm một bức ảnh của nhà bạn ...</string>
+    <string name="tutStepFinishText">Tốt công việc, bây giờ bạn có thể đi nhìn vào cửa của bạn trong 3d? Hoặc cho các bức tường một số màu? Sau đó bạn có thể thấy nếu bạn làm việc ra làm thế nào để làm một bức ảnh của nhà bạn …</string>
     <string name="tutStepFinishTitle">Hướng dẫn hoàn tất</string>
     <string name="addCameraPosition">Thêm vị trí máy ảnh</string>
     <string name="deleteCameraPosition">Xóa vị trí máy ảnh</string>

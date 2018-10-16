@@ -1866,28 +1866,30 @@ public class OBJLoader extends LoaderBase implements Loader {
 								fieldmBuffer.setAccessible(true);
 								byte[] mBuffer = (byte[]) fieldmBuffer.get(delegate); //IllegalAccessException
 
-							 	int textureFormat = Texture.RGBA;
-							 	int imageComponentFormat = ImageComponent.FORMAT_RGBA;
-							 	boolean byRef = true;
-							 	boolean yUp = true;
+								if (mBuffer != null) {
+									int textureFormat = Texture.RGBA;
+									int imageComponentFormat = ImageComponent.FORMAT_RGBA;
+									boolean byRef = true;
+									boolean yUp = true;
 
-								int width = delegate.getWidth();
-								int height = delegate.getHeight();
+									int width = delegate.getWidth();
+									int height = delegate.getHeight();
 
-								ByteBuffer buffer = ByteBuffer.wrap(mBuffer).order(ByteOrder.nativeOrder());
-								NioImageBuffer nioImageBuffer = new NioImageBuffer(width,height, NioImageBuffer.ImageType.TYPE_4BYTE_RGBA, buffer);
-								// Create texture from image
-								ImageComponent2D scaledImageComponents = new ImageComponent2D(imageComponentFormat, nioImageBuffer, byRef, yUp);
-								texture = new Texture2D(Texture.BASE_LEVEL, textureFormat, width, height);
-								texture.setImage(0, scaledImageComponents);
-								texture.setMinFilter(Texture.NICEST);// will cause mip maps to be used if auto generation enabled on device
-								texture.setMagFilter(Texture.NICEST);
-								// Keep in user data the URL of the texture image
-								texture.setUserData(textureImageUrl);
-								currentAppearance.setTexture(texture);
-							} catch (NoSuchFieldException e) {
+									ByteBuffer buffer = ByteBuffer.wrap(mBuffer).order(ByteOrder.nativeOrder());
+									NioImageBuffer nioImageBuffer = new NioImageBuffer(width, height, NioImageBuffer.ImageType.TYPE_4BYTE_RGBA, buffer);
+									// Create texture from image
+									ImageComponent2D scaledImageComponents = new ImageComponent2D(imageComponentFormat, nioImageBuffer, byRef, yUp);
+									texture = new Texture2D(Texture.BASE_LEVEL, textureFormat, width, height);
+									texture.setImage(0, scaledImageComponents);
+									texture.setMinFilter(Texture.NICEST);// will cause mip maps to be used if auto generation enabled on device
+									texture.setMagFilter(Texture.NICEST);
+									// Keep in user data the URL of the texture image
+									texture.setUserData(textureImageUrl);
+									currentAppearance.setTexture(texture);
+								}
+							} catch(NoSuchFieldException e){
 								//e.printStackTrace();
-							} catch (IllegalAccessException e) {
+							} catch(IllegalAccessException e){
 								//e.printStackTrace();
 							}
 

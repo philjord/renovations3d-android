@@ -110,7 +110,10 @@ public class JOptionPane
 				dialog.setMessage(Html.fromHtml(messageLessStyle, null, new ListTagHandler()));
 				dialog.setPositiveButton(closeText,  new DialogInterface.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog, int which) {dialog.dismiss();}});
+					public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+					}
+				});
 				if(!((Activity) context).isFinishing()) {
 					dialog.create().show();
 				}

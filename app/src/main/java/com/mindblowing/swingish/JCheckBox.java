@@ -2,13 +2,12 @@ package com.mindblowing.swingish;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.CheckBox;
 
 /**
  * Created by phil on 2/1/2017.
  */
 
-public class JCheckBox extends CheckBox
+public class JCheckBox extends android.support.v7.widget.AppCompatCheckBox
 {
 	public JCheckBox(Context context, String text)
 	{

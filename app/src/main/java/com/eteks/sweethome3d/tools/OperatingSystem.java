@@ -19,8 +19,6 @@
  */
 package com.eteks.sweethome3d.tools;
 
-import android.app.Activity;
-
 import com.eteks.sweethome3d.model.Home;
 
 import java.io.File;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;

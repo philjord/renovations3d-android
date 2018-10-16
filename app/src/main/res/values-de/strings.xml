@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Ziehe mit zwei Fingern, um den Plan zu bewegen, ohne zu ändern, was ausgewählt ist
 Doppelhahn Sie auf ein beliebiges Objekt, um es zu bearbeiten<br>
-Zwei Demo-Home-Dateien werden in Ihrem Download-Ordner, verwenden Sie Open ... im Menü. <br>
+Zwei Demo-Home-Dateien werden in Ihrem Download-Ordner, verwenden Sie Open … im Menü. <br>
 Sie können Ihren Browser verwenden, um direkt mehr Home-Dateien (.sh3d) aus dem Internet zu öffnen, zum Beispiel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
 Alternativ können Sie auch lange auf das Element drücken (es gibt keine Drag &amp; Drop).<br>
-Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren ...<br>
+Aus dieser Sicht können Sie Möbel Bibliotheken Katalog, wählen Sie Menü-> Import Möbel-Bibliothek importieren …<br>
    ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Dies ist eine Ansicht von allen Möbeln auf Ihrem Plan platziert.<br>
@@ -68,7 +68,7 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="menu_help_online">Onlinehilfe</string>
     <string name="menu_help_tutorial">Tutorial</string>
     <string name="tutStep0Title">Tutorial</string>
-    <string name="tutStep0Text">Bei Fehlern verwenden Rückgängig machen. Ziehen Sie den Plan mit einem Finger, zoomen, indem Sie die Pinch-Aktion verwenden. Versuche, den Plan jetzt zu bewegen ... (Du kannst dieses Tutorial jederzeit schließen / anzeigen).</string>
+    <string name="tutStep0Text">Bei Fehlern verwenden Rückgängig machen. Ziehen Sie den Plan mit einem Finger, zoomen, indem Sie die Pinch-Aktion verwenden. Versuche, den Plan jetzt zu bewegen … (Du kannst dieses Tutorial jederzeit schließen / anzeigen).</string>
     <string name="tutStep10Text">Bewege den Stuhl um und versuche es zu drehen.</string>
     <string name="tutStep10Title">Stuhl hinzufügen - 3</string>
     <string name="tutStep11Text">Tippen Sie auf die 3D-Schaltfläche, und die Ansicht wechselt zur 3D-Ansicht.</string>
@@ -107,7 +107,7 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="tutStep7Text">Bearbeiten Sie das neue Zimmer, indem Sie es doppelt klopfen, wählen Sie die Bodenstruktur, machen Sie es gefliest. Schließen Sie die Dialoge.</string>
     <string name="tutStep8Text">Zeigen Sie den Möbelkatalog, indem Sie den Pfeil drücken.</string>
     <string name="tutStep9Text">Lange Presse auf einen Stuhl, und es wird zu Ihrem Plan hinzugefügt werden.</string>
-    <string name="tutStepFinishText">Gute Arbeit, jetzt möchtest du vielleicht ein Zuhause aus einer Demo-Datei laden, Menü-> Datei-> Neu von Demo.\nSpäter könnten Sie den Fotogenerator in der 3D-Ansicht verwenden, um \"Foto erstellen ...\" zu erstellen.</string>
+    <string name="tutStepFinishText"><![CDATA[Gute Arbeit, jetzt möchtest du vielleicht ein Zuhause aus einer Demo-Datei laden, Menü-> Datei-> Neu von Demo.\nSpäter könnten Sie den Fotogenerator in der 3D-Ansicht verwenden, um \"Foto erstellen …\" zu erstellen.]]></string>
     <string name="tutorialWellDone">Gut gemacht!</string>
     <string name="share">Aktie</string>
     <string name="set_to_device_location">Geräteort verwenden</string>

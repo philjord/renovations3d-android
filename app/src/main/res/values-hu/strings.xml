@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Húzza két ujjal a terv mozgatásához anélkül, hogy megváltoztatná a kijelöltet<br>
 Dupla érintse meg bármelyik objektumot a szerkesztéshez<br>
-Két demo otthoni fájl lesz a letöltési mappában, a menüben használja a Megnyitás ... lehetőséget<br>
+Két demo otthoni fájl lesz a letöltési mappában, a menüben használja a Megnyitás … lehetőséget<br>
 Böngészőjével közvetlenül megnyithat több domaint (.sh3d) az internetről, például <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nyomja meg a Hozzáadás bútorok ikont elhelyezni a kiválasztott elemet bútorok rá a felülnézetben a helyszínen 0.0.<br>
 Másik lehetőség, hogy a hosszú nyomja meg az elem (nincs drag and drop).<br>
-Ebből a nézetből akkor importálni bútorok könyvtárak katalógusban válassza Menü-> Import bútorok könyvtár ...<br>
+Ebből a nézetből akkor importálni bútorok könyvtárak katalógusban válassza Menü-> Import bútorok könyvtár …<br>
    ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Ez a kilátás az összes bútor Jelenleg elhelyezni a tervet.<br>
@@ -67,7 +67,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="menu_help_online">Online segítség</string>
     <string name="menu_help_tutorial">oktatói</string>
     <string name="tutStep0Title">oktatói</string>
-    <string name="tutStep0Text">A hibákhoz használja a Visszavonást. Húzza át a tervet egy ujjal, nagyítsa fel a csúszást. Próbálja meg most áthelyezni a tervet ... (Bármikor lezárhatja / bemutathatja ezt a bemutatót.)</string>
+    <string name="tutStep0Text">A hibákhoz használja a Visszavonást. Húzza át a tervet egy ujjal, nagyítsa fel a csúszást. Próbálja meg most áthelyezni a tervet … (Bármikor lezárhatja / bemutathatja ezt a bemutatót.)</string>
     <string name="tutStep10Text">Mozgassa a szék körül, és próbálja forgatni.</string>
     <string name="tutStep10Title">Szék hozzáadása - 3</string>
     <string name="tutStep11Text">Érintse meg a 3D gombot, és a nézet a 3D nézetre vált.</string>
@@ -102,7 +102,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="tutStep8Title">Szék hozzáadása - 1</string>
     <string name="tutStep9Text">Hosszan nyomja meg a széket, és hozzáadódik a tervhez.</string>
     <string name="tutStep9Title">Add hozzá egy széket - 2</string>
-    <string name="tutStepFinishText">Jó munka, most szeretne egy otthont betölteni egy demófájlból, a Menü-> Fájl-> Új a demóból.\nKésőbb a fotó-generátort a 3D-s nézetben \"Fénykép készítése ...\"</string>
+    <string name="tutStepFinishText"><![CDATA[Jó munka, most szeretne egy otthont betölteni egy demófájlból, a Menü-> Fájl-> Új a demóból.\nKésőbb a fotó-generátort a 3D-s nézetben \"Fénykép készítése …\"]]></string>
     <string name="tutStepFinishTitle">A bemutató elkészült</string>
     <string name="addCameraPosition">Adja hozzá a kamera helyzetét</string>
     <string name="deleteCameraPosition">Törölje a kamera helyzetét</string>

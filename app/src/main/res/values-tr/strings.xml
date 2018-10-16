@@ -6,21 +6,21 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Seçilenleri değiştirmeden planı taşımak için iki parmağınızla sürükleyin. <br>
 Düzenlemek için herhangi bir nesneye iki kez hafifçe dokunun <br>
-İki demo ev dosyası indirme klasörünüzde olacak, menüde Aç ... komutunu kullanın. <br>
+İki demo ev dosyası indirme klasörünüzde olacak, menüde Aç … komutunu kullanın. <br>
 İnternetten daha fazla ev dosyasını (.sh3d) doğrudan açmak için tarayıcınızı kullanabilirsiniz, örneğin <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
 Alternatif olarak öğeye uzun basabilirsiniz (sürükleme ve bırakma yoktur).<br>
-Bu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz ...<br>
+Bu görünümde itibaren, mobilya kütüphaneleri katalog içe Menüsü-> Al mobilya kütüphanesi seçebilirsiniz …<br>
 	   ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Bu Halen planınıza yerleştirilmiş tüm mobilya görünümüdür.<br>
 Şimdilik burada yapabileceğiniz tek işlevi bir ürün görünürlüğü değiştirmektir.<br>
 ]]></string>
     <string name="welcometext_component3dview"><![CDATA[<html>
-Yukarıdan aşağıya doğru arıyorsanız, Çimdik kamera merkeze daha da yakınlaştıracaktır. <br>
+Yukarıdan aşağıya doğru arıyorsanız, Çimdik merkeze daha da yakınlaştıracaktır. <br>
 Ziyaret açısından baktıysanız, pinch seni ileri geri hareket ettirecek. <br>
-Kamera konumunu kamerayı ekle simgesiyle kaydedin, kamera kamera simgesiyle kamera konumuna gidin. <br>
+Kamera konumunu kamerayı ekle simgesiyle kaydedin, kamera simgesiyle kamera konumuna gidin. <br>
 Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <br>
 ]]></string>
     <string name="menu_deoptomize">Deoptomize 3d</string>
@@ -67,7 +67,7 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="menu_help_online">Çevrimiçi yardım</string>
     <string name="menu_help_tutorial">Eğitimi</string>
     <string name="tutStep0Title">Eğitimi</string>
-    <string name="tutStep0Text">Hatalar için Geri Al\'ı kullanın. Çimdik eylemini kullanarak planı tek bir parmağınızla sürükleyin, yakınlaştırın. Şimdi planı taşımayı deneyin ... (Bu öğreticiyi istediğiniz zaman kapatıp gösterebilirsiniz.)</string>
+    <string name="tutStep0Text">Hatalar için Geri Al\'ı kullanın. Çimdik eylemini kullanarak planı tek bir parmağınızla sürükleyin, yakınlaştırın. Şimdi planı taşımayı deneyin … (Bu öğreticiyi istediğiniz zaman kapatıp gösterebilirsiniz.)</string>
     <string name="tutStep10Text">Sandalyeyi dolaştırıp döndürmeyi deneyin.</string>
     <string name="tutStep10Title">Bir sandalye ekle - 3</string>
     <string name="tutStep11Text">3D düğmesine dokunun; görünüm, 3B görünümüne dönüşecektir.</string>
@@ -102,7 +102,7 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="tutStep8Title">Bir sandalye ekle - 1</string>
     <string name="tutStep9Text">Bir sandalyeye uzun bastığınızda planınıza eklenecektir.</string>
     <string name="tutStep9Title">Sandalyeyi ekle - 2</string>
-    <string name="tutStepFinishText">İyi iş, şimdi 3B\'de kapınıza bakabilir misiniz? Ya da duvarlara biraz renk veriyor musun? Daha sonra, evinizin fotoğrafını nasıl çekebileceğinizi öğrenebilirsiniz ...</string>
+    <string name="tutStepFinishText">İyi iş, şimdi 3B\'de kapınıza bakabilir misiniz? Ya da duvarlara biraz renk veriyor musun? Daha sonra, evinizin fotoğrafını nasıl çekebileceğinizi öğrenebilirsiniz …</string>
     <string name="tutStepFinishTitle">Öğretici Biten</string>
     <string name="addCameraPosition">Kamera konumunu ekle</string>
     <string name="deleteCameraPosition">Kamera konumunu sil</string>

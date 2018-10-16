@@ -45,7 +45,7 @@
                 android:id="@+id/bgiw_imageChoicePreviewComponent"
                 android:text="bgiw_imageChoicePreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
         </ScrollView>
 
@@ -90,7 +90,7 @@
                 android:id="@+id/bgiw_scalePreviewComponent"
                 android:text="bgiw_scalePreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
         </ScrollView>
        <!-- <TableLayout
@@ -169,7 +169,7 @@
                 android:id="@+id/bgiw_originPreviewComponent"
                 android:text="bgiw_originPreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
         </ScrollView>
 

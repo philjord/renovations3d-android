@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,6 @@ import android.widget.TextView;
 
 import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.sweethome3d.model.RecorderException;
 import com.mindblowing.swingish.ChangeListener;
 import com.mindblowing.swingish.DefaultComboBoxModel;
 import com.mindblowing.swingish.ItemListener;
@@ -770,7 +768,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		BufferedImage errorImage = new BufferedImage(
 				errorIcon.getIconWidth(), errorIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2D = (Graphics2D) errorImage.getGraphics();
-		errorIcon.paintIcon(this, g2D, 0, 0);
+		errorIcon.paintIcon(null, g2D, 0, 0);
 		g2D.dispose();
 		return errorImage;
 	}

@@ -1,7 +1,6 @@
 package com.mindblowing.swingish;
 
 import android.app.Activity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;

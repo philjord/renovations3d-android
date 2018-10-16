@@ -24,19 +24,12 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageButton;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 
 import com.eteks.sweethome3d.model.UserPreferences;
-import com.mindblowing.renovations3d.R;
-import com.mindblowing.swingish.ActionListener;
 import com.mindblowing.swingish.JButton;
 
 import java.beans.PropertyChangeEvent;
@@ -44,8 +37,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
 import javaawt.Color;
-import javaawt.Graphics2D;
-import javaawt.VMGraphics2D;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**

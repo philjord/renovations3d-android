@@ -6,13 +6,13 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Sleep met twee vingers om het plan te verplaatsen zonder te veranderen wat is geselecteerd. <br>
 Dubbeltik op elk object om het te bewerken. <br>
-Twee demo-thuisbestanden zijn in uw downloads-map, gebruik Open ... in het menu. <br>
+Twee demo-thuisbestanden zijn in uw downloads-map, gebruik Open … in het menu. <br>
 U kunt uw browser gebruiken om meer thuisbestanden (.sh3d) van het internet direct te openen, bijvoorbeeld <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
 Als alternatief kun je lang op het artikel (er is geen drag and drop).<br>
-Vanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek ...<br>
-	   ]]>\n</string>
+Vanuit deze weergave kunt u meubels bibliotheken catalogus importeren, selecteert u Menu-> meubilair Import bibliotheek …<br>
+	   \n]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Dit is een weergave van alle meubels Momenteel Geplaatst op uw plan.<br>
 Voor nu de enige functie die u hier kunt doen is om een items zichtbaarheid te wijzigen.<br>
@@ -67,7 +67,7 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="menu_help_online">Online hulp</string>
     <string name="menu_help_tutorial">Tutorial</string>
     <string name="tutStep0Title">Tutorial</string>
-    <string name="tutStep0Text">Bij fouten gebruikt u Ongedaan maken. Sleep het plan met een vinger, zoom met behulp van de knijpactie. Probeer het plan nu te verplaatsen ... (U kunt deze handleiding altijd sluiten / weergeven).</string>
+    <string name="tutStep0Text">Bij fouten gebruikt u Ongedaan maken. Sleep het plan met een vinger, zoom met behulp van de knijpactie. Probeer het plan nu te verplaatsen … (U kunt deze handleiding altijd sluiten / weergeven).</string>
     <string name="tutStep10Text">Verplaats de stoel rond en probeer het te draaien.</string>
     <string name="tutStep10Title">Voeg een stoel toe - 3</string>
     <string name="tutStep11Text">Tik op de 3D-knop en de weergave verandert in de 3D-weergave.</string>
@@ -102,7 +102,7 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="tutStep8Title">Voeg een stoel toe - 1</string>
     <string name="tutStep9Text">Lang druk op een stoel, en het wordt toegevoegd aan uw plan.</string>
     <string name="tutStep9Title">Voeg een stoel toe - 2</string>
-    <string name="tutStepFinishText">Goed werk, nu wil je misschien een huis laden vanuit een demobestand, Menu-> Bestand-> Nieuw van demo.\nLater kon je de fotogenerator in de 3D-weergave gebruiken om \"Foto maken ...\" te maken.</string>
+    <string name="tutStepFinishText"><![CDATA[Goed werk, nu wil je misschien een huis laden vanuit een demobestand, Menu-> Bestand-> Nieuw van demo.\nLater kon je de fotogenerator in de 3D-weergave gebruiken om \"Foto maken …\" te maken.]]></string>
     <string name="tutStepFinishTitle">Tutorial klaar</string>
     <string name="addCameraPosition">Voeg camera positie toe</string>
     <string name="deleteCameraPosition">Verwijder de camera positie</string>

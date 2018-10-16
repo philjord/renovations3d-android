@@ -41,7 +41,6 @@ import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JLabel;
 import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.swingish.JRadioButton;
-import com.mindblowing.swingish.JSpinnerJogDial;
 import com.mindblowing.swingish.JSpinner;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.mindblowing.swingish.ChangeListener;

@@ -6,13 +6,13 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Przeciągnij dwoma palcami, aby przenieść plan bez zmiany tego, co zostało wybrane. <br>
 Kliknij dwukrotnie na dowolnym obiekcie, aby go edytować. <br>
-Dwie pliki domowego demo będą znajdować się w folderze do pobrania, użyj Open ... w menu. <br>
+Dwie pliki domowego demo będą znajdować się w folderze do pobrania, użyj Open … w menu. <br>
 Możesz użyć swojej przeglądarki, aby bezpośrednio otworzyć więcej plików domowych (.sh3d) z Internetu, na przykład <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
 Możesz również nacisnąć długi element (nie ma przeciągania i upuszczania).<br>
-Z tego punktu widzenia można importować katalog biblioteki mebli, wybierz Menu-> biblioteki importu mebli ...<br>
-			     ]]>\n</string>
+Z tego punktu widzenia można importować katalog biblioteki mebli, wybierz Menu-> biblioteki importu mebli …<br>
+			     \n]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 To jest widok wszystkich mebli Obecnie umieszczone na planie.<br>
 Na razie jedyną funkcją można zrobić o to aby zmienić widoczność przedmiotów.<br>
@@ -68,7 +68,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="menu_help_online">Pomoc online</string>
     <string name="menu_help_tutorial">Seminarium</string>
     <string name="tutStep0Title">Seminarium</string>
-    <string name="tutStep0Text">Za błędy użyj funkcji Cofnij. Przeciągnij plan jednym palcem i powiększ zdjęcie, używając akcji naciągania. Spróbuj przenieść plan ... (Możesz zamknąć / pokazać ten samouczek w dowolnym momencie.)</string>
+    <string name="tutStep0Text">Za błędy użyj funkcji Cofnij. Przeciągnij plan jednym palcem i powiększ zdjęcie, używając akcji naciągania. Spróbuj przenieść plan … (Możesz zamknąć / pokazać ten samouczek w dowolnym momencie.)</string>
     <string name="tutStep10Text">Przesuń krzesło i spróbuj go obrócić.</string>
     <string name="tutStep10Title">Dodaj krzesło - 3</string>
     <string name="tutStep11Text">Dotknij przycisku 3D, a widok zmieni się na widok 3D.</string>
@@ -103,7 +103,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="tutStep8Title">Dodaj krzesło - 1</string>
     <string name="tutStep9Text">Długie naciśnięcie na krześle i zostanie dodane do planu.</string>
     <string name="tutStep9Title">Dodaj krzesło - 2</string>
-    <string name="tutStepFinishText">Dobra robota, możesz teraz załadować dom z pliku demonstracyjnego, Menu-> Plik-> Nowy z wersji demo.\nPóźniej możesz użyć generatora zdjęć w widoku 3D do \"Utwórz zdjęcie ...\"</string>
+    <string name="tutStepFinishText"><![CDATA[Dobra robota, możesz teraz załadować dom z pliku demonstracyjnego, Menu-> Plik-> Nowy z wersji demo.\nPóźniej możesz użyć generatora zdjęć w widoku 3D do \"Utwórz zdjęcie …\"]]></string>
     <string name="tutStepFinishTitle">Ukończony samouczek</string>
     <string name="addCameraPosition">Dodaj pozycję kamery</string>
     <string name="deleteCameraPosition">Usuń pozycję kamery</string>

@@ -39,17 +39,10 @@
 
 package org.jogamp.java3d.utils.image;
 
-import android.graphics.Bitmap;
-
 import org.jogamp.java3d.ImageComponent;
 import org.jogamp.java3d.ImageComponent2D;
-import org.jogamp.java3d.NioImageBuffer;
 import org.jogamp.java3d.Texture;
 import org.jogamp.java3d.Texture2D;
-
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import javaawt.image.BufferedImage;
 

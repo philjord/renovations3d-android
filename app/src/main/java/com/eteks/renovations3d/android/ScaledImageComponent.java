@@ -21,7 +21,6 @@ package com.eteks.renovations3d.android;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import javaawt.AlphaComposite;
@@ -41,7 +40,7 @@ import javaawt.image.BufferedImage;
  * Component displaying an image scaled to fit within its bound.
  * @author Emmanuel Puybaret 
  */
-public class ScaledImageComponent extends ImageView
+public class ScaledImageComponent extends android.support.v7.widget.AppCompatImageView
 {//extends JComponent {
   //private static final int MODEL_PREFERRED_SIZE = Math.round(300 * SwingTools.getResolutionScale());
 

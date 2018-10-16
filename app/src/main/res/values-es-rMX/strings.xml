@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Arrastre con dos dedos para mover el plan sin cambiar lo que está seleccionado<br>
 Toca dos veces en cualquier objeto para editarlo<br>
-Dos archivos de inicio de demostración estarán en su carpeta de descargas, utilice Abrir ... en el menú<br>
+Dos archivos de inicio de demostración estarán en su carpeta de descargas, utilice Abrir … en el menú<br>
 Puede utilizar su navegador para abrir directamente más archivos de inicio (.sh3d) desde Internet, por ejemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0.<br>
 Alternativamente, puede presionar largo sobre el elemento (no hay arrastrar y soltar).<br>
-Desde este punto de vista puede importar catálogo de las bibliotecas de muebles, seleccione Menú-> Importar biblioteca de muebles ...<br>
+Desde este punto de vista puede importar catálogo de las bibliotecas de muebles, seleccione Menú-> Importar biblioteca de muebles …<br>
      ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 Esta es una vista de todos los muebles Actualmente Colocado en su plan.<br>
@@ -66,10 +66,10 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="useChunkyHandles">Mostrar asideros pesados</string>
     <string name="showPagerButtons">Mostrar botones de localizador</string>
     <string name="showOtherHandles">Mostrar otras manijas</string>
-    <string name="menu_help_online">Ayuda en linea</string>
+    <string name="menu_help_online">Ayuda en línea</string>
     <string name="menu_help_tutorial">Tutorial</string>
     <string name="tutStep0Title">Tutorial</string>
-    <string name="tutStep0Text">Para errores use Deshacer. Arrastre el plan con un dedo, haga zoom utilizando la acción de pellizco. Trate de mover el plan ahora ... (Puede cerrar / mostrar este tutorial en cualquier momento.)</string>
+    <string name="tutStep0Text">Para errores use Deshacer. Arrastre el plan con un dedo, haga zoom utilizando la acción de pellizco. Trate de mover el plan ahora … (Puede cerrar / mostrar este tutorial en cualquier momento.)</string>
     <string name="tutStep10Text">Mueva la silla alrededor, e intente girarla.</string>
     <string name="tutStep10Title">Añadir una silla - 3</string>
     <string name="tutStep11Text">Pulse el botón 3D y la vista cambiará a la vista 3D.</string>
@@ -104,7 +104,7 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="tutStep8Title">Añadir una silla - 1</string>
     <string name="tutStep9Text">Prensa larga en una silla, y se agregará a su plan.</string>
     <string name="tutStep9Title">Añadir una silla - 2</string>
-    <string name="tutStepFinishText">Buen trabajo, ahora es posible que desee cargar una casa desde un archivo de demostración, Menú-> Archivo-> Nuevo desde la demostración. Más tarde, puede usar el generador de fotos en la vista 3D para \"Crear foto ...\"</string>
+    <string name="tutStepFinishText"><![CDATA[Buen trabajo, ahora es posible que desee cargar una casa desde un archivo de demostración, Menú-> Archivo-> Nuevo desde la demostración. Más tarde, puede usar el generador de fotos en la vista 3D para \"Crear foto …\"]]></string>
     <string name="tutStepFinishTitle">Tutorial Terminado</string>
     <string name="addCameraPosition">Añadir posición de cámara</string>
     <string name="deleteCameraPosition">Eliminar la posición de la cámara</string>

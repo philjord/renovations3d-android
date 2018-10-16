@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 用两根手指拖动移动计划，而不改变所选的内容。<br>
 双击任何对象进行编辑。<br>
-两个演示家庭文件将在您的下载文件夹中，在菜单中使用打开...点击。<br>
+两个演示家庭文件将在您的下载文件夹中，在菜单中使用打开…点击。<br>
 您可以使用浏览器从互联网直接打开更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
 或者，您可以长按项目（没有拖放）。<br>
-从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...<br>
+从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库…<br>
 	   ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 这是当前摆在你的计划中的所有家具的景色。<br>
@@ -67,7 +67,7 @@
     <string name="menu_help_online">网上帮助</string>
     <string name="menu_help_tutorial">教程</string>
     <string name="tutStep0Title">教程</string>
-    <string name="tutStep0Text">对于错误使用撤消。 用一根手指拖动计划，用缩小动作进行缩放。 现在尝试移动计划...（您可以随时关闭/显示本教程。）</string>
+    <string name="tutStep0Text">对于错误使用撤消。 用一根手指拖动计划，用缩小动作进行缩放。 现在尝试移动计划…（您可以随时关闭/显示本教程。）</string>
     <string name="tutStep10Text">移动椅子，并尝试旋转它。</string>
     <string name="tutStep10Title">添加椅子 - 3</string>
     <string name="tutStep11Text">点击3D按钮，视图将更改为3D视图。</string>

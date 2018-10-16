@@ -7,7 +7,7 @@ import android.widget.SeekBar;
  * Created by phil on 2/1/2017.
  */
 
-public class JSlider extends SeekBar
+public class JSlider extends android.support.v7.widget.AppCompatSeekBar
 {
 	private int min = 0;
 

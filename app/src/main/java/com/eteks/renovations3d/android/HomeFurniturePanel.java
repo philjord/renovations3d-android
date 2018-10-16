@@ -31,15 +31,12 @@ import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.security.AccessControlException;
 
-import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.mindblowing.swingish.ButtonGroup;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JButton;
 import com.mindblowing.swingish.JCheckBox;
 import com.mindblowing.swingish.JLabel;
-import com.mindblowing.swingish.JPanel;
 import com.mindblowing.swingish.JRadioButton;
-import com.mindblowing.swingish.JSpinnerJogDial;
 import com.mindblowing.swingish.JSpinner;
 import com.mindblowing.swingish.JTextField;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
@@ -51,8 +48,6 @@ import com.eteks.sweethome3d.viewcontroller.ModelMaterialsController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
 
 import com.mindblowing.renovations3d.R;
-
-import javaxswing.ImageIcon;
 
 /**
  * Home furniture editing panel.

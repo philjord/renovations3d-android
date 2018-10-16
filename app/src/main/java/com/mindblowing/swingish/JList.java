@@ -5,18 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.eteks.renovations3d.android.TextureChoiceComponent;
-import com.eteks.sweethome3d.model.CatalogTexture;
-import com.eteks.sweethome3d.model.CollectionEvent;
-import com.eteks.sweethome3d.model.CollectionListener;
-import com.eteks.sweethome3d.model.TexturesCatalog;
-import com.eteks.sweethome3d.model.TexturesCategory;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
-
-import javaawt.EventQueue;
 
 /**
  * Created by phil on 2/10/2017.

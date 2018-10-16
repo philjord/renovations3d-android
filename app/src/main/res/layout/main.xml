@@ -23,7 +23,6 @@
             android:id="@+id/lowerBannerAdView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/lower_banner_ad_unit_id"/>
     </LinearLayout>

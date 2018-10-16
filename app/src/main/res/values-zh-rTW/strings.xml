@@ -6,12 +6,12 @@
     <string name="welcometext_planview"><![CDATA[<html>
 用兩根手指拖動移動計劃，而不改變所選的內容。<br>
 雙擊任何對象進行編輯。<br>
-兩個演示家庭文件將在您的下載文件夾中，在菜單中使用打開...點擊。<br>
+兩個演示家庭文件將在您的下載文件夾中，在菜單中使用打開…點擊。<br>
 您可以使用瀏覽器從互聯網直接打開更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
 或者，您可以长按项目（没有拖放）。<br>
-从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库...<br>
+从这个观点可以导入家具图书馆目录中，选择菜单 - >导入家具库…<br>
 	   ]]></string>
     <string name="welcometext_furnitureview"><![CDATA[<html>
 这是当前摆在你的计划中的所有家具的景色。<br>
@@ -67,7 +67,7 @@
     <string name="menu_help_online">教學網站</string>
     <string name="menu_help_tutorial">教學</string>
     <string name="tutStep0Title">教學</string>
-    <string name="tutStep0Text">對於錯誤使用撤消。 用一根手指拖動計劃，用縮小動作進行縮放。 現在嘗試移動計劃...（您可以隨時關閉/顯示本教程。）</string>
+    <string name="tutStep0Text">對於錯誤使用撤消。 用一根手指拖動計劃，用縮小動作進行縮放。 現在嘗試移動計劃…（您可以隨時關閉/顯示本教程。）</string>
     <string name="tutStep10Text">移動椅子，並嘗試旋轉它。</string>
     <string name="tutStep10Title">添加椅子 - 3</string>
     <string name="tutStep11Text">點擊3D按鈕，視圖將更改為3D視圖。</string>

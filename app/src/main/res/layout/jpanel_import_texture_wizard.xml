@@ -45,7 +45,7 @@
                 android:id="@+id/itw_imageChoicePreviewComponent"
                 android:text="itw_imageChoicePreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
         </ScrollView>
 
@@ -78,7 +78,8 @@
                     android:id="@+id/itw_nameTextField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:importantForAutofill="no"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -104,7 +105,8 @@
                     android:id="@+id/itw_creatorTextField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:importantForAutofill="no"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -142,7 +144,7 @@
                 android:id="@+id/itw_attributesPreviewComponent"
                 android:text="itw_attributesPreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
         </ScrollView>
 

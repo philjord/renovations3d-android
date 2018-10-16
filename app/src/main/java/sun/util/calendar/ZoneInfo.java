@@ -27,12 +27,7 @@ package sun.util.calendar;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 

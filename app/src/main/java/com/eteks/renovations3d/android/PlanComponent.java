@@ -1326,8 +1326,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 							if(mActivePointerId == pointerId) {
 								// pan operation wants the move to be div scale as moveview does a multiply, so...
 								moveView(-dx / s, -dy / s);
-								System.out.println("1moveView(-dx / s, -dy / s) " + (-dx / s) + ", " + (-dy / s));
-								System.out.println("pointer count " + ev.getPointerCount());
 								mLastTouchX = x;
 								mLastTouchY = y;
 							}

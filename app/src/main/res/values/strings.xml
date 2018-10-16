@@ -6,7 +6,7 @@
     <string name="welcometext_planview"><![CDATA[<html>
 Drag with two fingers to move the plan without changing what is selected.<br>
 Double tap on any object to edit it.<br>
-Two demo home files will be in your downloads folder, use Open... in the menu. <br>
+Two demo home files will be in your downloads folder, use Open… in the menu. <br>
 You can use your browser to directly open more home files (.sh3d) from the internet, for example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>
@@ -74,7 +74,7 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="deleteCameraPosition">Delete camera position</string>
     <string name="tutorialWellDone">Well done!</string>
     <string name="tutStep0Title">Tutorial</string>
-    <string name="tutStep0Text">For mistakes use Undo.  Drag the plan around with one finger, zoom by using the pinch action. Try moving the plan now...  (You can close/show this tutorial anytime.)</string>
+    <string name="tutStep0Text">For mistakes use Undo.  Drag the plan around with one finger, zoom by using the pinch action. Try moving the plan now…  (You can close/show this tutorial anytime.)</string>
     <string name="tutStep1Title">Create some walls - 1</string>
     <string name="tutStep1Text">Select the \"Create walls\" tool from the Tool Selector.</string>
     <string name="tutStep2Title">Create some walls - 2</string>
@@ -110,7 +110,7 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="tutStep17Title">Add a door – 4</string>
     <string name="tutStep17Text">Drag the door onto a wall, notice that it automatically fits itself to the wall.</string>
     <string name="tutStepFinishTitle">Tutorial Finished</string>
-    <string name="tutStepFinishText">Good work, now you might like to load a home from a demo file, Menu->File->New from demo.\nLater you could use the photo generator in the 3D view to \"Create photo...\"</string>
+    <string name="tutStepFinishText"><![CDATA[Good work, now you might like to load a home from a demo file, Menu->File->New from demo.\nLater you could use the photo generator in the 3D view to \"Create photo…\"]]></string>
     <string name="share">Share</string>
     <string name="set_to_device_location">Use device location</string>
     <string name="menu_privacy">Privacy</string>

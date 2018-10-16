@@ -21,7 +21,6 @@ package com.eteks.sweethome3d.j3d;
 
 import javaawt.Color;
 import javaawt.EventQueue;
-import javaawt.Graphics;
 import javaawt.Graphics2D;
 import javaawt.RenderingHints;
 import javaawt.TexturePaint;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

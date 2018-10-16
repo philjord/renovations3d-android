@@ -35,7 +35,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.FileContentManager;
-import com.eteks.sweethome3d.io.ContentRecording;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
@@ -58,10 +57,8 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -511,7 +511,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			boolean enable = true;
 			for (Library lib : libs)
 			{
-				if (lib.getId().equals(importInfo.id))
+				if (lib.getId() != null && lib.getId().equals(importInfo.id))
 				{
 					enable = false;
 					break;

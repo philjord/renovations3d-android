@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/furnitureAdd"
-        android:text="Add furniture"
+        android:title="Add furniture"
         android:icon="@drawable/furniture_add"
-        android:showAsAction="always"
-        />
+        android:showAsAction="always"/>
     <item android:id="@+id/import_furniture_lib"
           android:title="@string/importFurnitureLib"
           android:showAsAction="ifRoom">
@@ -26,12 +25,12 @@
     </item>
     <item
         android:id="@+id/importTexture"
-        android:text="Import Texture"
+        android:title="Import Texture"
         android:showAsAction="never"
         />
     <item
         android:id="@+id/importFurniture"
-        android:text="Import Furniture"
+        android:title="Import Furniture"
         android:showAsAction="never"
         />
 </menu>

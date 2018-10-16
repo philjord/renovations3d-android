@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -246,7 +245,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				tv2.setTextColor(Color.BLACK);
 				tv2.setPadding(10, 10, 10, 10);
 				tv2.setGravity(Gravity.CENTER);
-				tv2.setText("" + String.format("%.2f", piece.getWidth()));
+				tv2.setText(String.format("%.2f", piece.getWidth()));
 				tv2.setWidth(widthsPx[3]);
 				tv2.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv2);
@@ -303,7 +302,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				tv8.setTextColor(Color.BLACK);
 				tv8.setPadding(10, 10, 10, 10);
 				tv8.setGravity(Gravity.CENTER);
-				tv8.setText("" + piece.getCreator());
+				tv8.setText(piece.getCreator());
 				tv8.setWidth(widthsPx[9]);
 				tv8.setOnClickListener(tableSelectionListener);
 				tableRow.addView(tv8);
@@ -328,7 +327,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		}
 	}
 
-	private class VisibilityCheckBox extends CheckBox
+	private class VisibilityCheckBox extends android.support.v7.widget.AppCompatCheckBox
 	{
 		public HomePieceOfFurniture piece;
 		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece)

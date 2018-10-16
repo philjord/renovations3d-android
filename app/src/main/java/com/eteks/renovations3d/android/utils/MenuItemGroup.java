@@ -3,7 +3,6 @@ package com.eteks.renovations3d.android.utils;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;

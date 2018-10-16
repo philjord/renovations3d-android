@@ -206,7 +206,8 @@
                     android:id="@+id/ifw_nameTextField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:importantForAutofill="no"/>
             </TableRow>
 
             <TableRow>
@@ -235,7 +236,8 @@
                     android:id="@+id/ifw_creatorTextField"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:importantForAutofill="no"/>
             </TableRow>
         </TableLayout>
 
@@ -445,7 +447,7 @@
             <ImageView
                 android:id="@+id/ifw_iconPreviewComponent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="ifw_iconPreviewComponent"
                 />
         </ScrollView>
