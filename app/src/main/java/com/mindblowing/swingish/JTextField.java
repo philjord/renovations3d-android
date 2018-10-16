@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -11,7 +12,7 @@ import android.widget.TextView;
  * Note these are single line and have a done button that hides them
  */
 
-public class JTextField extends android.support.v7.widget.AppCompatEditText
+public class JTextField extends EditText
 {
 
 	public JTextField(Context context)

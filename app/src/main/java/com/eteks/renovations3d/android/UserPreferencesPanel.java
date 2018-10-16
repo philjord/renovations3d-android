@@ -793,7 +793,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  return imageView;
 	  }
 
-	  private class WideImageView extends android.support.v7.widget.AppCompatImageView {
+	  private class WideImageView extends ImageView {
 		  private VMBufferedImage patternImage;
 
 		  public WideImageView(Context context) {

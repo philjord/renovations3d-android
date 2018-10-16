@@ -2,12 +2,13 @@ package com.mindblowing.swingish;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.RadioButton;
 
 /**
  * Created by phil on 2/1/2017.
  */
 
-public class JRadioButton extends android.support.v7.widget.AppCompatRadioButton
+public class JRadioButton extends RadioButton
 {
 
 	public JRadioButton(Context context, String text)

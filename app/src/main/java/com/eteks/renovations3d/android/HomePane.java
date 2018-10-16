@@ -3596,7 +3596,7 @@ public class HomePane implements HomeView
 		{
 			final HomeDescriptor home = this.getItem(position);
 			final Icon icon = IconManager.getInstance().getIcon(home.getIcon(), iconWidthPx * 3 / 4, null);
-			ImageView ret = new android.support.v7.widget.AppCompatImageView(getContext())
+			ImageView ret = new ImageView(getContext())
 			{
 				public void onDraw(Canvas canvas)
 				{

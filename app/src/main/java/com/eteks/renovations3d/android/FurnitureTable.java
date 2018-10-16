@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -327,7 +328,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		}
 	}
 
-	private class VisibilityCheckBox extends android.support.v7.widget.AppCompatCheckBox
+	private class VisibilityCheckBox extends CheckBox
 	{
 		public HomePieceOfFurniture piece;
 		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece)

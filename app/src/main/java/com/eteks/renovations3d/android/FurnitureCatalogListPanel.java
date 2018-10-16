@@ -679,7 +679,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	}
 
-	class FurnitureImageView extends android.support.v7.widget.AppCompatImageView
+	class FurnitureImageView extends ImageView
 	{
 		private CatalogPieceOfFurniture catalogPieceOfFurniture;
 

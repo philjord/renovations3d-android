@@ -317,7 +317,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
   }
 
 
-	private class ArrowStyleImageView extends  android.support.v7.widget.AppCompatImageView
+	private class ArrowStyleImageView extends ImageView
 	{
 		private ArrowsStyle arrowsStyle;
 		public ArrowStyleImageView(Context context)
@@ -373,7 +373,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 		}
 	}
 
-	public static class PolylineJoinStyleImageView extends  android.support.v7.widget.AppCompatImageView
+	public static class PolylineJoinStyleImageView extends ImageView
 	{
 		private Polyline.JoinStyle joinStyle;
 
@@ -419,7 +419,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 
 
 	}
-	private class PolylineDashStyleImageView extends android.support.v7.widget.AppCompatImageView
+	private class PolylineDashStyleImageView extends ImageView
 	{
 		private Polyline.DashStyle dashStyle;
 		public PolylineDashStyleImageView(Context context)

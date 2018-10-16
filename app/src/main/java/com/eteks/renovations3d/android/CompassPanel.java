@@ -347,7 +347,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     final SpinnerNumberModel northDirectionSpinnerModel = new SpinnerModuloNumberModel(0, 0, 360, 5);
     this.northDirectionSpinner = new AutoCommitSpinnerJogDial(activity, northDirectionSpinnerModel);
     northDirectionSpinnerModel.setValue(new Integer(Math.round(controller.getNorthDirectionInDegrees())));
-    this.northDirectionComponent = new android.support.v7.widget.AppCompatImageView(activity){//JComponent() {
+    this.northDirectionComponent = new ImageView(activity){//JComponent() {
 		public void onDraw(Canvas canvas)
 		{
 

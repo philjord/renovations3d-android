@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * Created by phil on 1/27/2017.
  */
 
-public class JComboBox extends android.support.v7.widget.AppCompatSpinner
+public class JComboBox extends Spinner
 {
 	private DefaultComboBoxModel dcbm;
 
