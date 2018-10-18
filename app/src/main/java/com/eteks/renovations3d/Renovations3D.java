@@ -31,7 +31,6 @@ import com.mindblowing.swingish.JOptionPane;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.io.AutoRecoveryManager;
 import com.eteks.sweethome3d.io.FileUserPreferences;
-import com.eteks.sweethome3d.io.HomeFileRecorder;
 import com.eteks.sweethome3d.model.CollectionEvent;
 import com.eteks.sweethome3d.model.CollectionListener;
 import com.eteks.sweethome3d.model.Home;
@@ -122,12 +121,12 @@ public class Renovations3D extends HomeApplication {
 	}
 
 	private void languageSetOnFirstUse() {
-		SharedPreferences settings = parentActivity.getSharedPreferences(parentActivity.PREFS_NAME, 0);
-		boolean languageSetOnFirstUse = settings.getBoolean(parentActivity.LANGUAGE_SET_ON_FIRST_USE, false);
+		SharedPreferences settings = parentActivity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
+		boolean languageSetOnFirstUse = settings.getBoolean(Renovations3DActivity.LANGUAGE_SET_ON_FIRST_USE, false);
 
 		if (!languageSetOnFirstUse) {
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean(parentActivity.LANGUAGE_SET_ON_FIRST_USE, true);
+			editor.putBoolean(Renovations3DActivity.LANGUAGE_SET_ON_FIRST_USE, true);
 			editor.apply();
 			EventQueue.invokeLater(new Runnable() {
 				@Override

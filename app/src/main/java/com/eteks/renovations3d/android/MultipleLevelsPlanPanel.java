@@ -408,13 +408,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
 
 		updateToolNames();
-		toolSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.planToolSelectSpinner));
+		toolSpinner = (Spinner) menu.findItem(R.id.planToolSelectSpinner).getActionView();
 		toolSpinner.setPadding(toolSpinner.getPaddingLeft(), 0, toolSpinner.getPaddingRight(), toolSpinner.getPaddingBottom());
 		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		if (toolSpinnerControl != null)
 			toolSpinnerControl.setSpinner(toolSpinner, toolNames, toolIcon);
 
-		levelsSpinner = (Spinner) MenuItemCompat.getActionView(menu.findItem(R.id.levelsSpinner));
+		levelsSpinner = (Spinner) menu.findItem(R.id.levelsSpinner).getActionView();
 		// no icons do not need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
 		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		if (levelSpinnerControl != null)

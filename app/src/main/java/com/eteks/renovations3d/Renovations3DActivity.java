@@ -1305,7 +1305,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private void locationPermission(boolean granted)
 	{
-		this.locationPermission = true;
+		locationPermission = true;
 		this.adMobManager.locationPermission(granted);
 	}
 

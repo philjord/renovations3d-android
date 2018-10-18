@@ -130,7 +130,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 			  int buttonWidth = getWidth();
 			  int x = 0;
 			  int y = 0;
-			  Graphics2D g = new VMGraphics2D(canvas);
+			  Graphics2D g2D = new VMGraphics2D(canvas);
 			 // g.setColor(Color.BLACK);
 			 // g.drawRect(x + 2, y + 2, buttonWidth - 4, iconHeight - 4);
 
@@ -145,14 +145,13 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 				  Icon icon = IconManager.getInstance().getIcon(
 						  texture.getImage(), iconHeight - 6, null);//TextureChoiceComponent.this);
 				  if (icon.getIconWidth() != icon.getIconHeight()) {
-					  Graphics2D g2D = (Graphics2D)g;
 					  AffineTransform previousTransform = g2D.getTransform();
 					  g2D.translate(x + 3 + ((buttonWidth/2) - (iconHeight/2)), y + 3);
 					  g2D.scale((float)icon.getIconHeight() / icon.getIconWidth(), 1);
 					  icon.paintIcon(null, g2D, 0, 0);
 					  g2D.setTransform(previousTransform);
 				  } else {
-					  icon.paintIcon(null, g, x + 3 + ((buttonWidth/2) - (iconHeight/2)), y + 3);
+					  icon.paintIcon(null, g2D, x + 3 + ((buttonWidth/2) - (iconHeight/2)), y + 3);
 				  }
 			  }
 		  }

@@ -90,7 +90,7 @@ public class ImageAcquireManager
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 
 		// we will get teh file path back in teh return but we might still be destroyed so we need to record the destination
-		SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+		SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("mCurrentPhotoPath", "");
 		editor.putString("imageDestination", imageDestination.name());
@@ -125,7 +125,7 @@ public class ImageAcquireManager
 
 			// I don't seem to get the save instance state or onPause calls, so if I have a photo file path then I assume this might destroy
 			// to get the camera running, so I need to save the destination of the photo for a restart
-			SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+			SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("mCurrentPhotoPath", mCurrentPhotoPath != null ? mCurrentPhotoPath : "");
 			editor.putString("imageDestination", imageDestination.name());
@@ -178,7 +178,7 @@ public class ImageAcquireManager
 				{
 					if (data == null)
 					{
-						SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+						SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 						// first case camera returns no data, but we have the file pointer in a member field so use that
 						if (mCurrentPhotoPath != null)
 						{
@@ -255,7 +255,7 @@ public class ImageAcquireManager
 
 						if( imageDestination == null )
 						{
-							SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+							SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 							try
 							{
 								imageDestination = Destination.valueOf(settings.getString("imageDestination", ""));

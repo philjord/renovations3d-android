@@ -133,7 +133,7 @@ public class Tutorial
 		for (int i = 0; i < tutorialSteps.length; i++)
 			tutorialSteps[i].id = i;
 
-		SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+		SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 		int currentStepIdx = settings.getInt(PREF_TUTORIAL_CURRENT_STEP, 0);
 		tutorialSteps[currentStepIdx].stepStarted(false);
 
@@ -167,7 +167,7 @@ public class Tutorial
 			Renovations3DActivity.logFireBaseContent("Tutorial hidden");
 		}
 
-		SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+		SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(PREF_TUTORIAL_IS_ENABLED, enable);
 		editor.apply();
@@ -238,7 +238,7 @@ public class Tutorial
 			prevButton.setEnabled(true);
 			skipButton.setEnabled(true);
 
-			SharedPreferences settings = activity.getSharedPreferences(activity.PREFS_NAME, 0);
+			SharedPreferences settings = activity.getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putInt(PREF_TUTORIAL_CURRENT_STEP, id);
 			editor.apply();

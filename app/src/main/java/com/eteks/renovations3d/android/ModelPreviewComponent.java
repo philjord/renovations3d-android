@@ -923,8 +923,7 @@ public class ModelPreviewComponent extends JPanel {
 			  }
 
 			  Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-			  VMBufferedImage img = new VMBufferedImage(bm);
-			  return img;
+			  return new VMBufferedImage(bm);
 		  }
 	  }
 	  return null;

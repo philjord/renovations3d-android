@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:ads="http://schemas.android.com/apk/res-auto"
-                xmlns:mobfox="http://schemas.android.com/apk/lib/com.mobfox.sdk"
                 android:id="@+id/mainLayout"
                 android:orientation="vertical"
                 android:padding="0px"

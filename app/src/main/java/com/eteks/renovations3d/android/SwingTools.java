@@ -56,8 +56,7 @@ import javaxswing.ImageIcon;
  * Gathers some useful tools for Swing.
  * @author Emmanuel Puybaret and Philip Jordan
  */
-public class SwingTools
-{
+public class SwingTools {
 	// Borders for focused views
 	//private static Border unfocusedViewBorder;
 	//private static Border focusedViewBorder;
@@ -79,8 +78,7 @@ public class SwingTools
 	}
 
 
-	public static Point convertPoint(JComponent from, int x, int y, JComponent to)
-	{
+	public static Point convertPoint(JComponent from, int x, int y, JComponent to) {
 		int[] fromCoord = new int[2];
 		int[] toCoord = new int[2];
 		if(from.getView()!=null)
@@ -88,14 +86,11 @@ public class SwingTools
 		if(to.getView()!=null)
 		to.getView().getLocationOnScreen(toCoord);
 
-		Point toPoint = new Point(fromCoord[0] - toCoord[0] + x,
+		return new Point(fromCoord[0] - toCoord[0] + x,
 				fromCoord[1] - toCoord[1] + y);
-
-		return toPoint;
 	}
 
-	public static Rect convertRect(Rect fromRect, View fromView, View toView)
-	{
+	public static Rect convertRect(Rect fromRect, View fromView, View toView) {
 		int[] fromCoord = new int[2];
 		int[] toCoord = new int[2];
 		if(fromView!=null)
@@ -106,10 +101,8 @@ public class SwingTools
 		int xShift = fromCoord[0] - toCoord[0];
 		int yShift = fromCoord[1] - toCoord[1];
 
-		Rect toRect = new Rect(fromRect.left + xShift, fromRect.top + yShift,
+		return new Rect(fromRect.left + xShift, fromRect.top + yShift,
 				fromRect.right + xShift, fromRect.bottom + yShift);
-
-		return toRect;
 	}
 
 

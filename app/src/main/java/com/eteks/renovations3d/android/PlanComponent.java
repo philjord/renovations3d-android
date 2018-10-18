@@ -617,9 +617,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		// Now determine a finger interface size for the indicators
 		//used for isItemSelectedAt, getSelectablesItesmAt, furnitureOnWall, various magnetized calls
-		controller.PIXEL_MARGIN = 2 * (int)(densityScale * 3);
-		controller.INDICATOR_PIXEL_MARGIN = 5 * (int)(densityScale * 3);// for selection handle touching and polyline resize and room resize
-		controller.WALL_ENDS_PIXEL_MARGIN = 2 * (int)(densityScale * 3);// just for wall start or end welding together
+		PlanController.PIXEL_MARGIN = 2 * (int)(densityScale * 3);
+		PlanController.INDICATOR_PIXEL_MARGIN = 5 * (int)(densityScale * 3);// for selection handle touching and polyline resize and room resize
+		PlanController.WALL_ENDS_PIXEL_MARGIN = 2 * (int)(densityScale * 3);// just for wall start or end welding together
 
 		MARGIN_PX = (int) (MARGIN_DP * densityScale + 0.5f);
 
@@ -1279,7 +1279,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						float modelX = convertXPixelToModel((int)x);
 						float modelY = convertYPixelToModel((int)y);
 						// add some margin so the handles can be used (note this cause odd behavior right next ot a selected item)
-						float margin = (float)PlanComponent.this.controller.INDICATOR_PIXEL_MARGIN / PlanComponent.this.controller.getScale();
+						float margin = (float) PlanController.INDICATOR_PIXEL_MARGIN / PlanComponent.this.controller.getScale();
 						List<Selectable> itemsUnderTouch = PlanComponent.this.controller.getSelectableItemsIntersectingRectangle(modelX-margin,modelY-margin, modelX+margin, modelY+margin );
 						lastDownTouchedSelections = false;
 						// contains any
