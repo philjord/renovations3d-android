@@ -1278,9 +1278,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						// have we just touched down in the selected items? If so we need to record so a move item occurs when the mouse move arrives
 						float modelX = convertXPixelToModel((int)x);
 						float modelY = convertYPixelToModel((int)y);
-						// add some margin so the handles can be used (note this cause odd behavior right next ot a selected item)
-						float margin = (float) PlanController.INDICATOR_PIXEL_MARGIN / PlanComponent.this.controller.getScale();
-						List<Selectable> itemsUnderTouch = PlanComponent.this.controller.getSelectableItemsIntersectingRectangle(modelX-margin,modelY-margin, modelX+margin, modelY+margin );
+
+						List<Selectable> itemsUnderTouch = controller.getSelectableItemsAt(modelX, modelY );
 						lastDownTouchedSelections = false;
 						// contains any
 						for( Selectable s : itemsUnderTouch) {
@@ -1289,6 +1288,41 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 								break;
 							}
 						}
+
+						// check for handles
+						if (controller.getRotatedLabelAt(modelX, modelY) != null
+							|| controller.getYawRotatedCameraAt(modelX, modelY) != null
+							|| controller.getPitchRotatedCameraAt(modelX, modelY) != null
+							|| controller.getElevatedLabelAt(modelX, modelY) != null
+							|| controller.getElevatedCameraAt(modelX, modelY) != null
+							|| controller.getRoomNameAt(modelX, modelY) != null
+							|| controller.getRoomRotatedNameAt(modelX, modelY) != null
+							|| controller.getRoomAreaAt(modelX, modelY) != null
+							|| controller.getRoomRotatedAreaAt(modelX, modelY) != null
+							|| controller.getResizedDimensionLineStartAt(modelX, modelY) != null
+							|| controller.getResizedDimensionLineEndAt(modelX, modelY) != null
+							|| controller.getWidthAndDepthResizedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getResizedWallStartAt(modelX, modelY) != null
+							|| controller.getResizedWallEndAt(modelX, modelY) != null
+							|| controller.getResizedRoomAt(modelX, modelY) != null
+							|| controller.getOffsetDimensionLineAt(modelX, modelY) != null
+							|| controller.getResizedPolylineAt(modelX, modelY) != null
+							|| controller.getPitchRotatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getRollRotatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getModifiedLightPowerAt(modelX, modelY) != null
+							|| controller.getHeightResizedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getRotatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getElevatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getPieceOfFurnitureNameAt(modelX, modelY) != null
+							|| controller.getPieceOfFurnitureRotatedNameAt(modelX, modelY) != null
+							|| controller.getRotatedCompassAt(modelX, modelY) != null
+							|| controller.getResizedCompassAt(modelX, modelY) != null )
+						{
+							lastDownTouchedSelections = true;
+						}
+
+
+
 
 						// this will be fired on a move or an up or another single down
 						potentialSinglePress = MotionEvent.obtain(ev); //instead of mousePressed(v, ev);
@@ -1377,6 +1411,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			}
 			return true;
 		}
+
 
 
 		public void mousePressed(View v, MotionEvent ev) {

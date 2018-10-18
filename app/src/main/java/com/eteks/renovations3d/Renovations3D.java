@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.android.HomePane;
+import com.eteks.sweethome3d.io.HomeFileRecorder;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.swingish.JOptionPane;
 import com.eteks.renovations3d.j3d.Component3DManager;
