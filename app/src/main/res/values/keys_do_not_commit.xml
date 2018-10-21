@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="pub_key" translatable="false">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtjvt4aM4KvVMr7KKpFqexbsLc56boqdl6IuhQhwf2itBdMVas1rmexcEiaq7iyNcOYGTPCTTNjT5w4sLyYyarcVPw5jFTvR9tuSGZraSLcP7lnP0CZe7uV9efc0WrU51F67bsGPCI2L+oebTtasX1yDR7HI13JGjyCbcy+T/NkKRcCVlLFf1r6E+9PGypwjrQw6iQ2sS8yFLWKrcnDNCatU/0Cchr1Ftc5CT5ky8fe9h11rd/yAU9Kofj6s7+L7vkK4jnn8pQ5Lz52t7ZOo/62Q6RGptD5OCRxIZYElvDTJHWPKZZH83loOKwEDqoyG+QEdvs86k62MawDypZsCPzQIDAQAB</string>
-    <string name="testad" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="lower_banner_ad_unit_id" translatable="false">ca-app-pub-7177705441403385/5503621354</string>
-</resources>
