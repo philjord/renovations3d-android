@@ -5,42 +5,56 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by phil on 2/10/2017.
  */
 
-public class JList extends ListView
-{
+public class JList extends ListView {
 	private AbstractListModel listModel;
-	public JList(Context context, AbstractListModel listModel)
-	{
+	public JList(Context context, AbstractListModel listModel) {
 		super(context);
 		this.listModel = listModel;
 		listModel.list = this;
 	}
 
-	/**
-	* for checkable selection to occur ou must call  this with
-	 * JList.ListSelectionModel.SINGLE_SELECTION
-	 */
-	public void setSelectionMode(int selectionMode)
-	{
-
-		if(selectionMode == JList.ListSelectionModel.SINGLE_SELECTION)
-			setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+	public AbstractListModel getModel() {
+		return listModel;
 	}
 
-	public void setCellRenderer(ListAdapter cellRenderer)
-	{
+	/**
+	* for checkable selection to occur you must call this with
+	 * JList.ListSelectionModel.SINGLE_SELECTION
+	 */
+	public void setSelectionMode(int selectionMode) {
+		if(selectionMode == JList.ListSelectionModel.SINGLE_SELECTION) {
+			setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		} else {
+			setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		}
+
+	}
+
+	public void setCellRenderer(ListAdapter cellRenderer) {
 		this.setAdapter(cellRenderer);
+	}
+
+	public int[] getSelectedIndices() {
+		this.getCheckedItemCount();
+		this.getCheckedItemPositions();
+
+		//TODO: how do we implement this?
+		//TODO:! ok I've had a pretty poor quality of selection vs activated time to sort it out for JLIst
+		//https://stackoverflow.com/questions/11504860/what-is-the-difference-between-the-states-selected-checked-and-activated-in-and
+		return new int[] {this.getSelectedItemPosition()};
 	}
 
 	public static class ListSelectionModel
 	{
-
 		public static final int SINGLE_SELECTION = 0;
+		public static final int MULTIPLE_INTERVAL_SELECTION = 1;
 	}
 
 	/**
@@ -48,17 +62,19 @@ public class JList extends ListView
 	 */
 	public static abstract class AbstractListModel
 	{
+		// for the JList itself to set a reference when using this model
+		JList list;
+
+		ArrayList<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
+
 		public abstract Object getElementAt(int index);
 
 		public abstract int getSize();
 
 		public abstract List toList();
 
-		// for the JList itself to set a reference when using this model
-		JList list;
 		public void fireContentsChanged(Object source, int start, int end)
 		{
-			//TODO: tell people about it? or just update renderererer
 			if(list != null)
 			{
 				if(list.getAdapter() instanceof ArrayAdapter)
@@ -69,6 +85,14 @@ public class JList extends ListView
 					list.postInvalidate();
 				}
 			}
+
+			for(ListDataListener  ldl : listDataListeners) {
+				ldl.contentsChanged(null);
+			}
+		}
+
+		public void addListDataListener(ListDataListener listener) {
+			listDataListeners.add(listener);
 		}
 	}
 
@@ -93,5 +117,17 @@ public class JList extends ListView
 		{
 			return data;
 		}
+	}
+
+
+	public interface ListDataListener {
+		public void contentsChanged(ListDataEvent ev) ;
+
+		public void intervalRemoved(ListDataEvent ev);
+
+		public void intervalAdded(ListDataEvent ev);
+	}
+	public interface ListDataEvent {
+
 	}
 }

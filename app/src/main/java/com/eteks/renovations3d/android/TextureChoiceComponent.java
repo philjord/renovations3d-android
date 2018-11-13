@@ -91,16 +91,15 @@ import javaxswing.Icon;
  * on this button a dialog appears to let him choose an other texture.
  */
 public class TextureChoiceComponent extends JButton implements TextureChoiceView {
-  private final UserPreferences preferences;
 
 	private Activity activity;
+	private final UserPreferences preferences;
 
   /**
    * Creates a texture button.
    */
   public TextureChoiceComponent(final UserPreferences preferences,
-                                final TextureChoiceController controller,
-  								final Activity activity) {
+                                final TextureChoiceController controller, final Activity activity) {
 	  super(activity, "");
 	  this.activity = activity;
     this.preferences = preferences;
@@ -267,9 +266,9 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     //private CatalogItemToolTip      toolTip;
 
 	  private Activity activity;
+
     public TexturePanel(UserPreferences preferences,
-                        TextureChoiceController controller,
-						Activity activity) {
+                        TextureChoiceController controller, Activity activity) {
 			super(preferences, activity, R.layout.dialog_texturechoice);
 			this.activity = activity;
       this.controller = controller;

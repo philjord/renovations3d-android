@@ -1290,39 +1290,23 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						}
 
 						// check for handles
-						if (controller.getRotatedLabelAt(modelX, modelY) != null
-							|| controller.getYawRotatedCameraAt(modelX, modelY) != null
-							|| controller.getPitchRotatedCameraAt(modelX, modelY) != null
-							|| controller.getElevatedLabelAt(modelX, modelY) != null
-							|| controller.getElevatedCameraAt(modelX, modelY) != null
-							|| controller.getRoomNameAt(modelX, modelY) != null
-							|| controller.getRoomRotatedNameAt(modelX, modelY) != null
-							|| controller.getRoomAreaAt(modelX, modelY) != null
-							|| controller.getRoomRotatedAreaAt(modelX, modelY) != null
-							|| controller.getResizedDimensionLineStartAt(modelX, modelY) != null
-							|| controller.getResizedDimensionLineEndAt(modelX, modelY) != null
-							|| controller.getWidthAndDepthResizedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getResizedWallStartAt(modelX, modelY) != null
-							|| controller.getResizedWallEndAt(modelX, modelY) != null
-							|| controller.getResizedRoomAt(modelX, modelY) != null
-							|| controller.getOffsetDimensionLineAt(modelX, modelY) != null
-							|| controller.getResizedPolylineAt(modelX, modelY) != null
-							|| controller.getPitchRotatedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getRollRotatedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getModifiedLightPowerAt(modelX, modelY) != null
-							|| controller.getHeightResizedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getRotatedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getElevatedPieceOfFurnitureAt(modelX, modelY) != null
-							|| controller.getPieceOfFurnitureNameAt(modelX, modelY) != null
-							|| controller.getPieceOfFurnitureRotatedNameAt(modelX, modelY) != null
-							|| controller.getRotatedCompassAt(modelX, modelY) != null
+						if (controller.getRotatedLabelAt(modelX, modelY) != null || controller.getYawRotatedCameraAt(modelX, modelY) != null
+							|| controller.getPitchRotatedCameraAt(modelX, modelY) != null || controller.getElevatedLabelAt(modelX, modelY) != null
+							|| controller.getElevatedCameraAt(modelX, modelY) != null || controller.getRoomNameAt(modelX, modelY) != null
+							|| controller.getRoomRotatedNameAt(modelX, modelY) != null || controller.getRoomAreaAt(modelX, modelY) != null
+							|| controller.getRoomRotatedAreaAt(modelX, modelY) != null || controller.getResizedDimensionLineStartAt(modelX, modelY) != null
+							|| controller.getResizedDimensionLineEndAt(modelX, modelY) != null || controller.getWidthAndDepthResizedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getResizedWallStartAt(modelX, modelY) != null || controller.getResizedWallEndAt(modelX, modelY) != null
+							|| controller.getResizedRoomAt(modelX, modelY) != null || controller.getOffsetDimensionLineAt(modelX, modelY) != null
+							|| controller.getResizedPolylineAt(modelX, modelY) != null || controller.getPitchRotatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getRollRotatedPieceOfFurnitureAt(modelX, modelY) != null || controller.getModifiedLightPowerAt(modelX, modelY) != null
+							|| controller.getHeightResizedPieceOfFurnitureAt(modelX, modelY) != null || controller.getRotatedPieceOfFurnitureAt(modelX, modelY) != null
+							|| controller.getElevatedPieceOfFurnitureAt(modelX, modelY) != null || controller.getPieceOfFurnitureNameAt(modelX, modelY) != null
+							|| controller.getPieceOfFurnitureRotatedNameAt(modelX, modelY) != null || controller.getRotatedCompassAt(modelX, modelY) != null
 							|| controller.getResizedCompassAt(modelX, modelY) != null )
 						{
 							lastDownTouchedSelections = true;
 						}
-
-
-
 
 						// this will be fired on a move or an up or another single down
 						potentialSinglePress = MotionEvent.obtain(ev); //instead of mousePressed(v, ev);
@@ -1355,7 +1339,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 						// this is a major divergence from the desktop function! Single finger pan during selection mode if the move is over nothing
 						if (controller.getMode() == PlanController.Mode.PANNING ||
-										(controller.getMode() == PlanController.Mode.SELECTION && !selectLasso && !lastDownTouchedSelections	) ) {
+										(controller.getMode() == PlanController.Mode.SELECTION
+														&& !selectLasso && !lastDownTouchedSelections	) ) {
 
 							if(mActivePointerId == pointerId) {
 								// pan operation wants the move to be div scale as moveview does a multiply, so...
@@ -2061,6 +2046,24 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       return 0;
     }
   }
+
+	/**
+	 * Returns the preferred scale to ensure it can be fully printed on the given print zone.
+	 */
+	public float getPrintPreferredScale(float preferredWidth, float preferredHeight) {
+		List<Selectable> printedItems = getPaintedItems();
+		Rectangle2D printedItemBounds = getItemsBounds(getGraphics(), printedItems);
+		if (printedItemBounds != null) {
+			float extraMargin = getStrokeWidthExtraMargin(printedItems, PaintMode.PRINT);
+			// Compute the largest integer scale possible
+			int scaleInverse = (int)Math.ceil(Math.max(
+							(printedItemBounds.getWidth() + 2 * extraMargin) / preferredWidth,
+							(printedItemBounds.getHeight() + 2 * extraMargin) / preferredHeight));
+			return 1f / scaleInverse;
+		} else {
+			return 0;
+		}
+	}
 
   /**
    * Returns the margin that should be added around home items bounds to ensure their

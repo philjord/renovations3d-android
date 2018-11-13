@@ -40,6 +40,8 @@ import android.widget.Toast;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
+import com.eteks.sweethome3d.model.Elevatable;
+import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.jogamp.opengl.GLException;
 import com.mindblowing.swingish.JOptionPane;
@@ -139,6 +141,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -150,6 +153,7 @@ import javaawt.GraphicsConfiguration;
 import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
+import javaawt.geom.Rectangle2D;
 import javaawt.image.BufferedImage;
 import jogamp.newt.WindowImpl;
 import jogamp.newt.driver.android.NewtBaseFragment;
@@ -278,15 +282,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 			getView().setOnTouchListener(new TouchyListener());
 
-			if (canvas3D2D != null) {
+			if (canvas3D != null) {
 				// must call this as onPause has called removeNotify
 				try {
-					canvas3D2D.addNotify();
+					canvas3D.addNotify();
 					//wait for onscreen hint
 					if (!HomeComponent3D.this.getUserVisibleHint()) {
-						canvas3D2D.stopRenderer();
+						canvas3D.stopRenderer();
 					} else {
-						canvas3D2D.startRenderer();
+						canvas3D.startRenderer();
 					}
 				} catch(NullPointerException e) {
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "1canvas3D2D.addNotify() null 0", null );
@@ -301,12 +305,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						// Create component 3D only once the graphics configuration of its parent is known
-						if (canvas3D2D == null) {
+						if (canvas3D == null) {
 							createComponent3D(null, preferences, controller);
 
 							try {
 								// called here not in createComponent, just for life cycle clarity
-								canvas3D2D.addNotify();
+								canvas3D.addNotify();
 							} catch(NullPointerException e) {
 								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "2canvas3D2D.addNotify() null 0", null);
 								if(gl_window != null) {
@@ -319,18 +323,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 							//wait for onscreen hint as this component is create whilst off screen
 							if (!HomeComponent3D.this.getUserVisibleHint()) {
-								canvas3D2D.stopRenderer();
+								canvas3D.stopRenderer();
 							}
 
 						}
 
 						if (onscreenUniverse == null) {
 							onscreenUniverse = createUniverse(displayShadowOnFloor, true, false);
-							onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D2D);
-							if(BuildConfig.DEBUG && ENABLE_HUD) {
+							onscreenUniverse.getViewer().getView().addCanvas3D(canvas3D);
+							if(BuildConfig.DEBUG && ENABLE_HUD && canvas3D instanceof Canvas3D2D) {
 								fpsCounter = new AndyFPSCounter();
 								onscreenUniverse.addBranchGraph(fpsCounter.getBehaviorBranchGroup());
-								fpsCounter.addToCanvas(canvas3D2D);
+								fpsCounter.addToCanvas((Canvas3D2D) canvas3D);
 								onscreenInfo = new InfoText3D() {
 									@Override
 									protected String getText() {
@@ -338,7 +342,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 									}
 								};
 								onscreenUniverse.addBranchGraph(onscreenInfo.getBehaviorBranchGroup());
-								onscreenInfo.addToCanvas(canvas3D2D);
+								onscreenInfo.addToCanvas((Canvas3D2D) canvas3D);
 							}
 
 							// I have no idea how getActivity() can return null here, possibly we are being destroyed right now
@@ -346,7 +350,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							if(getActivity() != null) {
 								// mouse interaction with picking
 								homeComponent3DMouseHandler = new HomeComponent3DMouseHandler(home, preferences, controller, (Renovations3DActivity) getActivity());
-								homeComponent3DMouseHandler.setConfig(canvas3D2D, onscreenUniverse.getLocale());
+								homeComponent3DMouseHandler.setConfig(canvas3D, onscreenUniverse.getLocale());
 							}
 						}
 					}
@@ -357,9 +361,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		@Override
 		public void dispose(final GLAutoDrawable drawable) {
-			if(canvas3D2D != null) {
-				canvas3D2D.stopRenderer();
-				canvas3D2D.removeNotify();
+			if(canvas3D != null) {
+				canvas3D.stopRenderer();
+				canvas3D.removeNotify();
 			}
 
 			PlanComponent.PieceOfFurnitureModelIcon.pauseOffScreenRendering();
@@ -406,21 +410,21 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// 		now we've (possible onStart then) onResume and GLStateKeeper is working in the background on restoring state
 		// 		a display is going to come through soon to make things show after state is happy
 		// in both cases display callback is gonna get called, he needs to addNotify in all cases
-		if(canvas3D2D != null) {
+		if(canvas3D != null) {
 			//PJ I add this entire conditional to try to restart after a stop it appears ok, but be suspicious of it
-			if(!canvas3D2D.getGLWindow().isNativeValid()) {
+			if(!canvas3D.getGLWindow().isNativeValid()) {
 				gl_window = GLWindow.create(caps);
 				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "GLWindow.create(caps) recreate", null );
 				// equal to addAncestor listeners but that's too late by far
 				gl_window.addGLEventListener(glWindowInitListener);
 			} else {
 				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume pre addNotify", null );
-				canvas3D2D.addNotify();
+				canvas3D.addNotify();
 				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onResume post addNotify", null );
 			}
 
 			if (HomeComponent3D.this.getUserVisibleHint()) {
-				canvas3D2D.startRenderer();
+				canvas3D.startRenderer();
 			}
 		}
 		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "end onResume", null );
@@ -432,10 +436,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		// so this is part of the exit so we need to call removeNotify in all cases, all re-entries will arrive back at display eventually
 		// and display will always call addNotify
-		if(canvas3D2D != null) {
+		if(canvas3D != null) {
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause pre removeNotify", null );
-			canvas3D2D.stopRenderer();
-			canvas3D2D.removeNotify();
+			canvas3D.stopRenderer();
+			canvas3D.removeNotify();
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause post removeNotify", null );
 		}
 
@@ -459,10 +463,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onDestroy() {
 		//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "start onDestroy", null );
 		// now we want to dump the universe as this fragment is being garbage collected shortly
-		if(canvas3D2D != null) {
+		if(canvas3D != null) {
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy pre removeNotify", null );
-			canvas3D2D.stopRenderer();
-			canvas3D2D.removeNotify();
+			canvas3D.stopRenderer();
+			canvas3D.removeNotify();
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy post removeNotify", null );
 		}
 
@@ -503,11 +507,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.VIEW_SHOWN_3D);
 		}
 
-		if (canvas3D2D != null) {
+		if (canvas3D != null) {
 			if (isVisibleToUser) {
-				canvas3D2D.startRenderer();
+				canvas3D.startRenderer();
 			} else {
-				canvas3D2D.stopRenderer();
+				canvas3D.stopRenderer();
 			}
 		}
 
@@ -856,7 +860,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private Collection<Selectable> homeObjectsToUpdate;
 	private Collection<Selectable> lightScopeObjectsToUpdate;
 	//private Component component3D;
-	private Canvas3D2D canvas3D2D;// component3D swapped to direct Canvas3D2D
+	private Canvas3D canvas3D;// component3D swapped to direct Canvas3D2D
 	private SimpleUniverse onscreenUniverse;
 	private Camera camera;
 	// Listeners bound to home that updates 3D scene objects
@@ -878,6 +882,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private PropertyChangeListener furnitureChangeListener;
 	private CollectionListener<Room> roomListener;
 	private PropertyChangeListener roomChangeListener;
+  private CollectionListener<Polyline>             polylineListener;
+  private PropertyChangeListener                   polylineChangeListener;
 	private CollectionListener<Label> labelListener;
 	private PropertyChangeListener labelChangeListener;
 	private SelectionListener selectionOutliningListener;
@@ -923,7 +929,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void init(Home home,
 									 UserPreferences preferences,
 									 boolean displayShadowOnFloor) {
-		init(home, preferences, new Object3DBranchFactory(), displayShadowOnFloor, null);
+		init(home, preferences, new Object3DBranchFactory(preferences), displayShadowOnFloor, null);
 	}
 
 	/**
@@ -933,7 +939,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void init(Home home,
 									 UserPreferences preferences,
 									 HomeController3D controller) {
-		init(home, preferences, new Object3DBranchFactory(), false, controller);
+		init(home, preferences, new Object3DBranchFactory(preferences), false, controller);
 	}
 
 	/**
@@ -971,7 +977,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		this.displayShadowOnFloor = displayShadowOnFloor;
     	this.object3dFactory = object3dFactory != null
         	? object3dFactory
-        	: new Object3DBranchFactory();
+        	: new Object3DBranchFactory(preferences);
 
 		if (controller != null) {
 			createActions(controller);
@@ -1032,7 +1038,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 																 UserPreferences preferences,
 																 HomeController3D controller) {
 		// construction is very different
-		canvas3D2D = Component3DManager.getInstance().getOnscreenCanvas3D(gl_window,
+		canvas3D = Component3DManager.getInstance().getOnscreenCanvas3D(gl_window,
 				new Component3DManager.RenderingObserver() {
 			//private Shape3D dummyShape;
 
@@ -1049,9 +1055,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//canvasPanel.add(this.component3D);
 		//setLayout(new GridLayout());
 		//add(canvasPanel);
-		//replaced with canvas3D2D.addNotify() but also moved into gl_window display call for life cycle clarity
+		//replaced with canvas3D.addNotify() but also moved into gl_window display call for life cycle clarity
 		if (controller != null)	{
-			addMouseListeners(controller, this.canvas3D2D);
+			addMouseListeners(controller, this.canvas3D);
 
 			//createActions(controller);
 			//installKeyboardActions();
@@ -1144,6 +1150,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
     homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_TEXTURE, this.backgroundChangeListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_COLOR, this.groundChangeListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.GROUND_TEXTURE, this.groundChangeListener);
+		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.BACKGROUND_IMAGE_VISIBLE_ON_GROUND_3D, this.groundChangeListener);
+    this.home.removePropertyChangeListener(Home.Property.BACKGROUND_IMAGE, this.groundChangeListener);
     homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.LIGHT_COLOR, this.backgroundLightColorListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.LIGHT_COLOR, this.lightColorListener);
 		homeEnvironment.removePropertyChangeListener(HomeEnvironment.Property.WALLS_ALPHA, this.wallsAlphaListener);
@@ -1173,6 +1181,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		for (Room room : this.home.getRooms()) {
 			room.removePropertyChangeListener(this.roomChangeListener);
 		}
+		this.home.removePolylinesListener(this.polylineListener);
+    for (Polyline polyline : this.home.getPolylines()) {
+      polyline.removePropertyChangeListener(this.polylineChangeListener);
+    }
 		this.home.removeLabelsListener(this.labelListener);
 		for (Label label : this.home.getLabels()) {
 			label.removePropertyChangeListener(this.labelChangeListener);
@@ -1285,7 +1297,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			// Enumerate children
 			Iterator<Node> enumeration = ((Group) node).getAllChildren();
 			while (enumeration.hasNext()) {
-				cloneTexture(enumeration.next(), replacedTextures);
+        cloneTexture((Node)enumeration.next(), replacedTextures);
 			}
 		} else if (node instanceof Link) {
 			cloneTexture(((Link) node).getSharedGroup(), replacedTextures);
@@ -1350,8 +1362,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Updates <code>view</code> from <code>camera</code> field of view.
 	 */
 	private void updateView(View view, Camera camera) {
-		if (this.canvas3D2D != null) {
-				updateView(view, camera, this.canvas3D2D.getWidth(), this.canvas3D2D.getHeight());
+		if (this.canvas3D != null) {
+				updateView(view, camera, this.canvas3D.getWidth(), this.canvas3D.getHeight());
 		} else {
 				updateView(view, camera, 0, 0);
 		}
@@ -1980,13 +1992,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private Node createBackgroundNode(boolean listenToHomeUpdates, final boolean waitForLoading) {
 		final SimpleShaderAppearance skyBackgroundAppearance = new SimpleShaderAppearance();
-
 		ColoringAttributes skyBackgroundColoringAttributes = new ColoringAttributes();
 		skyBackgroundAppearance.setColoringAttributes(skyBackgroundColoringAttributes);
+    	TextureAttributes skyBackgroundTextureAttributes = new TextureAttributes();
+    	skyBackgroundAppearance.setTextureAttributes(skyBackgroundTextureAttributes);
 		// Allow sky color and texture to change
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
 		skyBackgroundColoringAttributes.setCapability(ColoringAttributes.ALLOW_COLOR_WRITE);
+		skyBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_ATTRIBUTES_READ);
+		skyBackgroundTextureAttributes.setCapability(TextureAttributes.ALLOW_TRANSFORM_WRITE);
 		skyBackgroundAppearance.setUpdatableCapabilities();//PJ allow updatable shader building
 		Geometry topHalfSphereGeometry = createHalfSphereGeometry(true);
 		final Shape3D topHalfSphere = new Shape3D(topHalfSphereGeometry, skyBackgroundAppearance);
@@ -2005,11 +2020,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// Add two planes at ground level to complete landscape at the horizon when camera is above horizon
 		// (one at y = -0.01 to fill the horizon and a lower one to fill the lower part of the scene)
 		final SimpleShaderAppearance groundBackgroundAppearance = new SimpleShaderAppearance();
-
 		TextureAttributes groundBackgroundTextureAttributes = new TextureAttributes();
 		groundBackgroundTextureAttributes.setTextureMode(TextureAttributes.MODULATE);
 		groundBackgroundAppearance.setTextureAttributes(groundBackgroundTextureAttributes);
-
 		groundBackgroundAppearance.setTexCoordGeneration(
 			new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_2,
 				new Vector4f(1E5f, 0, 0, 0), new Vector4f(0, 0, 1E5f, 0)));
@@ -2046,10 +2059,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		final Background background = new Background(backgroundBranch);
-    	updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, this.home, waitForLoading);
-    	background.setApplicationBounds(new BoundingBox(
-        new Point3d(-1E7, -1E7, -1E7),
-        new Point3d(1E7, 1E7, 1E7)));
+    updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, this.home, waitForLoading);
+		background.setImageScaleMode(Background.SCALE_FIT_ALL);
+		//PJPJ used an isInfinite version
+		background.setApplicationBounds(new BoundingSphere(new Point3d(0,0,0), Double.POSITIVE_INFINITY));
 
 		if (listenToHomeUpdates) {
 			// Add a listener on sky color and texture properties change
@@ -2103,7 +2116,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			double nextAlpha = (i + 1) * 2 * Math.PI / divisionCount;
 			float cosNextAlpha = (float) Math.cos(nextAlpha);
 			float sinNextAlpha = (float) Math.sin(nextAlpha);
-			for (int j = 0; j < divisionCount / 4; j++) {
+      for (int j = 0, max = divisionCount / 4; j < max; j++) {
 				double beta = 2 * j * Math.PI / divisionCount;
 				float cosBeta = (float) Math.cos(beta);
 				float sinBeta = (float) Math.sin(beta);
@@ -2117,16 +2130,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				float sinNextBeta = (float) Math.sin(nextBeta);
 				if (top) {
 					coords[k] = new Point3f(cosAlpha * cosBeta, y, sinAlpha * cosBeta);
-					textureCoords[k++] = new TexCoord2f((float) i / divisionCount, sinBeta);
+          textureCoords [k++] = new TexCoord2f((float)i / divisionCount, (float)j / max);
 
 					coords[k] = new Point3f(cosNextAlpha * cosBeta, y, sinNextAlpha * cosBeta);
-					textureCoords[k++] = new TexCoord2f((float) (i + 1) / divisionCount, sinBeta);
+          textureCoords [k++] = new TexCoord2f((float)(i + 1) / divisionCount, (float)j / max);
 
 					coords[k] = new Point3f(cosNextAlpha * cosNextBeta, sinNextBeta, sinNextAlpha * cosNextBeta);
-					textureCoords[k++] = new TexCoord2f((float) (i + 1) / divisionCount, sinNextBeta);
+          textureCoords [k++] = new TexCoord2f((float)(i + 1) / divisionCount, (float)(j + 1) / max);
 
 					coords[k] = new Point3f(cosAlpha * cosNextBeta, sinNextBeta, sinAlpha * cosNextBeta);
-					textureCoords[k++] = new TexCoord2f((float) i / divisionCount, sinNextBeta);
+          textureCoords [k++] = new TexCoord2f((float)i / divisionCount, (float)(j + 1) / max);
 				} else {
 					coords[k] = new Point3f(cosAlpha * cosBeta, y, sinAlpha * cosBeta);
 					float color1 = .9f + y * .5f;
@@ -2178,18 +2191,22 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	  	skyBackgroundAppearance.getColoringAttributes().setColor(skyColor);
 		HomeTexture skyTexture = home.getEnvironment().getSkyTexture();
 		if (skyTexture != null) {
+      final Transform3D transform = new Transform3D();
+      transform.setTranslation(new Vector3f(-skyTexture.getXOffset(), 0, 0));
 			TextureManager textureManager = TextureManager.getInstance();
 			if (waitForLoading) {
 				// Don't share the background texture otherwise if might not be rendered correctly
 				skyBackgroundAppearance.setTexture(textureManager.loadTexture(skyTexture.getImage()));
+        skyBackgroundAppearance.getTextureAttributes().setTextureTransform(transform);
 			} else {
 				textureManager.loadTexture(skyTexture.getImage(), waitForLoading,
-						new TextureManager.TextureObserver() {
-					public void textureUpdated(Texture texture) {
-						// Use a copy of the texture in case it's used in an other universe
-						skyBackgroundAppearance.setTexture((Texture) texture.cloneNodeComponent(false));
-					}
-				});
+				  new TextureManager.TextureObserver() {
+					  public void textureUpdated(Texture texture) {
+						  // Use a copy of the texture in case it's used in an other universe
+						  skyBackgroundAppearance.setTexture((Texture) texture.cloneNodeComponent(false));
+              skyBackgroundAppearance.getTextureAttributes().setTextureTransform(transform);
+					  }
+				  });
 			}
 		} else {
 			skyBackgroundAppearance.setTexture(null);
@@ -2261,6 +2278,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					HomeEnvironment.Property.GROUND_COLOR, this.groundChangeListener);
 			homeEnvironment.addPropertyChangeListener(
 					HomeEnvironment.Property.GROUND_TEXTURE, this.groundChangeListener);
+      homeEnvironment.addPropertyChangeListener(
+          HomeEnvironment.Property.BACKGROUND_IMAGE_VISIBLE_ON_GROUND_3D, this.groundChangeListener);
+      this.home.addPropertyChangeListener(Home.Property.BACKGROUND_IMAGE, this.groundChangeListener);
 		}
 
 		return transformGroup;
@@ -2411,7 +2431,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					}
 				}
 			};
-
 			this.home.getEnvironment().addPropertyChangeListener(
 					HomeEnvironment.Property.SUBPART_SIZE_UNDER_LIGHT,this.subpartSizeListener);
 			this.subpartSizeListener.propertyChange(null);
@@ -2446,7 +2465,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if (this.lightScopeOutsideWallsAreaCache == null) {
 			// Compute a smaller area surrounding all walls at all levels
 			Area wallsPath = new Area();
-			for (Wall wall : home.getWalls()) {
+      for (Wall wall : this.home.getWalls()) {
 				Wall thinnerWall = wall.clone();
 				thinnerWall.setThickness(Math.max(thinnerWall.getThickness() - 0.1f, 0.08f));
 				wallsPath.add(new Area(getShape(thinnerWall.getPoints())));
@@ -2484,9 +2503,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								boolean listenToHomeUpdates,
 								boolean waitForLoading) {
 		Group homeRoot = createHomeRoot();
-		// Add walls, pieces, rooms and labels already available
+		// Add walls, pieces, rooms, polylines and labels already available
 		for (Label label : this.home.getLabels()) {
 			addObject(homeRoot, label, listenToHomeUpdates, waitForLoading);
+		}
+		for (Polyline polyline : this.home.getPolylines()) {
+			addObject(homeRoot, polyline, listenToHomeUpdates, waitForLoading);
 		}
 		for (Room room : this.home.getRooms()) {
 			addObject(homeRoot, room, listenToHomeUpdates, waitForLoading);
@@ -2517,6 +2539,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			addWallListener(homeRoot);
 			addFurnitureListener(homeRoot);
 			addRoomListener(homeRoot);
+			addPolylineListener(homeRoot);
 			addLabelListener(homeRoot);
 			// Add environment listeners
 			addEnvironmentListeners();
@@ -2548,11 +2571,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private void addLevelListener(final Group group) {
 		this.levelChangeListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent ev) {
-				if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
-						|| Level.Property.VISIBLE.name().equals(ev.getPropertyName())
+        if (Level.Property.VISIBLE.name().equals(ev.getPropertyName())
 						|| Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
-					updateObjects(homeObjects.keySet());
-					groundChangeListener.propertyChange(null);
+          Set<Selectable> objects = homeObjects.keySet();
+          ArrayList<Selectable> updatedItems = new ArrayList<Selectable>(objects.size());
+          for (Selectable item : objects) {
+            if (item instanceof Room // 3D rooms depend on rooms at other levels
+                  || !(item instanceof Elevatable)
+                  || ((Elevatable)item).isAtLevel((Level)ev.getSource())) {
+                updatedItems.add(item);
+            }
+          }
+          updateObjects(updatedItems);
+          groundChangeListener.propertyChange(null);
+        } else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())) {
+				updateObjects(homeObjects.keySet());
+				groundChangeListener.propertyChange(null);
+        } else if (Level.Property.BACKGROUND_IMAGE.name().equals(ev.getPropertyName())) {
+          groundChangeListener.propertyChange(null);
 				} else if (Level.Property.FLOOR_THICKNESS.name().equals(ev.getPropertyName())) {
 					updateObjects(home.getWalls());
 					updateObjects(home.getRooms());
@@ -2580,7 +2616,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		};
 		this.home.addLevelsListener(this.levelListener);
 	}
-
 
 	/**
 	 * Adds a wall listener to home walls that updates the children of the given
@@ -2629,11 +2664,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						groundChangeListener.propertyChange(null);
 					}
 					if (home.getEnvironment().getSubpartSizeUnderLight() > 0) {
-						if (Wall.Property.X_START.name().equals(propertyName) || Wall.Property.Y_START.name().equals(propertyName)
-								|| Wall.Property.X_END.name().equals(propertyName) || Wall.Property.Y_END.name().equals(propertyName)
+						if (Wall.Property.X_START.name().equals(propertyName)
+								|| Wall.Property.Y_START.name().equals(propertyName)
+								|| Wall.Property.X_END.name().equals(propertyName)
+								|| Wall.Property.Y_END.name().equals(propertyName)
 								|| Wall.Property.ARC_EXTENT.name().equals(propertyName)
-								|| Wall.Property.THICKNESS.name().equals(propertyName))
-						{
+								|| Wall.Property.THICKNESS.name().equals(propertyName)) {
 							lightScopeOutsideWallsAreaCache = null;
 							updateObjectsLightScope(null);
 						}
@@ -2687,14 +2723,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
             || HomePieceOfFurniture.Property.PITCH.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.WIDTH.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.DEPTH.name().equals(propertyName)) {
-					updatePieceOfFurnitureGeometry(updatedPiece);
+					updatePieceOfFurnitureGeometry(updatedPiece, propertyName, (Float)ev.getOldValue());
 					updateObjectsLightScope(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
 				} else if (HomePieceOfFurniture.Property.HEIGHT.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.ELEVATION.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MIRRORED.name().equals(propertyName)
+						|| HomePieceOfFurniture.Property.MODEL_TRANSFORMATIONS.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.VISIBLE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.LEVEL.name().equals(propertyName)) {
-					updatePieceOfFurnitureGeometry(updatedPiece);
+          updatePieceOfFurnitureGeometry(updatedPiece, null, null);
 				} else if (HomePieceOfFurniture.Property.COLOR.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.TEXTURE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MATERIALS.name().equals(propertyName)
@@ -2703,13 +2740,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						&& home.getEnvironment().getSubpartSizeUnderLight() > 0)) {
 					updateObjects(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
 				}
-
-
 			}
 
-			private void updatePieceOfFurnitureGeometry(HomePieceOfFurniture piece) {
+			private void updatePieceOfFurnitureGeometry(HomePieceOfFurniture piece, String propertyName, Float oldValue) {
 				updateObjects(Arrays.asList(new HomePieceOfFurniture[]{piece}));
-				// If piece is or contains a door or a window, update walls that intersect with piece
 				if (containsDoorsAndWindows(piece)) {
 					// deferred to visible see RUN_UPDATES updateObjects(home.getWalls());
 					fullWallUpdateRequired = true;
@@ -2916,6 +2950,38 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		return path;
 	}
 
+  /**
+   * Adds a polyline listener to home polylines that updates the children of the given
+   * <code>group</code>, each time a polyline is added, updated or deleted.
+   */
+  private void addPolylineListener(final Group group) {
+    this.polylineChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          Polyline polyline = (Polyline)ev.getSource();
+          updateObjects(Arrays.asList(new Polyline [] {polyline}));
+        }
+      };
+    for (Polyline polyline : this.home.getPolylines()) {
+      polyline.addPropertyChangeListener(this.polylineChangeListener);
+    }
+    this.polylineListener = new CollectionListener<Polyline>() {
+        public void collectionChanged(CollectionEvent<Polyline> ev) {
+          Polyline polyline = ev.getItem();
+          switch (ev.getType()) {
+            case ADD :
+              addObject(group, polyline, true, false);
+              polyline.addPropertyChangeListener(polylineChangeListener);
+              break;
+            case DELETE :
+              deleteObject(polyline);
+              polyline.removePropertyChangeListener(polylineChangeListener);
+              break;
+          }
+        }
+      };
+    this.home.addPolylinesListener(this.polylineListener);
+  }
+
 	/**
 	 * Adds a label listener to home labels that updates the children of the given
 	 * <code>group</code>, each time a label is added, updated or deleted.
@@ -2964,6 +3030,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		this.drawingModeListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent ev) {
 				updateObjects(home.getWalls());
+				updateObjects(home.getRooms());
 				updateObjects(getHomeObjects(HomePieceOfFurniture.class));
 			}
 		};
@@ -3018,7 +3085,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	/**
-	 * Updates <code>objects</code> later. Should be invoked from Event Dispatch Thread.
+   * Updates 3D <code>objects</code> later. Should be invoked from Event Dispatch Thread.
 	 */
 	private void updateObjects(Collection<? extends Selectable> objects) {
 		if (this.homeObjectsToUpdate != null) {
@@ -3044,8 +3111,48 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	/**
-	 * Updates <code>wall</code> geometry,
-	 * and the walls at its end or start.
+   * Updates walls that may intersect from the given doors or window.
+   */
+  private void updateIntersectingWalls(HomePieceOfFurniture ... doorOrWindows) {
+    Collection<Wall> walls = this.home.getWalls();
+    int wallCount = 0;
+    if (this.homeObjectsToUpdate != null) {
+      for (Selectable object : this.homeObjectsToUpdate) {
+        if (object instanceof Wall) {
+          wallCount++;
+        }
+      }
+    }
+    // Check if some more walls may require an update
+    if (wallCount != walls.size()) {
+      List<Wall> updatedWalls = new ArrayList<Wall>();
+      Rectangle2D doorOrWindowBounds = null;
+      // Compute the approximate bounds of the doors and windows
+      for (HomePieceOfFurniture doorOrWindow : doorOrWindows) {
+        float [][] points = doorOrWindow.getPoints();
+        if (doorOrWindowBounds == null) {
+          doorOrWindowBounds = new Rectangle2D.Float(points [0][0], points [0][1], 0, 0);
+        } else {
+          doorOrWindowBounds.add(points [0][0], points [0][1]);
+        }
+        for (int i = 1; i < points.length; i++) {
+          doorOrWindowBounds.add(points [i][0], points [i][1]);
+        }
+      }
+      // Search walls that intersect the bounds
+      for (Wall wall : walls) {
+        if (wall.intersectsRectangle((float)doorOrWindowBounds.getX(), (float)doorOrWindowBounds.getY(),
+            (float)doorOrWindowBounds.getX() + (float)doorOrWindowBounds.getWidth(),
+            (float)doorOrWindowBounds.getY() + (float)doorOrWindowBounds.getHeight())) {
+          updatedWalls.add(wall);
+        }
+      }
+      updateObjects(updatedWalls);
+    }
+  }
+
+  /**
+   * Updates <code>wall</code> geometry and the walls at its end or start.
 	 */
 	private void updateWall(Wall wall) {
 		Collection<Wall> wallsToUpdate = new ArrayList<Wall>(3);

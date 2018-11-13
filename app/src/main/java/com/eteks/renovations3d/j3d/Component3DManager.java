@@ -37,9 +37,9 @@ import org.jogamp.java3d.utils.universe.ViewingPlatform;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.tools.OperatingSystem;
-import com.mindblowing.j3d.utils.Canvas3D2D;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jogamp.newt.opengl.GLWindow;
+import com.mindblowing.j3d.utils.Canvas3D2D;
 
 import javaawt.GraphicsConfiguration;
 import javaawt.image.BufferedImage;
@@ -47,35 +47,37 @@ import javaawt.image.BufferedImage;
 /**
  * Manager of <code>Canvas3D</code> instantiations and Java 3D error listeners.
  * Note: this class is compatible with Java 3D 1.3 at runtime but requires Java 3D 1.5 to compile.
- *
  * @author Emmanuel Puybaret
  */
-public class Component3DManager
-{
+public class Component3DManager {
 	private static final String CHECK_OFF_SCREEN_IMAGE_SUPPORT = "com.eteks.sweethome3d.j3d.checkOffScreenSupport";
 
 	private static Component3DManager instance;
 
-	private RenderingErrorObserver renderingErrorObserver;
+	private RenderingErrorObserver 	renderingErrorObserver;
 	// The Java 3D listener matching renderingErrorObserver
 	// (use Object class to ensure Component3DManager class can run with Java 3D 1.3.1)
-	private Object renderingErrorListener;
-	private Boolean offScreenImageSupported;
-	private GraphicsConfiguration defaultScreenConfiguration;
+	private Object 									renderingErrorListener;
+	private Boolean 								offScreenImageSupported;
+	private GraphicsConfiguration 	defaultScreenConfiguration;
+  private int                    	depthSize;
 
-	private Component3DManager()
-	{
+	private Component3DManager() {
 
 	}
 
+	/**
+	 * Returns the depth bits size of the Z-buffer.
+	 */
+	public int getDepthSize() {
+		return this.depthSize;
+	}
 
 	/**
 	 * Returns an instance of this singleton.
 	 */
-	public static Component3DManager getInstance()
-	{
-		if (instance == null)
-		{
+	public static Component3DManager getInstance() {
+		if (instance == null) {
 			instance = new Component3DManager();
 		}
 		return instance;
@@ -84,17 +86,13 @@ public class Component3DManager
 	/**
 	 * Sets the current rendering error listener bound to <code>VirtualUniverse</code>.
 	 */
-	public void setRenderingErrorObserver(RenderingErrorObserver observer)
-	{
-		try
-		{
+	public void setRenderingErrorObserver(RenderingErrorObserver observer) {
+		try {
 			Class.forName("javax.media.j3d.RenderingErrorListener");
 			this.renderingErrorListener = RenderingErrorListenerManager.setRenderingErrorObserver(
 					observer, this.renderingErrorListener);
 			this.renderingErrorObserver = observer;
-		}
-		catch (ClassNotFoundException ex)
-		{
+		} catch (ClassNotFoundException ex) {
 			// As RenderingErrorListener and addRenderingErrorListener are available since Java 3D 1.5,
 			// use the default rendering error reporting if Sweet Home 3D is linked to a previous version
 		}
@@ -103,8 +101,7 @@ public class Component3DManager
 	/**
 	 * Returns the current rendering error listener bound to <code>VirtualUniverse</code>.
 	 */
-	public RenderingErrorObserver getRenderingErrorObserver()
-	{
+	public RenderingErrorObserver getRenderingErrorObserver() {
 		return this.renderingErrorObserver;
 	}
 
@@ -114,20 +111,14 @@ public class Component3DManager
 	 * system is equal to <code>false</code>. By default, <code>com.eteks.sweethome3d.j3d.checkOffScreenSupport</code>
 	 * is equal to <code>true</code>.
 	 */
-	public boolean isOffScreenImageSupported()
-	{
+	public boolean isOffScreenImageSupported() {
 
-		if (this.offScreenImageSupported == null)
-		{
-			if ("false".equalsIgnoreCase(System.getProperty(CHECK_OFF_SCREEN_IMAGE_SUPPORT, "true")))
-			{
+		if (this.offScreenImageSupported == null) {
+			if ("false".equalsIgnoreCase(System.getProperty(CHECK_OFF_SCREEN_IMAGE_SUPPORT, "true"))) {
 				this.offScreenImageSupported = Boolean.FALSE;
-			}
-			else
-			{
+			} else {
 				SimpleUniverse universe = null;
-				try
-				{
+				try {
 					// Create a universe bound to no canvas 3D
 					ViewingPlatform viewingPlatform = new ViewingPlatform();
 					Viewer viewer = new Viewer(new Canvas3D[0]);
@@ -135,23 +126,14 @@ public class Component3DManager
 					// Create a dummy 3D image to check if it can be rendered in current Java 3D configuration
 					getOffScreenImage(viewer.getView(), 1, 1);
 					this.offScreenImageSupported = Boolean.TRUE;
-				}
-				catch (IllegalRenderingStateException ex)
-				{
+				} catch (IllegalRenderingStateException ex) {
 					this.offScreenImageSupported = Boolean.FALSE;
-				}
-				catch (NullPointerException ex)
-				{
+				} catch (NullPointerException ex) {
 					this.offScreenImageSupported = Boolean.FALSE;
-				}
-				catch (IllegalArgumentException ex)
-				{
+				} catch (IllegalArgumentException ex) {
 					this.offScreenImageSupported = Boolean.FALSE;
-				}
-				finally
-				{
-					if (universe != null)
-					{
+				} finally {
+					if (universe != null) {
 						universe.cleanup();
 					}
 				}
@@ -164,13 +146,11 @@ public class Component3DManager
 	/**
 	 * Returns a new <code>canva3D</code> instance that will call <code>renderingObserver</code>
 	 * methods during the rendering loop.
-	 *
 	 * @throws IllegalRenderingStateException if the canvas 3D couldn't be created.
 	 */
-	private Canvas3D2D getCanvas3D2D(GLWindow glwindow,
-									 boolean offscreen,
-									 final RenderingObserver renderingObserver)
-	{
+	private Canvas3D getCanvas3D(GLWindow glwindow,
+																	 boolean offscreen,
+																	 final RenderingObserver renderingObserver) {
 		//PJPJPJPJPJ
 	  /*GraphicsConfiguration configuration;
 	if (GraphicsEnvironment.isHeadless()) {
@@ -185,44 +165,32 @@ public class Component3DManager
       if (configuration == null) {
         configuration = deviceConfiguration.getDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
       }
+    }
+    if (configuration == null) {
+      throw new IllegalRenderingStateException("Can't create graphics environment for Canvas 3D");
     }*/
-//    if (configuration == null) {
-//      throw new IllegalRenderingStateException("Can't create graphics environment for Canvas 3D");
-//    }
-		try
-		{
+		try {
 			// Ensure unused canvases are freed
 			System.gc();
 
 			// Create a Java 3D canvas
-			final Canvas3D2D canvas3D2D;
-			if (offscreen)
-			{
-				if (renderingObserver != null)
-				{
-					canvas3D2D = new ObservedCanvas3D2D(offscreen, renderingObserver);
+			final Canvas3D canvas3D;
+			if (offscreen) {
+				if (renderingObserver != null) {
+					canvas3D = new ObservedCanvas3D(offscreen, renderingObserver);
+				} else {
+					canvas3D = new Canvas3D2D(offscreen);
 				}
-				else
-				{
-					canvas3D2D = new Canvas3D2D(offscreen);
-				}
-			}
-			else
-			{
-				if (renderingObserver != null)
-				{
-					canvas3D2D = new ObservedCanvas3D2D(glwindow, renderingObserver);
-				}
-				else
-				{
-					canvas3D2D = new Canvas3D2D(glwindow);
+			} else {
+				if (renderingObserver != null) {
+					canvas3D = new ObservedCanvas3D(glwindow, renderingObserver);
+				} else {
+					canvas3D = new Canvas3D2D(glwindow);
 				}
 			}
 
-			return canvas3D2D;
-		}
-		catch (IllegalArgumentException ex)
-		{
+			return canvas3D;
+		} catch (IllegalArgumentException ex) {
 			IllegalRenderingStateException ex2 = new IllegalRenderingStateException("Can't create Canvas 3D");
 			ex2.initCause(ex);
 			throw ex2;
@@ -232,51 +200,43 @@ public class Component3DManager
 	/**
 	 * Returns a new on screen <code>canva3D</code> instance. The returned canvas 3D will be associated
 	 * with the graphics configuration of the default screen device.
-	 *
 	 * @throws IllegalRenderingStateException if the canvas 3D couldn't be created.
 	 */
-	public Canvas3D getOnscreenCanvas3D()
-	{
-		return getOnscreenCanvas3D2D(null);
+	public Canvas3D getOnscreenCanvas3D() {
+		return getOnscreenCanvas3D(null);
 	}
 
 	/**
 	 * Returns a new on screen <code>canva3D</code> instance which rendering will be observed
 	 * with the given rendering observer. The returned canvas 3D will be associated with the
 	 * graphics configuration of the default screen device.
-	 *
 	 * @param renderingObserver an observer of the 3D rendering process of the returned canvas.
 	 *                          Caution: The methods of the observer will be called in 3D rendering loop thread.
 	 * @throws IllegalRenderingStateException if the canvas 3D couldn't be created.
 	 */
-	public Canvas3D2D getOnscreenCanvas3D2D(RenderingObserver renderingObserver)
-	{
-		return getCanvas3D2D(null, false, renderingObserver);
+	public Canvas3D getOnscreenCanvas3D(RenderingObserver renderingObserver) {
+		return getCanvas3D(null, false, renderingObserver);
 	}
 
 	/**
 	 * Returns a new on screen <code>canva3D</code> instance which rendering will be observed
 	 * with the given rendering observer.
-	 *
 	 * @param renderingObserver an observer of the 3D rendering process of the returned canvas.
 	 *                          Caution: The methods of the observer will be called in 3D rendering loop thread.
 	 * @throws IllegalRenderingStateException if the canvas 3D couldn't be created.
 	 */
-	public Canvas3D2D getOnscreenCanvas3D(GLWindow glwindow,
-										  RenderingObserver renderingObserver)
-	{
-		return getCanvas3D2D(  glwindow, false, renderingObserver);
+	public Canvas3D getOnscreenCanvas3D(GLWindow glwindow,
+										  								RenderingObserver renderingObserver) {
+		return getCanvas3D(glwindow, false, renderingObserver);
 	}
 
 	/**
 	 * Returns a new off screen <code>canva3D</code> at the given size.
-	 *
 	 * @throws IllegalRenderingStateException if the canvas 3D couldn't be created.
 	 *                                        To avoid this exception, call {@link #isOffScreenImageSupported() isOffScreenImageSupported()} first.
 	 */
-	public Canvas3D2D getOffScreenCanvas3D(int width, int height)
-	{
-		Canvas3D2D offScreenCanvas = getCanvas3D2D(null, true, null);
+	public Canvas3D getOffScreenCanvas3D(int width, int height) {
+		Canvas3D offScreenCanvas = getCanvas3D(null, true, null);
 		// Configure canvas 3D for offscreen
 		Screen3D screen3D = offScreenCanvas.getScreen3D();
 		screen3D.setSize(width, height);
@@ -295,23 +255,18 @@ public class Component3DManager
 	/**
 	 * Returns an image at the given size of the 3D <code>view</code>.
 	 * This image is created with an off screen canvas.
-	 *
 	 * @throws IllegalRenderingStateException if the image couldn't be created.
 	 */
-	public BufferedImage getOffScreenImage(View view, int width, int height)
-	{
+	public BufferedImage getOffScreenImage(View view, int width, int height) {
 		Canvas3D offScreenCanvas = null;
 		RenderingErrorObserver previousRenderingErrorObserver = getRenderingErrorObserver();
-		try
-		{
+		try {
 			// Replace current rendering error observer by a listener that counts down
 			// a latch to check further if a rendering error happened during off screen rendering
 			// (rendering error listener is called from a notification thread)
 			final CountDownLatch latch = new CountDownLatch(1);
-			setRenderingErrorObserver(new RenderingErrorObserver()
-			{
-				public void errorOccured(int errorCode, String errorMessage)
-				{
+			setRenderingErrorObserver(new RenderingErrorObserver() {
+				public void errorOccured(int errorCode, String errorMessage) {
 					Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "RenderingErrorObserver", "" + errorCode + " " + errorMessage);
 					latch.countDown();
 				}
@@ -327,32 +282,23 @@ public class Component3DManager
 
 			// If latch count becomes equal to 0 during the past instructions or in the coming 10 milliseconds,
 			// this means that a rendering error happened
-			if (latch.await(10, TimeUnit.MILLISECONDS))
-			{
+			if (latch.await(10, TimeUnit.MILLISECONDS)) {
 				throw new IllegalRenderingStateException("Off screen rendering unavailable");
 			}
 
 			return offScreenCanvas.getOffScreenBuffer().getImage();
-		}
-		catch (InterruptedException ex)
-		{
+		} catch (InterruptedException ex) {
 			IllegalRenderingStateException ex2 =
 					new IllegalRenderingStateException("Off screen rendering interrupted");
 			ex2.initCause(ex);
 			throw ex2;
-		}
-		finally
-		{
-			if (offScreenCanvas != null)
-			{
+		} finally {
+			if (offScreenCanvas != null) {
 				view.removeCanvas3D(offScreenCanvas);
-				try
-				{
+				try {
 					// Free off screen buffer and context
 					offScreenCanvas.setOffScreenBuffer(null);
-				}
-				catch (NullPointerException ex)
-				{
+				} catch (NullPointerException ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -364,8 +310,7 @@ public class Component3DManager
 	/**
 	 * An observer that receives error notifications in Java 3D.
 	 */
-	public static interface RenderingErrorObserver
-	{
+	public static interface RenderingErrorObserver {
 		void errorOccured(int errorCode, String errorMessage);
 	}
 
@@ -373,20 +318,15 @@ public class Component3DManager
 	 * Manages Java 3D 1.5 <code>RenderingErrorListener</code> change matching the given
 	 * rendering error observer.
 	 */
-	private static class RenderingErrorListenerManager
-	{
+	private static class RenderingErrorListenerManager {
 		public static Object setRenderingErrorObserver(final RenderingErrorObserver observer,
-													   Object previousRenderingErrorListener)
-		{
-			if (previousRenderingErrorListener != null)
-			{
+													   Object previousRenderingErrorListener) {
+			if (previousRenderingErrorListener != null) {
 				VirtualUniverse.removeRenderingErrorListener(
 						(RenderingErrorListener) previousRenderingErrorListener);
 			}
-			RenderingErrorListener renderingErrorListener = new RenderingErrorListener()
-			{
-				public void errorOccurred(RenderingError error)
-				{
+			RenderingErrorListener renderingErrorListener = new RenderingErrorListener() {
+				public void errorOccurred(RenderingError error) {
 					observer.errorOccured(error.getErrorCode(), error.getErrorMessage());
 				}
 			};
@@ -399,8 +339,7 @@ public class Component3DManager
 	 * An observer that receives notifications during the different steps
 	 * of the loop rendering a canvas 3D.
 	 */
-	public static interface RenderingObserver
-	{
+	public static interface RenderingObserver {
 		/**
 		 * Called before <code>canvas3D</code> is rendered.
 		 */
@@ -420,17 +359,14 @@ public class Component3DManager
 	/**
 	 * A canvas 3D observed during its rendering.
 	 */
-	private static class ObservedCanvas3D2D extends Canvas3D2D
-	{
+	private static class ObservedCanvas3D extends Canvas3D2D {
 		private final RenderingObserver renderingObserver;
 		private final boolean paintDelayed;
 		//private Timer timer;
 
-		private ObservedCanvas3D2D(//GraphicsConfiguration graphicsConfiguration,
-								 boolean offScreen,
-								 RenderingObserver renderingObserver)
-		{
-			//PJPJPJPJ
+		private ObservedCanvas3D(//GraphicsConfiguration graphicsConfiguration,
+								 						boolean offScreen,
+								 						RenderingObserver renderingObserver) {
 			super(offScreen);//graphicsConfiguration, offScreen);
 			this.renderingObserver = renderingObserver;
 			// Under Windows with Java 7 and above, delay the rendering of the canvas 3D when
@@ -439,10 +375,8 @@ public class Component3DManager
 					&& OperatingSystem.isJavaVersionGreaterOrEqual("1.7");
 		}
 
-		private ObservedCanvas3D2D(GLWindow glwindow,
-								 RenderingObserver renderingObserver)
-		{
-			//PJPJPJPJ
+		private ObservedCanvas3D(GLWindow glwindow,
+								 						RenderingObserver renderingObserver) {
 			super(glwindow);//graphicsConfiguration, offScreen);
 			this.renderingObserver = renderingObserver;
 			// Under Windows with Java 7 and above, delay the rendering of the canvas 3D when
@@ -452,21 +386,21 @@ public class Component3DManager
 		}
 
 		@Override
-		public void preRender()
-		{
-			super.preRender();this.renderingObserver.canvas3DPreRendered(this);
+		public void preRender() {
+			super.preRender();
+			this.renderingObserver.canvas3DPreRendered(this);
 		}
 
 		@Override
-		public void postRender()
-		{
-			super.postRender();this.renderingObserver.canvas3DPostRendered(this);
+		public void postRender() {
+			super.postRender();
+			this.renderingObserver.canvas3DPostRendered(this);
 		}
 
 		@Override
-		public void postSwap()
-		{
-			super.postSwap();this.renderingObserver.canvas3DSwapped(this);
+		public void postSwap() {
+			super.postSwap();
+			this.renderingObserver.canvas3DSwapped(this);
 		}
 		//PJPJPJPJ no more paint
  /*   @Override
@@ -488,3 +422,4 @@ public class Component3DManager
     }*/
 	}
 }
+

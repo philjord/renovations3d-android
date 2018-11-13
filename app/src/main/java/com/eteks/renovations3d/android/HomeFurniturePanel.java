@@ -31,11 +31,21 @@ import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.security.AccessControlException;
 
+import com.eteks.sweethome3d.j3d.ModelManager;
+import com.eteks.sweethome3d.model.Transformation;
+import com.eteks.sweethome3d.tools.OperatingSystem;
+import com.eteks.sweethome3d.viewcontroller.View;
+import com.jogamp.newt.event.MouseAdapter;
+import com.jogamp.newt.event.MouseEvent;
+import com.mindblowing.swingish.ActionListener;
 import com.mindblowing.swingish.ButtonGroup;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JButton;
 import com.mindblowing.swingish.JCheckBox;
+import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JLabel;
+import com.mindblowing.swingish.JOptionPane;
+import com.mindblowing.swingish.JPanel;
 import com.mindblowing.swingish.JRadioButton;
 import com.mindblowing.swingish.JSpinner;
 import com.mindblowing.swingish.JTextField;
@@ -48,6 +58,8 @@ import com.eteks.sweethome3d.viewcontroller.ModelMaterialsController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
 
 import com.mindblowing.renovations3d.R;
+
+import org.jogamp.java3d.BranchGroup;
 
 /**
  * Home furniture editing panel.
@@ -62,6 +74,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private NullableCheckBox 		  	nameVisibleCheckBox;
   private JLabel                  priceLabel;
   private JSpinner 				  			priceSpinner;
+  private JLabel                  valueAddedTaxPercentageLabel;
+  private JSpinner                valueAddedTaxPercentageSpinner;
   private JLabel                  xLabel;
   private JSpinner 				  			xSpinner;
   private JLabel                  yLabel;
@@ -83,6 +97,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   private JSpinner 				  			heightSpinner;
   private JCheckBox 		 	  			keepProportionsCheckBox;
   private NullableCheckBox        mirroredModelCheckBox;
+  private JButton                 modelTransformationsButton;
   private JRadioButton 			  		defaultColorAndTextureRadioButton;
   private JRadioButton            colorRadioButton;
   private ColorButton             colorButton;
@@ -106,7 +121,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
    */
   public HomeFurniturePanel(UserPreferences preferences,
                             HomeFurnitureController controller,
-							Activity activity) {
+														Activity activity) {
 	  //super(new GridBagLayout());
 	  super(preferences, activity, R.layout.dialog_homefurniturepanel);
     this.controller = controller;
@@ -117,7 +132,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
   /**
    * Creates and initializes components and spinners model.
    */
-  private void createComponents(UserPreferences preferences, 
+  private void createComponents(final UserPreferences preferences,
                                 final HomeFurnitureController controller) {
 	  // Get unit name matching current unit
 	  String unitName = preferences.getLengthUnit().getName();
@@ -135,26 +150,19 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  }
 		  };
 		  controller.addPropertyChangeListener(HomeFurnitureController.Property.NAME, nameChangeListener);
-		  nameTextField.addTextChangedListener(new TextWatcher()
-		  {
-			  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3)
-			  {
+		  nameTextField.addTextChangedListener(new TextWatcher() {
+			  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
 			  }
 
-			  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3)
-			  {
+			  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
 			  }
 
-			  public void afterTextChanged(Editable arg0)
-			  {
+			  public void afterTextChanged(Editable arg0) {
 				  controller.removePropertyChangeListener(HomeFurnitureController.Property.NAME, nameChangeListener);
 				  String name = nameTextField.getText().toString();
-				  if (name == null || name.trim().length() == 0)
-				  {
+				  if (name == null || name.trim().length() == 0) {
 					  controller.setName(null);
-				  }
-				  else
-				  {
+				  } else {
 					  controller.setName(name);
 				  }
 				  controller.addPropertyChangeListener(HomeFurnitureController.Property.NAME, nameChangeListener);
@@ -218,26 +226,19 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  }
 		  };
 		  controller.addPropertyChangeListener(HomeFurnitureController.Property.DESCRIPTION, descriptionChangeListener);
-		  nameTextField.addTextChangedListener(new TextWatcher()
-		  {
-			  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3)
-			  {
+		  nameTextField.addTextChangedListener(new TextWatcher() {
+			  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
 			  }
 
-			  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3)
-			  {
+			  public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
 			  }
 
-			  public void afterTextChanged(Editable arg0)
-			  {
+			  public void afterTextChanged(Editable arg0) {
 				  controller.removePropertyChangeListener(HomeFurnitureController.Property.DESCRIPTION, descriptionChangeListener);
 				  String description = descriptionTextField.getText().toString();
-				  if (description == null || description.trim().length() == 0)
-				  {
+				  if (description == null || description.trim().length() == 0) {
 					  controller.setDescription(null);
-				  }
-				  else
-				  {
+				  } else {
 					  controller.setDescription(description);
 				  }
 				  controller.addPropertyChangeListener(HomeFurnitureController.Property.DESCRIPTION, descriptionChangeListener);
@@ -274,12 +275,12 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  new NullableSpinnerNumberModel(0, 0, 10000, 1f);
 		  this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel, true);
 		  BigDecimal price = controller.getPrice();
-		  priceSpinnerModel.setNullable(price == null);
-		  priceSpinnerModel.setValue(price == null ? null : price.floatValue());
+      priceSpinnerModel.setNullable(true);
+      priceSpinnerModel.setValue(price);
 		  final PropertyChangeListener priceChangeListener = new PropertyChangeListener() {
 			  public void propertyChange(PropertyChangeEvent ev) {
 				  priceSpinnerModel.setNullable(ev.getNewValue() == null);
-				  priceSpinnerModel.setValue(ev.getNewValue() != null ? ((Number) ev.getNewValue()).floatValue() : null);
+          priceSpinnerModel.setValue(ev.getNewValue());
 			  }
 		  };
 		  controller.addPropertyChangeListener(HomeFurnitureController.Property.PRICE, priceChangeListener);
@@ -290,6 +291,44 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  controller.addPropertyChangeListener(HomeFurnitureController.Property.PRICE, priceChangeListener);
 			  }
 		  });
+
+      if (controller.isPropertyEditable(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE)) {
+        this.valueAddedTaxPercentageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+								com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "valueAddedTaxPercentageLabel.text"));
+				final BigDecimal hundred = new BigDecimal("100");
+        final NullableSpinnerNumberModel valueAddedTaxPercentageSpinnerModel = new NullableSpinnerNumberModel(
+            0, 0, hundred.floatValue(), 0.5f);
+        this.valueAddedTaxPercentageSpinner = new NullableSpinner(activity, valueAddedTaxPercentageSpinnerModel);
+        BigDecimal valueAddedTaxPercentage = controller.getValueAddedTaxPercentage();
+        valueAddedTaxPercentageSpinnerModel.setNullable(true);
+        if (valueAddedTaxPercentage != null) {
+          valueAddedTaxPercentageSpinnerModel.setValue(valueAddedTaxPercentage.multiply(hundred));
+        } else {
+          valueAddedTaxPercentageSpinnerModel.setValue(null);
+        }
+        final PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent ev) {
+              priceSpinnerModel.setNullable(ev.getNewValue() == null);
+              if (ev.getNewValue() != null) {
+                valueAddedTaxPercentageSpinnerModel.setValue(((BigDecimal)ev.getNewValue()).multiply(hundred));
+              } else {
+                valueAddedTaxPercentageSpinnerModel.setValue(null);
+              }
+            }
+          };
+        valueAddedTaxPercentageSpinnerModel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent ev) {
+              // Remove listener on controller to avoid being recalled since actual value is divided by 100
+              controller.removePropertyChangeListener(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE, propertyChangeListener);
+              controller.setValueAddedTaxPercentage(valueAddedTaxPercentageSpinnerModel.getValue() != null
+                  ? ((BigDecimal)valueAddedTaxPercentageSpinnerModel.getValue()).divide(hundred)
+                  : null);
+              controller.addPropertyChangeListener(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE, propertyChangeListener);
+            }
+          });
+        controller.addPropertyChangeListener(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE,
+            propertyChangeListener);
+      }
 	  }
 
 	  final float maximumLength = preferences.getLengthUnit().getMaximumLength();
@@ -672,6 +711,47 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  });
 	  }
 
+    if (controller.isPropertyEditable(HomeFurnitureController.Property.MODEL_TRANSFORMATIONS)) {
+      try {
+        if (!Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
+          this.modelTransformationsButton = new JButton(activity, "");
+          this.modelTransformationsButton.setEnabled(false);
+          //if (OperatingSystem.isMacOSX()) {
+          //  this.modelTransformationsButton.putClientProperty("JButton.buttonType", "segmented");
+          //  this.modelTransformationsButton.putClientProperty("JButton.segmentPosition", "only");
+          //}
+          ModelMaterialsController modelMaterialsController = controller.getModelMaterialsController();
+          if (modelMaterialsController != null && modelMaterialsController.getModel() != null) {
+            ModelManager.getInstance().loadModel(modelMaterialsController.getModel(),
+                new ModelManager.ModelObserver() {
+                  public void modelUpdated(BranchGroup modelRoot) {
+                    ModelManager modelManager = ModelManager.getInstance();
+                    if (modelManager.containsDeformableNode(modelRoot)) {
+                      // Make button visible only if model contains some deformable nodes
+                      modelTransformationsButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+                          modelManager.containsNode(modelRoot, ModelManager.MANNEQUIN_ABDOMEN_PREFIX)
+                              ? "mannequinTransformationsButton.text"
+                              : "modelTransformationsButton.text"));
+                      modelTransformationsButton.setEnabled(true);
+                      modelTransformationsButton.addActionListener(new ActionListener() {
+                          public void actionPerformed(ActionEvent ev) {
+                            displayModelTransformationsView(preferences, controller);
+                          }
+                        });
+                    }
+                  }
+
+                  public void modelError(Exception ex) {
+                    // Ignore missing models
+                  }
+                });
+          }
+        }
+      } catch (AccessControlException ex) {
+        // com.eteks.sweethome3d.no3D property can't be read
+      }
+    }
+
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.PAINT)) {
 		  ButtonGroup buttonGroup = new ButtonGroup();
 		  // Create radio buttons bound to COLOR and TEXTURE controller properties
@@ -754,7 +834,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 						  }
 					  }
 				  });
-				  //this.modelMaterialsComponent = (JButton)modelMaterialsController.getView();
+				  this.modelMaterialsComponent = (JButton)modelMaterialsController.getView();
 				  //if (OperatingSystem.isMacOSX()) {
 				  //  this.modelMaterialsComponent.putClientProperty("JButton.buttonType", "segmented");
 				  //  this.modelMaterialsComponent.putClientProperty("JButton.segmentPosition", "only");
@@ -762,7 +842,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  buttonGroup.add(this.modelMaterialsRadioButton);
 				  boolean uniqueModel = modelMaterialsController.getModel() != null;
 				  this.modelMaterialsRadioButton.setEnabled(uniqueModel);
-				  //this.modelMaterialsComponent.setEnabled(uniqueModel);
+				  this.modelMaterialsComponent.setEnabled(uniqueModel);
 			  }
 		  } catch (AccessControlException ex) {
 			  // com.eteks.sweethome3d.no3D property can't be read
@@ -1018,9 +1098,18 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (priceDisplayed) {
 		  swapOut(this.priceLabel, R.id.furniture_panel_priceLabel);
 		  swapOut(this.priceSpinner, R.id.furniture_panel_priceSpinner);
+			if (this.valueAddedTaxPercentageLabel != null) {
+				swapOut(this.valueAddedTaxPercentageLabel, R.id.furniture_panel_valueAddedTaxPercentageLabel);
+				swapOut(this.valueAddedTaxPercentageSpinner, R.id.furniture_panel_valueAddedTaxPercentageSpinner);
+			} else {
+				removeView(R.id.furniture_panel_valueAddedTaxPercentageLabel);
+				removeView(R.id.furniture_panel_valueAddedTaxPercentageSpinner);
+			}
 	  } else {
 		  removeView(R.id.furniture_panel_priceLabel);
 		  removeView(R.id.furniture_panel_priceSpinner);
+			removeView(R.id.furniture_panel_valueAddedTaxPercentageLabel);
+			removeView(R.id.furniture_panel_valueAddedTaxPercentageSpinner);
 	  }
 	  // Location panel
 	  JLabel locationPanel = new JLabel(activity, preferences.getLocalizedString(
@@ -1047,7 +1136,6 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  removeView(R.id.furniture_panel_elevationLabel);
 		  removeView(R.id.furniture_panel_elevationSpinner);
 	  }
-
 	  if (this.angleLabel != null
 			  && !orientationPanelDisplayed) {
 		  swapOut(this.angleLabel, R.id.furniture_panel_angleLabel);
@@ -1056,6 +1144,11 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  removeView(R.id.furniture_panel_angleLabel);
 		  removeView(R.id.furniture_panel_angleSpinner);
 	  }
+		if (this.mirroredModelCheckBox != null) {
+			swapOut(this.mirroredModelCheckBox, R.id.furniture_panel_mirroredModelCheckBox);
+		} else {
+			removeView(R.id.furniture_panel_mirroredModelCheckBox);
+		}
 	  if (this.basePlanItemCheckBox != null) {
 		  swapOut(this.basePlanItemCheckBox, R.id.furniture_panel_basePlanItemCheckBox);
 	  } else {
@@ -1086,7 +1179,6 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  removeView(R.id.furniture_panel_angleLabel);
 			  removeView(R.id.furniture_panel_angleSpinner);
 		  }
-
 		  if (this.pitchRadioButton != null) {
 			  // Row 2 may contain horizontalRotationLabel
 			  swapOut(this.pitchRadioButton, R.id.furniture_panel_pitchRadioButton);
@@ -1147,10 +1239,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  } else {
 		  removeView(R.id.furniture_panel_keepProportionsCheckBox);
 	  }
-	  if (this.mirroredModelCheckBox != null) {
-		  swapOut(this.mirroredModelCheckBox, R.id.furniture_panel_mirroredModelCheckBox);
+	  if (this.modelTransformationsButton != null) {
+		  swapOut(this.modelTransformationsButton, R.id.furniture_panel_modelTransformationsButton);
 	  } else {
-		  removeView(R.id.furniture_panel_mirroredModelCheckBox);
+		  removeView(R.id.furniture_panel_modelTransformationsButton);
 	  }
 	  JLabel paintPanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
@@ -1178,10 +1270,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  removeView(R.id.furniture_panel_textureButton);
 		  }
 		  if (this.modelMaterialsComponent != null) {
-			  //swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
-			  //TODO:  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
-				removeView(R.id.furniture_panel_modelMaterialsRadioButton);
-				removeView(R.id.furniture_panel_modelMaterialsButton);
+			  swapOut(this.modelMaterialsRadioButton, R.id.furniture_panel_modelMaterialsRadioButton);
+			  swapOut(this.modelMaterialsComponent, R.id.furniture_panel_modelMaterialsButton);
 		  } else {
 			  removeView(R.id.furniture_panel_modelMaterialsRadioButton);
 				removeView(R.id.furniture_panel_modelMaterialsButton);
@@ -1212,7 +1302,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  removeView(R.id.furniture_panel_textureRadioButton);
 		  removeView(R.id.furniture_panel_textureButton);
 		  removeView(R.id.furniture_panel_modelMaterialsRadioButton);
-		  //TODO:  removeView(R.id.furniture_panel_modelMaterialsButton);
+		  removeView(R.id.furniture_panel_modelMaterialsButton);
 	  }
 	  if (this.defaultShininessRadioButton != null) {
 		  JLabel shininessPanel = new JLabel(activity, preferences.getLocalizedString(
@@ -1274,5 +1364,159 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  }
 	  });
 	  this.show();
+  }
+
+
+	/**
+	 * Displays a panel which lets the user modify the transformations applied to the edited model.
+	 */
+	private void displayModelTransformationsView(UserPreferences preferences, HomeFurnitureController controller) {
+		new ModelTransformationsPanel(preferences, controller, activity).displayView(this);
+	}
+
+	/**
+	 * A panel that displays a preview of a model to let the user change transformations applied on it.
+	 */
+	private static class ModelTransformationsPanel extends AndroidDialogView implements DialogView {
+		private ModelPreviewComponent   previewComponent;
+		private JLabel                  transformationsLabel;
+		private JButton                 resetTransformationsButton;
+		private JButton                 viewFromFrontButton;
+		private JButton                 viewFromSideButton;
+		private JButton                 viewFromTopButton;
+		private String                  dialogTitle;
+		private HomeFurnitureController controller;
+
+		public ModelTransformationsPanel(UserPreferences preferences,
+																		 HomeFurnitureController controller,
+																		 Activity activity) {
+			//super(new GridBagLayout());
+			super(preferences, activity, R.layout.dialog_modeltransformationspanel);
+			this.controller = controller;
+			createComponents(preferences, controller);
+			setMnemonics(preferences);
+			layoutComponents();
+		}
+
+		/**
+		 * Creates and initializes components.
+		 */
+		private void createComponents(final UserPreferences preferences,
+																	final HomeFurnitureController controller) {
+			ModelMaterialsController modelMaterialsController = controller.getModelMaterialsController();
+			this.previewComponent = new ModelPreviewComponent(true, true, true, true, activity);
+			this.previewComponent.setFocusable(false);
+			float resolutionScale = SwingTools.getResolutionScale();
+			//this.previewComponent.setPreferredSize(new Dimension((int)(400 * resolutionScale), (int)(400 * resolutionScale)));
+			this.previewComponent.setModel(modelMaterialsController.getModel(), modelMaterialsController.isBackFaceShown(), modelMaterialsController.getModelRotation(),
+							modelMaterialsController.getModelWidth(), modelMaterialsController.getModelDepth(), modelMaterialsController.getModelHeight());
+			this.previewComponent.setModelMaterials(modelMaterialsController.getMaterials());
+			this.previewComponent.setModelTranformations(controller.getModelTransformations());
+			this.previewComponent.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent ev) {
+					updateComponents(controller);
+				}
+			});
+
+			this.transformationsLabel = new JLabel(activity, preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "transformationsLabel.text"));
+
+			this.resetTransformationsButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "resetTransformationsButton.text"));
+			resetTransformationsButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					previewComponent.resetModelTranformations();
+					updateComponents(controller);
+				}
+			});
+			updateComponents(controller);
+			this.viewFromFrontButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromFrontButton.text"));
+			viewFromFrontButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					previewComponent.setViewYaw(0);
+					previewComponent.setViewPitch(0);
+				}
+			});
+			this.viewFromSideButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromSideButton.text"));
+			viewFromSideButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					previewComponent.setViewYaw((float)(Math.PI / 2));
+					previewComponent.setViewPitch(0);
+				}
+			});
+			this.viewFromTopButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromTopButton.text"));
+			viewFromTopButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					previewComponent.setViewYaw(0);
+					previewComponent.setViewPitch(-(float)(Math.PI / 2));
+				}
+			});
+
+			this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "modelTransformations.title");
+		}
+
+		private void updateComponents(HomeFurnitureController controller) {
+			this.resetTransformationsButton.setEnabled(this.previewComponent.getModelTransformations() != null);
+		}
+
+		/**
+		 * Sets components mnemonics and label / component associations.
+		 */
+		private void setMnemonics(UserPreferences preferences) {
+		}
+
+		/**
+		 * Layouts components in panel with their labels.
+		 */
+		private void layoutComponents() {
+  		// Preview
+			swapOut(this.transformationsLabel, R.id.modeltransformations_panel_transformationsLabel);
+			swapOut(this.previewComponent, R.id.modeltransformations_panel_previewComponent);
+			swapOut(this.resetTransformationsButton, R.id.modeltransformations_panel_resetTransformationsButton);
+			swapOut(this.viewFromFrontButton, R.id.modeltransformations_panel_viewFromFrontButton);
+			swapOut(this.viewFromSideButton, R.id.modeltransformations_panel_viewFromSideButton);
+			swapOut(this.viewFromTopButton, R.id.modeltransformations_panel_viewFromTopButton);
+
+			this.setTitle(dialogTitle);
+			swapOut(this.closeButton, R.id.modeltransformations_panel_closeButton);
+		}
+
+		private void updateLocationAndSize() {
+			float modelX = this.previewComponent.getModelX();
+			float modelY = this.previewComponent.getModelY();
+			float pieceX = (float)(this.controller.getX()
+							+ modelX * Math.cos(this.controller.getAngle()) - modelY * Math.sin(this.controller.getAngle()));
+			float pieceY = (float)(this.controller.getY()
+							+ modelX * Math.sin(this.controller.getAngle()) + modelY * Math.cos(this.controller.getAngle()));
+			float pieceElevation = this.controller.getElevation()
+							+ this.previewComponent.getModelElevation() + this.controller.getHeight() / 2;
+			Transformation[] modelTransformations = this.previewComponent.getModelTransformations();
+			this.controller.setModelTransformations(modelTransformations != null ? modelTransformations : new Transformation [0],
+							pieceX, pieceY, pieceElevation,
+							this.previewComponent.getModelWidth(),
+							this.previewComponent.getModelDepth(),
+							this.previewComponent.getModelHeight());
+		}
+
+		/**
+		 * Displays this panel in a modal dialog box.
+		 */
+		public void displayView(View parent) {
+			//JComponent parentComponent = SwingUtilities.getRootPane((JComponent)parent);
+			//if (SwingTools.showConfirmDialog(parentComponent, this, this.dialogTitle, null) == JOptionPane.OK_OPTION) {
+			//	updateLocationAndSize();
+			//}
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+			this.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					updateLocationAndSize();
+				}
+			});
+			this.show();
+		}
   }
 }

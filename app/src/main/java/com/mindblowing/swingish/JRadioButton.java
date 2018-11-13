@@ -40,4 +40,9 @@ public class JRadioButton extends RadioButton
 				changeListener.stateChanged(null);
 			}});
 	}
+
+	public void removeChangeListener(final ChangeListener changeListener)
+	{
+		setOnClickListener(null);
+	}
 }

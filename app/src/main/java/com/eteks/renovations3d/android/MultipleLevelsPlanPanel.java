@@ -1431,6 +1431,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	}
 
 	/**
+	 * Returns the preferred scale to ensure it can be fully printed on the given print zone.
+	 */
+	public float getPrintPreferredScale(float preferredWidth, float preferredHeight) {
+		return ((PlanView)this.planComponent).getPrintPreferredScale(preferredWidth, preferredHeight);
+	}
+
+	/**
 	 * A dummy label used to track tabs matching levels.
 	 */
 	public static class LevelLabel  {

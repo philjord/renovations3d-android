@@ -58,28 +58,25 @@ public class JSlider extends SeekBar
 	{
 		setProgress(value);
 	}
-	public void addChangeListener(final ChangeListener changeListener)
-	{
-		this.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-		{
+	public void addChangeListener(final ChangeListener changeListener) {
+		this.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-			{
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				changeListener.stateChanged(null);
 			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar)
-			{
-
+			public void onStartTrackingTouch(SeekBar seekBar) {
 			}
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar)
-			{
-
+			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
 		});
+	}
+
+	public void removeChangeListener(final ChangeListener changeListener) {
+		this.setOnSeekBarChangeListener(null);
 	}
 
 	public void setPaintTicks(boolean paintTicks)

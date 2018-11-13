@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="@drawable/empty_tall_divider"
+              android:orientation="vertical"
+              android:padding="10dp"
+              android:showDividers="middle">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+
+        <TextView
+            android:id="@+id/mmp_previewLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/mmp_previewComponent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/mmp_materialsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/mmp_materialsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/mmp_colorAndTextureLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+
+
+            <RadioButton
+                android:id="@+id/mmp_defaultColorAndTextureRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <RadioButton
+                android:id="@+id/mmp_invisibleRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display name in plan"/>
+
+
+
+        <TableRow>
+
+            <RadioButton
+                android:id="@+id/mmp_colorRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <Button
+                android:id="@+id/mmp_colorButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display name in plan"/>
+        </TableRow>
+        <TableRow>
+
+            <RadioButton
+                android:id="@+id/mmp_textureRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <Button
+                android:id="@+id/mmp_textureComponent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display name in plan"/>
+        </TableRow>
+        <TableRow>
+
+            <TextView
+                android:id="@+id/mmp_shininessLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                android:id="@+id/mmp_shininessSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display name in plan"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/mmp_closeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="Close"/>
+</LinearLayout>

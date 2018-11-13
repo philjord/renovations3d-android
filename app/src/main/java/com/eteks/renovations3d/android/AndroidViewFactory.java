@@ -416,7 +416,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public View createModelMaterialsView(UserPreferences preferences,
 										 ModelMaterialsController controller)
 	{
-		throw new UnsupportedOperationException();//return new ModelMaterialsComponent(preferences, controller);
+		return new ModelMaterialsComponent(preferences, controller, activity);
 	}
 
 	/**

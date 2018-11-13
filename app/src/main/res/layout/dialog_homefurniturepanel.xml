@@ -71,6 +71,20 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/furniture_panel_valueAddedTaxPercentageLabel"
+                    android:text="Description"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_valueAddedTaxPercentageSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
 
@@ -253,6 +267,12 @@
                 android:text="Mirrored shape"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/furniture_panel_modelTransformationsButton"
+                android:text="TransformationsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"/>
         </TableLayout>
         <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
         <TableLayout

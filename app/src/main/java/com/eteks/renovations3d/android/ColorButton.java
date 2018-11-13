@@ -336,22 +336,23 @@ public class ColorButton extends  JButton
 		}
 	}
 
-	private void firePropertyChange(String prop, Object oldValue, Object newValue)
-	{
+	private void firePropertyChange(String prop, Object oldValue, Object newValue) {
 		PropertyChangeListener propertyChangeListener = propertyChangeListeners.get(prop);
-		if(propertyChangeListener != null)
-		{
+		if (propertyChangeListener != null) {
 			propertyChangeListener.propertyChange(new PropertyChangeEvent(this, prop, oldValue, newValue));
 		}
 	}
 
 	private HashMap<String, PropertyChangeListener> propertyChangeListeners = new HashMap<String, PropertyChangeListener>();
-	public void addPropertyChangeListener(String prop, PropertyChangeListener propertyChangeListener)
-	{
-		if(propertyChangeListeners.get(prop)!=null)
-			new Throwable("prop already listnered to " +prop ).printStackTrace();
+	public void addPropertyChangeListener(String prop, PropertyChangeListener propertyChangeListener) {
+		if (propertyChangeListeners.get(prop) != null)
+			new Throwable("prop already listened to " + prop ).printStackTrace();
 
-		propertyChangeListeners.put(prop,propertyChangeListener);
+		propertyChangeListeners.put(prop, propertyChangeListener);
+	}
+
+	public void removePropertyChangeListener(String prop, PropertyChangeListener propertyChangeListener) {
+		propertyChangeListeners.remove(prop);
 	}
 
 	/**
