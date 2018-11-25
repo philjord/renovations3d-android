@@ -17,35 +17,37 @@
 
             <TextView
                 android:id="@+id/modeltransformations_panel_transformationsLabel"
-                android:text="Name"
+                android:text="modeltransformations_panel_transformationsLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/modeltransformations_panel_previewComponent"
-                android:text="Name"
+                android:text="modeltransformations_panel_previewComponent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_resetTransformationsButton"
-                    android:text="Display name in plan"
+                    android:text="modeltransformations_panel_resetTransformationsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromFrontButton"
-                    android:text="Display name in plan"
+                    android:text="modeltransformations_panel_viewFromFrontButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromSideButton"
-                    android:text="Display name in plan"
+                    android:text="modeltransformations_panel_viewFromSideButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromTopButton"
-                    android:text="Display name in plan"
+                    android:text="modeltransformations_panel_viewFromTopButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </TableRow>

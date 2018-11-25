@@ -22,7 +22,7 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
+import android.view.ScaleGestureDetector;
 
 import javaawt.Color;
 import javaawt.Dimension;
@@ -33,7 +33,6 @@ import javaawt.geom.Point2D;
 import javaawt.image.BufferedImage;
 import javaawt.image.VMBufferedImage;
 import javaawt.imageio.ImageIO;
-import jogamp.newt.driver.android.WindowDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -75,14 +75,11 @@ import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Matrix3f;
 import org.jogamp.vecmath.Point2d;
-import org.jogamp.vecmath.Point2f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
 
-import com.eteks.renovations3d.Renovations3DActivity;
-import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.j3d.Component3DManager;
 import com.eteks.sweethome3d.j3d.HomePieceOfFurniture3D;
 import com.eteks.sweethome3d.j3d.ModelManager;
@@ -97,7 +94,6 @@ import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLException;
 import com.mindblowing.renovations3d.R;
 import com.mindblowing.swingish.JPanel;
@@ -106,7 +102,7 @@ import com.mindblowing.swingish.JPanel;
  * Super class of 3D preview component for model. 
  */
 public class ModelPreviewComponent extends JPanel {
-  private static final int MODEL_PREFERRED_SIZE = Math.round(200 * SwingTools.getResolutionScale());
+  private static final int MODEL_PREFERRED_SIZE = Math.round(240 * SwingTools.getResolutionScale());
   
   private SimpleUniverse          universe;
 //  private JPanel component3DPanel;
@@ -124,6 +120,9 @@ public class ModelPreviewComponent extends JPanel {
   private Map<Texture, Texture>   pieceTextures = new HashMap<Texture, Texture>();
 
   private ScaledImageComponent 	  				modelPreviewImageComponent;
+
+  private boolean postureChangeOccuring = false;
+	private ScaleGestureDetector mScaleDetector;
 
   /**
    * Returns an 3D model preview component that lets the user change its yaw.
@@ -165,10 +164,13 @@ public class ModelPreviewComponent extends JPanel {
 
 		// swap the imagePreviewComponent out for a component that just uses the getIcon to draw an image
 		modelPreviewImageComponent = new ScaledImageComponent(null, activity);
-		modelPreviewImageComponent.setMinimumWidth(modelPreviewImageComponent.getPreferredSize().width);
-		modelPreviewImageComponent.setMinimumHeight(modelPreviewImageComponent.getPreferredSize().height);
 		this.swapOut(modelPreviewImageComponent, R.id.mpc_imagePreviewPanel);
-    
+		modelPreviewImageComponent.setPreferredSize(MODEL_PREFERRED_SIZE);// will be converted to px, after this call use the getPreferredSize() method
+		modelPreviewImageComponent.getLayoutParams().width = getPreferredSize().width;
+		modelPreviewImageComponent.getLayoutParams().height = getPreferredSize().height;
+		modelPreviewImageComponent.setMinimumWidth(getPreferredSize().width);
+		modelPreviewImageComponent.setMinimumHeight(getPreferredSize().height);
+
 //    this.component3DPanel = new JPanel();
     //setLayout(new BorderLayout());
     //add(this.component3DPanel);
@@ -200,7 +202,7 @@ public class ModelPreviewComponent extends JPanel {
   //  if (isPreferredSizeSet()) {
   //    return super.getPreferredSize();
   //  } else {
-      return new Dimension(MODEL_PREFERRED_SIZE, MODEL_PREFERRED_SIZE);
+      return new Dimension(modelPreviewImageComponent.getPreferredSize().width, modelPreviewImageComponent.getPreferredSize().height);
   //  }
   }
 
@@ -221,35 +223,12 @@ public class ModelPreviewComponent extends JPanel {
         });*/
     }
   }
-  
+
+  // create a listener list that the touch handler can call to re-implement a general listener facility
+	// that doesn't exist in the parent heirachy
+	private List<MouseListener> mouseListeners = new  ArrayList<MouseListener>();
   public void addMouseListener(final MouseListener l) {
-    //super.addMouseListener(l);
-    if (this.canvas3D != null) {
-    	//TODO: make a touch listener to forward events on
-      /*this.canvas3D.getGLWindow().addMouseListener(new MouseAdapter() {
-          public void mouseReleased(MouseEvent ev) {
-            l.mouseReleased(ev);
-          }
-          
-          public void mousePressed(MouseEvent ev) {
-            l.mousePressed(ev);
-          }
-          
-          public void mouseExited(MouseEvent ev) {
-            l.mouseExited(ev);
-          }
-          
-          public void mouseEntered(MouseEvent ev) {
-            l.mouseEntered(ev);
-          }
-          
-          public void mouseClicked(MouseEvent ev) {
-            l.mouseClicked(ev);
-          }
-
-
-        });*/
-    }
+		mouseListeners.add(l);
   }
   
   /**
@@ -305,8 +284,8 @@ public class ModelPreviewComponent extends JPanel {
 		  caps.setBackgroundOpaque(true);
 
 			GLWindow gl_window = GLWindow.create(caps);*/
-	    canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(modelPreviewImageComponent.getPreferredSize().width,
-							modelPreviewImageComponent.getPreferredSize().height);
+	    canvas3D = Component3DManager.getInstance().getOffScreenCanvas3D(getPreferredSize().width,
+							getPreferredSize().height);
 		} catch (GLException e) {
 		}
 
@@ -387,7 +366,7 @@ public class ModelPreviewComponent extends JPanel {
         private int yLastMouseMove;
         private boolean        boundedPitch;
         private TransformGroup pickedTransformGroup;
-        private Point2d pivotCenterPixel;
+        private Point2d 			 pivotCenterPixel;
         private Transform3D    translationFromOrigin;
         private Transform3D    translationToOrigin;
         private BoundingBox    modelBounds;
@@ -410,6 +389,12 @@ public class ModelPreviewComponent extends JPanel {
           return new Point(ev.getX(), ev.getY());
         }
 
+				@Override
+				public void mouseReleased(MouseEvent ev) {
+					postureChangeOccuring = false;
+					updateIconImage();
+				}
+
         @Override
         public void mousePressed(MouseEvent ev) {
           Point mouseLocation = getMouseLocation(ev);
@@ -417,6 +402,7 @@ public class ModelPreviewComponent extends JPanel {
           this.yLastMouseMove = mouseLocation.y;
           this.pickedTransformGroup = null;
           this.pivotCenterPixel = null;
+					postureChangeOccuring = false;
           this.boundedPitch = true;
           if (transformationsChangeSupported
               && getModelNode() != null) {
@@ -433,7 +419,6 @@ public class ModelPreviewComponent extends JPanel {
             pickCanvas.setFlags(PickInfo.NODE | PickInfo.SCENEGRAPHPATH);
             pickCanvas.setMode(PickInfo.PICK_GEOMETRY);
 
-            //TODO: adjust canvas size to be exact perhaps?
 						//Canvas is not the same size as the touched scaledImage so, adjust mouse locaiton to match
 						mouseLocation.x = (int)(((float)mouseLocation.x / (float)modelPreviewImageComponent.getWidth()) * (float)canvas3D.getWidth());
 						mouseLocation.y = (int)(((float)mouseLocation.y / (float)modelPreviewImageComponent.getHeight()) * (float)canvas3D.getHeight());
@@ -460,9 +445,11 @@ public class ModelPreviewComponent extends JPanel {
                   canvas.getVworldToImagePlate(transformToCanvas);
                   transformToCanvas.transform(nodeCenterAtScreen);
                   this.pivotCenterPixel = new Point2d();
+									postureChangeOccuring = true;
+									updateIconImage();
                   canvas.getPixelLocationFromImagePlate(new Point3d(nodeCenterAtScreen), this.pivotCenterPixel);
 
-                  String transformationName = (String)this.pickedTransformGroup.getUserData();
+                  String transformationName = (String)this.pickedTransformGroup.getUserData();System.out.println("transformationName " +transformationName);
                   this.translationFromOrigin = new Transform3D();
                   this.translationFromOrigin.setTranslation(new Vector3d(nodeCenter));
                   Transform3D transformBetweenNodes = getTransformBetweenNodes(referenceNode.getParent(), getModelNode());
@@ -504,7 +491,7 @@ public class ModelPreviewComponent extends JPanel {
                       if (transformationName.startsWith(ModelManager.RAIL_PREFIX)
                           ? zAxisAtScreen.x > 0
                           : zAxisAtScreen.z < 0) {
-                      rotation.rotX(Math.PI);
+                      	rotation.rotX(Math.PI);
                       }
                     } else {
                       Vector3f xAxisAtScreen = new Vector3f(1, 0, 0);
@@ -629,44 +616,44 @@ public class ModelPreviewComponent extends JPanel {
 
 							updateIconImage();
             } else {
-            if (yawChangeSupported) {
-              // Mouse move along X axis changes yaw 
-                setViewYaw(getViewYaw() - ANGLE_FACTOR * (mouseLocation.x - this.xLastMouseMove));
-            }
+							if (yawChangeSupported) {
+								// Mouse move along X axis changes yaw
+									setViewYaw(getViewYaw() - ANGLE_FACTOR * (mouseLocation.x - this.xLastMouseMove));
+							}
 
-            if (scaleChangeSupported && ev.isAltDown()) {
-              // Mouse move along Y axis with Alt down changes scale
-                setViewScale(Math.max(0.5f, Math.min(1.3f, getViewScale() * (float)Math.exp((mouseLocation.y - this.yLastMouseMove) * ZOOM_FACTOR))));
-            } else if (pitchChangeSupported && !ev.isAltDown()) {
-              // Mouse move along Y axis changes pitch
-                float viewPitch = getViewPitch() - ANGLE_FACTOR * (mouseLocation.y - this.yLastMouseMove);
-                if (this.boundedPitch) {
-                  setViewPitch(Math.max(-(float)Math.PI / 4, Math.min(0, viewPitch)));
-                } else {
-                  // Allow any rotation around the model
-                  setViewPitch(viewPitch);
-                }
-            }
-          }
-        }
+							if (scaleChangeSupported && ev.isAltDown()) {
+								// Mouse move along Y axis with Alt down changes scale
+									setViewScale(Math.max(0.5f, Math.min(1.3f, getViewScale() * (float)Math.exp((mouseLocation.y - this.yLastMouseMove) * ZOOM_FACTOR))));
+							} else if (pitchChangeSupported && !ev.isAltDown()) {
+								// Mouse move along Y axis changes pitch
+									float viewPitch = getViewPitch() - ANGLE_FACTOR * (mouseLocation.y - this.yLastMouseMove);
+									if (this.boundedPitch) {
+										setViewPitch(Math.max(-(float)Math.PI / 4, Math.min(0, viewPitch)));
+									} else {
+										// Allow any rotation around the model
+										setViewPitch(viewPitch);
+									}
+							}
+						}
+        	}
           this.xLastMouseMove = mouseLocation.x;
           this.yLastMouseMove = mouseLocation.y;
         }
       };
 
-      //TODO: add to scaled image istead canvas3D.getGLWindow().addMouseListener(mouseListener);
+      //added to scaled image instead
       //canvas3D.getGLWindow().addMouseListener(mouseListener);
     
     if (scaleChangeSupported) {
-			/*TODO: add to scaled image istead canvas3D.getGLWindow().addMouseListener(new MouseAdapter() {
+			/* canvas3D.getGLWindow().addMouseListener(new MouseAdapter() {
           public void mouseWheelMoved(MouseEvent ev) {
             // Mouse move along Y axis with Alt down changes scale
-        	  //TODO: seems to always be 1
-						//TODO: needs to be a scale listener for android
             setViewScale(Math.max(0.5f, Math.min(1.3f, getViewScale() * (float)Math.exp(ev.getRotation()[0] * ZOOM_FACTOR))));
           }
-
         });*/
+			if(getContext() != null){
+				mScaleDetector = new ScaleGestureDetector(this.getContext(), new ScaleListener());
+			}
     }
     
     // Redirect mouse events to the 3D component
@@ -704,15 +691,40 @@ public class ModelPreviewComponent extends JPanel {
           public void mouseClicked(MouseEvent ev) {
             l.mouseClicked(ev);
           }
-
-
         });
     }*/
 
 
 		modelPreviewImageComponent.setOnTouchListener(new TouchListener(mouseListener));
   }
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
+		/**
+		 * @param detector
+		 * @return
+		 */
+		@Override
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			return true;
+		}
+
+		@Override
+		public boolean onScale(ScaleGestureDetector detector) {
+			//float yd = (mScaleDetector.getCurrentSpan() - mScaleDetector.getPreviousSpan());
+			//setViewScale(Math.max(0.5f, Math.min(1.3f, getViewScale() * (float)Math.exp(yd))));
+
+			float oldScale = getViewScale();
+			float newScale = getViewScale() * (mScaleDetector.getPreviousSpan() / mScaleDetector.getCurrentSpan() );
+			// Don't let the object get too small or too large.
+			newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
+			setViewScale(newScale);
+
+			if (newScale != oldScale ) {
+				updateIconImage();
+			}
+			return true;
+		}
+	}
 	private class TouchListener implements OnTouchListener
 	{
 		private static final int INVALID_POINTER_ID = -1;
@@ -735,15 +747,24 @@ public class ModelPreviewComponent extends JPanel {
 		}
 		@Override
 		public boolean onTouch(android.view.View v, MotionEvent ev) {
-			final int action = ev.getActionMasked();
 
+			// Let the ScaleGestureDetector inspect all events, it will do move camera if it likes
+			if(mScaleDetector != null ) {
+				mScaleDetector.onTouchEvent(ev);
+				if (mScaleDetector.isInProgress())
+					return true;
+			}
+			final int action = ev.getActionMasked();
+			MouseEvent me = new MouseEvent((short)0,this,0,0,(int)ev.getX(), (int)ev.getY(),(short)1,(short)0,null,0);
 			switch (action & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_DOWN:
 					if( ev.getPointerCount() == 1 ) {
 						this.xLastMouseMove = ev.getX();
 						this.yLastMouseMove = ev.getY();
-
-						mouseListener.mousePressed(new MouseEvent((short)0,this,0,0,(int)ev.getX(), (int)ev.getY(),(short)1,(short)0,null,0));
+						mouseListener.mousePressed(me);
+						for (final MouseListener l : mouseListeners) {
+							l.mousePressed(me);
+						}
 					}
 					this.xLastMouseMove2 = -1;
 					this.yLastMouseMove2 = -1;
@@ -753,8 +774,10 @@ public class ModelPreviewComponent extends JPanel {
 				case MotionEvent.ACTION_MOVE:
 					if (ev.getPointerCount() == 1) {
 						if(this.xLastMouseMove != -1 && this.yLastMouseMove != -1) {
-							mouseListener.mouseDragged(new MouseEvent((short)0,this,0,0,(int)ev.getX(), (int)ev.getY(),(short)1,(short)0,null,0));
-
+							mouseListener.mouseDragged(me);
+							for (final MouseListener l : mouseListeners) {
+								l.mouseDragged(me);
+							}
 						}
 						this.xLastMouseMove = ev.getX();
 						this.yLastMouseMove = ev.getY();
@@ -771,6 +794,10 @@ public class ModelPreviewComponent extends JPanel {
 				case MotionEvent.ACTION_CANCEL:
 					mActivePointerId = INVALID_POINTER_ID;
 
+					mouseListener.mouseReleased(me);
+					for (final MouseListener l : mouseListeners) {
+						l.mouseReleased(me);
+					}
 					this.xLastMouseMove = -1;
 					this.yLastMouseMove = -1;
 
@@ -1440,12 +1467,24 @@ public class ModelPreviewComponent extends JPanel {
       }
     } 
   }
-	// very rough way to limit updates
-	private long lastUpdate = 0;
+
   private void updateIconImage() {
-  	if(System.currentTimeMillis() - lastUpdate > 100) {
-			modelPreviewImageComponent.setImage(this.getIconImage(400));
-			lastUpdate = System.currentTimeMillis();
+		if (canvas3D != null) {
+			// indicate model posture change occuring
+			if (postureChangeOccuring) {
+				setBackground(Color.LIGHT_GRAY);
+			} else {
+				setBackground(Color.WHITE);
+			}
+			canvas3D.renderOffScreenBuffer();
+			canvas3D.waitForOffScreenRendering();
+
+			BufferedImage image = canvas3D.getOffScreenBuffer().getImage();
+			// must be carefully swapped to get BGRA to RGBA
+			int[] imagePixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(image);
+			Bitmap bm = Bitmap.createBitmap(imagePixels, image.getWidth(), image.getHeight(), Bitmap.Config.RGB_565);// note smaller config size
+
+			modelPreviewImageComponent.setImage(new VMBufferedImage(bm));
 		}
 	}
 
@@ -1454,30 +1493,31 @@ public class ModelPreviewComponent extends JPanel {
    */
   private BufferedImage getIconImage(int maxWaitingDelay) {
 		if(canvas3D != null) {
+			setBackground(Color.WHITE);
 	  	canvas3D.renderOffScreenBuffer();
 	  	canvas3D.waitForOffScreenRendering();
-
 		  BufferedImage imageWithWhiteBackgound = canvas3D.getOffScreenBuffer().getImage();
 		  int[] imageWithWhiteBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithWhiteBackgound);
+
 		  // Render scene with a black background
 		  setBackground(Color.BLACK);
 		  canvas3D.renderOffScreenBuffer();
 		  canvas3D.waitForOffScreenRendering();
-		  if (canvas3D != null) {
-			  BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
-			  int[] imageWithBlackBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithBlackBackgound);
-			  // Create an image with transparent pixels where model isn't drawn
-			  for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
-				  if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
-						  && imageWithBlackBackgoundPixels[i] == 0xFF000000
-						  && imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF) {
-					  imageWithWhiteBackgoundPixels[i] = 0;
-				  }
-			  }
+			BufferedImage imageWithBlackBackgound = canvas3D.getOffScreenBuffer().getImage();
+			int[] imageWithBlackBackgoundPixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(imageWithBlackBackgound);
 
-			  Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
-			  return new VMBufferedImage(bm);
-		  }
+			// Create an image with transparent pixels where model isn't drawn
+			for (int i = 0; i < imageWithBlackBackgoundPixels.length; i++) {
+				if (imageWithBlackBackgoundPixels[i] != imageWithWhiteBackgoundPixels[i]
+								&& imageWithBlackBackgoundPixels[i] == 0xFF000000
+								&& imageWithWhiteBackgoundPixels[i] == 0xFFFFFFFF) {
+					imageWithWhiteBackgoundPixels[i] = 0;
+				}
+			}
+
+
+			Bitmap bm = Bitmap.createBitmap(imageWithWhiteBackgoundPixels, imageWithWhiteBackgound.getWidth(), imageWithWhiteBackgound.getHeight(), Bitmap.Config.ARGB_8888);
+			return new VMBufferedImage(bm);
 	  }
 	  return null;
   }

@@ -95,6 +95,8 @@ public class ScaledImageComponent extends ImageView
   }
 
   public Dimension getPreferredSize() {
+  	if(true)
+  	return new Dimension(modelPreferredSizePx,modelPreferredSizePx);
    // if (isPreferredSizeSet()) {
    //   return super.getPreferredSize();
    // } else {

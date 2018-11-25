@@ -20,6 +20,7 @@
 package com.eteks.renovations3d.android;
 
 
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -621,12 +622,18 @@ public class SwingTools {
 	 * Updates Swing components default size according to resolution scale.
 	 */
 
+	public static void setResolutionScale(Activity activity) {
+		resolutionScale = 1f;//TODO: put back activity.getResources().getDisplayMetrics().density;
+	}
+
+		private static float resolutionScale = 1f;
 
 	/**
 	 * Returns a scale factor used to adapt user interface items to screen resolution.
 	 */
 	public static float getResolutionScale() {
-		String resolutionScaleProperty = System.getProperty("com.eteks.sweethome3d.resolutionScale");
+		return resolutionScale;
+		/*String resolutionScaleProperty = System.getProperty("com.eteks.sweethome3d.resolutionScale");
 		if (resolutionScaleProperty != null) {
 			try {
 				return Float.parseFloat(resolutionScaleProperty.trim());
@@ -635,7 +642,7 @@ public class SwingTools {
 			}
 		}
 
-		return 1f;
+		return 1f;*/
 	}
 
 	/**

@@ -23,6 +23,7 @@ package com.eteks.renovations3d.android;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.WindowManager;
 
@@ -1419,7 +1420,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				}
 			});
 
-			this.transformationsLabel = new JLabel(activity, preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "transformationsLabel.text"));
+			String messageLessStyle = SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "transformationsLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			messageLessStyle = messageLessStyle.replace("<br>", " ");
+			this.transformationsLabel = new JLabel(activity, Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
 
 			this.resetTransformationsButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
 							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "resetTransformationsButton.text"));

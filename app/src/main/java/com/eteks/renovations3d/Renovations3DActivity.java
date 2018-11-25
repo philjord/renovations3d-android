@@ -3,6 +3,7 @@ package com.eteks.renovations3d;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -35,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.android.FileContentManager;
+import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
@@ -309,6 +311,8 @@ public class Renovations3DActivity extends FragmentActivity
 		SimpleShaderAppearance.setVersionES100();
 
 
+
+
 		super.onCreate(savedInstanceState);
 
 		// Obtain the FirebaseAnalytics instance.
@@ -324,6 +328,8 @@ public class Renovations3DActivity extends FragmentActivity
 		this.billingManager = new BillingManager(this);
 		this.adMobManager = new AdMobManager(this);
 		this.tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
+
+		SwingTools.setResolutionScale(this);
 
 		ActionBar actionBar = getActionBar();
 		//actionBar.setDisplayHomeAsUpEnabled(true);
