@@ -64,7 +64,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 import javaawt.Color;
 import javaawt.EventQueue;
 import javaawt.Font;
@@ -75,7 +74,6 @@ import javaawt.VMImage;
 import javaawt.geom.Rectangle2D;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
-
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.model.HomeDescriptor;
@@ -115,8 +113,7 @@ import org.jogamp.java3d.Node;
  * The MVC view that edits a home.
  * @author Emmanuel Puybaret
  */
-public class HomePane implements HomeView
-{
+public class HomePane implements HomeView {
 	private enum MenuActionType{FILE_MENU, EDIT_MENU, FURNITURE_MENU, PLAN_MENU, VIEW_3D_MENU, HELP_MENU,
 		OPEN_RECENT_HOME_MENU, ALIGN_OR_DISTRIBUTE_MENU, SORT_HOME_FURNITURE_MENU, DISPLAY_HOME_FURNITURE_PROPERTY_MENU,
 		MODIFY_TEXT_STYLE, GO_TO_POINT_OF_VIEW, SELECT_OBJECT_MENU, TOGGLE_SELECTION_MENU}
@@ -2057,8 +2054,7 @@ public class HomePane implements HomeView
    * Enables or disables the action matching <code>actionType</code>.
    */
 	public void setEnabled(ActionType actionType,
-						   boolean enabled)
-	{
+						   boolean enabled) {
 		//  Action action = getActionMap().get(actionType);
 		//  if (action != null) {
 		//    action.setEnabled(enabled);
@@ -2097,16 +2093,15 @@ public class HomePane implements HomeView
       action.putValue(Action.SHORT_DESCRIPTION, name);
     }*/
     HomeController homeController = activity.getHomeController();
-	if(homeController != null) {
-		((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(actionType, name);
-	}
+		if(homeController != null) {
+			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setNameAndShortDescription(actionType, name);
+		}
   }
 
   /**
    * Enables or disables transfer between components.  
    */
-	public void setTransferEnabled(boolean enabled)
-	{
+	public void setTransferEnabled(boolean enabled) {
 	/*	boolean dragAndDropWithTransferHandlerSupported;
 		try {
 			// Don't use transfer handlers for drag and drop with Plugin2 under Mac OS X or when in an unsigned applet
@@ -3483,37 +3478,31 @@ public class HomePane implements HomeView
     homeExamplesList.setAdapter(adapter);
     homeExamplesList.setSelectionMode(JList.ListSelectionModel.SINGLE_SELECTION);
 
-
     final LinearLayout homeExamplesPanel = new LinearLayout(activity);
     homeExamplesPanel.setOrientation(LinearLayout.VERTICAL);
     homeExamplesPanel.setPadding(10,10,10,10);
     homeExamplesPanel.addView(new JLabel(activity, Html.fromHtml(message)));
-    final float scale = activity.getResources().getDisplayMetrics().density;
-    int heightPx = (int) (150 * scale + 0.5f);
+    int heightPx = activity.getResources().getDisplayMetrics().heightPixels; // fullscreen it
     ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
     homeExamplesPanel.addView(homeExamplesList, listLP);
 
-		if(Looper.getMainLooper().getThread() == Thread.currentThread())
-		{
+		if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
 			new Throwable().printStackTrace();
 			System.err.println("JOptionPane asked to showOptionDialog (View root) on EDT thread you MUST not as I will block!");
 			return null;
 		}
-
 
 		final Semaphore dialogSemaphore = new Semaphore(0, true);
 		final String[] selectedHome = new String[1];
 
 		// if this is not a loopery thread you get java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
 		Handler handler = new Handler(Looper.getMainLooper());
-		handler.post(new Runnable()
-		{
-			public void run()
-			{
+		handler.post(new Runnable() {
+			public void run() {
 				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						switch (which){
+						switch (which) {
 							case DialogInterface.BUTTON_POSITIVE:
 								String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
 								// Display Find more demos (gallery) page in browser
@@ -3550,26 +3539,21 @@ public class HomePane implements HomeView
 					}
 				});
 
-				if(!(activity).isFinishing())
-				{
+				if(!(activity).isFinishing()) {
 					alertDialog.show();
 				}
 			}
 		});
 
-		try
-		{
+		try {
 			dialogSemaphore.acquire();
-		}
-		catch (InterruptedException e)
-		{
+		} catch (InterruptedException e) {
 		}
 		return selectedHome[0];
   }
 
 
-	private class HomeExamplesListCellRenderer extends ArrayAdapter<HomeDescriptor>
-	{
+	private class HomeExamplesListCellRenderer extends ArrayAdapter<HomeDescriptor> {
 		private int ICON_WIDTH_DP = 128;
 		private int iconWidthPx = 192;
 		public int namePadBottomPx = 42;
@@ -3577,8 +3561,7 @@ public class HomePane implements HomeView
 		//https://stackoverflow.com/questions/6263250/convert-pixels-to-sp
 		//https://stackoverflow.com/questions/11590538/dpi-value-of-default-large-medium-and-small-text-views-android
 		public Font defaultFont;
-		public HomeExamplesListCellRenderer(Context context, List<HomeDescriptor> examples)
-		{
+		public HomeExamplesListCellRenderer(Context context, List<HomeDescriptor> examples) {
 			super(context, android.R.layout.simple_list_item_1, examples);
 			int px = (int)(18 * context.getResources().getDisplayMetrics().scaledDensity);
 			defaultFont = new VMFont(Typeface.DEFAULT, px);
@@ -3587,19 +3570,15 @@ public class HomePane implements HomeView
 		}
 
 		@Override
-		public android.view.View getView(int position, android.view.View convertView, ViewGroup parent)
-		{
+		public android.view.View getView(int position, android.view.View convertView, ViewGroup parent) {
 			return getDropDownView(position, convertView, parent);
 		}
 		@Override
-		public android.view.View getDropDownView (final int position, android.view.View convertView, ViewGroup parent)
-		{
+		public android.view.View getDropDownView (final int position, android.view.View convertView, ViewGroup parent) {
 			final HomeDescriptor home = this.getItem(position);
 			final Icon icon = IconManager.getInstance().getIcon(home.getIcon(), iconWidthPx * 3 / 4, null);
-			ImageView ret = new ImageView(getContext())
-			{
-				public void onDraw(Canvas canvas)
-				{
+			ImageView ret = new ImageView(getContext()) {
+				public void onDraw(Canvas canvas) {
 					Graphics2D g2D = new VMGraphics2D(canvas);
 					icon.paintIcon(null, g2D, 0, 0);
 
@@ -3613,7 +3592,6 @@ public class HomePane implements HomeView
 			ret.setMinimumHeight(icon.getIconHeight() + namePadBottomPx);
 
 			return ret;
-
 		}
 	}
 
@@ -3787,8 +3765,7 @@ public class HomePane implements HomeView
 		final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipMessage");
 
 		// no tips while tutorial is showing
-		if (!activity.getTutorial().isEnabled() && message.length() > 0)
-		{
+		if (!activity.getTutorial().isEnabled() && message.length() > 0) {
      /* JPanel tipPanel = new JPanel(new GridBagLayout());
       
       JLabel messageLabel = new JLabel(message);
@@ -4451,9 +4428,9 @@ public class HomePane implements HomeView
 		  int response = JOptionPane.showOptionDialog(activity,  message, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				  null, new Object [] {exportAll, exportSelection, cancel}, exportAll);
 		  if (response == JOptionPane.NO_OPTION) {
-			this.exportAllToOBJ = false;
+				this.exportAllToOBJ = false;
 		  } else if (response != JOptionPane.YES_OPTION) {
-			return null;
+				return null;
 		  }
 		}
 		return homeName;
@@ -4674,9 +4651,8 @@ public class HomePane implements HomeView
 		// sort them so this list is consistent
 		Collections.sort(storedCameras, new Comparator<Camera>() {
 			@Override
-			public int compare(Camera o1, Camera o2)
-			{
-				if(o1==null||o2==null)
+			public int compare(Camera o1, Camera o2) {
+				if (o1==null || o2==null)
 					return 0;
 				return o1.getName().compareTo(o2.getName());
 			}
@@ -4684,36 +4660,28 @@ public class HomePane implements HomeView
 
 		// fill the JTextfield and JCombox box a bit later on a looper thread
 		Handler handler = new Handler(Looper.getMainLooper());
-		handler.post(new Runnable()
-		{
-			public void run()
-			{
+		handler.post(new Runnable() {
+			public void run() {
 				final JTextField cameraNameTextComponent = new JTextField(activity, cameraName);
 				cameraNamePanel.addView(cameraNameTextComponent);
-				if (!storedCameras.isEmpty())
-				{
+				if (!storedCameras.isEmpty()) {
 					// If cameras are already stored in home propose an editable combo box to user
 					// to let him choose more easily an existing one if he want to overwrite it
 					String[] storedCameraNames = new String[storedCameras.size() + 1];
 					storedCameraNames[0] = cameraName;
-					for (int i = 1; i < storedCameraNames.length; i++)
-					{
+					for (int i = 1; i < storedCameraNames.length; i++) {
 						storedCameraNames[i] = storedCameras.get(i - 1).getName();
 					}
 
 					final JComboBox cameraNameComboBox = new JComboBox(activity, storedCameraNames);
-					cameraNameComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-					{
+					cameraNameComboBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 						@Override
-						public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-						{
+						public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 							cameraNameTextComponent.setText((String) cameraNameComboBox.getSelectedItem());
 						}
 
 						@Override
-						public void onNothingSelected(AdapterView<?> parent)
-						{
-
+						public void onNothingSelected(AdapterView<?> parent) {
 						}
 					});
 					cameraNamePanel.addView(cameraNameComboBox);
@@ -4789,12 +4757,10 @@ public class HomePane implements HomeView
 
 		List<Camera> storedCameras = new ArrayList<Camera>(home.getStoredCameras());
 		// sort them so this list is consistent
-		Collections.sort(storedCameras, new Comparator<Camera>()
-		{
+		Collections.sort(storedCameras, new Comparator<Camera>() {
 			@Override
-			public int compare(Camera o1, Camera o2)
-			{
-				if(o1==null||o2==null)
+			public int compare(Camera o1, Camera o2) {
+				if (o1==null || o2==null)
 					return 0;
 				return o1.getName().compareTo(o2.getName());
 			}
@@ -4808,7 +4774,7 @@ public class HomePane implements HomeView
 
 		camerasList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		final float scale = activity.getResources().getDisplayMetrics().density;
-		int heightPx = (int) (150 * scale + 0.5f);
+		int heightPx = (int) (250 * scale + 0.5f);
 		ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
 		camerasPanel.addView(camerasList, listLP);
 
@@ -4823,12 +4789,9 @@ public class HomePane implements HomeView
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, new Object [] {delete, cancel}, cancel) == JOptionPane.OK_OPTION;
 
-		if(confirmed)
-		{
-			for( int i = 0 ; i < camerasList.getCount();i++)
-			{
-				if(camerasList.isItemChecked(i))
-				{
+		if (confirmed) {
+			for( int i = 0 ; i < camerasList.getCount();i++) {
+				if(camerasList.isItemChecked(i)) {
 					selectedCameras.add(storedCameras.get(i));
 				}
 			}
@@ -4987,8 +4950,7 @@ public class HomePane implements HomeView
 	// along with the open dialog
 	// and the set mode, so possibly if I make it non EDT they can all go back to using the controller method
 	// rather than the version pulled out to the Renovations3D object
-	public void invokeLater(Runnable runnable)
-	{
+	public void invokeLater(Runnable runnable) {
 		// These methods generally invoke blocking dialogs, so on Android I must explicitly NOT be EDT
 		//EventQueue.invokeLater(runnable);
 		Thread t = new Thread(runnable);
