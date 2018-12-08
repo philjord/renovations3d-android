@@ -911,7 +911,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 
 		public List<CatalogTexture> toList() {
 			checkFurnitureList();
-			return textures;
+			return new ArrayList<CatalogTexture>(textures);
 		}
 
 		/**

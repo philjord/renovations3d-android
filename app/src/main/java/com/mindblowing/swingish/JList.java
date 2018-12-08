@@ -1,6 +1,7 @@
 package com.mindblowing.swingish;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -17,7 +18,7 @@ public class JList extends ListView {
 	public JList(Context context, AbstractListModel listModel) {
 		super(context);
 		this.listModel = listModel;
-		listModel.list = this;
+		listModel.setList(this);
 	}
 
 	public AbstractListModel getModel() {
@@ -39,20 +40,29 @@ public class JList extends ListView {
 
 	public void setCellRenderer(ListAdapter cellRenderer) {
 		this.setAdapter(cellRenderer);
+		listModel.fireContentsChanged(this, 0, 0);
 	}
 
 	public int[] getSelectedIndices() {
-		this.getCheckedItemCount();
-		this.getCheckedItemPositions();
 
 		//TODO: how do we implement this?
 		//TODO:! ok I've had a pretty poor quality of selection vs activated time to sort it out for JLIst
 		//https://stackoverflow.com/questions/11504860/what-is-the-difference-between-the-states-selected-checked-and-activated-in-and
-		return new int[] {this.getSelectedItemPosition()};
+		List<Integer> list = new ArrayList<>();
+		SparseBooleanArray sp = getCheckedItemPositions();
+		for (int i = 0; i < sp.size(); i++) {
+			if (sp.valueAt(i)) {
+				list.add(sp.keyAt(i));
+			}
+		}
+		int[] ids = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			ids[i] = list.get(i);
+		}
+		return ids;
 	}
 
-	public static class ListSelectionModel
-	{
+	public static class ListSelectionModel {
 		public static final int SINGLE_SELECTION = 0;
 		public static final int MULTIPLE_INTERVAL_SELECTION = 1;
 	}
@@ -60,10 +70,9 @@ public class JList extends ListView {
 	/**
 	 * do NOT share models
 	 */
-	public static abstract class AbstractListModel
-	{
+	public static abstract class AbstractListModel {
 		// for the JList itself to set a reference when using this model
-		JList list;
+		private JList list;
 
 		ArrayList<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
 
@@ -73,12 +82,14 @@ public class JList extends ListView {
 
 		public abstract List toList();
 
-		public void fireContentsChanged(Object source, int start, int end)
-		{
-			if(list != null)
-			{
-				if(list.getAdapter() instanceof ArrayAdapter)
-				{
+		void setList(JList list) {
+			this.list = list;
+			fireContentsChanged(null, 0, 0);
+		}
+
+		public void fireContentsChanged(Object source, int start, int end) {
+			if(list != null) {
+				if(list.getAdapter() instanceof ArrayAdapter) {
 					((ArrayAdapter)list.getAdapter()).clear();
 					((ArrayAdapter)list.getAdapter()).addAll(this.toList());
 					((ArrayAdapter)list.getAdapter()).notifyDataSetChanged();
@@ -128,6 +139,5 @@ public class JList extends ListView {
 		public void intervalAdded(ListDataEvent ev);
 	}
 	public interface ListDataEvent {
-
 	}
 }

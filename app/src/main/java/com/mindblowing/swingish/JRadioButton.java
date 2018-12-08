@@ -10,7 +10,7 @@ import android.widget.RadioButton;
 
 public class JRadioButton extends RadioButton
 {
-
+	private ChangeListener changeListener = null;
 	public JRadioButton(Context context, String text)
 	{
 		super(context);
@@ -27,6 +27,9 @@ public class JRadioButton extends RadioButton
 	{
 		//This override whatever setSelected means in textview
 		setChecked(selected);
+		if(changeListener != null) {
+			changeListener.stateChanged(null);
+		}
 	}
 	@Override
 	public boolean isSelected() {
@@ -35,6 +38,7 @@ public class JRadioButton extends RadioButton
 	}
 	public void addChangeListener(final ChangeListener changeListener)
 	{
+		this.changeListener = changeListener;
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				changeListener.stateChanged(null);
@@ -43,6 +47,7 @@ public class JRadioButton extends RadioButton
 
 	public void removeChangeListener(final ChangeListener changeListener)
 	{
+		this.changeListener = null;
 		setOnClickListener(null);
 	}
 }

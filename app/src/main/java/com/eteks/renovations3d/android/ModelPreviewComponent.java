@@ -1325,9 +1325,9 @@ public class ModelPreviewComponent extends JPanel {
   public void setModelMaterials(HomeMaterial [] materials) {
     if (this.previewedPiece != null) {
       this.previewedPiece.setModelMaterials(materials);
-      getModelNode().update();
+      getModelNode().update(true);
       // Replace textures by clones because Java 3D doesn't accept all the time to share textures 
-      cloneTextures(getModelNode(), this.pieceTextures);
+      //cloneTextures(getModelNode(), this.pieceTextures);
 
 			updateIconImage();
     }
