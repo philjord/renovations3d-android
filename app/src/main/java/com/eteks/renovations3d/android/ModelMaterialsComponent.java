@@ -24,12 +24,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -50,7 +46,6 @@ import com.mindblowing.swingish.ActionListener;
 import com.mindblowing.swingish.ButtonGroup;
 import com.mindblowing.swingish.ChangeListener;
 import com.mindblowing.swingish.JButton;
-import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JLabel;
 import com.mindblowing.swingish.JList;
 import com.mindblowing.swingish.JRadioButton;
@@ -93,7 +88,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
 		ModelMaterialsComponent.ModelMaterialsPanel.iconSizePx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.ICON_SIZE_DP * scale + 0.5f);
 		ModelMaterialsComponent.ModelMaterialsPanel.fontSizePx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.fontSizeDp * scale + 0.5f);
 		ModelMaterialsComponent.ModelMaterialsPanel.namePadBottomPx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.namePadBottomDp * scale + 0.5f);
-    //setText(SwingTools.getLocalizedLabelText(preferences, ModelMaterialsComponent.class, "modifyButton.text"));
+    setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "modifyButton.text"));
     //if (!OperatingSystem.isMacOSX()) {
     //  setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
     //      ModelMaterialsComponent.class, "modifyButton.mnemonic")).getKeyCode());

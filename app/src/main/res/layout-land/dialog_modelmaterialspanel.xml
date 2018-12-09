@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:divider="@drawable/empty_tall_divider"
+              android:orientation="horizontal"
+              android:padding="10dp"
+              android:showDividers="middle">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/mmp_previewLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_previewLabel"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/mmp_previewComponent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_previewComponent"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/mmp_materialsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_materialsLabel"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <ListView
+            android:id="@+id/mmp_materialsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+    <TableLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/mmp_colorAndTextureLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_colorAndTextureLabel"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <RadioButton
+            android:id="@+id/mmp_defaultColorAndTextureRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_defaultColorAndTextureRadioButton"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <RadioButton
+            android:id="@+id/mmp_invisibleRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mmp_invisibleRadioButton"/>
+
+        <TableRow>
+
+            <RadioButton
+                android:id="@+id/mmp_colorRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_colorRadioButton"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <Button
+                android:id="@+id/mmp_colorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_colorButton"/>
+        </TableRow>
+
+        <TableRow>
+
+            <RadioButton
+                android:id="@+id/mmp_textureRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_textureRadioButton"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <Button
+                android:id="@+id/mmp_textureComponent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_textureComponent"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/mmp_shininessLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_shininessLabel"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                android:id="@+id/mmp_shininessSlider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mmp_shininessSlider"/>
+        </TableRow>
+
+        <Button
+            android:id="@+id/mmp_closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Close"
+            />
+    </TableLayout>
+
+</LinearLayout>

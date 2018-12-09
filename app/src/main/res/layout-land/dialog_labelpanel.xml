@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/labelpanel_nameAndStylePanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="nameAndStylePanel"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/labelpanel_textLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="textLabel"/>
+
+                <EditText
+                    android:id="@+id/labelpanel_textTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3"
+                    android:importantForAutofill="no"
+                    android:text="textTextField"/>
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/labelpanel_fontSizeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="fontSizeLabel"/>
+
+                    <TextView
+                        android:id="@+id/labelpanel_colorLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="colorLabel"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/labelpanel_fontSizeSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <Button
+                        android:id="@+id/labelpanel_colorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="colorButton"/>
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/labelpanel_rendering3DPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="rendering3DPanel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <CheckBox
+                    android:id="@+id/labelpanel_visibleIn3DViewCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="visibleIn3DViewCheckBox"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/labelpanel_pitchLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="pitchLabel"/>
+
+                    <TextView
+                        android:id="@+id/labelpanel_elevationLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="elevationLabel"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/labelpanel_pitch0DegreeRadioButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="pitch0DegreeRadioButton"/>
+
+                        <CheckBox
+                            android:id="@+id/labelpanel_pitch90DegreeRadioButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="pitch90DegreeRadioButton"/>
+                    </LinearLayout>
+
+                    <NumberPicker
+                        android:id="@+id/labelpanel_elevationSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/labelpanel_closeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Close"/>
+    </LinearLayout>
+</ScrollView>

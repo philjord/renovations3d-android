@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/empty_tall_divider"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:showDividers="middle">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TextView
+                android:id="@+id/furniture_panel_namePanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/furniture_panel_nameLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Name"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <EditText
+                    android:id="@+id/furniture_panel_nameTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:importantForAutofill="no"
+                    android:text=""/>
+            </TableRow>
+
+            <CheckBox
+                android:id="@+id/furniture_panel_nameVisibleCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display name in plan"/>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/furniture_panel_descriptionLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Description"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <EditText
+                    android:id="@+id/furniture_panel_descriptionTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:importantForAutofill="no"
+                    android:text=""/>
+            </TableRow>
+        </TableLayout>
+
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/furniture_panel_priceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="priceLabel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TextView
+                    android:id="@+id/furniture_panel_valueAddedTaxPercentageLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TaxPercentage"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            </TableRow>
+
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/furniture_panel_valueAddedTaxPercentageSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+
+                <NumberPicker
+                    android:id="@+id/furniture_panel_priceSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+        </TableLayout>
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/furniture_panel_locationPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_xLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="X (mm):"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_yLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Y (mm):"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_elevationLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Elevation (mm):"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_xSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_ySpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_elevationSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+
+                <CheckBox
+                    android:id="@+id/furniture_panel_basePlanItemCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Part of base plan"/>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/furniture_panel_orientationPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Orientation"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_verticalRotationLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_weight="1"
+                        android:maxLines="4"
+                        android:text="furniture panel verticalRotationLabel"/>
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="5dp"
+                        android:background="#BDBDBD"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_horizontalRotationLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_weight="1"
+                        android:maxLines="4"
+                        android:text="furniture panel horizontalRotationLabel"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_angleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Angle (o):"/>
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="5dp"
+                        android:background="#BDBDBD"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_pitchRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="pitchRadio"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_rollRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="rollRadio"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_angleSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="5dp"
+                        android:background="#BDBDBD"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_pitchSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_rollSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/furniture_panel_sizePanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Size"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_widthLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Width (mm):"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_depthLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Depth (mm):"/>
+
+                    <TextView
+                        android:id="@+id/furniture_panel_heightLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Height (mm):"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_widthSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_depthSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_heightSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+
+
+                <CheckBox
+                    android:id="@+id/furniture_panel_keepProportionsCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Keep proportions"/>
+
+                <CheckBox
+                    android:id="@+id/furniture_panel_mirroredModelCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mirrored shape"/>
+
+                <TextView
+                    android:id="@+id/furniture_panel_modelTransformationsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="TransformationsButton"/>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:id="@+id/furniture_panel_lightPowerTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/furniture_panel_lightPowerLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="lightPower"/>
+                </TableRow>
+                <TableRow>
+                    <NumberPicker
+                        android:id="@+id/furniture_panel_lightPowerSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/furniture_panel_paintPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Color and texture"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_defaultColorAndTextureRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Unchanged"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text=""/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_colorRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Color:"/>
+
+                    <Button
+                        android:id="@+id/furniture_panel_colorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text=""/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_textureRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Texture:"/>
+
+                    <Button
+                        android:id="@+id/furniture_panel_textureButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text=""/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_modelMaterialsRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Material:"/>
+
+                    <Button
+                        android:id="@+id/furniture_panel_modelMaterialsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text=""/>
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/furniture_panel_shininessPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shininess"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_defaultShininessRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Unchanged"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_mattRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Matt"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/furniture_panel_shinyRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Shiny"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+
+        <CheckBox
+            android:id="@+id/furniture_panel_visibleCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Visible"/>
+
+        <Button
+            android:id="@+id/furniture_panel_closeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Close"/>
+    </LinearLayout>
+</ScrollView>

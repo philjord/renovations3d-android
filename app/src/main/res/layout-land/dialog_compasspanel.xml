@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/empty_tall_divider"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/compasspanel_compassRosePanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="compassRosePanel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/compasspanel_xLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="xLabel"/>
+
+                    <TextView
+                        android:id="@+id/compasspanel_yLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="yLabel"/>
+
+                    <TextView
+                        android:id="@+id/compasspanel_diameterLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="diameterLabel"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/compasspanel_xSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/compasspanel_ySpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/compasspanel_diameterSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+                </TableRow>
+
+                <CheckBox
+                    android:id="@+id/compasspanel_visibleCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="visibleCheckBox"/>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/compasspanel_geographicLocationPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/compasspanel_latitudeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="latitudeLabel"/>
+
+                    <TextView
+                        android:id="@+id/compasspanel_longitudeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="longitudeLabel"/>
+
+
+                </TableRow>
+
+                <TableRow>
+
+                    <NumberPicker
+                        android:id="@+id/compasspanel_latitudeSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+                    <NumberPicker
+                        android:id="@+id/compasspanel_longitudeSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"/>
+
+
+                </TableRow>
+
+                <Button
+                    android:id="@+id/compasspanel_locationButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="@string/set_to_device_location"/>
+            </TableLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/compasspanel_northDirectionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="northDirectionLabel"/>
+
+                <NumberPicker
+                    android:id="@+id/compasspanel_northDirectionSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/compasspanel_northDirectionComponent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="northDirectionComponent"/>
+
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/compasspanel_timeZoneLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="timeZoneLabel"/>
+
+                <Spinner
+                    android:id="@+id/compasspanel_timeZoneComboBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text=""/>
+            </TableLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/compasspanel_closeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Close"/>
+    </LinearLayout>
+</ScrollView>

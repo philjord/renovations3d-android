@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/empty_tall_divider"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:showDividers="middle">
+
+
+        <TableLayout
+            android:id="@+id/roompanel_nameAndAreaTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TextView
+                android:id="@+id/roompanel_nameAndAreaPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="nameAndAreaPanel"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/roompanel_nameLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="nameLabel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <EditText
+                    android:id="@+id/roompanel_nameTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:importantForAutofill="no"
+                    android:text="nameTextField"/>
+            </TableRow>
+
+            <CheckBox
+                android:id="@+id/roompanel_areaVisibleCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="areaVisibleCheckBox"/>
+
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:id="@+id/roompanel_floorPanelTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/roompanel_floorPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="floorPanel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <CheckBox
+                    android:id="@+id/roompanel_floorVisibleCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Visible"/>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_floorColorRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Color"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_floorColorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Color"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_floorTextureRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Texture"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_floorTextureComponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Texture"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_floorMattRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Matt"/>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_floorShinyRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Shiny"/>
+                </TableRow>
+
+
+            </TableLayout>
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:id="@+id/roompanel_ceilingPanelTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/roompanel_ceilingPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ceilingPanel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <CheckBox
+                    android:id="@+id/roompanel_ceilingVisibleCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Visible"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_ceilingColorRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Color"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_ceilingColorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Color"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_ceilingTextureRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Texture"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_ceilingTextureComponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="Texture"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_ceilingMattRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Matt"/>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_ceilingShinyRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Shiny"/>
+                </TableRow>
+            </TableLayout>
+
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="#BDBDBD"/>
+
+            <TableLayout
+                android:id="@+id/roompanel_wallSidesPanelTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/roompanel_wallSidesPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="wallSidesPanel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <CheckBox
+                    android:id="@+id/roompanel_splitSurroundingWallsCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="recompute walls"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_wallSidesColorRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="wallSidesColor"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_wallSidesColorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="wallSidesColor"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_wallSidesTextureRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="wallSidesTexture"/>
+
+                    <TextView
+                        android:id="@+id/roompanel_wallSidesTextureComponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:text="wallSidesTexture"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_wallSidesMattRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="wallSidesMatt"/>
+
+                    <CheckBox
+                        android:id="@+id/roompanel_wallSidesShinyRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="wallSidesShiny"/>
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="5dp"
+            android:background="#BDBDBD"/>
+
+        <TextView
+            android:id="@+id/roompanel_wallSidesBaseboardPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="wallSidesBaseboardPanel"/>
+
+        <TextView
+            android:id="@+id/roompanel_wallSidesBaseboardComponent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="wallSidesBaseboardComponent"/>
+
+        <Button
+            android:id="@+id/roompanel_closeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Close"/>
+    </LinearLayout>
+</ScrollView>

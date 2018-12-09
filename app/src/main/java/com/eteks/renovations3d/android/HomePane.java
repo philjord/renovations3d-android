@@ -3482,7 +3482,7 @@ public class HomePane implements HomeView {
     homeExamplesPanel.setOrientation(LinearLayout.VERTICAL);
     homeExamplesPanel.setPadding(10,10,10,10);
     homeExamplesPanel.addView(new JLabel(activity, Html.fromHtml(message)));
-    int heightPx = activity.getResources().getDisplayMetrics().heightPixels; // fullscreen it
+    int heightPx = (int)(activity.getResources().getDisplayMetrics().heightPixels * 0.75); // fullscreen it
     ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
     homeExamplesPanel.addView(homeExamplesList, listLP);
 
