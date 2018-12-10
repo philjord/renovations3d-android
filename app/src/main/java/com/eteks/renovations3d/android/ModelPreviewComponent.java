@@ -449,7 +449,7 @@ public class ModelPreviewComponent extends JPanel {
 									updateIconImage();
                   canvas.getPixelLocationFromImagePlate(new Point3d(nodeCenterAtScreen), this.pivotCenterPixel);
 
-                  String transformationName = (String)this.pickedTransformGroup.getUserData();System.out.println("transformationName " +transformationName);
+                  String transformationName = (String)this.pickedTransformGroup.getUserData();
                   this.translationFromOrigin = new Transform3D();
                   this.translationFromOrigin.setTranslation(new Vector3d(nodeCenter));
                   Transform3D transformBetweenNodes = getTransformBetweenNodes(referenceNode.getParent(), getModelNode());
@@ -599,6 +599,7 @@ public class ModelPreviewComponent extends JPanel {
                 transformationsList.addAll(Arrays.asList(transformations));
               }
               transformationName = transformationName.substring(0, transformationName.length() - ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX.length());
+              int pre = transformationsList.size();
               for (Iterator<Transformation> it = transformationsList.iterator(); it.hasNext();) {
                 Transformation transformation = it.next();
                 if (transformationName.equals(transformation.getName())) {
@@ -606,6 +607,16 @@ public class ModelPreviewComponent extends JPanel {
                   break;
                 }
               }
+
+
+if(pre ==transformationsList.size())
+{
+	//TODO: each time a mouse down and drag gets here the drag won't work!
+	System.out.println("pre == transformationsList.size() pre " + pre    );// big problem, not found!!
+
+}
+
+
               float [] matrix = new float [16];
               newTransform.get(matrix);
               transformationsList.add(new Transformation(transformationName, new float [][] {
