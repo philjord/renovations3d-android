@@ -1123,8 +1123,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	}
 
 	@Override
-	public void setComponentPopupMenu(JPopupMenu popup) {
-		this.planComponent.setComponentPopupMenu(popup);
+	public void setComponentPopupMenu(JPopupMenu tooltippopup) {
+		this.planComponent.setComponentPopupMenu(tooltippopup);
 	}
 
 	@Override

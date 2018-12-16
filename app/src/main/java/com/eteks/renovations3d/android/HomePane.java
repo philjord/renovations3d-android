@@ -1110,11 +1110,11 @@ public class HomePane implements HomeView {
 	 * Adds the given action to <code>menu</code>.
 	 */
 /*  private void addActionToMenu(ActionType actionType,
-                               boolean popup,
+                               boolean tooltippopup,
                                JMenu menu) {
     Action action = getActionMap().get(actionType);
     if (action != null && action.getValue(Action.NAME) != null) {
-      menu.add(popup 
+      menu.add(tooltippopup
           ? new ResourceAction.PopupMenuItemAction(action)
           : new ResourceAction.MenuItemAction(action));
     }
@@ -1133,12 +1133,12 @@ public class HomePane implements HomeView {
 	 * Adds to <code>menu</code> the menu item matching the given <code>actionType</code>.
 	 */
 /*  private void addToggleActionToMenu(ActionType actionType,
-                                     boolean popup,
+                                     boolean tooltippopup,
                                      boolean radioButton,
                                      JMenu menu) {
     Action action = getActionMap().get(actionType);
     if (action != null && action.getValue(Action.NAME) != null) {
-      menu.add(createToggleMenuItem(action, popup, radioButton));
+      menu.add(createToggleMenuItem(action, tooltippopup, radioButton));
     }
   }
 
@@ -1146,7 +1146,7 @@ public class HomePane implements HomeView {
 	 * Creates a menu item for a toggle action.
 	 */
 /*  private JMenuItem createToggleMenuItem(Action action,
-                                         boolean popup,
+                                         boolean tooltippopup,
                                          boolean radioButton) {
     JMenuItem menuItem;
     if (radioButton) {
@@ -1157,7 +1157,7 @@ public class HomePane implements HomeView {
     // Configure model
     menuItem.setModel((JToggleButton.ToggleButtonModel)action.getValue(ResourceAction.TOGGLE_BUTTON_MODEL));
     // Configure menu item action after setting its model to avoid losing its mnemonic
-    menuItem.setAction(popup
+    menuItem.setAction(tooltippopup
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action));
     return menuItem;
@@ -1220,19 +1220,19 @@ public class HomePane implements HomeView {
 	 */
 /*  private JMenu createAlignOrDistributeMenu(final Home home,
                                             final UserPreferences preferences,
-                                            boolean popup) {
+                                            boolean tooltippopup) {
     JMenu alignOrDistributeMenu = new JMenu(this.menuActionMap.get(MenuActionType.ALIGN_OR_DISTRIBUTE_MENU));    
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_TOP, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BOTTOM, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_FRONT_SIDE, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BACK_SIDE, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT_SIDE, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT_SIDE, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_SIDE_BY_SIDE, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_HORIZONTALLY, popup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_VERTICALLY, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_TOP, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BOTTOM, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_FRONT_SIDE, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BACK_SIDE, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT_SIDE, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT_SIDE, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_SIDE_BY_SIDE, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_HORIZONTALLY, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_VERTICALLY, tooltippopup, alignOrDistributeMenu);
     return alignOrDistributeMenu;
   }
 
@@ -1424,7 +1424,7 @@ public class HomePane implements HomeView {
 	 * Returns Lock / Unlock base plan menu item.
 	 */
 /*  private JMenuItem createLockUnlockBasePlanMenuItem(final Home home,
-                                                       final boolean popup) {
+                                                       final boolean tooltippopup) {
     ActionMap actionMap = getActionMap();
     final Action unlockBasePlanAction = actionMap.get(ActionType.UNLOCK_BASE_PLAN);
     final Action lockBasePlanAction = actionMap.get(ActionType.LOCK_BASE_PLAN);
@@ -1432,14 +1432,14 @@ public class HomePane implements HomeView {
         && unlockBasePlanAction.getValue(Action.NAME) != null
         && lockBasePlanAction.getValue(Action.NAME) != null) {
       final JMenuItem lockUnlockBasePlanMenuItem = new JMenuItem(
-          createLockUnlockBasePlanAction(home, popup));
+          createLockUnlockBasePlanAction(home, tooltippopup));
       // Add a listener to home on basePlanLocked property change to 
       // switch action according to basePlanLocked change
       home.addPropertyChangeListener(Home.Property.BASE_PLAN_LOCKED, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
               lockUnlockBasePlanMenuItem.setAction(
-                  createLockUnlockBasePlanAction(home, popup));
+                  createLockUnlockBasePlanAction(home, tooltippopup));
             }
           });    
       return lockUnlockBasePlanMenuItem;
@@ -1451,12 +1451,12 @@ public class HomePane implements HomeView {
 	/**
 	 * Returns the action active on Lock / Unlock base plan menu item.
 	 */
-/*  private Action createLockUnlockBasePlanAction(Home home, boolean popup) {
+/*  private Action createLockUnlockBasePlanAction(Home home, boolean tooltippopup) {
     ActionType actionType = home.isBasePlanLocked() 
         ? ActionType.UNLOCK_BASE_PLAN
         : ActionType.LOCK_BASE_PLAN;
     Action action = getActionMap().get(actionType);
-    return popup 
+    return tooltippopup
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action);
   }
@@ -1500,14 +1500,14 @@ public class HomePane implements HomeView {
 	 */
 /*  private JMenu createTextStyleMenu(final Home home,
                                     final UserPreferences preferences,
-                                    boolean popup) {
+                                    boolean tooltippopup) {
     JMenu modifyTextStyleMenu = new JMenu(this.menuActionMap.get(MenuActionType.MODIFY_TEXT_STYLE));
     
-    addActionToMenu(ActionType.INCREASE_TEXT_SIZE, popup, modifyTextStyleMenu);
-    addActionToMenu(ActionType.DECREASE_TEXT_SIZE, popup, modifyTextStyleMenu);
+    addActionToMenu(ActionType.INCREASE_TEXT_SIZE, tooltippopup, modifyTextStyleMenu);
+    addActionToMenu(ActionType.DECREASE_TEXT_SIZE, tooltippopup, modifyTextStyleMenu);
     modifyTextStyleMenu.addSeparator();
-    addToggleActionToMenu(ActionType.TOGGLE_BOLD_STYLE, popup, false, modifyTextStyleMenu);
-    addToggleActionToMenu(ActionType.TOGGLE_ITALIC_STYLE, popup, false, modifyTextStyleMenu);
+    addToggleActionToMenu(ActionType.TOGGLE_BOLD_STYLE, tooltippopup, false, modifyTextStyleMenu);
+    addToggleActionToMenu(ActionType.TOGGLE_ITALIC_STYLE, tooltippopup, false, modifyTextStyleMenu);
     return modifyTextStyleMenu;
   }
 
@@ -1628,7 +1628,7 @@ public class HomePane implements HomeView {
    * Returns Import / Modify background image menu item.
    */
 /*  private JMenuItem createImportModifyBackgroundImageMenuItem(final Home home,
-                                                                final boolean popup) {
+                                                                final boolean tooltippopup) {
     ActionMap actionMap = getActionMap();
     Action importBackgroundImageAction = actionMap.get(ActionType.IMPORT_BACKGROUND_IMAGE);
     Action modifyBackgroundImageAction = actionMap.get(ActionType.MODIFY_BACKGROUND_IMAGE);
@@ -1636,13 +1636,13 @@ public class HomePane implements HomeView {
         && importBackgroundImageAction.getValue(Action.NAME) != null
         && modifyBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem importModifyBackgroundImageMenuItem = new JMenuItem(
-          createImportModifyBackgroundImageAction(home, popup));
+          createImportModifyBackgroundImageAction(home, tooltippopup));
       // Add a listener to home and levels on backgroundImage property change to 
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             importModifyBackgroundImageMenuItem.setAction(
-                createImportModifyBackgroundImageAction(home, popup));
+                createImportModifyBackgroundImageAction(home, tooltippopup));
           }
         });
       return importModifyBackgroundImageMenuItem;
@@ -1684,7 +1684,7 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Import / Modify menu item.
    */
-/*  private Action createImportModifyBackgroundImageAction(Home home, boolean popup) {
+/*  private Action createImportModifyBackgroundImageAction(Home home, boolean tooltippopup) {
     BackgroundImage backgroundImage = home.getSelectedLevel() != null
         ? home.getSelectedLevel().getBackgroundImage()
         : home.getBackgroundImage();
@@ -1692,7 +1692,7 @@ public class HomePane implements HomeView {
         ? ActionType.IMPORT_BACKGROUND_IMAGE
         : ActionType.MODIFY_BACKGROUND_IMAGE;
     Action backgroundImageAction = getActionMap().get(backgroundImageActionType);
-    return popup 
+    return tooltippopup
         ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
         : new ResourceAction.MenuItemAction(backgroundImageAction);
   }
@@ -1701,7 +1701,7 @@ public class HomePane implements HomeView {
    * Returns Hide / Show background image menu item.
    */
 /*  private JMenuItem createHideShowBackgroundImageMenuItem(final Home home,
-                                                          final boolean popup) {
+                                                          final boolean tooltippopup) {
     ActionMap actionMap = getActionMap();
     Action hideBackgroundImageAction = actionMap.get(ActionType.HIDE_BACKGROUND_IMAGE);
     Action showBackgroundImageAction = actionMap.get(ActionType.SHOW_BACKGROUND_IMAGE);
@@ -1709,13 +1709,13 @@ public class HomePane implements HomeView {
         && hideBackgroundImageAction.getValue(Action.NAME) != null
         && showBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem hideShowBackgroundImageMenuItem = new JMenuItem(
-          createHideShowBackgroundImageAction(home, popup));
+          createHideShowBackgroundImageAction(home, tooltippopup));
       // Add a listener to home and levels on backgroundImage property change to 
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             hideShowBackgroundImageMenuItem.setAction(
-                createHideShowBackgroundImageAction(home, popup));
+                createHideShowBackgroundImageAction(home, tooltippopup));
           }
         });
       return hideShowBackgroundImageMenuItem;
@@ -1727,7 +1727,7 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Hide / Show menu item.
    */
-/*  private Action createHideShowBackgroundImageAction(Home home, boolean popup) {
+/*  private Action createHideShowBackgroundImageAction(Home home, boolean tooltippopup) {
     BackgroundImage backgroundImage = home.getSelectedLevel() != null
         ? home.getSelectedLevel().getBackgroundImage()
         : home.getBackgroundImage();
@@ -1735,7 +1735,7 @@ public class HomePane implements HomeView {
         ? ActionType.HIDE_BACKGROUND_IMAGE
         : ActionType.SHOW_BACKGROUND_IMAGE;
     Action backgroundImageAction = getActionMap().get(backgroundImageActionType);
-    return popup 
+    return tooltippopup
         ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
         : new ResourceAction.MenuItemAction(backgroundImageAction);
   }
@@ -1744,7 +1744,7 @@ public class HomePane implements HomeView {
    * Returns Make level unviewable / viewable menu item.
    */
 /*  private JMenuItem createMakeLevelUnviewableViewableMenuItem(final Home home,
-                                                              final boolean popup) {
+                                                              final boolean tooltippopup) {
     ActionMap actionMap = getActionMap();
     Action makeLevelUnviewableAction = actionMap.get(ActionType.MAKE_LEVEL_UNVIEWABLE);
     Action makeLevelViewableAction = actionMap.get(ActionType.MAKE_LEVEL_VIEWABLE);
@@ -1752,12 +1752,12 @@ public class HomePane implements HomeView {
         && makeLevelUnviewableAction.getValue(Action.NAME) != null
         && makeLevelViewableAction.getValue(Action.NAME) != null) {
       final JMenuItem makeLevelUnviewableViewableMenuItem = new JMenuItem(
-          createMakeLevelUnviewableViewableAction(home, popup));
+          createMakeLevelUnviewableViewableAction(home, tooltippopup));
       // Add a listener to home and selected level on viewable property change to switch action
       final PropertyChangeListener viewabilityChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             makeLevelUnviewableViewableMenuItem.setAction(
-                createMakeLevelUnviewableViewableAction(home, popup));
+                createMakeLevelUnviewableViewableAction(home, tooltippopup));
           }
         };
       Level selectedLevel = home.getSelectedLevel();
@@ -1768,7 +1768,7 @@ public class HomePane implements HomeView {
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
               makeLevelUnviewableViewableMenuItem.setAction(
-                  createMakeLevelUnviewableViewableAction(home, popup));
+                  createMakeLevelUnviewableViewableAction(home, tooltippopup));
               if (ev.getOldValue() != null) {
                 ((Level)ev.getOldValue()).removePropertyChangeListener(viewabilityChangeListener);
               }
@@ -1786,13 +1786,13 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Make level unviewable / viewable  menu item.
    */
-/*  private Action createMakeLevelUnviewableViewableAction(Home home, boolean popup) {
+/*  private Action createMakeLevelUnviewableViewableAction(Home home, boolean tooltippopup) {
     Level selectedLevel = home.getSelectedLevel();
     ActionType levelViewabilityActionType = selectedLevel == null || selectedLevel.isViewable()        
         ? ActionType.MAKE_LEVEL_UNVIEWABLE
         : ActionType.MAKE_LEVEL_VIEWABLE;
     Action levelViewabilityAction = getActionMap().get(levelViewabilityActionType);
-    return popup 
+    return tooltippopup
         ? new ResourceAction.PopupMenuItemAction(levelViewabilityAction)
         : new ResourceAction.MenuItemAction(levelViewabilityAction);
   }
@@ -1847,7 +1847,7 @@ public class HomePane implements HomeView {
    * Returns Attach / Detach menu item for the 3D view.
    */
 /*  private JMenuItem createAttachDetach3DViewMenuItem(final HomeController controller,
-                                                     final boolean popup) {
+                                                     final boolean tooltippopup) {
     ActionMap actionMap = getActionMap();
     Action display3DViewInSeparateWindowAction = actionMap.get(ActionType.DETACH_3D_VIEW);
     Action display3DViewInMainWindowAction = actionMap.get(ActionType.ATTACH_3D_VIEW);
@@ -1855,13 +1855,13 @@ public class HomePane implements HomeView {
         && display3DViewInSeparateWindowAction.getValue(Action.NAME) != null
         && display3DViewInMainWindowAction.getValue(Action.NAME) != null) {
       final JMenuItem attachDetach3DViewMenuItem = new JMenuItem(
-          createAttachDetach3DViewAction(controller, popup));
+          createAttachDetach3DViewAction(controller, tooltippopup));
       // Add a listener to 3D view to switch action when its parent changes
       JComponent view3D = (JComponent)controller.getHomeController3D().getView();
       view3D.addAncestorListener(new AncestorListener() {        
           public void ancestorAdded(AncestorEvent ev) {
             attachDetach3DViewMenuItem.setAction(
-                createAttachDetach3DViewAction(controller, popup));
+                createAttachDetach3DViewAction(controller, tooltippopup));
           }
           
           public void ancestorRemoved(AncestorEvent ev) {
@@ -1879,13 +1879,13 @@ public class HomePane implements HomeView {
   /**
    * Returns the action Attach / Detach menu item.
    */
- /* private Action createAttachDetach3DViewAction(HomeController controller, boolean popup) {
+ /* private Action createAttachDetach3DViewAction(HomeController controller, boolean tooltippopup) {
     JRootPane view3DRootPane = SwingUtilities.getRootPane((JComponent)controller.getHomeController3D().getView());
     ActionType display3DViewActionType = view3DRootPane == this        
         ? ActionType.DETACH_3D_VIEW
         : ActionType.ATTACH_3D_VIEW;
     Action backgroundImageAction = getActionMap().get(display3DViewActionType);
-    return popup 
+    return tooltippopup
         ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
         : new ResourceAction.MenuItemAction(backgroundImageAction);
   }
@@ -2471,7 +2471,7 @@ public class HomePane implements HomeView {
                                                 final HomeController controller) {
     JComponent catalogView = (JComponent)controller.getFurnitureCatalogController().getView();
     if (catalogView != null) {
-      // Create catalog view popup menu
+      // Create catalog view tooltippopup menu
       JPopupMenu catalogViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.COPY, catalogViewPopup);
       catalogViewPopup.addSeparator();
@@ -2502,7 +2502,7 @@ public class HomePane implements HomeView {
       furnitureView.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
           focusManager.getDefaultFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
   
-      // Create furniture view popup menu
+      // Create furniture view tooltippopup menu
       JPopupMenu furnitureViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.UNDO, furnitureViewPopup);
       addActionToPopupMenu(ActionType.REDO, furnitureViewPopup);
@@ -2621,7 +2621,7 @@ public class HomePane implements HomeView {
                                           final HomeController controller) {
     JComponent planView = (JComponent)controller.getPlanController().getView();
     if (planView != null) {
-      // Create plan view popup menu
+      // Create plan view tooltippopup menu
       JPopupMenu planViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.UNDO, planViewPopup);
       addActionToPopupMenu(ActionType.REDO, planViewPopup);
@@ -2720,11 +2720,11 @@ public class HomePane implements HomeView {
       addActionToPopupMenu(ActionType.EXPORT_TO_SVG, planViewPopup);
       SwingTools.hideDisabledMenuItems(planViewPopup);
       if (selectObjectMenu != null) {
-        // Add a popup listener to manage Select object sub menu before the menu is hidden when empty
+        // Add a tooltippopup listener to manage Select object sub menu before the menu is hidden when empty
         addSelectObjectMenuItems(selectObjectMenu, controller.getPlanController(), preferences);
       }
       if (addRoomPointMenuItem != null || deleteRoomPointMenuItem != null) {
-        // Add a popup listener to manage ADD_ROOM_POINT and DELETE_ROOM_POINT actions according to selection
+        // Add a tooltippopup listener to manage ADD_ROOM_POINT and DELETE_ROOM_POINT actions according to selection
         updateRoomActions(addRoomPointMenuItem, deleteRoomPointMenuItem, controller.getPlanController(), preferences);
       }
       planView.setComponentPopupMenu(planViewPopup);
@@ -2785,7 +2785,7 @@ public class HomePane implements HomeView {
           : new Dimension(400, 400));
       view3D.setMinimumSize(new Dimension());
       
-      // Create 3D view popup menu
+      // Create 3D view tooltippopup menu
       JPopupMenu view3DPopup = new JPopupMenu();
       addToggleActionToPopupMenu(ActionType.VIEW_FROM_TOP, true, view3DPopup);
       addToggleActionToPopupMenu(ActionType.VIEW_FROM_OBSERVER, true, view3DPopup);
@@ -2915,7 +2915,7 @@ public class HomePane implements HomeView {
     popupMenu.addPopupMenuListener(new PopupMenuListenerWithMouseLocation((JComponent)planController.getView()) {
         {
           // Replace ADD_ROOM_POINT and DELETE_ROOM_POINT actions by ones 
-          // that will use the mouse location when the popup is displayed 
+          // that will use the mouse location when the tooltippopup is displayed
           ActionMap actionMap = getActionMap();
           if (addRoomPointMenuItem != null) {
             ResourceAction addRoomPointAction = 
@@ -2982,7 +2982,7 @@ public class HomePane implements HomeView {
   }
 
   /**
-   * Adds to the menu a popup listener that will update the menu items able to select 
+   * Adds to the menu a tooltippopup listener that will update the menu items able to select
    * the selectable items in plan at the location where the menu will be triggered.
    */
 /*  private void addSelectObjectMenuItems(final JMenu           selectObjectMenu,
@@ -5078,7 +5078,7 @@ public class HomePane implements HomeView {
   }
 
   /**
-   * A popup listener that stores the location of the mouse.
+   * A tooltippopup listener that stores the location of the mouse.
    */
  /* private static abstract class PopupMenuListenerWithMouseLocation implements PopupMenuListener {
     private Point mouseLocation;
@@ -5104,7 +5104,7 @@ public class HomePane implements HomeView {
     }
     
     public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
-      // Copy last mouse move location in case mouseExited is called while popup menu is displayed
+      // Copy last mouse move location in case mouseExited is called while tooltippopup menu is displayed
       this.mouseLocation = this.lastMouseMoveLocation;      
     }
   }

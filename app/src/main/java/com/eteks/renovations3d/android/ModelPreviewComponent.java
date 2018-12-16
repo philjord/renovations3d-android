@@ -515,6 +515,30 @@ public class ModelPreviewComponent extends JPanel {
                   this.translationToOrigin.invert();
 
                   this.modelBounds = modelManager.getBounds(getModelNode());
+
+
+//DEBUGDEUG
+									Transformation[] transformations = previewedPiece.getModelTransformations();
+									ArrayList<Transformation> transformationsList = new ArrayList<Transformation>();
+									if (transformations != null) {
+										transformationsList.addAll(Arrays.asList(transformations));
+									}
+									boolean found = false;
+									for (Iterator<Transformation> it = transformationsList.iterator(); it.hasNext();) {
+										Transformation transformation = it.next();
+										if (transformationName.equals(transformation.getName())) {
+											found = true;
+											break;
+										}
+									}
+									if( !found)
+									{
+										System.out.println("Pressed !found   " +  transformationName    );// big problem, not found!!
+									}
+									else
+									{
+										System.out.println(" Pressed found   " +  transformationName    );
+									}
                 }
               }
             }
@@ -597,25 +621,26 @@ public class ModelPreviewComponent extends JPanel {
               ArrayList<Transformation> transformationsList = new ArrayList<Transformation>();
               if (transformations != null) {
                 transformationsList.addAll(Arrays.asList(transformations));
-              }
+              }boolean found = false;
               transformationName = transformationName.substring(0, transformationName.length() - ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX.length());
-              int pre = transformationsList.size();
               for (Iterator<Transformation> it = transformationsList.iterator(); it.hasNext();) {
                 Transformation transformation = it.next();
                 if (transformationName.equals(transformation.getName())) {
-                  it.remove();
+                  it.remove();found = true;
                   break;
                 }
               }
 
 
-if(pre ==transformationsList.size())
-{
-	//TODO: each time a mouse down and drag gets here the drag won't work!
-	System.out.println("pre == transformationsList.size() pre " + pre    );// big problem, not found!!
 
-}
-
+							if( !found)
+							{
+								System.out.println("Dragged !found   " +  transformationName    );// big problem, not found!!
+							}
+							else
+							{
+								System.out.println("Dragged found   " +  transformationName    );
+							}
 
               float [] matrix = new float [16];
               newTransform.get(matrix);

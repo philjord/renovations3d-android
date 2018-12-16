@@ -417,11 +417,11 @@ public class SwingTools {
 	 */
 
 	/**
-	 * Adds a listener that will update the given popup menu to hide disabled menu items.
+	 * Adds a listener that will update the given tooltippopup menu to hide disabled menu items.
 	 */
 
 	/**
-	 * A popup menu listener that displays only enabled menu items.
+	 * A tooltippopup menu listener that displays only enabled menu items.
 	 */
 
 	/**

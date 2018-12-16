@@ -1215,15 +1215,15 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	}*/
 
 	/**
-	 * Sets the popup menu of the list displayed by this panel.
+	 * Sets the tooltippopup menu of the list displayed by this panel.
 	 */
 /*	@Override
-	public void setComponentPopupMenu(JPopupMenu popup) {
-		this.catalogFurnitureList.setComponentPopupMenu(popup);
+	public void setComponentPopupMenu(JPopupMenu tooltippopup) {
+		this.catalogFurnitureList.setComponentPopupMenu(tooltippopup);
 	}*/
 
 	/**
-	 * Returns the popup menu of the list displayed by this panel.
+	 * Returns the tooltippopup menu of the list displayed by this panel.
 	 */
 /*	@Override
 	public JPopupMenu getComponentPopupMenu() {

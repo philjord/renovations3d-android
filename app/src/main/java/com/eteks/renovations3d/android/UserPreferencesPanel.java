@@ -729,18 +729,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     	});
 
 	  //PJ----------------------------new refs for Renovations, using the local prefs storage system
-	  boolean SHOW_HANDLES_THAT_NEED_TOOLTIPS = settings.getBoolean(PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS_PREF, false);
 	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, true);
 
-	  this.showOtherHandles = new JCheckBox(activity, getContext().getString(R.string.showOtherHandles), SHOW_HANDLES_THAT_NEED_TOOLTIPS);
-	  this.showOtherHandles.addChangeListener(new ChangeListener() {
-		  public void stateChanged(ChangeEvent ev) {
-			  SharedPreferences.Editor editor = settings.edit();
-			  editor.putBoolean(PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS_PREF, showOtherHandles.isSelected());
-			  editor.apply();
-			  PlanComponent.SHOW_HANDLES_THAT_NEED_TOOLTIPS = showOtherHandles.isSelected();
-		  }
-	  });
 	  this.showPagerButtons = new JCheckBox(activity, getContext().getString(R.string.showPagerButtons), SHOW_PAGER_BUTTONS_PREF);
 	  this.showPagerButtons.addChangeListener(new ChangeListener() {
 		  public void stateChanged(ChangeEvent ev) {

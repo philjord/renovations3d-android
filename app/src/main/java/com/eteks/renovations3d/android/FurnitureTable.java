@@ -773,7 +773,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	}
 
 	/**
-	 * Shows in a popup the information of the cell at the given coordinates.
+	 * Shows in a tooltippopup the information of the cell at the given coordinates.
 	 */
 /*	private void showInformationPopup(String information, int column, int row) {
 		if (this.furnitureInformationPopup == null
@@ -813,7 +813,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			informationPane.setForeground(toolTip.getForeground());
 			informationPane.setSize(informationPane.getPreferredSize());
 
-			// Show information in a popup
+			// Show information in a tooltippopup
 			Rectangle cellRectangle = getCellRect(row, column, true);
 			Point p = new Point(cellRectangle.x + cellRectangle.width, cellRectangle.y);
 			SwingUtilities.convertPointToScreen(p, this);
@@ -825,7 +825,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 								deleteInformationPopup();
 								((KeyEvent)ev).consume();
 							}
-						} else if (ev.getID() != WindowEvent.WINDOW_OPENED  // Fired at first popup instantiation
+						} else if (ev.getID() != WindowEvent.WINDOW_OPENED  // Fired at first tooltippopup instantiation
 								&& (!(ev instanceof MouseEvent)
 								|| (ev.getSource() != FurnitureTable.this
 								&& ev.getSource() != informationPane))) {
@@ -833,7 +833,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 						}
 					}
 				};
-				// Add a listener that will delete information popup for events outside of table
+				// Add a listener that will delete information tooltippopup for events outside of table
 				getToolkit().addAWTEventListener(this.informationPopupRemovalListener,
 						AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK
 								| AWTEvent.KEY_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK
@@ -843,13 +843,13 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				this.furnitureInformationPopup.show();
 				this.furnitureInformationRow = row;
 			} catch (SecurityException ex) {
-				// Ignore information popup if it's not possible to delete it by clicking anywhere
+				// Ignore information tooltippopup if it's not possible to delete it by clicking anywhere
 			}
 		}
 	}*/
 
 	/**
-	 * Deletes information popup from screen.
+	 * Deletes information tooltippopup from screen.
 	 */
 /*	public void deleteInformationPopup() {
 		if (this.furnitureInformationPopup != null) {

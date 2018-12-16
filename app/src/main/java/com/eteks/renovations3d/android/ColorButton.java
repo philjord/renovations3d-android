@@ -822,7 +822,7 @@ public class ColorButton extends  JButton
 /*  private static class PaletteComboBox extends JComboBox {
     private PaletteComboBox(ColorCode [] colors) {
       super(colors);
-      // Set combo box popup wider as suggested at http://forums.java.net/jive/message.jspa?messageID=61267
+      // Set combo box tooltippopup wider as suggested at http://forums.java.net/jive/message.jspa?messageID=61267
       PopupMenuListener comboBoxPopupMenuListener = new PopupMenuListener() {
           public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
             JComboBox comboBox = (JComboBox)ev.getSource();
