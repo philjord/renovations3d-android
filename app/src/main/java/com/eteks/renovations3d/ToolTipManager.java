@@ -1,4 +1,4 @@
-package com.mindblowing.swingish;
+package com.eteks.renovations3d;
 
 import android.content.Context;
 import android.os.Handler;
@@ -19,6 +19,11 @@ public class ToolTipManager {
 	private int mCurrentX = 20;
 	private int mCurrentY = 75;
 	private View parent;
+
+	private boolean isDismissing = false;
+	private Handler handler = new Handler();
+	private Runnable dismissTask;
+
 	public ToolTipManager(Context context, View parent) {
 		this.context = context;
 		this.parent = parent;
@@ -35,21 +40,28 @@ public class ToolTipManager {
 		btnClose.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				isDismissing = false;
 				popupWindow.dismiss();
 			}
 		});
-
+		dismissTask = new Runnable() {
+			@Override
+			public void run() {
+				isDismissing = false;
+				popupWindow.dismiss();
+			}
+		};
 	}
 
 	public void showTooltip(View toolTipComponent)
 	{
-
 		View placeHolder = popupView.findViewById(R.id.toolTipTextView);
 		toolTipComponent.setLayoutParams(placeHolder.getLayoutParams());
 		toolTipComponent.setId(R.id.toolTipTextView);
 		AndroidDialogView.replaceView(placeHolder, toolTipComponent);
 
 		popupWindow.showAtLocation(parent, Gravity.NO_GRAVITY, mCurrentX, mCurrentY);
+		isDismissing = false;
 
 		popupView.setOnTouchListener(new View.OnTouchListener() {
 			private float mDx;
@@ -67,6 +79,11 @@ public class ToolTipManager {
 					mCurrentY = (int) (event.getRawY() + mDy);
 					popupWindow.update(mCurrentX, mCurrentY, -1, -1);
 				}
+				if(isDismissing) {
+					// reset the timer
+					handler.removeCallbacks(dismissTask);
+					handler.postDelayed(dismissTask, 4000);
+				}
 				return true;
 			}
 		});
@@ -74,13 +91,7 @@ public class ToolTipManager {
 
 	public void hideTooltip() {
 		// delay so the user can move it around if they wish
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				popupWindow.dismiss();
-			}
-		}, 4000);
-
+		isDismissing = true;
+		handler.postDelayed(dismissTask, 4000);
 	}
 }

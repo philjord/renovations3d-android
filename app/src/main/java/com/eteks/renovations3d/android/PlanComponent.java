@@ -75,7 +75,7 @@ import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JFormattedTextField;
 import com.mindblowing.swingish.JToolTip;
 import com.mindblowing.swingish.JViewPort;
-import com.mindblowing.swingish.ToolTipManager;
+import com.eteks.renovations3d.ToolTipManager;
 import com.mindblowing.utils.LongHoldHandler;
 
 import org.jogamp.java3d.AmbientLight;
