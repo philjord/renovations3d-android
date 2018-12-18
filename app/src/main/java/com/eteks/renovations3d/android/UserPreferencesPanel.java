@@ -35,7 +35,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -79,6 +82,9 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	//private JButton          languageLibraryImportButton;
 	private JLabel           unitLabel;
 	private JComboBox        unitComboBox;
+	private JLabel           currencyLabel;
+	private JComboBox        currencyComboBox;
+	private JCheckBox        valueAddedTaxCheckBox;
 	//private JLabel           furnitureCatalogViewLabel;
 	//private JRadioButton     treeRadioButton;
 	//private JRadioButton     listRadioButton;
@@ -122,7 +128,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JButton          resetDisplayedActionTipsButton;
 
 	private JCheckBox        showPagerButtons;
-
 	private String           dialogTitle;
 
   /**
@@ -162,8 +167,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 					if (underscoreIndex != -1) {
 						locale = new Locale(language.substring(0, underscoreIndex),
 										language.substring(underscoreIndex + 1));
-					}
-					else {
+					} else {
 						locale = new Locale(language);
 					}
 					String displayedValue = locale.getDisplayLanguage(locale);
@@ -250,7 +254,90 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 								}
 							});
 		}
-    
+
+		if (controller.isPropertyEditable(UserPreferencesController.Property.CURRENCY)) {
+			// Create currency label and combo box bound to controller CURRENCY property
+			this.currencyLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+							com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "currencyLabel.text"));
+
+			final Map<String, String> currencyMap = new HashMap<String, String>();
+			for (Locale locale : Locale.getAvailableLocales()) {
+				try {
+					Currency currency = Currency.getInstance(locale);
+					if (currencyMap.get(currency.getCurrencyCode()) == null
+									|| currencyMap.get(currency.getCurrencyCode()).length() > currency.getSymbol(locale).length()) {
+						currencyMap.put(currency.getCurrencyCode(), currency.getSymbol(locale));
+					}
+				} catch (IllegalArgumentException ex) {
+					// Currency in Locale not found
+				}
+			}
+			ArrayList<String> currencies = new ArrayList<String>(currencyMap.keySet());
+			Collections.sort(currencies);
+			Locale defaultLocale = Locale.getDefault();
+			Currency defaultLocaleCurrency = defaultLocale.getCountry() != null && defaultLocale.getCountry().length() == 2
+							? Currency.getInstance(defaultLocale)
+							: null;
+			if (defaultLocaleCurrency != null) {
+				currencies.add(0, defaultLocaleCurrency.getCurrencyCode()); // Add also the currency of the current locale
+			}
+			currencies.add(0, null);
+			this.currencyComboBox = new JComboBox(activity, currencies);
+			final String noCurrencyText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "currencyComboBox.noCurrency.text");
+			this.currencyComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, currencies) {
+				@Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+					return getDropDownView(position, convertView, parent);
+				}
+
+				@Override
+				public View getDropDownView(int position, View convertView, ViewGroup parent) {
+					TextView ret = new TextView(getContext());
+					Object value = currencyComboBox.getItemAtPosition(position);
+					if (value == null) {
+						ret.setText(noCurrencyText);
+					} else {
+						ret.setText(value + " " + currencyMap.get(value));
+					}
+					return ret;
+				}
+			});
+			this.currencyComboBox.setSelectedItem(controller.getCurrency());
+			this.currencyComboBox.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent ev) {
+					controller.setCurrency((String)currencyComboBox.getSelectedItem());
+				}
+			});
+			controller.addPropertyChangeListener(UserPreferencesController.Property.CURRENCY,
+							new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent ev) {
+									currencyComboBox.setSelectedItem(controller.getCurrency());
+									if (valueAddedTaxCheckBox != null) {
+										valueAddedTaxCheckBox.setEnabled(controller.getCurrency() != null);
+									}
+								}
+							});
+
+			if (controller.isPropertyEditable(UserPreferencesController.Property.VALUE_ADDED_TAX_ENABLED)) {
+				this.valueAddedTaxCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
+								com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "valueAddedTaxCheckBox.text"));
+				this.valueAddedTaxCheckBox.setEnabled(controller.getCurrency() != null);
+				this.valueAddedTaxCheckBox.setSelected(controller.isValueAddedTaxEnabled());
+				this.valueAddedTaxCheckBox.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent ev) {
+						controller.setValueAddedTaxEnabled(valueAddedTaxCheckBox.isSelected());
+					}
+				});
+				controller.addPropertyChangeListener(UserPreferencesController.Property.VALUE_ADDED_TAX_ENABLED,
+								new PropertyChangeListener() {
+									public void propertyChange(PropertyChangeEvent ev) {
+										valueAddedTaxCheckBox.setEnabled(controller.getCurrency() != null);
+										valueAddedTaxCheckBox.setSelected(controller.isValueAddedTaxEnabled());
+									}
+								});
+			}
+		}
+
 /*    if (controller.isPropertyEditable(UserPreferencesController.Property.FURNITURE_CATALOG_VIEWED_IN_TREE)) {
       // Create furniture catalog label and radio buttons bound to controller FURNITURE_CATALOG_VIEWED_IN_TREE property
       this.furnitureCatalogViewLabel = new TextView(activity);furnitureCatalogViewLabel.setText(preferences.getLocalizedString(
@@ -490,10 +577,14 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
               new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent ev) {
                   topViewRadioButton.setSelected(controller.isFurnitureViewedFromTop());
-                  iconSizeComboBox.setEnabled(controller.isFurnitureViewedFromTop());
+                  if (iconSizeComboBox != null) {
+                  	iconSizeComboBox.setEnabled(controller.isFurnitureViewedFromTop());
+                	}
                 }
               });
-          this.iconSizeComboBox.setEnabled(controller.isFurnitureViewedFromTop());
+          if (this.iconSizeComboBox != null) {
+          	this.iconSizeComboBox.setEnabled(controller.isFurnitureViewedFromTop());
+          }
         } else {
           this.catalogIconRadioButton.setEnabled(false);
           this.topViewRadioButton.setEnabled(false);
@@ -706,7 +797,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       controller.addPropertyChangeListener(UserPreferencesController.Property.AUTO_SAVE_FOR_RECOVERY_ENABLED, listener);
     }*/
 
-
 	  final SharedPreferences settings = getContext().getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 
     this.resetDisplayedActionTipsButton = new JButton(activity,
@@ -897,19 +987,34 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_unitSpinner);
 			// Keep third row empty (used to contain unit radio buttons)
 		}
-		/* if (this.furnitureCatalogViewLabel != null) {
+		if (this.currencyLabel != null) {
 			// Fourth row
+			swapOut(this.currencyLabel, R.id.prefs_currencyLabel);
+			swapOut(this.currencyComboBox, R.id.prefs_currencySpinner);
+			if (this.valueAddedTaxCheckBox != null) {
+				swapOut(this.valueAddedTaxCheckBox, R.id.valueAddedTaxCheckBox);
+			} else {
+				removeView(R.id.valueAddedTaxCheckBox);
+			}
+		} else {
+			removeView(R.id.prefs_currencyLabel);
+			removeView(R.id.prefs_currencySpinner);
+			removeView(R.id.valueAddedTaxCheckBox);
+			removeView(R.id.prefs_currencyRow);
+		}
+		/* if (this.furnitureCatalogViewLabel != null) {
+			// Fifth row
 		  rootView.addView(this.furnitureCatalogViewLabel, labelInsets);
 		  rootView.addView(this.treeRadioButton, labelInsets);
 		  rootView.addView(this.listRadioButton, rightComponentInsets);
 		}*/
 	   /* if (this.navigationPanelLabel != null) {
-	   	// Fifth row
+	   	// Sixth row
 		  rootView.addView(this.navigationPanelLabel, labelInsets);
 		  rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);
 		}*/
 		if (this.aerialViewCenteredOnSelectionLabel != null) {
-			// Sixth row
+			// Seventh row
 			swapOut(this.aerialViewCenteredOnSelectionLabel, R.id.prefs_aerialViewCenteredOnSelectionLabel);
 			swapOut(this.aerialViewCenteredOnSelectionCheckBox, R.id.prefs_aerialViewCenteredOnSelectionCheckBox);
 		} else {
@@ -918,7 +1023,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		}
 		//NOTICE disabled in create above to avoid observer selection removing 3d selection
 		if (this.observerCameraSelectedAtChangeLabel != null) {
-			// Seventh row
+			// Eighth row
 			swapOut(this.observerCameraSelectedAtChangeLabel, R.id.prefs_observerCameraSelectedAtChangeLabel);
 			swapOut(this.observerCameraSelectedAtChangeCheckBox, R.id.prefs_observerCameraSelectedAtChangeCheckBox);
 		} else {
@@ -927,7 +1032,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_observerCameraSelectedAtChangeCheckBox);
 		}
 		if (this.magnetismLabel != null) {
-			// Eighth row
+			// Ninth row
 			swapOut(this.magnetismLabel, R.id.prefs_magnetismLabel);
 			swapOut(this.magnetismCheckBox, R.id.prefs_magnetismRadioButton);
 		} else {
@@ -935,7 +1040,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_magnetismRadioButton);
 		}
 		if (this.rulersLabel != null) {
-			// Ninth row
+			// Tenth row
 			swapOut(this.rulersLabel, R.id.prefs_rulersLabel);
 			swapOut(this.rulersCheckBox, R.id.prefs_rulersRadioButton);
 		} else {
@@ -943,7 +1048,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_rulersRadioButton);
 		}
 		if (this.gridLabel != null) {
-			// Tenth row
+			// Eleventh row
 			swapOut(this.gridLabel, R.id.prefs_gridLabel);
 			swapOut(this.gridCheckBox, R.id.prefs_gridRadioButton);
 		} else {
@@ -951,7 +1056,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_gridRadioButton);
 		}
 		/*if (this.defaultFontNameLabel != null) {
-			// Eleventh row
+			// Twelfth row
 		  rootView.addView(this.defaultFontNameLabel, labelInsets);
 		  Dimension preferredSize = this.defaultFontNameComboBox.getPreferredSize();
 		  if (this.unitComboBox != null
@@ -965,13 +1070,13 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  rootView.addView(this.defaultFontNameComboBox, rightComponentInsets);
 		}*/
 		/*if (this.furnitureIconLabel != null) {
-			// Twelfth and thirteenth row
+			// Thirteenth and fourteenth row
 		  rootView.addView(this.furnitureIconLabel, labelInsets);
 		  rootView.addView(this.catalogIconRadioButton, labelInsets);
 		  rootView.addView(this.topViewRadioButton, rightComponentInsets);
 		}*/
 		if (this.roomRenderingLabel != null) {
-			// Fourteenth row
+			// Fifteenth row
 			swapOut(this.roomRenderingLabel, R.id.prefs_roomRenderLabel);
 			swapOut(this.monochromeRadioButton, R.id.prefs_roomRenderMonoRadioButton);
 			swapOut(this.floorColorOrTextureRadioButton, R.id.prefs_roomRenderColorRadioButton);
@@ -981,7 +1086,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_roomRenderColorRadioButton);
 		}
 		if (this.newWallPatternLabel != null) {
-			// Fifteenth row
+			// Sixteenth row
 			swapOut(this.newWallPatternLabel, R.id.prefs_newWallsTextureLabel);
 			swapOut(this.newWallPatternComboBox, R.id.prefs_newWallsTextureSpinner);
 		} else if (this.wallPatternLabel != null) {
@@ -992,7 +1097,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_newWallsTextureSpinner);
 		}
 		if (this.newWallThicknessLabel != null) {
-			// Sixteenth row
+			// Seventeenth row
 			swapOut(this.newWallThicknessLabel, R.id.prefs_newWallsThicknessLabel);
 			swapOut(this.newWallThicknessSpinner, R.id.prefs_newWallsThicknessSpinner);
 		} else {
@@ -1000,7 +1105,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_newWallsThicknessSpinner);
 		}
 		if (this.newWallHeightLabel != null) {
-			// Seventeenth row
+			// Eighteenth row
 			swapOut(this.newWallHeightLabel, R.id.prefs_newWallsHeightLabel);
 			swapOut(this.newWallHeightSpinner, R.id.prefs_newWallsHeightSpinner);
 		} else {
@@ -1008,7 +1113,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_newWallsHeightSpinner);
 		}
 		if (this.newFloorThicknessLabel != null) {
-			// Eighteenth row
+			// Nineteenth row
 			swapOut(this.newFloorThicknessLabel, R.id.prefs_newLevelFloorThicknessLabel);
 			swapOut(this.newFloorThicknessSpinner, R.id.prefs_newLevelFloorThicknessSpinner);
 		} else {
@@ -1031,31 +1136,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_autoSaveRadioButton);
 			removeView(R.id.prefs_autoSaveSpinner);
 			removeView(R.id.prefs_autoSaveUnitLabel);
-
-// had to strip this out completely
-			 <TableRow>
-            <CheckBox
-                android:id="@+id/prefs_autoSaveRadioButton"
-                android:text="Auto Save time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
-            <NumberPicker
-                android:id="@+id/prefs_autoSaveSpinner"
-                android:text=""
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-            />
-            <TextView
-                android:id="@+id/prefs_autoSaveUnitLabel"
-                android:text="Min"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                />
-        </TableRow>
-		}*/
+			}*/
 
 		// Last row
 		if (this.resetDisplayedActionTipsButton.getText() != null

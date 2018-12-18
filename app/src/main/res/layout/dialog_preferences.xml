@@ -46,6 +46,38 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"/>
         </TableRow>
+        <TableRow
+            android:id="@+id/prefs_currencyRow"
+            >
+            <TextView
+                android:id="@+id/prefs_currencyLabel"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@+id/prefs_currencySpinner"
+                android:text=""
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"/>
+        </TableRow>
+        <TableRow>
+            <CheckBox
+                android:id="@+id/valueAddedTaxCheckBox"
+                android:text="aerialViewCenteredOnSelectionCheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                />
+            <TextView
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
         <TableRow>
             <TextView
                 android:id="@+id/prefs_aerialViewCenteredOnSelectionLabel"
