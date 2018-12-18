@@ -342,7 +342,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 	//menu item options
 	public boolean alignmentActivated = false;
-	public boolean magnetismToggled = false;// careful toggle != checked!
 	public boolean selectLasso = false;
 	public boolean selectMultiple = false;
 
@@ -1423,8 +1422,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						//alignment and magnetism come from menu now
 						boolean alignmentActivated = PlanComponent.this.alignmentActivated;
 						boolean duplicationActivated = ((MultipleLevelsPlanPanel) controller.getView()).getIsControlKeyOn();
-						boolean magnetismToggled = PlanComponent.this.magnetismToggled;
-
 						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && PlanComponent.this.selectMultiple;
 
 						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 250 ? 2 : 1);
@@ -1435,7 +1432,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						try {
 							controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
 											clickCount, isShiftDown,
-											alignmentActivated, duplicationActivated, magnetismToggled);
+											alignmentActivated, duplicationActivated, false);
 						} catch (ArrayIndexOutOfBoundsException e) {
 							// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 							//ignore for now, investigate later

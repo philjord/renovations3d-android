@@ -567,8 +567,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
 
 		menu.findItem(R.id.planAlignment).setChecked(this.planComponent.alignmentActivated);
-		menu.findItem(R.id.planMagnetism).setEnabled(preferences.isMagnetismEnabled());
-		menu.findItem(R.id.planMagnetism).setChecked(preferences.isMagnetismEnabled() && !this.planComponent.magnetismToggled);
+		menu.findItem(R.id.planMagnetism).setChecked(preferences.isMagnetismEnabled());
 
 		sortOutBackgroundMenu(menu);
 
@@ -698,7 +697,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				return true;
 			case R.id.planMagnetism:
 				item.setChecked(!item.isChecked());
-				this.planComponent.magnetismToggled = !item.isChecked();// careful toggle != checked!
+				preferences.setMagnetismEnabled(item.isChecked());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

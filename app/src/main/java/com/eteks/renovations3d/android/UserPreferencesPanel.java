@@ -121,7 +121,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	//private JLabel           autoSaveDelayForRecoveryUnitLabel;
 	private JButton          resetDisplayedActionTipsButton;
 
-	private JCheckBox        showOtherHandles;
 	private JCheckBox        showPagerButtons;
 
 	private String           dialogTitle;
@@ -1067,7 +1066,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			removeView(R.id.prefs_resetTipsButton);
 		}
 
-		swapOut(this.showOtherHandles, R.id.prefs_showOtherHandles);
 		swapOut(this.showPagerButtons, R.id.prefs_showPagerButtons);
 
 		this.setTitle(dialogTitle);

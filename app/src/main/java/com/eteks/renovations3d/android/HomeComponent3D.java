@@ -992,7 +992,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if (graphicsEnvironment.getScreenDevices().length == 1)	{
 			// If only one screen device is available, create canvas 3D immediately,
 			// otherwise create it once the screen device of the parent is known
-			createComponent3D(null//graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration(), preferences, controller);
+			createComponent3D(null//graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration()
+			, preferences, controller);
 		}*/
 
 		// Add an ancestor listener to create canvas 3D and its universe once this component is made visible
@@ -1015,7 +1016,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			{
 				boolean isSelected = selectionEvent.getSelectedItems().contains(sel);
 				Object3DBranch obj3D = homeObjects.get(sel);
-				if(obj3D.isShowOutline()!=isSelected)
+				if (obj3D.isShowOutline() != isSelected)
 					obj3D.showOutline(isSelected);
 			}
 		}
@@ -1957,6 +1958,41 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Creates actions that calls back <code>controller</code> methods.
 	 */
 	private void createActions(final HomeController3D controller) {
+	}
+
+	/**
+	 * Returns the closest {@link Selectable} object at screen coordinates (x, y),
+	 * or <code>null</code> if not found.
+	 */
+	public Selectable getClosestItemAt(int x, int y) {
+   /* if (this.component3D != null) {
+      Canvas3D canvas;
+      if (this.component3D instanceof JCanvas3D) {
+        canvas = ((JCanvas3D)this.component3D).getOffscreenCanvas3D();
+      } else {
+        canvas = (Canvas3D)this.component3D;
+      }
+      PickCanvas pickCanvas = new PickCanvas(canvas, this.onscreenUniverse.getLocale());
+      pickCanvas.setMode(PickCanvas.GEOMETRY);
+      Point canvasPoint = SwingUtilities.convertPoint(this, x, y, this.component3D);
+      pickCanvas.setShapeLocation(canvasPoint.x, canvasPoint.y);
+      PickResult result = pickCanvas.pickClosest();
+      if (result != null) {
+        Node pickedNode = result.getNode(PickResult.SHAPE3D);
+        while (!this.homeObjects.containsValue(pickedNode)
+               && pickedNode.getParent() != null) {
+          pickedNode = pickedNode.getParent();
+        }
+        if (pickedNode != null) {
+          for (Map.Entry<Selectable, Object3DBranch> entry : this.homeObjects.entrySet()) {
+            if (entry.getValue() == pickedNode) {
+              return entry.getKey();
+            }
+          }
+        }
+      }
+    }*/
+		return null;
 	}
 
 	/**

@@ -230,12 +230,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"/>
         <CheckBox
-            android:id="@+id/prefs_showOtherHandles"
-            android:text="prefs_showOtherHandles"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
-        <CheckBox
             android:id="@+id/prefs_showPagerButtons"
             android:text="prefs_showPagerButtons"
             android:layout_width="0dp"
