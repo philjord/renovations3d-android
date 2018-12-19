@@ -35,73 +35,6 @@
         android:showAsAction="always"
         android:title="3D"
         />
-
-
-    <item
-        android:id="@+id/planModifyMenu"
-        android:showAsAction="never"
-        android:title="planModifyMenu">
-        <menu>
-            <item
-                android:id="@+id/planModifyFurniture"
-                android:title="planModifyFurniture"
-                />
-            <item
-                android:id="@+id/planModifyWalls"
-                android:title="planModifyWalls"
-                />
-            <item
-                android:id="@+id/planModifyRooms"
-                android:title="planModifyRooms"
-                />
-            <item
-                android:id="@+id/planModifyPolylines"
-                android:title="planModifyPolylines"
-                />
-            <item
-                android:id="@+id/planModifyText"
-                android:title="planModifyText"
-                />
-            <item
-                android:id="@+id/planSplitWall"
-                android:title="planSplitWall"
-                />
-            <item
-                android:id="@+id/planModifyCompass"
-                android:title="planModifyCompass"
-                />
-            <item
-                android:id="@+id/lockBasePlanCheck"
-                android:checkable="true"
-                android:title="lockBasePlanCheck"
-                />
-        </menu>
-    </item>
-
-    <item
-        android:id="@+id/planLevelMenu"
-        android:showAsAction="never"
-        android:title="planLevelMenu">
-        <menu>
-            <item
-                android:id="@+id/planAddLevel"
-                android:title="planAddLevel"
-                />
-            <item
-                android:id="@+id/planAddLevelAtSame"
-                android:title="planAddLevelAtSame"
-                />
-            <item
-                android:id="@+id/planModifyLevel"
-                android:title="planModifyLevel"
-                />
-            <item
-                android:id="@+id/planDeleteLevel"
-                android:title="planDeleteLevel"
-                />
-        </menu>
-    </item>
-
     <item
         android:id="@+id/planEdit"
         android:showAsAction="never"
@@ -144,6 +77,97 @@
                 />
         </menu>
     </item>
+    <item
+        android:id="@+id/planModifyWallsMenu"
+        android:showAsAction="never"
+        android:title="planModifyWallsMenu">
+        <menu>
+            <item
+                android:id="@+id/planModifyWalls"
+                android:title="planModifyWalls"
+                />
+            <item
+                android:id="@+id/planJoinWalls"
+                android:title="planJoinWalls"
+                />
+            <item
+                android:id="@+id/planReverseWalls"
+                android:title="planReverseWalls"
+                />
+            <item
+                android:id="@+id/planSplitWall"
+                android:title="planSplitWall"
+                />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/planModifyMenu"
+        android:showAsAction="never"
+        android:title="planModifyMenu">
+        <menu>
+            <item
+                android:id="@+id/lockBasePlanCheck"
+                android:checkable="true"
+                android:title="lockBasePlanCheck"
+                />
+            <item
+                android:id="@+id/planModifyFurniture"
+                android:title="planModifyFurniture"
+                />
+            <item
+                android:id="@+id/planModifyPolylines"
+                android:title="planModifyPolylines"
+                />
+            <item
+                android:id="@+id/planModifyText"
+                android:title="planModifyText"
+                />
+            <item
+                android:id="@+id/planModifyCompass"
+                android:title="planModifyCompass"
+                />
+            <item
+                android:id="@+id/planModifyRooms"
+                android:title="planModifyRooms"
+                />
+            <item
+                android:id="@+id/planAddRoomPoint"
+                android:checkable="true"
+                android:title="planAddRoomPoint"
+                />
+            <item
+                android:id="@+id/planDeleteRoomPoint"
+                android:checkable="true"
+                android:title="planDeleteRoomPoint"
+                />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/planLevelMenu"
+        android:showAsAction="never"
+        android:title="planLevelMenu">
+        <menu>
+            <item
+                android:id="@+id/planAddLevel"
+                android:title="planAddLevel"
+                />
+            <item
+                android:id="@+id/planAddLevelAtSame"
+                android:title="planAddLevelAtSame"
+                />
+            <item
+                android:id="@+id/planModifyLevel"
+                android:title="planModifyLevel"
+                />
+            <item
+                android:id="@+id/planDeleteLevel"
+                android:title="planDeleteLevel"
+                />
+        </menu>
+    </item>
+
+
 
     <item
         android:id="@+id/bgImageMenu"

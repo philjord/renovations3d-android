@@ -344,6 +344,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	public boolean alignmentActivated = false;
 	public boolean selectLasso = false;
 	public boolean selectMultiple = false;
+	public boolean addRoomPointActivated = false;
+	public boolean deleteRoomPointActivated = false;
 
   static {
     POINT_INDICATOR = new Ellipse2D.Float(-1.5f, -1.5f, 3, 3);
@@ -1345,6 +1347,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						// stops any double taps
 						lastMouseReleasedTime = 0;
 
+						//ignore all moves if room points are activated
+						if(addRoomPointActivated || deleteRoomPointActivated) {
+							return true;
+						}
+
 						// this is a major divergence from the desktop function! Single finger pan during selection mode if the move is over nothing
 						if (controller.getMode() == PlanController.Mode.PANNING ||
 										(controller.getMode() == PlanController.Mode.SELECTION
@@ -1429,14 +1436,24 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						// if it's a double, ensure triple != double twice
 						lastMouseReleasedTime = clickCount == 1 ? System.currentTimeMillis() : 0;
 
-						try {
-							controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-											clickCount, isShiftDown,
-											alignmentActivated, duplicationActivated, false);
-						} catch (ArrayIndexOutOfBoundsException e) {
-							// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
-							//ignore for now, investigate later
-							e.printStackTrace();
+						// handle special cases of mouse click (from desktop right click menu)
+						if(addRoomPointActivated) {
+							addRoomPointActivated = false;
+							controller.addPointToSelectedRoom(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+						} else if (deleteRoomPointActivated) {
+							deleteRoomPointActivated = false;
+							controller.deletePointFromSelectedRoom(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
+						} else {
+							try {
+								controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
+												clickCount, isShiftDown,
+												alignmentActivated, duplicationActivated, false);
+							}
+							catch (ArrayIndexOutOfBoundsException e) {
+								// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
+								//ignore for now, investigate later
+								e.printStackTrace();
+							}
 						}
 					}
 				}

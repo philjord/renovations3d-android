@@ -2059,12 +2059,12 @@ public class HomePane implements HomeView {
 		//  if (action != null) {
 		//    action.setEnabled(enabled);
 		//  }
-		//PJPJPJP but we are interested in thh REDO and Undo items being enabled or disabled!
-		if (actionType == ActionType.UNDO || actionType == ActionType.REDO) {
-			HomeController homeController = activity.getHomeController();
-			if(homeController != null) {
-				((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setEnabled(actionType, enabled);
-			}
+
+		//give it to the MultipleLevelsPlanPanel to decide
+		HomeController homeController = activity.getHomeController();
+		if(homeController != null) {
+			((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).setEnabled(actionType, enabled);
+			//TODO: hand this to all the pager fragments
 		}
 	}
 

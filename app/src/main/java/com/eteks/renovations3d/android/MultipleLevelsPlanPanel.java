@@ -98,6 +98,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	private View rootView;// recorded to prevent double view creates from fragment manager
 	private boolean resetToSelectTool = false;
 
+
+
 	//PJPJP will be needed later I guess
 	// use a class from the jar!
 	//private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(this.class.getResource("swing/resources/sameElevation.png"));
@@ -465,23 +467,35 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		Renovations3DActivity.setIconizedMenuTitle(redo, redoStr, R.drawable.edit_redo, getContext());
 		redo.setEnabled(redoEnabled);
 
-		menu.findItem(R.id.planModifyMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name"));
 
+		menu.findItem(R.id.planModifyWallsMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_WALL.Name"));
+		menu.findItem(R.id.planModifyWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "wall.title").replace("...", ""));
+		menu.findItem(R.id.planModifyWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planJoinWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "JOIN_WALLS.Name"));
+		menu.findItem(R.id.planJoinWalls).setEnabled(joinWallsEnabled);// enabled via the setEnabled call
+		menu.findItem(R.id.planReverseWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REVERSE_WALL_DIRECTION.Name"));
+		menu.findItem(R.id.planReverseWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planSplitWall).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SPLIT_WALL.Name"));
+		menu.findItem(R.id.planSplitWall).setEnabled(Home.getWallsSubList(this.home.getSelectedItems()).size() == 1);
+
+		menu.findItem(R.id.planModifyMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name"));
 		String modifyFurniture = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name").replace("...", "") + " "
 				+ preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FURNITURE_MENU.Name") + "...";
 		menu.findItem(R.id.planModifyFurniture).setTitle(modifyFurniture);
 		menu.findItem(R.id.planModifyFurniture).setEnabled(!Home.getFurnitureSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planModifyWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_WALL.Name"));
-		menu.findItem(R.id.planModifyWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planModifyRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_ROOM.Name"));
-		menu.findItem(R.id.planModifyRooms).setEnabled(!Home.getRoomsSubList(this.home.getSelectedItems()).isEmpty());
 		menu.findItem(R.id.planModifyPolylines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_POLYLINE.Name"));
 		menu.findItem(R.id.planModifyPolylines).setEnabled(!Home.getPolylinesSubList(this.home.getSelectedItems()).isEmpty());
 		menu.findItem(R.id.planModifyText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LABEL.Name"));
 		menu.findItem(R.id.planModifyText).setEnabled(!Home.getLabelsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planSplitWall).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SPLIT_WALL.Name"));
-		menu.findItem(R.id.planSplitWall).setEnabled(Home.getWallsSubList(this.home.getSelectedItems()).size() == 1);
 		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
+		menu.findItem(R.id.planModifyRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_ROOM.Name"));
+		menu.findItem(R.id.planModifyRooms).setEnabled(!Home.getRoomsSubList(this.home.getSelectedItems()).isEmpty());
+		menu.findItem(R.id.planAddRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_ROOM_POINT.Name"));
+		menu.findItem(R.id.planAddRoomPoint).setEnabled(this.addRoomPointEnabled);// enabled via the setEnabled call
+		menu.findItem(R.id.planAddRoomPoint).setChecked(this.addRoomPointEnabled && this.planComponent.addRoomPointActivated);
+		menu.findItem(R.id.planDeleteRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_ROOM_POINT.Name"));
+		menu.findItem(R.id.planDeleteRoomPoint).setEnabled(this.deleteRoomPointEnabled);// enabled via the setEnabled call
+		menu.findItem(R.id.planDeleteRoomPoint).setChecked(this.deleteRoomPointEnabled && this.planComponent.deleteRoomPointActivated);
 
 		MenuItem itemLocked = menu.findItem(R.id.lockBasePlanCheck);
 		itemLocked.setChecked(home.isBasePlanLocked());
@@ -544,14 +558,20 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			case R.id.planGoto3D:
 				renovations3DActivity.getViewPager().setCurrentItem(3, true);
 				return true;
-			case R.id.planModifyFurniture:
-				planController.modifySelectedFurniture();
-				return true;
 			case R.id.planModifyWalls:
 				planController.modifySelectedWalls();
 				return true;
-			case R.id.planModifyRooms:
-				planController.modifySelectedRooms();
+			case R.id.planJoinWalls:
+				planController.joinSelectedWalls();
+				return true;
+			case R.id.planReverseWalls:
+				planController.reverseSelectedWallsDirection();
+				return true;
+			case R.id.planSplitWall:
+				planController.splitSelectedWall();
+				return true;
+			case R.id.planModifyFurniture:
+				planController.modifySelectedFurniture();
 				return true;
 			case R.id.planModifyPolylines:
 				planController.modifySelectedPolylines();
@@ -559,11 +579,21 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			case R.id.planModifyText:
 				planController.modifySelectedLabels();
 				return true;
-			case R.id.planSplitWall:
-				planController.splitSelectedWall();
-				return true;
 			case R.id.planModifyCompass:
 				planController.modifyCompass();
+				return true;
+			case R.id.planModifyRooms:
+				planController.modifySelectedRooms();
+				return true;
+			case R.id.planAddRoomPoint:
+				item.setChecked(!item.isChecked());
+				this.planComponent.addRoomPointActivated = item.isChecked();
+				this.planComponent.deleteRoomPointActivated = false; //radios!
+				return true;
+			case R.id.planDeleteRoomPoint:
+				item.setChecked(!item.isChecked());
+				this.planComponent.deleteRoomPointActivated = item.isChecked();
+				this.planComponent.addRoomPointActivated = false; //radios!
 				return true;
 			case R.id.planAddLevel:
 				planController.addLevel();
@@ -628,6 +658,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				item.setChecked(!item.isChecked());
 				preferences.setMagnetismEnabled(item.isChecked());
 				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -926,9 +957,11 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	private boolean undoEnabled = false;
 	private String redoText = null;
 	private String undoText = null;
+	private boolean joinWallsEnabled = false;
+	private boolean addRoomPointEnabled = false;
+	private boolean deleteRoomPointEnabled = false;
 
-	public void setEnabled(HomeView.ActionType actionType, boolean enabled)
-	{
+	public void setEnabled(HomeView.ActionType actionType, boolean enabled) {
 		if (actionType == HomeView.ActionType.UNDO) {
 			undoEnabled = enabled;
 			if (mOptionsMenu != null) {
@@ -943,7 +976,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				if (redoItem != null)
 					redoItem.setEnabled(enabled);
 			}
+		} else if (actionType == HomeView.ActionType.JOIN_WALLS) {
+			joinWallsEnabled = enabled;
+		}	else if (actionType == HomeView.ActionType.ADD_ROOM_POINT) {
+			addRoomPointEnabled = enabled;
+		}	else if (actionType == HomeView.ActionType.DELETE_ROOM_POINT) {
+			deleteRoomPointEnabled = enabled;
 		}
+
 	}
 
 	public void setNameAndShortDescription(HomeView.ActionType actionType, String text)
