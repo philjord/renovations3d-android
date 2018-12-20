@@ -60,7 +60,7 @@
             <TableRow>
                 <TextView
                     android:id="@+id/furniture_panel_priceLabel"
-                    android:text="Description"
+                    android:text="priceLabel"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             <TableRow>
                 <TextView
                     android:id="@+id/furniture_panel_valueAddedTaxPercentageLabel"
-                    android:text="Description"
+                    android:text="TaxPercentageLabel"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -152,8 +152,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TableRow>
-                <TextView  android:layout_width="0dp"
-                           android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/furniture_panel_angleLabelSpacer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/furniture_panel_angleLabel"
                     android:text="Angle (o):"

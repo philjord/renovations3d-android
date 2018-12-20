@@ -1200,10 +1200,10 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  	//left in to make code comparison better
 		  }
 	  } else {
-		  // removeView(R.id.furniture_panel_orientationPanel);
+		  //removeView(R.id.furniture_panel_orientationPanel);
+			removeView(R.id.furniture_panel_angleLabelSpacer);
 		  removeView(R.id.furniture_panel_verticalRotationLabel);
 		  removeView(R.id.furniture_panel_horizontalRotationLabel);
-		 // removeView(R.id.furniture_panel_orientationLabel);
 			removeView(R.id.furniture_panel_pitchRadioButton);
 			removeView(R.id.furniture_panel_pitchSpinner);
 			removeView(R.id.furniture_panel_rollRadioButton);

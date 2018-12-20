@@ -207,7 +207,7 @@
                         android:layout_gravity="center_vertical|center_horizontal"
                         android:layout_weight="1"
                         android:maxLines="4"
-                        android:text="furniture panel verticalRotationLabel"/>
+                        android:text="verticalRotationLabel"/>
 
                     <TextView
                         android:layout_width="2dp"
@@ -222,9 +222,10 @@
                         android:layout_gravity="center_vertical|center_horizontal"
                         android:layout_weight="1"
                         android:maxLines="4"
-                        android:text="furniture panel horizontalRotationLabel"/>
+                        android:text="horizontalRotationLabel"/>
 
                     <TextView
+                        android:id="@+id/furniture_panel_angleLabelSpacer"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>

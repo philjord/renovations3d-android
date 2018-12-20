@@ -120,7 +120,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	}
 
 	private GridView gridView;
-	private FurnitureImageView selectedFiv = null;
+	private CatalogPieceOfFurniture selectedFurniture = null;
 
 	private View rootView;
 
@@ -140,10 +140,11 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 			gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-					selectedFiv = (FurnitureImageView) v;
+					selectedFurniture = ((FurnitureImageView) v).getCatalogPieceOfFurniture();
+					//highlight it so we can tell what we just did
 					for (int j = 0; j < gridView.getChildCount(); j++) {
-						final ImageView iv = (ImageView) gridView.getChildAt(j);
-						if (iv == v)
+						final FurnitureImageView iv = (FurnitureImageView) gridView.getChildAt(j);
+						if (iv.getCatalogPieceOfFurniture() == selectedFurniture)
 							iv.setBackgroundColor(Color.CYAN);
 						else
 							iv.setBackgroundColor(Color.WHITE);
@@ -153,11 +154,11 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 			gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-					selectedFiv = (FurnitureImageView) v;
+					selectedFurniture = ((FurnitureImageView) v).getCatalogPieceOfFurniture();
 					//highlight it so we can tell what we just did
 					for (int j = 0; j < gridView.getChildCount(); j++) {
-						final ImageView iv = (ImageView) gridView.getChildAt(j);
-						if (iv == v)
+						final FurnitureImageView iv = (FurnitureImageView) gridView.getChildAt(j);
+						if (iv.getCatalogPieceOfFurniture() == selectedFurniture)
 							iv.setBackgroundColor(Color.CYAN);
 						else
 							iv.setBackgroundColor(Color.WHITE);
@@ -546,15 +547,15 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	}
 
 	private void addFurniture() {
-		if (selectedFiv != null) {
+		if (selectedFurniture != null) {
 			ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
-			al.add(selectedFiv.getCatalogPieceOfFurniture());
+			al.add(selectedFurniture);
 			HomeController homeController = ((Renovations3DActivity) getActivity()).getHomeController();
 			if (homeController != null) {
 				homeController.getFurnitureCatalogController().setSelectedFurniture(al);
 				homeController.addHomeFurniture();
 
-				Renovations3DActivity.logFireBaseContent("addFurniture", selectedFiv.getCatalogPieceOfFurniture().getName());
+				Renovations3DActivity.logFireBaseContent("addFurniture", selectedFurniture.getName());
 
 				((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(1, true);
 			}
@@ -594,23 +595,22 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 				imageView.setBackgroundColor(Color.WHITE);
-
-				//int DEFAULT_ICON_HEIGHT = 80;//see below
-				Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
-				if (icon instanceof ImageIcon) {
-					imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
-				}
-
 			} else {
 				imageView = (FurnitureImageView) convertView;
 				if (imageView.getCatalogPieceOfFurniture() != catalogPieceOfFurniture) {
 					imageView.setCatalogPieceOfFurniture(catalogPieceOfFurniture);
-					Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
-					if (icon instanceof ImageIcon) {
-						imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
-					}
 				}
 			}
+			//int DEFAULT_ICON_HEIGHT = 80;//see below
+			Icon icon = IconManager.getInstance().getIcon(catalogPieceOfFurniture.getIcon(), iconHeightPx, null);
+			if (icon instanceof ImageIcon) {
+				imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
+			}
+
+			if (catalogPieceOfFurniture == selectedFurniture)
+				imageView.setBackgroundColor(Color.CYAN);
+			else
+				imageView.setBackgroundColor(Color.WHITE);
 
 			return imageView;
 		}
