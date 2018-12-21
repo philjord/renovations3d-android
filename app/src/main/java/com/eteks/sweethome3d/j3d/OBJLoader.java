@@ -1172,8 +1172,7 @@ public class OBJLoader extends LoaderBase implements Loader {
 
 		// get all similar geoms into a groupings for processing into shapes
 		// but keep windows and mirrors apart
-		for (Group group : this.groups.values())
-		{
+		for (Group group : this.groups.values()) {
 			// special group names used by  ModelManager.updateShapeNamesAndWindowPanesTransparency(Scene scene)			
 			if (group.name.startsWith(ModelManager.WINDOW_PANE_SHAPE_PREFIX)
 					|| group.name.startsWith(ModelManager.MIRROR_SHAPE_PREFIX)
@@ -1218,31 +1217,28 @@ public class OBJLoader extends LoaderBase implements Loader {
 					|| group.name.startsWith(ModelManager.RAIL_PREFIX)
 					|| group.name.startsWith(ModelManager.OPENING_ON_RAIL_PREFIX)
 					|| group.name.startsWith(ModelManager.WINDOW_PANE_ON_RAIL_PREFIX)
-					|| group.name.endsWith(ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX))
-			{
-				String c = group.name + unique++;
-
-				ArrayList<Geometry> gg = groupedGeoms.get(c);
-				if (gg == null)
-				{
-					gg = new ArrayList<Geometry>();
-					groupedGeoms.put(c, gg);
-				}
-
-				gg.addAll(group.getGeometries());
-			}
-			else
-			{
+					|| group.name.endsWith(ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX)) {
+				String groupName = group.name + unique++;
 				List<Geometry> geometries = group.getGeometries();
-				if (geometries != null && !geometries.isEmpty())
-				{
-					for (Geometry geom : geometries)
-					{
+				if (geometries != null && !geometries.isEmpty()) {
+					for (Geometry geom : geometries) {
+						String c = groupName + "_" + geom.getClassifier();
+						ArrayList<Geometry> gg = groupedGeoms.get(c);
+						if (gg == null) {
+							gg = new ArrayList<Geometry>();
+							groupedGeoms.put(c, gg);
+						}
+						gg.add(geom);
+					}
+				}
+			} else {
+				List<Geometry> geometries = group.getGeometries();
+				if (geometries != null && !geometries.isEmpty()) {
+					for (Geometry geom : geometries) {
 						String c = geom.getClassifier();
 
 						ArrayList<Geometry> gg = groupedGeoms.get(c);
-						if (gg == null)
-						{
+						if (gg == null) {
 							gg = new ArrayList<Geometry>();
 							groupedGeoms.put(c, gg);
 						}
@@ -1253,8 +1249,7 @@ public class OBJLoader extends LoaderBase implements Loader {
 			}
 		}
 
-		for (String groupClassifier : groupedGeoms.keySet())
-		{
+		for (String groupClassifier : groupedGeoms.keySet()) {
 			ArrayList<Geometry> geometries = groupedGeoms.get(groupClassifier);
 			Geometry firstGeometry = geometries.get(0);
 			boolean firstGeometryHasTextureCoordinateIndices = firstGeometry.hasTextureCoordinateIndices();
@@ -1267,14 +1262,12 @@ public class OBJLoader extends LoaderBase implements Loader {
 			// Create indices arrays for the geometries with an index between i and max
 			int geometryCount = geometries.size();
 			int indexCount = 0;
-			for (int j = 0; j < geometryCount; j++)
-			{
+			for (int j = 0; j < geometryCount; j++) {
 				indexCount += geometries.get(j).getVertexIndices().length;
 			}
 			int[] coordinatesIndices = new int[indexCount];
 			int[] stripCounts = new int[geometryCount];
-			for (int j = 0, destIndex = 0; j < geometryCount; j++)
-			{
+			for (int j = 0, destIndex = 0; j < geometryCount; j++) {
 				int[] geometryVertexIndices = geometries.get(j).getVertexIndices();
 				System.arraycopy(geometryVertexIndices, 0, coordinatesIndices, destIndex, geometryVertexIndices.length);
 				stripCounts[j] = geometryVertexIndices.length;
