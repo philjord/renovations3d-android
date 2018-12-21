@@ -1240,7 +1240,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  } else {
 		  removeView(R.id.furniture_panel_keepProportionsCheckBox);
 	  }
-	  if (this.modelTransformationsButton != null) {
+	  if (this.modelTransformationsButton != null && this.modelTransformationsButton.isEnabled()) {
 		  swapOut(this.modelTransformationsButton, R.id.furniture_panel_modelTransformationsButton);
 	  } else {
 		  removeView(R.id.furniture_panel_modelTransformationsButton);
