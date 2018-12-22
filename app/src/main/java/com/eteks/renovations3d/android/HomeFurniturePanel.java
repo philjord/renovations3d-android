@@ -322,7 +322,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
               // Remove listener on controller to avoid being recalled since actual value is divided by 100
               controller.removePropertyChangeListener(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE, propertyChangeListener);
               controller.setValueAddedTaxPercentage(valueAddedTaxPercentageSpinnerModel.getValue() != null
-                  ? ((BigDecimal)valueAddedTaxPercentageSpinnerModel.getValue()).divide(hundred)
+                  ? new BigDecimal(((Number)valueAddedTaxPercentageSpinnerModel.getValue()).doubleValue()/(hundred.doubleValue()))
                   : null);
               controller.addPropertyChangeListener(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE, propertyChangeListener);
             }

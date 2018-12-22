@@ -62,26 +62,26 @@
                     android:id="@+id/furniture_panel_priceLabel"
                     android:text="priceLabel"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <NumberPicker
-                    android:id="@+id/furniture_panel_priceSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"/>
-            </TableRow>
-            <TableRow>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/furniture_panel_valueAddedTaxPercentageLabel"
                     android:text="TaxPercentageLabel"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </TableRow>
+            <TableRow>
+
+                <NumberPicker
+                    android:id="@+id/furniture_panel_priceSpinner"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_gravity="center_vertical|center_horizontal"/>
                 <NumberPicker
                     android:id="@+id/furniture_panel_valueAddedTaxPercentageSpinner"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
