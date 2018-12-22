@@ -384,13 +384,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		if (toolSpinnerControl != null)
 			toolSpinnerControl.setSpinner(toolSpinner, toolNames, toolIcon);
 
-		levelsSpinner = (Spinner) menu.findItem(R.id.levelsSpinner).getActionView();
+		levelsSpinner = (Spinner) menu.findItem(R.id.planLevelsSpinner).getActionView();
 		// no icons do not need to shift up levelsSpinner.setPadding(levelsSpinner.getPaddingLeft(), 0, levelsSpinner.getPaddingRight(), levelsSpinner.getPaddingBottom());
 		// possibly on a double onCreateView call this gets called and the levelSpinnerControl has not yet been created so ignore the call this time round
 		if (levelSpinnerControl != null)
 			levelSpinnerControl.setSpinner(levelsSpinner);
 
-		menu.findItem(R.id.levelsSpinner).setVisible(home.getLevels().size() > 0);
+		menu.findItem(R.id.planLevelsSpinner).setVisible(home.getLevels().size() > 0);
 	}
 
 
@@ -457,7 +457,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		resetToolSpinnerToMode();
 
-		menu.findItem(R.id.levelsSpinner).setVisible(home.getLevels().size() > 0);
+		menu.findItem(R.id.planLevelsSpinner).setVisible(home.getLevels().size() > 0);
 
 		// undo doesn't get text updated as it is just an icon
 		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);

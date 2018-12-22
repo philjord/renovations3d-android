@@ -39,11 +39,13 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
+import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
 import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
 import com.eteks.sweethome3d.model.Elevatable;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.jogamp.opengl.GLException;
+import com.mindblowing.swingish.ChangeListener;
 import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.j3d.utils.InfoText3D;
 import com.mindblowing.j3d.utils.JoglStatusActivity;
@@ -188,6 +190,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private Menu mOptionsMenu;
 	private ToolSpinnerControl toolSpinnerControl;
+	private LevelSpinnerControl levelSpinnerControl;
+	private Spinner levelsSpinner;
+	private Spinner toolSpinner;
+	private String[] toolNames;
+	private int[] toolIcon = new int[]{
+					R.drawable.plan_select,
+					R.drawable.plan_pan
+	};
 
 	private GLCapabilities caps;
 	private GLWindow gl_window;
@@ -390,6 +400,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if(initialized) {
 			this.setHasOptionsMenu(true);
 			this.toolSpinnerControl = new ToolSpinnerControl(this.getContext());
+			this.levelSpinnerControl = new LevelSpinnerControl(this.getContext());
 		}
 		android.view.View rootView = getContentView(this.getWindow(), gl_window);
 		return rootView;
@@ -498,6 +509,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// tell walls to update now
 		if (isVisibleToUser && wallChangeListener != null) {
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, RUN_UPDATES, null, null));
+
+
 		}
 
 		if(isVisibleToUser && getContext() != null) {
@@ -539,6 +552,29 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if (toolSpinnerControl != null)
 			toolSpinnerControl.setSpinner(toolSpinner, toolNames, toolIcon);
 
+		this.levelSpinnerControl.removeAll();
+		List<Level> levels = home.getLevels();
+		for (int i = 0; i < levels.size(); i++) {
+			Level level = levels.get(i);
+			this.levelSpinnerControl.addTab(level.getName(), new MultipleLevelsPlanPanel.LevelLabel(level));
+		}
+
+		levelsSpinner = (Spinner) menu.findItem(R.id.home3dLevelsSpinner).getActionView();
+		levelSpinnerControl.setSpinner(levelsSpinner);
+
+		final ChangeListener changeListener = new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				MultipleLevelsPlanPanel.LevelLabel selectedComponent = levelSpinnerControl.getSelectedComponent();
+				HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
+				if(homeController != null) {
+					homeController.getPlanController().setSelectedLevel(selectedComponent.getLevel());
+				}
+			}
+		};
+		this.levelSpinnerControl.addChangeListener(changeListener);
+
+		menu.findItem(R.id.home3dLevelsSpinner).setVisible(home.getLevels().size() > 0);
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -549,12 +585,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		};
 	}
 
-	private Spinner toolSpinner;
-	private String[] toolNames;
-	private int[] toolIcon = new int[]{
-					R.drawable.plan_select,
-					R.drawable.plan_pan
-	};
+
 
 
 	private void setMode(PlanController.Mode mode) {
@@ -604,13 +635,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		//both on action bar
 		menu.findItem(R.id.go_to_camera_position).setTitle(R.string.goToCameraPosition);
-		menu.findItem(R.id.store_camera_position).setTitle(R.string.addCameraPosition);
 
 		// tools on action bar now
 		HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
 		if(homeController != null) {
 			setMode(homeController.getPlanController().getMode());
 		}
+
+		menu.findItem(R.id.home3dLevelsSpinner).setVisible(home.getLevels().size() > 0);
 
 		MenuItem deletePov = menu.findItem(R.id.delete_camera_position);
 		String deletePovStr =  getActivity().getString(R.string.deleteCameraPosition);
@@ -683,8 +715,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		});
 
-
 		goToPointOfViewMenu.getSubMenu().clear();
+		// put back the add item
+		MenuItem item = goToPointOfViewMenu.getSubMenu().add(Menu.NONE, R.id.store_camera_position,0, R.string.addCameraPosition);
+		item.setIcon(R.drawable.ic_video_call_black_24dp);
 
 		if (storedCameras.isEmpty()) {
 			goToPointOfViewMenu.setEnabled(false);
@@ -1004,16 +1038,15 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// for outlining
 		selectionOutliningListener = new SelectionOutliningListener();
 		home.addSelectionListener(selectionOutliningListener);
+
+
 	}
 
 
-	private class SelectionOutliningListener implements SelectionListener
-	{
+	private class SelectionOutliningListener implements SelectionListener {
 		@Override
-		public void selectionChanged(SelectionEvent selectionEvent)
-		{
-			for(Selectable sel : homeObjects.keySet())
-			{
+		public void selectionChanged(SelectionEvent selectionEvent) {
+			for(Selectable sel : homeObjects.keySet()) {
 				boolean isSelected = selectionEvent.getSelectedItems().contains(sel);
 				Object3DBranch obj3D = homeObjects.get(sel);
 				if (obj3D.isShowOutline() != isSelected)

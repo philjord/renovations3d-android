@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home3dLevelsSpinner"
+        android:actionViewClass="android.widget.Spinner"
+        android:showAsAction="always"
+        android:title="Level"
+        android:orderInCategory="0"
+        />
     <item
         android:id="@+id/home3dToolSelectSpinner"
         android:actionViewClass="android.widget.Spinner"
         android:showAsAction="always"
         android:title="CurrentTool"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
         />
     <item
         android:id="@+id/virtual_visit"
@@ -14,26 +22,26 @@
         android:icon="@drawable/view3d_view_from_observer"
         android:showAsAction="always"
         android:title="@string/virtual_visit"
-        android:orderInCategory="1"/>
+        android:orderInCategory="2"/>
     <item
         android:id="@+id/go_to_camera_position"
         android:icon="@drawable/ic_switch_video_black_24dp"
         android:showAsAction="always"
         android:title="@string/goToCameraPosition"
-        android:orderInCategory="2">
+        android:orderInCategory="3">
         <menu>
+            <item
+                android:id="@+id/store_camera_position"
+                android:title="@string/addCameraPosition"
+                android:icon="@drawable/ic_video_call_black_24dp"
+                android:orderInCategory="1"
+                />
             <item
                 android:id="@+id/goto_pov_default"
                 android:title="Default"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/store_camera_position"
-        android:title="@string/addCameraPosition"
-        android:icon="@drawable/ic_video_call_black_24dp"
-        android:showAsAction="always"
-        android:orderInCategory="3"
-        />
+
 
     <item
         android:id="@+id/goto_2D_view"
