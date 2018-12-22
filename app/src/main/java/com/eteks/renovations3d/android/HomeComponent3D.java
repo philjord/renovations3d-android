@@ -561,6 +561,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		levelsSpinner = (Spinner) menu.findItem(R.id.home3dLevelsSpinner).getActionView();
 		levelSpinnerControl.setSpinner(levelsSpinner);
+		// now set the correctly selected item
+		Level selectedLevel = home.getSelectedLevel();
+		if (levels.size() >= 2 && selectedLevel != null) {
+			this.levelSpinnerControl.setSelectedIndex(levels.indexOf(selectedLevel));
+		}
 
 		final ChangeListener changeListener = new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {

@@ -18,8 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by phil on 1/1/2017.
  */
-public class LevelSpinnerControl
-{
+public class LevelSpinnerControl {
 	private Context context;
 	private Spinner spinner;
 
@@ -31,43 +30,38 @@ public class LevelSpinnerControl
 	private ArrayList<String> levelNames = new ArrayList<String>();
 	private ArrayList<LevelLabel> levelLabels = new ArrayList<LevelLabel>();
 
+
 	public LevelSpinnerControl(final Context context)
 	{
 		this.context = context;
 	}
 
-	public void setSpinner(final Spinner spinner)
-	{
+	public void setSpinner(final Spinner spinner) {
 		this.spinner = spinner;
 		spinner.setAdapter(buildAdapter());
 		spinner.setSelection(selectedLevel);
 
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-		{
+		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			int count = 0;//https://stackoverflow.com/questions/5124835/spinner-onitemselected-called-erroneously-without-user-action/10102356#10102356
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-			{
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				selectedLevel = position;
-				if (changeListener != null)
-				{
+				if (changeListener != null && count >= 1) {
 					changeListener.stateChanged(new ChangeListener.ChangeEvent());
 				}
+				count++;
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent)
-			{
+			public void onNothingSelected(AdapterView<?> parent) {
 				System.err.println("LevelSpinnerControl has nothing selected, does this matter?");
 			}
 		});
 
-		longClickPassThough = new View.OnLongClickListener()
-		{
+		longClickPassThough = new View.OnLongClickListener() {
 			@Override
-			public boolean onLongClick(View view)
-			{
-				if (onLongClickListener != null)
-				{
+			public boolean onLongClick(View view) {
+				if (onLongClickListener != null) {
 					onLongClickListener.onLongClick(view);
 				}
 				return false;
@@ -78,13 +72,10 @@ public class LevelSpinnerControl
 	}
 
 
-	private ArrayAdapter<String> buildAdapter()
-	{
-		return new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, levelNames)
-		{
+	private ArrayAdapter<String> buildAdapter() {
+		return new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, levelNames) {
 			@Override
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
+			public View getView(int position, View convertView, ViewGroup parent) {
 				Configuration configuration = getContext().getResources().getConfiguration();
 				int screenWidthDp = configuration.screenWidthDp;
 
@@ -133,14 +124,12 @@ public class LevelSpinnerControl
 			}
 
 			@Override
-			public View getDropDownView(int position, View convertView, ViewGroup parent)
-			{
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
 				View view = getTextView(position, true);
 				return view;
 			}
 
-			public TextView getTextView(int position, boolean withText)
-			{
+			public TextView getTextView(int position, boolean withText) {
 				TextView ret = new TextView(getContext());
 				ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 				String spanText = "L" + position + (withText ? "-" + levelNames.get(position) : "");
@@ -157,88 +146,72 @@ public class LevelSpinnerControl
 	}
 
 
-	public LevelLabel getSelectedComponent()
-	{
+	public LevelLabel getSelectedComponent() {
 		if (selectedLevel < levelLabels.size())
 			return levelLabels.get(selectedLevel);
 		else
 			return null;
 	}
 
-	public void addChangeListener(ChangeListener changeListener)
-	{
+	public void addChangeListener(ChangeListener changeListener) {
 		this.changeListener = changeListener;
 	}
 
-	public void addOnLongClickListener(View.OnLongClickListener onLongClickListener)
-	{
+	public void addOnLongClickListener(View.OnLongClickListener onLongClickListener) {
 		this.onLongClickListener = onLongClickListener;
 	}
 
-	public void setTitleAt(int index, String newValue)
-	{
+	public void setTitleAt(int index, String newValue) {
 		levelNames.set(index, newValue);
 	}
 
-	public void removeChangeListener(ChangeListener changeListener)
-	{
+	public void removeChangeListener(ChangeListener changeListener) {
 		this.changeListener = null;
 	}
 
-	public void removeOnLongClickListener(View.OnLongClickListener onLongClickListener)
-	{
+	public void removeOnLongClickListener(View.OnLongClickListener onLongClickListener) {
 		this.onLongClickListener = null;
 	}
 
-	public void removeAll()
-	{
+	public void removeAll() {
 		levelNames.clear();
 		levelLabels.clear();
 		if (spinner != null)
 			spinner.setAdapter(buildAdapter());
 	}
 
-	public void remove(int index)
-	{
+	public void remove(int index) {
 		levelNames.remove(index);
 		levelLabels.remove(index);
 		if (spinner != null)
 			spinner.setAdapter(buildAdapter());
 	}
 
-	public void insertTab(String title, Object icon, LevelLabel levelLabel, int index)
-	{
+	public void insertTab(String title, Object icon, LevelLabel levelLabel, int index) {
 		levelNames.add(index, title);
 		levelLabels.add(index, levelLabel);
 
 		selectedLevel = index;
-		if (spinner != null)
-		{
+		if (spinner != null) {
 			spinner.setSelection(index);
 			spinner.setAdapter(buildAdapter());
 		}
 	}
 
-	public void addTab(String title, LevelLabel levelLabel)
-	{
+	public void addTab(String title, LevelLabel levelLabel) {
 		insertTab(title, null, levelLabel, levelNames.size());
 	}
 
-	public void addTab(String title, Object icon, LevelLabel levelLabel)
-	{
+	public void addTab(String title, Object icon, LevelLabel levelLabel) {
 		insertTab(title, icon, levelLabel, levelNames.size());
 	}
 
-	public void setSelectedIndex(int i)
-	{
-		if (i < levelNames.size())
-		{
+	public void setSelectedIndex(int i) {
+		if (i < levelNames.size()) {
 			selectedLevel = i;
 			if (spinner != null)
 				spinner.setSelection(i);
-		}
-		else
-		{
+		} else {
 			selectedLevel = i;
 		}
 	}
