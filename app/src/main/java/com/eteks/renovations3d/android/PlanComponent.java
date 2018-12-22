@@ -641,7 +641,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		setOpaque(true);
 		// Add listeners
 		addModelListeners(home, preferences, controller);
-		//createToolTipTextFields(preferences, controller);
+		createToolTipTextFields(preferences, controller);
 		if (controller != null) {
 			addMouseListeners(controller);
 			//addFocusListener(controller);
