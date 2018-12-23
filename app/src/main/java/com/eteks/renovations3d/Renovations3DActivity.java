@@ -86,8 +86,7 @@ import static android.os.Build.VERSION_CODES.M;
 /**
  * Created by phil on 11/20/2016.
  */
-public class Renovations3DActivity extends FragmentActivity
-{
+public class Renovations3DActivity extends FragmentActivity {
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
 
 	public static final String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
@@ -210,8 +209,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 * @param id    short id (method name?)
 	 * @param value optional value
 	 */
-	public static void logFireBaseContent(String id, String value)
-	{
+	public static void logFireBaseContent(String id, String value) {
 		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, value);
 	}
 
@@ -220,8 +218,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 *
 	 * @param id short id (method name?)
 	 */
-	public static void logFireBaseContent(String id)
-	{
+	public static void logFireBaseContent(String id) {
 		logFireBase(FirebaseAnalytics.Event.SELECT_CONTENT, id, null);
 	}
 
@@ -231,8 +228,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 * @param id    short id (method name?)
 	 * @param value optional value
 	 */
-	public static void logFireBaseLevelUp(String id, String value)
-	{
+	public static void logFireBaseLevelUp(String id, String value) {
 		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, value);
 	}
 
@@ -241,8 +237,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 *
 	 * @param id short id (method name?)
 	 */
-	public static void logFireBaseLevelUp(String id)
-	{
+	public static void logFireBaseLevelUp(String id) {
 		logFireBase(FirebaseAnalytics.Event.LEVEL_UP, id, null);
 	}
 
@@ -251,15 +246,14 @@ public class Renovations3DActivity extends FragmentActivity
 	 * @param id    short id (method name?)
 	 * @param value optional value
 	 */
-	public static void logFireBase(String event, String id, String value)
-	{
+	public static void logFireBase(String event, String id, String value) {
 		System.out.println("logFireBase : " + id + (value != null ? (" [" + value + "]") : ""));
-		if (mFirebaseAnalytics != null && !BuildConfig.DEBUG)
-		{
+		if (mFirebaseAnalytics != null && !BuildConfig.DEBUG) {
 			Bundle bundle = new Bundle();
 			bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
-			if (value != null && value.length() > 0)
+			if (value != null && value.length() > 0) {
 				bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, value);
+			}
 			Renovations3DActivity.mFirebaseAnalytics.logEvent(event, bundle);
 		}
 	}
@@ -290,8 +284,7 @@ public class Renovations3DActivity extends FragmentActivity
 		storagePermission();
 	}*/
 
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		//System.setProperty("jogl.verbose", "true");
 		//System.setProperty("jogl.debug", "true");
 
@@ -310,14 +303,10 @@ public class Renovations3DActivity extends FragmentActivity
 		VMEventQueue.activity = this;
 		SimpleShaderAppearance.setVersionES100();
 
-
-
-
 		super.onCreate(savedInstanceState);
 
 		// Obtain the FirebaseAnalytics instance.
-		if (!BuildConfig.DEBUG)
-		{
+		if (!BuildConfig.DEBUG) {
 			mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 		}
 
@@ -345,11 +334,9 @@ public class Renovations3DActivity extends FragmentActivity
 
 		// if we have any fragments in the manager then we are doing a restore with bundle style,
 		// so all frags will get onCreate() but not the init() and fail, let's chuck em away now
-		if (getSupportFragmentManager().getFragments() != null)
-		{
+		if (getSupportFragmentManager().getFragments() != null) {
 			Fragment[] frags = getSupportFragmentManager().getFragments().toArray(new Fragment[0]);
-			for (int i = 0; i < frags.length; i++)
-			{
+			for (int i = 0; i < frags.length; i++) {
 				Fragment fragment = frags[i];
 				if (fragment != null)
 					getSupportFragmentManager().beginTransaction().remove(fragment).commit();
@@ -363,44 +350,34 @@ public class Renovations3DActivity extends FragmentActivity
 		// set the no permission default
 		downloadsLocation = this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-		if (Build.VERSION.SDK_INT >= M)
-		{
+		if (Build.VERSION.SDK_INT >= M) {
 			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED)
-			{
+			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED) {
 				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
-			}
-			else
-			{
+			} else {
 				storagePermission(true);
 			}
-		}
-		else
-		{
+		} else {
 			storagePermission(true);
 		}
 	}
 
-	public ViewPager getViewPager()
-	{
+	public ViewPager getViewPager() {
 		return mViewPager;
 	}
 
-	public HashSet<String> getWelcomeScreensShownThisSession()
-	{
+	public HashSet<String> getWelcomeScreensShownThisSession() {
 		return welcomeScreensShownThisSession;
 	}
 
-	public Tutorial getTutorial()
-	{
+	public Tutorial getTutorial() {
 		return tutorial;
 	}
 
 	/**
 	 * This must be called eventually by Renovations3D
 	 */
-	public void setUpViews()
-	{
+	public void setUpViews() {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		//see https://github.com/umano/AndroidSlidingUpPanel/issues/590
 		// I got IndexOutOfBound when dragging (in a double call case or perhaps a very slow start up time)
@@ -420,16 +397,14 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		// these three always on, but save location modified
 		menu.findItem(R.id.menu_load).setEnabled(true);
 
@@ -439,19 +414,15 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 		// should this be on the menu at all?
-		if (this.getBillingManager().ownsBasicAdFree())
-		{
+		if (this.getBillingManager().ownsBasicAdFree()) {
 			menu.removeItem(R.id.basic_remove_ads);
-		}
-		else
-		{
+		} else {
 			MenuItem removeAdsMI = menu.findItem(R.id.basic_remove_ads);
 			String removeAdsStr = this.getString(R.string.basic_remove_ads);
 			setIconizedMenuTitle(removeAdsMI, removeAdsStr, R.drawable.ic_shopping_cart_black_24dp, this);
 		}
 
-		if (renovations3D != null)
-		{
+		if (renovations3D != null) {
 			MenuItem fileMI = menu.findItem(R.id.menu_file);
 			String fileStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FILE_MENU.Name");
 			fileMI.setTitle(fileStr + "...");
@@ -497,17 +468,14 @@ public class Renovations3DActivity extends FragmentActivity
 			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
 			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details, this);
 
-
 		}
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-		switch (item.getItemId())
-		{
+		switch (item.getItemId()) {
 			case R.id.basic_remove_ads:
 				this.billingManager.buyBasicAdFree();
 				return true;
@@ -564,18 +532,14 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	private void share()
-	{
+	private void share() {
 		//https://developer.android.com/training/basics/intents/sending.html
 
 		Home home = getHome();
-		if(home != null)
-		{
+		if(home != null) {
 			final Home autoSaveHome = home.clone();
-			Thread t = new Thread(new Runnable()
-			{
-				public void run()
-				{
+			Thread t = new Thread(new Runnable() {
+				public void run() {
 					//name will be null for a new home and "" for some corrupted autosaves
 					// to share with a name the user needs to do a save as
 					String name = autoSaveHome.getName();
@@ -594,8 +558,7 @@ public class Renovations3DActivity extends FragmentActivity
 					File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 					File homeFile = new File(storageDir,  homeName);
 
-					try
-					{
+					try {
 						//NOTE compressed VERY slow
 						renovations3D.getHomeRecorder(HomeRecorder.Type.COMPRESSED).writeHome(autoSaveHome, homeFile.getAbsolutePath());
 
@@ -620,9 +583,7 @@ public class Renovations3DActivity extends FragmentActivity
 							startActivity(chooser);
 						}
 						Renovations3DActivity.logFireBaseContent("shareemail_end", "homeName: " + homeName);}});
-					}
-					catch (RecorderException e)
-					{
+					} catch (RecorderException e) {
 						e.printStackTrace();
 					}
 				}
@@ -631,8 +592,7 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	private void showHelp()
-	{
+	private void showHelp() {
 		//if (renovations3D.getHomeController() != null)
 		//	renovations3D.getHomeController().help();
 
@@ -664,8 +624,7 @@ public class Renovations3DActivity extends FragmentActivity
 				};
 
 				String urlStr = "http://www.sweethome3d.com";
-				if (Arrays.binarySearch(localizedHelp, language) >= 0)
-				{
+				if (Arrays.binarySearch(localizedHelp, language) >= 0) {
 					// http://www.sweethome3d.com/fr/userGuide.jsp#drawingWalls
 					urlStr += "/" + language;
 				}
@@ -675,8 +634,7 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 				Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-				if (intent.resolveActivity(getPackageManager()) != null)
-				{
+				if (intent.resolveActivity(getPackageManager()) != null) {
 					startActivity(intent);
 				}
 			}
@@ -686,12 +644,10 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		//This is where we do an extra auto save to ensure content always can be loaded back up
 		System.out.println("onPause - auto saving");
 		doAutoSave();
-
 
 		super.onPause();
 
@@ -700,8 +656,7 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onDestroy()
-	{
+	public void onDestroy() {
 		super.onDestroy();
 
 		this.imageAcquireManager.onDestroy();
@@ -709,8 +664,7 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 
 		if(tutorial != null)
@@ -718,19 +672,16 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
+	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState)
-	{
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	private void recordHomeStateInPrefs(String tempHomeRealName, boolean tempHomeRealModified, String currentHomeName)
-	{
+	private void recordHomeStateInPrefs(String tempHomeRealName, boolean tempHomeRealModified, String currentHomeName) {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(STATE_TEMP_HOME_REAL_NAME, tempHomeRealName);
@@ -745,8 +696,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 *
 	 * @return
 	 */
-	public HomeController getHomeController()
-	{
+	public HomeController getHomeController() {
 		if (renovations3D != null)
 			return renovations3D.getHomeController();
 		else
@@ -758,50 +708,41 @@ public class Renovations3DActivity extends FragmentActivity
 	 *
 	 * @return
 	 */
-	public Home getHome()
-	{
+	public Home getHome() {
 		if (renovations3D != null)
 			return renovations3D.getHome();
 		else
 			return null;
 	}
 
-	private void saveSh3dFile()
-	{
+	private void saveSh3dFile() {
 		//I must get off the EDT as it may ask the question in a blocking manner
-		Thread t = new Thread()
-		{
-			public void run()
-			{
+		Thread t = new Thread() {
+			public void run() {
 				Home home = getHome();
-				if (getHomeController() != null && home != null)
-				{
+				if (getHomeController() != null && home != null) {
 					String homeName = home.getName();
 					Renovations3DActivity.logFireBaseContent("menu_save", homeName);
 
 					//Last minute desperate attempt to ensure save is never over the temp file, null will trigger save as
 					//this may not be truly needed but better to be safe
-					if (homeName != null && (homeName.contains(CURRENT_WORK_FILENAME) ||  homeName.length() == 0))
-					{
+					if (homeName != null && (homeName.contains(CURRENT_WORK_FILENAME) ||  homeName.length() == 0)) {
 						renovations3D.getHome().setName(null);
 						homeName = null;
 					}
 
-					if (homeName != null && !home.isRepaired())
-					{
+					if (homeName != null && !home.isRepaired()) {
 						// update prefs to base a check of a ral file save
 						recordHomeStateInPrefs("", false, homeName);
-					}
-					else
-					{
+					} else {
 						// no current name will get a modified homes change
 						// record the name into prefs after it is changed
-						PropertyChangeListener newNameListener = new PropertyChangeListener()
-						{
+						PropertyChangeListener newNameListener = new PropertyChangeListener() {
 							@Override
-							public void propertyChange(PropertyChangeEvent evt)
-							{
-								recordHomeStateInPrefs("", false, getHome().getName());
+							public void propertyChange(PropertyChangeEvent evt) {
+								if(getHome() != null) {
+									recordHomeStateInPrefs("", false, getHome().getName());
+								}
 								// only once
 								if (getUserPreferences() != null)
 									getUserPreferences().removePropertyChangeListener(UserPreferences.Property.RECENT_HOMES, this);
@@ -819,25 +760,19 @@ public class Renovations3DActivity extends FragmentActivity
 		t.start();
 	}
 
-	private void saveAsSh3dFile()
-	{
+	private void saveAsSh3dFile() {
 		//I must get off the EDT and ask the question in a blocking manner
-		Thread t2 = new Thread()
-		{
-			public void run()
-			{
+		Thread t2 = new Thread() {
+			public void run() {
 				Home home = getHome();
-				if (getHomeController() != null && home != null)
-				{
+				if (getHomeController() != null && home != null) {
 					String homeName = home.getName();
 					Renovations3DActivity.logFireBaseContent("menu_saveas", homeName);
 
 					// record the name into prefs after it is changed
-					PropertyChangeListener newNameListener = new PropertyChangeListener()
-					{
+					PropertyChangeListener newNameListener = new PropertyChangeListener() {
 						@Override
-						public void propertyChange(PropertyChangeEvent evt)
-						{
+						public void propertyChange(PropertyChangeEvent evt) {
 							recordHomeStateInPrefs("", false, getHome().getName());
 							// only once
 							if (getUserPreferences() != null)
@@ -858,14 +793,12 @@ public class Renovations3DActivity extends FragmentActivity
 
 	}
 
-	private void newHomeFromExample()
-	{
+	private void newHomeFromExample() {
 		if (getHomeController() != null)
 			getHomeController().close();
 
 		// to be safe get this back onto the ui thread
-		Renovations3DActivity.this.runOnUiThread(new Runnable()
-		{
+		Renovations3DActivity.this.runOnUiThread(new Runnable() {
 			public void run() {
 				//TODO: this is a copy of the load method below, I'm not sure if these fragment leak issues are happening here, rudimentary tests suggest not
 				// adding these renovations3D lines in causes the dialog to never show...
@@ -883,10 +816,8 @@ public class Renovations3DActivity extends FragmentActivity
 				//mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 				//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
 
-				Thread t = new Thread(new Runnable()
-				{
-					public void run()
-					{
+				Thread t = new Thread(new Runnable() {
+					public void run() {
 						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
 							@Override
 							public void onHomeLoaded(Home home, final HomeController homeController) {
@@ -904,42 +835,30 @@ public class Renovations3DActivity extends FragmentActivity
 			}});
 	}
 
-	private void loadSh3dFile()
-	{
+	private void loadSh3dFile() {
 		// get off EDT for showOpenDialog call
-		Thread t2 = new Thread()
-		{
-			public void run()
-			{
-				if (getHomeController() != null)
-				{
+		Thread t2 = new Thread() {
+			public void run() {
+				if (getHomeController() != null) {
 					HomeController controller = getHomeController();
 					String openFileName = controller.getView().showOpenDialog();
 					if (openFileName != null)
 					{
 						loadHome(new File(openFileName));
 					}
-				}
-				else
-				{
+				} else {
 					// shouldn't really happen unless crash on load of first home
 					// above this is the proper way to do it, but if I don't have a home controller...
 					// get on the EDT, for the init of fileChooser
-					Renovations3DActivity.this.runOnUiThread(new Runnable()
-					{
-						public void run()
-						{
+					Renovations3DActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
 							final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
 							fileChooser.setFileFilters(FileContentManager.MODEL_FILTERS);
-							fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
-							{
+							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
 								@Override
-								public void fileSelected(final File file)
-								{
-									Thread t2 = new Thread()
-									{
-										public void run()
-										{
+								public void fileSelected(final File file) {
+									Thread t2 = new Thread() {
+										public void run() {
 											// get back off the EDT
 											loadHome(file);
 										}
@@ -961,8 +880,7 @@ public class Renovations3DActivity extends FragmentActivity
 	/**
 	 * Only call when not on EDT as blocking save question may arise
 	 */
-	private void newHome()
-	{
+	private void newHome() {
 		loadHome(null);
 	}
 
@@ -971,8 +889,7 @@ public class Renovations3DActivity extends FragmentActivity
 	 *
 	 * @param homeFile
 	 */
-	public void loadHome(final File homeFile)
-	{
+	public void loadHome(final File homeFile) {
 		loadHome(homeFile, null, false, false);
 	}
 
@@ -982,28 +899,19 @@ public class Renovations3DActivity extends FragmentActivity
 	 * @param homeFile
 	 * @param loadedFromTemp
 	 */
-	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp)
-	{
-
-
-
+	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp) {
 		// must get off the EDT thread as the close may ask for a save
-		Thread t2 = new Thread()
-		{
-			public void run()
-			{
+		Thread t2 = new Thread() {
+			public void run() {
 				if (getHomeController() != null)
 					getHomeController().close();
 
 				// to be safe get this back onto the ui thread
-				Renovations3DActivity.this.runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
+				Renovations3DActivity.this.runOnUiThread(new Runnable() {
+					public void run() {
 						renovations3D = new Renovations3D(Renovations3DActivity.this);
 
-						if (mRenovations3DPagerAdapter != null)
-						{
+						if (mRenovations3DPagerAdapter != null) {
 							// discard the old view first
 							mRenovations3DPagerAdapter.notifyChangeInPosition(1);
 							mRenovations3DPagerAdapter.notifyDataSetChanged();
@@ -1017,31 +925,23 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 						//after the home is loaded check for an import wizard wanted and show interstitials
-						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener()
-						{
+						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
 							@Override
-							public void onHomeLoaded(Home home, final HomeController homeController)
-							{
-								if(importDestination != null)
-								{
-									switch (importDestination)
-									{
+							public void onHomeLoaded(Home home, final HomeController homeController) {
+								if(importDestination != null) {
+									switch (importDestination) {
 										case IMPORT_TEXTURE:
 											Handler handler = new Handler(Looper.getMainLooper());
-											handler.post(new Runnable()
-											{
-												public void run()
-												{
+											handler.post(new Runnable() {
+												public void run() {
 													homeController.importTexture();
 												}
 											});
 											break;
 										case IMPORT_BACKGROUND:
 											Handler handler2 = new Handler(Looper.getMainLooper());
-											handler2.post(new Runnable()
-											{
-												public void run()
-												{
+											handler2.post(new Runnable() {
+												public void run() {
 													homeController.importBackgroundImage();
 												}
 											});
@@ -1056,13 +956,10 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 						// load home and trigger the new views
-						if (homeFile != null)
-						{
+						if (homeFile != null) {
 							renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
 							recordHomeStateInPrefs(overrideName == null ? "" : overrideName, isModifiedOverrideValue, homeFile.getAbsolutePath());
-						}
-						else
-						{
+						} else {
 							renovations3D.newHome();
 							recordHomeStateInPrefs("", false, "");//TODO: should I clear now or just let auto save sort it out?
 						}
@@ -1078,10 +975,8 @@ public class Renovations3DActivity extends FragmentActivity
 	}
 
 
-	public BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver()
-	{
-		public void onReceive(Context ctxt, Intent intent)
-		{
+	public BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver() {
+		public void onReceive(Context ctxt, Intent intent) {
 			//don't call unregisterReceiver(this); in case multiple downloads are set up
 			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
@@ -1091,19 +986,16 @@ public class Renovations3DActivity extends FragmentActivity
 			query.setFilterById(id);
 			Cursor cursor = downloadManager.query(query);
 
-			if (cursor.moveToFirst())
-			{
+			if (cursor.moveToFirst()) {
 				int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
 				int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
 				int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
 				int status = cursor.getInt(statusIndex);
 
-				if (status == DownloadManager.STATUS_SUCCESSFUL)
-				{
+				if (status == DownloadManager.STATUS_SUCCESSFUL) {
 					String localUri = cursor.getString(localUriIndex);
-					try
-					{
+					try {
 						//WHAT? local storage returns "" paht?
 						URI u = new URI(localUri);
 						String path =   u.getPath();
@@ -1111,19 +1003,14 @@ public class Renovations3DActivity extends FragmentActivity
 						File file = new File(new URI(localUri).getPath());
 						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
 						loadFile(file);
-					}
-					catch (URISyntaxException e)
-					{
+					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
-				}
-				else if (status == DownloadManager.STATUS_FAILED)
-				{
+				} else if (status == DownloadManager.STATUS_FAILED) {
 					int reason = cursor.getInt(reasonIndex);
 
 					String message;
-					switch (reason)
-					{
+					switch (reason) {
 						case DownloadManager.ERROR_FILE_ERROR:
 						case DownloadManager.ERROR_DEVICE_NOT_FOUND:
 						case DownloadManager.ERROR_INSUFFICIENT_SPACE:
@@ -1149,22 +1036,16 @@ public class Renovations3DActivity extends FragmentActivity
 	};
 
 
-	private void loadFile(final File inFile)
-	{
-		if (inFile.getName().toLowerCase().endsWith(".sh3d"))
-		{
+	private void loadFile(final File inFile) {
+		if (inFile.getName().toLowerCase().endsWith(".sh3d")) {
 			loadHome(inFile);
-		}
-		else
-		{
+		} else {
 			// if no home loaded must load a new home and on complete import libraries, notice NOT a call to newHome()
-			if (getHomeController() == null)
-			{
+			if (getHomeController() == null) {
 				// must always recreate otherwise the pager hand out an IllegalStateException
 				renovations3D = new Renovations3D(Renovations3DActivity.this);
 
-				if (mRenovations3DPagerAdapter != null)
-				{
+				if (mRenovations3DPagerAdapter != null) {
 					// discard the old view first
 					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
@@ -1183,23 +1064,19 @@ public class Renovations3DActivity extends FragmentActivity
 			}
 
 			//get off EDT so blocking questions can be asked
-			Thread t = new Thread()
-			{
-				public void run()
-				{
+			Thread t = new Thread() {
+				public void run() {
 					if (getHomeController() != null) {
 						// try the zip wrapped option
-						if (inFile.getName().toLowerCase().endsWith(".zip"))
-						{
+						if (inFile.getName().toLowerCase().endsWith(".zip")) {
 							int BUFFER = 1024;
 							ZipInputStream zipIn = null;
-							try{
+							try {
 								zipIn = new ZipInputStream(new FileInputStream(inFile));
 
 								ZipEntry entry;
-								while((entry = zipIn.getNextEntry()) != null) {
-									if (entry.getName().toLowerCase().endsWith(".sh3f"))
-									{
+								while ((entry = zipIn.getNextEntry()) != null) {
+									if (entry.getName().toLowerCase().endsWith(".sh3f")) {
 										int count;
 										byte data[] = new byte[1024];
 										// Write the files to the disk
@@ -1213,9 +1090,7 @@ public class Renovations3DActivity extends FragmentActivity
 										dest.close();
 										zipIn.closeEntry();
 										getHomeController().importFurnitureLibrary(extractedFile.getAbsolutePath());
-									}
-									else if (entry.getName().toLowerCase().endsWith(".sh3t"))
-									{
+									} else if (entry.getName().toLowerCase().endsWith(".sh3t")) {
 										int count;
 										byte data[] = new byte[1024];
 										// Write the files to the disk
@@ -1237,16 +1112,12 @@ public class Renovations3DActivity extends FragmentActivity
 								if (zipIn != null) {
 									try {
 										zipIn.close();
-									}catch(IOException e){;}
+									} catch(IOException e) {;}
 								}
 							}
-						}
-						else if (inFile.getName().toLowerCase().endsWith(".sh3f"))
-						{
+						} else if (inFile.getName().toLowerCase().endsWith(".sh3f")) {
 							getHomeController().importFurnitureLibrary(inFile.getAbsolutePath());
-						}
-						else if (inFile.getName().toLowerCase().endsWith(".sh3t"))
-						{
+						} else if (inFile.getName().toLowerCase().endsWith(".sh3t")) {
 							getHomeController().importTexturesLibrary(inFile.getAbsolutePath());
 						}
 					}
@@ -1256,24 +1127,17 @@ public class Renovations3DActivity extends FragmentActivity
 		}
 	}
 
-	private void storagePermission(boolean granted)
-	{
-		if(granted)
-		{
+	private void storagePermission(boolean granted) {
+		if(granted) {
 			writeExternalStorageGranted = true;
 			downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-			JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer()
-			{
+			JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer() {
 				@Override
-				public File reviewFolder(File folder)
-				{
-					if (folder == null)
-					{
+				public File reviewFolder(File folder) {
+					if (folder == null) {
 						folder = downloadsLocation;
-					}
-					else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME))
-					{
+					} else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME)) {
 						// extra care in case the caller is trying to use a app cache file location, which is invalid
 						folder = downloadsLocation;
 					}
@@ -1282,26 +1146,19 @@ public class Renovations3DActivity extends FragmentActivity
 			});
 
 			//possibly the ext is not mounted
-			if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
-			{
+			if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
 			}
 
 		}
 
-		if (Build.VERSION.SDK_INT >= M)
-		{
-			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-			{
+		if (Build.VERSION.SDK_INT >= M) {
+			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSION_LOCATION);
-			}
-			else
-			{
+			} else {
 				locationPermission(true);
 			}
-		}
-		else
-		{
+		} else {
 			locationPermission(true);
 		}
 
@@ -1309,19 +1166,15 @@ public class Renovations3DActivity extends FragmentActivity
 		loadUpContent();
 	}
 
-	private void locationPermission(boolean granted)
-	{
+	private void locationPermission(boolean granted) {
 		locationPermission = true;
 		this.adMobManager.locationPermission(granted);
 	}
 
-	private void loadUpContent()
-	{
+	private void loadUpContent() {
 		// set up the auto save system now as various things below call return
-		final TimerTask autoSaveTask = new TimerTask()
-		{
-			public void run()
-			{
+		final TimerTask autoSaveTask = new TimerTask() {
+			public void run() {
 				System.out.println("Possibly auto save");
 				doAutoSave();
 			}
@@ -1331,12 +1184,10 @@ public class Renovations3DActivity extends FragmentActivity
 
 		//TODO: see eclipse Renovations3D.protected void start(String[] args) for exactly this setup, but better
 		Intent intent = getIntent();
-		if (intent != null)
-		{
+		if (intent != null) {
 			String action = intent.getAction();
 
-			if (action.compareTo(Intent.ACTION_VIEW) == 0)
-			{
+			if (action.compareTo(Intent.ACTION_VIEW) == 0) {
 				String scheme = intent.getScheme();
 				//ContentResolver resolver = getContentResolver();
 				if(scheme != null) {
@@ -1394,8 +1245,7 @@ public class Renovations3DActivity extends FragmentActivity
 							setIntent(null);
 							ToastCompat.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
 							Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
-						}
-						catch (IllegalStateException e) {
+						} catch (IllegalStateException e) {
 							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IllegalStateException during http intent", intent.getDataString());
 						}
 						return;
@@ -1421,110 +1271,30 @@ public class Renovations3DActivity extends FragmentActivity
 
 		boolean firstOpening = appOpenedCount <= 1;
 
-		// now download the files from drop box
-		// folder	String url = "https://www.dropbox.com/sh/m1291ug4cooafn9/AADthFyjnndOhjTvr2iiMJzWa?dl=0";
-
-		//https://www.dropbox.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d?dl=0
-		//https://www.dropbox.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d?dl=0
-
-		// notice the files actual url not the sexy page offering the file
-	/*	String[] urls = new String[]{
-				"https://dl.dropboxusercontent.com/s/ejfdbfopcat3c26/SweetHome3DExample2.sh3d",
-				"https://dl.dropboxusercontent.com/s/ird6ysp4cai1wej/SweetHome3DExample3.sh3d"};
-		String[] fileNames = new String[]{
-				"SweetHome3DExample2.sh3d",
-				"SweetHome3DExample3.sh3d"};
-
-		// only download attempt 3 times, after that consider it impossible or the user sick of it
-		int downloadAttempts = settings.getInt(EXAMPLE_DOWNLOAD_COUNT, 0);
-
-		if (!(new File(downloadsLocation, fileNames[0]).exists()))
-		{
-			downloadAttempts++;
-			editor.putInt(EXAMPLE_DOWNLOAD_COUNT, downloadAttempts);
-			editor.apply();
-		}
-
-		if (downloadAttempts < 4)
-		{
-			for (int i = 0; i < urls.length; i++)
-			{
-				String fileName = fileNames[i];
-				if (!(new File(downloadsLocation, fileName).exists()))
-				{
-					String url = urls[i];
-					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-					request.setDescription(fileName + " download");
-					request.setTitle(fileName);
-
-					request.allowScanningByMediaScanner();
-					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-					try
-					{
-						if (writeExternalStorageGranted)
-						{
-							request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-						}
-						else
-						{
-							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
-						}
-
-						// get download service and enqueue file
-						DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-						manager.enqueue(request);
-						Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
-
-						// if this is first ever opening then we should open the SweetHome3DExample2.sh3d file after it's downloaded
-						if (firstOpening && fileName.equals(autoOpenFirstOpen))
-						{
-							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-						}
-					}
-					catch (IllegalStateException e)
-					{
-						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IllegalStateException during demo download", fileName);
-					}
-				}
-			}
-		}*/
-
-
-		if (!firstOpening)
-		{
+		if (!firstOpening) {
 			// do we have a temp home we were working on
 			String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
-			if (unmodifiedFileName.length() > 0 && !unmodifiedFileName.endsWith(CURRENT_WORK_FILENAME))
-			{
+			if (unmodifiedFileName.length() > 0 && !unmodifiedFileName.endsWith(CURRENT_WORK_FILENAME)) {
 				File homeName = new File(unmodifiedFileName);
 				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getName());
-				if (homeName.exists())
-				{
+				if (homeName.exists()) {
 					loadHome(homeName);
-				}
-				else
-				{
+				} else {
 					Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME does not exist");
 					newHome();
 				}
-			}
-			else
-			{
+			} else {
 				//This is where we open the temp file that was last used, but wait for any writes to finish
 				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
 				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
 				File outputDir = getCacheDir();
 				File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
 
-				if (homeName.exists())
-				{
+				if (homeName.exists()) {
 					// wait for any previous still running autosaves to finish up
-					try
-					{
+					try {
 						autoSaveSemaphore.acquire();
-					}
-					catch (InterruptedException e)
-					{
+					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 
@@ -1533,29 +1303,15 @@ public class Renovations3DActivity extends FragmentActivity
 
 					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
 					autoSaveSemaphore.release();
-				}
-				else
-				{
+				} else {
 					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWorkNoFile", "original: " + tempWorkingFileRealName);
 					// or just fire up a lovely clear new home
 					newHome();
 				}
 			}
-		}
-		else
-		{
-
-		/*	File autoOpenFile = new File(downloadsLocation, autoOpenFirstOpen);
-			if (autoOpenFile.exists())
-			{
-				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenAutoFile", "autoOpenFile: " + autoOpenFile.getName());
-				loadHome(autoOpenFile);
-			}
-			else
-			{*/
-				Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile");
-				newHome();
-//			}
+		} else {
+			Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile");
+			newHome();
 		}
 
 
@@ -1565,28 +1321,19 @@ public class Renovations3DActivity extends FragmentActivity
 	// static will stay around as long as exiting activity is alive saving
 	private static final Semaphore autoSaveSemaphore = new Semaphore(1, true);
 
-	public void doAutoSave()
-	{
-		if (renovations3D != null && renovations3D.getHome() != null)
-		{
+	public void doAutoSave() {
+		if (renovations3D != null && renovations3D.getHome() != null) {
 			// get off the caller in case this is an onPause
-			Thread t = new Thread(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					try {
 						// all synchro-meshed and sexy
 						autoSaveSemaphore.acquire();
-					}
-					catch (InterruptedException e)
-					{
+					} catch (InterruptedException e) {
 					}
 
-					if (getHome() != null && getHome().isModified())
-					{
-						try
-						{
+					if (getHome() != null && getHome().isModified()) {
+						try {
 							//clone so original modified flag is not changed
 							Home autoSaveHome = getHome().clone();
 							boolean isModifiedOverrideValue = getHome().isModified();
@@ -1602,9 +1349,7 @@ public class Renovations3DActivity extends FragmentActivity
 							Renovations3DActivity.logFireBaseContent("doAutoSave", "temp: " + homeName.getName() + " original: " + originalName
 									+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
-						}
-						catch (RecorderException e)
-						{
+						} catch (RecorderException e) {
 							e.printStackTrace();
 							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "RecorderException during autosave", getHome().getName());
 						}
@@ -1663,11 +1408,9 @@ public class Renovations3DActivity extends FragmentActivity
 	 * Returns user preferences stored in resources and local file system.
 	 */
 
-	public UserPreferences getUserPreferences()
-	{
+	public UserPreferences getUserPreferences() {
 		// Initialize userPreferences lazily
-		if (this.userPreferences == null)
-		{
+		if (this.userPreferences == null) {
 			// Retrieve preferences and application folders
 			String preferencesFolderProperty = System.getProperty(Renovations3D.PREFERENCES_FOLDER, null);
 			String applicationFoldersProperty = System.getProperty(Renovations3D.APPLICATION_FOLDERS, null);
@@ -1675,68 +1418,22 @@ public class Renovations3DActivity extends FragmentActivity
 					? new File(preferencesFolderProperty)
 					: null;
 			File[] applicationFolders;
-			if (applicationFoldersProperty != null)
-			{
+			if (applicationFoldersProperty != null) {
 				String[] applicationFoldersProperties = applicationFoldersProperty.split(File.pathSeparator);
 				applicationFolders = new File[applicationFoldersProperties.length];
-				for (int i = 0; i < applicationFolders.length; i++)
-				{
+				for (int i = 0; i < applicationFolders.length; i++) {
 					applicationFolders[i] = new File(applicationFoldersProperties[i]);
 				}
-			}
-			else
-			{
+			} else {
 				applicationFolders = null;
 			}
-			Executor eventQueueExecutor = new Executor()
-			{
+			Executor eventQueueExecutor = new Executor() {
 				@Override
-				public void execute(Runnable command)
-				{
+				public void execute(Runnable command) {
 					EventQueue.invokeLater(command);
 				}
 			};
 			this.userPreferences = new FileUserPreferences(preferencesFolder, applicationFolders, eventQueueExecutor);
-			//PJ plugins removed
-			/*{
-				@Override
-				public List<Library> getLibraries()
-				{
-					//PJ no plugin libraries now
-					if (userPreferences != null // Don't go further if preferences are not ready
-							&& getPluginManager() != null)
-					{
-						List<Library> pluginLibraries = getPluginManager().getPluginLibraries();
-						if (!pluginLibraries.isEmpty())
-						{
-							// Add plug-ins to the list returned by user preferences
-							ArrayList<Library> libraries = new ArrayList<Library>(super.getLibraries());
-							libraries.addAll(pluginLibraries);
-							return Collections.unmodifiableList(libraries);
-						}
-					}
-					return super.getLibraries();
-				}
-
-				@Override
-				public void deleteLibraries(List<Library> libraries) throws RecorderException
-				{
-					if (userPreferences != null // Don't go further if preferences are not ready
-							&& getPluginManager() != null)
-					{
-						super.deleteLibraries(libraries);
-						List<Library> plugins = new ArrayList<Library>();
-						for (Library library : libraries)
-						{
-							if (PluginManager.PLUGIN_LIBRARY_TYPE.equals(library.getType()))
-							{
-								plugins.add(library);
-							}
-						}
-						getPluginManager().deletePlugins(plugins);
-					}
-				}
-			};*/
 		}
 		return this.userPreferences;
 	}
@@ -1744,34 +1441,25 @@ public class Renovations3DActivity extends FragmentActivity
 
 	private ImageAcquireManager.Destination importDestination = null;
 
-	public void showImportTextureWizard()
-	{
-		if (getHomeController() != null)
-		{
+	public void showImportTextureWizard() {
+		if (getHomeController() != null) {
 			getHomeController().importTexture();
 			importDestination = null;
-		}
-		else
-		{
+		} else {
 			importDestination = ImageAcquireManager.Destination.IMPORT_TEXTURE;
 		}
 	}
 
-	public void showBackGroundImportWizard()
-	{
-		if (getHomeController() != null)
-		{
+	public void showBackGroundImportWizard() {
+		if (getHomeController() != null) {
 			getHomeController().importBackgroundImage();
 			importDestination = null;
-		}
-		else
-		{
+		} else {
 			importDestination = ImageAcquireManager.Destination.IMPORT_BACKGROUND;
 		}
 	}
 
-	public static void setIconizedMenuTitle(MenuItem menuItem, String title, int iconId, Context context)
-	{
+	public static void setIconizedMenuTitle(MenuItem menuItem, String title, int iconId, Context context) {
 		// NOTE use of setTitleCondensed as well as setTitle
 		//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
 		//http://stackoverflow.com/questions/7658725/android-java-lang-illegalargumentexception-invalid-payload-item-type
@@ -1789,19 +1477,14 @@ public class Renovations3DActivity extends FragmentActivity
 	final private int  REQUEST_CODE_ASK_PERMISSION_LOCATION = 124;
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-	{
-		switch (requestCode)
-		{
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
 			case REQUEST_CODE_ASK_PERMISSION_STORAGE:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-				{
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					// Permission Granted
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Granted");
 					storagePermission(true);
-				}
-				else
-				{
+				} else {
 					// Permission Denied
 					Renovations3DActivity.logFireBaseContent("REQUEST_CODE_ASK_PERMISSIONS Denied");
 
@@ -1812,13 +1495,10 @@ public class Renovations3DActivity extends FragmentActivity
 				}
 				break;
 			case REQUEST_CODE_ASK_PERMISSION_LOCATION:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-				{
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					Renovations3DActivity.logFireBaseContent("location permission Granted");
 					locationPermission(true);
-				}
-				else
-				{
+				} else {
 					Renovations3DActivity.logFireBaseContent("location permission Denied");
 					locationPermission(false);
 				}
@@ -1830,26 +1510,22 @@ public class Renovations3DActivity extends FragmentActivity
 
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
 		this.billingManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 
-	public AdMobManager getAdMobManager()
-	{
+	public AdMobManager getAdMobManager() {
 		return adMobManager;
 	}
 
-	public ImageAcquireManager getImageAcquireManager()
-	{
+	public ImageAcquireManager getImageAcquireManager() {
 		return imageAcquireManager;
 	}
 
-	public BillingManager getBillingManager()
-	{
+	public BillingManager getBillingManager() {
 		return billingManager;
 	}
 }
