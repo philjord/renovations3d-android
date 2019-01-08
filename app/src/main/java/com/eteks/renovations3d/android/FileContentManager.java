@@ -708,9 +708,9 @@ private Renovations3DActivity activity;//for dialogs etc
    */
   private String showFileChooser(View          parentView,
                                  String        dialogTitle,
-								 final ContentType   contentType,
+																 final ContentType   contentType,
                                  final String        path,
-                                 boolean       save) {
+                                 final boolean       save) {
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
 		  new Throwable().printStackTrace();
 		  System.err.println("FileContentManager asked to showFileChooser on EDT thread, it MUST not be called from EDT as it is blocking!");
@@ -725,92 +725,76 @@ private Renovations3DActivity activity;//for dialogs etc
 	  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
 	  final String[] okCancel = new String[]{ok,cancel};
 
-	  // just a name picker for the save as system
-	  if(save)
-	  {
-		  final File parent;
-		  if(path == null || path.length() == 0)
-		  {
-			  parent = Renovations3DActivity.downloadsLocation;
-		  }
-		  else
-		  {
-			  parent = new File(path).getParentFile();
-		  }
-		  activity.runOnUiThread(new Runnable()
-		  {
-			  public void run()
-			  {
-				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
-				  fileChooser.setFileFilters(fileFilters.get(contentType));
-				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
-				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
-															   {
-																   @Override
-																   public void onDismiss(DialogInterface dialog)
-																   {
-						   dialogSemaphore.release();
-					   }
-				   }
-				  );
+		FileContentManager.this.activity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
 
-				  fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
-				  {
-					  @Override
-					  public void fileSelected(final File file)
-					  {
-						  selectedFile[0] = file;
-					  }
-				  });
-				  fileChooser.showDialog();
-			  }
-		  });
+			public void location(File downloadsLocation) {
+				// just a name picker for the save as system
+				if (save) {
+					final File parent;
+					if (path == null || path.length() == 0) {
+						parent = downloadsLocation;
+					} else {
+						parent = new File(path).getParentFile();
+					}
+					activity.runOnUiThread(new Runnable() {
+						public void run() {
+							final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
+							fileChooser.setFileFilters(fileFilters.get(contentType));
+							fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+							fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+																														 @Override
+																														 public void onDismiss(DialogInterface dialog) {
+																															 dialogSemaphore.release();
+																														 }
+																													 }
+							);
 
-	  }
-	  else
-	  {
-			// in this case we want ot show a real file picker (with an extension filter of the right type
-		  //TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
-		  //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
-		  //MUST use filefilter array cos furniture model has loads of options, note furniture model import handles teh zip files as well
+							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
+								@Override
+								public void fileSelected(final File file) {
+									selectedFile[0] = file;
+								}
+							});
+							fileChooser.showDialog();
+						}
+					});
 
-		  activity.runOnUiThread(new Runnable()
-		  {
-			  public void run()
-			  {
-				  final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, Renovations3DActivity.downloadsLocation, false, false, okCancel);
-				  fileChooser.setFileFilters(fileFilters.get(contentType));
-				  fileChooser.getDialog().setTitle(getFileDialogTitle(false));
-				  fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener()
-															   {
-																   @Override
-																   public void onDismiss(DialogInterface dialog)
-																   {
-						   dialogSemaphore.release();
-					   }
-				   }
-				  );
+				} else {
+					// in this case we want ot show a real file picker (with an extension filter of the right type
+					//TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
+					//TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
+					//MUST use filefilter array cos furniture model has loads of options, note furniture model import handles teh zip files as well
+					final File parent = downloadsLocation;
+					activity.runOnUiThread(new Runnable() {
+						public void run() {
+							final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, false, false, okCancel);
+							fileChooser.setFileFilters(fileFilters.get(contentType));
+							fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+							fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+																														 @Override
+																														 public void onDismiss(DialogInterface dialog) {
+																															 dialogSemaphore.release();
+																														 }
+																													 }
+							);
 
-				  fileChooser.setFileListener(new JFileChooser.FileSelectedListener()
-				  {
-					  @Override
-					  public void fileSelected(final File file)
-					  {
-						  selectedFile[0] = file;
-					  }
-				  });
-				  fileChooser.showDialog();
-			  }
-		  });
-	  }
+							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
+								@Override
+								public void fileSelected(final File file) {
+									selectedFile[0] = file;
+								}
+							});
+							fileChooser.showDialog();
+						}
+					});
+				}
+			}
+		});
 
-	  try
-	  {
+	  try {
 		  //NOTE: this is a reverse semphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
 		  dialogSemaphore.acquire();
-	  }
-	  catch (InterruptedException e)
-	  {
+	  } catch (InterruptedException e) {
 	  }
 
 	  Renovations3DActivity.logFireBaseContent("showFileChooser" +(save ? "Save" : "Open"), "Selected file " + selectedFile[0]);

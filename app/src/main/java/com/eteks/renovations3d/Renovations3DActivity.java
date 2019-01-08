@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.PermissionChecker;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -113,11 +114,8 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	private static HashSet<String> welcomeScreensShownThisSession = new HashSet<String>();
 
-
-	public static boolean writeExternalStorageGranted = false;
-	public static File downloadsLocation;
-
-	public static boolean locationPermission = false;
+	//public static boolean writeExternalStorageGranted = false;
+	//public static File downloadsLocation;
 
 	private final Timer autoSaveTimer = new Timer("autosave", true);
 
@@ -343,24 +341,23 @@ public class Renovations3DActivity extends FragmentActivity {
 			}
 		}
 
-
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SHOW_PAGER_BUTTONS = settings.getBoolean(SHOW_PAGER_BUTTONS_PREF, true);
 
-		// set the no permission default
-		downloadsLocation = this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-
+		// If we were given locations permission at some point then use it here now for ads, but don't ask for it (the compass does that)
 		if (Build.VERSION.SDK_INT >= M) {
-			int hasWriteExternalStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			if (hasWriteExternalStorage != PackageManager.PERMISSION_GRANTED) {
-				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
-			} else {
-				storagePermission(true);
-			}
+				locationPermission(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 		} else {
-			storagePermission(true);
+			locationPermission(true);
 		}
+
+		invalidateOptionsMenu();
+		loadUpContent();
+
+
 	}
+
+
 
 	public ViewPager getViewPager() {
 		return mViewPager;
@@ -842,34 +839,9 @@ public class Renovations3DActivity extends FragmentActivity {
 				if (getHomeController() != null) {
 					HomeController controller = getHomeController();
 					String openFileName = controller.getView().showOpenDialog();
-					if (openFileName != null)
-					{
+					if (openFileName != null) {
 						loadHome(new File(openFileName));
 					}
-				} else {
-					// shouldn't really happen unless crash on load of first home
-					// above this is the proper way to do it, but if I don't have a home controller...
-					// get on the EDT, for the init of fileChooser
-					Renovations3DActivity.this.runOnUiThread(new Runnable() {
-						public void run() {
-							final JFileChooser fileChooser = new JFileChooser(Renovations3DActivity.this, downloadsLocation);
-							fileChooser.setFileFilters(FileContentManager.MODEL_FILTERS);
-							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
-								@Override
-								public void fileSelected(final File file) {
-									Thread t2 = new Thread() {
-										public void run() {
-											// get back off the EDT
-											loadHome(file);
-										}
-									};
-									t2.start();
-								}
-							});
-
-							fileChooser.showDialog();
-						}
-					});
 				}
 			}
 		};
@@ -1127,49 +1099,9 @@ public class Renovations3DActivity extends FragmentActivity {
 		}
 	}
 
-	private void storagePermission(boolean granted) {
-		if(granted) {
-			writeExternalStorageGranted = true;
-			downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-			JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer() {
-				@Override
-				public File reviewFolder(File folder) {
-					if (folder == null) {
-						folder = downloadsLocation;
-					} else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME)) {
-						// extra care in case the caller is trying to use a app cache file location, which is invalid
-						folder = downloadsLocation;
-					}
-					return folder;
-				}
-			});
 
-			//possibly the ext is not mounted
-			if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
-			}
 
-		}
-
-		if (Build.VERSION.SDK_INT >= M) {
-			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSION_LOCATION);
-			} else {
-				locationPermission(true);
-			}
-		} else {
-			locationPermission(true);
-		}
-
-		invalidateOptionsMenu();
-		loadUpContent();
-	}
-
-	private void locationPermission(boolean granted) {
-		locationPermission = true;
-		this.adMobManager.locationPermission(granted);
-	}
 
 	private void loadUpContent() {
 		// set up the auto save system now as various things below call return
@@ -1232,11 +1164,7 @@ public class Renovations3DActivity extends FragmentActivity {
 						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
 						try {
-							if (writeExternalStorageGranted) {
-								request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-							} else {
-								request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
-							}
+							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
 
 							// get download service and enqueue file
 							DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -1257,10 +1185,8 @@ public class Renovations3DActivity extends FragmentActivity {
 						return;
 					}
 				}
-
 			}
 		}
-
 
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		int appOpenedCount = settings.getInt(APP_OPENED_COUNT, 0);
@@ -1362,46 +1288,6 @@ public class Renovations3DActivity extends FragmentActivity {
 		}
 	}
 
-
-	/*private String getContentName(ContentResolver resolver, Uri uri)
-	{
-		Cursor cursor = resolver.query(uri, null, null, null, null);
-		cursor.moveToFirst();
-		int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-		if (nameIndex >= 0)
-		{
-			return cursor.getString(nameIndex);
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	private void inputStreamToFile(InputStream in, String file)
-	{
-		try
-		{
-			OutputStream out = new FileOutputStream(new File(file));
-
-			int size = 0;
-			byte[] buffer = new byte[1024];
-
-			while ((size = in.read(buffer)) != -1)
-			{
-				out.write(buffer, 0, size);
-			}
-
-			out.close();
-		}
-		catch (Exception e)
-		{
-			Log.e("MainActivity", "InputStreamToFile exception: " + e.getMessage());
-		}
-	}*/
-
-
-
 	private UserPreferences userPreferences;
 	/**
 	 * PJ moved here from Renovations3D to make it a singleton again
@@ -1469,12 +1355,101 @@ public class Renovations3DActivity extends FragmentActivity {
 		builder.setSpan(new ImageSpan(context, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		menuItem.setTitle(builder);
 		menuItem.setTitleCondensed(title);
-		//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwsie there 2 icons
+		//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwise there 2 icons
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
+		this.billingManager.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 
-	final private int REQUEST_CODE_ASK_PERMISSION_STORAGE = 123;//just has to match from request to response below
-	final private int  REQUEST_CODE_ASK_PERMISSION_LOCATION = 124;
+	public AdMobManager getAdMobManager() {
+		return adMobManager;
+	}
+
+	public ImageAcquireManager getImageAcquireManager() {
+		return imageAcquireManager;
+	}
+
+	public BillingManager getBillingManager() {
+		return billingManager;
+	}
+
+	final public int REQUEST_CODE_ASK_PERMISSION_STORAGE = 123;//just has to match from request to response below
+	final public int REQUEST_CODE_ASK_PERMISSION_LOCATION = 124;
+
+	// called by Compass
+	public void getLocationPermission(LocationPermissionRequestor locationPermissionRequestor) {
+		this.locationPermissionRequestor = locationPermissionRequestor;
+		if (Build.VERSION.SDK_INT >= M) {
+			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSION_LOCATION);
+			} else {
+				locationPermission(true);
+			}
+		} else {
+			locationPermission(true);
+		}
+	}
+
+	private LocationPermissionRequestor locationPermissionRequestor = null;
+	private void locationPermission(boolean granted) {
+		this.adMobManager.locationPermission(granted);
+		if (locationPermissionRequestor != null) {
+			locationPermissionRequestor.permission(granted);
+			locationPermissionRequestor = null;
+		}
+	}
+	public void getDownloadsLocation(DownloadsLocationRequestor downloadsLocationRequestor) {
+		this.downloadsLocationRequestor = downloadsLocationRequestor;
+		if (Build.VERSION.SDK_INT >= M) {
+			if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
+			} else {
+				storagePermission(true);
+			}
+		} else {
+			storagePermission(true);
+		}
+	}
+	private DownloadsLocationRequestor	downloadsLocationRequestor = null;
+	private void storagePermission(boolean granted) {
+		// set the no permission default
+		File downloadsLocation = this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+		if(granted) {
+			downloadsLocation = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		}
+
+		// give the jfilechooser a sanity checker to try to reduce trouble with bad file locations
+		final File reviewFileLocation = downloadsLocation;
+		JFileChooser.setFolderReviewer(new JFileChooser.FolderReviewer() {
+			@Override
+			public File reviewFolder(File folder) {
+				if (folder == null) {
+					folder = reviewFileLocation;
+				} else if (folder.getAbsolutePath().contains(CURRENT_WORK_FILENAME)) {
+					// extra care in case the caller is trying to use a app cache file location, which is invalid
+					folder = reviewFileLocation;
+				}
+				return folder;
+			}
+		});
+
+		//possibly the ext is not mounted
+		if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+			Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "getExternalStorageState not MEDIA_MOUNTED", Environment.getExternalStorageState());
+		}
+
+		if (downloadsLocationRequestor != null) {
+			downloadsLocationRequestor.location(downloadsLocation);
+			downloadsLocationRequestor = null;
+		}
+
+	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -1509,23 +1484,13 @@ public class Renovations3DActivity extends FragmentActivity {
 	}
 
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
-		this.billingManager.onActivityResult(requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
+
+
+	public interface LocationPermissionRequestor {
+		void permission(boolean granted);
 	}
 
-
-	public AdMobManager getAdMobManager() {
-		return adMobManager;
-	}
-
-	public ImageAcquireManager getImageAcquireManager() {
-		return imageAcquireManager;
-	}
-
-	public BillingManager getBillingManager() {
-		return billingManager;
+	public interface DownloadsLocationRequestor {
+		void location(File downloadLocation);
 	}
 }

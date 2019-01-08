@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -45,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.eteks.renovations3d.Renovations3DActivity;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JCheckBox;
 import com.mindblowing.swingish.JComboBox;
@@ -68,6 +71,9 @@ import javaawt.VMGraphics2D;
 import javaawt.geom.Ellipse2D;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.Line2D;
+import me.drakeet.support.toast.ToastCompat;
+
+import static android.os.Build.VERSION_CODES.M;
 
 
 /**
@@ -101,9 +107,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
    * @param controller the controller of this panel
    */
   public CompassPanel(UserPreferences preferences,
-                      CompassController controller,
-		  				Activity activity) {
-
+                      CompassController controller, Activity activity) {
 	  super(preferences, activity, R.layout.dialog_compasspanel);
     this.controller = controller;
     createComponents(preferences, controller);
@@ -135,7 +139,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     xSpinnerModel.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           controller.removePropertyChangeListener(CompassController.Property.X, xChangeListener);
-          controller.setX((float)xSpinnerModel.getLength());
+          controller.setX(xSpinnerModel.getLength());
           controller.addPropertyChangeListener(CompassController.Property.X, xChangeListener);
         }
       });
@@ -217,7 +221,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     latitudeSpinnerModel.setValue(controller.getLatitudeInDegrees());
     final PropertyChangeListener latitudeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          latitudeSpinnerModel.setValue(ev.getNewValue());
+          latitudeSpinnerModel.setValue((Float)ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.LATITUDE_IN_DEGREES, latitudeChangeListener);
@@ -242,7 +246,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     longitudeSpinnerModel.setValue(controller.getLongitudeInDegrees());
     final PropertyChangeListener longitudeChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          longitudeSpinnerModel.setValue(ev.getNewValue());
+          longitudeSpinnerModel.setValue((Float)ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.LONGITUDE_IN_DEGREES, longitudeChangeListener);
@@ -275,20 +279,17 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 
     final PropertyChangeListener timeZoneChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-			timeZoneComboBox.setSelectedItem(ev.getNewValue());
+					timeZoneComboBox.setSelectedItem(ev.getNewValue());
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.TIME_ZONE, timeZoneChangeListener);
-	  this.timeZoneComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, timeZoneIdsArray)
-	  {
+	  this.timeZoneComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, timeZoneIdsArray) {
 		  @Override
-		  public View getView(int position, View convertView, ViewGroup parent)
-		  {
+		  public View getView(int position, View convertView, ViewGroup parent) {
 			  return getDropDownView(position, convertView, parent);
 		  }
 		  @Override
-		  public View getDropDownView(int position, View convertView, ViewGroup parent)
-		  {
+		  public View getDropDownView(int position, View convertView, ViewGroup parent) {
 			  String timeZoneId = (String)timeZoneComboBox.getItemAtPosition(position);
 			  if (timeZoneId.startsWith("GMT")) {
 				  //if (!OperatingSystem.isMacOSX()) {
@@ -311,27 +312,6 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 
 	  // moved to after the adpater is set, as the android adapter is both model and renderer
 	  this.timeZoneComboBox.setSelectedItem(controller.getTimeZone());
-    /*this.timeZoneComboBox.setRenderer(new DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-                                                      boolean cellHasFocus) {
-          String timeZoneId = (String)value;
-          if (timeZoneId.startsWith("GMT")) {
-            if (!OperatingSystem.isMacOSX()) {
-              setToolTipText(timeZoneId);
-            }
-          } else {
-            String timeZoneDisplayName = TimeZone.getTimeZone(timeZoneId).getDisplayName();
-            if (OperatingSystem.isMacOSX()) {
-              value = timeZoneId + " - " + timeZoneDisplayName;
-            } else {
-              // Use tool tip do display the complete time zone information
-              setToolTipText(timeZoneId + " - " + timeZoneDisplayName);
-            }
-          }
-          return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        }
-      });*/
 
     this.timeZoneComboBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
@@ -348,48 +328,41 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     this.northDirectionSpinner = new AutoCommitSpinnerJogDial(activity, northDirectionSpinnerModel);
     northDirectionSpinnerModel.setValue(new Integer(Math.round(controller.getNorthDirectionInDegrees())));
     this.northDirectionComponent = new ImageView(activity){//JComponent() {
-		public void onDraw(Canvas canvas)
-		{
-
-			Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
-
-			g2D.setColor(Color.black);
-
-          g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-          g2D.translate(getWidth() / 2, getHeight() / 2);
-          g2D.scale(getWidth() / 2, getWidth() / 2);
-          g2D.rotate(Math.toRadians(controller.getNorthDirectionInDegrees()));
-          // Draw a round arc
-          g2D.setStroke(new BasicStroke(0.5f / getWidth()));
-          g2D.draw(new Ellipse2D.Float(-0.7f, -0.7f, 1.4f, 1.4f));
-          g2D.draw(new Line2D.Float(-0.85f, 0, -0.7f, 0));
-          g2D.draw(new Line2D.Float(0.85f, 0, 0.7f, 0));
-          g2D.draw(new Line2D.Float(0, -0.8f, 0, -0.7f));
-          g2D.draw(new Line2D.Float(0, 0.85f, 0, 0.7f));
-          // Draw a N
-          GeneralPath path = new GeneralPath();
-          path.moveTo(-0.1f, -0.8f);
-          path.lineTo(-0.1f, -1f);
-          path.lineTo(0.1f, -0.8f);
-          path.lineTo(0.1f, -1f);
-          g2D.setStroke(new BasicStroke(1.5f / getWidth()));
-          g2D.draw(path);
-          // Draw the needle
-          GeneralPath needlePath = new GeneralPath();
-          needlePath.moveTo(0, -0.75f);
-          needlePath.lineTo(0.2f, 0.7f);
-          needlePath.lineTo(0, 0.5f);
-          needlePath.lineTo(-0.2f, 0.7f);
-          needlePath.closePath();
-          needlePath.moveTo(-0.02f, 0);
-          needlePath.lineTo(0.02f, 0);
-          g2D.setStroke(new BasicStroke(4 / getWidth()));
-          g2D.draw(needlePath);
-
-
-
-        }
-      };
+			public void onDraw(Canvas canvas) {
+				Graphics2D g2D = new VMGraphics2D(canvas);//(Graphics2D)g;
+				g2D.setColor(Color.black);
+				g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2D.translate(getWidth() / 2, getHeight() / 2);
+				g2D.scale(getWidth() / 2, getWidth() / 2);
+				g2D.rotate(Math.toRadians(controller.getNorthDirectionInDegrees()));
+				// Draw a round arc
+				g2D.setStroke(new BasicStroke(0.5f / getWidth()));
+				g2D.draw(new Ellipse2D.Float(-0.7f, -0.7f, 1.4f, 1.4f));
+				g2D.draw(new Line2D.Float(-0.85f, 0, -0.7f, 0));
+				g2D.draw(new Line2D.Float(0.85f, 0, 0.7f, 0));
+				g2D.draw(new Line2D.Float(0, -0.8f, 0, -0.7f));
+				g2D.draw(new Line2D.Float(0, 0.85f, 0, 0.7f));
+				// Draw a N
+				GeneralPath path = new GeneralPath();
+				path.moveTo(-0.1f, -0.8f);
+				path.lineTo(-0.1f, -1f);
+				path.lineTo(0.1f, -0.8f);
+				path.lineTo(0.1f, -1f);
+				g2D.setStroke(new BasicStroke(1.5f / getWidth()));
+				g2D.draw(path);
+				// Draw the needle
+				GeneralPath needlePath = new GeneralPath();
+				needlePath.moveTo(0, -0.75f);
+				needlePath.lineTo(0.2f, 0.7f);
+				needlePath.lineTo(0, 0.5f);
+				needlePath.lineTo(-0.2f, 0.7f);
+				needlePath.closePath();
+				needlePath.moveTo(-0.02f, 0);
+				needlePath.lineTo(0.02f, 0);
+				g2D.setStroke(new BasicStroke(4 / getWidth()));
+				g2D.draw(needlePath);
+			}
+    };
 	  final float scale = activity.getResources().getDisplayMetrics().density;
 	  int iconHeightPx = (int) (DIRECTION_COMP_DP * scale + 0.5f);
 	  northDirectionComponent.setMinimumWidth(iconHeightPx);
@@ -399,7 +372,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         public void propertyChange(PropertyChangeEvent ev) {
           northDirectionSpinnerModel.setValue(((Number)ev.getNewValue()).intValue());
           //northDirectionComponent.repaint();
-			northDirectionComponent.postInvalidate();
+					northDirectionComponent.postInvalidate();
         }
       };
     controller.addPropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
@@ -408,57 +381,53 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
           controller.removePropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
           controller.setNorthDirectionInDegrees(((Number)northDirectionSpinnerModel.getValue()).floatValue());
           //northDirectionComponent.repaint();
-			northDirectionComponent.postInvalidate();
+					northDirectionComponent.postInvalidate();
           controller.addPropertyChangeListener(CompassController.Property.NORTH_DIRECTION_IN_DEGREES, northDirectionChangeListener);
         }
       });
 
     this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
 
-
-
-	 Button setToLocationButton = (Button)this.findViewById(R.id.compasspanel_locationButton);
-	  if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-	  {
-		  setToLocationButton.setOnClickListener(new View.OnClickListener()
-		  {
-			  @Override
-			  public void onClick(View v)
-			  {
-				  if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-				  {
-					  // Acquire a reference to the system Location Manager
-					  LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-					  Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					  if(location == null)
-					  {
-						  location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-					  }
-
-					  // possibly nothing has been returned
-					  if(location != null)
-					  {
-						  longitudeSpinner.setValue(location.getLongitude());
-						  latitudeSpinner.setValue(location.getLatitude());
-						  longitudeSpinner.postInvalidate();
-						  latitudeSpinner.postInvalidate();
-					  }
-				  }
-			  }
-		  });
-	  }
-	  else
-	  {
-		  setToLocationButton.setEnabled(false);
-	  }
+		Button setToLocationButton = (Button)this.findViewById(R.id.compasspanel_locationButton);
+		setToLocationButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				((Renovations3DActivity)activity).getLocationPermission (new Renovations3DActivity.LocationPermissionRequestor() {
+					@Override
+					public void permission(boolean granted) {
+						locationPermission(granted);
+					}
+				});
+			}
+		});
   }
 
+	private void locationPermission(boolean granted) {
+		if(granted) {
+			if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				// Acquire a reference to the system Location Manager
+				LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+
+				Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				if(location == null) {
+					location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+				}
+
+				// possibly nothing has been returned
+				if(location != null) {
+					longitudeSpinner.setValue(location.getLongitude());
+					latitudeSpinner.setValue(location.getLatitude());
+					longitudeSpinner.postInvalidate();
+					latitudeSpinner.postInvalidate();
+				}
+			}
+		}
+		// if no permission the ignore the click, the user will understand why nothing happened
+	}
   /**
    * Layouts panel components in panel with their labels. 
    */
   private void layoutComponents(UserPreferences preferences) {
-
 	  JLabel compassRosePanel = new JLabel(activity, preferences.getLocalizedString(
 			  com.eteks.sweethome3d.android_props.CompassPanel.class, "compassRosePanel.title"));
 	  swapOut(compassRosePanel, R.id.compasspanel_compassRosePanel);
@@ -491,19 +460,10 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
    * Displays this panel in a modal dialog box. 
    */
   public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
-  /*  JFormattedTextField northDirectionTextField =
-        ((JSpinner.DefaultEditor)this.northDirectionSpinner.getEditor()).getTextField();
-    if (SwingTools.showConfirmDialog((JComponent)parentView, 
-            this, this.dialogTitle, northDirectionTextField) == JOptionPane.OK_OPTION
-        && this.controller != null) {
-      this.controller.modifyCompass();
-    }*/
 	  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-	  this.setOnDismissListener(new OnDismissListener()
-	  {
+	  this.setOnDismissListener(new OnDismissListener() {
 		  @Override
-		  public void onDismiss(DialogInterface dialog)
-		  {
+		  public void onDismiss(DialogInterface dialog) {
 			  controller.modifyCompass();
 		  }
 	  });
