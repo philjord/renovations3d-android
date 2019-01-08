@@ -446,9 +446,11 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		mOptionsMenu = menu;
 
 		MenuItem cntlMI = menu.findItem(R.id.controlKeyOneTimer);
-		String cntlText = getActivity().getResources().getString(android.R.string.copy);
-		Renovations3DActivity.setIconizedMenuTitle(cntlMI, cntlText, R.drawable.edit_copy, getContext() );
-		cntlMI.setEnabled(planController.getMode() == PlanController.Mode.SELECTION);
+		if (cntlMI != null) {
+			String cntlText = getActivity().getResources().getString(android.R.string.copy);
+			Renovations3DActivity.setIconizedMenuTitle(cntlMI, cntlText, R.drawable.edit_copy, getContext());
+			cntlMI.setEnabled(planController.getMode() == PlanController.Mode.SELECTION);
+		}
 
 		if (resetToSelectTool && planController.getMode() != PlanController.Mode.PANNING) {
 			setMode(PlanController.Mode.SELECTION);

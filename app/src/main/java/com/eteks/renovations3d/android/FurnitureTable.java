@@ -95,28 +95,16 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 					HomePieceOfFurniture.SortableProperty.CREATOR,};
 
 	/*CATALOG_ID,
-	-NAME,
-	-WIDTH,
-	-DEPTH,
-	-HEIGHT,
-	-MOVABLE,
-	-DOOR_OR_WINDOW,
 	COLOR,
-	-TEXTURE,
-	-VISIBLE,
 	X,
 	Y,
 	ELEVATION,
 	ANGLE,
-	-MODEL_SIZE,
-	-CREATOR,
 	PRICE,
 	VALUE_ADDED_TAX,
 	VALUE_ADDED_TAX_PERCENTAGE,
 	PRICE_VALUE_ADDED_TAX_INCLUDED,
 	LEVEL*/
-
-
 
 	private TableLayout tableLayout;
 	private LinearLayout header;
@@ -124,11 +112,9 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
-							 ViewGroup container, Bundle savedInstanceState)
-	{
+							 ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
-		if(initialized)
-		{
+		if (initialized) {
 			header = (LinearLayout) rootView.findViewById(R.id.header);
 			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
 
@@ -154,23 +140,20 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 
 
-	private void updateHeader()
-	{
+	private void updateHeader() {
 		// sometimes Exception java.lang.IllegalStateException: Fragment ii{d4006c0} not attached to Activity  is thrown, presumably during destroy or dispose
-		if(header != null && this.getContext() != null)
-		{
+		if (header != null && this.getContext() != null) {
 			final int fragWidthPx = rootView.getWidth();
 			final float scale = getResources().getDisplayMetrics().density;
 
-			for(int i = 0; i < widthsPx.length; i++)
+			for (int i = 0; i < widthsPx.length; i++)
 				widthsPx[i] = (int) Math.max((minWidthsDp[i] * scale + 0.5f), percentWidth[i] * fragWidthPx);
 
 			header.removeAllViews();
 
 			TableRow headerRow = new TableRow(this.getContext());
 
-			for (int i = 0; i < headerNames.length; i++)
-			{
+			for (int i = 0; i < headerNames.length; i++) {
 				TextView tv = new TextView(this.getContext());
 				tv.setBackgroundColor(Color.WHITE);
 				tv.setTextColor(Color.BLACK);
@@ -187,11 +170,9 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	/**
 	 * This is really expensive and is not simple an update, I need a single row updater system , not this super expensive one
 	 */
-	private void updateTable()
-	{
+	private void updateTable() {
 
-		if(tableLayout != null && this.getContext() != null)
-		{
+		if (tableLayout != null && this.getContext() != null) {
 			updateHeader();
 
 			tableLayout.removeAllViews();
@@ -200,8 +181,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			//tableLayout.setDividerDrawable(this.getResources().getDrawable(R.drawable.empty_small_divider));
 
 			FurnitureTreeTableModel model = getModel();
-			for (int i = 0; i < model.getRowCount(); i++)
-			{
+			for (int i = 0; i < model.getRowCount(); i++) {
 				final HomePieceOfFurniture piece = (HomePieceOfFurniture) model.getValueAt(i, 0);
 				HomePieceOfFurnitureTableRow tableRow = new HomePieceOfFurnitureTableRow(this.getContext(), piece);
 				tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
@@ -215,8 +195,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				imageView.setMinimumWidth(widthsPx[0]);
 
 				Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), iconHeightPx, null);
-				if (icon instanceof ImageIcon)
-				{
+				if (icon instanceof ImageIcon) {
 					imageView.setImageBitmap(((Bitmap) ((ImageIcon) icon).getImage().getDelegate()));
 				}
 				imageView.setOnClickListener(tableSelectionListener);
@@ -318,21 +297,17 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			}
 		}
 	}
-	private class HomePieceOfFurnitureTableRow extends TableRow
-	{
+	private class HomePieceOfFurnitureTableRow extends TableRow {
 		public HomePieceOfFurniture homePieceOfFurniture;
-		public HomePieceOfFurnitureTableRow(Context context, HomePieceOfFurniture homePieceOfFurniture)
-		{
+		public HomePieceOfFurnitureTableRow(Context context, HomePieceOfFurniture homePieceOfFurniture) {
 			super(context);
 			this.homePieceOfFurniture = homePieceOfFurniture;
 		}
 	}
 
-	private class VisibilityCheckBox extends CheckBox
-	{
+	private class VisibilityCheckBox extends CheckBox {
 		public HomePieceOfFurniture piece;
-		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece)
-		{
+		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece) {
 			super(context);
 			this.piece = piece;
 			setChecked(piece.isVisible());
@@ -374,18 +349,15 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	}
 
 	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser)
-	{
+	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		// this gets called heaps of time, wait until we have an activity
-		if(isVisibleToUser && getActivity() != null)
-		{
+		if(isVisibleToUser && getActivity() != null) {
 			//PJ cut out as it provides almost no infomation at all now, add back when table is functional
 			//JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
 		}
 
-		if(isVisibleToUser && getView()!= null)
-		{
+		if(isVisibleToUser && getView()!= null) {
 			// As furniture properties values change may alter sort order and filter, update the whole table
 			((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
 			// Update selected rows
@@ -468,8 +440,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			boolean isSelected = !parentTableRow.isSelected();
 			parentTableRow.setSelected(isSelected);
 			parentTableRow.setBackgroundColor(isSelected ? Color.CYAN : Color.WHITE);
-			for (int j = 0; j < parentTableRow.getChildCount(); j++)
-			{
+			for (int j = 0; j < parentTableRow.getChildCount(); j++) {
 				View cv = parentTableRow.getChildAt(j);
 				cv.setBackgroundColor(isSelected ? Color.CYAN : Color.WHITE);
 			}
@@ -477,21 +448,16 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			// Build the list of selected furniture
 			List<HomePieceOfFurniture> selectedFurniture = new ArrayList<HomePieceOfFurniture>();
 			List<HomePieceOfFurniture> ignoredGroupsFurniture = new ArrayList<HomePieceOfFurniture>();
-			for(int i = 0; i < tableLayout.getChildCount(); i++)
-			{
+			for (int i = 0; i < tableLayout.getChildCount(); i++) {
 				View rowView = tableLayout.getChildAt(i);
-				if( rowView instanceof HomePieceOfFurnitureTableRow)
-				{
+				if (rowView instanceof HomePieceOfFurnitureTableRow) {
 					HomePieceOfFurnitureTableRow tr = (HomePieceOfFurnitureTableRow)rowView;
-					if (tr.isSelected())
-					{
+					if (tr.isSelected()) {
 						HomePieceOfFurniture piece = tr.homePieceOfFurniture;
-						if (!ignoredGroupsFurniture.contains(piece))
-						{
+						if (!ignoredGroupsFurniture.contains(piece)) {
 							// Add to selectedFurniture table model value that stores piece
 							selectedFurniture.add(piece);
-							if (piece instanceof HomeFurnitureGroup)
-							{
+							if (piece instanceof HomeFurnitureGroup) {
 								ignoredGroupsFurniture.addAll(((HomeFurnitureGroup) piece).getAllFurniture());
 							}
 						}
@@ -890,8 +856,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			} else {
 				//furnitureTable.repaint();
 				//furnitureTable.getTableHeader().repaint();
-				if(furnitureTable.getView() != null)
-				{
+				if (furnitureTable.getView() != null) {
 					furnitureTable.updateTable();
 					furnitureTable.getView().postInvalidate();
 				}

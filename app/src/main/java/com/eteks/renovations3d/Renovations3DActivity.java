@@ -1350,12 +1350,13 @@ public class Renovations3DActivity extends FragmentActivity {
 		//https://console.firebase.google.com/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/aa60d8ac?duration=2592000000&appVersions=192					// is caused by this
 		//http://stackoverflow.com/questions/7658725/android-java-lang-illegalargumentexception-invalid-payload-item-type
 
-
-		SpannableStringBuilder builder = new SpannableStringBuilder("* " + title);
-		builder.setSpan(new ImageSpan(context, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		menuItem.setTitle(builder);
-		menuItem.setTitleCondensed(title);
-		//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwise there 2 icons
+		if (menuItem != null) {
+			SpannableStringBuilder builder = new SpannableStringBuilder("* " + title);
+			builder.setSpan(new ImageSpan(context, iconId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			menuItem.setTitle(builder);
+			menuItem.setTitleCondensed(title);
+			//menuItem.setIcon(iconId);// sub menus do show this, so don't do this for sub menus! otherwise there 2 icons
+		}
 	}
 
 	@Override

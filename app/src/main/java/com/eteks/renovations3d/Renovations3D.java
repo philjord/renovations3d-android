@@ -331,15 +331,11 @@ public class Renovations3D extends HomeApplication {
 
 	//new singleton hand outerer
 	public HomeController getHomeController() {
-		if (homeController == null)
-			newHome();
 		return homeController;
 	}
 
 	//new singleton hand outerer
 	public Home getHome() {
-		if (home == null)
-			newHome();
 		return home;
 	}
 
