@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mindblowing.renovations3d.R;
+import com.mobfox.sdk.utils.Utils;
 
 import org.xml.sax.XMLReader;
 
@@ -233,6 +234,16 @@ public class JOptionPane
 				}
 				//Cancel is always allowed
 				dialog.setCancelable(options == YES_NO_CANCEL_OPTION || options == YES_NO_OPTION || options == OK_CANCEL_OPTION);
+
+				dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						if(root != null && root.getParent() != null)
+							((ViewGroup)root.getParent()).removeView(root);//oddly dismiss doesn't do this
+						dialogSemaphore.release();
+					}
+				});
+
 				if(!((Activity) context).isFinishing()) {
 					dialog.create().show();
 				}

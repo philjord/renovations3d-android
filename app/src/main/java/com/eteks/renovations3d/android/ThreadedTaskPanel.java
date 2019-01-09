@@ -158,7 +158,8 @@ public class ThreadedTaskPanel extends LinearLayout//extends JPanel
 		  final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		  builder.setTitle(dialogTitle);
 		  builder.setView(this);
-		  builder.setPositiveButton(this.preferences.getLocalizedString(
+		  // this dialofg is only used by home load and the cancel button does very little but break things
+		  /*builder.setPositiveButton(this.preferences.getLocalizedString(
 				  com.eteks.sweethome3d.android_props.ThreadedTaskPanel.class, "cancelButton.text"),
 				  new DialogInterface.OnClickListener() {
 					  @Override
@@ -172,7 +173,7 @@ public class ThreadedTaskPanel extends LinearLayout//extends JPanel
 									  controller.cancelTask();
 								  }
 								  break;
-						  }}});
+						  }}});*/
 		  builder.setCancelable(false);
 		  dialog = builder.create();
 
