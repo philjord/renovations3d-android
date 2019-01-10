@@ -570,9 +570,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		final ChangeListener changeListener = new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
 				MultipleLevelsPlanPanel.LevelLabel selectedComponent = levelSpinnerControl.getSelectedComponent();
-				HomeController homeController = ((Renovations3DActivity)getActivity()).getHomeController();
-				if(homeController != null) {
-					homeController.getPlanController().setSelectedLevel(selectedComponent.getLevel());
+				//also checks for nullness in the umexpected case of a null activity
+				if (getActivity() instanceof Renovations3DActivity) {
+					HomeController homeController = ((Renovations3DActivity) getActivity()).getHomeController();
+					if (homeController != null) {
+						homeController.getPlanController().setSelectedLevel(selectedComponent.getLevel());
+					}
 				}
 			}
 		};
