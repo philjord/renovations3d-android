@@ -691,9 +691,12 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 							throw new UnsupportedOperationException();
 						}
 					};
-					photoRenderer.render(image, camera, io);
+					try {
+						photoRenderer.render(image, camera, io);
+					} catch (ClassCastException e) {
+						//sometimes ImageComponent2D.getRenderedImage throws a ClassCastException
+					}
 					photoRenderer.dispose();
-
 				}
 			}
 			else
