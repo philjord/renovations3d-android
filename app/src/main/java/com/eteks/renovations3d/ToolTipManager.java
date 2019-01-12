@@ -1,5 +1,6 @@
 package com.eteks.renovations3d;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.Gravity;
@@ -41,14 +42,16 @@ public class ToolTipManager {
 			@Override
 			public void onClick(View view) {
 				isDismissing = false;
-				popupWindow.dismiss();
+				if (popupWindow != null & popupWindow.isShowing() && !((Activity) ToolTipManager.this.context).isFinishing() )
+					popupWindow.dismiss();
 			}
 		});
 		dismissTask = new Runnable() {
 			@Override
 			public void run() {
 				isDismissing = false;
-				popupWindow.dismiss();
+				if (popupWindow != null & popupWindow.isShowing() && !((Activity) ToolTipManager.this.context).isFinishing() )
+					popupWindow.dismiss();
 			}
 		};
 	}
