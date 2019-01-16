@@ -3,8 +3,8 @@
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="6030"
-    android:versionName="6.030">
+    android:versionCode="6021"
+    android:versionName="6.021">
 
     <supports-screens
         android:anyDensity="true"
