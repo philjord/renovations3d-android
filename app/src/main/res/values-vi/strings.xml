@@ -114,5 +114,6 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="menu_privacy">Riêng tư</string>
     <string name="yes">Vâng</string>
     <string name="no">Không</string>
+    <string name="showPlanZoomButtons">Hiển thị các nút thu phóng kế hoạch</string>
 
 </resources>

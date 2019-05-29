@@ -249,12 +249,12 @@
                 android:layout_height="wrap_content"
                 />
         </TableRow>
-</TableLayout>
-            <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
+    </TableLayout>
+    <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
         <Button
             android:id="@+id/prefs_resetTipsButton"
             android:text="resetTips"
@@ -267,13 +267,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"/>
-    </TableLayout>
-        <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
-        <Button
-            android:id="@+id/prefs_closeButton"
-            android:text="Close"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/prefs_showPlanZoomButtons"
+            android:text="prefs_showPlanZoomButtons"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"/>
+            android:layout_gravity="center_vertical"/>
+    </TableLayout>
+    <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
+    <Button
+        android:id="@+id/prefs_closeButton"
+        android:text="Close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"/>
 </LinearLayout>
 </ScrollView>

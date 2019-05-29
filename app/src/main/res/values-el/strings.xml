@@ -115,4 +115,5 @@
     <string name="menu_privacy">Μυστικότητα</string>
     <string name="yes">Ναί</string>
     <string name="no">Οχι</string>
+    <string name="showPlanZoomButtons">Εμφάνιση κουμπιών μεγέθυνσης σχεδίου</string>
 </resources>

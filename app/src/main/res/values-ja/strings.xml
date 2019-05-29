@@ -113,5 +113,6 @@
     <string name="menu_privacy">プライバシー</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
+    <string name="showPlanZoomButtons">プランズームボタンを表示</string>
 
 </resources>

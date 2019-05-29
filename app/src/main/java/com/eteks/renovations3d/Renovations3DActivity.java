@@ -95,8 +95,10 @@ public class Renovations3DActivity extends FragmentActivity {
 	public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
+	public static final String SHOW_PLAN_ZOOM_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
 
 	public static boolean SHOW_PAGER_BUTTONS = true;
+	public static boolean SHOW_PLAN_ZOOM_BUTTONS = false;
 
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";

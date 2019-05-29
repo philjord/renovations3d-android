@@ -128,6 +128,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JButton          resetDisplayedActionTipsButton;
 
 	private JCheckBox        showPagerButtons;
+	private JCheckBox        showPlanZoomButtons;
 	private String           dialogTitle;
 
   /**
@@ -145,8 +146,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
   /**
    * Creates and initializes components and spinners model.
    */
-  private void createComponents(UserPreferences preferences,
-                                final UserPreferencesController controller) {
+  private void createComponents(final UserPreferences preferences,
+																final UserPreferencesController controller) {
 		if (controller.isPropertyEditable(UserPreferencesController.Property.LANGUAGE)) {
 			// Create language label and combo box bound to controller LANGUAGE property
 			this.languageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
@@ -818,7 +819,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
     	});
 
 	  //PJ----------------------------new refs for Renovations, using the local prefs storage system
-	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, true);
+	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, Renovations3DActivity.SHOW_PAGER_BUTTONS);
 
 	  this.showPagerButtons = new JCheckBox(activity, getContext().getString(R.string.showPagerButtons), SHOW_PAGER_BUTTONS_PREF);
 	  this.showPagerButtons.addChangeListener(new ChangeListener() {
@@ -827,8 +828,22 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			  editor.putBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, showPagerButtons.isSelected());
 			  editor.apply();
 			  Renovations3DActivity.SHOW_PAGER_BUTTONS = showPagerButtons.isSelected();
+				preferences.firePropertyChange(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, !Renovations3DActivity.SHOW_PAGER_BUTTONS, Renovations3DActivity.SHOW_PAGER_BUTTONS);
 		  }
 	  });
+
+		boolean SHOW_PLAN_ZOOM_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS_PREF, Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS);
+
+		this.showPlanZoomButtons = new JCheckBox(activity, getContext().getString(R.string.showPlanZoomButtons), SHOW_PLAN_ZOOM_BUTTONS_PREF);
+		this.showPlanZoomButtons.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putBoolean(Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS_PREF, showPlanZoomButtons.isSelected());
+				editor.apply();
+				Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS = showPlanZoomButtons.isSelected();
+				preferences.firePropertyChange(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, !Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS, Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS);
+			}
+		});
 
 	  this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "preferences.title");
   }
@@ -1148,6 +1163,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		}
 
 		swapOut(this.showPagerButtons, R.id.prefs_showPagerButtons);
+		swapOut(this.showPlanZoomButtons, R.id.prefs_showPlanZoomButtons);
 
 		this.setTitle(dialogTitle);
 		swapOut(closeButton, R.id.prefs_closeButton);

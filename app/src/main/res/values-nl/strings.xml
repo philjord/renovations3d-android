@@ -113,5 +113,6 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="menu_privacy">Privacy</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+    <string name="showPlanZoomButtons">Toon zoomknoppen van het plan</string>
 
 </resources>

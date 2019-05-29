@@ -113,5 +113,6 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="menu_privacy">Magánélet</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
+    <string name="showPlanZoomButtons">Mutassa a terv nagyítási gombjait</string>
 
 </resources>

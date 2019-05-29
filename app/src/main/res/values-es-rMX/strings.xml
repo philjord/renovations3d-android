@@ -115,5 +115,6 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="menu_privacy">Intimidad</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="showPlanZoomButtons">Mostrar los botones de zoom del plan</string>
 
 </resources>

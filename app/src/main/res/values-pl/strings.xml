@@ -114,5 +114,6 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="menu_privacy">Prywatność</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="showPlanZoomButtons">Pokaż przyciski powiększenia planu</string>
 
 </resources>

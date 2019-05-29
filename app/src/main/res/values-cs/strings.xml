@@ -116,5 +116,6 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="menu_privacy">Soukromí</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="showPlanZoomButtons">Zobrazit tlačítka Zvětšení plánu</string>
 
 </resources>

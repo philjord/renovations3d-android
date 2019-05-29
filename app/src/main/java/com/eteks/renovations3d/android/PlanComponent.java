@@ -1568,8 +1568,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
 				//((JViewport)getParent()).setViewPosition(new Point());
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
-
+				System.out.println("mouseX " +mouseX );
 				float modelDiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
+				System.out.println("modelDiffX " + modelDiffX + " newScale " + newScale + " 1 " +mouseX + " 2 "+ convertXPixelToModel((int)detector.getFocusX()));
 				moveScrolledX(modelDiffX * newScale);
 
 				float modelDiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
@@ -1599,6 +1600,12 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(scale));
 			}
 		}
+	}
+
+	public void moveScrolledXY(float xdiff, float ydiff)
+	{
+		moveScrolledX(xdiff);
+		moveScrolledY(ydiff);
 	}
 
 	protected void scrollRectToVisible(Rectangle shapePixelBounds) {

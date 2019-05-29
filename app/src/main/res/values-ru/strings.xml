@@ -114,5 +114,6 @@
     <string name="menu_privacy">Конфиденциальность</string>
     <string name="yes">да</string>
     <string name="no">нет</string>
+    <string name="showPlanZoomButtons">Показать план масштабирования кнопки</string>
 
 </resources>

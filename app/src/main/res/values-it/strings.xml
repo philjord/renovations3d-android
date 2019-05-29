@@ -121,6 +121,7 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="menu_privacy">vita privata</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="showPlanZoomButtons">Mostra i pulsanti di zoom del piano</string>
 
 
 </resources>

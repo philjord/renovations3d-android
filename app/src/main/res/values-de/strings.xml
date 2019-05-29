@@ -114,5 +114,6 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="menu_privacy">Privatsphäre</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="showPlanZoomButtons">Schaltflächen zum Zoomen des Plans anzeigen</string>
 
 </resources>

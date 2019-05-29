@@ -115,5 +115,6 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="menu_privacy">Integritet</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="showPlanZoomButtons">Visa planzoomknappar</string>
 
 </resources>

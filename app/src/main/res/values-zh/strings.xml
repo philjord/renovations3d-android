@@ -113,5 +113,6 @@
     <string name="menu_privacy">隐私</string>
     <string name="yes">是</string>
     <string name="no">没有</string>
+    <string name="showPlanZoomButtons">显示计划缩放按钮</string>
 
 </resources>

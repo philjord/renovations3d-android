@@ -116,5 +116,6 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="menu_privacy">Privacidade</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="showPlanZoomButtons">Mostrar botões de zoom do plano</string>
 
 </resources>

@@ -72,7 +72,9 @@ import java.util.Properties;
 
 import javaawt.Graphics;
 import javaawt.Graphics2D;
+import javaawt.Insets;
 import javaawt.geom.AffineTransform;
+import javaawt.geom.Rectangle2D;
 import javaawt.print.PageFormat;
 import javaawt.print.PrinterException;
 
@@ -133,6 +135,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			}
 
 
+
 			// make the left and right swipers work
 			ImageButton planLeftSwiper = (ImageButton) rootView.findViewById(R.id.planLeftSwiper);
 			planLeftSwiper.setOnClickListener(new View.OnClickListener() {
@@ -149,8 +152,47 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				}
 			});
 
+			// make the zoom buttons zoom at center
+			ImageButton planZoomIn = (ImageButton) rootView.findViewById(R.id.planZoomIn);
+			planZoomIn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					zoomAtCenter(1.5f);
+				}
+			});
+
+			ImageButton planZoomOut = (ImageButton) rootView.findViewById(R.id.planZoomOut);
+			planZoomOut.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					zoomAtCenter(1.0f / 1.5f);
+				}
+			});
+
 		}
 		return rootView;
+	}
+
+	private void zoomAtCenter(float scaleChangeFactor) {
+		// keep the center central
+		float centerX = planComponent.getWidth()/2.0f; //TODO: what's center??
+		float centerY = planComponent.getHeight()/2.0f;
+		float priorCenterX = convertXPixelToModel((int)centerX);
+		float priorCenterY = convertYPixelToModel((int)centerY);
+
+		float newScale = getScale() * scaleChangeFactor;
+		// Don't let the object get too small or too large.
+		newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
+		//controller.zoom(newScale); //don't want the mouse move calls
+		newScale = Math.max(planController.getMinimumScale(), Math.min(newScale, planController.getMaximumScale()));
+		if(newScale != getScale()) {
+			planController.getView().setScale(newScale);
+			home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(newScale));
+		}
+
+		float modelDiffX = priorCenterX - convertXPixelToModel((int)centerX);
+		float modelDiffY = priorCenterY - convertYPixelToModel((int)centerY);
+		planComponent.moveScrolledXY(modelDiffX * newScale,modelDiffY * newScale);
 	}
 
 	@Override
@@ -173,6 +215,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				} else {
 					rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
 					rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
+				}
+				if (Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS) {
+					rootView.findViewById(R.id.planZoomIn).setVisibility(View.VISIBLE);
+					rootView.findViewById(R.id.planZoomOut).setVisibility(View.VISIBLE);
+				} else {
+					rootView.findViewById(R.id.planZoomIn).setVisibility(View.INVISIBLE);
+					rootView.findViewById(R.id.planZoomOut).setVisibility(View.INVISIBLE);
 				}
 			}
 
@@ -840,6 +889,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
 				new LanguageChangeListener(this));
+
+		preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
+				if (rootView != null) {
+					if (Renovations3DActivity.SHOW_PAGER_BUTTONS) {
+						rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.VISIBLE);
+						rootView.findViewById(R.id.planRightSwiper).setVisibility(View.VISIBLE);
+					} else {
+						rootView.findViewById(R.id.planLeftSwiper).setVisibility(View.INVISIBLE);
+						rootView.findViewById(R.id.planRightSwiper).setVisibility(View.INVISIBLE);
+					}
+					if (Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS) {
+						rootView.findViewById(R.id.planZoomIn).setVisibility(View.VISIBLE);
+						rootView.findViewById(R.id.planZoomOut).setVisibility(View.VISIBLE);
+					} else {
+						rootView.findViewById(R.id.planZoomIn).setVisibility(View.INVISIBLE);
+						rootView.findViewById(R.id.planZoomOut).setVisibility(View.INVISIBLE);
+					}
+				}
+			}
+		});
+
 
 		// auto reset for label creates
 		home.addLabelsListener(new CollectionListener<Label>() {

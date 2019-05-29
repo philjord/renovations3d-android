@@ -113,5 +113,6 @@
     <string name="menu_privacy">поверителност</string>
     <string name="yes">да</string>
     <string name="no">Не</string>
+    <string name="showPlanZoomButtons">Показване на бутоните за мащабиране по план</string>
 
 </resources>

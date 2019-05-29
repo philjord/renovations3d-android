@@ -113,5 +113,6 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="menu_privacy">Intimité</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="showPlanZoomButtons">Afficher les boutons de zoom du plan</string>
 
 </resources>
