@@ -95,7 +95,7 @@ public class Renovations3DActivity extends FragmentActivity {
 	public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
-	public static final String SHOW_PLAN_ZOOM_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
+	public static final String SHOW_PLAN_ZOOM_BUTTONS_PREF = "SHOW_PLAN_ZOOM_BUTTONS_PREF";
 
 	public static boolean SHOW_PAGER_BUTTONS = true;
 	public static boolean SHOW_PLAN_ZOOM_BUTTONS = false;
@@ -345,6 +345,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SHOW_PAGER_BUTTONS = settings.getBoolean(SHOW_PAGER_BUTTONS_PREF, true);
+		SHOW_PLAN_ZOOM_BUTTONS = settings.getBoolean(SHOW_PLAN_ZOOM_BUTTONS_PREF, false);
 
 		// If we were given locations permission at some point then use it here now for ads, but don't ask for it (the compass does that)
 		if (Build.VERSION.SDK_INT >= M) {
