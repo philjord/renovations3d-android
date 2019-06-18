@@ -1127,7 +1127,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			addMouseListeners(controller, this.canvas3D);
 			if (preferences != null) {
 				this.navigationPanel = createNavigationPanel(this.home, preferences, controller);
-				setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible());
+				// set in user visible hint
+				//setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible());
 				preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,
 								new NavigationPanelChangeListener(this));
 			}
