@@ -7,13 +7,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
-import com.eteks.renovations3d.android.utils.AndroidDialogView;
+
 import com.mindblowing.renovations3d.R;
 
-public class ToolTipManager {
+public class NavigationPanel {
 	private Context context;
 	private PopupWindow popupWindow;
 	private View popupView;
@@ -21,51 +23,36 @@ public class ToolTipManager {
 	private int mCurrentY = 75;
 	private View parent;
 
-	private boolean isDismissing = false;
 	private Handler handler = new Handler();
-	private Runnable dismissTask;
 
-	public ToolTipManager(Context context, View parent) {
+	public NavigationPanel(Context context, View parent) {
 		this.context = context;
 		this.parent = parent;
 		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		popupView = layoutInflater.inflate(R.layout.tooltippopup, null);
+		popupView = layoutInflater.inflate(R.layout.navigationpanelpopup, null);
 
 		// convert to pixel for the location
 		mCurrentX = (int)(mCurrentX * context.getResources().getDisplayMetrics().density);
 		mCurrentY = (int)(mCurrentY * context.getResources().getDisplayMetrics().density);
 
 		popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		View btnClose = popupView.findViewById(R.id.btnClose);
 
-		btnClose.setOnClickListener(new View.OnClickListener() {
+		/*View navPanelLeftButton = popupView.findViewById(R.id.navPanelLeftButton);
+		navPanelLeftButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				isDismissing = false;
-				if (popupWindow != null & popupWindow.isShowing() && !((Activity) ToolTipManager.this.context).isFinishing() )
+				if (popupWindow != null & popupWindow.isShowing() && !((Activity) NavigationPanel.this.context).isFinishing() ) {
 					popupWindow.dismiss();
+				}
 			}
-		});
-		dismissTask = new Runnable() {
-			@Override
-			public void run() {
-				isDismissing = false;
-				if (popupWindow != null & popupWindow.isShowing() && !((Activity) ToolTipManager.this.context).isFinishing() )
-					popupWindow.dismiss();
-			}
-		};
+		});*/
 	}
 
-	public void showTooltip(View toolTipComponent)
+	public void showTooltip()
 	{
-		View placeHolder = popupView.findViewById(R.id.toolTipTextView);
-		toolTipComponent.setLayoutParams(placeHolder.getLayoutParams());
-		toolTipComponent.setId(R.id.toolTipTextView);
-		AndroidDialogView.replaceView(placeHolder, toolTipComponent);
-
 		popupWindow.showAtLocation(parent, Gravity.NO_GRAVITY, mCurrentX, mCurrentY);
-		isDismissing = false;
 
+		// add a listener for drags that aren't caught by other buttons
 		popupView.setOnTouchListener(new View.OnTouchListener() {
 			private float mDx;
 			private float mDy;
@@ -82,19 +69,37 @@ public class ToolTipManager {
 					mCurrentY = (int) (event.getRawY() + mDy);
 					popupWindow.update(mCurrentX, mCurrentY, -1, -1);
 				}
-				if(isDismissing) {
-					// reset the timer
-					handler.removeCallbacks(dismissTask);
-					handler.postDelayed(dismissTask, 4000);
-				}
 				return true;
 			}
 		});
 	}
 
 	public void hideTooltip() {
-		// delay so the user can move it around if they wish
-		isDismissing = true;
-		handler.postDelayed(dismissTask, 500);
+		if (popupWindow != null & popupWindow.isShowing() && !((Activity) NavigationPanel.this.context).isFinishing() )
+			popupWindow.dismiss();
+	}
+
+	public View getLeftButton() {
+		return popupView.findViewById(R.id.navPanelLeftButton);
+	}
+
+	public View getForwardButton() {
+		return popupView.findViewById(R.id.navPanelForwardButton);
+	}
+
+	public View getRightButton() {
+		return popupView.findViewById(R.id.navPanelRightButton);
+	}
+
+	public View getBackButton() {
+		return popupView.findViewById(R.id.navPanelBackButton);
+	}
+
+	public View getUpButton() {
+		return popupView.findViewById(R.id.navPanelUpButton);
+	}
+
+	public View getDownButton() {
+		return popupView.findViewById(R.id.navPanelDownButton);
 	}
 }

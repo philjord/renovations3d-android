@@ -28,12 +28,14 @@ import android.graphics.Canvas;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.security.AccessControlException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JButton;
 import com.mindblowing.swingish.JCheckBox;
@@ -88,8 +91,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	//private JLabel           furnitureCatalogViewLabel;
 	//private JRadioButton     treeRadioButton;
 	//private JRadioButton     listRadioButton;
-	//private JLabel           navigationPanelLabel;
-	//private JCheckBox        navigationPanelCheckBox;
+	private JLabel           navigationPanelLabel;
+	private JCheckBox        navigationPanelCheckBox;
 	private JLabel           aerialViewCenteredOnSelectionLabel;
 	private JCheckBox        aerialViewCenteredOnSelectionCheckBox;
   private JLabel           observerCameraSelectedAtChangeLabel;
@@ -368,20 +371,20 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
           });
     }*/
 
-/*    boolean no3D;
-    try {
+    boolean no3D = false;
+    /*try {
       no3D = Boolean.getBoolean("com.eteks.sweethome3d.no3D");
     } catch (AccessControlException ex) {
       // If com.eteks.sweethome3d.no3D property can't be read, 
       // security manager won't allow to access to Java 3D DLLs required by 3D view too
       no3D = true;
-    }
+    }*/
     if (controller.isPropertyEditable(UserPreferencesController.Property.NAVIGATION_PANEL_VISIBLE)
         && !no3D) {
       // Create navigation panel label and check box bound to controller NAVIGATION_PANEL_VISIBLE property
-      this.navigationPanelLabel = new TextView(activity);navigationPanelLabel.setText(preferences.getLocalizedString(
+      this.navigationPanelLabel = new JLabel(activity, preferences.getLocalizedString(
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "navigationPanelLabel.text"));
-      this.navigationPanelCheckBox = new CheckBox(activity);navigationPanelCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
+      this.navigationPanelCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
           com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "navigationPanelCheckBox.text"));
       if (!OperatingSystem.isMacOSX()
           || OperatingSystem.isMacOSXLeopardOrSuperior()) {
@@ -401,7 +404,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
         // No support for navigation panel under Mac OS X Tiger (too unstable)
         this.navigationPanelCheckBox.setEnabled(false);
       }
-    }*/
+    }
 
 		if (controller.isPropertyEditable(UserPreferencesController.Property.AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED)) {
 			// Create aerialViewCenteredOnSelection label and check box bound to controller AERIAL_VIEW_CENTERED_ON_SELECTION_ENABLED property
@@ -828,7 +831,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			  editor.putBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, showPagerButtons.isSelected());
 			  editor.apply();
 			  Renovations3DActivity.SHOW_PAGER_BUTTONS = showPagerButtons.isSelected();
-				preferences.firePropertyChange(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, !Renovations3DActivity.SHOW_PAGER_BUTTONS, Renovations3DActivity.SHOW_PAGER_BUTTONS);
+				preferences.firePropertyChange(UserPreferences.Property.UPDATES_MINIMUM_DATE, !Renovations3DActivity.SHOW_PAGER_BUTTONS, Renovations3DActivity.SHOW_PAGER_BUTTONS);
 		  }
 	  });
 
@@ -841,7 +844,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 				editor.putBoolean(Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS_PREF, showPlanZoomButtons.isSelected());
 				editor.apply();
 				Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS = showPlanZoomButtons.isSelected();
-				preferences.firePropertyChange(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, !Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS, Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS);
+				preferences.firePropertyChange(UserPreferences.Property.UPDATES_MINIMUM_DATE, !Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS, Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS);
 			}
 		});
 
@@ -1023,11 +1026,14 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		  rootView.addView(this.treeRadioButton, labelInsets);
 		  rootView.addView(this.listRadioButton, rightComponentInsets);
 		}*/
-	   /* if (this.navigationPanelLabel != null) {
+		if (this.navigationPanelLabel != null) {
 	   	// Sixth row
-		  rootView.addView(this.navigationPanelLabel, labelInsets);
-		  rootView.addView(this.navigationPanelCheckBox, rightComponentInsets);
-		}*/
+			swapOut(this.navigationPanelLabel, R.id.prefs_navigationPanelLabel);
+			swapOut(this.navigationPanelCheckBox, R.id.prefs_navigationPanelCheckBox);
+		} else {
+			removeView(R.id.prefs_aerialViewCenteredOnSelectionLabel);
+			removeView(R.id.prefs_aerialViewCenteredOnSelectionCheckBox);
+		}
 		if (this.aerialViewCenteredOnSelectionLabel != null) {
 			// Seventh row
 			swapOut(this.aerialViewCenteredOnSelectionLabel, R.id.prefs_aerialViewCenteredOnSelectionLabel);

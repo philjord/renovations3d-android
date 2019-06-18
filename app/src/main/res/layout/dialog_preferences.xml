@@ -80,6 +80,22 @@
         </TableRow>
         <TableRow>
             <TextView
+                android:id="@+id/prefs_navigationPanelLabel"
+                android:text="navigationPanelLabel"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                />
+            <CheckBox
+                android:id="@+id/prefs_navigationPanelCheckBox"
+                android:text="navigationPanelCheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
                 android:id="@+id/prefs_aerialViewCenteredOnSelectionLabel"
                 android:text="aerialViewCenteredOnSelectionLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"

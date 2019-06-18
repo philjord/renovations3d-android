@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,18 +35,27 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.NavigationPanel;
 import com.eteks.renovations3d.Renovations3DActivity;
+import com.eteks.renovations3d.ToolTipManager;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
 import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
 import com.eteks.sweethome3d.model.Elevatable;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
+import com.google.firebase.components.Component;
+import com.jogamp.newt.event.MouseAdapter;
+import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.GLException;
+import com.mindblowing.swingish.ActionListener;
 import com.mindblowing.swingish.ChangeListener;
+import com.mindblowing.swingish.JButton;
+import com.mindblowing.swingish.JComponent;
 import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.j3d.utils.InfoText3D;
 import com.mindblowing.j3d.utils.JoglStatusActivity;
@@ -89,6 +99,8 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.mindblowing.renovations3d.BuildConfig;
 import com.mindblowing.renovations3d.R;
+import com.mindblowing.swingish.JPanel;
+import com.mindblowing.swingish.JToolTip;
 
 import org.jogamp.java3d.Alpha;
 import org.jogamp.java3d.AmbientLight;
@@ -133,6 +145,7 @@ import org.jogamp.vecmath.Vector4f;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -144,6 +157,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -151,12 +166,16 @@ import java.util.concurrent.TimeUnit;
 
 import javaawt.Color;
 import javaawt.EventQueue;
+import javaawt.Graphics;
+import javaawt.Graphics2D;
 import javaawt.GraphicsConfiguration;
+import javaawt.RenderingHints;
 import javaawt.geom.Area;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.PathIterator;
 import javaawt.geom.Rectangle2D;
 import javaawt.image.BufferedImage;
+import javaxswing.ImageIcon;
 import jogamp.newt.WindowImpl;
 import jogamp.newt.driver.android.NewtBaseFragment;
 import jogamp.newt.driver.android.WindowDriver;
@@ -184,6 +203,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private AndyFPSCounter fpsCounter;
 	private InfoText3D onscreenInfo;// not used currently
+
+	private NavigationPanel navigationPanel;
 
 	private HomeComponent3DMouseHandler homeComponent3DMouseHandler;
 	private ScaleGestureDetector mScaleDetector;
@@ -509,8 +530,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		// tell walls to update now
 		if (isVisibleToUser && wallChangeListener != null) {
 			wallChangeListener.propertyChange(new PropertyChangeEvent(this, RUN_UPDATES, null, null));
-
-
 		}
 
 		if(isVisibleToUser && getContext() != null) {
@@ -520,6 +539,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.VIEW_SHOWN_3D);
 		}
 
+		if( navigationPanel != null) {
+			setNavigationPanelVisible(isVisibleToUser);
+		}
+
 		if (canvas3D != null) {
 			if (isVisibleToUser) {
 				canvas3D.startRenderer();
@@ -527,6 +550,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				canvas3D.stopRenderer();
 			}
 		}
+
+
 
 		super.setUserVisibleHint(isVisibleToUser);
 	}
@@ -1100,7 +1125,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//replaced with canvas3D.addNotify() but also moved into gl_window display call for life cycle clarity
 		if (controller != null)	{
 			addMouseListeners(controller, this.canvas3D);
-
+			if (preferences != null) {
+				this.navigationPanel = createNavigationPanel(this.home, preferences, controller);
+				setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible());
+				preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,
+								new NavigationPanelChangeListener(this));
+			}
 			//createActions(controller);
 			//installKeyboardActions();
 			// Let this component manage focus
@@ -1124,17 +1154,113 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 	}*/
 
- 	// Comments left in to facilitate code comparision
+
 	/**
 	 * Preferences property listener bound to this component with a weak reference to avoid
 	 * strong link between preferences and this component.
 	 */
+	private static class NavigationPanelChangeListener implements PropertyChangeListener {
+		private final WeakReference<HomeComponent3D> homeComponent3D;
+
+		public NavigationPanelChangeListener(HomeComponent3D homeComponent3D) {
+			this.homeComponent3D = new WeakReference<HomeComponent3D>(homeComponent3D);
+		}
+
+		public void propertyChange(PropertyChangeEvent ev) {
+			// If home pane was garbage collected, remove this listener from preferences
+			HomeComponent3D homeComponent3D = this.homeComponent3D.get();
+			if (homeComponent3D == null) {
+				((UserPreferences)ev.getSource()).removePropertyChangeListener(
+								UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, this);
+			} else {
+				homeComponent3D.setNavigationPanelVisible((Boolean) ev.getNewValue() && homeComponent3D.isVisible());
+			}
+		}
+	}
+
+	/**
+	 * Returns the component displayed as navigation panel by this 3D view.
+	 */
+  private NavigationPanel createNavigationPanel(Home home,
+																					 UserPreferences preferences,
+																					 HomeController3D controller) {
+
+		NavigationPanel navigationPanel = new NavigationPanel(getContext(), getView());
+		new NavigationButton(0, -(float) Math.PI / 36, 0, "TURN_LEFT", preferences, controller, navigationPanel.getLeftButton());
+		new NavigationButton(12.5f, 0, 0, "GO_FORWARD", preferences, controller, navigationPanel.getForwardButton());
+		new NavigationButton(0, (float) Math.PI / 36, 0, "TURN_RIGHT", preferences, controller, navigationPanel.getRightButton());
+		new NavigationButton(-12.5f, 0, 0, "GO_BACKWARD", preferences, controller, navigationPanel.getBackButton());
+		new NavigationButton(0, 0, -(float) Math.PI / 100, "TURN_UP", preferences, controller, navigationPanel.getUpButton());
+		new NavigationButton(0, 0, (float) Math.PI / 100, "TURN_DOWN", preferences, controller, navigationPanel.getDownButton());
+		return navigationPanel;
+	}
+
+  /**
+   * An icon button that changes camera location and angles when pressed.
+   */
+  private static class NavigationButton  {
+    private boolean shiftDown;
+
+    public NavigationButton(final float moveDelta,
+                            final float yawDelta,
+                            final float pitchDelta,
+                            String actionName,
+                            UserPreferences preferences,
+                            final HomeController3D controller,
+														android.view.View button) {
+
+
+			button.setOnKeyListener(new android.view.View.OnKeyListener() {
+					@Override
+					public boolean onKey(android.view.View v, int keyCode, KeyEvent event) {
+						if(event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+							shiftDown = event.getAction() == KeyEvent.ACTION_DOWN;
+						}
+						return false;
+					}
+				});
+      // Update camera when button is armed
+			button.setOnTouchListener(new android.view.View.OnTouchListener() {
+				// Create a timer that will update camera angles and location
+				Timer timer;
+				@Override
+				public boolean onTouch(android.view.View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+							if(timer != null){
+								timer.cancel();
+							}
+							timer = new Timer("",true);
+              timer.schedule(new TimerTask() {
+								@Override
+								public void run() {
+									controller.moveCamera(shiftDown ? moveDelta : moveDelta / 5);
+									controller.rotateCameraYaw(shiftDown ? yawDelta : yawDelta / 5);
+									controller.rotateCameraPitch(pitchDelta);
+								}
+							},50, 50 );
+            } else if (event.getAction() == MotionEvent.ACTION_UP && timer != null) {
+              timer.cancel();
+            }
+						return true;
+          }
+
+        });
+    }
+  }
 
 	/**
 	 * Sets the component that will be drawn upon the heavyweight 3D component shown by this component.
 	 * Mouse events will targeted to the navigation panel when needed.
 	 * Supports transparent components.
 	 */
+  private void setNavigationPanelVisible(boolean visible) {
+    if (this.navigationPanel != null) {
+			if(preferences.isNavigationPanelVisible() && visible)
+				navigationPanel.showTooltip();
+			else
+				navigationPanel.hideTooltip();
+    }
+  }
 
 	/**
 	 * Updates the image of the components that may overlap canvas 3D
@@ -1873,6 +1999,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		@Override
 		public boolean onTouch(android.view.View v, MotionEvent ev) {
+
+
+
+
 			// Let the ScaleGestureDetector inspect all events, it will do move camera if it likes
 			if(mScaleDetector != null ) {
 				mScaleDetector.onTouchEvent(ev);

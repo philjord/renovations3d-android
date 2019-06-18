@@ -890,7 +890,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
 				new LanguageChangeListener(this));
 
-		preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,new PropertyChangeListener() {
+		preferences.addPropertyChangeListener(UserPreferences.Property.UPDATES_MINIMUM_DATE,new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent ev) {
 				if (rootView != null) {
 					if (Renovations3DActivity.SHOW_PAGER_BUTTONS) {
