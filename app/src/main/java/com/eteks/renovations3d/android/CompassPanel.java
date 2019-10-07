@@ -27,8 +27,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,7 +34,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -63,6 +60,7 @@ import com.eteks.sweethome3d.viewcontroller.DialogView;
 import com.mindblowing.renovations3d.R;
 
 
+import androidx.core.app.ActivityCompat;
 import javaawt.BasicStroke;
 import javaawt.Color;
 import javaawt.Graphics2D;
@@ -71,9 +69,6 @@ import javaawt.VMGraphics2D;
 import javaawt.geom.Ellipse2D;
 import javaawt.geom.GeneralPath;
 import javaawt.geom.Line2D;
-import me.drakeet.support.toast.ToastCompat;
-
-import static android.os.Build.VERSION_CODES.M;
 
 
 /**

@@ -6,12 +6,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import androidx.fragment.app.Fragment;
 import javaawt.Color;
 import javaawt.Font;
 import javaawt.Graphics;

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mindblowing.renovations3d.R;
-import com.mobfox.sdk.utils.Utils;
 
 import org.xml.sax.XMLReader;
 

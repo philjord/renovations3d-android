@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -83,6 +82,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import androidx.core.content.FileProvider;
 import javaawt.EventQueue;
 import javaawt.Graphics2D;
 import javaawt.Image;

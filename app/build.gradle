@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
         multiDexEnabled = true
         // SM-T210 didn't like this setting, presumably the proguard sorts this out
         //http://stackoverflow.com/questions/32723590/generate-maindexlist-multidex-for-maven/39771419#39771419
@@ -55,8 +55,7 @@ dependencies {
     implementation files('libs/sweethome3D-android.jar')
     implementation files('libs/sweethome3D-tools.jar')
     implementation files('libs/sunflow-0.07.3pj.jar')
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.0'
     // all firebase libs versions must match
     implementation 'com.google.firebase:firebase-ads:15.0.1'
@@ -67,8 +66,6 @@ dependencies {
     //implementation 'com.google.vr:sdk-audio:1.10.0'
     //implementation 'com.google.vr:sdk-base:1.10.0'
     implementation 'com.andkulikov:transitionseverywhere:1.7.4'
-    implementation 'com.github.mobfox:MobFox-Android-SDK-Core:3.2.7d'
-    implementation files('libs/MobFox-Android-AdMob-Adapter.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'me.drakeet.support:toastcompat:1.1.0' // fix bad token exception on sdk 25
 
