@@ -1843,108 +1843,29 @@ public class OBJLoader extends LoaderBase implements Loader {
 				}
 			}
 		} else if ("map_Kd".equals(tokenizer.sval)) {
-			// Read material texture map_Kd name
-			// Search last parameter that matches image file name
-			String imageFileName = null;
-			while (tokenizer.nextToken() != StreamTokenizer.TT_EOL) {
-				if (tokenizer.ttype == StreamTokenizer.TT_WORD) {
-					imageFileName = tokenizer.sval;
-				}
-			}
-
-			if (imageFileName != null) {
-				InputStream in = null;
-				try {
-					URL textureImageUrl = baseUrl != null
-						? new URL(baseUrl, imageFileName.replace("%", "%25").replace("#", "%23"))
-							: new File(imageFileName).toURI().toURL();
-					// Check texture image wasn't already loaded
-					Texture texture = null;
-					for (Appearance appearance : appearances.values()) {
-						Texture appearanceTexture = appearance.getTexture();
-						if (appearanceTexture != null
-							&& textureImageUrl.equals(appearanceTexture.getUserData())) {
-							currentAppearance.setTexture(appearanceTexture);
-							texture = appearanceTexture;
-						}
+			// Read material texture map_Kd -options args fileName
+			// Search image file in the last word or in all words that follow map_Kd to tolerate file names containing spaces
+			tokenizer.wordChars(' ', ' ');
+			int mapKdOptionsToken = tokenizer.nextToken();
+			tokenizer.whitespaceChars(' ', ' ');
+			if (mapKdOptionsToken == StreamTokenizer.TT_WORD) {
+				String mapKdOptionsString = tokenizer.sval.trim();
+				String [] mapKdOptions = mapKdOptionsString.split(" ");
+				if (mapKdOptions.length > 0) {
+					// First try to handle last word as image file name
+					Texture texture = readTexture(mapKdOptions [mapKdOptions.length - 1], appearances, baseUrl, useCaches);
+					if (texture == null
+									&& mapKdOptions.length > 1) {
+						// Even if not in format specifications, give a chance to file names with spaces ignoring other options
+						texture = readTexture(mapKdOptionsString, appearances, baseUrl, useCaches);
 					}
-					if (texture == null) {
-						in = openStream(textureImageUrl, useCaches);
-						BufferedImage textureImage = null;
-						try {
-							textureImage = ImageIO.read(in);
-						} catch (ConcurrentModificationException ex) {
-							// Try to read the image once more, 
-							// see unfixed Java bug http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6986863
-							in.close();
-							in = openStream(textureImageUrl, useCaches);
-							textureImage = ImageIO.read(in);
-						}
-
-						if (textureImage != null) {
-							//this part diverges from original, to allow NioImageBuffer use on older devices
-							Bitmap delegate = (Bitmap)textureImage.getDelegate();
-							// this field is only availible on older OS,(e.g.5.1.1)
-							try {
-								Field fieldmBuffer = delegate.getClass().getDeclaredField("mBuffer");
-								fieldmBuffer.setAccessible(true);
-								byte[] mBuffer = (byte[]) fieldmBuffer.get(delegate); //IllegalAccessException
-
-								if (mBuffer != null) {
-									int textureFormat = Texture.RGBA;
-									int imageComponentFormat = ImageComponent.FORMAT_RGBA;
-									boolean byRef = true;
-									boolean yUp = true;
-
-									int width = delegate.getWidth();
-									int height = delegate.getHeight();
-
-									ByteBuffer buffer = ByteBuffer.wrap(mBuffer).order(ByteOrder.nativeOrder());
-									NioImageBuffer nioImageBuffer = new NioImageBuffer(width, height, NioImageBuffer.ImageType.TYPE_4BYTE_RGBA, buffer);
-									// Create texture from image
-									ImageComponent2D scaledImageComponents = new ImageComponent2D(imageComponentFormat, nioImageBuffer, byRef, yUp);
-									texture = new Texture2D(Texture.BASE_LEVEL, textureFormat, width, height);
-									texture.setImage(0, scaledImageComponents);
-									texture.setMinFilter(Texture.NICEST);// will cause mip maps to be used if auto generation enabled on device
-									texture.setMagFilter(Texture.NICEST);
-									// Keep in user data the URL of the texture image
-									texture.setUserData(textureImageUrl);
-									currentAppearance.setTexture(texture);
-								}
-							} catch(NoSuchFieldException e){
-								//e.printStackTrace();
-							} catch(IllegalAccessException e){
-								//e.printStackTrace();
-							}
-
-							//If the mBuffer path isn't availible use a normal texture loader
-							if (texture == null) {
-								texture =  new TextureLoader(textureImage).getTexture();
-								// Keep in user data the URL of the texture image
-								texture.setUserData(textureImageUrl);
-								currentAppearance.setTexture(texture);
-							}
-						}
-					}
-				} catch (IOException ex) {
-					// Ignore images at other format
-				} catch (RuntimeException ex) {
-					// Take into account exceptions of Java 3D 1.5 ImageException class
-					// in such a way program can run in Java 3D 1.3.1
-					if (ex.getClass().getName().equals("com.sun.j3d.utils.image.ImageException")) {
-						// Ignore images not supported by TextureLoader
-					} else {
-						throw ex;
-					}
-				} finally {
-					if (in != null){
-						in.close();
+					if (texture != null) {
+						currentAppearance.setTexture(texture);
 					}
 				}
 			} else {
 				throw new IncorrectFormatException("Expected image file name at line " + tokenizer.lineno());
 			}
-			tokenizer.pushBack();
 		} else {
 			int token;
 			do {
@@ -1959,6 +1880,102 @@ public class OBJLoader extends LoaderBase implements Loader {
 		}
 
 		return currentAppearance;
+	}
+
+	/**
+	 * Returns the texture matching the image file in parameter.
+	 */
+	private static Texture readTexture(String imageFileName,
+																		 Map<String, Appearance> appearances,
+																		 URL baseUrl,
+																		 Boolean useCaches) throws IOException {
+		InputStream in = null;
+		try {
+			URL textureImageUrl = baseUrl != null
+							? new URL(baseUrl, imageFileName.replace("%", "%25").replace("#", "%23"))
+							: new File(imageFileName).toURI().toURL();
+			// Check texture image wasn't already loaded
+			for (Appearance appearance : appearances.values()) {
+				Texture appearanceTexture = appearance.getTexture();
+				if (appearanceTexture != null
+								&& textureImageUrl.equals(appearanceTexture.getUserData())) {
+					return appearanceTexture;
+				}
+			}
+
+			in = openStream(textureImageUrl, useCaches);
+			BufferedImage textureImage = null;
+			try {
+				textureImage = ImageIO.read(in);
+			} catch (ConcurrentModificationException ex) {
+				// Try to read the image once more,
+				// see unfixed Java bug http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6986863
+				in.close();
+				in = openStream(textureImageUrl, useCaches);
+				textureImage = ImageIO.read(in);
+			}
+
+			if (textureImage != null) {
+				//this part diverges from original, to allow NioImageBuffer use on older devices
+				Texture texture = null;
+				Bitmap delegate = (Bitmap)textureImage.getDelegate();
+				// this field is only availible on older OS,(e.g.5.1.1)
+				try {
+					Field fieldmBuffer = delegate.getClass().getDeclaredField("mBuffer");
+					fieldmBuffer.setAccessible(true);
+					byte[] mBuffer = (byte[]) fieldmBuffer.get(delegate); //IllegalAccessException
+
+					if (mBuffer != null) {
+						int textureFormat = Texture.RGBA;
+						int imageComponentFormat = ImageComponent.FORMAT_RGBA;
+						boolean byRef = true;
+						boolean yUp = true;
+
+						int width = delegate.getWidth();
+						int height = delegate.getHeight();
+
+						ByteBuffer buffer = ByteBuffer.wrap(mBuffer).order(ByteOrder.nativeOrder());
+						NioImageBuffer nioImageBuffer = new NioImageBuffer(width, height, NioImageBuffer.ImageType.TYPE_4BYTE_RGBA, buffer);
+						// Create texture from image
+						ImageComponent2D scaledImageComponents = new ImageComponent2D(imageComponentFormat, nioImageBuffer, byRef, yUp);
+						texture = new Texture2D(Texture.BASE_LEVEL, textureFormat, width, height);
+						texture.setImage(0, scaledImageComponents);
+						texture.setMinFilter(Texture.NICEST);// will cause mip maps to be used if auto generation enabled on device
+						texture.setMagFilter(Texture.NICEST);
+						// Keep in user data the URL of the texture image
+						texture.setUserData(textureImageUrl);
+						return texture;
+					}
+				} catch(NoSuchFieldException e){
+					//e.printStackTrace();
+				} catch(IllegalAccessException e){
+					//e.printStackTrace();
+				}
+
+				//If the mBuffer path isn't availible use a normal texture loader
+				if (texture == null) {
+					texture = new TextureLoader(textureImage).getTexture();
+					// Keep in user data the URL of the texture image
+					texture.setUserData(textureImageUrl);
+					return texture;
+				}
+			}
+		} catch (IOException ex) {
+			// Ignore images at other format
+		} catch (RuntimeException ex) {
+			// Take into account exceptions of Java 3D 1.5 ImageException class
+			// in such a way program can run in Java 3D 1.3.1
+			if (ex.getClass().getName().equals("com.sun.j3d.utils.image.ImageException")) {
+				// Ignore images not supported by TextureLoader
+			} else {
+				throw ex;
+			}
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -1333,12 +1333,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 		this.home.removeFurnitureListener(this.furnitureListener);
     for (HomePieceOfFurniture piece : this.home.getFurniture()) {
-			piece.removePropertyChangeListener(this.furnitureChangeListener);
-			if (piece instanceof HomeFurnitureGroup) {
-				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
-					childPiece.removePropertyChangeListener(this.furnitureChangeListener);
-				}
-			}
+			removePropertyChangeListener(piece, this.furnitureChangeListener);
 		}
 		this.home.removeRoomsListener(this.roomListener);
 		for (Room room : this.home.getRooms()) {
@@ -1497,14 +1492,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private void addCameraListeners(final View view,
 									final TransformGroup viewPlatformTransform) {
 		this.cameraChangeListener = new PropertyChangeListener() {
+			private Runnable updater;
 			public void propertyChange(PropertyChangeEvent ev) {
-				// Update view transform later to avoid flickering in case of multiple camera changes
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-              			updateView(view, home.getCamera());
-              			updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true);
-					}
-				});
+				if (this.updater == null) {
+					// Update view transform later to avoid flickering in case of multiple camera changes
+					EventQueue.invokeLater(this.updater = new Runnable () {
+						public void run() {
+							updateView(view, home.getCamera());
+							updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true);
+							updater = null;
+						}
+					});
+				}
 			}
 		};
 		this.home.getCamera().addPropertyChangeListener(this.cameraChangeListener);
@@ -1794,13 +1793,14 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform,
 																					 Camera camera, boolean updateWithAnimation,
 																					 long animateTime) {
+		// Get the camera interpolator
+		CameraInterpolator cameraInterpolator =
+						(CameraInterpolator) viewPlatformTransform.getChild(viewPlatformTransform.numChildren() - 1);
 		if (updateWithAnimation) {
-			// Get the camera interpolator
-			CameraInterpolator cameraInterpolator =
-					(CameraInterpolator) viewPlatformTransform.getChild(viewPlatformTransform.numChildren() - 1);
 			cameraInterpolator.setLenAnimationMS(animateTime);
 			cameraInterpolator.moveCamera(camera);
 		} else {
+			cameraInterpolator.stop();
 			Transform3D transform = new Transform3D();
 			updateViewPlatformTransform(transform, camera.getX(), camera.getY(),
 					camera.getZ(), camera.getYaw(), camera.getPitch());
@@ -1902,6 +1902,11 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					this.initialCamera.getZ() + (this.finalCamera.getZ() - this.initialCamera.getZ()) * alpha,
 					this.initialCamera.getYaw() % ((float)Math.PI * 2f) + shortest_angle * alpha,
 					this.initialCamera.getPitch() + (this.finalCamera.getPitch() - this.initialCamera.getPitch()) * alpha);
+		}
+
+		public synchronized void stop() {
+			setAlpha(null);
+			this.finalCamera = null;
 		}
 	}
 
@@ -2196,8 +2201,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		final SimpleShaderAppearance skyBackgroundAppearance = new SimpleShaderAppearance();
 		ColoringAttributes skyBackgroundColoringAttributes = new ColoringAttributes();
 		skyBackgroundAppearance.setColoringAttributes(skyBackgroundColoringAttributes);
-    	TextureAttributes skyBackgroundTextureAttributes = new TextureAttributes();
-    	skyBackgroundAppearance.setTextureAttributes(skyBackgroundTextureAttributes);
+		TextureAttributes skyBackgroundTextureAttributes = new TextureAttributes();
+		skyBackgroundAppearance.setTextureAttributes(skyBackgroundTextureAttributes);
 		// Allow sky color and texture to change
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
 		skyBackgroundAppearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
@@ -2959,43 +2964,19 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		};
 		for (HomePieceOfFurniture piece : this.home.getFurniture()) {
-			if (piece instanceof HomeFurnitureGroup) {
-				for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
-					childPiece.addPropertyChangeListener(this.furnitureChangeListener);
-				}
-			} else {
-				piece.addPropertyChangeListener(this.furnitureChangeListener);
-			}
+			addPropertyChangeListener(piece, this.furnitureChangeListener);
 		}
 		this.furnitureListener = new CollectionListener<HomePieceOfFurniture>() {
 			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> ev) {
 				HomePieceOfFurniture piece = (HomePieceOfFurniture) ev.getItem();
 				switch (ev.getType()) {
 					case ADD:
-						if (piece instanceof HomeFurnitureGroup) {
-							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
-								if (!(childPiece instanceof HomeFurnitureGroup)) {
-									addObject(group, childPiece, true, false);
-									childPiece.addPropertyChangeListener(furnitureChangeListener);
-								}
-							}
-						} else {
-							addObject(group, piece, true, false);
-							piece.addPropertyChangeListener(furnitureChangeListener);
-						}
+						addPieceOfFurniture(group, piece, true, false);
+						addPropertyChangeListener(piece, furnitureChangeListener);
 						break;
 					case DELETE:
-						if (piece instanceof HomeFurnitureGroup) {
-							for (HomePieceOfFurniture childPiece : ((HomeFurnitureGroup) piece).getAllFurniture()) {
-								if (!(childPiece instanceof HomeFurnitureGroup)) {
-									deleteObject(childPiece);
-									childPiece.removePropertyChangeListener(furnitureChangeListener);
-								}
-							}
-						} else {
-							deleteObject(piece);
-							piece.removePropertyChangeListener(furnitureChangeListener);
-						}
+						deletePieceOfFurniture(piece);
+						removePropertyChangeListener(piece, furnitureChangeListener);
 						break;
 				}
 				// If piece is or contains a door or a window, update walls that intersect with piece
@@ -3013,6 +2994,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		};
 		this.home.addFurnitureListener(this.furnitureListener);
+	}
+
+	/**
+	 * Adds the given <code>listener</code> to <code>piece</code> and its children.
+	 */
+	private void addPropertyChangeListener(HomePieceOfFurniture piece, PropertyChangeListener listener) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture child : ((HomeFurnitureGroup)piece).getFurniture()) {
+				addPropertyChangeListener(child, listener);
+			}
+		} else {
+			piece.addPropertyChangeListener(listener);
+		}
+	}
+
+	/**
+	 * Removes the given <code>listener</code> from <code>piece</code> and its children.
+	 */
+	private void removePropertyChangeListener(HomePieceOfFurniture piece, PropertyChangeListener listener) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture child : ((HomeFurnitureGroup)piece).getFurniture()) {
+				removePropertyChangeListener(child, listener);
+			}
+		} else {
+			piece.removePropertyChangeListener(listener);
+		}
 	}
 
 	/**
@@ -3267,6 +3274,19 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	/**
+	 * Adds to <code>group</code> a branch matching <code>homeObject</code> or its children if the piece is a group of furniture.
+	 */
+	private void addPieceOfFurniture(Group group, HomePieceOfFurniture piece, boolean listenToHomeUpdates, boolean waitForLoading) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture child : ((HomeFurnitureGroup)piece).getFurniture()) {
+				addPieceOfFurniture(group, child, listenToHomeUpdates, waitForLoading);
+			}
+		} else {
+			addObject(group, piece, listenToHomeUpdates, waitForLoading);
+		}
+	}
+
+	/**
 	 * Returns the 3D object matching the given home object. If <code>waitForLoading</code>
 	 * is <code>true</code> the resources used by the returned 3D object should be ready to be displayed.
 	 * @deprecated Subclasses which used to override this method must be updated to create an instance of
@@ -3284,6 +3304,19 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		this.homeObjects.get(homeObject).detach();
 		this.homeObjects.remove(homeObject);
 		clearPrintedImageCache();
+	}
+
+	/**
+	 * Detaches from the scene the branches matching <code>piece</code> or its children if it's a group.
+	 */
+	private void deletePieceOfFurniture(HomePieceOfFurniture piece) {
+		if (piece instanceof HomeFurnitureGroup) {
+			for (HomePieceOfFurniture child : ((HomeFurnitureGroup)piece).getFurniture()) {
+				deletePieceOfFurniture(child);
+			}
+		} else {
+			deleteObject(piece);
+		}
 	}
 
 	/**

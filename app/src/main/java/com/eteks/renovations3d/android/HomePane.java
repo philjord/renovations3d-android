@@ -77,6 +77,7 @@ import javaxswing.ImageIcon;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.model.HomeDescriptor;
+import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.tools.URLContent;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.mindblowing.swingish.JComboBox;
@@ -4522,7 +4523,14 @@ public class HomePane implements HomeView {
                 (float)homeBounds.getWidth(), (float)homeBounds.getHeight(), true);
             writer.writeNode(groundNode, "ground");
           }
-        }
+				} else if (home.isAllLevelsSelection()) {
+					// Make viewable levels visible when all levels are selected
+					for (Level level : home.getLevels()) {
+						if (level.isViewable()) {
+							level.setVisible(true);
+						}
+					}
+				}
         
         // Write 3D objects 
         int i = 0;

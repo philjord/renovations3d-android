@@ -1,0 +1,9 @@
+org/jogamp/java3d/JoglesPipeline.class
+org/jogamp/java3d/Jogl2es2DEPPipeline.class
+org/jogamp/java3d/Pipeline.class
+org/jogamp/java3d/utils/shader/SimpleShaderAppearance.class
+org/jogamp/java3d/ShaderAppearance.class
+org/jogamp/java3d/Appearance.class
+org/jogamp/java3d/NodeComponent.class
+org/jogamp/java3d/SceneGraphObject.class
+com/eteks/renovations3d/android/HomeComponent3D.class

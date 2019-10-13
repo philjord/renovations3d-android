@@ -942,18 +942,18 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
       } else {
 				EventQueue.invokeLater(new Runnable(){
 					public void run(){
-						JComboBox languageComboBox = userPreferencesPanel.languageComboBox;
-							List<String> oldSupportedLanguages = Arrays.asList((String [])ev.getOldValue());
-							String [] supportedLanguages = (String [])ev.getNewValue();
-							languageComboBox.setModel(new DefaultComboBoxModel(supportedLanguages));
-							// Select the first language added to supported languages
-							for (String language : supportedLanguages) {
-								if (!oldSupportedLanguages.contains(language)) {
-									languageComboBox.setSelectedItem(language);
-									return;
-								}
+						final JComboBox languageComboBox = userPreferencesPanel.languageComboBox;
+						List<String> oldSupportedLanguages = Arrays.asList((String [])ev.getOldValue());
+						String [] supportedLanguages = (String [])ev.getNewValue();
+						languageComboBox.setModel(new DefaultComboBoxModel(supportedLanguages));
+						languageComboBox.setSelectedItem(userPreferencesPanel.controller.getLanguage());
+						// Select the first language added to supported languages
+						for (final String language : supportedLanguages) {
+							if (!oldSupportedLanguages.contains(language)) {
+								languageComboBox.setSelectedItem(language);
+								break;
 							}
-							languageComboBox.setSelectedItem(userPreferencesPanel.controller.getLanguage());
+						}
 					}
 				});
       }

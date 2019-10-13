@@ -59,6 +59,7 @@ import org.jogamp.java3d.Link;
 import org.jogamp.java3d.Node;
 import org.jogamp.java3d.PickInfo;
 import org.jogamp.java3d.RenderingAttributes;
+import org.jogamp.java3d.ShaderAppearance;
 import org.jogamp.java3d.Shape3D;
 import org.jogamp.java3d.Texture;
 import org.jogamp.java3d.Transform3D;
@@ -1080,13 +1081,13 @@ public class ModelPreviewComponent extends JPanel {
   private Node createAxes(boolean visible) {
     RenderingAttributes renderingAttributes = new RenderingAttributes();
     renderingAttributes.setVisible(visible);
-    Appearance red = new SimpleShaderAppearance();
+		ShaderAppearance red = new SimpleShaderAppearance();
     red.setColoringAttributes(new ColoringAttributes(new Color3f(1, 0, 0), ColoringAttributes.SHADE_FLAT));
     red.setRenderingAttributes(renderingAttributes);
-    Appearance green = new SimpleShaderAppearance();
+		ShaderAppearance green = new SimpleShaderAppearance();
     green.setColoringAttributes(new ColoringAttributes(new Color3f(0, 1,0), ColoringAttributes.SHADE_FLAT));
     green.setRenderingAttributes(renderingAttributes);
-    Appearance blue = new SimpleShaderAppearance();
+		ShaderAppearance blue = new SimpleShaderAppearance();
     blue.setColoringAttributes(new ColoringAttributes(new Color3f(0, 0, 1), ColoringAttributes.SHADE_FLAT));
     blue.setRenderingAttributes(renderingAttributes);
 
@@ -1103,7 +1104,7 @@ public class ModelPreviewComponent extends JPanel {
     return axes;
   }
 
-  private Node createAxis(Transform3D axisRotation, Appearance appearance) {
+  private Node createAxis(Transform3D axisRotation, ShaderAppearance appearance) {
     Cylinder cylinder = new Cylinder(0.00275f, 0.2f, appearance);
     Transform3D cylinderTranslation = new Transform3D();
     cylinderTranslation.setTranslation(new Vector3f(0, 0.1f, 0));

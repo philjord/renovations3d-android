@@ -229,12 +229,11 @@ public class ModelMaterialsComponent  extends JButton implements View {
           public void stateChanged(ChangeEvent ev) {
             if (colorRadioButton.isEnabled() && colorRadioButton.isSelected()) {
               for (int index : materialsList.getSelectedIndices()) {
-                HomeMaterial material = (HomeMaterial)materialsList.getItemAtPosition(index);
-              	Integer defaultColor = ((MaterialsListModel)materialsList.getModel()).
-                    getDefaultMaterialAt(index).getColor();
-              	Integer color = defaultColor != colorButton.getColor()
-                  ? colorButton.getColor()
-                  : null;
+								HomeMaterial material = (HomeMaterial)materialsList.getModel().getElementAt(index);
+								HomeMaterial defaultMaterial = ((MaterialsListModel)materialsList.getModel()).getDefaultMaterialAt(index);
+								Integer color = defaultMaterial.getColor() != colorButton.getColor() || defaultMaterial.getTexture() != null
+												? colorButton.getColor()
+												: null;
               	((MaterialsListModel)materialsList.getModel()).setMaterialAt(
                   new HomeMaterial(material.getName(), color, null, material.getShininess()),
                     index);
@@ -737,21 +736,22 @@ public class ModelMaterialsComponent  extends JButton implements View {
        * Sets the material at the given <code>index</code>.
        */
       public void setMaterialAt(HomeMaterial material, int index) {
-        if (this.materials != null
-            && material.getColor() == null
-            && material.getTexture() == null
-            && material.getShininess() == null) {
-          this.materials [index] = null;
-          boolean containsOnlyNull = true;
-          for (HomeMaterial m : this.materials) {
-            if (m != null) {
-              containsOnlyNull = false;
-              break;
-            }
-          }
-          if (containsOnlyNull) {
-            this.materials = null;
-          }
+				if (material.getColor() == null
+								&& material.getTexture() == null
+								&& material.getShininess() == null) {
+					if (this.materials != null) {
+						this.materials[index] = null;
+						boolean containsOnlyNull = true;
+						for (HomeMaterial m : this.materials) {
+							if (m != null) {
+								containsOnlyNull = false;
+								break;
+							}
+						}
+						if (containsOnlyNull) {
+							this.materials = null;
+						}
+					}
         } else {
           if (this.materials == null || this.materials.length != this.defaultMaterials.length) {
             this.materials = new HomeMaterial [this.defaultMaterials.length];
