@@ -6,12 +6,9 @@ android {
 
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled = true
-        // SM-T210 didn't like this setting, presumably the proguard sorts this out
-        //http://stackoverflow.com/questions/32723590/generate-maindexlist-multidex-for-maven/39771419#39771419
-        //
 
         ndk {
             // Specifies the ABI configurations of your native
@@ -30,7 +27,7 @@ android {
             zipAlignEnabled true
         }
         debug {
-            minifyEnabled false// make this true to run on older sdk like 19
+            minifyEnabled false
 
             //multiDexKeepFile file('multidex_keep_file.txt')// not working yet, possibly need the script system to produce a big list
             //see ${sdk.dir}/tools/proguard/proguard-android-optimize.txt
@@ -43,31 +40,29 @@ android {
         javaMaxHeapSize "4g"
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation files('libs/gluegen-rt-android.jar')
-    implementation files('libs/jogl-all-android.jar')
-    implementation files('libs/jogamp-natives.jar')
+    implementation files('libs/gluegen-rt-android2.4.0.jar')
+    implementation files('libs/jogl-all-android2.4.0.jar')
+    implementation files('libs/jogamp-natives2.4.0.jar')
     implementation files('libs/sweethome3D-android.jar')
     implementation files('libs/sweethome3D-tools.jar')
     implementation files('libs/sunflow-0.07.3pj.jar')
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
     // all firebase libs versions must match
     implementation 'com.google.firebase:firebase-ads:15.0.1'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
-    implementation 'com.github.yukuku:ambilwarna:2.0.1'
-    //color picker dialog
+    implementation 'com.google.firebase:firebase-config:17.0.0'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.github.yukuku:ambilwarna:2.0.1' //color picker dialog
     //implementation 'com.google.vr:sdk-audio:1.10.0'
     //implementation 'com.google.vr:sdk-base:1.10.0'
     implementation 'com.andkulikov:transitionseverywhere:1.7.4'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'me.drakeet.support:toastcompat:1.1.0' // fix bad token exception on sdk 25
-
 }
 apply plugin: 'com.google.gms.google-services'

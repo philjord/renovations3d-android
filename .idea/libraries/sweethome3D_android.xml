@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="sweethome3D-android">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/sweethome3D-android.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
