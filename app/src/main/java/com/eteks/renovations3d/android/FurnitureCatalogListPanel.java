@@ -51,6 +51,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eteks.renovations3d.Tutorial;
+import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.swingish.DefaultComboBoxModel;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JComboBox;
@@ -91,6 +92,8 @@ import java.util.List;
 
 import javaawt.EventQueue;
 import javaawt.Graphics;
+import javaawt.Point;
+import javaawt.geom.Rectangle2D;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
 
@@ -551,15 +554,41 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 		private void addFurniture() {
 			if (selectedFurniture != null) {
-				ArrayList<CatalogPieceOfFurniture> al = new ArrayList<CatalogPieceOfFurniture>();
-				al.add(selectedFurniture);
 				HomeController homeController = ((Renovations3DActivity) getActivity()).getHomeController();
 				if (homeController != null) {
-					homeController.getFurnitureCatalogController().setSelectedFurniture(al);
-					homeController.addHomeFurniture();
+					PlanComponent planComponent = ((MultipleLevelsPlanPanel) homeController.getPlanController().getView()).getPlanComponent();
+					// center of screen pixels converted to model space
+					float x = planComponent.convertXPixelToModel(planComponent.getWidth() / 2) - selectedFurniture.getWidth() / 2;
+					float y = planComponent.convertYPixelToModel(planComponent.getHeight() / 2) - selectedFurniture.getHeight() / 2;
 
+					Point vp = planComponent.getViewPosition();
+
+					Rectangle2D invalidPlanBounds = planComponent.getPlanBounds();
+
+					HomePieceOfFurniture newPiece = homeController.getFurnitureController().createHomePieceOfFurniture(selectedFurniture);
+					List<HomePieceOfFurniture> addedFurniture = new ArrayList<HomePieceOfFurniture>();
+					addedFurniture.add(newPiece);
+					homeController.drop(addedFurniture, x, y);
+
+					// position is updated after adding and selecting and making visible at 0,0, reset the scroll point back after that makevisible event has processed
+					// in addition the min plan bounds can change so we need to adjust scroll for that as well
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							planComponent.setScrollPosition(vp);
+
+							// taken from revalidate in PlanComponent
+							float planBoundsNewMinX = (float)planComponent.getPlanBounds().getMinX();
+							float planBoundsNewMinY = (float)planComponent.getPlanBounds().getMinY();
+							// If plan bounds upper left corner diminished (PJ in fact any min plan change)
+							if (planBoundsNewMinX != invalidPlanBounds.getMinX()
+											|| planBoundsNewMinY != invalidPlanBounds.getMinY()) {
+								int deltaX = Math.round(((float) invalidPlanBounds.getMinX() - planBoundsNewMinX));
+								int deltaY = Math.round(((float) invalidPlanBounds.getMinY() - planBoundsNewMinY));
+								planComponent.moveScrolledX(deltaX);
+								planComponent.moveScrolledY(deltaY);
+							}
+						}});
 					Renovations3DActivity.logFireBaseContent("addFurniture", selectedFurniture.getName());
-
 					((Renovations3DActivity) getActivity()).getViewPager().setCurrentItem(1, true);
 				}
 			}

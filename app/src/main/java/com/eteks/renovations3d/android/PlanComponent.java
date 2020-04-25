@@ -704,9 +704,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 	  //PJ taken from HomePane
 		Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
-		setScrolledX(viewportX != null ?  viewportX.intValue() : 0);
+		setXScroll(viewportX != null ?  viewportX.intValue() : 0);
 		Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
-		setScrolledY(viewportY != null? viewportY.intValue(): 0);
+		setYScroll(viewportY != null? viewportY.intValue(): 0);
 
 
 
@@ -1153,39 +1153,43 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    */
   private void revalidate(boolean invalidatePlanBoundsCache) {
 
-    boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
-    //final float planBoundsMinX = (float)getPlanBounds().getMinX();
-    //final float planBoundsMinY = (float)getPlanBounds().getMinY();
-    if (invalidatePlanBoundsCache
-        && planBoundsCacheWereValid) {
-      this.planBoundsCacheValid = false;
-    }
+		if (invalidatePlanBoundsCache) {
+			boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
+			if (this.invalidPlanBounds == null) {
+				this.invalidPlanBounds = getPlanBounds().getBounds2D();
+			}
+			if (planBoundsCacheWereValid) {
+				this.planBoundsCacheValid = false;
+			}
+		}
 
     // Revalidate and repaint
     super.revalidate();
     repaint();
 
-	  //PJPJ JViewport gone
-  /*  if (invalidatePlanBoundsCache
-        && getParent() instanceof JViewport) {
+		if (this.invalidPlanBounds != null
+        && true ) { //getParent() instanceof JViewport) {
       float planBoundsNewMinX = (float)getPlanBounds().getMinX();
       float planBoundsNewMinY = (float)getPlanBounds().getMinY();
-      // If plan bounds upper left corner diminished
-      if (planBoundsNewMinX < this.invalidPlanBounds.getMinX()
-          || planBoundsNewMinY < this.invalidPlanBounds.getMinY()) {
-        JViewport parent = (JViewport)getParent();
-        final Point viewPosition = parent.getViewPosition();
-        Dimension extentSize = parent.getExtentSize();
-        Dimension viewSize = parent.getViewSize();
+      // If plan bounds upper left corner diminished (PJ in fact any min plan change)
+      if (planBoundsNewMinX != this.invalidPlanBounds.getMinX()
+          || planBoundsNewMinY != this.invalidPlanBounds.getMinY()) {
+        //JViewport parent = (JViewport)getParent();
+        //final Point viewPosition = getViewPosition();
+        //Dimension extentSize = parent.getExtentSize();
+        //Dimension viewSize = parent.getViewSize();
         // Update view position when scroll bars are visible
-        if (extentSize.width < viewSize.width
-            || extentSize.height < viewSize.height) {
-          int deltaX = Math.round(((float)this.invalidPlanBounds.getMinX() - planBoundsNewMinX) * getScale());
-          int deltaY = Math.round(((float)this.invalidPlanBounds.getMinY() - planBoundsNewMinY) * getScale());
-          parent.setViewPosition(new Point(viewPosition.x + deltaX, viewPosition.y + deltaY));
-        }
+        //if (extentSize.width < viewSize.width
+				//   || extentSize.height < viewSize.height) {
+				int deltaX = Math.round(((float)this.invalidPlanBounds.getMinX() - planBoundsNewMinX));
+				int deltaY = Math.round(((float)this.invalidPlanBounds.getMinY() - planBoundsNewMinY));
+				this.moveScrolledX(deltaX);
+				this.moveScrolledY(deltaY);
+				//parent.setViewPosition(new Point(viewPosition.x + deltaX, viewPosition.y + deltaY));
+        //}
+
       }
-    }*/
+    }
     this.invalidPlanBounds = null;
   }
 
@@ -1275,7 +1279,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						float modelX = convertXPixelToModel((int)x);
 						float modelY = convertYPixelToModel((int)y);
 
-						List<Selectable> itemsUnderTouch = controller.getSelectableItemsAt(modelX, modelY );
+						List<Selectable> itemsUnderTouch = controller.getSelectableItemsAt(modelX, modelY);
 						lastDownTouchedSelections = false;
 						// contains any
 						for( Selectable s : itemsUnderTouch) {
@@ -1317,12 +1321,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				case MotionEvent.ACTION_MOVE:
 					final float dx = x - mLastTouchX;
 					final float dy = y - mLastTouchY;
-					float s = getScale();
 					if (ev.getPointerCount() > 1) {
 						// might be the second finger move, we want only active moves
 						if(mActivePointerId == pointerId) {
 							// pan operation wants the move to be div scale as moveview does a multiply, so...
-							moveView(-dx / s, -dy / s);
+							moveView(-dx, -dy);
 							mLastTouchX = x;
 							mLastTouchY = y;
 						}
@@ -1345,7 +1348,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 							if(mActivePointerId == pointerId) {
 								// pan operation wants the move to be div scale as moveview does a multiply, so...
-								moveView(-dx / s, -dy / s);
+								moveView(-dx, -dy);
 								mLastTouchX = x;
 								mLastTouchY = y;
 							}
@@ -1492,8 +1495,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				mouseMoved(v, ev);
 			}
 		}
-
-
 	}
 
 	private ScaleGestureDetector mScaleDetector;
@@ -1505,13 +1506,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		 * @return
 		 */
 		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector)
-		{
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
 			///this is to allow 2 finger drags to work  so this is not about how far the scale move,
 			// just about how close the fingers are when deciding if this is a 2 drag or not
 			// 2 finger is handy as single finger panning is only on during selection or pan modes
 
-			//System.out.println("mScaleDetector.getCurrentSpan()  "+mScaleDetector.getCurrentSpan() );
 			DisplayMetrics mDisplayMetrics = getDrawableView().getResources().getDisplayMetrics();
 			float measurement = mScaleDetector.getCurrentSpan() / (float) mDisplayMetrics.densityDpi;
 
@@ -1520,47 +1519,38 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				return true;
 			else*/
 				return measurement > dpiMinSpanForZoom;
-
 		}
 
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
-
 			float mouseX = 0;
 			float mouseY = 0;
 			//int deltaX = 0;
 			//int deltaY = 0;
-			//PJ alwaysish if (getParent() instanceof JViewport) {
+			if (true) {//(getParent() instanceof JViewport) {
 				mouseX = convertXPixelToModel((int)detector.getFocusX());
 				mouseY = convertYPixelToModel((int)detector.getFocusY());
 				//Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
 				//deltaX = ev.getX() - viewRectangle.x;
 				//deltaY = ev.getY() - viewRectangle.y;
-			//}
+			}
 
 			float oldScale = getScale();
-
-			float newScale = getScale() * detector.getScaleFactor();
 			// Don't let the object get too small or too large.
-			newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
-			//controller.zoom(newScale); //don't want the mouse move calls
+			float newScale =  Math.max(0.1f, Math.min(getScale() * detector.getScaleFactor(), 10.0f));
+
+			//controller.zoom((float)(ev.getWheelRotation() < 0
+			//				? Math.pow(1.05, -ev.getWheelRotation())
+			//				: Math.pow(0.95, ev.getWheelRotation())));
+			//don't want the mouse move calls so...
 			controllerSetScale(newScale);
 
-			/*controller.zoom((float)(ev.getWheelRotation() < 0
-					? Math.pow(1.05, -ev.getWheelRotation())
-					: Math.pow(0.95, ev.getWheelRotation())));*/
-
-			if (getScale() != oldScale ) {//&& getParent() instanceof JViewport) {
+			if (getScale() != oldScale && true) {// getParent() instanceof JViewport) {
 				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
 				//((JViewport)getParent()).setViewPosition(new Point());
 				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
-				System.out.println("mouseX " +mouseX );
-				float modelDiffX  = mouseX - convertXPixelToModel((int)detector.getFocusX());
-				System.out.println("modelDiffX " + modelDiffX + " newScale " + newScale + " 1 " +mouseX + " 2 "+ convertXPixelToModel((int)detector.getFocusX()));
-				moveScrolledX(modelDiffX * newScale);
-
-				float modelDiffY  = mouseY - convertYPixelToModel((int)detector.getFocusY());
-				moveScrolledY(modelDiffY * newScale);
+				moveScrolledX(mouseX - convertXPixelToModel((int)detector.getFocusX()));
+				moveScrolledY(mouseY - convertYPixelToModel((int)detector.getFocusY()));
 			}
 
 			return true;
@@ -1570,8 +1560,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		 * Taken from controller.zoom()
 		 * used here to avoid the unwanted mouse move call in
 		 */
-		private void controllerSetScale(float scale)
-		{
+		private void controllerSetScale(float scale) {
 			scale = Math.max(controller.getMinimumScale(), Math.min(scale, controller.getMaximumScale()));
 			if(scale != controller.getView().getScale()) {
 				float oldScale = controller.getView().getScale();
@@ -1583,30 +1572,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 					//controller.moveMouse(controller.getView().convertXPixelToModel(x), controller.getView().convertYPixelToModel(y));
 				}
 				//controller.propertyChangeSupport.firePropertyChange(PlanController.Property.SCALE.name(), Float.valueOf(oldScale), Float.valueOf(scale));
+				//SCALE_VISUAL_PROPERTY is not visible
 				home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(scale));
 			}
 		}
 	}
 
-	public void moveScrolledXY(float xdiff, float ydiff)
-	{
-		moveScrolledX(xdiff);
-		moveScrolledY(ydiff);
-	}
-
 	protected void scrollRectToVisible(Rectangle shapePixelBounds) {
-		//so the shape that arrives here start x and y as mouse moved, and both are passed through convertXPixelToModel
-		// eg at scale 1 scrollxy 0,0 plan min -160,-22 margin 60 : a move 331,208 gets here as 110,125
-		// eg at scale 1 scrollxy 102,5 plan min -160,-22 margin 60 : a move 351,258 gets here as 232,180
-		// eg at scale 0.5 scrollxy -494,-239 plan min -160,-22 margin 60 : a move 730,362 gets here as 249,161
-		// eg at scale 0.5 scrollxy 78,9 plan min -160,-22 margin 60 : a move 178,210 gets here as 293,356 (this guy zoomed out and at 0,0 on ruler)
-
-		//convertXPixelToModel = (x + getScrolledX() - insets.left) / getScale() - MARGIN + (float)planBounds.getMinX();
-
-		//convertXModelToPixel= ((x - getScrolledX() + insets.left) * getScale() + MARGIN - planBounds.getMinX());
-
-		// key concepts, scrolled is relative to plan min, so 0 can be -160, and scrolled include the scale factor
-
 		// use the margin to push on the edges a bit to make a bumper
 		shapePixelBounds.grow((int) MARGIN,(int) MARGIN);
 		super.scrollRectToVisible(shapePixelBounds);
@@ -1751,11 +1723,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   /**
    * Returns the bounds of the plan displayed by this component.
    */
-  private Rectangle2D getPlanBounds() {
+  public Rectangle2D getPlanBounds() {
     if (!this.planBoundsCacheValid) {
       // Always enlarge plan bounds only when plan component is a child of a scroll pane
       if (this.planBoundsCache == null
-			    || true) {//PJPJ  that is always true -> !(getParent() instanceof JViewport))
+			    || true) {//(getParent() instanceof JViewport))
         // Ensure plan bounds are 10 x 10 meters wide at minimum
         this.planBoundsCache = new Rectangle2D.Float(0, 0, 1000, 1000);
       }
@@ -2091,8 +2063,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		// Change component coordinates system to plan system
 		Rectangle2D planBounds = getPlanBounds();
 		float paintScale = getScale();
-		g2D.translate(insets.left + ((MARGIN - planBounds.getMinX()) * paintScale) - getScrolledX(),
-				insets.top + ((MARGIN - planBounds.getMinY()) * paintScale) - getScrolledY());
+		g2D.translate(insets.left + ((MARGIN - planBounds.getMinX()) * paintScale) - getXScroll(),
+				insets.top + ((MARGIN - planBounds.getMinY()) * paintScale) - getYScroll());
 		g2D.scale(paintScale, paintScale);
 		setRenderingHints(g2D);
 		try {
@@ -2669,8 +2641,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       xMax = convertXPixelToModel(viewRectangle.x + viewRectangle.width);
       yMax = convertYPixelToModel(viewRectangle.y + viewRectangle.height);
     } else {*/
-	  xMin = (float)planBounds.getMinX() - MARGIN + (getScrolledX() / getScale());
-	  yMin = (float)planBounds.getMinY() - MARGIN + (getScrolledY() / getScale());
+	  xMin = (float)planBounds.getMinX() - MARGIN + (getXScroll() / getScale());
+	  yMin = (float)planBounds.getMinY() - MARGIN + (getYScroll() / getScale());
 	  xMax = convertXPixelToModel(getWidth());
 	  yMax = convertYPixelToModel(getHeight());
    // }
@@ -4661,7 +4633,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
             dimensionLine.getOffset() <= 0
                 ? lengthFontMetrics.descent- 1
                 : -fontAscent + 1);
-		  //TODO: feedback outline thingy disabled for now, but should be put back
+		  // feedback outline thingy disabled for now, but should be put back
     /*    if (feedback) {
           // Draw text outline with half transparent background color
           g2D.setPaint(backgroundColor);
@@ -5518,21 +5490,31 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       viewport.setViewPosition(viewRectangle.getLocation());
     }*/
 	  //my scrolled are -ve versus the viewport location x,y
-	  moveScrolledX(dx * getScale());
-	  moveScrolledY(dy * getScale());
-	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(getScrolledX()));
-	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(getScrolledY()));
+	  moveXScroll(dx);
+	  moveYScroll(dy);
+	  controller.setHomeProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY, String.valueOf(getXScroll()));
+	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(getYScroll()));
 	  PlanComponent.this.revalidate();
 
 
 	  //update the tutorial
-	  Point2D data = new Point2D.Float(getScrolledX(), getScrolledY());
+	  Point2D data = new Point2D.Float(getXScroll(), getYScroll());
 	  ((Renovations3DActivity)parentFragment.getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.PLAN_MOVED, data);
 
   }
 
+	//model coords
+	protected void moveScrolledX(float deltaScrolledX) {
+		moveXScroll(deltaScrolledX * getScale());
+	}
+
+	//model coords
+	protected void moveScrolledY(float deltaScrolledY) {
+		moveYScroll(deltaScrolledY * getScale());
+	}
+
   /**
-   * Returns the scale used to display the plan.
+   * Returns the scale used to display the plan. Factor from model coord to pixel coords
    */
   public float getScale() {
     return this.scale;
@@ -5544,103 +5526,85 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * to ensure the center's view will remain the same after the scale change.
    */
   public void setScale(float scale) {
-    if (this.scale != scale) {
-    //  JViewport parent = null;
-      //Rectangle viewRectangle = null;
-      float xViewCenterPosition = 0;
-      float yViewCenterPosition = 0;
-  /*    if (this instanceof JViewport) {
-        parent = (JViewport)getParent();
-        viewRectangle = parent.getViewRect();
-        xViewCenterPosition = convertXPixelToModel(viewRectangle.x + viewRectangle.width / 2);
-        yViewCenterPosition = convertYPixelToModel(viewRectangle.y + viewRectangle.height / 2);
-      }*/
+		if (this.scale != scale) {
+			//JViewport parent = null;
+			//Rectangle viewRectangle = null;
+			float xViewCenterPosition = 0;
+			float yViewCenterPosition = 0;
+			if (true) {//getParent() instanceof JViewport) {
+				//parent = (JViewport)getParent();
+				//viewRectangle = parent.getViewRect();
+				xViewCenterPosition = convertXPixelToModel(getWidth() / 2);
+				yViewCenterPosition = convertYPixelToModel(getHeight() / 2);
+			}
 
-		// note getDrawableView() can be null during init
-//		xViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
-//		yViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
+			this.scale = scale;
+			// Revalidate plan without computing again unchanged plan bounds
+			//invalidate(false);
+			revalidate(false);
 
-      this.scale = scale;
-      //revalidate(false);
-
-		//PJPJ
-  //    if (this instanceof JViewport) {
-        //Dimension viewSize = parent.getViewSize();
- /*       float viewWidth = convertXPixelToModel(getDrawableView().getWidth());
-        int xViewLocation = (int) convertXModelToPixel(xViewCenterPosition - viewWidth / 2);
-        float viewHeight = convertYPixelToModel(getDrawableView().getHeight());
-        int yViewLocation = (int) convertYModelToPixel(yViewCenterPosition - viewHeight / 2);
-
-		//scrolledX = xViewLocation;
-		//scrolledY = yViewLocation;
-
-
-		float newxViewCenterPosition = convertXPixelToModel(scrolledX + getDrawableView().getWidth() / 2);
-		float newyViewCenterPosition = convertYPixelToModel(scrolledY + getDrawableView().getHeight() / 2);
-
-		//System.out.println("scrolledX " +scrolledX + " getDrawableView().getWidth() " +getDrawableView().getWidth());
-		//System.out.println("newxViewCenterPosition " +newxViewCenterPosition + " xViewCenterPosition " +xViewCenterPosition);
-		//TODO: this may work now I understand the scrolling and converting better
-		//scrolledX += convertYModelToPixel(newxViewCenterPosition-xViewCenterPosition);
-		//scrolledY += convertYModelToPixel(newyViewCenterPosition-yViewCenterPosition);
-*/
-		revalidate(false);
-     // }
-    }
+			if (true) {// (parent instanceof JViewport) {
+				//Dimension viewSize = parent.getViewSize();
+				//float viewWidth = convertXPixelToModel(viewRectangle.x + viewRectangle.width)
+				//				- convertXPixelToModel(viewRectangle.x);
+				int xViewLocation = (int)(xViewCenterPosition - convertXPixelToModel(getWidth() / 2));
+				//float viewHeight = convertYPixelToModel(viewRectangle.y + viewRectangle.height)
+				//				- convertYPixelToModel(viewRectangle.y);
+				int yViewLocation = (int)(yViewCenterPosition - convertYPixelToModel( getHeight() / 2));
+				//parent.setViewPosition(new Point(xViewLocation, yViewLocation));
+				this.setScrollPosition(new Point(xViewLocation, yViewLocation));
+			}
+		}
   }
 
   /**
    * Returns <code>x</code> converted in model coordinates space.
    */
   public float convertXPixelToModel(int x) {
-	Insets insets = getInsets();
+		Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-   return (x + getScrolledX() - insets.left) / getScale() - MARGIN + (float)planBounds.getMinX();
+  	return (x - insets.left + getXScroll()) / getScale() - MARGIN + (float)planBounds.getMinX();
   }
 
   /**
    * Returns <code>y</code> converted in model coordinates space.
    */
   public float convertYPixelToModel(int y) {
-	Insets insets = getInsets();
+		Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-    return (y + getScrolledY() - insets.top) / getScale() - MARGIN + (float)planBounds.getMinY();
+		return (y - insets.top + getYScroll()) / getScale() - MARGIN + (float)planBounds.getMinY();
   }
 
   /**
    * Returns <code>x</code> converted in view coordinates space.
    */
-  private int convertXModelToPixel(float x) {
-	Insets insets = getInsets();
+	public int convertXModelToPixel(float x) {
+		Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-	return (int)Math.round((x - planBounds.getMinX() + MARGIN) * getScale() + insets.left - getScrolledX());
+	 	return (int)Math.round((x - planBounds.getMinX() + MARGIN) * getScale() + insets.left - getXScroll());
   }
 
   /**
    * Returns <code>y</code> converted in view coordinates space.
    */
-  private int convertYModelToPixel(float y) {
-	Insets insets = getInsets();
+	public int convertYModelToPixel(float y) {
+		Insets insets = getInsets();
     Rectangle2D planBounds = getPlanBounds();
-	return (int)Math.round((y - planBounds.getMinY() + MARGIN) * getScale() + insets.top - getScrolledY());
+		return (int)Math.round((y - planBounds.getMinY() + MARGIN) * getScale() + insets.top - getYScroll());
   }
 
   /**
    * Returns <code>x</code> converted in screen coordinates space.
    */
   public int convertXModelToScreen(float x) {
-    Point point = new Point(convertXModelToPixel(x), 0);
- 		SwingTools.convertPointToScreen(point, this);
-    return point.x;
+    return convertXModelToPixel(x);//+ getXScroll());
   }
 
   /**
    * Returns <code>y</code> converted in screen coordinates space.
    */
   public int convertYModelToScreen(float y) {
-    Point point = new Point(0, convertYModelToPixel(y));
-    SwingTools.convertPointToScreen(point, this);
-    return point.y;
+  	return convertYModelToPixel(y);//+ getYScroll());
   }
 
 
@@ -5657,10 +5621,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private Rectangle getShapePixelBounds(Shape shape) {
     Rectangle2D shapeBounds = shape.getBounds2D();
     return new Rectangle(
-        convertXModelToPixel((float)shapeBounds.getMinX()),
-        convertYModelToPixel((float)shapeBounds.getMinY()),
-        (int)Math.round(shapeBounds.getWidth() * getScale()),
-        (int)Math.round(shapeBounds.getHeight() * getScale()));
+    				convertXModelToPixel((float)shapeBounds.getMinX()),
+						convertYModelToPixel((float)shapeBounds.getMinY()),
+        		(int)Math.round(shapeBounds.getWidth() * getScale()),
+						(int)Math.round(shapeBounds.getHeight() * getScale()));
   }
 
   /**
@@ -6237,25 +6201,25 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
      */
     @Override
 	public void paintComponent(Graphics g) {
-      Graphics2D g2D = (Graphics2D)g.create();
-      paintBackground(g2D);
-		Insets insets = getInsets();
-      // Clip component to avoid drawing in empty borders
-     g2D.clipRect(insets.left, insets.top,
-          getWidth() - insets.left - insets.right,
-          getHeight() - insets.top - insets.bottom);
-      // Change component coordinates system to plan system
-      Rectangle2D planBounds = pc.getPlanBounds();
-      float paintScale = pc.getScale();
-      g2D.translate(insets.left + (MARGIN - planBounds.getMinX() ) * paintScale - pc.getScrolledX(),
-          insets.top + (MARGIN - planBounds.getMinY() ) * paintScale - pc.getScrolledY());
+			Graphics2D g2D = (Graphics2D) g.create();
+			paintBackground(g2D);
+			Insets insets = getInsets();
+			// Clip component to avoid drawing in empty borders
+			g2D.clipRect(insets.left, insets.top,
+							getWidth() - insets.left - insets.right,
+							getHeight() - insets.top - insets.bottom);
+			// Change component coordinates system to plan system
+			Rectangle2D planBounds = pc.getPlanBounds();
+			float paintScale = pc.getScale();
+			g2D.translate((insets.left + (MARGIN - planBounds.getMinX()) * paintScale) - pc.getXScroll(),
+							(insets.top + (MARGIN - planBounds.getMinY()) * paintScale) - pc.getYScroll());
 
-      g2D.scale(paintScale, paintScale);
-      g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-      // Paint component contents
-      paintRuler(g2D, paintScale);
-      g2D.dispose();
+			g2D.scale(paintScale, paintScale);
+			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			// Paint component contents
+			paintRuler(g2D, paintScale);
+			g2D.dispose();
     }
 
     /**
@@ -6283,24 +6247,24 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       float yRulerBase;
       Rectangle2D planBounds = pc.getPlanBounds();
       boolean leftToRightOriented = true;// TODO: right to left at some point getComponentOrientation().isLeftToRight();
-     /* if (getParent() instanceof JViewport) {
-        Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
-        xMin = convertXPixelToModel(viewRectangle.x - 1);
-        yMin = convertYPixelToModel(viewRectangle.y - 1);
-        xMax = convertXPixelToModel(viewRectangle.x + viewRectangle.width);
-        yMax = convertYPixelToModel(viewRectangle.y + viewRectangle.height);
+      if (true) {//getParent() instanceof JViewport ) {
+        Rectangle viewRectangle = new Rectangle(0, 0, getWidth(), getHeight());
+        xMin = pc.convertXPixelToModel(viewRectangle.x - 1);
+        yMin = pc.convertYPixelToModel(viewRectangle.y - 1);
+        xMax = pc.convertXPixelToModel(viewRectangle.x + viewRectangle.width);
+        yMax = pc.convertYPixelToModel(viewRectangle.y + viewRectangle.height);
         xRulerBase = leftToRightOriented
-            ? convertXPixelToModel(viewRectangle.x + viewRectangle.width - 1)
-            : convertXPixelToModel(viewRectangle.x);
-        yRulerBase = convertYPixelToModel(viewRectangle.y + viewRectangle.height - 1);
-      } else {*/
-        xMin = (float)planBounds.getMinX() - MARGIN + (pc.getScrolledX() / pc.getScale());
-        yMin = (float)planBounds.getMinY() - MARGIN + (pc.getScrolledY() / pc.getScale());
+            ? pc.convertXPixelToModel(viewRectangle.x + viewRectangle.width - 1)
+            : pc.convertXPixelToModel(viewRectangle.x);
+        yRulerBase = pc.convertYPixelToModel(viewRectangle.y + viewRectangle.height - 1);
+      } else {
+        xMin = (float)planBounds.getMinX() - MARGIN + (pc.getXScroll() / pc.getScale());
+        yMin = (float)planBounds.getMinY() - MARGIN + (pc.getYScroll() / pc.getScale());
         xMax = pc.convertXPixelToModel(getWidth() - 1);
         yRulerBase =
         yMax = pc.convertYPixelToModel(getHeight() - 1);
         xRulerBase = leftToRightOriented ? xMax : xMin;
-     // }
+      }
 
       FontMetrics metrics = getFontMetrics(getFont());
       int fontAscent = (int)metrics.ascent;

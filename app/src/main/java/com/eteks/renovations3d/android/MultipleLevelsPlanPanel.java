@@ -175,8 +175,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 	private void zoomAtCenter(float scaleChangeFactor) {
 		// keep the center central
-		float centerX = planComponent.getWidth()/2.0f; //TODO: what's center??
-		float centerY = planComponent.getHeight()/2.0f;
+		float centerX = planComponent.getWidth() / 2.0f;
+		float centerY = planComponent.getHeight() / 2.0f;
 		float priorCenterX = convertXPixelToModel((int)centerX);
 		float priorCenterY = convertYPixelToModel((int)centerY);
 
@@ -192,7 +192,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		float modelDiffX = priorCenterX - convertXPixelToModel((int)centerX);
 		float modelDiffY = priorCenterY - convertYPixelToModel((int)centerY);
-		planComponent.moveScrolledXY(modelDiffX * newScale,modelDiffY * newScale);
+		planComponent.moveScrolledX(modelDiffX);
+		planComponent.moveScrolledY(modelDiffY);
 	}
 
 	@Override
@@ -757,6 +758,10 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 				});
 	}
 
+
+	protected PlanComponent getPlanComponent() {
+		return planComponent;
+	}
 	/**
 	 * Called by our drawableView when onDraw called for it
 	 *
