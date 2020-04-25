@@ -114,5 +114,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="showPlanZoomButtons">Afficher les boutons de zoom du plan</string>
+    <string name="doubleTapEdit2D">Appuyez deux fois pour modifier le plan</string>
+    <string name="doubleTapEdit3D">Appuyez deux fois pour modifier en vue 3D</string>
 
 </resources>

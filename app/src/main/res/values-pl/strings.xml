@@ -115,5 +115,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="showPlanZoomButtons">Pokaż przyciski powiększenia planu</string>
+    <string name="doubleTapEdit2D">Kliknij dwukrotnie, aby edytować plan</string>
+    <string name="doubleTapEdit3D">Kliknij dwukrotnie, aby edytować w widoku 3D</string>
 
 </resources>

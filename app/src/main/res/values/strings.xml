@@ -116,6 +116,9 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="menu_privacy">Privacy</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="showPlanZoomButtons">Show Plan Zoom Buttons</string>
+    <string name="showPlanZoomButtons">Show plan zoom buttons</string>
+    <string name="doubleTapEdit2D">Double tap to edit in plan</string>
+    <string name="doubleTapEdit3D">Double tap to edit in 3D view</string>
+
 
 </resources>

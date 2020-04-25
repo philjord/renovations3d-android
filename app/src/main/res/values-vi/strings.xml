@@ -115,5 +115,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="yes">Vâng</string>
     <string name="no">Không</string>
     <string name="showPlanZoomButtons">Hiển thị các nút thu phóng kế hoạch</string>
+    <string name="doubleTapEdit2D">Nhấn đúp để chỉnh sửa gói</string>
+    <string name="doubleTapEdit3D">Nhấn đúp để chỉnh sửa trong chế độ xem 3D</string>
 
 </resources>

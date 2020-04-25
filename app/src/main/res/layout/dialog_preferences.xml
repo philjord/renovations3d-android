@@ -289,6 +289,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"/>
+        <CheckBox
+            android:id="@+id/prefs_doubleTapEdit2D"
+            android:text="prefs_doubleTapEdit2D"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+        <CheckBox
+            android:id="@+id/prefs_doubleTapEdit3D"
+            android:text="prefs_doubleTapEdit2D"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
     </TableLayout>
     <TextView android:layout_height="1px" android:layout_width="fill_parent" android:background="#BDBDBD"/>
     <Button

@@ -93,9 +93,13 @@ public class Renovations3DActivity extends FragmentActivity {
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
 	public static final String SHOW_PLAN_ZOOM_BUTTONS_PREF = "SHOW_PLAN_ZOOM_BUTTONS_PREF";
+	public static final String DOUBLE_TAP_EDIT_2D_PREF = "DOUBLE_TAP_EDIT_2D_PREF";
+	public static final String DOUBLE_TAP_EDIT_3D_PREF = "DOUBLE_TAP_EDIT_3D_PREF";
 
 	public static boolean SHOW_PAGER_BUTTONS = true;
 	public static boolean SHOW_PLAN_ZOOM_BUTTONS = false;
+	public static boolean DOUBLE_TAP_EDIT_2D = false;
+	public static boolean DOUBLE_TAP_EDIT_3D = false;
 
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
@@ -343,6 +347,8 @@ public class Renovations3DActivity extends FragmentActivity {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SHOW_PAGER_BUTTONS = settings.getBoolean(SHOW_PAGER_BUTTONS_PREF, true);
 		SHOW_PLAN_ZOOM_BUTTONS = settings.getBoolean(SHOW_PLAN_ZOOM_BUTTONS_PREF, false);
+		DOUBLE_TAP_EDIT_2D = settings.getBoolean(DOUBLE_TAP_EDIT_2D_PREF, false);
+		DOUBLE_TAP_EDIT_3D = settings.getBoolean(DOUBLE_TAP_EDIT_3D_PREF, false);
 
 		// If we were given locations permission at some point then use it here now for ads, but don't ask for it (the compass does that)
 		if (Build.VERSION.SDK_INT >= M) {

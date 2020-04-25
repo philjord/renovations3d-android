@@ -122,6 +122,8 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="yes">Sì</string>
     <string name="no">No</string>
     <string name="showPlanZoomButtons">Mostra i pulsanti di zoom del piano</string>
+    <string name="doubleTapEdit2D">Tocca due volte per modificare nel piano</string>
+    <string name="doubleTapEdit3D">Tocca due volte per modificare in vista 3D</string>
 
 
 </resources>

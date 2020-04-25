@@ -114,5 +114,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <string name="showPlanZoomButtons">Mutassa a terv nagyítási gombjait</string>
+    <string name="doubleTapEdit2D">Kattintson duplán a szerkesztéshez a tervben</string>
+    <string name="doubleTapEdit3D">Koppintson duplán a 3D nézet szerkesztéséhez</string>
 
 </resources>

@@ -114,5 +114,7 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="yes">Evet</string>
     <string name="no">Yok hayır</string>
     <string name="showPlanZoomButtons">Plan Yakınlaştırma Düğmelerini Göster</string>
+    <string name="doubleTapEdit2D">Planı düzenlemek için iki kez hafifçe vurun</string>
+    <string name="doubleTapEdit3D">3B görünümde düzenlemek için iki kez hafifçe vurun</string>
 
 </resources>

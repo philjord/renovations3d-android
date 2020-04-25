@@ -116,5 +116,7 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="showPlanZoomButtons">Mostrar los botones de zoom del plan</string>
+    <string name="doubleTapEdit3D">Toca dos veces para editar en vista 3D</string>
+    <string name="doubleTapEdit2D">Toca dos veces para editar el plan</string>
 
 </resources>

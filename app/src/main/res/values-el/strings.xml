@@ -116,4 +116,6 @@
     <string name="yes">Ναί</string>
     <string name="no">Οχι</string>
     <string name="showPlanZoomButtons">Εμφάνιση κουμπιών μεγέθυνσης σχεδίου</string>
+    <string name="doubleTapEdit2D">Πατήστε δύο φορές για επεξεργασία στο σχέδιο</string>
+    <string name="doubleTapEdit3D">Πατήστε δύο φορές για επεξεργασία σε προβολή 3D</string>
 </resources>

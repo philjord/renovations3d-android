@@ -3,8 +3,8 @@
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="6201"
-    android:versionName="6.201">
+    android:versionCode="6210"
+    android:versionName="6.210">
 
     <supports-screens
         android:anyDensity="true"
@@ -28,7 +28,7 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with teh Jogl renderering -->
+    <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with the Jogl renderering -->
     <application
         android:hardwareAccelerated="false"
         android:icon="@drawable/renovations3dicon"

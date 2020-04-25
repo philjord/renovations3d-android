@@ -115,5 +115,7 @@
     <string name="yes">да</string>
     <string name="no">нет</string>
     <string name="showPlanZoomButtons">Показать план масштабирования кнопки</string>
+    <string name="doubleTapEdit2D">Дважды нажмите, чтобы изменить план</string>
+    <string name="doubleTapEdit3D">Дважды нажмите, чтобы редактировать в 3D виде</string>
 
 </resources>

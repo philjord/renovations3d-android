@@ -116,5 +116,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="showPlanZoomButtons">Visa planzoomknappar</string>
+    <string name="doubleTapEdit2D">Dubbelklicka för att redigera planen</string>
+    <string name="doubleTapEdit3D">Dubbelklicka för att redigera i 3D-vy</string>
 
 </resources>

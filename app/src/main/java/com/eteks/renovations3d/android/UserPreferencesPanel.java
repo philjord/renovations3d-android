@@ -132,6 +132,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
 	private JCheckBox        showPagerButtons;
 	private JCheckBox        showPlanZoomButtons;
+	private JCheckBox        doubleTapEdit2D;
+	private JCheckBox        doubleTapEdit3D;
 	private String           dialogTitle;
 
   /**
@@ -821,7 +823,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 				}
     	});
 
-	  //PJ----------------------------new refs for Renovations, using the local prefs storage system
+	  //PJ----------------------------new Prefs for Renovations, using the local prefs storage system
 	  boolean SHOW_PAGER_BUTTONS_PREF = settings.getBoolean(Renovations3DActivity.SHOW_PAGER_BUTTONS_PREF, Renovations3DActivity.SHOW_PAGER_BUTTONS);
 
 	  this.showPagerButtons = new JCheckBox(activity, getContext().getString(R.string.showPagerButtons), SHOW_PAGER_BUTTONS_PREF);
@@ -845,6 +847,32 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 				editor.apply();
 				Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS = showPlanZoomButtons.isSelected();
 				preferences.firePropertyChange(UserPreferences.Property.UPDATES_MINIMUM_DATE, !Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS, Renovations3DActivity.SHOW_PLAN_ZOOM_BUTTONS);
+			}
+		});
+
+		boolean DOUBLE_TAP_EDIT_2D_PREF = settings.getBoolean(Renovations3DActivity.DOUBLE_TAP_EDIT_2D_PREF, Renovations3DActivity.DOUBLE_TAP_EDIT_2D);
+
+		this.doubleTapEdit2D = new JCheckBox(activity, getContext().getString(R.string.doubleTapEdit2D), DOUBLE_TAP_EDIT_2D_PREF);
+		this.doubleTapEdit2D.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putBoolean(Renovations3DActivity.DOUBLE_TAP_EDIT_2D_PREF, doubleTapEdit2D.isSelected());
+				editor.apply();
+				Renovations3DActivity.DOUBLE_TAP_EDIT_2D = doubleTapEdit2D.isSelected();
+				preferences.firePropertyChange(UserPreferences.Property.UPDATES_MINIMUM_DATE, !Renovations3DActivity.DOUBLE_TAP_EDIT_2D, Renovations3DActivity.DOUBLE_TAP_EDIT_2D);
+			}
+		});
+
+		boolean DOUBLE_TAP_EDIT_3D_PREF = settings.getBoolean(Renovations3DActivity.DOUBLE_TAP_EDIT_3D_PREF, Renovations3DActivity.DOUBLE_TAP_EDIT_3D);
+
+		this.doubleTapEdit3D = new JCheckBox(activity, getContext().getString(R.string.doubleTapEdit3D), DOUBLE_TAP_EDIT_3D_PREF);
+		this.doubleTapEdit3D.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putBoolean(Renovations3DActivity.DOUBLE_TAP_EDIT_3D_PREF, doubleTapEdit3D.isSelected());
+				editor.apply();
+				Renovations3DActivity.DOUBLE_TAP_EDIT_3D = doubleTapEdit3D.isSelected();
+				preferences.firePropertyChange(UserPreferences.Property.UPDATES_MINIMUM_DATE, !Renovations3DActivity.DOUBLE_TAP_EDIT_3D, Renovations3DActivity.DOUBLE_TAP_EDIT_3D);
 			}
 		});
 
@@ -1170,6 +1198,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
 		swapOut(this.showPagerButtons, R.id.prefs_showPagerButtons);
 		swapOut(this.showPlanZoomButtons, R.id.prefs_showPlanZoomButtons);
+		swapOut(this.doubleTapEdit2D, R.id.prefs_doubleTapEdit2D);
+		swapOut(this.doubleTapEdit3D, R.id.prefs_doubleTapEdit3D);
 
 		this.setTitle(dialogTitle);
 		swapOut(closeButton, R.id.prefs_closeButton);

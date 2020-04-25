@@ -114,5 +114,7 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="showPlanZoomButtons">Toon zoomknoppen van het plan</string>
+    <string name="doubleTapEdit2D">Dubbeltik om in plan te bewerken</string>
+    <string name="doubleTapEdit3D">Dubbeltik om te bewerken in 3D-weergave</string>
 
 </resources>

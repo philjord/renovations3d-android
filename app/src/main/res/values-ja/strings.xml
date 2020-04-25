@@ -114,5 +114,7 @@
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="showPlanZoomButtons">プランズームボタンを表示</string>
+    <string name="doubleTapEdit2D">ダブルタップしてプランを編集します</string>
+    <string name="doubleTapEdit3D">ダブルタップすると3Dビューで編集できます</string>
 
 </resources>

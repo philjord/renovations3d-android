@@ -114,5 +114,7 @@
     <string name="yes">是</string>
     <string name="no">沒有</string>
     <string name="showPlanZoomButtons">顯示計劃縮放按鈕</string>
+    <string name="doubleTapEdit2D">雙擊以編輯計劃</string>
+    <string name="doubleTapEdit3D">雙擊以在3D視圖中進行編輯</string>
 
 </resources>

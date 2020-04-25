@@ -7,8 +7,7 @@ import android.view.MotionEvent;
 /**
  * Created by phil on 8/27/2017.
  */
-public class LongHoldHandler implements android.view.View.OnTouchListener
-{
+public class LongHoldHandler implements android.view.View.OnTouchListener {
 	private int JITTER_DP = 10;
 	private int maxJitter = 10;
 	private Handler handler = new Handler();
@@ -27,8 +26,7 @@ public class LongHoldHandler implements android.view.View.OnTouchListener
 	 * @param firstDelay
 	 * @param repeatDelay use 0 for a single fire
 	 */
-	public LongHoldHandler(DisplayMetrics mDisplayMetrics, long firstDelay, long repeatDelay, Callback callback)
-	{
+	public LongHoldHandler(DisplayMetrics mDisplayMetrics, long firstDelay, long repeatDelay, Callback callback) {
 		this.firstDelay = firstDelay;
 		this.repeatDelay = repeatDelay;
 		this.callback = callback;
@@ -47,18 +45,13 @@ public class LongHoldHandler implements android.view.View.OnTouchListener
 		}
 	};
 	@Override
-	public boolean onTouch(android.view.View v, MotionEvent ev)
-	{
+	public boolean onTouch(android.view.View v, MotionEvent ev) {
 		final int action = ev.getActionMasked();
 
-		switch (action & MotionEvent.ACTION_MASK)
-		{
-			case MotionEvent.ACTION_DOWN:
-			{
-				if (ev.getPointerCount() == 1)
-				{
-					if(!pushingDown)
-					{
+		switch (action & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN: {
+				if (ev.getPointerCount() == 1) {
+					if(!pushingDown) {
 						pushingDown = true;
 						xFirstMouseDown = ev.getX();
 						yFirstMouseDown = ev.getY();
@@ -70,29 +63,28 @@ public class LongHoldHandler implements android.view.View.OnTouchListener
 					}
 				}
 			}
-			case MotionEvent.ACTION_MOVE:
-			{
+			case MotionEvent.ACTION_MOVE: {
 				// we want to consume jitters as we are running
-				if (ev.getPointerCount() == 1)
-				{
-					if(pushingDown)
-					{
+				if (ev.getPointerCount() == 1) {
+					if(pushingDown) {
 						if( Math.abs(xFirstMouseDown - ev.getX()) < maxJitter
-								&& Math.abs(yFirstMouseDown - ev.getY()) < maxJitter)
+								&& Math.abs(yFirstMouseDown - ev.getY()) < maxJitter) {
 							return true;
+						}
 
 						// other wise fall through to stop the long hold repeats
 					}
 				}
 			}
 		}
+		// any other interaction should cancel the pending repeater call
 		pushingDown = false;
+		handler.removeCallbacks(repeater);
 		return false;
 	}
 
 
-	public interface Callback
-	{
+	public interface Callback {
 		void longHoldRepeat(MotionEvent lastMotionEvent);
 	}
 }

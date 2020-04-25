@@ -53,7 +53,7 @@
      이러한 항목을 보려면 2D 평면보기의 왼쪽에있는 가구 테이블에서 해당 항목의 가시성을 변경할 수 있습니다. <br>
      ]]></string>
 
-    <string name="double_tap_finish">완료하려면 두 번 탭하십시오.</string>
+    <string name="double_tap_finish">완료하려면 두 번 탭하십시오</string>
     <string name="long_process_title">장기 실행 프로세스</string>
     <string name="high_quality_photo_notice">고화질 사진 렌더링을 계산하는 데 시간이 오래 걸릴 수 있으며, 경우에 따라 1 시간 이상 걸릴 수도 있습니다.</string>
     <string name="libraryDownLoadNotice">이 라이브러리 파일은 현재 다운로드 중입니다. 약간 시간이 소요될 수 있습니다. 다운로드 및 설치가 완료되면 알림 메시지가 표시됩니다.</string>
@@ -121,6 +121,8 @@
     <string name="yes">예</string>
     <string name="no">아니</string>
     <string name="showPlanZoomButtons">계획 확대 / 축소 단추 표시</string>
+    <string name="doubleTapEdit2D">계획을 편집하려면 두 번 탭하세요</string>
+    <string name="doubleTapEdit3D">3D보기에서 편집하려면 두 번 탭하세요</string>
 
 
 </resources>

@@ -1199,7 +1199,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private void addMouseListeners(final PlanController controller) {
 	  mScaleDetector = new ScaleGestureDetector( this.getDrawableView().getContext(), new ScaleListener());
 	  this.getDrawableView().setOnTouchListener(touchyListener);
-	  longHoldHandler = new LongHoldHandler(this.getDrawableView().getResources().getDisplayMetrics(), 750, 0,
+	  longHoldHandler = new LongHoldHandler(this.getDrawableView().getResources().getDisplayMetrics(), 300, 0,
 			  new LongHoldHandler.Callback (){
 				  public void longHoldRepeat(MotionEvent lastMotionEvent){
 					  final float x = lastMotionEvent.getX();
@@ -1209,7 +1209,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 							  1, false, false, false, false);
 					  controller.releaseMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y));
 					  controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
-							  2, false, false, false, false);}
+							  2, false, false, false, false);
+				  }
 			  });
   }
 
@@ -1224,17 +1225,22 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	TouchyListener touchyListener = new TouchyListener();
 	LongHoldHandler longHoldHandler;
 	private class TouchyListener implements android.view.View.OnTouchListener {
+		// used to record downs so that when ups occur they can be fired off as downs
 		private MotionEvent potentialSinglePress = null;
 
 		private static final int INVALID_POINTER_ID = -1;
 
 		// The ‘active pointer’ is the one currently moving our object.
 		private int mActivePointerId = INVALID_POINTER_ID;
+		// used to record previous move events so the delta can be sent through
 		private float mLastTouchX;
 		private float mLastTouchY;
 
+		// used for double clicks, that off disabled by default in prefs
 		private long lastMouseReleasedTime = 0;
+		// used to ignore mouseMoved events that follows a mousePressed at the same location (Linux notifies this kind of events)
 		private Point lastMousePressedLocation;
+		//used to understand the auto pan operation for drags in selection mode
 		private boolean lastDownTouchedSelections = false;
 
 
@@ -1244,15 +1250,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent ev) {
-			// TODO: I should use this as the previous tap time, not my time grab I reckon
-			//ev.getEventTime()
-
 			if(mScaleDetector != null ) {
 				mScaleDetector.onTouchEvent(ev);
 				if (mScaleDetector.isInProgress())
 					return true;
 			}
 
+			// Note the long hold removes the move jitters, so almost nothing completes a down/up click without it
 			if (longHoldHandler != null && longHoldHandler.onTouch(v, ev))
 				return true;
 
@@ -1336,7 +1340,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 						// stops any double taps
 						lastMouseReleasedTime = 0;
 
-						//ignore all moves if room points are activated
+						// ignore all moves if room points are activated
 						if(addRoomPointActivated || deleteRoomPointActivated) {
 							return true;
 						}
@@ -1388,7 +1392,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 					potentialSinglePress = null;
 					break;
 				case MotionEvent.ACTION_POINTER_UP:
-					//second finger has been released
+					// second finger has been released
 					// Was this our active pointer going up, if so choose a new active pointer and adjust accordingly
 					if (pointerId == mActivePointerId) {
 						final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
@@ -1413,14 +1417,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				this.lastMousePressedLocation = new Point((int) x, (int) y);
 				if (isEnabled()) {
 					//requestFocusInWindow();
-					//always button 1 if (ev.getButton() == MouseEvent.BUTTON1)
+					if (true) // (ev.getButton() == MouseEvent.BUTTON1)
 					{
 						//alignment and magnetism come from menu now
 						boolean alignmentActivated = PlanComponent.this.alignmentActivated;
 						boolean duplicationActivated = ((MultipleLevelsPlanPanel) controller.getView()).getIsControlKeyOn();
 						boolean isShiftDown = controller.getMode() == PlanController.Mode.SELECTION && PlanComponent.this.selectMultiple;
 
-						int clickCount = lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 250 ? 2 : 1);
+						int clickCount = !Renovations3DActivity.DOUBLE_TAP_EDIT_2D || lastMouseReleasedTime == 0 ? 1 : (System.currentTimeMillis() - lastMouseReleasedTime < 250 ? 2 : 1);
 
 						// if it's a double, ensure triple != double twice
 						lastMouseReleasedTime = clickCount == 1 ? System.currentTimeMillis() : 0;
@@ -1437,8 +1441,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 								controller.pressMouse(convertXPixelToModel((int) x), convertYPixelToModel((int) y),
 												clickCount, isShiftDown,
 												alignmentActivated, duplicationActivated, false);
-							}
-							catch (ArrayIndexOutOfBoundsException e) {
+							} catch (ArrayIndexOutOfBoundsException e) {
 								// TODO this happens :at com.eteks.sweethome3d.viewcontroller.PlanController$PolylineResizeState.enter(PlanController.java:11465)
 								//ignore for now, investigate later
 								e.printStackTrace();
