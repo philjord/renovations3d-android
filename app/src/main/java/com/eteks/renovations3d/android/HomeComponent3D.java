@@ -332,7 +332,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						// Create component 3D only once the graphics configuration of its parent is known
 						if (canvas3D == null) {
 							createComponent3D(null, preferences, controller);
-
+							System.out.println("createComponent3D");
 							try {
 								// called here not in createComponent, just for life cycle clarity
 								canvas3D.addNotify();
@@ -1113,6 +1113,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			}
 		});
 
+		// start isn the stopped state, so initial load up isn't laboured
+		canvas3D.stopRenderer();
+
 		//canvasPanel.add(this.component3D);
 		//setLayout(new GridLayout());
 		//add(canvasPanel);
@@ -1120,11 +1123,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		if (controller != null)	{
 			addMouseListeners(controller, this.canvas3D);
 			if (preferences != null) {
-				this.navigationPanel = createNavigationPanel(this.home, preferences, controller);
-				// set in user visible hint
-				//setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible());
-				preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,
-								new NavigationPanelChangeListener(this));
+				setNavigationPanelVisible(preferences.isNavigationPanelVisible() && isVisible() && this.getUserVisibleHint());
 			}
 			//createActions(controller);
 			//installKeyboardActions();
@@ -1162,13 +1161,16 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		public void propertyChange(PropertyChangeEvent ev) {
+
 			// If home pane was garbage collected, remove this listener from preferences
 			HomeComponent3D homeComponent3D = this.homeComponent3D.get();
+
 			if (homeComponent3D == null) {
 				((UserPreferences)ev.getSource()).removePropertyChangeListener(
 								UserPreferences.Property.NAVIGATION_PANEL_VISIBLE, this);
 			} else {
-				homeComponent3D.setNavigationPanelVisible((Boolean) ev.getNewValue() && homeComponent3D.isVisible());
+
+				homeComponent3D.setNavigationPanelVisible((Boolean) ev.getNewValue() && homeComponent3D.isVisible() && homeComponent3D.getUserVisibleHint());
 			}
 		}
 	}
@@ -1176,8 +1178,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	/**
 	 * Returns the component displayed as navigation panel by this 3D view.
 	 */
-  private NavigationPanel createNavigationPanel(Home home,
-																					 UserPreferences preferences,
+  private NavigationPanel createNavigationPanel( UserPreferences preferences,
 																					 HomeController3D controller) {
 
 		NavigationPanel navigationPanel = new NavigationPanel(getContext(), getView());
@@ -1249,12 +1250,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * Supports transparent components.
 	 */
   private void setNavigationPanelVisible(boolean visible) {
-    if (this.navigationPanel != null) {
-			if(preferences.isNavigationPanelVisible() && visible)
-				navigationPanel.showTooltip();
-			else
-				navigationPanel.hideTooltip();
-    }
+
+		if(getContext() != null && this.navigationPanel == null && preferences != null) {
+				this.navigationPanel = createNavigationPanel(preferences, controller);
+				preferences.addPropertyChangeListener(UserPreferences.Property.NAVIGATION_PANEL_VISIBLE,
+								new NavigationPanelChangeListener(this));
+		}
+
+		if(preferences.isNavigationPanelVisible() && visible &&canvas3D != null)
+			navigationPanel.showTooltip();
+		else
+			navigationPanel.hideTooltip();
+
   }
 
 	/**
