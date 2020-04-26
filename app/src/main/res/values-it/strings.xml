@@ -4,9 +4,10 @@
     <string name="alignment">Allineamento</string>
     <string name="magnetism">Magnetismo</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Trascinare con due dita per spostare il piano senza modificare ciò che è selezionato
-Toccare due volte su qualsiasi oggetto per modificarlo<br>
-Due file di home demo saranno nella cartella download, utilizzare Open &#8230; nel menu. <br>
+Premi a lungo su qualsiasi oggetto per modificarlo. <br>
+Utilizzare il menu a discesa Strumenti nella barra del titolo per creare nuovi oggetti. <br>
+Utilizzare il pulsante Annulla nella barra del titolo per apportare correzioni. <br>
+Le demo case possono essere aperte da File-> Nuovo da Demo .. nel menu a discesa. <br>
 Puoi utilizzare il tuo browser per aprire direttamente più file home (.sh3d) da Internet, ad esempio <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>
@@ -54,7 +55,7 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     Questa casa è di dimensioni %1, che potrebbe essere troppo grande per essere modificata in Rinnovamenti 3D, se desideri disattivare la visibilità per mobili di grandi dimensioni? (Consigliata) <br>
     Per visualizzare tali elementi è possibile modificare la loro visibilità nella tabella dei mobili che si trova a sinistra della vista in pianta 2D. <br>
     ]]></string>
-    <string name="double_tap_finish">Doppio tap per finire</string>
+    <string name="long_press_to_finish">Premere a lungo per terminare</string>
     <string name="long_process_title">processo in esecuzione lungo</string>
     <string name="high_quality_photo_notice">foto di rendering di alta qualità può richiedere molto tempo per calcolare, in alcuni casi più di un\'ora, si prega di essere consapevoli di questo.</string>
     <string name="libraryDownLoadNotice">Questo file di libreria è ora scaricato, potrebbe richiedere un certo tempo, sarai notificato una volta scaricato e installato.</string>
@@ -102,9 +103,9 @@ Cambiare dall\'alto verso il basso alla visita può essere fatta con l\'icona di
     <string name="tutStep4Title">Creare una stanza - 1</string>
     <string name="tutStep5Text">Selezionare lo strumento \"Crea camere\" dal selettore degli strumenti.</string>
     <string name="tutStep5Title">Creare una stanza - 2</string>
-    <string name="tutStep6Text">Toccare due volte all\'interno delle quattro pareti per creare una stanza.</string>
+    <string name="tutStep6Text">Premi a lungo ovunque all\'interno delle quattro pareti per creare una stanza.</string>
     <string name="tutStep6Title">Creare una stanza - 3</string>
-    <string name="tutStep7Text">Modifica la nuova stanza doppio premendo su di esso, seleziona la struttura del pavimento, fai piastrellata. Chiudere le finestre di dialogo.</string>
+    <string name="tutStep7Text">Modifica la nuova stanza premendo a lungo su di essa, seleziona la trama del pavimento, rendila piastrellata. Chiudi le finestre di dialogo.</string>
     <string name="tutStep7Title">Creare una stanza - 4</string>
     <string name="tutStep8Text">Mostra il catalogo mobili, premendo la freccia.</string>
     <string name="tutStep8Title">Aggiungi una sedia - 1</string>

@@ -4,9 +4,10 @@
     <string name="alignment">zarovnání</string>
     <string name="magnetism">magnetismus</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Přetáhněte s dvěma prsty pohyb plánu bez změny toho, co je vybráno<br>
-Dvojitým klepnutím na kterýkoli objekt jej upravíte<br>
-Dva demo domovské soubory budou ve složce ke stažení, v nabídce použijte možnost Otevřít .... <br>
+Dlouhým stisknutím libovolného objektu jej upravíte. <br>
+K vytvoření nových objektů použijte rozevírací nabídku Nástroje v záhlaví. <br>
+Použijte tlačítko Zpět v záhlaví pro provedení oprav. <br>
+Demo domovy lze otevřít z nabídky Files-> New from Demo .. v rozbalovací nabídce. <br>
 Můžete použít váš prohlížeč k přímému otevření více domácích souborů (.sh3d) z internetu, například <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Stiskněte ikonu přidat k webu nábytku vybrána nábytek položku na zobrazení mapy v nájmu 0.0.<br>
@@ -49,7 +50,7 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
      Tento domov je %1 ve velikosti, který může být příliš velký, aby byl hladce upravován v Renovations 3D, chcete vypnout viditelnost u velkých nábytkových předmětů? (Doporučeno) <br>
     Chcete-li zobrazit tyto položky, můžete změnit jejich viditelnost v Tabulce nábytku na levé straně výřezu 2D <br>
      ]]></string>
-    <string name="double_tap_finish">Ukončete dvojitým poklepáním</string>
+    <string name="long_press_to_finish">Dokončete dlouhým stisknutím</string>
     <string name="long_process_title">Tohle chvíli potrvá…</string>
     <string name="high_quality_photo_notice">Renderování vysoce kvalitní fotografie může chvíli trvat. V některých případech i více než hodinu</string>
     <string name="libraryDownLoadNotice">Tato knihovna se právě stahuje. Jakmile bude hotovo, dáme vám vědět</string>
@@ -76,7 +77,7 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="tutStep11Text">Klepněte na tlačítko 3D a zobrazení se změní na zobrazení 3D.</string>
     <string name="tutStep11Title">Pohled ve 3D - 1</string>
     <string name="tutStep12Text">Fotoaparát přemístěte přetažením.</string>
-    <string name="tutStep12Title">Zobrazení ve 3D - 2</string>
+    <string name="tutStep12Title">Pohled ve 3D - 2</string>
     <string name="tutStep13Text">Jděte do domova stisknutím tlačítka virtuální návštěvy.</string>
     <string name="tutStep13Title">Pohled ve 3D - 3</string>
     <string name="tutStep14Title">Přidat dveře - 1</string>
@@ -103,10 +104,10 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="tutStep1Text">V nástroji Selector Tool vyberte nástroj \"Vytvořit stěny\".</string>
     <string name="tutStep2Text">Vytvořte stěnu přetažením na obrazovku a zvednutím prstu.</string>
     <string name="tutStep3Text">Zopakujte třikrát a vytvořte ze stěn čtverec. Poslední stěnu protáhněte až k začátku první.</string>
-    <string name="tutStep4Text">Připojte poslední stěnu k prvnímu dvojitým klepnutím a dokončete vytváření.</string>
+    <string name="tutStep4Text">Spojte poslední zeď s první dlouhým stisknutím a dokončete vytvoření zdi.</string>
     <string name="tutStep5Text">Vyberte nástroj \"Vytvořit pokoje\" v nástroji Selector Tool.</string>
-    <string name="tutStep6Text">Dvojitým klepnutím kdekoliv uvnitř čtyř stěn vytvoříte pokoj.</string>
-    <string name="tutStep7Text">Upravte nový pokoj dvojitým poklepáním na něj, vyberte texturu podlahy a upravte ji na dlažbu. Zavřete dialogová okna.</string>
+    <string name="tutStep6Text">Dlouhý stisk kdekoli uvnitř čtyř stěn vytvoří místnost.</string>
+    <string name="tutStep7Text">Upravte novou místnost dlouhým stisknutím, vyberte texturu podlahy, nechte ji položit. Zavřete dialogy.</string>
     <string name="tutStep8Text">Zobrazte katalog nábytku stisknutím šipky.</string>
     <string name="tutStep9Text">Dlouhým stiskem na židli se přidá k vašemu plánu.</string>
     <string name="tutStepFinishText"><![CDATA[Dobrá práce, nyní byste si chtěli načíst domov z demo souboru Menu-> File-> New z demo.\nPozději můžete použít generátor fotografií v 3D zobrazení na \"Vytvořit fotografii …\"]]></string>

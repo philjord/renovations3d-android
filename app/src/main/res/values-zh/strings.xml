@@ -4,9 +4,10 @@
     <string name="alignment">对准</string>
     <string name="magnetism">磁</string>
     <string name="welcometext_planview"><![CDATA[<html>
-用两根手指拖动移动计划，而不改变所选的内容。<br>
-双击任何对象进行编辑。<br>
-两个演示家庭文件将在您的下载文件夹中，在菜单中使用打开…点击。<br>
+长按任何对象以对其进行编辑。<br>
+使用标题栏中的“工具”下拉列表创建新对象。<br>
+使用标题栏中的撤消按钮进行更正。<br>
+可以从菜单下拉菜单中的“文件”->“从演示中新建..”中打开演示房屋。<br>
 您可以使用浏览器从互联网直接打开更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
@@ -46,7 +47,7 @@
  这个房子的大小是 ％1，可能太大而无法在Renovations 3D中进行平滑编辑，您想要关闭大型家具的可见性吗？（推荐）<br>
 要查看这些项目，您可以在2D平面视图左侧的家具表中更改其可见性。<br>
      ]]></string>
-    <string name="double_tap_finish">双击完成</string>
+    <string name="long_press_to_finish">长按即可完成</string>
     <string name="long_process_title">长时间运行的过程</string>
     <string name="high_quality_photo_notice">高品质的照片渲染可能需要很长时间来计算，在某些情况下超过一个小时，请注意这一点。</string>
     <string name="libraryDownLoadNotice">此库文件正在下载，这可能需要一些时间，一旦下载并安装，您将收到通知。</string>
@@ -90,13 +91,13 @@
     <string name="tutStep2Title">创建一些墙壁 - 2</string>
     <string name="tutStep3Text">再拖三次，创建一个平方的墙壁。使最后一个拖曳靠近你的第一个墙壁的开始。</string>
     <string name="tutStep3Title">创造一些墙壁 - 3</string>
-    <string name="tutStep4Text">通过双击完成创建，将最后一个墙加入第一个墙。</string>
+    <string name="tutStep4Text">长按将最后一堵墙连接到第一堵墙以完成墙的创建。</string>
     <string name="tutStep4Title">创建一个房间 - 1</string>
     <string name="tutStep5Text">从工具选择器中选择“创建房间”工具。</string>
     <string name="tutStep5Title">创建一个房间 - 2</string>
-    <string name="tutStep6Text">双击四面墙内的任何地方创建一个房间。</string>
+    <string name="tutStep6Text">长按四壁内的任何位置以创建一个房间。</string>
     <string name="tutStep6Title">创建一个房间 - 3</string>
-    <string name="tutStep7Text">通过双击来编辑新房间，选择地板纹理，使其平铺。 关闭对话框。</string>
+    <string name="tutStep7Text">长按它来编辑新房间，选择地板纹理，使其平铺。 关闭对话框。</string>
     <string name="tutStep7Title">创建一个房间 - 4</string>
     <string name="tutStep8Text">按箭头显示家具目录。</string>
     <string name="tutStep8Title">添加椅子 - 1</string>

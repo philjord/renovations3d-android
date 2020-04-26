@@ -4,9 +4,10 @@
     <string name="alignment">alineación</string>
     <string name="magnetism">magnetismo</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Arrastre con dos dedos para mover el plan sin cambiar lo que está seleccionado<br>
-Toca dos veces en cualquier objeto para editarlo<br>
-Dos archivos de inicio de demostración estarán en su carpeta de descargas, utilice Abrir … en el menú<br>
+Mantenga presionado cualquier objeto para editarlo. <br>
+Use el menú desplegable Herramientas en la barra de título para crear nuevos objetos. <br>
+Use el botón Deshacer en la barra de título para hacer correcciones. <br>
+Las casas de demostración se pueden abrir desde Archivos-> Nuevo desde la demostración .. en el menú desplegable. <br>
 Puede utilizar su navegador para abrir directamente más archivos de inicio (.sh3d) desde Internet, por ejemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Pulse el icono de añadir al sitio de los muebles seleccionados elemento de mobiliario a la vista del mapa en el contrato de arrendamiento 0.0.<br>
@@ -48,7 +49,7 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
      Esta casa es %1, que puede ser demasiado grande para ser fácilmente editada en Renovations 3D, ¿le gustaría desactivar la visibilidad para muebles grandes? (Recomendado) <br>
      Para ver estos elementos, puede cambiar su visibilidad en la tabla de muebles ubicada a la izquierda de la vista en planta 2D. <br>
      ]]></string>
-    <string name="double_tap_finish">Doble toque para terminar</string>
+    <string name="long_press_to_finish">Pulsación larga para terminar</string>
     <string name="long_process_title">Proceso de larga duración</string>
     <string name="high_quality_photo_notice">La representación de fotos de alta calidad puede tomar mucho tiempo para calcular, en algunos casos más de una hora, por favor, tenga en cuenta esto.</string>
     <string name="libraryDownLoadNotice">Este archivo de biblioteca se está descargando, esto puede tomar algún tiempo, se le notificará una vez que se descarga e instala.</string>
@@ -85,12 +86,12 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="tutStep1Title">Cree algunas paredes - 1</string>
     <string name="tutStep2Title">Cree algunas paredes - 2</string>
     <string name="tutStep3Title">Cree algunas paredes - 3</string>
-    <string name="tutStep4Title">Δημιουργήστε ένα δωμάτιο - 1</string>
-    <string name="tutStep5Title">Δημιουργήστε ένα δωμάτιο - 2</string>
-    <string name="tutStep6Text">Πατήστε δύο φορές οπουδήποτε μέσα στους τέσσερις τοίχους για να δημιουργήσετε ένα δωμάτιο.</string>
-    <string name="tutStep6Title">Δημιουργήστε ένα δωμάτιο - 3</string>
-    <string name="tutStep7Text">Επεξεργαστείτε το νέο δωμάτιο με διπλό πάτημα σε αυτό, επιλέξτε την υφή του δαπέδου, κάντε το πλακάκι. Κλείστε τα παράθυρα διαλόγου.</string>
-    <string name="tutStep7Title">Δημιουργήστε ένα δωμάτιο - 4</string>
+    <string name="tutStep4Title">Crea una habitación - 1</string>
+    <string name="tutStep5Title">Crea una habitación - 2</string>
+    <string name="tutStep6Text">Mantenga presionada en cualquier lugar dentro de las cuatro paredes para crear una habitación.</string>
+    <string name="tutStep6Title">Crea una habitación - 3</string>
+    <string name="tutStep7Text">Edite la nueva habitación presionándola prolongadamente, seleccione la textura del piso, hágala en mosaico. Cierra los cuadros de diálogo.</string>
+    <string name="tutStep7Title">Crea una habitación - 4</string>
     <string name="tutStep14Text">Muestre el catálogo de muebles, arrastrándolo hacia fuera desde el lado izquierdo de la pantalla.</string>
     <string name="tutStep15Text">Busque la palabra \"puerta\".</string>
     <string name="tutStep16Text">Prensa larga en una puerta, y se agregará a su plan.</string>
@@ -99,8 +100,8 @@ Cambiar de arriba abajo a la visita se puede hacer por el icono de un plan / per
     <string name="tutStep2Text">Cree una pared arrastrando la pantalla y luego levantando el dedo.</string>
     <string name="tutStep3Text">Cree un cuadrado de paredes arrastrándolo tres veces más. Haga que el último fin de arrastrar esté cerca del inicio de su primera pared.</string>
     <string name="tutStep4Text">Συμμετάσχετε στον τελευταίο τοίχο στην πρώτη με διπλό πάτημα για να τελειώσετε τη δημιουργία.</string>
-    <string name="tutStep5Text">Επιλέξτε το εργαλείο \"Δημιουργία δωματίων\" από τον επιλογέα εργαλείων.</string>
-    <string name="tutStep8Text">Εμφανίστε τον κατάλογο επίπλων πατώντας το βέλος....</string>
+    <string name="tutStep5Text">Seleccione la herramienta Crear habitaciones del Selector de herramientas.</string>
+    <string name="tutStep8Text">Muestre el catálogo de muebles presionando la flecha.</string>
     <string name="tutStep8Title">Añadir una silla - 1</string>
     <string name="tutStep9Text">Prensa larga en una silla, y se agregará a su plan.</string>
     <string name="tutStep9Title">Añadir una silla - 2</string>

@@ -4,9 +4,10 @@
     <string name="alignment">opstelling</string>
     <string name="magnetism">magnetisme</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Sleep met twee vingers om het plan te verplaatsen zonder te veranderen wat is geselecteerd. <br>
-Dubbeltik op elk object om het te bewerken. <br>
-Twee demo-thuisbestanden zijn in uw downloads-map, gebruik Open … in het menu. <br>
+Druk lang op een object om het te bewerken. <br>
+Gebruik de vervolgkeuzelijst Extra in de titelbalk om nieuwe objecten te maken. <br>
+Gebruik de knop Ongedaan maken in de titelbalk om correcties aan te brengen. <br>
+Demo-huizen kunnen worden geopend via Bestanden-> Nieuw uit Demo .. in het vervolgkeuzemenu. <br>
 U kunt uw browser gebruiken om meer thuisbestanden (.sh3d) van het internet direct te openen, bijvoorbeeld <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Druk op het pictogram voor toevoegen meubilair aan de geselecteerde meubels op het bovenaanzicht punt te plaatsen op de locatie 0.0.<br>
@@ -46,7 +47,7 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     Dit huis is %1 groot, wat te groot kan zijn om soepel te worden bewerkt in Renovations 3D, wilt u de zichtbaarheid van grote meubelstukken uitschakelen? (Aanbevolen) <br>
 	Als u die items wilt weergeven, kunt u hun zichtbaarheid wijzigen in de Meubeltabel aan de linkerkant van de 2D-plattegrond. <br>
      ]]></string>
-    <string name="double_tap_finish">Double tap om te voltooien</string>
+    <string name="long_press_to_finish">Druk lang om te voltooien</string>
     <string name="long_process_title">Lang lopend proces</string>
     <string name="high_quality_photo_notice">Hoge kwaliteit foto renderen kan een lange tijd in beslag nemen om te berekenen, in sommige gevallen meer dan een uur, dan kunt u zich bewust zijn van dit.</string>
     <string name="libraryDownLoadNotice">Dit bibliotheekbestand wordt nu gedownload, dit kan enige tijd duren, u wordt op de hoogte gesteld zodra het is gedownload en geïnstalleerd.</string>
@@ -90,13 +91,13 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="tutStep2Title">Maak een aantal muren - 2</string>
     <string name="tutStep3Text">Maak een vierkant muren door drie keer te slepen. Maak het laatste dragende einde bij het begin van je eerste muur.</string>
     <string name="tutStep3Title">Maak een aantal muren - 3</string>
-    <string name="tutStep4Text">Doe mee aan de laatste wand naar de eerste door dubbel te tikken om de creatie af te ronden.</string>
+    <string name="tutStep4Text">Verbind de laatste muur met de eerste door lang op te drukken om het maken van de muur te voltooien.</string>
     <string name="tutStep4Title">Maak een kamer aan - 1</string>
     <string name="tutStep5Text">Selecteer het gereedschap \'Creëren kamers\' uit de hulpprogramma.</string>
     <string name="tutStep5Title">Maak een kamer aan - 2</string>
-    <string name="tutStep6Text">Dubbel tik ergens in de vier muren om een kamer te creëren.</string>
+    <string name="tutStep6Text">Druk lang ergens binnen de vier muren om een kamer te creëren.</string>
     <string name="tutStep6Title">Maak een kamer aan - 3</string>
-    <string name="tutStep7Text">Bewerk de nieuwe kamer door er dubbel op te tikken, selecteer de vloerstructuur, maak het betegeld. Sluit de dialoogvensters.</string>
+    <string name="tutStep7Text">Bewerk de nieuwe kamer door er lang op te drukken, selecteer de textuur van de vloer, maak hem betegeld. Sluit de dialogen.</string>
     <string name="tutStep7Title">Maak een kamer aan - 4</string>
     <string name="tutStep8Text">Toon de meubel catalogus door op de pijl te drukken.</string>
     <string name="tutStep8Title">Voeg een stoel toe - 1</string>

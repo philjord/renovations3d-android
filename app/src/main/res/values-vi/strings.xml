@@ -4,9 +4,10 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">từ tính</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Kéo bằng hai ngón tay để di chuyển kế hoạch mà không thay đổi những gì được chọn. <br>
-Nhấn đúp vào bất kỳ đối tượng nào để chỉnh sửa. <br>
-Hai tệp trình diễn bản demo sẽ nằm trong thư mục tải xuống của bạn, sử dụng Mở … trong trình đơn. <br>
+Nhấn và giữ bất kỳ đối tượng nào để chỉnh sửa nó. <br>
+Sử dụng công cụ thả xuống trong thanh tiêu đề để tạo các đối tượng mới. <br>
+Sử dụng nút hoàn tác trong thanh tiêu đề để chỉnh sửa. <br>
+Nhà demo có thể được mở từ Tệp-> Mới từ Bản trình diễn .. trong trình đơn thả xuống. <br>
 Bạn có thể sử dụng trình duyệt để trực tiếp mở thêm các tệp tin nhà (.sh3d) từ internet, ví dụ như <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nhấn vào biểu tượng add đồ nội thất đặt hàng đồ nội thất được lựa chọn vào xem kế hoạch tại vị trí 0.0.<br>
@@ -47,7 +48,7 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
      Ngôi nhà này là %1, có thể quá lớn để có thể dễ dàng chỉnh sửa trong Renovations 3D, bạn có muốn tắt chế độ hiển thị cho các đồ nội thất lớn không? (Được khuyến nghị) <br>
      Để xem các yếu tố này, bạn có thể thay đổi chế độ hiển thị của chúng trong bảng đồ nội thất nằm ở bên trái của giao diện kế hoạch 2D. <br>
      ]]></string>
-    <string name="double_tap_finish">Nhấn đúp để kết thúc</string>
+    <string name="long_press_to_finish">Nhấn và giữ để hoàn thành</string>
     <string name="long_process_title">Quá trình chạy dài</string>
     <string name="high_quality_photo_notice">Việc hiển thị hình ảnh chất lượng cao có thể mất một thời gian dài để tính toán, trong một số trường hợp hơn một giờ, hãy chú ý đến việc này.</string>
     <string name="libraryDownLoadNotice">Tệp thư viện này hiện đang được tải xuống, quá trình này có thể mất một lúc, bạn sẽ được thông báo khi đã tải xuống và cài đặt.</string>
@@ -91,13 +92,13 @@ Thay đổi từ trên xuống dưới để truy cập có thể được thự
     <string name="tutStep2Title">Tạo một số bức tường - 2</string>
     <string name="tutStep3Text">Tạo một hình vuông của bức tường bằng cách kéo thêm ba lần nữa. Làm cho cuối cùng kết thúc kéo gần đầu tường đầu tiên của bạn.</string>
     <string name="tutStep3Title">Tạo một số bức tường - 3</string>
-    <string name="tutStep4Text">Tham gia bức tường cuối cùng trước tiên bằng cách nhấn đúp để hoàn thành sáng tạo.</string>
+    <string name="tutStep4Text">Tham gia bức tường cuối cùng đến bức tường đầu tiên bằng cách nhấn lâu để hoàn thành việc tạo bức tường.</string>
     <string name="tutStep4Title">Tạo phòng - 1</string>
     <string name="tutStep5Text">Chọn công cụ \"Tạo phòng\" từ Công cụ chọn.</string>
     <string name="tutStep5Title">Tạo phòng - 2</string>
-    <string name="tutStep6Text">Nhấn đúp vào bất kỳ nơi nào trong bốn bức tường để tạo phòng.</string>
+    <string name="tutStep6Text">Nhấn dài bất cứ nơi nào trong bốn bức tường để tạo ra một căn phòng.</string>
     <string name="tutStep6Title">Tạo phòng - 3</string>
-    <string name="tutStep7Text">Chỉnh sửa phòng mới bằng cách nhấn đúp vào nó, chọn kết cấu sàn, làm cho nó lát gạch. Đóng các hộp thoại.</string>
+    <string name="tutStep7Text">Chỉnh sửa phòng mới bằng cách nhấn lâu vào nó, chọn kết cấu sàn, làm cho nó lát gạch. Đóng các hộp thoại.</string>
     <string name="tutStep7Title">Tạo phòng - 4</string>
     <string name="tutStep8Text">Hiển thị danh mục đồ dùng bằng gỗ, bằng cách nhấn vào mũi tên.</string>
     <string name="tutStep8Title">Thêm ghế - 1</string>

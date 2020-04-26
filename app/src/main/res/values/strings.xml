@@ -4,9 +4,10 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Drag with two fingers to move the plan without changing what is selected.<br>
-Double tap on any object to edit it.<br>
-Two demo home files will be in your downloads folder, use Open… in the menu. <br>
+Long press on any object to edit it.<br>
+Use the Tools drop down in the title bar to create new objects.<br>
+Use the undo button in the title bar to make corrections.<br>
+Demo homes can be opened from Files->New from Demo.. in the menu drop down.<br>
 You can use your browser to directly open more home files (.sh3d) from the internet, for example <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>
@@ -49,7 +50,7 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     To view those items you can change their visibility in the Furniture Table found to the left of the 2D Plan view.<br>
     ]]></string>
 
-    <string name="double_tap_finish">Double tap to finish</string>
+    <string name="long_press_to_finish">Long press to finish</string>
     <string name="long_process_title">Long running process</string>
     <string name="high_quality_photo_notice">High quality photo rendering can take a long time to calculate, in some cases more than an hour, please be aware of this.</string>
     <string name="libraryDownLoadNotice">This library file is now being downloaded, this may take some time, you will be notified once it is downloaded and installed.</string>
@@ -82,13 +83,13 @@ Changing from top down to visit can be done by the icon of a plan/person. <br>
     <string name="tutStep3Title">Create some walls - 3</string>
     <string name="tutStep3Text">Create a square of walls by dragging three more times. Make the last drag end near the start of your first wall.</string>
     <string name="tutStep4Title">Create a room – 1</string>
-    <string name="tutStep4Text">Join the last wall to the first by double tapping to finish creation.</string>
+    <string name="tutStep4Text">Join the last wall to the first by long pressing to finish wall creation.</string>
     <string name="tutStep5Title">Create a room – 2</string>
     <string name="tutStep5Text">Select the \"Create Rooms\" tool from the Tool Selector.</string>
     <string name="tutStep6Title">Create a room – 3</string>
-    <string name="tutStep6Text">Double tap anywhere inside the four walls to create a room.</string>
+    <string name="tutStep6Text">Long press anywhere inside the four walls to create a room.</string>
     <string name="tutStep7Title">Create a room – 4</string>
-    <string name="tutStep7Text">Edit the new room by double tapping on it, select the floor texture, make it tiled. Close the dialogs.</string>
+    <string name="tutStep7Text">Edit the new room by long pressing on it, select the floor texture, make it tiled. Close the dialogs.</string>
     <string name="tutStep8Title">Add a chair – 1</string>
     <string name="tutStep8Text">Show the furniture catalog, by pressing the arrow.</string>
     <string name="tutStep9Title">Add a chair – 2</string>

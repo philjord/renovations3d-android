@@ -4,9 +4,10 @@
     <string name="alignment">對準</string>
     <string name="magnetism">具有磁性</string>
     <string name="welcometext_planview"><![CDATA[<html>
-用兩根手指拖動移動計劃，而不改變所選的內容。<br>
-雙擊任何對象進行編輯。<br>
-兩個演示家庭文件將在您的下載文件夾中，在菜單中使用打開…點擊。<br>
+長按任何對像以對其進行編輯。<br>
+使用標題欄中的“工具”下拉列表創建新對象。<br>
+使用標題欄中的撤消按鈕進行更正。<br>
+可以在菜單下拉菜單中的“文件”->“從演示中新建”中打開演示房屋。<br>
 您可以使用瀏覽器從互聯網直接打開更多的家庭文件（.sh3d），例如<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>。
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>按Add家具图标放置挑选的家具到平面图了该项目的位置0.0。<br>
@@ -46,7 +47,7 @@
      這個房子的大小是 ％1，可能太大而無法在Renovations 3D中進行平滑編輯，您想要關閉大型家具的可見性嗎？（推薦）<br>
     要查看這些項目，您可以在2D平面視圖左側的家具表中更改其可見性。<br>
      ]]></string>
-    <string name="double_tap_finish">双击完成</string>
+    <string name="long_press_to_finish">長按即可完成</string>
     <string name="long_process_title">长时间运行的过程</string>
     <string name="high_quality_photo_notice">高品质的照片渲染可能需要很长时间来计算，在某些情况下超过一个小时，请注意这一点。</string>
     <string name="libraryDownLoadNotice">此庫文件正在下載，這可能需要一些時間，一旦下載並安裝，您將收到通知。</string>
@@ -90,13 +91,13 @@
     <string name="tutStep2Title">創建一些牆壁 - 2</string>
     <string name="tutStep3Text">再拖三次，創建一個平方的牆壁。使最後一個拖曳靠近你的第一個牆壁的開始。</string>
     <string name="tutStep3Title">創造一些牆壁 - 3</string>
-    <string name="tutStep4Text">通過雙擊完成創建，將最後一個牆加入第一個牆。</string>
+    <string name="tutStep4Text">長按將最後一堵牆連接到第一堵牆以完成牆的創建。</string>
     <string name="tutStep4Title">創建一個房間 - 1</string>
     <string name="tutStep5Text">從工具選擇器中選擇“創建房間”工具。</string>
     <string name="tutStep5Title">創建一個房間 - 2</string>
-    <string name="tutStep6Text">雙擊四面牆內的任何地方創建一個房間。</string>
+    <string name="tutStep6Text">長按四壁內的任何位置以創建一個房間。</string>
     <string name="tutStep6Title">創建一個房間 - 3</string>
-    <string name="tutStep7Text">通過雙擊來編輯新房間，選擇地板紋理，使其平鋪。 關閉對話框。</string>
+    <string name="tutStep7Text">長按它來編輯新房間，選擇地板紋理，使其平鋪。 關閉對話框。</string>
     <string name="tutStep7Title">創建一個房間 - 4</string>
     <string name="tutStep8Text">按箭頭顯示家具目錄。</string>
     <string name="tutStep8Title">添加椅子 - 1</string>

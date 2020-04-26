@@ -4,9 +4,10 @@
     <string name="alignment">Alignment</string>
     <string name="magnetism">Magnetism</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Dra med två fingrar för att flytta planen utan att ändra vad som valts. <br>
-Dubbelklicka på något objekt för att redigera det. <br>
-Två demo hemfiler kommer att finnas i din nedladdningsmapp, använd Öppna … i menyn. <br>
+Tryck länge på valfritt objekt för att redigera det. <br>
+Använd rullgardinsmenyn Verktyg i titelfältet för att skapa nya objekt. <br>
+Använd ångra-knappen i titelraden för att göra korrigeringar. <br>
+Demohem kan öppnas från Filer-> Nytt från Demo .. i rullgardinsmenyn. <br>
 Du kan använda din webbläsare för att direkt öppna fler hemfiler (.sh3d) från internet, till exempel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Tryck på add möbler ikonen för att placera det valda möbler på planritning på platsen 0,0.<br>
@@ -48,7 +49,7 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
      Detta hus är %1, vilket kan vara för stort för att enkelt kunna redigeras i Renovations 3D, vill du stänga av synligheten för stora möbler? (Rekommenderas) <br>
      För att se dessa element kan du ändra sin synlighet i möbelbordet till vänster om 2D planvy. <br>
      ]]></string>
-    <string name="double_tap_finish">Dubbeltryck för att avsluta</string>
+    <string name="long_press_to_finish">Tryck länge för att avsluta</string>
     <string name="long_process_title">Långdragna process</string>
     <string name="high_quality_photo_notice">Hög kvalitet foto rendering kan ta lång tid att beräkna, i vissa fall mer än en timme, du vara medveten om detta.</string>
     <string name="libraryDownLoadNotice">Den här biblioteksfilen hämtas nu, det kan ta lite tid, du kommer att bli underrättad när den har laddats ner och installerats.</string>
@@ -92,13 +93,13 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="tutStep2Title">Skapa några väggar - 2</string>
     <string name="tutStep3Text">Skapa en kvadrat med väggar genom att dra tre gånger. Gör sista dragänden nära början på din första vägg.</string>
     <string name="tutStep3Title">Skapa några väggar - 3</string>
-    <string name="tutStep4Text">Gå med i den sista väggen till den första genom att dubbelklicka för att avsluta skapandet.</string>
+    <string name="tutStep4Text">Gå med den sista väggen till den första genom att trycka länge för att avsluta skapandet av väggen.</string>
     <string name="tutStep4Title">Skapa ett rum - 1</string>
     <string name="tutStep5Text">Välj verktyget \"Skapa rum\" från Verktygsväljaren.</string>
     <string name="tutStep5Title">Skapa ett rum - 2</string>
-    <string name="tutStep6Text">Dubbelklicka någonstans inuti de fyra väggarna för att skapa ett rum.</string>
+    <string name="tutStep6Text">Tryck länge inuti de fyra väggarna för att skapa ett rum.</string>
     <string name="tutStep6Title">Skapa ett rum - 3</string>
-    <string name="tutStep7Text">Redigera det nya rummet genom att dubbelklicka på det, välj golvstruktur, gör det kaklat. Stäng dialogrutorna.</string>
+    <string name="tutStep7Text">Redigera det nya rummet genom att länge trycka på det, välj golvstrukturen, göra det kaklat. Stäng dialogrutorna.</string>
     <string name="tutStep7Title">Skapa ett rum - 4</string>
     <string name="tutStep8Text">Visa möbelkatalogen genom att trycka på pilen.</string>
     <string name="tutStep8Title">Lägg till en stol - 1</string>

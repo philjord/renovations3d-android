@@ -4,9 +4,10 @@
     <string name="alignment">wyrównanie</string>
     <string name="magnetism">magnetyzm</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Przeciągnij dwoma palcami, aby przenieść plan bez zmiany tego, co zostało wybrane. <br>
-Kliknij dwukrotnie na dowolnym obiekcie, aby go edytować. <br>
-Dwie pliki domowego demo będą znajdować się w folderze do pobrania, użyj Open … w menu. <br>
+Naciśnij długo dowolny obiekt, aby go edytować. <br>
+Użyj menu rozwijanego Narzędzia na pasku tytułu, aby utworzyć nowe obiekty. <br>
+Użyj przycisku Cofnij na pasku tytułu, aby wprowadzić poprawki. <br>
+Wersje demonstracyjne można otworzyć w menu Pliki-> Nowe z wersji Demo ... w menu rozwijanym. <br>
 Możesz użyć swojej przeglądarki, aby bezpośrednio otworzyć więcej plików domowych (.sh3d) z Internetu, na przykład <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nacisnąć ikonę furniture Dodaj do umieszczenia wybranego meble na rzucie element w miejscu 0.0.<br>
@@ -47,7 +48,7 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
      Ten dom ma rozmiar %1, który może być zbyt duży, aby można go było płynnie edytować w programie Renovations 3D, czy chcesz wyłączyć widoczność dużych elementów mebli? (Zalecane) <br>
      Aby wyświetlić te elementy, możesz zmienić ich widoczność w tabeli mebli znajdującej się po lewej stronie widoku planu 2D. <br>
      ]]></string>
-    <string name="double_tap_finish">Kliknij dwukrotnie, aby zakończyć</string>
+    <string name="long_press_to_finish">Naciśnij długo, aby zakończyć</string>
     <string name="long_process_title">Długi proces</string>
     <string name="high_quality_photo_notice">Wysoka jakość renderowania zdjęć może zająć dużo czasu, aby obliczyć, w niektórych przypadkach ponad godzinę, pamiętaj o tym.</string>
     <string name="libraryDownLoadNotice">Ten plik biblioteki jest teraz pobierany, co może zająć trochę czasu, zostanie ono powiadomione po jej pobraniu i zainstalowaniu.</string>
@@ -95,9 +96,9 @@ Zmiana z góry na dół do odwiedzenia może odbywać się za pomocą ikony plan
     <string name="tutStep4Title">Utwórz pokój - 1</string>
     <string name="tutStep5Text">Wybierz narzędzie \"Utwórz pomieszczenia\" z Narzędzia wyboru.</string>
     <string name="tutStep5Title">Utwórz pokój - 2</string>
-    <string name="tutStep6Text">Kliknij dwukrotnie w dowolnym miejscu wewnątrz czterech ścian, aby utworzyć pokój.</string>
+    <string name="tutStep6Text">Naciśnij długo w dowolnym miejscu wewnątrz czterech ścian, aby stworzyć pokój.</string>
     <string name="tutStep6Title">Utwórz pokój - 3</string>
-    <string name="tutStep7Text">Edytuj nowy pokój, podwójnie dotykając go, wybierz teksturę podłogi, wykończ ją. Zamknij okna dialogowe.</string>
+    <string name="tutStep7Text">Edytuj nowy pokój, naciskając go długo, wybierz teksturę podłogi, spraw, aby była kafelkowa. Zamknij okna dialogowe.</string>
     <string name="tutStep7Title">Utwórz pokój - 4</string>
     <string name="tutStep8Text">Pokaż katalog mebli, naciskając strzałkę.</string>
     <string name="tutStep8Title">Dodaj krzesło - 1</string>

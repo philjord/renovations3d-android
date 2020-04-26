@@ -4,9 +4,10 @@
     <string name="alignment">Ausrichtung</string>
     <string name="magnetism">Magnetismus</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Ziehe mit zwei Fingern, um den Plan zu bewegen, ohne zu ändern, was ausgewählt ist
-Doppelhahn Sie auf ein beliebiges Objekt, um es zu bearbeiten<br>
-Zwei Demo-Home-Dateien werden in Ihrem Download-Ordner, verwenden Sie Open … im Menü. <br>
+Drücken Sie lange auf ein Objekt, um es zu bearbeiten. <br>
+Verwenden Sie das Dropdown-Menü Extras in der Titelleiste, um neue Objekte zu erstellen. <br>
+Verwenden Sie die Schaltfläche "Rückgängig" in der Titelleiste, um Korrekturen vorzunehmen. <br>
+Demo-Häuser können über Dateien-> Neu aus Demo .. im Dropdown-Menü geöffnet werden. <br>
 Sie können Ihren Browser verwenden, um direkt mehr Home-Dateien (.sh3d) aus dem Internet zu öffnen, zum Beispiel <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Drücken Sie die Hinzufügen-Symbol, um vor Ort die Möbel ausgewählt Möbelstück auf der Kartenansicht auf den Mietvertrag 0,0.<br>
@@ -47,7 +48,7 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
      Dieses Home ist %1 groß, was zu groß sein könnte, um in Renovations 3D problemlos bearbeitet zu werden. Möchten Sie die Sichtbarkeit für große Möbelelemente deaktivieren? (Empfohlen) <br>
     Um diese Elemente anzuzeigen, können Sie ihre Sichtbarkeit in der Möbeltabelle links neben der 2D-Planansicht ändern. <br>
      ]]></string>
-    <string name="double_tap_finish">Doppeltippen, um zu beenden</string>
+    <string name="long_press_to_finish">Zum Drücken lange drücken</string>
     <string name="long_process_title">Lange Laufzeit</string>
     <string name="high_quality_photo_notice">Hochwertige Foto-Rendering kann eine lange Zeit zu berechnen, in einigen Fällen mehr als eine Stunde, bitte beachten Sie diese.</string>
     <string name="libraryDownLoadNotice">Diese Bibliotheksdatei wird nun heruntergeladen, dies kann einige Zeit dauern, Sie werden benachrichtigt, sobald es heruntergeladen und installiert ist.</string>
@@ -101,10 +102,10 @@ Das Ändern von oben nach unten zu besuchen kann durch die Ikone eines Planes / 
     <string name="tutStep1Text">Wählen Sie aus der Werkzeugauswahl das Werkzeug \"Wände erstellen\".</string>
     <string name="tutStep2Text">Erstellen Sie eine Wand, indem Sie auf den Bildschirm ziehen und dann den Finger anheben.</string>
     <string name="tutStep3Text">Erstellen Sie ein Quadrat von Wänden, indem Sie drei weitere Male ziehen. Machen Sie das letzte Wendeende in der Nähe des Anfangs Ihrer ersten Wand.</string>
-    <string name="tutStep4Text">Verbinde die letzte Mauer zum ersten durch doppelte Klopfen, um die Schöpfung zu beenden.</string>
+    <string name="tutStep4Text">Verbinden Sie die letzte Wand mit der ersten, indem Sie lange drücken, um die Wanderstellung abzuschließen.</string>
     <string name="tutStep5Text">Wählen Sie aus der Werkzeugauswahl das Werkzeug \"Räume erstellen\".</string>
-    <string name="tutStep6Text">Doppeltes Hahn irgendwo innerhalb der vier Wände, um ein Zimmer zu schaffen.</string>
-    <string name="tutStep7Text">Bearbeiten Sie das neue Zimmer, indem Sie es doppelt klopfen, wählen Sie die Bodenstruktur, machen Sie es gefliest. Schließen Sie die Dialoge.</string>
+    <string name="tutStep6Text">Drücken Sie lange irgendwo in die vier Wände, um einen Raum zu schaffen.</string>
+    <string name="tutStep7Text">Bearbeiten Sie den neuen Raum, indem Sie lange darauf drücken, die Bodentextur auswählen und ihn kacheln lassen. Schließen Sie die Dialoge.</string>
     <string name="tutStep8Text">Zeigen Sie den Möbelkatalog, indem Sie den Pfeil drücken.</string>
     <string name="tutStep9Text">Lange Presse auf einen Stuhl, und es wird zu Ihrem Plan hinzugefügt werden.</string>
     <string name="tutStepFinishText"><![CDATA[Gute Arbeit, jetzt möchtest du vielleicht ein Zuhause aus einer Demo-Datei laden, Menü-> Datei-> Neu von Demo.\nSpäter könnten Sie den Fotogenerator in der 3D-Ansicht verwenden, um \"Foto erstellen …\" zu erstellen.]]></string>

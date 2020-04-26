@@ -72,9 +72,7 @@ import java.util.Properties;
 
 import javaawt.Graphics;
 import javaawt.Graphics2D;
-import javaawt.Insets;
 import javaawt.geom.AffineTransform;
-import javaawt.geom.Rectangle2D;
 import javaawt.print.PageFormat;
 import javaawt.print.PrinterException;
 
@@ -254,28 +252,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 						break;
 					case 1://createWalls:
 						finishCurrentMode();
-						if (!tutorial.isEnabled() && getActivity().isFinishing())
-							Toast.makeText(getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						if (!tutorial.isEnabled() && !getActivity().isFinishing())
+							Toast.makeText(getActivity(), R.string.long_press_to_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.WALL_CREATION);
 						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_WALL_TOOL_SELECTED);
 						break;
 					case 2://createRooms:
 						finishCurrentMode();
-						if (!tutorial.isEnabled() && getActivity().isFinishing())
-							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						if (!tutorial.isEnabled() && !getActivity().isFinishing())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.long_press_to_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.ROOM_CREATION);
 						tutorial.actionComplete(Tutorial.TutorialAction.CREATE_ROOM_TOOL_SELECTED);
 						break;
 					case 3://createPolyLines:
 						finishCurrentMode();
-						if (!tutorial.isEnabled() && getActivity().isFinishing())
-							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						if (!tutorial.isEnabled() && !getActivity().isFinishing())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.long_press_to_finish, Toast.LENGTH_SHORT).show();
 						planController.setMode(PlanController.Mode.POLYLINE_CREATION);
 						break;
 					case 4://createDimensions:
 						finishCurrentMode();
-						if (!tutorial.isEnabled() && getActivity().isFinishing())
-							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.double_tap_finish, Toast.LENGTH_SHORT).show();
+						if (!tutorial.isEnabled() && !getActivity().isFinishing())
+							Toast.makeText(MultipleLevelsPlanPanel.this.getActivity(), R.string.long_press_to_finish, Toast.LENGTH_SHORT).show();
 						setMode(PlanController.Mode.DIMENSION_LINE_CREATION);
 						break;
 					case 5://createText:
@@ -355,10 +353,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			}
 
 			if (actionKey != null && !this.preferences.isActionTipIgnored(actionKey)) {
-				Thread t = new Thread(new Runnable()
-				{
-					public void run()
-					{
+				Thread t = new Thread(new Runnable() {
+					public void run() {
 						if(getActivity() != null) {
 							if (((Renovations3DActivity) getActivity()).getHomeController() != null &&
 									((Renovations3DActivity) getActivity()).getHomeController().getView().showActionTipMessage(actionKey)) {
@@ -739,20 +735,16 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		// taken from HomePane
 		rulersVisible = preferences.isRulersVisible();
 		preferences.addPropertyChangeListener(UserPreferences.Property.RULERS_VISIBLE,
-				new PropertyChangeListener()
-				{
-					public void propertyChange(PropertyChangeEvent event)
-					{
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent event) {
 						rulersVisible = preferences.isRulersVisible();
 						planComponent.repaint();
 					}
 				});
 
 		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
-				new PropertyChangeListener()
-				{
-					public void propertyChange(PropertyChangeEvent event)
-					{
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent event) {
 						//TODO: this should set the names of the menu options just once now
 					}
 				});
@@ -935,19 +927,20 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 			}
 		});
 
-		// auto reset for room creates
+		// auto reset for room/ wall/poly line creates
 		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new  PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				if (planController.getMode() == PlanController.Mode.ROOM_CREATION &&
-						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue()) {
+				if ((planController.getMode() == PlanController.Mode.ROOM_CREATION ||
+								planController.getMode() == PlanController.Mode.WALL_CREATION ||
+								planController.getMode() == PlanController.Mode.DIMENSION_LINE_CREATION ||
+								planController.getMode() == PlanController.Mode.POLYLINE_CREATION
+							)	&& ((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue()) {
 					// run this code after everything has finished in the controller (invoke later)
 					Handler h = new Handler();
-					h.post(new Runnable()
-					{
+					h.post(new Runnable() {
 						@Override
-						public void run()
-						{
+						public void run() {
 							setMode(PlanController.Mode.SELECTION);
 							resetToolSpinnerToMode();
 						}
@@ -958,11 +951,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 
 		//tutorial listener
-		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener()
-		{
+		planController.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener() {
 			@Override
-			public void propertyChange(PropertyChangeEvent evt)
-			{
+			public void propertyChange(PropertyChangeEvent evt) {
 				if (planController.getMode() == PlanController.Mode.WALL_CREATION &&
 						((Boolean) evt.getOldValue()).booleanValue() && !((Boolean) evt.getNewValue()).booleanValue()) {
 					((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_CREATION_FINISHED);
@@ -971,11 +962,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		});
 
 		//tutorial listener
-		home.addWallsListener(new CollectionListener<Wall>()
-		{
+		home.addWallsListener(new CollectionListener<Wall>() {
 			@Override
-			public void collectionChanged(CollectionEvent<Wall> collectionEvent)
-			{
+			public void collectionChanged(CollectionEvent<Wall> collectionEvent) {
 				if (collectionEvent.getType() == CollectionEvent.Type.ADD) {
 					 ((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.WALL_PLACED);
 				}
@@ -983,11 +972,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		});
 
 		//tutorial listener
-		home.addRoomsListener(new CollectionListener<Room>()
-		{
+		home.addRoomsListener(new CollectionListener<Room>() {
 			@Override
-			public void collectionChanged(CollectionEvent<Room> collectionEvent)
-			{
+			public void collectionChanged(CollectionEvent<Room> collectionEvent) {
 				if (collectionEvent.getType() == CollectionEvent.Type.ADD) {
 					((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.CREATE_ROOM_FINISHED);
 				}
@@ -995,11 +982,9 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		});
 
 		//tutorial listener
-		home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>()
-		{
+		home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>() {
 			@Override
-			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> collectionEvent)
-			{
+			public void collectionChanged(CollectionEvent<HomePieceOfFurniture> collectionEvent) {
 				if (collectionEvent.getType() == CollectionEvent.Type.ADD) {
 					if(collectionEvent.getItem() instanceof HomeDoorOrWindow) {
 						((Renovations3DActivity) getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.DOOR_ADDED);

@@ -4,9 +4,10 @@
     <string name="alignment">Alignement</string>
     <string name="magnetism">Magnétisme</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Pour déplacer la zone visible du plan, déplacez deux doigts ensemble.<br>
-Pour modifier n\'importe quel objet, double-cliquez.<br>
-Deux fichiers sh3d de démo sont dans votre dossier de téléchargement, sélectionnez Ouvrir… dans le menu.<br>
+Appuyez longuement sur n\'importe quel objet pour le modifier. <br>
+Utilisez le menu déroulant Outils dans la barre de titre pour créer de nouveaux objets. <br>
+Utilisez le bouton Annuler dans la barre de titre pour apporter des corrections. <br>
+Les démos peuvent être ouvertes depuis Fichiers-> Nouveau depuis la démo .. dans le menu déroulant. <br>
 Utilisez votre navigateur pour télécharger d\'autres fichiers sh3d à partir d\'Internet, par exemple <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Appuyez sur l\'icône d\'ajout de meubles pour placer le meuble sélectionné dans la vue du plan à l\'emplacement 0,0,<br>
@@ -46,7 +47,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
      La taille de cette maison est de %1; il est peut-être trop grand pour être édité en douceur dans Renovations 3D. Désirez-vous désactiver la visibilité des gros meubles? (Recommandé) <br>
      Pour afficher ces éléments, vous pouvez modifier leur visibilité dans la table des meubles située à gauche de la vue en plan 2D. <br>
      ]]></string>
-    <string name="double_tap_finish">Double-cliquez pour finir</string>
+    <string name="long_press_to_finish">Appui long pour terminer</string>
     <string name="long_process_title">Processus à long terme</string>
     <string name="high_quality_photo_notice">Un rendu photo de haute qualité peut prendre beaucoup de temps pour calculer, dans certains cas, plus d\'une heure, soyez conscient de cela.</string>
     <string name="libraryDownLoadNotice">Ce fichier de bibliothèque est en cours de téléchargement, cela peut prendre un certain temps, vous serez averti une fois qu\'il est téléchargé et installé.</string>
@@ -71,7 +72,7 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="tutStep10Text">Déplacez la chaise et essayez de la faire tourner.</string>
     <string name="tutStep10Title">Ajouter une chaise - 3</string>
     <string name="tutStep11Text">Appuyez sur le bouton 3D, et la vue changera en vue 3D.</string>
-    <string name="tutStep11Title">Voir en 3D - 1</string>
+    <string name="tutStep11Title">Vue en 3D - 1</string>
     <string name="tutStep12Text">Déplacez la caméra en faisant glisser.</string>
     <string name="tutStep12Title">Vue en 3D - 2</string>
     <string name="tutStep13Text">Entrez dans la maison en appuyant sur le bouton de visite virtuelle.</string>
@@ -90,13 +91,13 @@ Le passage de la vue de haut à la visite virtuelle s\'effectue avec l\'icône r
     <string name="tutStep2Title">Créez des murs - 2</string>
     <string name="tutStep3Text">Créez un carré de murs en traînant trois fois de plus. Faites la dernière extrémité de la glissière près du début de votre premier mur.</string>
     <string name="tutStep3Title">Créez des murs - 3</string>
-    <string name="tutStep4Text">Rejoignez le dernier mur à la première par deux fois pour terminer la création.</string>
+    <string name="tutStep4Text">Joignez le dernier mur au premier en appuyant longuement sur pour terminer la création du mur.</string>
     <string name="tutStep4Title">Créer une chambre - 1</string>
     <string name="tutStep5Text">Sélectionnez l\'outil \"Créer des pièces\" à partir du Sélecteur d\'outils.</string>
     <string name="tutStep5Title">Créer une chambre - 2</string>
-    <string name="tutStep6Text">Doublement n\'importe où dans les quatre murs pour créer une pièce.</string>
+    <string name="tutStep6Text">Appuyez longuement n\'importe où à l\'intérieur des quatre murs pour créer une pièce.</string>
     <string name="tutStep6Title">Créer une chambre - 3</string>
-    <string name="tutStep7Text">Modifiez la nouvelle pièce en tapotant dessus, sélectionnez la texture du sol, faites-la carrelée. Fermez les boîtes de dialogue.</string>
+    <string name="tutStep7Text">Modifiez la nouvelle pièce en appuyant longuement dessus, sélectionnez la texture du sol, faites-la en mosaïque. Fermez les boîtes de dialogue.</string>
     <string name="tutStep7Title">Créer une chambre - 4</string>
     <string name="tutStep8Text">Montrez le catalogue de meubles en appuyant sur la flèche.</string>
     <string name="tutStep8Title">Ajouter une chaise - 1</string>

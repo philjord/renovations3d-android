@@ -4,9 +4,10 @@
     <string name="alignment">alinhamento</string>
     <string name="magnetism">magnetismo</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Arraste com dois dedos para mover o plano sem alterar o que está selecionado. <br>
-Toque duas vezes em qualquer objeto para editá-lo. <br>
-Dois arquivos domésticos de demonstração estarão na sua pasta de downloads, use Abrir … no menu. <br>
+Pressione e segure qualquer objeto para editá-lo. <br>
+Use o menu suspenso Ferramentas na barra de título para criar novos objetos. <br>
+Use o botão desfazer na barra de título para fazer as correções. <br>
+As casas de demonstração podem ser abertas em Arquivos-> Novo na demonstração .. no menu suspenso. <br>
 Você pode usar seu navegador para abrir diretamente mais arquivos domésticos (.sh3d) da internet, por exemplo <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Pressione o ícone da mobília add para colocar o item selecionado móveis para a vista de planta no local 0.0.<br>
@@ -49,7 +50,7 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     Esta casa tem %1 de tamanho, o que pode ser muito grande para ser suavemente editado no Renovations 3D, você gostaria de desativar a visibilidade de itens de mobiliário de grande porte? (Recomendado) <br>
     Para visualizar esses itens, você pode alterar sua visibilidade na Tabela de Móveis, localizada à esquerda da visualização do Plano 2D. <br>
     ]]></string>
-    <string name="double_tap_finish">Toque duas vezes para terminar</string>
+    <string name="long_press_to_finish">Pressão longa para terminar</string>
     <string name="long_process_title">Processo de longa duração</string>
     <string name="high_quality_photo_notice">Alta qualidade de processamento de fotos pode levar muito tempo para calcular, em alguns casos, mais de uma hora, por favor, esteja ciente disso.</string>
     <string name="libraryDownLoadNotice">Este arquivo de biblioteca está sendo baixado, isso pode levar algum tempo, você será notificado assim que for baixado e instalado.</string>
@@ -97,9 +98,9 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="tutStep4Title">Crie um quarto - 1</string>
     <string name="tutStep5Text">Selecione a ferramenta \"Criar quartos\" no seletor de ferramentas.</string>
     <string name="tutStep5Title">Crie um quarto - 2</string>
-    <string name="tutStep6Text">Toque duas vezes em qualquer lugar dentro das quatro paredes para criar uma sala.</string>
+    <string name="tutStep6Text">Pressione e segure em qualquer lugar dentro das quatro paredes para criar uma sala.</string>
     <string name="tutStep6Title">Crie um quarto - 3</string>
-    <string name="tutStep7Text">Edite a nova sala com um toque duplo, selecione a textura do chão, faça-a em azulejo. Feche as caixas de diálogo.</string>
+    <string name="tutStep7Text">Edite a nova sala pressionando-a por muito tempo, selecione a textura do piso e deixe-a lado a lado. Feche as caixas de diálogo.</string>
     <string name="tutStep7Title">Crie um quarto - 4</string>
     <string name="tutStep8Text">Mostre o catálogo de móveis, pressionando a seta.</string>
     <string name="tutStep8Title">Adicione uma cadeira - 1</string>

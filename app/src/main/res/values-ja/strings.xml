@@ -4,9 +4,10 @@
     <string name="alignment">アラインメント</string>
     <string name="magnetism">磁気</string>
     <string name="welcometext_planview"><![CDATA[<html>
-選択したものを変更せずに、2本の指でドラッグしてプランを移動します<br>
-任意のオブジェクトをダブルタップして編集します<br>
-2つのデモホームファイルがダウンロードフォルダにあります。メニューの[開く…]を使用します<br>
+オブジェクトを長押しして編集します。<br>
+タイトルバーの[ツール]ドロップダウンを使用して、新しいオブジェクトを作成します。<br>
+タイトルバーの[元に戻す]ボタンを使用して修正します。<br>
+デモホームは、メニュードロップダウンの[ファイル]-> [デモから新規作成...]から開くことができます。<br>
 ブラウザを使用して、インターネットからより多くのホームファイル（.sh3d）を直接開くことができます（例：<a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>位置0.0での平面図上に家具を選択した項目を配置する追加の家具のアイコンを押してください<br>
@@ -46,7 +47,7 @@
      この家は大きさが ％1 ですが、Renovations 3Dでスムーズに編集するには大きすぎる場合があります。大きな家具のアイテムの表示をオフにしますか？ （推奨）<br>
      これらのアイテムを表示するには、2D平面図ビューの左側にある家具テーブルでその表示を変更することができます。<br>
      ]]></string>
-    <string name="double_tap_finish">ダブルタップして終了</string>
+    <string name="long_press_to_finish">長押しして終了</string>
     <string name="long_process_title">長期実行プロセス</string>
     <string name="high_quality_photo_notice">高品質の写真のレンダリングには時間がかかりますが、場合によっては1時間以上かかることもありますので、ご注意ください。</string>
     <string name="libraryDownLoadNotice">このライブラリファイルは現在ダウンロードされていますが、これには時間がかかることがあります。ダウンロードしてインストールすると通知されます。</string>
@@ -94,9 +95,9 @@
     <string name="tutStep4Title">部屋を作る - 1</string>
     <string name="tutStep5Text">ツールセレクタから「部屋を作成」ツールを選択します。</string>
     <string name="tutStep5Title">部屋を作る - 2</string>
-    <string name="tutStep6Text">4つの壁のどこかをダブルタップして部屋を作成します。</string>
+    <string name="tutStep6Text">部屋を作成するには、4つの壁の内側を長押しします。</string>
     <string name="tutStep6Title">部屋を作る - 3</string>
-    <string name="tutStep7Text">新しい部屋をダブルタップして編集し、床のテクスチャを選択してタイル張りにします。 ダイアログを閉じます。</string>
+    <string name="tutStep7Text">新しい部屋を長押しして編集し、床のテクスチャを選択して、タイル張りにします。 ダイアログを閉じます。</string>
     <string name="tutStep7Title">部屋を作る - 4</string>
     <string name="tutStep8Text">矢印を押して、家具カタログを表示します。</string>
     <string name="tutStep8Title">椅子を追加する - 1</string>

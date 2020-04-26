@@ -4,9 +4,10 @@
     <string name="alignment">hiza</string>
     <string name="magnetism">manyetizma</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Seçilenleri değiştirmeden planı taşımak için iki parmağınızla sürükleyin. <br>
-Düzenlemek için herhangi bir nesneye iki kez hafifçe dokunun <br>
-İki demo ev dosyası indirme klasörünüzde olacak, menüde Aç … komutunu kullanın. <br>
+Düzenlemek için herhangi bir nesneye uzun basın. <br>
+Yeni nesneler oluşturmak için başlık çubuğundaki Araçlar açılır menüsünü kullanın.<br>
+Düzeltmeler yapmak için başlık çubuğundaki geri al düğmesini kullanın. <br>
+Demo evleri, menü açılır menüsünde Dosyalar-> Demo\'dan Yeni .. \'den açılabilir.<br>
 İnternetten daha fazla ev dosyasını (.sh3d) doğrudan açmak için tarayıcınızı kullanabilirsiniz, örneğin <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Konuma 0.0 plan görünümünde üzerine mobilya Seçilen öğeyi yerleştirmek için eklenti mobilya simgesine basın.<br>
@@ -46,7 +47,7 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
      Bu ev %1, Renovations 3D\'de kolayca düzenlenebilecek kadar büyük olabilir, büyük mobilya parçaları için görünürlüğü kapatmak ister misiniz? (Önerilen) <br>
      Bu öğeleri görüntülemek için, görünürlüklerini 2B plan görünümünün solunda bulunan mobilya tablosunda değiştirebilirsiniz. <br>
      ]]></string>
-    <string name="double_tap_finish">Bitirmek için iki kez hafifçe dokunun</string>
+    <string name="long_press_to_finish">Bitirmek için uzun basın</string>
     <string name="long_process_title">Uzun süren süreç</string>
     <string name="high_quality_photo_notice">Yüksek kaliteli fotoğraf işleme, hesaplama uzun sürebilir, bazı durumlarda bir saatten daha uzun sürebilir, lütfen bunun farkında olun.</string>
     <string name="libraryDownLoadNotice">Bu kütüphane dosyası şimdi indiriliyor, bu biraz zaman alabilir, indirildikten ve yüklendikten sonra bilgilendirileceksiniz.</string>
@@ -90,13 +91,13 @@ Yukarıdan aşağıya gitmek, bir planın / kişinin simgesi ile yapılabilir. <
     <string name="tutStep2Title">Bazı duvarlar oluştur - 2</string>
     <string name="tutStep3Text">Üç kez daha sürükleyerek bir duvar karesi oluşturun. Son sürükleme ucu ilk duvarınızın başlangıcına yakın olun.</string>
     <string name="tutStep3Title">Biraz duvar yarat - 3</string>
-    <string name="tutStep4Text">Oluşturmayı tamamlamak için çift dokunarak ilk duvarın son duvarına katılın.</string>
+    <string name="tutStep4Text">Duvar oluşturmayı bitirmek için uzun basarak son duvara ilk katın.</string>
     <string name="tutStep4Title">Bir oda yarat - 1</string>
     <string name="tutStep5Text">Araç Seçici\'den \"Odalar Yarat\" aracını seçin.</string>
     <string name="tutStep5Title">Bir oda yarat - 2</string>
-    <string name="tutStep6Text">Bir oda oluşturmak için dört duvarın herhangi bir yerine iki kez hafifçe vurun.</string>
+    <string name="tutStep6Text">Bir oda oluşturmak için dört duvarın içinde herhangi bir yere uzun basın.</string>
     <string name="tutStep6Title">Bir oda yarat - 3</string>
-    <string name="tutStep7Text">Yeni odayı üzerine çift dokunarak düzenleyin, zemin dokusunu seçin, karo haline getirin. Diyalog kutularını kapatın.</string>
+    <string name="tutStep7Text">Üzerine uzun basarak yeni odayı düzenleyin, zemin dokusunu seçin, döşeyin. İletişim kutularını kapatın.</string>
     <string name="tutStep7Title">Bir oda yarat - 4</string>
     <string name="tutStep8Text">Mobilya katalogunu ok tuşuna basarak gösterin.</string>
     <string name="tutStep8Title">Bir sandalye ekle - 1</string>

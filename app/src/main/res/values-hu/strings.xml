@@ -4,9 +4,10 @@
     <string name="alignment">összehangolás</string>
     <string name="magnetism">mágnesesség</string>
     <string name="welcometext_planview"><![CDATA[<html>
-Húzza két ujjal a terv mozgatásához anélkül, hogy megváltoztatná a kijelöltet<br>
-Dupla érintse meg bármelyik objektumot a szerkesztéshez<br>
-Két demo otthoni fájl lesz a letöltési mappában, a menüben használja a Megnyitás … lehetőséget<br>
+Hosszan nyomja meg bármely tárgyat szerkesztéséhez. <br>
+Használja az Eszközök legördülő menüt a címsorban új objektumok létrehozásához. <br>
+A javításokhoz használja a címsorban a visszavonás gombot. <br>
+A demonstrációs otthonok a Files-> New from Demo .. menüből nyithatók meg a legördülő menüben. <br>
 Böngészőjével közvetlenül megnyithat több domaint (.sh3d) az internetről, például <a href="http://www.sweethome3d.com/gallery.jsp">http://www.sweethome3d.com/gallery</a>.
 ]]></string>
     <string name="welcometext_catalogview"><![CDATA[<html><p>Nyomja meg a Hozzáadás bútorok ikont elhelyezni a kiválasztott elemet bútorok rá a felülnézetben a helyszínen 0.0.<br>
@@ -46,7 +47,7 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
      Ez a ház %1 méretű, ami túl nagy ahhoz, hogy egyszerűen szerkeszthető legyen a Renovations 3D-ben, szeretné kikapcsolni a nagyméretű bútorok láthatóságát? (Ajánlott) <br>
      Az elemek megtekintéséhez megváltoztathatja láthatóságát a 2D-s nézet bal oldalán található Bútorasztalon <br>
      ]]></string>
-    <string name="double_tap_finish">Koppintson duplán, hogy befejezze</string>
+    <string name="long_press_to_finish">Hosszan nyomja meg a befejezéshez</string>
     <string name="long_process_title">Hosszú futó folyamat</string>
     <string name="high_quality_photo_notice">Kiváló minőségű renderelés fotó is hosszú időt vesz igénybe, hogy kiszámítható, esetenként több mint egy óra, kérjük ennek tudatában.</string>
     <string name="libraryDownLoadNotice">Ez a könyvtárfájl most letöltődik, ez eltarthat egy ideig, értesítést kap a letöltés és telepítés után.</string>
@@ -94,9 +95,9 @@ A felülről lefelé a látogatásra történő áttérés a terv / személy iko
     <string name="tutStep4Title">Terem létrehozása - 1</string>
     <string name="tutStep5Text">Válassza ki a \"Helyek létrehozása\" eszközt az Eszközválasztóból.</string>
     <string name="tutStep5Title">Terem létrehozása - 2</string>
-    <string name="tutStep6Text">Dupla érintse meg bárhol a négy falon belül egy szobát.</string>
+    <string name="tutStep6Text">Hosszan nyomja meg bárhol a négy falon belül egy szobát.</string>
     <string name="tutStep6Title">Terem létrehozása - 3</string>
-    <string name="tutStep7Text">Szerkessze az új helyiséget kettõs megérintésével, válassza ki a padló textúráját, és csempézse. Zárja be a párbeszédablakokat.</string>
+    <string name="tutStep7Text">Szerkessze az új szobát hosszú megnyomásával, válassza ki a padló textúráját, csempézetté tegye. Zárja be a párbeszédablakokat.</string>
     <string name="tutStep7Title">Terem létrehozása - 4</string>
     <string name="tutStep8Text">Mutassa a bútorkatalógust a nyíl megnyomásával.</string>
     <string name="tutStep8Title">Szék hozzáadása - 1</string>
