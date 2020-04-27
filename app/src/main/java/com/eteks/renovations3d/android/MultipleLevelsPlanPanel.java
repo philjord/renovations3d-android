@@ -175,23 +175,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		// keep the center central
 		float centerX = planComponent.getWidth() / 2.0f;
 		float centerY = planComponent.getHeight() / 2.0f;
-		float priorCenterX = convertXPixelToModel((int)centerX);
-		float priorCenterY = convertYPixelToModel((int)centerY);
-
-		float newScale = getScale() * scaleChangeFactor;
-		// Don't let the object get too small or too large.
-		newScale = Math.max(0.1f, Math.min(newScale, 10.0f));
-		//controller.zoom(newScale); //don't want the mouse move calls
-		newScale = Math.max(planController.getMinimumScale(), Math.min(newScale, planController.getMaximumScale()));
-		if(newScale != getScale()) {
-			planController.getView().setScale(newScale);
-			home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(newScale));
-		}
-
-		float modelDiffX = priorCenterX - convertXPixelToModel((int)centerX);
-		float modelDiffY = priorCenterY - convertYPixelToModel((int)centerY);
-		planComponent.moveScrolledX(modelDiffX);
-		planComponent.moveScrolledY(modelDiffY);
+		planComponent.scaleAt(scaleChangeFactor, (int)centerX, (int)centerY);
 	}
 
 	@Override

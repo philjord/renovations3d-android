@@ -383,9 +383,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 			joinPath.lineTo(58, 4);
 			joinPath.lineTo(36, 14);}
 
-		//PJ Desktop take a 3 o'clock start and positive = counter clock wise
-		// hence android starts at 9 o'clock + angle and a clockwise (android is always)
-		private static Shape curvedPath = new Arc2D.Float(-7, 6, 80, 40, 47 + 180, 86, Arc2D.OPEN);
+		private static Shape curvedPath = new Arc2D.Float(-7, 6, 80, 40, 47, 86, Arc2D.OPEN);
 
 		public PolylineJoinStyleImageView(Context context)
 		{

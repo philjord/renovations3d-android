@@ -172,12 +172,13 @@ import javaxswing.ImageIcon;
  * @author Emmanuel Puybaret and Philip Jordan
  */
 public class PlanComponent extends JViewPort implements PlanView, Printable {
-	static int HORIZONTAL = 0;
+	static int HORIZONTAL = 0; //as SwingConstants does not exist in this rt
 	static int VERTICAL = 1;
 
 	//PJ taken from HomePane
 	public static final String PLAN_VIEWPORT_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportX";
 	public static final String PLAN_VIEWPORT_Y_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanViewportY";
+	public static final String SCALE_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.PlanScale";
 
   /**
    * The circumstances under which the home items displayed by this component will be painted.
@@ -229,7 +230,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 	public static float 					densityScale = 1;
 
-  private static float 					fatFingerScaleUp = 3;// reset in setDrawable elow to a density scaled figure
+  private static float 					fatFingerScaleUp = 3;// reset in setDrawable below to a density scaled figure
 
 	public static float 					dpiMinSpanForZoom = 1.0f; //TODO: this is used to control if a scale should happen, not sure why it's so damn complex though
 
@@ -1144,14 +1145,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    */
   @Override
   public void revalidate() {
-    revalidate(true);
+    invalidate(true);
   }
 
   /**
-   * Revalidates this component after invalidating plan bounds cache if <code>invalidatePlanBoundsCache</code> is <code>true</code>
-   * and updates viewport position if this component is displayed in a scrolled pane.
+   * Invalidates this component voiding plan bounds cache if <code>invalidatePlanBoundsCache</code> is <code>true</code>.
+	 * Validates this component and updates viewport position if it's displayed in a scrolled pane.
    */
-  private void revalidate(boolean invalidatePlanBoundsCache) {
+  private void invalidate(boolean invalidatePlanBoundsCache) {
 
 		if (invalidatePlanBoundsCache) {
 			boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
@@ -1187,7 +1188,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				this.moveScrolledY(deltaY);
 				//parent.setViewPosition(new Point(viewPosition.x + deltaX, viewPosition.y + deltaY));
         //}
-
       }
     }
     this.invalidPlanBounds = null;
@@ -1228,7 +1228,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		// used to record downs so that when ups occur they can be fired off as downs
 		private MotionEvent potentialSinglePress = null;
 
-		private static final int INVALID_POINTER_ID = -1;
+		public static final int INVALID_POINTER_ID = -1;
 
 		// The ‘active pointer’ is the one currently moving our object.
 		private int mActivePointerId = INVALID_POINTER_ID;
@@ -1242,7 +1242,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		private Point lastMousePressedLocation;
 		//used to understand the auto pan operation for drags in selection mode
 		private boolean lastDownTouchedSelections = false;
-
 
 		public Point2f getLastDragLocation() {
 			return new Point2f(mLastTouchX, mLastTouchY);
@@ -1510,7 +1509,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		 */
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			///this is to allow 2 finger drags to work  so this is not about how far the scale move,
+			// this is to allow 2 finger drags to work so this is not about how far the scale moves,
 			// just about how close the fingers are when deciding if this is a 2 drag or not
 			// 2 finger is handy as single finger panning is only on during selection or pan modes
 
@@ -1521,63 +1520,50 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 							PlanComponent.this.controller.getMode() == PlanController.Mode.SELECTION )
 				return true;
 			else*/
-				return measurement > dpiMinSpanForZoom;
+			return measurement > dpiMinSpanForZoom;
 		}
 
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
-			float mouseX = 0;
-			float mouseY = 0;
-			//int deltaX = 0;
-			//int deltaY = 0;
-			if (true) {//(getParent() instanceof JViewport) {
-				mouseX = convertXPixelToModel((int)detector.getFocusX());
-				mouseY = convertYPixelToModel((int)detector.getFocusY());
-				//Rectangle viewRectangle = ((JViewport)getParent()).getViewRect();
-				//deltaX = ev.getX() - viewRectangle.x;
-				//deltaY = ev.getY() - viewRectangle.y;
-			}
-
-			float oldScale = getScale();
-			// Don't let the object get too small or too large.
-			float newScale =  Math.max(0.1f, Math.min(getScale() * detector.getScaleFactor(), 10.0f));
-
-			//controller.zoom((float)(ev.getWheelRotation() < 0
-			//				? Math.pow(1.05, -ev.getWheelRotation())
-			//				: Math.pow(0.95, ev.getWheelRotation())));
-			//don't want the mouse move calls so...
-			controllerSetScale(newScale);
-
-			if (getScale() != oldScale && true) {// getParent() instanceof JViewport) {
-				// If scale changed, update viewport position to keep the same coordinates under mouse cursor
-				//((JViewport)getParent()).setViewPosition(new Point());
-				//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
-				moveScrolledX(mouseX - convertXPixelToModel((int)detector.getFocusX()));
-				moveScrolledY(mouseY - convertYPixelToModel((int)detector.getFocusY()));
-			}
-
+			scaleAt(detector.getScaleFactor(), (int) detector.getFocusX(), (int) detector.getFocusY());
 			return true;
 		}
+	}
 
-		/**
-		 * Taken from controller.zoom()
-		 * used here to avoid the unwanted mouse move call in
-		 */
-		private void controllerSetScale(float scale) {
-			scale = Math.max(controller.getMinimumScale(), Math.min(scale, controller.getMaximumScale()));
-			if(scale != controller.getView().getScale()) {
-				float oldScale = controller.getView().getScale();
-				//controller.furnitureSidesCache.clear();
-				if(controller.getView() != null) {
-					//int x = controller.getView().convertXModelToScreen(controller.getXLastMouseMove());
-					//int y = controller.getView().convertXModelToScreen(controller.getYLastMouseMove());
-					controller.getView().setScale(scale);
-					//controller.moveMouse(controller.getView().convertXPixelToModel(x), controller.getView().convertYPixelToModel(y));
-				}
-				//controller.propertyChangeSupport.firePropertyChange(PlanController.Property.SCALE.name(), Float.valueOf(oldScale), Float.valueOf(scale));
-				//SCALE_VISUAL_PROPERTY is not visible
-				home.setProperty("com.eteks.sweethome3d.SweetHome3D.PlanScale", String.valueOf(scale));
+	public void scaleAt(float scaleChangeFactor, int atX, int atY) {
+		float priorX = convertXPixelToModel(atX);
+		float priorY = convertYPixelToModel(atY);
+
+		float oldScale = getScale();
+		//don't want the mouse move calls so instead of controller.zoom((float)(ev.getWheelRotation() < 0 ...
+		controllerSetScale(getScale() * scaleChangeFactor);
+
+		if (getScale() != oldScale && true) {// getParent() instanceof JViewport) {
+			// If scale changed, update viewport position to keep the same coordinates under mouse cursor
+			//((JViewport)getParent()).setViewPosition(new Point());
+			//moveView(mouseX - convertXPixelToModel(deltaX), mouseY - convertYPixelToModel(deltaY));
+			moveScrolledX(priorX - convertXPixelToModel(atX));
+			moveScrolledY(priorY - convertYPixelToModel(atY));
+		}
+	}
+
+	/**
+	 * Taken from PlanController.setScale(float scale)
+	 * used here to avoid the unwanted mouse move call in the controller code
+	 */
+	private void controllerSetScale(float scale) {
+		scale = Math.max(controller.getMinimumScale(), Math.min(scale, controller.getMaximumScale()));
+		if(scale != controller.getView().getScale()) {
+			//float oldScale = controller.getView().getScale();
+			//controller.furnitureSidesCache.clear();
+			if(controller.getView() != null) {
+				//int x = controller.getView().convertXModelToScreen(controller.getXLastMouseMove());
+				//int y = controller.getView().convertXModelToScreen(controller.getYLastMouseMove());
+				controller.getView().setScale(scale);
+				//controller.moveMouse(controller.getView().convertXPixelToModel(x), controller.getView().convertYPixelToModel(y));
 			}
+			//controller.propertyChangeSupport.firePropertyChange(PlanController.Property.SCALE.name(), Float.valueOf(oldScale), Float.valueOf(scale));
+			home.setProperty(SCALE_VISUAL_PROPERTY, String.valueOf(scale));
 		}
 	}
 
@@ -1707,9 +1693,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	/**
 	 * Returns the preferred size of this component.
 	 */
-	//PJPJ removed as layout is totally different and always fullscreen
 /*  @Override
   public Dimension getPreferredSize() {
+  //PJPJ removed as layout is totally different and always fullscreen
     if (isPreferredSizeSet()) {
       return super.getPreferredSize();
     } else {
@@ -1730,7 +1716,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     if (!this.planBoundsCacheValid) {
       // Always enlarge plan bounds only when plan component is a child of a scroll pane
       if (this.planBoundsCache == null
-			    || true) {//(getParent() instanceof JViewport))
+			    || false) {// !(getParent() instanceof JViewport)) // never not child of viewport
         // Ensure plan bounds are 10 x 10 meters wide at minimum
         this.planBoundsCache = new Rectangle2D.Float(0, 0, 1000, 1000);
       }
@@ -1833,7 +1819,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       }
     } else if (item instanceof Polyline) {
       Polyline polyline = (Polyline)item;
-      return getPolylineShape(polyline).getBounds2D();
+      return ShapeTools.getPolylineShape(polyline.getPoints(),
+          polyline.getJoinStyle() == Polyline.JoinStyle.CURVED, polyline.isClosedPath()).getBounds2D();
     } else if (item instanceof HomePieceOfFurniture) {
       if (item instanceof HomeDoorOrWindow) {
         HomeDoorOrWindow doorOrWindow = (HomeDoorOrWindow)item;
@@ -2202,7 +2189,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         columnIndex = pageIndex - rowIndex * pagesPerRow;
       }
 
-      Graphics2D g2D = (Graphics2D)g;//.create();
+      Graphics2D g2D = (Graphics2D)g.create();
       g2D.clip(new Rectangle2D.Double(imageableX, imageableY, imageableWidth, imageableHeight));
       // Change coordinates system to paper imageable origin
       g2D.translate(imageableX - columnIndex * imageableWidth, imageableY - rowIndex * imageableHeight);
@@ -2683,7 +2670,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private void paintGridLines(Graphics2D g2D, float gridScale,
                               float xMin, float xMax, float yMin, float yMax,
                               float gridSize, float mainGridSize) {
-    g2D.setColor(new Color(0.3f,0.3f,0.3f));//UIManager.getColor("controlShadow"));
+    g2D.setColor(new Color(0.3f, 0.3f, 0.3f));//UIManager.getColor("controlShadow"));
     g2D.setStroke(new BasicStroke(0.5f / gridScale));
     // Draw vertical lines
     for (double x = (int)(xMin / gridSize) * gridSize; x < xMax; x += gridSize) {
@@ -2783,13 +2770,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       Color furnitureOutlineColor = getFurnitureOutlineColor();
       Paint selectionOutlinePaint = new Color(selectionColor.getRed(), selectionColor.getGreen(),
           selectionColor.getBlue(), 128);
-      Stroke selectionOutlineStroke = new BasicStroke(6 / planScale * this.resolutionScale,
+      Stroke selectionOutlineStroke = new BasicStroke(6 * fatFingerScaleUp / planScale * this.resolutionScale,
           BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-      Stroke dimensionLinesSelectionOutlineStroke = new BasicStroke(4 / planScale * this.resolutionScale,
+      Stroke dimensionLinesSelectionOutlineStroke = new BasicStroke(4 * fatFingerScaleUp / planScale * this.resolutionScale,
           BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
       Stroke locationFeedbackStroke = new BasicStroke(
-          1 / planScale * this.resolutionScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0,
-          new float [] {20 / planScale, 5 / planScale, 5 / planScale, 5 / planScale}, 4 / planScale);
+          fatFingerScaleUp / planScale * this.resolutionScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0,
+          new float [] {20 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale}, 4 * fatFingerScaleUp / planScale);
 
       paintCamera(g2D, selectedItems, selectionOutlinePaint, selectionOutlineStroke, selectionColor,
           planScale, backgroundColor, foregroundColor);
@@ -2878,8 +2865,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     Stroke dimensionLinesSelectionOutlineStroke = new BasicStroke(4 / planScale * this.resolutionScale,
         BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     Stroke locationFeedbackStroke = new BasicStroke(
-        1 / planScale * this.resolutionScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0,
-        new float [] {20 / planScale, 5 / planScale, 5 / planScale, 5 / planScale}, 4 / planScale);
+        1 * fatFingerScaleUp / planScale * this.resolutionScale, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0,
+        new float [] {20 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale, 5 * fatFingerScaleUp / planScale}, 4 * fatFingerScaleUp / planScale);
 
     paintCompass(g2D, selectedItems, planScale, foregroundColor, paintMode);
 
@@ -2956,7 +2943,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     } else {*/
       // On systems different from Mac OS X, take a darker color
 	  // From desktop r=0,g=84,b=150
-      return  new Color(0.0f,84f/255f,150f/255f);// UIManager.getColor("textHighlight").darker();
+      return  new Color(0.0f, 84f/255f, 150f/255f);// UIManager.getColor("textHighlight").darker();
    // }
   }
 
@@ -3090,7 +3077,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         AffineTransform rotation = textureAngle != 0
             ? AffineTransform.getRotateInstance(-textureAngle, 0, 0)
             : null;
-        Shape roomShape = getShape(room.getPoints(), true, rotation);
+        Shape roomShape = ShapeTools.getShape(room.getPoints(), true, rotation);
         fillShape(g2D, roomShape, paintMode);
 				g2D.setComposite(oldComposite);
 
@@ -3237,14 +3224,13 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
                           Paint selectionOutlinePaint, Stroke selectionOutlineStroke,
                           Paint indicatorPaint, float planScale, Color foregroundColor) {
     Collection<Room> rooms = Home.getRoomsSubList(items);
-    //AffineTransform previousTransform = g2D.getTransform();
-    float scaleInverse = fatFingerScaleUp / planScale;
+ 		float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
     // Draw selection border
     for (Room room : rooms) {
       if (isViewableAtSelectedLevel(room)) {
         g2D.setPaint(selectionOutlinePaint);
         g2D.setStroke(selectionOutlineStroke);
-        g2D.draw(getShape(room.getPoints(), true, null));
+        g2D.draw(ShapeTools.getShape(room.getPoints(), true, null));
 
         if (indicatorPaint != null) {
           g2D.setPaint(indicatorPaint);
@@ -3266,7 +3252,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     g2D.setStroke(new BasicStroke(getStrokeWidth(Room.class, PaintMode.PAINT) / planScale));
     for (Room room : rooms) {
       if (isViewableAtSelectedLevel(room)) {
-        g2D.draw(getShape(room.getPoints(), true, null));
+        g2D.draw(ShapeTools.getShape(room.getPoints(), true, null));
       }
     }
 
@@ -3297,8 +3283,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     if (this.resizeIndicatorVisible) {
       g2D.setPaint(indicatorPaint);
       g2D.setStroke(INDICATOR_STROKE);
-      //AffineTransform previousTransform = g2D.getTransform();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1* fatFingerScaleUp / planScale * this.resolutionScale;
       float [][] points = item.getPoints();
       Shape resizeIndicator = getIndicator(item, IndicatorType.RESIZE);
       for (int i = 0; i < points.length; i++) {
@@ -3446,7 +3431,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setPaint(indicatorPaint);
       g2D.setStroke(INDICATOR_STROKE);
       AffineTransform previousTransform = g2D.getTransform();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       g2D.translate(x, y);
       g2D.rotate(angle);
       g2D.scale(scaleInverse, scaleInverse);
@@ -3541,7 +3526,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private void paintWallsOutline(Graphics2D g2D, List<Selectable> items,
                                  Paint selectionOutlinePaint, Stroke selectionOutlineStroke,
                                  Paint indicatorPaint, float planScale, Color foregroundColor) {
-    float scaleInverse = fatFingerScaleUp / planScale;
+		float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
     Collection<Wall> walls = Home.getWallsSubList(items);
     //AffineTransform previousTransform = g2D.getTransform();
     for (Wall wall : walls) {
@@ -3549,7 +3534,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         // Draw selection border
         g2D.setPaint(selectionOutlinePaint);
         g2D.setStroke(selectionOutlineStroke);
-        g2D.draw(getShape(wall.getPoints(), true, null));
+        g2D.draw(ShapeTools.getShape(wall.getPoints(), true, null));
 
         if (indicatorPaint != null) {
 					AffineTransform previousTransform = g2D.getTransform();
@@ -3605,7 +3590,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           }
           g2D.draw(WALL_ORIENTATION_INDICATOR);
           g2D.setTransform(previousTransform);
-					AffineTransform previousTransform2 = g2D.getTransform();
+					AffineTransform previousTransform2 = g2D.getTransform();//force save
           // Draw end point of the wall
           g2D.translate(wall.getXEnd(), wall.getYEnd());
           g2D.scale(scaleInverse, scaleInverse);
@@ -3662,7 +3647,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(INDICATOR_STROKE);
 
       AffineTransform previousTransform = g2D.getTransform();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       float [][] wallPoints = wall.getPoints();
       int leftSideMiddlePointIndex = wallPoints.length / 4;
       double wallAngle = Math.atan2(wall.getYEnd() - wall.getYStart(),
@@ -3784,7 +3769,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private Area getItemsArea(Collection<? extends Selectable> items) {
     Area itemsArea = new Area();
     for (Selectable item : items) {
-      itemsArea.add(new Area(getShape(item.getPoints(), true, null)));
+      itemsArea.add(new Area(ShapeTools.getShape(item.getPoints(), true, null)));
     }
     return itemsArea;
   }
@@ -3833,7 +3818,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           } else if (paintMode != PaintMode.CLIPBOARD
                     || selectedPiece) {
             // In clipboard paint mode, paint piece only if it is selected
-            Shape pieceShape = getShape(piece.getPoints(), true, null);
+            Shape pieceShape = ShapeTools.getShape(piece.getPoints(), true, null);
             Shape pieceShape2D;
             if (piece instanceof HomeDoorOrWindow) {
               HomeDoorOrWindow doorOrWindow = (HomeDoorOrWindow)piece;
@@ -3986,7 +3971,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				for (Wall wall : home.getWalls()) {
 					if (wall.isAtLevel(doorOrWindow.getLevel())
 									&& doorOrWindow.isParallelToWall(wall)) {
-						Shape wallShape = getShape(wall.getPoints(), true, null);
+						Shape wallShape = ShapeTools.getShape(wall.getPoints(), true, null);
 						Area wallArea = new Area(wallShape);
 						wallArea.intersect(doorOrWindowWallPartArea);
 						if (!wallArea.isEmpty()) {
@@ -4125,12 +4110,12 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         if (homePieceOfFurniture != piece) {
           Area groupArea = null;
           if (lastGroup != homePieceOfFurniture) {
-            Shape groupShape = getShape(homePieceOfFurniture.getPoints(), true, null);
+            Shape groupShape = ShapeTools.getShape(homePieceOfFurniture.getPoints(), true, null);
             groupArea = new Area(groupShape);
             // Enlarge group area
             groupArea.add(new Area(furnitureGroupsStroke.createStrokedShape(groupShape)));
           }
-          Area pieceArea = new Area(getShape(piece.getPoints(), true, null));
+          Area pieceArea = new Area(ShapeTools.getShape(piece.getPoints(), true, null));
           if (furnitureGroupsArea == null) {
             furnitureGroupsArea = groupArea;
             furnitureInGroupsArea = pieceArea;
@@ -4158,7 +4143,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
     for (HomePieceOfFurniture piece : furniture) {
       float [][] points = piece.getPoints();
-      Shape pieceShape = getShape(points, true, null);
+      Shape pieceShape = ShapeTools.getShape(points, true, null);
 
       // Draw selection border
       g2D.setPaint(selectionOutlinePaint);
@@ -4329,7 +4314,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
       //AffineTransform previousTransform = g2D.getTransform();
       float [][] piecePoints = piece.getPoints();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       float pieceAngle = piece.getAngle();
       Shape rotationIndicator = getIndicator(piece, IndicatorType.ROTATE);
       if (rotationIndicator != null) {
@@ -4435,9 +4420,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
             || selected) {
           g2D.setPaint(new Color(polyline.getColor()));
           float thickness = polyline.getThickness();
-          g2D.setStroke(SwingTools.getStroke(thickness,
-              polyline.getCapStyle(), polyline.getJoinStyle(), polyline.getDashStyle()));
-          Shape polylineShape = getPolylineShape(polyline);
+          g2D.setStroke(ShapeTools.getStroke(thickness,
+              polyline.getCapStyle(), polyline.getJoinStyle(), polyline.getDashPattern(), polyline.getDashOffset()));
+					Shape polylineShape = ShapeTools.getPolylineShape(polyline.getPoints(),
+									polyline.getJoinStyle() == Polyline.JoinStyle.CURVED, polyline.isClosedPath());
           g2D.draw(polylineShape);
 
           // Search angle at start and at end
@@ -4487,36 +4473,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           }
         }
       }
-    }
-  }
-
-  /**
-   * Returns the shape of a polyline.
-   */
-  private Shape getPolylineShape(Polyline polyline) {
-    float [][] points = polyline.getPoints();
-    boolean closedPath = polyline.isClosedPath();
-    if (polyline.getJoinStyle() == Polyline.JoinStyle.CURVED) {
-      GeneralPath polylineShape = new GeneralPath();
-      for (int i = 0, n = closedPath ? points.length : points.length - 1; i < n; i++) {
-        CubicCurve2D.Float curve2D = new CubicCurve2D.Float();
-        float [] previousPoint = points [i == 0 ?  points.length - 1  : i - 1];
-        float [] point         = points [i];
-        float [] nextPoint     = points [i == points.length - 1 ?  0  : i + 1];
-        float [] vectorToBisectorPoint = new float [] {nextPoint [0] - previousPoint [0], nextPoint [1] - previousPoint [1]};
-        float [] nextNextPoint     = points [(i + 2) % points.length];
-        float [] vectorToBisectorNextPoint = new float [] {point[0] - nextNextPoint [0], point[1] - nextNextPoint [1]};
-        curve2D.setCurve(point[0], point[1],
-            point [0] + (i != 0 || closedPath  ? vectorToBisectorPoint [0] / 3.625f  : 0),
-            point [1] + (i != 0 || closedPath  ? vectorToBisectorPoint [1] / 3.625f  : 0),
-            nextPoint [0] + (i != points.length - 2 || closedPath  ? vectorToBisectorNextPoint [0] / 3.625f  : 0),
-            nextPoint [1] + (i != points.length - 2 || closedPath  ? vectorToBisectorNextPoint [1] / 3.625f  : 0),
-            nextPoint [0], nextPoint [1]);
-        polylineShape.append(curve2D, true);
-      }
-      return polylineShape;
-    } else {
-      return getShape(points, closedPath, null);
     }
   }
 
@@ -4615,17 +4571,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         g2D.draw(new Line2D.Float(0, -dimensionLine.getOffset(), 0, -5));
         g2D.draw(new Line2D.Float(dimensionLineLength, -dimensionLine.getOffset(), dimensionLineLength, -5));
 
-        float displayedValue = feedback
-            ? this.preferences.getLengthUnit().getMagnetizedLength(dimensionLineLength, getPixelLength())
-            : dimensionLineLength;
-        String lengthText = this.preferences.getLengthUnit().getFormat().format(displayedValue);
+        String lengthText = this.preferences.getLengthUnit().getFormat().format(dimensionLineLength);
         TextStyle lengthStyle = dimensionLine.getLengthStyle();
         if (lengthStyle == null) {
           lengthStyle = this.preferences.getDefaultTextStyle(dimensionLine.getClass());
         }
         if (feedback && getFont() != null) {
           // Use default for feedback
-          lengthStyle = lengthStyle.deriveStyle(getFont().getSize() / getScale());
+          lengthStyle = lengthStyle.deriveStyle( 9 * fatFingerScaleUp / getScale());//getFont().getSize() / getScale());
         }
         Font font = getFont(previousFont, lengthStyle);
         FontMetrics lengthFontMetrics = getFontMetrics(font, lengthStyle);
@@ -4636,18 +4589,18 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
             dimensionLine.getOffset() <= 0
                 ? lengthFontMetrics.descent- 1
                 : -fontAscent + 1);
-		  // feedback outline thingy disabled for now, but should be put back
-    /*    if (feedback) {
+        if (feedback) {
+					// feedback outline thingy disabled for now, but should be put back
           // Draw text outline with half transparent background color
-          g2D.setPaint(backgroundColor);
+          /*g2D.setPaint(backgroundColor);
           Composite oldComposite = setTransparency(g2D, 0.7f);
           g2D.setStroke(new BasicStroke(3 / planScale));
           FontRenderContext fontRenderContext = g2D.getFontRenderContext();
           TextLayout textLayout = new TextLayout(lengthText, font, fontRenderContext);
           g2D.draw(textLayout.getOutline(new AffineTransform()));
           g2D.setComposite(oldComposite);
-          g2D.setPaint(foregroundColor);
-        }*/
+          g2D.setPaint(foregroundColor);*/
+        }
         // Draw dimension length in middle
         g2D.setFont(font);
         g2D.drawString(lengthText, 0, 0);
@@ -4679,7 +4632,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           dimensionLine.getXEnd() - dimensionLine.getXStart());
 
       AffineTransform previousTransform = g2D.getTransform();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       // Draw resize indicator at the start of dimension line
       g2D.translate(dimensionLine.getXStart(), dimensionLine.getYStart());
       g2D.rotate(wallAngle);
@@ -4747,7 +4700,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
             g2D.setPaint(selectionOutlinePaint);
             g2D.setStroke(selectionOutlineStroke);
             float [][] textBounds = getTextBounds(labelText, labelStyle, xLabel, yLabel, labelAngle);
-            g2D.draw(getShape(textBounds, true, null));
+            g2D.draw(ShapeTools.getShape(textBounds, true, null));
             g2D.setPaint(foregroundColor);
             if (indicatorPaint != null
                 && selectedItems.size() == 1
@@ -4768,7 +4721,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 									} else { // CENTER
 										g2D.translate((textBounds[2][0] + textBounds[3][0]) / 2, (textBounds[2][1] + textBounds[3][1]) / 2);
 									}
-                  float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+                  float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
                   g2D.scale(scaleInverse, scaleInverse);
                   g2D.rotate(label.getAngle());
                   g2D.draw(ELEVATION_POINT_INDICATOR);
@@ -4849,7 +4802,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       AffineTransform previousTransform = g2D.getTransform();
       // Draw rotation indicator at middle of second and third point of compass
       float [][] compassPoints = compass.getPoints();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       g2D.translate((compassPoints [2][0] + compassPoints [3][0]) / 2,
           (compassPoints [2][1] + compassPoints [3][1]) / 2);
       g2D.scale(scaleInverse, scaleInverse);
@@ -4943,21 +4896,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestWall != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestWall > 0) {
-          g2D.draw(new Line2D.Float(x + 25 / planScale, y,
-              x - deltaXToClosestWall - 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestWall - 25 * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 / planScale, y,
-              x - deltaXToClosestWall + 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestWall + 25 * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestWall != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestWall > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 / planScale,
-              x, y - deltaYToClosestWall - 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestWall - 25 * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 / planScale,
-              x, y - deltaYToClosestWall + 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestWall + 25 * fatFingerScaleUp / planScale));
         }
       }
 
@@ -4992,17 +4945,17 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
                                   Paint pointPaint, Stroke pointStroke) {
     g2D.setPaint(pointPaint);
     g2D.setStroke(pointStroke);
-    g2D.draw(new Ellipse2D.Float((float)locationFeedback.getX() - 5f / planScale,
-        (float)locationFeedback.getY() - 5f / planScale, 10f / planScale, 10f / planScale));
+    g2D.draw(new Ellipse2D.Float((float)locationFeedback.getX() - 5f * fatFingerScaleUp / planScale,
+        (float)locationFeedback.getY() - 5f * fatFingerScaleUp / planScale, 10f * fatFingerScaleUp / planScale, 10f * fatFingerScaleUp / planScale));
     g2D.setPaint(feedbackPaint);
-    g2D.setStroke(new BasicStroke(1 / planScale * this.resolutionScale));
+    g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
     g2D.draw(new Line2D.Float((float)locationFeedback.getX(),
-        (float)locationFeedback.getY() - 5f / planScale,
+        (float)locationFeedback.getY() - 5f * fatFingerScaleUp / planScale,
         (float)locationFeedback.getX(),
-        (float)locationFeedback.getY() + 5f / planScale));
-    g2D.draw(new Line2D.Float((float)locationFeedback.getX() - 5f / planScale,
+        (float)locationFeedback.getY() + 5f* fatFingerScaleUp  / planScale));
+    g2D.draw(new Line2D.Float((float)locationFeedback.getX() - 5f* fatFingerScaleUp  / planScale,
         (float)locationFeedback.getY(),
-        (float)locationFeedback.getX() + 5f / planScale,
+        (float)locationFeedback.getX() + 5f* fatFingerScaleUp  / planScale,
         (float)locationFeedback.getY()));
   }
 
@@ -5080,21 +5033,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x + 25 / planScale, y,
-              x - deltaXToClosestObject - 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject - 25 * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 / planScale, y,
-              x - deltaXToClosestObject + 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject + 25 * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 / planScale,
-              x, y - deltaYToClosestObject - 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject - 25 * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 / planScale,
-              x, y - deltaYToClosestObject + 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject + 25 * fatFingerScaleUp / planScale));
         }
       }
 
@@ -5212,21 +5165,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x + 25 / planScale, y,
-              x - deltaXToClosestObject - 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject - 25 * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 / planScale, y,
-              x - deltaXToClosestObject + 25 / planScale, y));
+          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject + 25 * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 / planScale,
-              x, y - deltaYToClosestObject - 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject - 25 * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 / planScale,
-              x, y - deltaYToClosestObject + 25 / planScale));
+          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject + 25 * fatFingerScaleUp / planScale));
         }
       }
 
@@ -5252,7 +5205,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
                                   Point2D point1, Point2D point2,
                                   float planScale, Color selectionColor) {
     g2D.setColor(selectionColor);
-    g2D.setStroke(new BasicStroke(1 / planScale * this.resolutionScale));
+    g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
     // Compute angles
     double angle1 = Math.atan2(center.getY() - point1.getY(), point1.getX() - center.getX());
     if (angle1 < 0) {
@@ -5269,11 +5222,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     AffineTransform previousTransform = g2D.getTransform();
     // Draw an arc
     g2D.translate(center.getX(), center.getY());
-    float radius = 20 / planScale;
+    float radius = 20 * fatFingerScaleUp / planScale;
     g2D.draw(new Arc2D.Double(-radius, -radius,
         radius * 2, radius * 2, Math.toDegrees(angle1), Math.toDegrees(extent), Arc2D.OPEN));
     // Draw two radius
-    radius += 5 / planScale;
+    radius += 5 * fatFingerScaleUp / planScale;
     g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1), -radius * Math.sin(angle1)));
     g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1 + extent), -radius * Math.sin(angle1 + extent)));
     g2D.setTransform(previousTransform);
@@ -5358,7 +5311,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       AffineTransform previousTransform = g2D.getTransform();
       // Draw yaw rotation indicator at middle of first and last point of camera
       float [][] cameraPoints = camera.getPoints();
-      float scaleInverse = fatFingerScaleUp / planScale * this.resolutionScale;
+      float scaleInverse = 1 * fatFingerScaleUp / planScale * this.resolutionScale;
       g2D.translate((cameraPoints [0][0] + cameraPoints [3][0]) / 2,
           (cameraPoints [0][1] + cameraPoints [3][1]) / 2);
       g2D.scale(scaleInverse, scaleInverse);
@@ -5397,11 +5350,99 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setPaint(new Color(selectionColor.getRed(), selectionColor.getGreen(), selectionColor.getBlue(), 32));
       g2D.fill(this.rectangleFeedback);
       g2D.setPaint(selectionColor);
-      g2D.setStroke(new BasicStroke(1 / planScale * this.resolutionScale));
+      g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
       g2D.draw(this.rectangleFeedback);
     }
   }
 
+  //PJPJPJ taken from ShapeTools back here to avoid javaawt shape use here
+  public static class ShapeTools {
+	  // SVG path Shapes
+	  private static final Map<String, Shape> parsedShapes = new WeakHashMap<String, Shape>();
+
+	  private ShapeTools() {
+	    // This class contains only tools
+	  }
+
+	  /**
+	   * Returns the line stroke matching the given line styles.
+	   */
+	  public static Stroke getStroke(float thickness,
+	                                 Polyline.CapStyle capStyle,
+	                                 Polyline.JoinStyle joinStyle,
+	                                 float [] dashPattern,
+	                                 float dashOffset) {
+	    int strokeCapStyle;
+	    switch (capStyle) {
+	      case ROUND :
+	        strokeCapStyle = BasicStroke.CAP_ROUND;
+	        break;
+	      case SQUARE :
+	        strokeCapStyle = BasicStroke.CAP_SQUARE;
+	        break;
+	      default:
+	        strokeCapStyle = BasicStroke.CAP_BUTT;
+	        break;
+	    }
+
+	    int strokeJoinStyle;
+	    switch (joinStyle) {
+	      case ROUND :
+	      case CURVED :
+	        strokeJoinStyle = BasicStroke.JOIN_ROUND;
+	        break;
+	      case BEVEL :
+	        strokeJoinStyle = BasicStroke.JOIN_BEVEL;
+	        break;
+	      default:
+	        strokeJoinStyle = BasicStroke.JOIN_MITER;
+	        break;
+	    }
+
+	    float dashPhase = 0;
+	    if (dashPattern != null) {
+	      dashPattern = dashPattern.clone();
+	      for (int i = 0; i < dashPattern.length; i++) {
+	        dashPattern [i] *= thickness;
+	        dashPhase += dashPattern [i];
+	      }
+	      dashPhase *= dashOffset;
+	    }
+
+	    return new BasicStroke(thickness, strokeCapStyle, strokeJoinStyle, 10, dashPattern, dashPhase);
+	  }
+
+	  /**
+	   * Returns the shape of a polyline.
+	   */
+	  public static Shape getPolylineShape(float [][] points, boolean curved, boolean closedPath) {
+	    if (curved) {
+	      GeneralPath polylineShape = new GeneralPath();
+	      for (int i = 0, n = closedPath ? points.length : points.length - 1; i < n; i++) {
+	        CubicCurve2D.Float curve2D = new CubicCurve2D.Float();
+	        float [] previousPoint = points [i == 0 ?  points.length - 1  : i - 1];
+	        float [] point         = points [i];
+	        float [] nextPoint     = points [i == points.length - 1 ?  0  : i + 1];
+	        float [] vectorToBisectorPoint = new float [] {nextPoint [0] - previousPoint [0], nextPoint [1] - previousPoint [1]};
+	        float [] nextNextPoint     = points [(i + 2) % points.length];
+	        float [] vectorToBisectorNextPoint = new float [] {point[0] - nextNextPoint [0], point[1] - nextNextPoint [1]};
+	        curve2D.setCurve(point[0], point[1],
+	            point [0] + (i != 0 || closedPath  ? vectorToBisectorPoint [0] / 3.625f  : 0),
+	            point [1] + (i != 0 || closedPath  ? vectorToBisectorPoint [1] / 3.625f  : 0),
+	            nextPoint [0] + (i != points.length - 2 || closedPath  ? vectorToBisectorNextPoint [0] / 3.625f  : 0),
+	            nextPoint [1] + (i != points.length - 2 || closedPath  ? vectorToBisectorNextPoint [1] / 3.625f  : 0),
+	            nextPoint [0], nextPoint [1]);
+	        polylineShape.append(curve2D, true);
+	      }
+	      return polylineShape;
+	    } else {
+	      return ShapeTools.getShape(points, closedPath, null);
+	    }
+	  }
+
+	  /**
+	   * Returns the shape matching the coordinates in <code>points</code> array.
+	   */
   /**
    * Returns the shape matching the coordinates in <code>points</code> array.
    */
@@ -5419,6 +5460,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     }
     return path;
   }
+
+
+
+	}
 
   /**
    * Sets rectangle selection feedback coordinates.
@@ -5499,7 +5544,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	  controller.setHomeProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY, String.valueOf(getYScroll()));
 	  PlanComponent.this.revalidate();
 
-
 	  //update the tutorial
 	  Point2D data = new Point2D.Float(getXScroll(), getYScroll());
 	  ((Renovations3DActivity)parentFragment.getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.PLAN_MOVED, data);
@@ -5543,8 +5587,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 			this.scale = scale;
 			// Revalidate plan without computing again unchanged plan bounds
-			//invalidate(false);
-			revalidate(false);
+			invalidate(false);
 
 			if (true) {// (parent instanceof JViewport) {
 				//Dimension viewSize = parent.getViewSize();
@@ -5600,14 +5643,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * Returns <code>x</code> converted in screen coordinates space.
    */
   public int convertXModelToScreen(float x) {
-    return convertXModelToPixel(x);//+ getXScroll());
+    return convertXModelToPixel(x);
   }
 
   /**
    * Returns <code>y</code> converted in screen coordinates space.
    */
   public int convertYModelToScreen(float y) {
-  	return convertYModelToPixel(y);//+ getYScroll());
+  	return convertYModelToPixel(y);
   }
 
 
@@ -5706,10 +5749,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       //this.toolTipWindow.setFocusableWindowState(false);
       //this.toolTipWindow.add(toolTipComponent);
 
-
 			toolTipManager.showTooltip(toolTipComponent);
-
-
 
       // Add to window a mouse listener that redispatch mouse events to
       // plan component (if the user moves fast enough the mouse pointer in a way
@@ -6057,14 +6097,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   public boolean getScrollableTracksViewportHeight() {
     // Return true if the plan's preferred height is smaller than the viewport height
-    return this instanceof JViewport
-        && getPreferredSize().height < ((JViewport)this).getHeight();
+    return getParent() instanceof JViewport
+        && getPreferredSize().height < ((JViewport)getParent()).getHeight();
   }
 
   public boolean getScrollableTracksViewportWidth() {
     // Return true if the plan's preferred width is smaller than the viewport width
-    return this instanceof JViewport
-        && getPreferredSize().width < ((JViewport)this).getWidth();
+    return getParent() instanceof JViewport
+        && getPreferredSize().width < ((JViewport)getParent()).getWidth();
   }
 
   public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
@@ -6081,7 +6121,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler() {
     if (this.horizontalRuler == null) {
       this.horizontalRuler = new PlanRulerComponent();
-      horizontalRuler.init(HORIZONTAL,this);
+      horizontalRuler.init(HORIZONTAL, this);
     }
     return this.horizontalRuler;
   }
@@ -6092,7 +6132,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   public com.eteks.sweethome3d.viewcontroller.View getVerticalRuler() {
     if (this.verticalRuler == null) {
       this.verticalRuler = new PlanRulerComponent();
-      verticalRuler.init(VERTICAL,this);
+      verticalRuler.init(VERTICAL, this);
     }
     return this.verticalRuler;
   }
@@ -6346,9 +6386,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         }
       }
 
-      if (this.mouseLocation != null) {
+      //if (this.mouseLocation != null) {
+			if (pc.touchyListener.mActivePointerId != TouchyListener.INVALID_POINTER_ID ) {
+				mouseLocation = new Point((int)pc.touchyListener.getLastDragLocation().x, (int)pc.touchyListener.getLastDragLocation().y);
         g2D.setColor(pc.getSelectionColor());
-        g2D.setStroke(new BasicStroke(1 / rulerScale));
+        g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / rulerScale));
         if (this.orientation == HORIZONTAL) {
           // Draw mouse feedback vertical line
           float x = pc.convertXPixelToModel(this.mouseLocation.x);
@@ -6403,8 +6445,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     }
 
     public void paintIcon(Object c, Graphics g, int x, int y) {
-		if(this.icon != null)
-			this.icon.paintIcon(c, g, x, y);
+			if(this.icon != null)
+				this.icon.paintIcon(c, g, x, y);
     }
 
     public boolean isWaitIcon() {
