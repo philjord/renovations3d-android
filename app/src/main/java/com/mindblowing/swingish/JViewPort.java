@@ -43,7 +43,6 @@ public abstract class JViewPort extends JComponent
 
 	//pixel space
 	protected void scrollRectToVisible(Rectangle shapePixelBounds) {
-		System.out.println("pw " + getWidth() + " cw " +shapePixelBounds.width + " at " +(shapePixelBounds.x) );
 		float dx = positionAdjustment(getWidth(), shapePixelBounds.width, shapePixelBounds.x);
 		float dy = positionAdjustment(getHeight(), shapePixelBounds.height, shapePixelBounds.y);
 
@@ -75,42 +74,42 @@ public abstract class JViewPort extends JComponent
 		//   +-----+
 		//   | --- |     No Change
 		//   +-----+
-		if (childAt >= 0 && childWidth + childAt <= parentWidth) {System.out.println("1");
+		if (childAt >= 0 && childWidth + childAt <= parentWidth) {
 			return 0;
 		}
 
 		//   +-----+
 		//  ---------   No Change
 		//   +-----+
-		if (childAt <= 0 && childWidth + childAt >= parentWidth) {System.out.println("2");
+		if (childAt <= 0 && childWidth + childAt >= parentWidth) {
 			return 0;
 		}
 
 		//   +-----+          +-----+
 		//   |   ----    ->   | ----|
 		//   +-----+          +-----+
-		if (childAt > 0 && childWidth <= parentWidth) {System.out.println("3");
+		if (childAt > 0 && childWidth <= parentWidth) {
 			return -childAt + parentWidth - childWidth;
 		}
 
 		//   +-----+             +-----+
 		//   |  --------  ->     |--------
 		//   +-----+             +-----+
-		if (childAt >= 0 && childWidth >= parentWidth) {System.out.println("4");
+		if (childAt >= 0 && childWidth >= parentWidth) {
 			return -childAt;
 		}
 
 		//   +-----+          +-----+
 		// ----    |     ->   |---- |
 		//   +-----+          +-----+
-		if (childAt <= 0 && childWidth <= parentWidth) {System.out.println("5");
+		if (childAt <= 0 && childWidth <= parentWidth) {
 			return -childAt;
 		}
 
 		//   +-----+             +-----+
 		//-------- |      ->   --------|
 		//   +-----+             +-----+
-		if (childAt < 0 && childWidth >= parentWidth) {System.out.println("6");
+		if (childAt < 0 && childWidth >= parentWidth) {
 			return -childAt + parentWidth - childWidth;
 		}
 		System.out.println("7");

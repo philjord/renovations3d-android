@@ -824,8 +824,11 @@ public class Renovations3DActivity extends FragmentActivity {
 						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
 							@Override
 							public void onHomeLoaded(Home home, final HomeController homeController) {
-								mRenovations3DPagerAdapter.notifyChangeInPosition(1);
-								mRenovations3DPagerAdapter.notifyDataSetChanged();
+								Renovations3DActivity.this.runOnUiThread(new Runnable() {
+									public void run() {
+										mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+										mRenovations3DPagerAdapter.notifyDataSetChanged();
+									}});
 							}
 						});
 						renovations3D.newHomeFromExample();
