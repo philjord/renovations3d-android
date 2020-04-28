@@ -91,7 +91,7 @@ public class LabelPanel extends AndroidDialogView implements DialogView {
     // Create text label and its text field bound to NAME controller property
     this.textLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 			  com.eteks.sweethome3d.android_props.LabelPanel.class, "textLabel.text"));
-    this.textTextField = new AutoCompleteTextField(activity, controller.getText(), 20, preferences.getAutoCompletionStrings("LabelText"));
+    this.textTextField = new AutoCompleteTextField(activity, controller.getText(), 20, preferences.getAutoCompletionStrings("LabelText"), true);
     //if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
     //  SwingTools.addAutoSelectionOnFocusGain(this.textTextField);
     //}

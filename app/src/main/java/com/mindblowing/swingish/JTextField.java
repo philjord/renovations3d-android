@@ -9,16 +9,17 @@ import android.widget.TextView;
 
 /**
  * Created by phil on 2/1/2017.
- * Note these are single line and have a done button that hides them
  */
 
-public class JTextField extends EditText
-{
+public class JTextField extends EditText {
 
-	public JTextField(Context context)
-	{
+	public JTextField(Context context) {
+		this(context,false);
+	}
+	public JTextField(Context context, boolean multiline) {
 		super(context);
-		setSingleLine();
+		if(!multiline)
+			setSingleLine();
 		//JTextField default to assume no next type options
 		setImeOptions(EditorInfo.IME_ACTION_DONE);
 		setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -33,18 +34,23 @@ public class JTextField extends EditText
 			}
 		});
 	}
-	public JTextField(Context context, int minEMS)
-	{
+
+	public JTextField(Context context, int minEMS) {
 		this(context);
 		this.setMinEms(minEMS);
 	}
-	public JTextField(Context context, String text)
-	{
+
+	public JTextField(Context context, String text) {
 		this(context);
 		setText(text);
 	}
-	public JTextField(Context context, String text, int minEMS)
-	{
+
+	public JTextField(Context context, String text, boolean multiline) {
+		this(context, multiline);
+		setText(text);
+	}
+
+	public JTextField(Context context, String text, int minEMS) {
 		this(context);
 		setText(text);
 		this.setMinEms(minEMS);

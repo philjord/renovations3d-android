@@ -386,12 +386,13 @@ public class Renovations3DActivity extends FragmentActivity {
 		// I got IndexOutOfBound when dragging (in a double call case or perhaps a very slow start up time)
 		//https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/9db15004?duration=2592000000
 
-		//FIXME:!! this solution stops changes happenign at all! need a better answer
+		//FIXME:!! this solution stops changes happening at all! need a better answer
 		//if(mViewPager.getAdapter() == null){
 			mViewPager.setAdapter(mRenovations3DPagerAdapter);
 			mViewPager.setCurrentItem(1);
 			mViewPager.setOffscreenPageLimit(4);
 		//} else {
+		//  mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 		//	mRenovations3DPagerAdapter.notifyDataSetChanged();
 		//}
 
@@ -809,7 +810,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 				if (mRenovations3DPagerAdapter != null) {
 					// discard the old view first
-					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+					mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
 				}
 
@@ -826,7 +827,7 @@ public class Renovations3DActivity extends FragmentActivity {
 							public void onHomeLoaded(Home home, final HomeController homeController) {
 								Renovations3DActivity.this.runOnUiThread(new Runnable() {
 									public void run() {
-										mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+										mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 										mRenovations3DPagerAdapter.notifyDataSetChanged();
 									}});
 							}
@@ -894,7 +895,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 						if (mRenovations3DPagerAdapter != null) {
 							// discard the old view first
-							mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+							mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 							mRenovations3DPagerAdapter.notifyDataSetChanged();
 						}
 
@@ -945,7 +946,7 @@ public class Renovations3DActivity extends FragmentActivity {
 							recordHomeStateInPrefs("", false, "");//TODO: should I clear now or just let auto save sort it out?
 						}
 
-						mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+						mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 						mRenovations3DPagerAdapter.notifyDataSetChanged();
 					}
 				});
@@ -1028,7 +1029,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 				if (mRenovations3DPagerAdapter != null) {
 					// discard the old view first
-					mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+					mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
 				}
 
@@ -1040,7 +1041,7 @@ public class Renovations3DActivity extends FragmentActivity {
 				renovations3D.newHome();
 				recordHomeStateInPrefs("", false, "");
 
-				mRenovations3DPagerAdapter.notifyChangeInPosition(1);
+				mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 				mRenovations3DPagerAdapter.notifyDataSetChanged();
 			}
 

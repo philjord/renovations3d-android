@@ -1860,7 +1860,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           dimensionLine.getXStart(), dimensionLine.getYStart());
       transform.rotate(angle);
       transform.translate(0, dimensionLine.getOffset());
-		//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
+			//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent
       transform.translate((dimensionLineLength - lengthTextBounds.getWidth()) / 2,
           dimensionLine.getOffset() <= 0
               ? lengthFontMetrics.descent + 1
@@ -1925,33 +1925,55 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    */
   public float [][] getTextBounds(String text, TextStyle style,
                                   float x, float y, float angle) {
-    //FontMetrics fontMetrics = getFontMetrics(getFont(), style);
-    Rectangle2D textBounds = getFont().getStringBounds(text);
-    float halfTextLength = (float)textBounds.getWidth() / 2;
-    if (angle == 0) {
-      float minY = (float)(y + textBounds.getY());
-      float maxY = (float)(minY + textBounds.getHeight());
-      return new float [][] {
-          {x - halfTextLength, minY},
-          {x + halfTextLength, minY},
-          {x + halfTextLength, maxY},
-          {x - halfTextLength, maxY}};
-    } else {
-      // Transform text bounding rectangle corners to their real location
-      AffineTransform transform = new AffineTransform();
-      transform.translate(x, y);
-      transform.rotate(angle);
-      transform.translate(-halfTextLength, 0);
-      GeneralPath textBoundsPath = new GeneralPath(textBounds);
-      List<float []> textPoints = new ArrayList<float[]>(4);
-	  for (PathIterator it = textBoundsPath.getPathIterator(transform); !it.isDone(); it.next()) {
-	  	float [] pathPoint = new float[2];
-		if (it.currentSegment(pathPoint) != PathIterator.SEG_CLOSE) {
-			textPoints.add(pathPoint);
+		FontMetrics fontMetrics = getFontMetrics(getFont(), style);
+		Rectangle2D textBounds = null;
+		String [] lines = text.split("\n");
+		Graphics2D g = (Graphics2D)getGraphics();
+		if (g != null) {
+			setRenderingHints(g);
 		}
-	  }
-      return textPoints.toArray(new float [textPoints.size()][]);
-    }
+		for (int i = 0; i < lines.length; i++) {
+			Rectangle2D lineBounds = getFont(getFont(), style).getStringBounds(lines [i]);
+			if (textBounds == null
+							|| textBounds.getWidth() < lineBounds.getWidth()) {
+				textBounds = lineBounds;
+			}
+		}
+		float textWidth = (float)textBounds.getWidth();
+		float shiftX;
+		if (style.getAlignment() == TextStyle.Alignment.LEFT) {
+			shiftX = 0;
+		} else if (style.getAlignment() == TextStyle.Alignment.RIGHT) {
+			shiftX = -textWidth;
+		} else { // CENTER
+			shiftX = -textWidth / 2;
+		}
+		if (angle == 0) {
+			float minY = (float)(y + textBounds.getY());
+			float maxY = (float)(minY + textBounds.getHeight());
+			minY -= (float)(textBounds.getHeight() * (lines.length - 1));
+			return new float [][] {
+							{x + shiftX, minY},
+							{x + shiftX + textWidth, minY},
+							{x + shiftX + textWidth, maxY},
+							{x + shiftX, maxY}};
+		} else {
+			textBounds.add(textBounds.getX(), textBounds.getY() - ((fontMetrics.bottom - fontMetrics.top) - fontMetrics.leading) * (lines.length - 1));
+			// Transform text bounding rectangle corners to their real location
+			AffineTransform transform = new AffineTransform();
+			transform.translate(x, y);
+			transform.rotate(angle);
+			transform.translate(shiftX, 0);
+			GeneralPath textBoundsPath = new GeneralPath(textBounds);
+			List<float []> textPoints = new ArrayList<float[]>(4);
+			for (PathIterator it = textBoundsPath.getPathIterator(transform); !it.isDone(); it.next()) {
+				float [] pathPoint = new float[2];
+				if (it.currentSegment(pathPoint) != PathIterator.SEG_CLOSE) {
+					textPoints.add(pathPoint);
+				}
+			}
+			return textPoints.toArray(new float [textPoints.size()][]);
+		}
   }
 
   /**
@@ -3186,34 +3208,55 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     if (style == null) {
       style = this.preferences.getDefaultTextStyle(selectableClass);
     }
-    //FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
-    Rectangle2D textBounds;// = fontMetrics.getStringBounds(text, g2D); //PJ reobtained below as font is not right yet
-    if (outlineColor != null) {
-      // Draw text outline
-      BasicStroke stroke = new BasicStroke(style.getFontSize() * 0.05f);
-      TextStyle outlineStyle = style.deriveStyle(style.getFontSize() - stroke.getLineWidth());
-      Font font = getFont(defaultFont, outlineStyle);
-      g2D.setFont(font);
-			setFont(font);// make font setting consistent
-			textBounds = font.getStringBounds(text);
-      Color defaultColor = g2D.getColor();
-      g2D.setColor(new Color(outlineColor));
-      g2D.setStroke(stroke);
-      g2D.translate(-(float)textBounds.getWidth() / 2 + stroke.getLineWidth() / 2, 0);
-			//TODO: what is a TextLayout and it's outline?
-      //TextLayout textLayout = new TextLayout(text, font, g2D.getFontRenderContext());
-      //g2D.draw(textLayout.getOutline(null));
-      g2D.setColor(defaultColor);
-    } else {
-      g2D.setFont(getFont(defaultFont, style));
-			setFont(getFont(defaultFont, style));// make font setting consistent
-			textBounds = getFont(defaultFont, style).getStringBounds(text);//PJ
-			((VMGraphics2D)g2D).canvasPaint.setTextSize(style.getFontSize());
-      g2D.translate(-(float)textBounds.getWidth() / 2, 0);
-    }
-    // Draw text
-    g2D.drawString(text, 0, 0);
-    g2D.setTransform(previousTransform);
+    FontMetrics fontMetrics = getFontMetrics(defaultFont, style);
+		String [] lines = text.split("\n");
+		float [] lineWidths = new float [lines.length];
+		float textWidth = -Float.MAX_VALUE;
+		for (int i = 0; i < lines.length; i++) {
+			lineWidths [i] = (float)getFont(defaultFont, style).getStringBounds(lines [i]).getWidth();
+			textWidth = Math.max(lineWidths [i], textWidth);
+		}
+		BasicStroke stroke = null;
+		Font font;
+		if (outlineColor != null) {
+			stroke = new BasicStroke(style.getFontSize() * 0.05f);
+			TextStyle outlineStyle = style.deriveStyle(style.getFontSize() - stroke.getLineWidth());
+			font = getFont(defaultFont, outlineStyle);
+			g2D.setStroke(stroke);
+		} else {
+			font = getFont(defaultFont, style);
+		}
+		g2D.setFont(font);
+
+		for (int i = lines.length - 1; i >= 0; i--) {
+			String line = lines[i];
+			float translationX;
+			if (style.getAlignment() == TextStyle.Alignment.LEFT) {
+				translationX = 0;
+			} else if (style.getAlignment() == TextStyle.Alignment.RIGHT) {
+				translationX = -lineWidths[i];
+			} else { // CENTER
+				translationX = -lineWidths[i] / 2;
+			}
+			if (outlineColor != null) {
+				translationX += stroke.getLineWidth() / 2;
+			}
+			g2D.translate(translationX, 0);
+			if (outlineColor != null) {
+				// Draw text outline
+				Color defaultColor = g2D.getColor();
+				g2D.setColor(new Color(outlineColor));
+				//TODO: what is a TextLayout and it's outline?
+				//TextLayout textLayout = new TextLayout(line, font, g2D.getFontRenderContext());
+				//g2D.draw(textLayout.getOutline(null));
+				g2D.setColor(defaultColor);
+			}
+
+			// Draw text
+			g2D.drawString(line, 0, 0);
+			g2D.translate(-translationX, -((fontMetrics.bottom - fontMetrics.top) - fontMetrics.leading));
+		}
+		g2D.setTransform(previousTransform);
   }
 
   /**
@@ -3448,8 +3491,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			AffineTransform previousTransform2 = g2D.getTransform();//force save
       g2D.translate(x, y);
       g2D.rotate(angle);
-			//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent swapped to just fontMetrics.ascent
-      g2D.translate(0, fontMetrics.ascent * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
+			//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent
+			g2D.translate(0, -((fontMetrics.bottom - fontMetrics.top) - fontMetrics.leading) * (lineCount - 1)
+							- (-fontMetrics.ascent) * (Label.class.isAssignableFrom(selectableClass) ? 1 : 0.85));
 			g2D.scale(scaleInverse, scaleInverse);
       g2D.draw(getIndicator(null, IndicatorType.ROTATE_TEXT));
       g2D.setTransform(previousTransform2);
@@ -4584,7 +4628,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         FontMetrics lengthFontMetrics = getFontMetrics(font, lengthStyle);
         Rectangle2D lengthTextBounds = font.getStringBounds(lengthText);
         int fontAscent = (int)lengthFontMetrics.ascent;
-		  	//the ascent in fontMetrics is already -ve so fontMetrics.ascent swapped to -fontMetrics.ascent
+				//PJ the ascent in fontMetrics is already -ve so -fontMetrics.ascent
         g2D.translate((dimensionLineLength - (float)lengthTextBounds.getWidth()) / 2,
             dimensionLine.getOffset() <= 0
                 ? lengthFontMetrics.descent- 1

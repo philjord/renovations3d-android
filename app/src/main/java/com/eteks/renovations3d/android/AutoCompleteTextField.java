@@ -10,10 +10,11 @@ import java.util.List;
  * Created by phil on 2/1/2017.
  */
 
-public class AutoCompleteTextField extends JTextField
-{
-	public AutoCompleteTextField(Context context, String text, int i, List<String> autoTexts)
-	{
+public class AutoCompleteTextField extends JTextField {
+	public AutoCompleteTextField(Context context, String text, int i, List<String> autoTexts, boolean multiline) {
+		super(context, text, multiline);
+	}
+	public AutoCompleteTextField(Context context, String text, int i, List<String> autoTexts) {
 		super(context, text);
 	}
 }
