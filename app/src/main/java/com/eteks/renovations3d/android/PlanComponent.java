@@ -1950,8 +1950,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		}
 		if (angle == 0) {
 			float minY = (float)(y + textBounds.getY());
-			float maxY = (float)(minY + textBounds.getHeight());
-			minY -= (float)(textBounds.getHeight() * (lines.length - 1));
+			float h = ((fontMetrics.bottom - fontMetrics.top) - fontMetrics.leading);
+			float maxY = (float)(minY + h);
+			minY -= (float)(h * (lines.length - 1));
 			return new float [][] {
 							{x + shiftX, minY},
 							{x + shiftX + textWidth, minY},
