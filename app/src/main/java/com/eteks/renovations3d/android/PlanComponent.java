@@ -1713,7 +1713,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * Returns the bounds of the plan displayed by this component.
    */
   public Rectangle2D getPlanBounds() {
-    if (!this.planBoundsCacheValid) {
+    if (!this.planBoundsCacheValid || this.planBoundsCache == null) {
       // Always enlarge plan bounds only when plan component is a child of a scroll pane
       if (this.planBoundsCache == null
 			    || false) {// !(getParent() instanceof JViewport)) // never not child of viewport

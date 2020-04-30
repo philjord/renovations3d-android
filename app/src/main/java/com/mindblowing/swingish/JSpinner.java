@@ -19,14 +19,12 @@ import android.widget.TextView;
 import java.text.Format;
 import java.text.ParseException;
 
-
 /**
  * Created by phil on 2/1/2017.
  * A JSpinner that works like the java desktop version
  */
 
-public class JSpinner extends LinearLayout
-{
+public class JSpinner extends LinearLayout {
 	protected AbstractSpinnerModel model;
 	protected Format currentFormat;
 
@@ -39,90 +37,72 @@ public class JSpinner extends LinearLayout
 	public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {}
 	public void afterTextChanged(Editable arg0) {
 		model.removeChangeListener(changerListener);
-		if( output.getText().toString().length() > 0)
-		{
-			try
-			{
-				if (currentFormat != null)
-				{
-					try
-					{
+		if( output.getText().toString().length() > 0) {
+			try {
+				if (currentFormat != null) {
+					try {
 						Object parsed = currentFormat.parseObject(output.getText().toString());
-						if(parsed instanceof Number)
+						if(parsed instanceof Number) {
 							model.setValue(parsed);
-						else
+						} else {
 							model.setValue(Float.parseFloat(output.getText().toString()));
-					}
-					catch (ParseException e)
-					{
+						}
+					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-				}
-				else
-				{
+				} else {
 					model.setValue(Float.parseFloat(output.getText().toString()));
 				}
-			}catch(NumberFormatException e)
-			{
+			}catch(NumberFormatException e) {
 				//possibly entering a -ve number or something, just ignore for now
-			}
-		}
-		else
-		{
+			}catch(StringIndexOutOfBoundsException  e){}
+		} else {
 			model.setValue(0);
 		}
 		model.addChangeListener(changerListener);
 	}};
 
-	private ChangeListener changerListener = new ChangeListener()
-	{
+	private ChangeListener changerListener = new ChangeListener() {
 		@Override
-		public void stateChanged(ChangeEvent ev)
-		{
-			if(output instanceof EditText)
+		public void stateChanged(ChangeEvent ev) {
+			if(output instanceof EditText) {
 				output.removeTextChangedListener(textWatcher);
-
-			if(model.getValue() != null)
-			{
-				if (currentFormat != null)
-					output.setText(currentFormat.format(model.getValue()));
-				else
-					output.setText("" + model.getValue());
 			}
-			else
-			{
+
+			if(model.getValue() != null) {
+				if (currentFormat != null) {
+					output.setText(currentFormat.format(model.getValue()));
+				} else {
+					output.setText("" + model.getValue());
+				}
+			} else {
 				output.setText("");
 			}
 
-			if(output instanceof EditText)
+			if(output instanceof EditText) {
 				output.addTextChangedListener(textWatcher);
+			}
 		}
 	};
 
 
 
-	public JSpinner(Context context, AbstractSpinnerModel model)
-	{
+	public JSpinner(Context context, AbstractSpinnerModel model) {
 		this(context, model, null);
 	}
 
-	public JSpinner(Context context, final AbstractSpinnerModel model, Format format)
-	{
+	public JSpinner(Context context, final AbstractSpinnerModel model, Format format) {
 		 this(context, model, format, false);
 	}
 
-	public JSpinner(Context context, final AbstractSpinnerModel model, Format format, boolean allowTextEntry)
-	{
+	public JSpinner(Context context, final AbstractSpinnerModel model, Format format, boolean allowTextEntry) {
 		super(context);
 		this.model = model;
 
 		this.setOrientation(LinearLayout.VERTICAL);
-		if(!allowTextEntry)
-		{
+		if(!allowTextEntry) {
 			output = new TextView(context);
-		}
-		else
-		{
+		} else {
 			output = new EditText(context);
 			output.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 			output.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -134,8 +114,9 @@ public class JSpinner extends LinearLayout
 		output.setTextAppearance(context, android.R.style.TextAppearance_Medium);
 		output.setMinEms(6);
 		output.setMaxLines(1);
-		if(output instanceof EditText)
+		if(output instanceof EditText) {
 			output.addTextChangedListener(textWatcher);
+		}
 
 		model.addChangeListener(changerListener);
 
@@ -150,7 +131,6 @@ public class JSpinner extends LinearLayout
 		downButton = new Button(context);
 		downButton.setText(downSB);
 		downButton.setPadding(0,0,0,0);
-
 
 		final float scale = getResources().getDisplayMetrics().density;
 		int heightSizePx = (int) (30 * scale + 0.5f);
@@ -179,34 +159,28 @@ public class JSpinner extends LinearLayout
 		this.setValue(model.getValue());
 	}
 
-	public void setEnabled(boolean enabled)
-	{
+	public void setEnabled(boolean enabled) {
 		upButton.setEnabled(enabled);
 		output.setEnabled(enabled);
 		downButton.setEnabled(enabled);
 	}
 
-	public AbstractSpinnerModel getModel()
-	{
+	public AbstractSpinnerModel getModel() {
 		return model;
 	}
 
-	public void setValue(Object value)
-	{
+	public void setValue(Object value) {
 		model.setValue(value);
 	}
 
-	public void setFormat(Format format)
-	{
+	public void setFormat(Format format) {
 		this.currentFormat = format;
-		if(currentFormat != null)
+		if(currentFormat != null) {
 			output.setText(currentFormat.format(model.getValue()));
-		else
+		} else {
 			output.setText("" + model.getValue());
+		}
 	}
-
-
-
 
 
 	/**
@@ -231,14 +205,14 @@ public class JSpinner extends LinearLayout
 		private Runnable handlerRunnable = new Runnable() {
 			@Override
 			public void run() {
-
-				int del = normalInterval;
+				int delay = normalInterval;
 				// double speed after a hold of 25
 				runCount++;
-				if(runCount>25)
-					del = del/2;
+				if(runCount > 25) {
+					delay = delay / 2;
+				}
 
-				handler.postDelayed(this, del);
+				handler.postDelayed(this, delay);
 				clickListener.onClick(downView);
 			}
 		};
@@ -254,10 +228,12 @@ public class JSpinner extends LinearLayout
 		 */
 		public RepeatListener(int initialInterval, int normalInterval,
 							  OnClickListener clickListener) {
-			if (clickListener == null)
+			if (clickListener == null) {
 				throw new IllegalArgumentException("null runnable");
-			if (initialInterval < 0 || normalInterval < 0)
+			}
+			if (initialInterval < 0 || normalInterval < 0) {
 				throw new IllegalArgumentException("negative interval");
+			}
 
 			this.initialInterval = initialInterval;
 			this.normalInterval = normalInterval;
@@ -281,12 +257,7 @@ public class JSpinner extends LinearLayout
 					runCount = 0;
 					return true;
 			}
-
-
-			//TODO: add some slop in so the users can be a vague down, instead of all moves returning false;
-			//mSpanSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
 			return false;
 		}
-
 	}
 }

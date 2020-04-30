@@ -1225,12 +1225,17 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 							if(timer != null){
 								timer.cancel();
 							}
-							timer = new Timer("",true);
+							timer = new Timer("NavButtonTimer",true);
               timer.schedule(new TimerTask() {
+              	int repeatCount = 0;
 								@Override
 								public void run() {
-									controller.moveCamera(shiftDown ? moveDelta : moveDelta / 5);
-									controller.rotateCameraYaw(shiftDown ? yawDelta : yawDelta / 5);
+									// increase speed after 20*50 = 1 sec
+									// and a bit more after 4 secs
+									repeatCount++;
+									float speedDivisor = (repeatCount > 20 ?  repeatCount > 80 ? 0.5f : 1.5f : 5);
+									controller.moveCamera(shiftDown ? moveDelta : moveDelta / speedDivisor);
+									controller.rotateCameraYaw(shiftDown ? yawDelta : yawDelta / speedDivisor);
 									controller.rotateCameraPitch(pitchDelta);
 								}
 							},50, 50 );
