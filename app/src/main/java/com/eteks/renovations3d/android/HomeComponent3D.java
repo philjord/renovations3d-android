@@ -466,6 +466,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause pre removeNotify", null );
 			canvas3D.stopRenderer();
 			canvas3D.removeNotify();
+			setNavigationPanelVisible(false);
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onPause post removeNotify", null );
 		}
 
@@ -493,6 +494,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy pre removeNotify", null );
 			canvas3D.stopRenderer();
 			canvas3D.removeNotify();
+			setNavigationPanelVisible(false);
 			//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "onDestroy post removeNotify", null );
 		}
 

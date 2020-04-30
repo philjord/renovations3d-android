@@ -798,28 +798,9 @@ public class Renovations3DActivity extends FragmentActivity {
 	}
 
 	private void newHomeFromExample() {
-		if (getHomeController() != null)
-			getHomeController().close();
-
-		// to be safe get this back onto the ui thread
+			// to be safe get this back onto the ui thread
 		Renovations3DActivity.this.runOnUiThread(new Runnable() {
 			public void run() {
-				//TODO: this is a copy of the load method below, I'm not sure if these fragment leak issues are happening here, rudimentary tests suggest not
-				// adding these renovations3D lines in causes the dialog to never show...
-				//renovations3D = new Renovations3D(Renovations3DActivity.this);
-
-				if (mRenovations3DPagerAdapter != null) {
-					// discard the old view first
-					mRenovations3DPagerAdapter.notifyChangeInPosition(4);
-					mRenovations3DPagerAdapter.notifyDataSetChanged();
-				}
-
-				// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
-				//mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
-
-				//mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
-				//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
-
 				Thread t = new Thread(new Runnable() {
 					public void run() {
 						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
@@ -837,8 +818,6 @@ public class Renovations3DActivity extends FragmentActivity {
 					}}
 				);
 				t.start();
-
-
 			}});
 	}
 
