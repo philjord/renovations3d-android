@@ -633,9 +633,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		// Now determine a finger interface size for the indicators
 		//used for isItemSelectedAt, getSelectablesItesmAt, furnitureOnWall, various magnetized calls
-		PlanController.PIXEL_MARGIN = 2 * (int)(densityScale * 3);
-		PlanController.INDICATOR_PIXEL_MARGIN = 5 * (int)(densityScale * 3);// for selection handle touching and polyline resize and room resize
-		PlanController.WALL_ENDS_PIXEL_MARGIN = 2 * (int)(densityScale * 3);// just for wall start or end welding together
+		PlanController.PIXEL_MARGIN = 4 * (int)fatFingerScaleUp / 2;
+		PlanController.INDICATOR_PIXEL_MARGIN = 5 * (int)fatFingerScaleUp;// for selection handle touching and polyline resize and room resize
+		PlanController.WALL_ENDS_PIXEL_MARGIN = 2 * (int)fatFingerScaleUp * 4;//<-bonus just for wall start or end welding together
 
 		MARGIN = (int) (MARGIN_DP * densityScale + 0.5f);
 
