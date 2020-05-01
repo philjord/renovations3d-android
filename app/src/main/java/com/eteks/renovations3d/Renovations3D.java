@@ -169,62 +169,60 @@ public class Renovations3D extends HomeApplication {
 	}
 
 	// this is a butchery of HomeController.newHomeFromExample() like the loadHome below
-	public void newHomeFromExample() {
-		if (getHomeController() != null) {
-			HomeController controller = getHomeController();
-			final String exampleName = controller.getView().showNewHomeFromExampleDialog();
-			if (exampleName != null) {
-				Renovations3DActivity.logFireBaseContent("newHomeFromExample", exampleName);
+	public void loadHomeFromExample(String exampleName) {
 
-				// force dump old pref property change support
-				this.getUserPreferences().clearPropertyChangeListeners();
+		// force dump old pref property change support
+		this.getUserPreferences().clearPropertyChangeListeners();
 
-				Callable<Void> openTask = new Callable<Void>() {
-					public Void call() throws RecorderException {
-						home = getHomeRecorder().readHome(exampleName);
-						homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
-						homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								parentActivity.setUpViews();
-								parentActivity.invalidateOptionsMenu();
-							}
-						});
+		final String homeName = exampleName;
 
-						for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners) {
-							onHomeLoadedListener.onHomeLoaded(home, homeController);
-						}
+		Callable<Void> openTask = new Callable<Void>() {
+			public Void call() throws RecorderException {
+				home = getHomeRecorder().readHome(homeName);
+				home.setName((String) null);
 
-						Map<String, String> furnitureNames = homeController.getCatalogFurnitureNames(getUserPreferences().getFurnitureCatalog());
-						String groupName = getUserPreferences().getLocalizedString(HomeController.class, "defaultGroupName", new Object[0]);
-						Iterator furniture = home.getFurniture().iterator();
+				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
 
-						while (furniture.hasNext()) {
-							HomePieceOfFurniture piece = (HomePieceOfFurniture) furniture.next();
-							homeController.renameToCatalogName(piece, furnitureNames, groupName);
-						}
-
-						home.setName((String) null);
-						return null;
+				homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						parentActivity.setUpViews();
+						parentActivity.invalidateOptionsMenu();
 					}
-				};
-				ThreadedTaskController.ExceptionHandler exceptionHandler = new ThreadedTaskController.ExceptionHandler() {
-					public void handleException(Exception ex) {
-						if (!(ex instanceof InterruptedRecorderException)) {
-							ex.printStackTrace();
-							if (ex instanceof RecorderException) {
-								String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", new Object[]{exampleName});
-								new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
-							}
-						}
+				});
 
-					}
-				};
-				(new ThreadedTaskController(openTask,
-								getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
-								getUserPreferences(), this.viewFactory)).executeTask(new View(){});
+				Map<String, String> furnitureNames = homeController.getCatalogFurnitureNames(getUserPreferences().getFurnitureCatalog());
+				String groupName = getUserPreferences().getLocalizedString(HomeController.class, "defaultGroupName", new Object[0]);
+				Iterator furniture = home.getFurniture().iterator();
+
+				while (furniture.hasNext()) {
+					HomePieceOfFurniture piece = (HomePieceOfFurniture) furniture.next();
+					homeController.renameToCatalogName(piece, furnitureNames, groupName);
+				}
+
+				home.setName((String) null);//belt and braces not sure if required
+				for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners) {
+					onHomeLoadedListener.onHomeLoaded(home, homeController);
+				}
+				return null;
 			}
-		}
+		};
+		ThreadedTaskController.ExceptionHandler exceptionHandler = new ThreadedTaskController.ExceptionHandler() {
+			public void handleException(Exception ex) {
+				if (!(ex instanceof InterruptedRecorderException)) {
+					ex.printStackTrace();
+					if (ex instanceof RecorderException) {
+						String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", new Object[]{homeName});
+						new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
+					}
+				}
+
+			}
+		};
+		(new ThreadedTaskController(openTask,
+						getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+						getUserPreferences(), this.viewFactory)).executeTask(new View(){});
+
 
 	}
 
@@ -245,7 +243,7 @@ public class Renovations3D extends HomeApplication {
 				// Read home with application recorder
 				home = getHomeRecorder().readHome(homeName);
 				if(overrideName != null) {
-					home.setName(overrideName);// Notice this is used as the save name
+					home.setName(overrideName.length() == 0 ? null : overrideName);// Notice this is used as the save name
 					home.setModified(isModifiedOverrideValue);
 				} else {
 					home.setName(homeName);

@@ -797,29 +797,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	}
 
-	private void newHomeFromExample() {
-			// to be safe get this back onto the ui thread
-		Renovations3DActivity.this.runOnUiThread(new Runnable() {
-			public void run() {
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
-							@Override
-							public void onHomeLoaded(Home home, final HomeController homeController) {
-								Renovations3DActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										mRenovations3DPagerAdapter.notifyChangeInPosition(4);
-										mRenovations3DPagerAdapter.notifyDataSetChanged();
-									}});
-							}
-						});
-						renovations3D.newHomeFromExample();
-						recordHomeStateInPrefs("", false, "");
-					}}
-				);
-				t.start();
-			}});
-	}
+
 
 	private void loadSh3dFile() {
 		// get off EDT for showOpenDialog call
@@ -837,7 +815,77 @@ public class Renovations3DActivity extends FragmentActivity {
 		t2.start();
 	}
 
+	private void newHomeFromExample() {
 
+		//!!copy of the loadHome code below
+		// get off EDT for showOpenDialog call
+		Thread t2 = new Thread() {
+			public void run() {
+				if (getHomeController() != null) {
+					HomeController controller = getHomeController();
+					final String exampleName = controller.getView().showNewHomeFromExampleDialog();
+					if (exampleName != null) {
+						loadHomeFromExample(exampleName);
+					}
+				}
+			}
+		};
+		t2.start();
+	}
+
+	private void loadHomeFromExample(String exampleName) {
+
+		// must get off the EDT thread as the close may ask for a save
+		Thread t2 = new Thread() {
+			public void run() {
+				//trigger save of current
+				if (getHomeController() != null)
+					getHomeController().close();
+
+				// to be safe get this back onto the ui thread
+				Renovations3DActivity.this.runOnUiThread(new Runnable() {
+					public void run() {
+						Thread t = new Thread(new Runnable() {
+							public void run() {
+
+								//NOTE! the loadHome below has this exact lines of code, but in this call it causes crases
+								// with some odd fragment manager issue I don't understand
+								/*renovations3D = new Renovations3D(Renovations3DActivity.this);
+
+								if (mRenovations3DPagerAdapter != null) {
+									// discard the old view first
+									mRenovations3DPagerAdapter.notifyChangeInPosition(4);
+									mRenovations3DPagerAdapter.notifyDataSetChanged();
+								}
+
+								// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
+								mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+
+								mRenovations3DPagerAdapter.setRenovations3D(renovations3D);*/
+
+								renovations3D.addOnHomeLoadedListener(new Renovations3D.OnHomeLoadedListener() {
+									@Override
+									public void onHomeLoaded(Home home, final HomeController homeController) {
+										Renovations3DActivity.this.runOnUiThread(new Runnable() {
+											public void run() {
+												mRenovations3DPagerAdapter.notifyChangeInPosition(4);
+												mRenovations3DPagerAdapter.notifyDataSetChanged();
+											}
+										});
+									}
+								});
+								renovations3D.loadHomeFromExample(exampleName);
+								recordHomeStateInPrefs("", false, "");
+							}
+						}
+						);
+						t.start();
+					}
+				});
+			}
+		};
+		t2.start();
+	}
 	/**
 	 * Only call when not on EDT as blocking save question may arise
 	 */
@@ -864,6 +912,7 @@ public class Renovations3DActivity extends FragmentActivity {
 		// must get off the EDT thread as the close may ask for a save
 		Thread t2 = new Thread() {
 			public void run() {
+				//trigger save of current
 				if (getHomeController() != null)
 					getHomeController().close();
 
