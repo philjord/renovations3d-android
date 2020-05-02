@@ -1264,11 +1264,13 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								new NavigationPanelChangeListener(this));
 		}
 
-		if(preferences != null && preferences.isNavigationPanelVisible() && visible && canvas3D != null)
-			navigationPanel.showTooltip();
-		else
-			navigationPanel.hideTooltip();
-
+		if(navigationPanel != null) {
+			if (preferences != null && preferences.isNavigationPanelVisible() && visible && canvas3D != null) {
+				navigationPanel.showTooltip();
+			} else {
+				navigationPanel.hideTooltip();
+			}
+		}
   }
 
 	/**
