@@ -3531,23 +3531,23 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     float wallPaintScale = paintMode == PaintMode.PRINT
         ? planScale / 72 * 150 // Adjust scale to 150 dpi for print
         : planScale / this.resolutionScale;
-  /*  Composite oldComposite = null;
+    Composite oldComposite = null;
     if (paintMode == PaintMode.PAINT
         && this.backgroundPainted
         && this.backgroundImageCache != null
         && this.wallsDoorsOrWindowsModification) {
       // Paint walls with half transparent paint when a wall or a door/window in the base plan is being handled
       oldComposite = setTransparency(g2D, 0.5f);
-    }*/
+    }
     for (Map.Entry<Collection<Wall>, Area> areaEntry : wallAreas.entrySet()) {
       TextureImage wallPattern = areaEntry.getKey().iterator().next().getPattern();
       fillAndDrawWallsArea(g2D, areaEntry.getValue(), planScale,
           getWallPaint(wallPaintScale, backgroundColor, foregroundColor,
               wallPattern != null ? wallPattern : this.preferences.getWallPattern()), foregroundColor, paintMode);
     }
-   /* if (oldComposite != null) {
+    if (oldComposite != null) {
       g2D.setComposite(oldComposite);
-    }*/
+    }
   }
 
   /**
