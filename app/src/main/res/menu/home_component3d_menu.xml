@@ -79,6 +79,11 @@
         android:icon="@drawable/ic_add_a_photo_black_24dp"
         />
     <item
+        android:id="@+id/createVideo"
+        android:title="@string/menu_createVideo"
+        android:icon="@drawable/ic_video_call_black_24dp"
+        />
+    <item
         android:id="@+id/exportToObj"
         android:title="@string/menu_exportToObj"
         />

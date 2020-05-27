@@ -19,6 +19,7 @@
  */
 package com.eteks.renovations3d.android;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
@@ -340,7 +341,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
 
 	private PlanController controller;
-	private MultipleLevelsPlanPanel parentFragment;
 
 	//menu item options
 	public boolean alignmentActivated = false;
@@ -665,8 +665,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			 */
   public void init(Home home,
 									 UserPreferences preferences,
-									 PlanController controller, MultipleLevelsPlanPanel parentFragment) {
-  	init(home, preferences, null, controller, parentFragment);
+									 PlanController controller) {
+  	init(home, preferences, null, controller);
   }
 
 			/**
@@ -681,7 +681,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   public void init(Home home,
 							UserPreferences preferences,
 							Object3DFactory  object3dFactory,
-							PlanController controller, MultipleLevelsPlanPanel parentFragment) {
+							PlanController controller) {
 		this.home = home;
 		this.preferences = preferences;
 		try {
@@ -694,8 +694,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		this.object3dFactory = object3dFactory;
 
 		this.controller = controller;
-		this.parentFragment = parentFragment;
-
 
     this.patternImagesCache = new HashMap<TextureImage, BufferedImage>();
     // Install default colors using same colors as a text field
@@ -708,10 +706,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 		setXScroll(viewportX != null ?  viewportX.intValue() : 0);
 		Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
 		setYScroll(viewportY != null? viewportY.intValue(): 0);
-
-
-
-
   }
 
   /**
@@ -1152,7 +1146,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * Invalidates this component voiding plan bounds cache if <code>invalidatePlanBoundsCache</code> is <code>true</code>.
 	 * Validates this component and updates viewport position if it's displayed in a scrolled pane.
    */
-  private void invalidate(boolean invalidatePlanBoundsCache) {
+  protected void invalidate(boolean invalidatePlanBoundsCache) {
 
 		if (invalidatePlanBoundsCache) {
 			boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
@@ -1408,8 +1402,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		public void mousePressed(View v, MotionEvent ev) {
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
-			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
-							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
+			if(((Renovations3DActivity)getDrawableView().getContext()).currentDialog == null
+							|| !((Renovations3DActivity)getDrawableView().getContext()).currentDialog.isShowing()) {
 				final int pointerIndex = ev.getActionIndex();
 				final float x = ev.getX(pointerIndex);
 				final float y = ev.getY(pointerIndex);
@@ -1453,8 +1447,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 		public void mouseReleased(View v, MotionEvent ev) {
 			// no selection or edits while a dialog is up, note PlanComponent is not on screen at all.
-			if(((Renovations3DActivity)parentFragment.getActivity()).currentDialog == null
-							|| !((Renovations3DActivity)parentFragment.getActivity()).currentDialog.isShowing()) {
+			if(((Renovations3DActivity)getDrawableView().getContext()).currentDialog == null
+							|| !((Renovations3DActivity)getDrawableView().getContext()).currentDialog.isShowing()) {
 				final int pointerIndex = ev.getActionIndex();
 				final float x = ev.getX(pointerIndex);
 				final float y = ev.getY(pointerIndex);
@@ -5485,29 +5479,23 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 	    }
 	  }
 
-	  /**
-	   * Returns the shape matching the coordinates in <code>points</code> array.
-	   */
-  /**
-   * Returns the shape matching the coordinates in <code>points</code> array.
-   */
-  public static Shape getShape(float [][] points, boolean closedPath, AffineTransform transform) {
-    GeneralPath path = new GeneralPath();
-    path.moveTo(points [0][0], points [0][1]);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points [i][0], points [i][1]);
-    }
-    if (closedPath) {
-      path.closePath();
-    }
-    if (transform != null) {
-      path.transform(transform);
-    }
-    return path;
-  }
-
-
-
+		/**
+		 * Returns the shape matching the coordinates in <code>points</code> array.
+		 */
+		public static Shape getShape(float [][] points, boolean closedPath, AffineTransform transform) {
+			GeneralPath path = new GeneralPath();
+			path.moveTo(points [0][0], points [0][1]);
+			for (int i = 1; i < points.length; i++) {
+				path.lineTo(points [i][0], points [i][1]);
+			}
+			if (closedPath) {
+				path.closePath();
+			}
+			if (transform != null) {
+				path.transform(transform);
+			}
+			return path;
+		}
 	}
 
   /**
@@ -5591,7 +5579,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
 	  //update the tutorial
 	  Point2D data = new Point2D.Float(getXScroll(), getYScroll());
-	  ((Renovations3DActivity)parentFragment.getActivity()).getTutorial().actionComplete(Tutorial.TutorialAction.PLAN_MOVED, data);
+	  ((Renovations3DActivity)getDrawableView().getContext()).getTutorial().actionComplete(Tutorial.TutorialAction.PLAN_MOVED, data);
 
   }
 
@@ -5618,12 +5606,16 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * to ensure the center's view will remain the same after the scale change.
    */
   public void setScale(float scale) {
+		setScale(scale, true);
+	}
+	// hand in update position info, to emulate knowing the parent jviewport status
+	public void setScale(float scale, boolean updateViewport) {
 		if (this.scale != scale) {
 			//JViewport parent = null;
 			//Rectangle viewRectangle = null;
 			float xViewCenterPosition = 0;
 			float yViewCenterPosition = 0;
-			if (true) {//getParent() instanceof JViewport) {
+			if (updateViewport) {//getParent() instanceof JViewport) {
 				//parent = (JViewport)getParent();
 				//viewRectangle = parent.getViewRect();
 				xViewCenterPosition = convertXPixelToModel(getWidth() / 2);
@@ -5634,7 +5626,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			// Revalidate plan without computing again unchanged plan bounds
 			invalidate(false);
 
-			if (true) {// (parent instanceof JViewport) {
+			if (updateViewport) {// (parent instanceof JViewport) {
 				//Dimension viewSize = parent.getViewSize();
 				//float viewWidth = convertXPixelToModel(viewRectangle.x + viewRectangle.width)
 				//				- convertXPixelToModel(viewRectangle.x);

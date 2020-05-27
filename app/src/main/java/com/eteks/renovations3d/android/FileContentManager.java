@@ -731,7 +731,7 @@ private Renovations3DActivity activity;//for dialogs etc
 				// just a name picker for the save as system
 				if (save) {
 					final File parent;
-					if (path == null || path.length() == 0) {
+					if (path == null || path.length() == 0 || path.contains("com.mindblowing.renovations3d")) {
 						parent = downloadsLocation;
 					} else {
 						parent = new File(path).getParentFile();

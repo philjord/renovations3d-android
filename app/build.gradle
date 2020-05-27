@@ -58,11 +58,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.google.firebase:firebase-config:17.0.0'
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.github.yukuku:ambilwarna:2.0.1' //color picker dialog
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    //color picker dialog
     //implementation 'com.google.vr:sdk-audio:1.10.0'
     //implementation 'com.google.vr:sdk-base:1.10.0'
     implementation 'com.andkulikov:transitionseverywhere:1.7.4'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    implementation 'me.drakeet.support:toastcompat:1.1.0' // fix bad token exception on sdk 25
+    implementation 'me.drakeet.support:toastcompat:1.1.0'
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
+    // fix bad token exception on sdk 25
 }
 apply plugin: 'com.google.gms.google-services'

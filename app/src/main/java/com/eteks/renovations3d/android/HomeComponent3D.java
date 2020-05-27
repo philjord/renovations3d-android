@@ -695,6 +695,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		String createPhotoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name");
 		Renovations3DActivity.setIconizedMenuTitle(createPhoto, createPhotoStr, R.drawable.ic_add_a_photo_black_24dp, getContext());
 
+		MenuItem createVideo = menu.findItem(R.id.createVideo);
+		String createVideoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_VIDEO.Name");
+		Renovations3DActivity.setIconizedMenuTitle(createVideo, createVideoStr, R.drawable.ic_video_call_black_24dp, getContext());
+
 		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
 						com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));
 
@@ -852,6 +856,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 						if(homeController2 != null) {
 							homeController2.createPhoto();
 						}
+					break;
+				case R.id.createVideo:
+					HomeController homeController3 = ((Renovations3DActivity)getActivity()).getHomeController();
+					if(homeController3 != null) {
+						homeController3.createVideo();
+					}
 					break;
 				case R.id.exportToObj:
 					Thread t4 = new Thread() {
@@ -1526,8 +1536,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		this.homeCameraListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent ev) {
 				updateView(view, home.getCamera());
-				// false changed to true and animation lengthed for cool effect
-				updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), true, 750);
+				updateViewPlatformTransform(viewPlatformTransform, home.getCamera(), false);
 				// Add camera change listener to new active camera
 				((Camera) ev.getOldValue()).removePropertyChangeListener(cameraChangeListener);
 				home.getCamera().addPropertyChangeListener(cameraChangeListener);
@@ -1801,19 +1810,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform,
 																					 Camera camera, boolean updateWithAnimation) {
-		updateViewPlatformTransform(viewPlatformTransform,  camera,  updateWithAnimation, CameraInterpolator.DEFAULT_ANIMATE_LEN);
-	}
-
-
-	//My extension that allows a wee animation of the camera move for fun
-	private void updateViewPlatformTransform(TransformGroup viewPlatformTransform,
-																					 Camera camera, boolean updateWithAnimation,
-																					 long animateTime) {
 		// Get the camera interpolator
 		CameraInterpolator cameraInterpolator =
 						(CameraInterpolator) viewPlatformTransform.getChild(viewPlatformTransform.numChildren() - 1);
 		if (updateWithAnimation) {
-			cameraInterpolator.setLenAnimationMS(animateTime);
 			cameraInterpolator.moveCamera(camera);
 		} else {
 			cameraInterpolator.stop();
@@ -1829,26 +1829,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 * An interpolator that computes smooth camera moves.
 	 */
 	private class CameraInterpolator extends TransformInterpolator {
-		public static final long DEFAULT_ANIMATE_LEN = 150;
 		private final ScheduledExecutorService scheduledExecutor;
 		private Camera initialCamera;
 		private Camera finalCamera;
-
-		private long lenAnimationMS = 150;
 
 		public static final float onepi = (float)Math.PI * 1f;
 		public static final float twopi = (float)Math.PI * 2f;
 		public static final float fivepi = (float)Math.PI * 5f;
 
-
 		public CameraInterpolator(TransformGroup transformGroup) {
 			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 			setTarget(transformGroup);
 		}
-		public void setLenAnimationMS(long lenAnimationMS) {
-			this.lenAnimationMS = lenAnimationMS;
-		}
-
 
 		/**
 		 * Moves the camera to a new location.
@@ -1889,7 +1881,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					// Create an animation that will interpolate camera location
 					// between initial camera and final camera in 150 ms
 					if (alpha == null) {
-						alpha = new Alpha(1, lenAnimationMS);
+            alpha = new Alpha(1, 150);
 						setAlpha(alpha);
 					}
 					// Start animation now
@@ -1904,7 +1896,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 								getTarget().setTransform(transform);
 							}
 						}
-					}, lenAnimationMS, TimeUnit.MILLISECONDS);
+						}, 150, TimeUnit.MILLISECONDS);
 				}
 			}
 		}

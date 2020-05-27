@@ -465,7 +465,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 									  UserPreferences preferences,
 									  VideoController videoController)
 	{
-		throw new UnsupportedOperationException();//return new VideoPanel(home, preferences, videoController);
+		return new VideoPanel(home, preferences, videoController, activity);
 	}
 
 	/**

@@ -16,5 +16,6 @@
     <string name="modify3dview" translatable="false">Modify 3D view</string>
     <string name="viewAllLevels" translatable="false">View all levels</string>
     <string name="menu_createPhoto" translatable="false">createPhoto</string>
+    <string name="menu_createVideo" translatable="false">createVideo</string>
     <string name="menu_exportToObj" translatable="false">exportToObj</string>
 </resources>
