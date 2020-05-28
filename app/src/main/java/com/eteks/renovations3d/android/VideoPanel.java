@@ -137,7 +137,7 @@ import static android.os.Build.VERSION_CODES.M;
  * @author Emmanuel Puybaret
  */
 public class VideoPanel extends AndroidFloatingView implements DialogView {
-  private enum ActionType {START_VIDEO_CREATION, STOP_VIDEO_CREATION, SAVE_VIDEO, SHARE_VIDEO, CLOSE,
+  private enum ActionType {START_VIDEO_CREATION, STOP_VIDEO_CREATION, SAVE_VIDEO, SHARE_VIDEO, //close button handled by super class CLOSE,
 		DELETE_CAMERA_PATH, PLAYBACK, PAUSE, RECORD, SEEK_BACKWARD, SEEK_FORWARD, SKIP_BACKWARD, SKIP_FORWARD, DELETE_LAST_RECORD}
 
   //private static final String VIDEO_DIALOG_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.swing.VideoPanel.VideoDialogX";
@@ -242,6 +242,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.PLAYBACK,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "PLAYBACK.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.PLAYBACK).setEnabled(false);
 		actions.get(ActionType.PLAYBACK).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				playback();
@@ -266,6 +267,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.SEEK_BACKWARD,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SEEK_BACKWARD.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.SEEK_BACKWARD).setEnabled(false);
 		actions.get(ActionType.SEEK_BACKWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				seekBackward();
@@ -274,6 +276,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.SEEK_FORWARD,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SEEK_FORWARD.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.SEEK_FORWARD).setEnabled(false);
 		actions.get(ActionType.SEEK_FORWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				seekForward();
@@ -282,6 +285,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.SKIP_BACKWARD,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SKIP_BACKWARD.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.SKIP_BACKWARD).setEnabled(false);
 		actions.get(ActionType.SKIP_BACKWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				skipBackward();
@@ -290,6 +294,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.SKIP_FORWARD,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SKIP_FORWARD.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.SKIP_FORWARD).setEnabled(false);
 		actions.get(ActionType.SKIP_FORWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				skipForward();
@@ -298,6 +303,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.DELETE_LAST_RECORD,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "DELETE_LAST_RECORD.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.DELETE_LAST_RECORD).setEnabled(false);
 		actions.get(ActionType.DELETE_LAST_RECORD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				deleteLastRecordedCameraLocation();
@@ -306,6 +312,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		actions.put(ActionType.DELETE_CAMERA_PATH,
 						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
 						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "DELETE_CAMERA_PATH.SmallIcon"))).getImage().getDelegate()));
+		actions.get(ActionType.DELETE_CAMERA_PATH).setEnabled(false);
 		actions.get(ActionType.DELETE_CAMERA_PATH).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				deleteCameraPath();
@@ -314,6 +321,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 
 		actions.put(ActionType.START_VIDEO_CREATION,
 						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "START_VIDEO_CREATION.Name")));
+		actions.get(ActionType.START_VIDEO_CREATION).setEnabled(false);
 		actions.get(ActionType.START_VIDEO_CREATION).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				startVideoCreation();
@@ -328,6 +336,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		});
 		actions.put(ActionType.SAVE_VIDEO,
 						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SAVE_VIDEO.Name")));
+		actions.get(ActionType.SAVE_VIDEO).setEnabled(false);
 		actions.get(ActionType.SAVE_VIDEO).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				saveVideo(false);
@@ -335,12 +344,13 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		});
 		actions.put(ActionType.SHARE_VIDEO,
 						new JButton(activity, activity.getResources().getString(R.string.share)));
+		actions.get(ActionType.SHARE_VIDEO).setEnabled(false);
 		actions.get(ActionType.SHARE_VIDEO).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				saveVideo(true);
 			}
 		});
-		//close button handled by super class
+
   }
 
   /**
@@ -1530,11 +1540,14 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 
 					// Disable panel actions
 					ActionMap actionMap = getActionMap();
-					final boolean [] actionEnabledStates = new boolean [ActionType.values().length];
-					for (ActionType action : ActionType.values()) {
-						actionEnabledStates [action.ordinal()] = actionMap.get(action).isEnabled();
-						actionMap.get(action).setEnabled(false);
-					}
+					final boolean[] actionEnabledStates = new boolean[ActionType.values().length];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							for (ActionType action : ActionType.values()) {
+								actionEnabledStates[action.ordinal()] = actionMap.get(action).isEnabled();
+								actionMap.get(action).setEnabled(false);
+							}
+						}});
 					Executors.newSingleThreadExecutor().execute(new Runnable() {
 							public void run() {
 								OutputStream out = null;
