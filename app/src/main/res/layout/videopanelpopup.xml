@@ -47,6 +47,12 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/go_next"/>
             <ImageButton
+                android:id="@+id/videopanel_PLAYBACKButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/go_next"/>
+            <ImageButton
                 android:id="@+id/videopanel_SEEK_FORWARDButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
