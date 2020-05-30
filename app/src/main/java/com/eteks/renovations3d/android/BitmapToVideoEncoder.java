@@ -352,8 +352,8 @@ public class BitmapToVideoEncoder {
 				//    pixel AND every other scanline.
 				yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
 				if (j % 2 == 0 && index % 2 == 0) {
-					yuv420sp[uvIndex++] = (byte) ((V < 0) ? 0 : ((V > 255) ? 255 : V));
 					yuv420sp[uvIndex++] = (byte) ((U < 0) ? 0 : ((U > 255) ? 255 : U));
+					yuv420sp[uvIndex++] = (byte) ((V < 0) ? 0 : ((V > 255) ? 255 : V));
 				}
 				index++;
 			}

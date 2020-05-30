@@ -1009,7 +1009,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		swapOut(actions.get(ActionType.START_VIDEO_CREATION), R.id.videopanel_createButton);
 		swapOut(actions.get(ActionType.SAVE_VIDEO), R.id.videopanel_saveButton);
 		swapOut(actions.get(ActionType.SHARE_VIDEO), R.id.videopanel_shareButton);
-		//swapOut(this.closeButton, R.id.videopanel_closeButton);
+		swapOut(this.closeButton, R.id.videopanel_closeButton);
 
   }
   
@@ -1785,9 +1785,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
       try {
         checkLaunchingThreadIsntInterrupted();
         this.renderer.render(this.image, frameCamera, null);
-				// must be carefully swapped to get BGRA to RGBA
-				int[] imagePixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels(image);
-				Bitmap bm = Bitmap.createBitmap(imagePixels, image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
+				Bitmap bm = ((Bitmap)this.image.getDelegate()).copy(((Bitmap)this.image.getDelegate()).getConfig(),false);
 				VMBufferedImage image2 = new VMBufferedImage(bm);
         checkLaunchingThreadIsntInterrupted();
         return image2;
@@ -1836,12 +1834,12 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
         // (antialiasing isn't always available for offscreen canvas)
         BufferedImage offScreenImage = this.homeComponent3D.getOffScreenImage(
             2 * this.image.getWidth(), 2 * this.image.getHeight());
-
         checkLaunchingThreadIsntInterrupted();
-        Graphics graphics = this.image.getGraphics();
-        graphics.drawImage(offScreenImage.getScaledInstance(
-            this.image.getWidth(), this.image.getHeight(), Image.SCALE_DEFAULT), 0, 0, null);
-        graphics.dispose();
+        //swap BGR to RGB
+				int[] imagePixels = PlanComponent.PieceOfFurnitureModelIcon.getImagePixels((BufferedImage)offScreenImage.getScaledInstance(
+								    this.image.getWidth(), this.image.getHeight(), Image.SCALE_DEFAULT));
+				Bitmap bm = Bitmap.createBitmap(imagePixels, image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
+				image = new VMBufferedImage(bm);
         checkLaunchingThreadIsntInterrupted();
         return this.image;
       } catch(InterruptedIOException ex) {
