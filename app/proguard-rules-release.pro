@@ -26,7 +26,7 @@
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -verbose
--optimizations **
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 
 
 #-optimizations code/simplification/arithmetic

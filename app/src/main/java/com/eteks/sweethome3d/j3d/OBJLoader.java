@@ -84,7 +84,7 @@ import javaawt.imageio.ImageIO;
  *
  *
  * An OBJ + MTL loader.
- * It supports the same features as {@link com.sun.j3d.loaders.objectfile.ObjectFile ObjectFile}
+ * It supports the same features as { link com.sun.j3d.loaders.objectfile.ObjectFile ObjectFile}
  * Java 3D class, expected for texture images format (supports only BMP, WBMP, GIF, JPEG and PNG format).
  * Compared to <code>ObjectFile</code>, this class supports transparency as defined in
  * <a href="http://local.wasp.uwa.edu.au/~pbourke/dataformats/mtl/">MTL file format</a> 

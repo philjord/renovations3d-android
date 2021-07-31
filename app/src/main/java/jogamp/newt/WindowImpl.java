@@ -296,7 +296,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	protected int supportedReconfigStateMask = 0;
 	/** See {@link #getSupportedStateMask()}, i.e. {@link #STATE_MASK_VISIBLE} | {@link #STATE_MASK_FOCUSED}. */
 	protected static final int minimumReconfigStateMask = STATE_MASK_VISIBLE | STATE_MASK_FOCUSED;
-	/** See {@link #getSupportedStateMask()}, i.e. {@link #STATE_MASK_VISIBLE} | {@link #STATE_MASK_FOCUSED} | {@link STATE_MASK_FULLSCREEN} | {@link STATE_MASK_RESIZABLE} | {@link STATE_MASK_REPOSITIONABLE}. */
+	/** See {@link #getSupportedStateMask()}, i.e. {@link #STATE_MASK_VISIBLE} | {@link #STATE_MASK_FOCUSED} | { link STATE_MASK_FULLSCREEN} | { link STATE_MASK_RESIZABLE} | { link STATE_MASK_REPOSITIONABLE}. */
 	protected static final int mutableSizePosReconfigStateMask = minimumReconfigStateMask |
 					STATE_MASK_FULLSCREEN | STATE_MASK_RESIZABLE | STATE_MASK_REPOSITIONABLE;
 
@@ -553,7 +553,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	}
 	private final PointerState0 pState0 = new PointerState0();
 
-	/** from direct input: {@link WindowImpl#doPointerEvent(boolean, boolean, int[], short, int, int, boolean, short[], int[], int[], float[], float, float[], float)}. */
+	/** from direct input: { link WindowImpl#doPointerEvent(boolean, boolean, int[], short, int, int, boolean, short[], int[], int[], float[], float, float[], float)}. */
 	private static class PointerState1 extends PointerState0 {
 		/** Current pressed mouse button number */
 		short buttonPressed = (short)0;
@@ -972,8 +972,8 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * The native implementation must set the native windowHandle.<br>
 	 *
 	 * <p>
-	 * The implementation shall respect the states {@link #isAlwaysOnTop()}/{@link #FLAG_IS_ALWAYSONTOP} and
-	 * {@link #isUndecorated()}/{@link #FLAG_IS_UNDECORATED}, ie. the created window shall reflect those settings.
+	 * The implementation shall respect the states {@link #isAlwaysOnTop()}/{ link #FLAG_IS_ALWAYSONTOP} and
+	 * {@link #isUndecorated()}/{ link #FLAG_IS_UNDECORATED}, ie. the created window shall reflect those settings.
 	 * </p>
 	 *
 	 * <p>
@@ -983,7 +983,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * @see #windowDestroyNotify(boolean)
 	 * @see #focusChanged(boolean, boolean)
 	 * @see #visibleChanged(boolean)
-	 * @see #sizeChanged(int,int)
 	 * @see #positionChanged(boolean,int, int)
 	 * @see #windowDestroyNotify(boolean)
 	 */
@@ -1038,7 +1037,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * @param flags bitfield of change and status flags
 	 *
 	 * @see #getSupportedReconfigMaskImpl()
-	 * @see #sizeChanged(int,int)
 	 * @see #positionChanged(boolean,int, int)
 	 */
 	protected abstract boolean reconfigureWindowImpl(int x, int y, int width, int height, int flags);
@@ -2486,12 +2484,11 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * gives same behavior on all platforms.
 	 * </p>
 	 * <p>
-	 * If visible, implementation invokes {@link #setOffscreenPointerIcon(OffscreenLayerSurface, PointerIconImpl)} using the
+	 * If visible, implementation invokes { link #setOffscreenPointerIcon(OffscreenLayerSurface, PointerIconImpl)} using the
 	 * given <code>defaultPointerIcon</code>, otherwise {@link OffscreenLayerSurface#hideCursor()} is invoked.
 	 * </p>
 	 * @param pointerVisible true for visible, otherwise invisible.
 	 * @param defaultPointerIcon default PointerIcon for visibility
-	 * @param ols the {@link OffscreenLayerSurface} instance, if null method does nothing.
 	 */
 	private boolean setOffscreenPointerVisible(final boolean pointerVisible, final PointerIconImpl defaultPointerIcon) {
 		if( pointerVisible ) {
@@ -2545,7 +2542,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * where the PointerIcon gets periodically overridden
 	 * by the AWT Component's icon.
 	 * </p>
-	 * @param ols the {@link OffscreenLayerSurface} instance, if null method does nothing.
 	 * @param pi the {@link PointerIconImpl} instance, if null PointerIcon gets reset.
 	 */
 	private boolean setOffscreenPointerIcon(final PointerIconImpl pi) {
@@ -3630,7 +3626,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * @param modifiers
 	 * @param pActionIdx index of multiple-pointer arrays representing the pointer which triggered the event
 	 * @param pID Pointer ID for each pointer (multiple pointer). We assume consecutive pointerIDs starting w/ 0.
-	 * @param button Corresponding mouse-button, a button of 0 denotes no activity, i.e. {@link PointerType#Mouse} move.
+	 * @param buttonIn Corresponding mouse-button, a button of 0 denotes no activity, i.e. {@link PointerType#Mouse} move.
 	 * @param pX X-axis for each pointer (multiple pointer)
 	 * @param pY Y-axis for each pointer (multiple pointer)
 	 * @param pPressure Pressure for each pointer (multiple pointer)
@@ -4729,7 +4725,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 * @param bottom insets, -1 ignored
 	 *
 	 * @see #getInsets()
-	 * @see #updateInsetsImpl(Insets)
 	 */
 	protected final void insetsChanged(final int left, final int right, final int top, final int bottom) {
 		if ( left >= 0 && right >= 0 && top >= 0 && bottom >= 0 ) {
@@ -4754,7 +4749,7 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	/**
 	 * Triggered by implementation's WM events or programmatic while respecting {@link #getDefaultCloseOperation()}.
 	 *
-	 * @param force if true, overrides {@link #setDefaultCloseOperation(WindowClosingMode)} with {@link WindowClosingProtocol#DISPOSE_ON_CLOSE}
+	 * @param force if true, overrides {@link #setDefaultCloseOperation(WindowClosingMode)} with { link WindowClosingProtocol#DISPOSE_ON_CLOSE}
 	 *              and hence force destruction. Otherwise is follows the user settings.
 	 * @return true if this window is no more valid and hence has been destroyed, otherwise false.
 	 */
@@ -4843,7 +4838,6 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 	 *
 	 * @param defer
 	 * @param visibleChange -1 ignored, 0 invisible, > 0 visible
-	 * @param entranceChange -1 ignored, 0 exit, > 0 enter
 	 * @param eventType 0 ignored, > 0 [send|enqueue]MouseEvent
 	 * @param modifiers
 	 * @param x

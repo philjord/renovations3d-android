@@ -417,7 +417,7 @@ public abstract class UIShape {
     /**
      * {@link UIShape} event details for propagated {@link NEWTEvent}s
      * containing reference of {@link #shape the intended shape} as well as
-     * the {@link #objPos rotated relative position} and {@link #rotBounds bounding box}.
+     * the {@link #objPos rotated relative position} and { link #rotBounds bounding box}.
      * The latter fields are also normalized to lower-left zero origin, allowing easier usage.
      */
     public static class PointerEventInfo {
@@ -457,8 +457,8 @@ public abstract class UIShape {
     /**
      *
      * @param e original Newt {@link MouseEvent}
-     * @param glX x-position in OpenGL model space
-     * @param glY y-position in OpenGL model space
+     * @param glWinX x-position in OpenGL model space
+     * @param glWinY y-position in OpenGL model space
      */
     public final void dispatchMouseEvent(final MouseEvent e, final int glWinX, final int glWinY, final float[] objPos) {
         e.setAttachment(new PointerEventInfo(glWinX, glWinY, this, objPos));

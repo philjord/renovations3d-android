@@ -77,8 +77,6 @@ public class TextureLoader extends Object
 	 * Contructs a TextureLoader object using the specified BufferedImage,
 	 * format and option flags
 	 * @param bImage The BufferedImage used for loading the texture
-	 * @param format The format specifies which channels to use
-	 * @param flags The flags specify what options to use in texture loading (generate mipmap etc)
 	 *
 	 * @exception NullPointerException if bImage is null
 	 */

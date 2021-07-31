@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
         multiDexEnabled = true
 
         ndk {
@@ -57,7 +58,8 @@ dependencies {
     // all firebase libs versions must match
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.google.firebase:firebase-config:17.0.0'
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    releaseImplementation 'com.google.firebase:firebase-crashlytics:17.3.1'
+    implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
     //color picker dialog
     //implementation 'com.google.vr:sdk-audio:1.10.0'
@@ -67,5 +69,6 @@ dependencies {
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     // fix bad token exception on sdk 25
+    implementation 'com.android.billingclient:billing:4.0.0'
+
 }
-apply plugin: 'com.google.gms.google-services'

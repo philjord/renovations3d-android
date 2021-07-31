@@ -1400,7 +1400,6 @@ public class Renovations3DActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
-		this.billingManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

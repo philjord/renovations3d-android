@@ -54,7 +54,7 @@ import java.util.TimeZone;
  * object created using the daylight saving time schedule as of 2037.
  * <p>
  * The date items, transitions, GMT offset(s), etc. are read from a database
- * file. See {@link ZoneInfoFile} for details.
+ * file. See { link ZoneInfoFile} for details.
  * @see SimpleTimeZone
  * @since 1.4
  */
@@ -339,8 +339,8 @@ public class ZoneInfo  extends TimeZone  {
      * assumes a Gregorian calendar for calculations.
      * <p>
      * <em>Note: In general, clients should use
-     * {@link Calendar#ZONE_OFFSET Calendar.get(ZONE_OFFSET)} +
-     * {@link Calendar#DST_OFFSET Calendar.get(DST_OFFSET)}
+     * { link Calendar#ZONE_OFFSET Calendar.get(ZONE_OFFSET)} +
+     * { link Calendar#DST_OFFSET Calendar.get(DST_OFFSET)}
      * instead of calling this method.</em>
      *
      * @param era       The era of the given date. The value must be either
@@ -350,7 +350,7 @@ public class ZoneInfo  extends TimeZone  {
      *                  0 for January.
      * @param day       The day-in-month of the given date.
      * @param dayOfWeek The day-of-week of the given date.
-     * @param millis    The milliseconds in day in <em>standard</em> local time.
+     * @param milliseconds    The milliseconds in day in <em>standard</em> local time.
      * @return The milliseconds to add to UTC to get local time.
      */
     public int getOffset(int era, int year, int month, int day,
@@ -393,7 +393,6 @@ public class ZoneInfo  extends TimeZone  {
      * historical ones, if applicable.
      *
      * @param offsetMillis the base time zone offset to GMT.
-     * @see getRawOffset
      */
    public synchronized void setRawOffset(int offsetMillis) {
         if (offsetMillis == rawOffset + rawOffsetDiff) {
