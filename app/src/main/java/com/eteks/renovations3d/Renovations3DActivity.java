@@ -357,6 +357,7 @@ public class Renovations3DActivity extends FragmentActivity {
 			locationPermission(true);
 		}
 
+		billingManager.initialize();
 		invalidateOptionsMenu();
 		loadUpContent();
 

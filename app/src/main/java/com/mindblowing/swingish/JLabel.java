@@ -1,5 +1,6 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spanned;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
  * Created by phil on 2/1/2017.
  */
 
+@SuppressLint("AppCompatCustomView")
 public class JLabel extends TextView
 {
 	public JLabel(Context context, String text)

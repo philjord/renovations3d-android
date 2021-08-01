@@ -1,5 +1,6 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 /**
  * Created by phil on 2/1/2017.
  */
-
+@SuppressLint("AppCompatCustomView")
 public class JTextField extends EditText {
 
 	public JTextField(Context context) {

@@ -1,5 +1,6 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
@@ -7,7 +8,7 @@ import android.widget.CheckBox;
 /**
  * Created by phil on 2/1/2017.
  */
-
+@SuppressLint("AppCompatCustomView")
 public class JCheckBox extends CheckBox
 {
 	public JCheckBox(Context context, String text)

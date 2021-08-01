@@ -1,5 +1,6 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -13,7 +14,7 @@ import android.widget.TextView;
  * Created by phil on 2/1/2017.
  * Note these are single line and have a done button that hides them
  */
-
+@SuppressLint("AppCompatCustomView")
 public class JTextArea extends EditText
 {
 

@@ -1,5 +1,6 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by phil on 1/27/2017.
  */
-
+@SuppressLint("AppCompatCustomView")
 public class JComboBox extends Spinner
 {
 	private DefaultComboBoxModel dcbm;

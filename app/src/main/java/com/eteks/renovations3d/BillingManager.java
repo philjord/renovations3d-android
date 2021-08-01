@@ -1,9 +1,5 @@
 package com.eteks.renovations3d;
 
-import android.os.Bundle;
-import android.os.RemoteException;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -22,8 +18,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.drakeet.support.toast.ToastCompat;
-
 /**
  * Created by phil on 5/15/2017.
  */
@@ -41,7 +35,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     public void initialize() {
-        billingClient = BillingClient.newBuilder(renovations3DActivity).setListener(this).build();
+        billingClient = BillingClient.newBuilder(renovations3DActivity)
+                .setListener(this)
+                .enablePendingPurchases()
+                .build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
@@ -86,7 +83,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
                     @Override
                     public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                        if (purchase.getSkus().get(0).equals(basicAdFreeSKU)) {
+                        if (purchase.getSku().equals(basicAdFreeSKU)) {
                             cachedOwnsBasicAdFree = new Boolean(true);
                             // the menu should update on the next prepare
                             renovations3DActivity.getAdMobManager().removeBasicLowerBannerAdView();
@@ -132,7 +129,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         List<Purchase> purchaseDataList = ownedItems.getPurchasesList();
 
         for (Purchase ownedPurchase: purchaseDataList) {
-            if (ownedPurchase.getSkus().get(0).equals(basicAdFreeSKU)) {
+            if (ownedPurchase.getSku().equals(basicAdFreeSKU)) {
                 cachedOwnsBasicAdFree = new Boolean(true);
             }
         }

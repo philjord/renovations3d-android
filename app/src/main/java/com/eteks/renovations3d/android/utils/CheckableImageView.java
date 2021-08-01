@@ -1,9 +1,12 @@
 package com.eteks.renovations3d.android.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Checkable;
 import android.widget.ImageView;
 
+
+@SuppressLint("AppCompatCustomView")
 public class CheckableImageView extends ImageView implements Checkable
 {
 	private Boolean checked = false;

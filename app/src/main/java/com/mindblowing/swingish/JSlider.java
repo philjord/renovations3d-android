@@ -1,12 +1,13 @@
 package com.mindblowing.swingish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.SeekBar;
 
 /**
  * Created by phil on 2/1/2017.
  */
-
+@SuppressLint("AppCompatCustomView")
 public class JSlider extends SeekBar
 {
 	private int min = 0;

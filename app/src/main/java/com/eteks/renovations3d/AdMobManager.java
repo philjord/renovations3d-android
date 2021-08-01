@@ -8,10 +8,18 @@ import android.location.LocationManager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +31,9 @@ import com.mindblowing.renovations3d.R;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by phil on 5/15/2017.
@@ -37,7 +48,6 @@ public class AdMobManager
 	private static final int INTERSTITIAL_POINTS_THRESHOLD = 10;
 	private static final long INTERSTITIAL_TIME_THRESHOLD = 2 * 24 * 60 * 60 * 1000; // 2 days in ms
 	private Renovations3DActivity renovations3DActivity;
-	private AdRequest.Builder builder = new AdRequest.Builder();
 	private AdView mBasicLowerBannerAdView;
 	private InterstitialAd mInterstitialAd;
 
@@ -49,50 +59,82 @@ public class AdMobManager
 		this.renovations3DActivity = renovations3DActivity;
 
 		mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-				.setDeveloperModeEnabled(BuildConfig.DEBUG)
+		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600)
 				.build();
-		mFirebaseRemoteConfig.setConfigSettings(configSettings);
-		mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-
-		long cacheExpiration = 3600; // 1 hour in seconds.
-		// If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
-		// retrieve values from the service.
-		if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-			cacheExpiration = 0;
-		}
-		// cacheExpirationSeconds is set to cacheExpiration here, indicating the next fetch request
-		// will use fetch data from the Remote Config service, rather than cached parameter values,
-		// if cached parameter values are more than cacheExpiration seconds old.
-		// See Best Practices in the README for more information.
-		mFirebaseRemoteConfig.fetch(cacheExpiration)
-				.addOnCompleteListener(renovations3DActivity, new OnCompleteListener<Void>() {
+		mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+		mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
+		mFirebaseRemoteConfig.fetchAndActivate()
+				.addOnCompleteListener(renovations3DActivity, new OnCompleteListener<Boolean>() {
 					@Override
-					public void onComplete(@NonNull Task<Void> task) {
+					public void onComplete(@NonNull Task<Boolean> task) {
 						if (task.isSuccessful()) {
-							// After config data is successfully fetched, it must be activated before newly fetched
-							// values are returned.
-							mFirebaseRemoteConfig.activateFetched();
+							boolean updated = task.getResult();
 						} else {
 						}
 					}
 				});
 
+		List<String> testDevices = new ArrayList<>();
+		//To get the Device ID Check the logcat output for a message that looks like the one below, which shows you your device ID and how to add it as a test device:
+
+		//I/Ads: Use RequestConfiguration.Builder.setTestDeviceIds(Arrays.asList("33BE2250B43518CCDA7DE426D04EE231"))
+		//to get test ads on this device."
+		if(BuildConfig.DEBUG) {
+			testDevices.add("56ACE73C453B9562B288E8C2075BDA73");//T580
+			testDevices.add("4A1B3B44655FDE15F64CFD90EFD60699");//I9505
+			testDevices.add("F1F03BC6248C8ECF32CBB4DD027F78B9");//T210
+			testDevices.add("3A757DEE674365779CF90E1E82546B04");//samsung 9
+			testDevices.add("39B3EC8638721A37B3E6B0DE8E5F414F");//samsung 9  again?
+			testDevices.add("1E402426FE6157896DDA311AE9D06182");//s21 plus
+		}
 
 
+		RequestConfiguration requestConfiguration
+				= new RequestConfiguration.Builder()
+				.setTestDeviceIds(testDevices)
+				.build();
+		MobileAds.setRequestConfiguration(requestConfiguration);
 
-		//example logcat Use AdRequest.Builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699") to get test ads on this device.
-		builder.addTestDevice("56ACE73C453B9562B288E8C2075BDA73");//T580
-		builder.addTestDevice("4A1B3B44655FDE15F64CFD90EFD60699");//I9505
-		builder.addTestDevice("F1F03BC6248C8ECF32CBB4DD027F78B9");//T210
-		builder.addTestDevice("3A757DEE674365779CF90E1E82546B04");//samsung 9
-		builder.addTestDevice("39B3EC8638721A37B3E6B0DE8E5F414F");//samsung 9  again?
+		MobileAds.initialize(renovations3DActivity.getApplicationContext(), new OnInitializationCompleteListener() {
+			@Override
+			public void onInitializationComplete(InitializationStatus initializationStatus) {
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "MobileAds.initialize ", null);
+			}
+		});
 
 		mBasicLowerBannerAdView = (AdView) renovations3DActivity.findViewById(R.id.lowerBannerAdView);
 
-		mInterstitialAd = new InterstitialAd(renovations3DActivity);
-		mInterstitialAd.setAdUnitId("ca-app-pub-7177705441403385/4587558769");
+		mBasicLowerBannerAdView.setAdListener(new AdListener() {
+			@Override
+			public void onAdLoaded() {
+				// Code to be executed when an ad finishes loading.
+				//Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "mBasicLowerBannerAdView.onAdLoaded ", null);
+			}
+
+			@Override
+			public void onAdFailedToLoad(LoadAdError adError) {
+				// Code to be executed when an ad request fails.
+				// this will be called on BuildConfig.DEBUG==true if the device isn't in the test list above
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "mBasicLowerBannerAdView.onAdFailedToLoad ", null);
+			}
+
+			@Override
+			public void onAdOpened() {
+				// Code to be executed when an ad opens an overlay that
+				// covers the screen.
+			}
+
+			@Override
+			public void onAdClicked() {
+				// Code to be executed when the user clicks on an ad.
+			}
+
+			@Override
+			public void onAdClosed() {
+				// Code to be executed when the user is about to return
+				// to the app after tapping on an ad.
+			}
+		});
 
 	}
 
@@ -112,28 +154,25 @@ public class AdMobManager
 			}
 			else
 			{
-				MobileAds.initialize(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385~4026888158");
-				mBasicLowerBannerAdView.loadAd(builder.build());
-				mInterstitialAd.setAdListener(new AdListener()
-				{
-					@Override
-					public void onAdClosed()
-					{
-						//This is how I would load the next ad, but because of the time threshold removed to reduce overhead
-						// Load the next interstitial.
-						//mInterstitialAd.loadAd(builder.build());
-					}
+				mBasicLowerBannerAdView.loadAd(new AdRequest.Builder().build());
+				Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "MobileAds.initialize ", null);
 
-					@Override
-					public void onAdFailedToLoad(int errorCode)
-					{
-						Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + errorCode, null);
-					}
-				});
+				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled")) {
+					InterstitialAd.load(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385/4587558769", new AdRequest.Builder().build(),
+							new InterstitialAdLoadCallback() {
+								@Override
+								public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+									// The mInterstitialAd reference will be null until an ad is loaded.
+									mInterstitialAd = interstitialAd;
+								}
 
-
-				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
-					mInterstitialAd.loadAd(builder.build());
+								@Override
+								public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+									mInterstitialAd = null;
+									Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + loadAdError, null);
+								}
+							});
+				}
 			}
 		}
 	}
@@ -149,11 +188,27 @@ public class AdMobManager
 				//String locationProvider = LocationManager.NETWORK_PROVIDER;
 				String locationProvider = LocationManager.GPS_PROVIDER;
 
+				AdRequest.Builder builder = new AdRequest.Builder();
 				builder.setLocation(locationManager.getLastKnownLocation(locationProvider));
 
 				mBasicLowerBannerAdView.loadAd(builder.build());
-				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
-					mInterstitialAd.loadAd(builder.build());
+
+				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled")) {
+					InterstitialAd.load(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385/4587558769", builder.build(),
+							new InterstitialAdLoadCallback() {
+								@Override
+								public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+									// The mInterstitialAd reference will be null until an ad is loaded.
+									mInterstitialAd = interstitialAd;
+								}
+
+								@Override
+								public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+									mInterstitialAd = null;
+									Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + loadAdError, null);
+								}
+							});
+				}
 			}
 
 		}
@@ -273,10 +328,32 @@ public class AdMobManager
 
 						if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled"))
 						{
-							if (mInterstitialAd.isLoaded())
+							if (mInterstitialAd != null)
 							{
 								Renovations3DActivity.logFireBaseContent("INTERSTITIAL SHOWN", null);
-								mInterstitialAd.show();
+								mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+									@Override
+									public void onAdDismissedFullScreenContent() {
+										// Called when fullscreen content is dismissed.
+										//Log.d("TAG", "The ad was dismissed.");
+									}
+
+									@Override
+									public void onAdFailedToShowFullScreenContent(AdError adError) {
+										// Called when fullscreen content failed to show.
+										//Log.d("TAG", "The ad failed to show.");
+									}
+
+									@Override
+									public void onAdShowedFullScreenContent() {
+										// Called when fullscreen content is shown.
+										// Make sure to set your reference to null so you don't
+										// show it a second time.
+										mInterstitialAd = null;
+										//Log.d("TAG", "The ad was shown.");
+									}
+								});
+								mInterstitialAd.show(renovations3DActivity);
 
 								//if more than one per day and session then loadAd needs to be called here
 							}

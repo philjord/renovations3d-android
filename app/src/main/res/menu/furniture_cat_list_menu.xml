@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/furnitureAdd"
         android:title="Add furniture"
         android:icon="@drawable/furniture_add"
-        android:showAsAction="always"/>
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
     <item android:id="@+id/import_furniture_lib"
           android:title="@string/importFurnitureLib"
-          android:showAsAction="ifRoom">
+          android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource">
         <menu>
             <item
                 android:id="@+id/empty1"
@@ -16,7 +19,8 @@
     </item>
     <item android:id="@+id/import_texture_lib"
           android:title="@string/importTextureLib"
-          android:showAsAction="ifRoom">
+          android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource">
         <menu>
             <item
                 android:id="@+id/empty2"
@@ -27,10 +31,10 @@
         android:id="@+id/importTexture"
         android:title="Import Texture"
         android:showAsAction="never"
-        />
+        tools:ignore="AppCompatResource" />
     <item
         android:id="@+id/importFurniture"
         android:title="Import Furniture"
         android:showAsAction="never"
-        />
+        tools:ignore="AppCompatResource" />
 </menu>

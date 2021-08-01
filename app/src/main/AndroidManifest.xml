@@ -2,7 +2,6 @@
 <manifest
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:versionCode="6320"
     android:versionName="6.320">
 
@@ -128,6 +127,11 @@
         <activity
             android:name="com.mindblowing.j3d.utils.JoglStatusActivity"
             android:label="@string/app_name"/>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7177705441403385~4026888158"/>
+
 
     </application>
 </manifest>

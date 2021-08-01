@@ -1,5 +1,6 @@
 package com.eteks.renovations3d.android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -305,6 +306,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		}
 	}
 
+	@SuppressLint("AppCompatCustomView")
 	private class VisibilityCheckBox extends CheckBox {
 		public HomePieceOfFurniture piece;
 		public VisibilityCheckBox(Context context, HomePieceOfFurniture piece) {
