@@ -1020,6 +1020,7 @@ public class OBJLoader extends LoaderBase implements Loader {
 	private boolean currentSmooth;
 	private Map<String, Appearance> appearances;
 
+
 	/**
 	 * Sets whether this loader should try or avoid accessing to URLs with cache.
 	 * @param useCaches <code>Boolean.TRUE</code>, <code>Boolean.FALSE</code>, or 
@@ -1096,6 +1097,7 @@ public class OBJLoader extends LoaderBase implements Loader {
 	 * Returns the scene described in the given OBJ file.
 	 */
 	private Scene load(Reader reader, URL baseUrl) throws FileNotFoundException {
+		//Give it a name for debug
 		this.name = baseUrl.toString();
 		if (!(reader instanceof BufferedReader)) {
 			reader = new BufferedReader(reader);

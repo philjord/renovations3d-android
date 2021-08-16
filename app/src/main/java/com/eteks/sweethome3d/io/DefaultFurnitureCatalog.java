@@ -1,18 +1,18 @@
 /*
  * DefaultFurnitureCatalog.java 7 avr. 2006
- * 
+ *
  * Sweet Home 3D, Copyright (c) 2006 Emmanuel PUYBARET / eTeks <info@eteks.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
@@ -70,9 +70,9 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
    */
   public enum PropertyKey {
     /**
-     * The key for the ID of a piece of furniture (optional). 
+     * The key for the ID of a piece of furniture (optional).
      * Two pieces of furniture read in a furniture catalog can't have the same ID
-     * and the second one will be ignored.   
+     * and the second one will be ignored.
      */
     ID("id"),
     /**
@@ -80,7 +80,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      */
     NAME("name"),
     /**
-     * The key for the description of a piece of furniture (optional). 
+     * The key for the description of a piece of furniture (optional).
      * This may give detailed information about a piece of furniture.
      */
     DESCRIPTION("description"),
@@ -90,12 +90,12 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      */
     INFORMATION("information"),
     /**
-     * The key for the tags or keywords associated to a piece of furniture (optional). 
-     * Tags are separated by commas with possible heading or trailing spaces. 
+     * The key for the tags or keywords associated to a piece of furniture (optional).
+     * Tags are separated by commas with possible heading or trailing spaces.
      */
     TAGS("tags"),
     /**
-     * The key for the creation or publication date of a piece of furniture at 
+     * The key for the creation or publication date of a piece of furniture at
      * <code>yyyy-MM-dd</code> format (optional).
      */
     CREATION_DATE("creationDate"),
@@ -109,35 +109,35 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      */
     CATEGORY("category"),
     /**
-     * The key for the icon file of a piece of furniture (mandatory). 
+     * The key for the icon file of a piece of furniture (mandatory).
      * This icon file can be either the path to an image relative to classpath
-     * or an absolute URL. It should be encoded in application/x-www-form-urlencoded  
-     * format if needed. 
+     * or an absolute URL. It should be encoded in application/x-www-form-urlencoded
+     * format if needed.
      */
     ICON("icon"),
     /**
-     * The key for the SHA-1 digest of the icon file of a piece of furniture (optional). 
+     * The key for the SHA-1 digest of the icon file of a piece of furniture (optional).
      * This property is used to compare faster catalog resources with the ones of a read home,
-     * and should be encoded in Base64.  
+     * and should be encoded in Base64.
      */
     ICON_DIGEST("iconDigest"),
     /**
      * The key for the plan icon file of a piece of furniture (optional).
      * This icon file can be either the path to an image relative to classpath
-     * or an absolute URL. It should be encoded in application/x-www-form-urlencoded  
+     * or an absolute URL. It should be encoded in application/x-www-form-urlencoded
      * format if needed.
      */
     PLAN_ICON("planIcon"),
     /**
-     * The key for the SHA-1 digest of the plan icon file of a piece of furniture (optional). 
+     * The key for the SHA-1 digest of the plan icon file of a piece of furniture (optional).
      * This property is used to compare faster catalog resources with the ones of a read home,
-     * and should be encoded in Base64.  
+     * and should be encoded in Base64.
      */
     PLAN_ICON_DIGEST("planIconDigest"),
     /**
      * The key for the 3D model file of a piece of furniture (mandatory).
      * The 3D model file can be either a path relative to classpath
-     * or an absolute URL.  It should be encoded in application/x-www-form-urlencoded  
+     * or an absolute URL.  It should be encoded in application/x-www-form-urlencoded
      * format if needed.
      */
     MODEL("model"),
@@ -149,14 +149,14 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     /**
      * The key for the SHA-1 digest of the 3D model file of a piece of furniture (optional).
      * This property is used to compare faster catalog resources with the ones of a read home,
-     * and should be encoded in Base64.  
+     * and should be encoded in Base64.
      */
     MODEL_DIGEST("modelDigest"),
     /**
      * The key for a piece of furniture with multiple parts (optional).
      * If the value of this key is <code>true</code>, all the files
      * stored in the same folder as the 3D model file (MTL, texture files...)
-     * will be considered as being necessary to view correctly the 3D model. 
+     * will be considered as being necessary to view correctly the 3D model.
      */
     MULTI_PART_MODEL("multiPartModel"),
     /**
@@ -174,22 +174,22 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     /**
      * The key for the movability of a piece of furniture (mandatory).
      * If the value of this key is <code>true</code>, the piece of furniture
-     * will be considered as a movable piece. 
+     * will be considered as a movable piece.
      */
     MOVABLE("movable"),
     /**
      * The key for the door or window type of a piece of furniture (mandatory).
      * If the value of this key is <code>true</code>, the piece of furniture
-     * will be considered as a door or a window. 
+     * will be considered as a door or a window.
      */
     DOOR_OR_WINDOW("doorOrWindow"),
     /**
      * The key for the shape of a door or window used to cut out walls when they intersect it (optional).
-     * This shape should be defined with the syntax of the d attribute of a 
+     * This shape should be defined with the syntax of the d attribute of a
      * <a href="http://www.w3.org/TR/SVG/paths.html">SVG path element</a>
-     * and should fit in a square spreading from (0, 0) to (1, 1) which will be 
-     * scaled afterwards to the real size of the piece. 
-     * If not specified, then this shape will be automatically computed from the actual shape of the model.  
+     * and should fit in a square spreading from (0, 0) to (1, 1) which will be
+     * scaled afterwards to the real size of the piece.
+     * If not specified, then this shape will be automatically computed from the actual shape of the model.
      */
     DOOR_OR_WINDOW_CUT_OUT_SHAPE("doorOrWindowCutOutShape"),
     /**
@@ -222,33 +222,33 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     DOOR_OR_WINDOW_WIDTH_DEPTH_DEFORMABLE("doorOrWindowWidthDepthDeformable"),
     /**
      * The key for the sash axis distance(s) of a door or a window along X axis (optional).
-     * If a door or a window has more than one sash, the values of each sash should be 
-     * separated by spaces.  
+     * If a door or a window has more than one sash, the values of each sash should be
+     * separated by spaces.
      */
     DOOR_OR_WINDOW_SASH_X_AXIS("doorOrWindowSashXAxis"),
     /**
-     * The key for the sash axis distance(s) of a door or a window along Y axis 
+     * The key for the sash axis distance(s) of a door or a window along Y axis
      * (mandatory if sash axis distance along X axis is defined).
      */
     DOOR_OR_WINDOW_SASH_Y_AXIS("doorOrWindowSashYAxis"),
     /**
-     * The key for the sash width(s) of a door or a window  
+     * The key for the sash width(s) of a door or a window
      * (mandatory if sash axis distance along X axis is defined).
      */
     DOOR_OR_WINDOW_SASH_WIDTH("doorOrWindowSashWidth"),
     /**
-     * The key for the sash start angle(s) of a door or a window  
+     * The key for the sash start angle(s) of a door or a window
      * (mandatory if sash axis distance along X axis is defined).
      */
     DOOR_OR_WINDOW_SASH_START_ANGLE("doorOrWindowSashStartAngle"),
     /**
-     * The key for the sash end angle(s) of a door or a window  
+     * The key for the sash end angle(s) of a door or a window
      * (mandatory if sash axis distance along X axis is defined).
      */
     DOOR_OR_WINDOW_SASH_END_ANGLE("doorOrWindowSashEndAngle"),
     /**
      * The key for the abscissa(s) of light sources in a light (optional).
-     * If a light has more than one light source, the values of each light source should 
+     * If a light has more than one light source, the values of each light source should
      * be separated by spaces.
      */
     LIGHT_SOURCE_X("lightSourceX"),
@@ -269,11 +269,11 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      */
     LIGHT_SOURCE_DIAMETER("lightSourceDiameter"),
     /**
-     * The key for the shape used to cut out upper levels when they intersect with a piece   
-     * like a staircase (optional). This shape should be defined with the syntax of 
+     * The key for the shape used to cut out upper levels when they intersect with a piece
+     * like a staircase (optional). This shape should be defined with the syntax of
      * the d attribute of a <a href="http://www.w3.org/TR/SVG/paths.html">SVG path element</a>
-     * and should fit in a square spreading from (0, 0) to (1, 1) which will be scaled afterwards 
-     * to the real size of the piece. 
+     * and should fit in a square spreading from (0, 0) to (1, 1) which will be scaled afterwards
+     * to the real size of the piece.
      */
     STAIRCASE_CUT_OUT_SHAPE("staircaseCutOutShape"),
     /**
@@ -281,16 +281,16 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      */
     ELEVATION("elevation"),
     /**
-     * The key for the preferred elevation (from the bottom of a piece) at which should be placed  
+     * The key for the preferred elevation (from the bottom of a piece) at which should be placed
      * an object dropped on a piece (optional). A negative value means that the piece should be ignored
-     * when an object is dropped on it. By default, this elevation is equal to its height. 
+     * when an object is dropped on it. By default, this elevation is equal to its height.
      */
     DROP_ON_TOP_ELEVATION("dropOnTopElevation"),
     /**
      * The key for the transformation matrix values applied to a piece of furniture (optional).
-     * If the 3D model of a piece of furniture isn't correctly oriented, 
-     * the value of this key should give the 9 values of the transformation matrix 
-     * that will orient it correctly.  
+     * If the 3D model of a piece of furniture isn't correctly oriented,
+     * the value of this key should give the 9 values of the transformation matrix
+     * that will orient it correctly.
      */
     MODEL_ROTATION("modelRotation"),
     /**
@@ -301,19 +301,19 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     /**
      * The key for the resizability of a piece of furniture (optional, <code>true</code> by default).
      * If the value of this key is <code>false</code>, the piece of furniture
-     * will be considered as a piece with a fixed size. 
+     * will be considered as a piece with a fixed size.
      */
     RESIZABLE("resizable"),
     /**
      * The key for the deformability of a piece of furniture (optional, <code>true</code> by default).
      * If the value of this key is <code>false</code>, the piece of furniture
-     * will be considered as a piece that should always keep its proportions when resized. 
+     * will be considered as a piece that should always keep its proportions when resized.
      */
     DEFORMABLE("deformable"),
     /**
      * The key for the texturable capability of a piece of furniture (optional, <code>true</code> by default).
      * If the value of this key is <code>false</code>, the piece of furniture
-     * will be considered as a piece that will always keep the same color or texture. 
+     * will be considered as a piece that will always keep the same color or texture.
      */
     TEXTURABLE("texturable"),
     /**
@@ -334,13 +334,13 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
      * The key for the currency ISO 4217 code of the price of a piece of furniture (optional).
      */
     CURRENCY("currency");
-    
+
     private String keyPrefix;
 
     private PropertyKey(String keyPrefix) {
       this.keyPrefix = keyPrefix;
     }
-    
+
     /**
      * Returns the key for the piece property of the given index.
      */
@@ -362,53 +362,51 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
   }
 
   /**
-   * The name of <code>.properties</code> family files in plugin furniture catalog files. 
+   * The name of <code>.properties</code> family files in plugin furniture catalog files.
    */
   public static final String PLUGIN_FURNITURE_CATALOG_FAMILY = "PluginFurnitureCatalog";
-  
+
   private static final String CONTRIBUTED_FURNITURE_CATALOG_FAMILY = "ContributedFurnitureCatalog";
   private static final String ADDITIONAL_FURNITURE_CATALOG_FAMILY  = "AdditionalFurnitureCatalog";
-  
+
   private static Map<ResourceBundle, Map<Integer, List<String>>> furnitureAdditionalKeys = new WeakHashMap<ResourceBundle, Map<Integer,List<String>>>();
 
   private List<Library> libraries = new ArrayList<Library>();
-  
+
   /**
    * Creates a default furniture catalog read from resources in the package of this class.
    */
   public DefaultFurnitureCatalog() {
     this((File)null);
   }
-  
+
   /**
-   * Creates a default furniture catalog read from resources and   
+   * Creates a default furniture catalog read from resources and
    * furniture plugin folder if <code>furniturePluginFolder</code> isn't <code>null</code>.
    */
   public DefaultFurnitureCatalog(File furniturePluginFolder) {
     this(null, furniturePluginFolder);
   }
-  
+
   /**
-   * Creates a default furniture catalog read from resources and   
+   * Creates a default furniture catalog read from resources and
    * furniture plugin folder if <code>furniturePluginFolder</code> isn't <code>null</code>.
    */
-  public DefaultFurnitureCatalog(final UserPreferences preferences, 
+  public DefaultFurnitureCatalog(final UserPreferences preferences,
                                  File furniturePluginFolder) {
     this(preferences, furniturePluginFolder == null ? null : new File [] {furniturePluginFolder});
   }
-  
+
   /**
-   * Creates a default furniture catalog read from resources and   
+   * Creates a default furniture catalog read from resources and
    * furniture plugin folders if <code>furniturePluginFolders</code> isn't <code>null</code>.
    */
-  public DefaultFurnitureCatalog(final UserPreferences preferences, 
+  public DefaultFurnitureCatalog(final UserPreferences preferences,
                                  File [] furniturePluginFolders) {
-    Map<FurnitureCategory, Map<CatalogPieceOfFurniture, Integer>> furnitureHomonymsCounter = 
-        new HashMap<FurnitureCategory, Map<CatalogPieceOfFurniture,Integer>>();
     List<String> identifiedFurniture = new ArrayList<String>();
-    
-    readDefaultFurnitureCatalogs(preferences, furnitureHomonymsCounter, identifiedFurniture);
-    
+
+    readDefaultFurnitureCatalogs(preferences, identifiedFurniture);
+
     if (furniturePluginFolders != null) {
       for (File furniturePluginFolder : furniturePluginFolders) {
         // Try to load sh3f files from furniture plugin folder
@@ -417,12 +415,12 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
             return pathname.isFile();
           }
         });
-        
+
         if (pluginFurnitureCatalogFiles != null) {
           // Treat furniture catalog files in reverse order of their version
           Arrays.sort(pluginFurnitureCatalogFiles, Collections.reverseOrder(OperatingSystem.getFileVersionComparator()));
           for (File pluginFurnitureCatalogFile : pluginFurnitureCatalogFiles) {
-            // Try to load the properties file describing furniture catalog from current file  
+            // Try to load the properties file describing furniture catalog from current file
             readPluginFurnitureCatalog(pluginFurnitureCatalogFile, identifiedFurniture);
           }
         }
@@ -436,9 +434,9 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
   public DefaultFurnitureCatalog(URL [] pluginFurnitureCatalogUrls) {
     this(pluginFurnitureCatalogUrls, null);
   }
-  
+
   /**
-   * Creates a default furniture catalog read only from resources in the given URLs 
+   * Creates a default furniture catalog read only from resources in the given URLs
    * or in the classpath if the security manager doesn't allow to create class loaders.
    * Model and icon URLs will built from <code>furnitureResourcesUrlBase</code> if it isn't <code>null</code>.
    */
@@ -451,38 +449,37 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         securityManager.checkCreateClassLoader();
       }
 
-      for (URL pluginFurnitureCatalogUrl : pluginFurnitureCatalogUrls) {
-        try {        
-          ResourceBundle resource = ResourceBundle.getBundle(PLUGIN_FURNITURE_CATALOG_FAMILY, Locale.getDefault(), 
-              new URLContentClassLoader(pluginFurnitureCatalogUrl), new ISO8859FileControl());
-          this.libraries.add(0, new DefaultLibrary(pluginFurnitureCatalogUrl.toExternalForm(), 
-              UserPreferences.FURNITURE_LIBRARY_TYPE, resource));
-          readFurniture(resource, pluginFurnitureCatalogUrl, furnitureResourcesUrlBase, identifiedFurniture);
-        } catch (MissingResourceException ex) {
-          // Ignore malformed furniture catalog
+    for (URL pluginFurnitureCatalogUrl : pluginFurnitureCatalogUrls) {
+      try {
+        ResourceBundle resource = ResourceBundleTools.getBundle(pluginFurnitureCatalogUrl, PLUGIN_FURNITURE_CATALOG_FAMILY);
+        this.libraries.add(0, new DefaultLibrary(pluginFurnitureCatalogUrl.toExternalForm(),
+            UserPreferences.FURNITURE_LIBRARY_TYPE, resource));
+        readFurniture(resource, pluginFurnitureCatalogUrl, furnitureResourcesUrlBase, identifiedFurniture);
+      } catch (MissingResourceException ex) {
+        // Ignore malformed furniture catalog
         } catch (IllegalArgumentException ex) {
           // Ignore malformed furniture catalog
-        }
       }
+    }
     } catch (AccessControlException ex) {
       // Use only furniture accessible through classpath
       ResourceBundle resource = ResourceBundle.getBundle(PLUGIN_FURNITURE_CATALOG_FAMILY, Locale.getDefault(), new ISO8859FileControl());
       readFurniture(resource, null, furnitureResourcesUrlBase, identifiedFurniture);
     }
   }
-  
+
   /**
    * Returns the furniture libraries at initialization.
-   * @since 4.0 
+   * @since 4.0
    */
   public List<Library> getLibraries() {
     return Collections.unmodifiableList(this.libraries);
   }
 
-  private static final Map<File,URL> pluginFurnitureCatalogUrlUpdates = new HashMap<File, URL>(); 
-  
+  private static final Map<File,URL> pluginFurnitureCatalogUrlUpdates = new HashMap<File, URL>();
+
   /**
-   * Reads plug-in furniture catalog from the <code>pluginFurnitureCatalogFile</code> file. 
+   * Reads plug-in furniture catalog from the <code>pluginFurnitureCatalogFile</code> file.
    */
   private void readPluginFurnitureCatalog(File pluginFurnitureCatalogFile,
                                           List<String> identifiedFurniture) {
@@ -491,9 +488,9 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
       long urlModificationDate = pluginFurnitureCatalogFile.lastModified();
       URL urlUpdate = pluginFurnitureCatalogUrlUpdates.get(pluginFurnitureCatalogFile);
       if (pluginFurnitureCatalogFile.canWrite()
-          && (urlUpdate == null 
+          && (urlUpdate == null
               || urlUpdate.openConnection().getLastModified() < urlModificationDate)) {
-        // Copy updated resource URL content to a temporary file to ensure furniture added to home can safely 
+        // Copy updated resource URL content to a temporary file to ensure furniture added to home can safely
         // reference any file of the catalog file even if its content is changed afterwards
         TemporaryURLContent contentCopy = TemporaryURLContent.copyToTemporaryURLContent(new URLContent(pluginFurnitureCatalogFile.toURI().toURL()));
         URL temporaryFurnitureCatalogUrl = contentCopy.getURL();
@@ -504,12 +501,15 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
       } else {
         pluginFurnitureCatalogUrl = pluginFurnitureCatalogFile.toURI().toURL();
       }
-      
+
+      //PJPJ don't change to newer ResourceBundleTools
       final ClassLoader urlLoader = new URLContentClassLoader(pluginFurnitureCatalogUrl);
       ResourceBundle resourceBundle = ResourceBundle.getBundle(PLUGIN_FURNITURE_CATALOG_FAMILY, Locale.getDefault(), urlLoader, new ISO8859FileControl());
-      this.libraries.add(0, new DefaultLibrary(pluginFurnitureCatalogFile.getCanonicalPath(), 
-          UserPreferences.FURNITURE_LIBRARY_TYPE, resourceBundle));
-      readFurniture(resourceBundle, pluginFurnitureCatalogUrl, null, identifiedFurniture);
+      if (resourceBundle != null) {
+        this.libraries.add(0, new DefaultLibrary(pluginFurnitureCatalogFile.getCanonicalPath(),
+                UserPreferences.FURNITURE_LIBRARY_TYPE, resourceBundle));
+        readFurniture(resourceBundle, pluginFurnitureCatalogUrl, null, identifiedFurniture);
+      }
     } catch (MissingResourceException ex) {
       // Ignore malformed furniture catalog
     } catch (IllegalArgumentException ex) {
@@ -523,21 +523,20 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
    * Reads the default furniture described in properties files accessible through classpath.
    */
   private void readDefaultFurnitureCatalogs(UserPreferences preferences,
-                                            Map<FurnitureCategory, Map<CatalogPieceOfFurniture, Integer>> furnitureHomonymsCounter,
                                             List<String> identifiedFurniture) {
     // Try to load com.eteks.sweethome3d.io.DefaultFurnitureCatalog property file from classpath 
     String defaultFurnitureCatalogFamily = DefaultFurnitureCatalog.class.getName();
     readFurnitureCatalog(defaultFurnitureCatalogFamily, 
-        preferences, furnitureHomonymsCounter, identifiedFurniture);
+        preferences, identifiedFurniture);
     
     // Try to load com.eteks.sweethome3d.io.ContributedFurnitureCatalog property file from classpath 
     String classPackage = defaultFurnitureCatalogFamily.substring(0, defaultFurnitureCatalogFamily.lastIndexOf("."));
     readFurnitureCatalog(classPackage + "." + CONTRIBUTED_FURNITURE_CATALOG_FAMILY, 
-        preferences, furnitureHomonymsCounter, identifiedFurniture);
+        preferences, identifiedFurniture);
     
     // Try to load com.eteks.sweethome3d.io.AdditionalFurnitureCatalog property file from classpath
     readFurnitureCatalog(classPackage + "." + ADDITIONAL_FURNITURE_CATALOG_FAMILY, 
-        preferences, furnitureHomonymsCounter, identifiedFurniture);
+        preferences, identifiedFurniture);
   }
   
   /**
@@ -545,7 +544,6 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
    */
   private void readFurnitureCatalog(final String furnitureCatalogFamily,
                                     final UserPreferences preferences,
-                                    Map<FurnitureCategory, Map<CatalogPieceOfFurniture, Integer>> furnitureHomonymsCounter,
                                     List<String> identifiedFurniture) {
     ResourceBundle resource;
     if (preferences != null) {
@@ -577,6 +575,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         };
     } else {
       try {
+        //PJPJ
         resource = ResourceBundle.getBundle(furnitureCatalogFamily, new ISO8859FileControl());
       } catch (MissingResourceException ex) {
         return;
@@ -721,17 +720,17 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
       // Return null if key name# doesn't exist
       return null;
     }
-    String id = getOptionalString(resource, PropertyKey.ID.getKey(index), null);
-    String description = getOptionalString(resource, PropertyKey.DESCRIPTION.getKey(index), null);
-    String information = getOptionalString(resource, PropertyKey.INFORMATION.getKey(index), null);
-    String tagsString = getOptionalString(resource, PropertyKey.TAGS.getKey(index), null);
+    String id = ResourceBundleTools.getOptionalString(resource, PropertyKey.ID.getKey(index), null);
+    String description = ResourceBundleTools.getOptionalString(resource, PropertyKey.DESCRIPTION.getKey(index), null);
+    String information = ResourceBundleTools.getOptionalString(resource, PropertyKey.INFORMATION.getKey(index), null);
+    String tagsString = ResourceBundleTools.getOptionalString(resource, PropertyKey.TAGS.getKey(index), null);
     String [] tags;
     if (tagsString != null) {
       tags = tagsString.split("\\s*,\\s*");
     } else {
       tags = new String [0];
     }
-    String creationDateString = getOptionalString(resource, PropertyKey.CREATION_DATE.getKey(index), null);
+    String creationDateString = ResourceBundleTools.getOptionalString(resource, PropertyKey.CREATION_DATE.getKey(index), null);
     Long creationDate = null;
     if (creationDateString != null) {
       try {
@@ -740,7 +739,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         throw new IllegalArgumentException("Can't parse date "+ creationDateString, ex);
       }
     }
-    String gradeString = getOptionalString(resource, PropertyKey.GRADE.getKey(index), null);
+    String gradeString = ResourceBundleTools.getOptionalString(resource, PropertyKey.GRADE.getKey(index), null);
     Float grade = null;
     if (gradeString != null) {
       grade = Float.valueOf(gradeString);
@@ -749,20 +748,20 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         furnitureCatalogUrl, furnitureResourcesUrlBase, false, false);
     Content planIcon = getContent(resource, PropertyKey.PLAN_ICON.getKey(index), PropertyKey.PLAN_ICON_DIGEST.getKey(index), 
         furnitureCatalogUrl, furnitureResourcesUrlBase, false, true);
-    boolean multiPartModel = getOptionalBoolean(resource, PropertyKey.MULTI_PART_MODEL.getKey(index), false);
+    boolean multiPartModel = ResourceBundleTools.getOptionalBoolean(resource, PropertyKey.MULTI_PART_MODEL.getKey(index), false);
     Content model = getContent(resource, PropertyKey.MODEL.getKey(index), PropertyKey.MODEL_DIGEST.getKey(index), 
         furnitureCatalogUrl, furnitureResourcesUrlBase, multiPartModel, false);
     float width = Float.parseFloat(resource.getString(PropertyKey.WIDTH.getKey(index)));
     float depth = Float.parseFloat(resource.getString(PropertyKey.DEPTH.getKey(index)));
     float height = Float.parseFloat(resource.getString(PropertyKey.HEIGHT.getKey(index)));
-    float elevation = getOptionalFloat(resource, PropertyKey.ELEVATION.getKey(index), 0);
-    float dropOnTopElevation = getOptionalFloat(resource, PropertyKey.DROP_ON_TOP_ELEVATION.getKey(index), height) / height;
+    float elevation = ResourceBundleTools.getOptionalFloat(resource, PropertyKey.ELEVATION.getKey(index), 0);
+    float dropOnTopElevation = ResourceBundleTools.getOptionalFloat(resource, PropertyKey.DROP_ON_TOP_ELEVATION.getKey(index), height) / height;
     boolean movable = Boolean.parseBoolean(resource.getString(PropertyKey.MOVABLE.getKey(index)));
     boolean doorOrWindow = Boolean.parseBoolean(resource.getString(PropertyKey.DOOR_OR_WINDOW.getKey(index)));
-    String staircaseCutOutShape = getOptionalString(resource, PropertyKey.STAIRCASE_CUT_OUT_SHAPE.getKey(index), null);     
+    String staircaseCutOutShape = ResourceBundleTools.getOptionalString(resource, PropertyKey.STAIRCASE_CUT_OUT_SHAPE.getKey(index), null);
     float [][] modelRotation = getModelRotation(resource, PropertyKey.MODEL_ROTATION.getKey(index));
     // By default creator is eTeks
-    String modelSizeString = getOptionalString(resource, PropertyKey.MODEL_SIZE.getKey(index), null);
+    String modelSizeString = ResourceBundleTools.getOptionalString(resource, PropertyKey.MODEL_SIZE.getKey(index), null);
     Long modelSize = null;
     if (modelSizeString != null) {
       modelSize = Long.parseLong(modelSizeString);
@@ -770,11 +769,11 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
       // Request model size (this should be avoided when content is stored on a server)
       modelSize = ContentDigestManager.getInstance().getContentSize(model);
     }
-    String creator = getOptionalString(resource, PropertyKey.CREATOR.getKey(index), null);
-    boolean resizable = getOptionalBoolean(resource, PropertyKey.RESIZABLE.getKey(index), true);
-    boolean deformable = getOptionalBoolean(resource, PropertyKey.DEFORMABLE.getKey(index), true);
-    boolean texturable = getOptionalBoolean(resource, PropertyKey.TEXTURABLE.getKey(index), true);
-    boolean horizontallyRotatable = getOptionalBoolean(resource, PropertyKey.HORIZONTALLY_ROTATABLE.getKey(index), true);
+    String creator = ResourceBundleTools.getOptionalString(resource, PropertyKey.CREATOR.getKey(index), null);
+    boolean resizable = ResourceBundleTools.getOptionalBoolean(resource, PropertyKey.RESIZABLE.getKey(index), true);
+    boolean deformable = ResourceBundleTools.getOptionalBoolean(resource, PropertyKey.DEFORMABLE.getKey(index), true);
+    boolean texturable = ResourceBundleTools.getOptionalBoolean(resource, PropertyKey.TEXTURABLE.getKey(index), true);
+    boolean horizontallyRotatable = ResourceBundleTools.getOptionalBoolean(resource, PropertyKey.HORIZONTALLY_ROTATABLE.getKey(index), true);
     BigDecimal price = null;
     try {
       price = new BigDecimal(resource.getString(PropertyKey.PRICE.getKey(index)));
@@ -787,19 +786,19 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     } catch (MissingResourceException ex) {
       // By default price is null
     }
-    String currency = getOptionalString(resource, PropertyKey.CURRENCY.getKey(index), null);
+    String currency = ResourceBundleTools.getOptionalString(resource, PropertyKey.CURRENCY.getKey(index), null);
 
     Map<String, String> additionalProperties = getAdditionalProperties(resource, index);
 
     if (doorOrWindow) {
-      String doorOrWindowCutOutShape = getOptionalString(resource, PropertyKey.DOOR_OR_WINDOW_CUT_OUT_SHAPE.getKey(index), null);     
-      float wallThicknessPercentage = getOptionalFloat(
+      String doorOrWindowCutOutShape = ResourceBundleTools.getOptionalString(resource, PropertyKey.DOOR_OR_WINDOW_CUT_OUT_SHAPE.getKey(index), null);
+      float wallThicknessPercentage = ResourceBundleTools.getOptionalFloat(
           resource, PropertyKey.DOOR_OR_WINDOW_WALL_THICKNESS.getKey(index), depth) / depth;
-      float wallDistancePercentage = getOptionalFloat(
+      float wallDistancePercentage = ResourceBundleTools.getOptionalFloat(
           resource, PropertyKey.DOOR_OR_WINDOW_WALL_DISTANCE.getKey(index), 0) / depth;
-      boolean wallCutOutOnBothSides = getOptionalBoolean(
+      boolean wallCutOutOnBothSides = ResourceBundleTools.getOptionalBoolean(
           resource, PropertyKey.DOOR_OR_WINDOW_WALL_CUT_OUT_ON_BOTH_SIDES.getKey(index), true);
-      boolean widthDepthDeformable = getOptionalBoolean(
+      boolean widthDepthDeformable = ResourceBundleTools.getOptionalBoolean(
           resource, PropertyKey.DOOR_OR_WINDOW_WIDTH_DEPTH_DEFORMABLE.getKey(index), true);
       Sash [] sashes = getDoorOrWindowSashes(resource, index, width, depth);
       return new CatalogDoorOrWindow(id, name, description, information, tags, creationDate, grade, 
@@ -852,7 +851,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
                              boolean multiPartModel,
                              boolean optional) {
     String contentFile = optional
-        ? getOptionalString(resource, contentKey, null)
+        ? ResourceBundleTools.getOptionalString(resource, contentKey, null)
         : resource.getString(contentKey);
     if (optional && contentFile == null) {
       return null;
@@ -868,7 +867,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         url = contentFile.startsWith("?") 
             ? new URL(resourceUrlBase + contentFile)
             : new URL(resourceUrlBase, contentFile);
-        if (contentFile.indexOf('!') >= 0 && !contentFile.startsWith("jar:")) {
+        if (contentFile.indexOf("!/") >= 0 && !contentFile.startsWith("jar:")) {
           url = new URL("jar:" + url);
         }
       }
@@ -890,7 +889,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
     // Except in special cases like URL content in applets where it might avoid to download content  
     // to compute its digest, it's not recommended to store digests in sh3f and imported files. 
     // Missing digests will be computed on demand, ensuring it will be updated in case content is damaged
-    String contentDigest = getOptionalString(resource, contentDigestKey, null);
+    String contentDigest = ResourceBundleTools.getOptionalString(resource, contentDigestKey, null);
     if (contentDigest != null && contentDigest.length() > 0) {
       try {        
         ContentDigestManager.getInstance().setContentDigest(content, Base64.decode(contentDigest));
@@ -936,7 +935,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
                                         float doorOrWindowWidth, 
                                         float doorOrWindowDepth) throws MissingResourceException {
     Sash [] sashes;
-    String sashXAxisString = getOptionalString(resource, PropertyKey.DOOR_OR_WINDOW_SASH_X_AXIS.getKey(index), null);
+    String sashXAxisString = ResourceBundleTools.getOptionalString(resource, PropertyKey.DOOR_OR_WINDOW_SASH_X_AXIS.getKey(index), null);
     if (sashXAxisString != null) {
       String [] sashXAxisValues = sashXAxisString.split(" ");
       // If doorOrWindowHingesX#i key exists the 3 other keys with the same count of numbers must exist too
@@ -985,7 +984,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
                                          float lightDepth,
                                          float lightHeight) throws MissingResourceException {
     LightSource [] lightSources = null;
-    String lightSourceXString = getOptionalString(resource, PropertyKey.LIGHT_SOURCE_X.getKey(index), null);
+    String lightSourceXString = ResourceBundleTools.getOptionalString(resource, PropertyKey.LIGHT_SOURCE_X.getKey(index), null);
     if (lightSourceXString != null) {
       String [] lightSourceX = lightSourceXString.split(" ");
       // If doorOrWindowHingesX#i key exists the 3 other keys with the same count of numbers must exist too
@@ -1004,7 +1003,7 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
         throw new IllegalArgumentException(
             "Expected " + lightSourceX.length + " values in " + PropertyKey.LIGHT_SOURCE_COLOR.getKey(index) + " key");
       }
-      String lightSourceDiametersString = getOptionalString(resource, PropertyKey.LIGHT_SOURCE_DIAMETER.getKey(index), null);
+      String lightSourceDiametersString = ResourceBundleTools.getOptionalString(resource, PropertyKey.LIGHT_SOURCE_DIAMETER.getKey(index), null);
       String [] lightSourceDiameters;
       if (lightSourceDiametersString != null) {
         lightSourceDiameters = lightSourceDiametersString.split(" ");
@@ -1032,48 +1031,6 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
       }
     }     
     return lightSources;
-  }
-
-  /**
-   * Returns the value of <code>propertyKey</code> in <code>resource</code>, 
-   * or <code>defaultValue</code> if the property doesn't exist.
-   */
-  private String getOptionalString(ResourceBundle resource, 
-                                   String propertyKey,
-                                   String defaultValue) {
-    try {
-      return resource.getString(propertyKey);
-    } catch (MissingResourceException ex) {
-      return defaultValue;
-    }
-  }
-
-  /**
-   * Returns the value of <code>propertyKey</code> in <code>resource</code>, 
-   * or <code>defaultValue</code> if the property doesn't exist.
-   */
-  private float getOptionalFloat(ResourceBundle resource, 
-                                 String propertyKey,
-                                 float defaultValue) {
-    try {
-      return Float.parseFloat(resource.getString(propertyKey));
-    } catch (MissingResourceException ex) {
-      return defaultValue;
-    }
-  }
-
-  /**
-   * Returns the boolean value of <code>propertyKey</code> in <code>resource</code>, 
-   * or <code>defaultValue</code> if the property doesn't exist.
-   */
-  private boolean getOptionalBoolean(ResourceBundle resource, 
-                                     String propertyKey,
-                                     boolean defaultValue) {
-    try {
-      return Boolean.parseBoolean(resource.getString(propertyKey));
-    } catch (MissingResourceException ex) {
-      return defaultValue;
-    }
   }
 }
 

@@ -22,25 +22,21 @@ package com.eteks.renovations3d.android;
 import android.util.SparseArray;
 
 import java.util.concurrent.Executors;
-
-
-
-
-		import javaawt.Graphics;
+import javaawt.Graphics;
 import javaawt.image.BufferedImage;
-		import java.io.IOException;
-		import java.io.InputStream;
-		import java.util.Collections;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
-		import java.util.WeakHashMap;
-		import java.util.concurrent.ExecutorService;
+import java.util.WeakHashMap;
+import java.util.concurrent.ExecutorService;
 
 import javaawt.imageio.ImageIO;
-		import javaxswing.Icon;
-		import javaxswing.ImageIcon;
+import javaxswing.Icon;
+import javaxswing.ImageIcon;
 
-		import com.eteks.sweethome3d.model.Content;
-		import com.eteks.sweethome3d.tools.ResourceURLContent;
+import com.eteks.sweethome3d.model.Content;
+import com.eteks.sweethome3d.tools.ResourceURLContent;
 import com.mindblowing.swingish.JComponent;
 
 /**
@@ -59,9 +55,9 @@ public class IconManager {
 	private ExecutorService                        iconsLoader;
 
 	private IconManager() {
-		// use a class from inside teh jar and inside the swing package too
-		this.errorIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/icons/tango/image-missing.png");
-		this.waitIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/icons/tango/image-loading.png");
+		// use a class from inside the jar and inside the swing package too
+		this.errorIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/error.png");
+		this.waitIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/wait.png");
 		this.icons = Collections.synchronizedMap(new WeakHashMap<Content, SparseArray<Icon>>());
 	}
 
@@ -234,15 +230,16 @@ public class IconManager {
 		}
 		return errorIcon;
 	}
+
 	public static class TypedImageIcon extends ImageIcon {
 		public boolean isWaitIcon = false;
 		public boolean isErrorIcon = false;
 
-		public TypedImageIcon(BufferedImage image)
-		{
+		public TypedImageIcon(BufferedImage image) {
 			super(image);
 		}
 	}
+
 	/**
 	 * Proxy icon that displays a temporary icon while waiting
 	 * image loading completion.

@@ -1047,7 +1047,7 @@ public class Renovations3DActivity extends FragmentActivity {
 	};
 
 
-	private void loadFile(final File inFile) {
+	public void loadFile(final File inFile) {
 		if (inFile.getName().toLowerCase().endsWith(".sh3d")) {
 			loadHome(inFile);
 		} else {
@@ -1118,7 +1118,8 @@ public class Renovations3DActivity extends FragmentActivity {
 									}
 								}
 							} catch (IOException e) {
-								;
+								//System.out.println(e);
+								e.printStackTrace();
 							} finally {
 								if (zipIn != null) {
 									try {

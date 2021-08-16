@@ -19,7 +19,6 @@
  */
 package com.eteks.renovations3d.android;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
@@ -30,6 +29,97 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import javaawt.AlphaComposite;
+import javaawt.BasicStroke;
+import javaawt.Color;
+import javaawt.Composite;
+import javaawt.EventQueue;
+import javaawt.Font;
+import javaawt.Graphics;
+import javaawt.Graphics2D;
+import javaawt.Insets;
+import javaawt.Paint;
+import javaawt.Point;
+import javaawt.Rectangle;
+import javaawt.RenderingHints;
+import javaawt.Shape;
+import javaawt.Stroke;
+import javaawt.TexturePaint;
+import javaawt.VMFont;
+import javaawt.VMGraphics2D;
+import javaawt.geom.AffineTransform;
+import javaawt.geom.Arc2D;
+import javaawt.geom.Area;
+import javaawt.geom.CubicCurve2D;
+import javaawt.geom.Ellipse2D;
+import javaawt.geom.GeneralPath;
+import javaawt.geom.Line2D;
+import javaawt.geom.PathIterator;
+import javaawt.geom.Point2D;
+import javaawt.geom.Rectangle2D;
+import javaawt.image.BufferedImage;
+import javaawt.image.VMBufferedImage;
+import javaawt.imageio.ImageIO;
+import javaawt.print.PageFormat;
+import javaawt.print.Printable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.io.OutputStream;
+import java.lang.ref.WeakReference;
+import java.security.AccessControlException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+import org.jogamp.java3d.AmbientLight;
+import org.jogamp.java3d.Appearance;
+import org.jogamp.java3d.Background;
+import org.jogamp.java3d.BoundingBox;
+import org.jogamp.java3d.BranchGroup;
+import org.jogamp.java3d.Canvas3D;
+import org.jogamp.java3d.DirectionalLight;
+import org.jogamp.java3d.Group;
+import org.jogamp.java3d.ImageComponent2D;
+import org.jogamp.java3d.Light;
+import org.jogamp.java3d.Link;
+import org.jogamp.java3d.Node;
+import org.jogamp.java3d.Shape3D;
+import org.jogamp.java3d.Texture;
+import org.jogamp.java3d.Transform3D;
+import org.jogamp.java3d.TransformGroup;
+
+import com.mindblowing.swingish.JComponent;
+import com.mindblowing.swingish.JFormattedTextField;
+import com.mindblowing.swingish.JToolTip;
+import com.mindblowing.swingish.JViewPort;
+import com.eteks.renovations3d.ToolTipManager;
+import com.mindblowing.utils.LongHoldHandler;
+import javaxswing.Icon;
+import javaxswing.ImageIcon;
+import org.jogamp.vecmath.Color3f;
+import org.jogamp.vecmath.Point2f;
+import org.jogamp.vecmath.Point3d;
+import org.jogamp.vecmath.Vector3d;
+import org.jogamp.vecmath.Vector3f;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.renovations3d.Tutorial;
@@ -72,100 +162,9 @@ import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.viewcontroller.Object3DFactory;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
-import com.mindblowing.swingish.JComponent;
-import com.mindblowing.swingish.JFormattedTextField;
-import com.mindblowing.swingish.JToolTip;
-import com.mindblowing.swingish.JViewPort;
-import com.eteks.renovations3d.ToolTipManager;
-import com.mindblowing.utils.LongHoldHandler;
-
-import org.jogamp.java3d.AmbientLight;
-import org.jogamp.java3d.Appearance;
-import org.jogamp.java3d.Background;
-import org.jogamp.java3d.BoundingBox;
-import org.jogamp.java3d.BranchGroup;
-import org.jogamp.java3d.Canvas3D;
-import org.jogamp.java3d.DirectionalLight;
-import org.jogamp.java3d.Group;
-import org.jogamp.java3d.ImageComponent2D;
-import org.jogamp.java3d.Light;
-import org.jogamp.java3d.Link;
-import org.jogamp.java3d.Node;
-import org.jogamp.java3d.Shape3D;
-import org.jogamp.java3d.Texture;
-import org.jogamp.java3d.Transform3D;
-import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
-import org.jogamp.vecmath.Color3f;
-import org.jogamp.vecmath.Point2f;
-import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Vector3d;
-import org.jogamp.vecmath.Vector3f;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.lang.ref.WeakReference;
-import java.security.AccessControlException;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.WeakHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-
-import javaawt.AlphaComposite;
-import javaawt.BasicStroke;
-import javaawt.Color;
-import javaawt.Composite;
-import javaawt.EventQueue;
-import javaawt.Font;
-import javaawt.Graphics;
-import javaawt.Graphics2D;
-import javaawt.Insets;
-import javaawt.Paint;
-import javaawt.Point;
-import javaawt.Rectangle;
-import javaawt.RenderingHints;
-import javaawt.Shape;
-import javaawt.Stroke;
-import javaawt.TexturePaint;
-import javaawt.VMFont;
-import javaawt.VMGraphics2D;
-
-import javaawt.geom.AffineTransform;
-import javaawt.geom.Arc2D;
-import javaawt.geom.Area;
-import javaawt.geom.CubicCurve2D;
-import javaawt.geom.Ellipse2D;
-import javaawt.geom.GeneralPath;
-import javaawt.geom.Line2D;
-import javaawt.geom.PathIterator;
-import javaawt.geom.Point2D;
-import javaawt.geom.Rectangle2D;
-import javaawt.image.BufferedImage;
-import javaawt.image.VMBufferedImage;
-import javaawt.imageio.ImageIO;
-import javaawt.print.PageFormat;
-import javaawt.print.Printable;
-import javaxswing.Icon;
-import javaxswing.ImageIcon;
 
 
 /**
@@ -226,20 +225,20 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     }
   };
 
-  private static float 					MARGIN_DP = 40;
-  private static float 					MARGIN = 40;
+  private static float 			MARGIN_DP = 40;
+  private static float 			MARGIN = 40;
 
-	public static float 					densityScale = 1;
+  public static float 			densityScale = 1;
 
-  private static float 					fatFingerScaleUp = 3;// reset in setDrawable below to a density scaled figure
+  private static float 			fatFingerScaleUp = 3;// reset in setDrawable below to a density scaled figure
 
-	public static float 					dpiMinSpanForZoom = 1.0f; //TODO: this is used to control if a scale should happen, not sure why it's so damn complex though
+  public static float 			dpiMinSpanForZoom = 1.0f; //TODO: this is used to control if a scale should happen, not sure why it's so damn complex though
 
 
-  private Home            			home;
-  private UserPreferences 			preferences;
-	private Object3DFactory 			object3dFactory;
-	private float                 resolutionScale = 1;//SwingTools.getResolutionScale();
+  private Home            		home;
+  private UserPreferences 		preferences;
+  private Object3DFactory 		object3dFactory;
+  private float                 resolutionScale = 1;//SwingTools.getResolutionScale();
   private float                 scale = 1;//0.5f * this.resolutionScale;
   private boolean               selectedItemsOutlinePainted = true;
   private boolean               backgroundPainted = true;
@@ -267,10 +266,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private List<Selectable>      draggedItemsFeedback;
   private List<DimensionLine>   dimensionLinesFeedback;
   private boolean               selectionScrollUpdated;
-	private boolean               wallsDoorsOrWindowsModification;
-  private JToolTip 							toolTip;
+  private boolean               wallsDoorsOrWindowsModification;
+  private JToolTip 				toolTip;
   //private JWindow               toolTipWindow;
-	private ToolTipManager 				toolTipManager;
+  private ToolTipManager 		toolTipManager;
   private boolean               resizeIndicatorVisible;
 
   private Map<PlanController.EditableProperty, JFormattedTextField> toolTipEditableTextFields;
@@ -283,9 +282,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   private Rectangle2D                       planBoundsCache;
   private boolean                           planBoundsCacheValid = false;
-	private Rectangle2D                       invalidPlanBounds;
+  private Rectangle2D                       invalidPlanBounds;
   private BufferedImage                     backgroundImageCache;
   private Map<TextureImage, BufferedImage>  patternImagesCache;
+  private Set<HomePieceOfFurniture>         invalidFurnitureTopViewIcons;
   private List<Wall>                        otherLevelsWallsCache;
   private Area                              otherLevelsWallAreaCache;
   private List<Room>                        otherLevelsRoomsCache;
@@ -293,10 +293,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private Color                             wallsPatternBackgroundCache;
   private Color                             wallsPatternForegroundCache;
   private Map<Collection<Wall>, Area>       wallAreasCache;
-	private Map<HomeDoorOrWindow, Area>       doorOrWindowWallThicknessAreasCache;
-	private Map<HomeTexture, BufferedImage>   floorTextureImagesCache;
-	private Map<HomePieceOfFurniture, HomePieceOfFurnitureTopViewIconKey> furnitureTopViewIconKeys;
-	private Map<HomePieceOfFurnitureTopViewIconKey, PieceOfFurnitureTopViewIcon> furnitureTopViewIconsCache;
+  private Map<HomeDoorOrWindow, Area>       doorOrWindowWallThicknessAreasCache;
+  private Map<HomeTexture, BufferedImage>   floorTextureImagesCache;
+  private Map<HomePieceOfFurniture, HomePieceOfFurnitureTopViewIconKey> furnitureTopViewIconKeys;
+  private Map<HomePieceOfFurnitureTopViewIconKey, PieceOfFurnitureTopViewIcon> furnitureTopViewIconsCache;
+
 
   private static ExecutorService            backgroundImageLoader;
 
@@ -316,7 +317,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private static final GeneralPath WALL_ARC_EXTENT_INDICATOR;
   private static final GeneralPath WALL_AND_LINE_RESIZE_INDICATOR;
   private static final Shape       CAMERA_YAW_ROTATION_INDICATOR;
-  private static final Shape 			 CAMERA_PITCH_ROTATION_INDICATOR;
+  private static final Shape 	   CAMERA_PITCH_ROTATION_INDICATOR;
   private static final GeneralPath CAMERA_ELEVATION_INDICATOR;
   private static final Shape       CAMERA_BODY;
   private static final Shape       CAMERA_HEAD;
@@ -336,18 +337,19 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   private static final float       WALL_STROKE_WIDTH = 1.5f;
   private static final float       BORDER_STROKE_WIDTH = 1f;
+  private static final float       ALIGNMENT_LINE_OFFSET = 25f;
 
   private static final BufferedImage ERROR_TEXTURE_IMAGE;
   private static final BufferedImage WAIT_TEXTURE_IMAGE;
 
-	private PlanController controller;
+  private PlanController controller;
 
-	//menu item options
-	public boolean alignmentActivated = false;
-	public boolean selectLasso = false;
-	public boolean selectMultiple = false;
-	public boolean addRoomPointActivated = false;
-	public boolean deleteRoomPointActivated = false;
+  //menu item options
+  public boolean alignmentActivated = false;
+  public boolean selectLasso = false;
+  public boolean selectMultiple = false;
+  public boolean addRoomPointActivated = false;
+  public boolean deleteRoomPointActivated = false;
 
   static {
     POINT_INDICATOR = new Ellipse2D.Float(-1.5f, -1.5f, 3, 3);
@@ -664,8 +666,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			 * @param controller the optional controller used to manage home items modification
 			 */
   public void init(Home home,
-									 UserPreferences preferences,
-									 PlanController controller) {
+					UserPreferences preferences,
+					PlanController controller) {
   	init(home, preferences, null, controller);
   }
 
@@ -679,21 +681,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			 * @param controller the optional controller used to manage home items modification
 			 */
   public void init(Home home,
-							UserPreferences preferences,
-							Object3DFactory  object3dFactory,
-							PlanController controller) {
-		this.home = home;
-		this.preferences = preferences;
-		try {
-			if (object3dFactory == null && !Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
-				object3dFactory = new Object3DBranchFactory();
-			}
-		} catch (AccessControlException ex) {
-			// Can't access to properties
-		}
-		this.object3dFactory = object3dFactory;
+					UserPreferences preferences,
+					Object3DFactory  object3dFactory,
+					PlanController controller) {
+    this.home = home;
+    this.preferences = preferences;
+    try {
+      if (object3dFactory == null && !Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
+        object3dFactory = new Object3DBranchFactory();
+      }
+    } catch (AccessControlException ex) {
+      // Can't access to properties
+    }
+    this.object3dFactory = object3dFactory;
 
-		this.controller = controller;
+    this.controller = controller;
 
     this.patternImagesCache = new HashMap<TextureImage, BufferedImage>();
     // Install default colors using same colors as a text field
@@ -701,11 +703,11 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    // super.setForeground(UIManager.getColor("TextField.foreground"));
    // super.setBackground(UIManager.getColor("TextField.background"));
 
-	  //PJ taken from HomePane
-		Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
-		setXScroll(viewportX != null ?  viewportX.intValue() : 0);
-		Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
-		setYScroll(viewportY != null? viewportY.intValue(): 0);
+    //PJ taken from HomePane
+	Number viewportX = home.getNumericProperty(PLAN_VIEWPORT_X_VISUAL_PROPERTY);
+	setXScroll(viewportX != null ?  viewportX.intValue() : 0);
+	Number viewportY = home.getNumericProperty(PLAN_VIEWPORT_Y_VISUAL_PROPERTY);
+	setYScroll(viewportY != null? viewportY.intValue(): 0);
   }
 
   /**
@@ -718,36 +720,49 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     final PropertyChangeListener furnitureChangeListener = new PropertyChangeListener() {
         public void propertyChange(final PropertyChangeEvent ev) {
 					if (furnitureTopViewIconKeys != null
-              && (HomePieceOfFurniture.Property.MODEL_TRANSFORMATIONS.name().equals(ev.getPropertyName())
+              && (HomePieceOfFurniture.Property.MODEL.name().equals(ev.getPropertyName())
+                  || HomePieceOfFurniture.Property.MODEL_ROTATION.name().equals(ev.getPropertyName())
+                  || HomePieceOfFurniture.Property.BACK_FACE_SHOWN.name().equals(ev.getPropertyName())
+                  || HomePieceOfFurniture.Property.MODEL_TRANSFORMATIONS.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.ROLL.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.PITCH.name().equals(ev.getPropertyName())
                   || (HomePieceOfFurniture.Property.WIDTH_IN_PLAN.name().equals(ev.getPropertyName())
                       || HomePieceOfFurniture.Property.DEPTH_IN_PLAN.name().equals(ev.getPropertyName())
                       || HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName()))
                      && (((HomePieceOfFurniture)ev.getSource()).isHorizontallyRotated()
-                         || ((HomePieceOfFurniture)ev.getSource()).getTexture() != null))) {
+                         || ((HomePieceOfFurniture)ev.getSource()).getTexture() != null)
+                  || HomePieceOfFurniture.Property.MODEL_MIRRORED.name().equals(ev.getPropertyName())
+                     && ((HomePieceOfFurniture)ev.getSource()).getRoll() != 0)) {
             if (HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName())) {
               sortedLevelFurniture = null;
             }
-						if (!(ev.getSource() instanceof HomeFurnitureGroup)) {
-							// Invalidate top icon only for individual pieces because
-							// groups can't have their own texture, can't be transformed and can't be horizontally rotated
-							if (controller == null || !controller.isModificationState()) {
-								furnitureTopViewIconKeys.remove((HomePieceOfFurniture)ev.getSource());
-							} else {
-								// Delay computing of new top view icon
-								controller.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener() {
-									public void propertyChange(PropertyChangeEvent ev2) {
-										furnitureTopViewIconKeys.remove((HomePieceOfFurniture)ev.getSource());
-										repaint();
-										controller.removePropertyChangeListener(PlanController.Property.MODIFICATION_STATE, this);
-									}
-								});
-							}
-						}
+            if (!(ev.getSource() instanceof HomeFurnitureGroup)) {
+                // Invalidate top icon only for individual pieces because
+                // groups can't have their own texture, can't be transformed and can't be horizontally rotated
+                if (controller == null || !controller.isModificationState()) {
+                    furnitureTopViewIconKeys.remove((HomePieceOfFurniture)ev.getSource());
+                } else {
+                    // Delay computing of new top view icon
+                  if (invalidFurnitureTopViewIcons == null) {
+                    invalidFurnitureTopViewIcons = new HashSet<HomePieceOfFurniture>();
+                    controller.addPropertyChangeListener(PlanController.Property.MODIFICATION_STATE, new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent ev2) {
+                          for (HomePieceOfFurniture piece : invalidFurnitureTopViewIcons) {
+                            furnitureTopViewIconKeys.remove(piece);
+                          }
+                          invalidFurnitureTopViewIcons = null;
+                            repaint();
+                            controller.removePropertyChangeListener(PlanController.Property.MODIFICATION_STATE, this);
+                        }
+                    });
+                  }
+                  invalidFurnitureTopViewIcons.add((HomePieceOfFurniture)ev.getSource());
+                }
+            }
             revalidate();
           } else if (furnitureTopViewIconKeys != null
-              && (HomePieceOfFurniture.Property.COLOR.name().equals(ev.getPropertyName())
+              && (HomePieceOfFurniture.Property.PLAN_ICON.name().equals(ev.getPropertyName())
+                  || HomePieceOfFurniture.Property.COLOR.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.TEXTURE.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.MODEL_MATERIALS.name().equals(ev.getPropertyName())
                   || HomePieceOfFurniture.Property.SHININESS.name().equals(ev.getPropertyName()))) {
@@ -760,17 +775,24 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
                      || HomePieceOfFurniture.Property.HEIGHT_IN_PLAN.name().equals(ev.getPropertyName())) {
             sortedLevelFurniture = null;
             repaint();
+          } else if (HomePieceOfFurniture.Property.ICON.name().equals(ev.getPropertyName())
+                     || HomeDoorOrWindow.Property.WALL_CUT_OUT_ON_BOTH_SIDES.name().equals(ev.getPropertyName())) {
+            // Should repaint only if icons rather than plan icons or top views are drawn but this may depends on various criteria
+            repaint();
           } else if (doorOrWindowWallThicknessAreasCache != null
-                     && doorOrWindowWallThicknessAreasCache.containsKey(ev.getSource())
                      && (HomePieceOfFurniture.Property.WIDTH.name().equals(ev.getPropertyName())
                          || HomePieceOfFurniture.Property.DEPTH.name().equals(ev.getPropertyName())
                          || HomePieceOfFurniture.Property.ANGLE.name().equals(ev.getPropertyName())
                          || HomePieceOfFurniture.Property.MODEL_MIRRORED.name().equals(ev.getPropertyName())
-                         || HomePieceOfFurniture.Property.MODEL_TRANSFORMATIONS.name().equals(ev.getPropertyName())
                          || HomePieceOfFurniture.Property.X.name().equals(ev.getPropertyName())
                          || HomePieceOfFurniture.Property.Y.name().equals(ev.getPropertyName())
-                         || HomePieceOfFurniture.Property.LEVEL.name().equals(ev.getPropertyName()))) {
-            doorOrWindowWallThicknessAreasCache.remove(ev.getSource());
+                         || HomePieceOfFurniture.Property.LEVEL.name().equals(ev.getPropertyName())
+                         || HomeDoorOrWindow.Property.WALL_THICKNESS.name().equals(ev.getPropertyName())
+                         || HomeDoorOrWindow.Property.WALL_DISTANCE.name().equals(ev.getPropertyName())
+                         || HomeDoorOrWindow.Property.WALL_WIDTH.name().equals(ev.getPropertyName())
+                         || HomeDoorOrWindow.Property.WALL_LEFT.name().equals(ev.getPropertyName())
+                         || HomeDoorOrWindow.Property.CUT_OUT_SHAPE.name().equals(ev.getPropertyName()))
+                     && doorOrWindowWallThicknessAreasCache.remove(ev.getSource()) != null) {
             revalidate();
           } else {
             revalidate();
@@ -1148,22 +1170,22 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    */
   protected void invalidate(boolean invalidatePlanBoundsCache) {
 
-		if (invalidatePlanBoundsCache) {
-			boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
-			if (this.invalidPlanBounds == null) {
-				this.invalidPlanBounds = getPlanBounds().getBounds2D();
-			}
-			if (planBoundsCacheWereValid) {
-				this.planBoundsCacheValid = false;
-			}
-		}
+      if (invalidatePlanBoundsCache) {
+          boolean planBoundsCacheWereValid = this.planBoundsCacheValid;
+          if (this.invalidPlanBounds == null) {
+              this.invalidPlanBounds = getPlanBounds().getBounds2D();
+          }
+          if (planBoundsCacheWereValid) {
+              this.planBoundsCacheValid = false;
+          }
+      }
 
     // Revalidate and repaint
     super.revalidate();
     repaint();
 
-		if (this.invalidPlanBounds != null
-        && true ) { //getParent() instanceof JViewport) {
+    if (this.invalidPlanBounds != null
+      && true ) { //getParent() instanceof JViewport) {
       float planBoundsNewMinX = (float)getPlanBounds().getMinX();
       float planBoundsNewMinY = (float)getPlanBounds().getMinY();
       // If plan bounds upper left corner diminished (PJ in fact any min plan change)
@@ -1175,12 +1197,12 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         //Dimension viewSize = parent.getViewSize();
         // Update view position when scroll bars are visible
         //if (extentSize.width < viewSize.width
-				//   || extentSize.height < viewSize.height) {
-				int deltaX = Math.round(((float)this.invalidPlanBounds.getMinX() - planBoundsNewMinX));
-				int deltaY = Math.round(((float)this.invalidPlanBounds.getMinY() - planBoundsNewMinY));
-				this.moveScrolledX(deltaX);
-				this.moveScrolledY(deltaY);
-				//parent.setViewPosition(new Point(viewPosition.x + deltaX, viewPosition.y + deltaY));
+            //   || extentSize.height < viewSize.height) {
+          int deltaX = Math.round(((float)this.invalidPlanBounds.getMinX() - planBoundsNewMinX));
+          int deltaY = Math.round(((float)this.invalidPlanBounds.getMinY() - planBoundsNewMinY));
+            this.moveScrolledX(deltaX);
+            this.moveScrolledY(deltaY);
+            //parent.setViewPosition(new Point(viewPosition.x + deltaX, viewPosition.y + deltaY));
         //}
       }
     }
@@ -1696,10 +1718,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     Insets insets = getInsets();
       Rectangle2D planBounds = getPlanBounds();
       return new Dimension(
-          Math.round(((float)planBounds.getWidth() + MARGIN * 2)
-                     * getScale()) + insets.left + insets.right,
-          Math.round(((float)planBounds.getHeight() + MARGIN * 2)
-                     * getScale()) + insets.top + insets.bottom);
+          convertLengthToPixel(planBounds.getWidth() + MARGIN * 2) + insets.left + insets.right,
+          convertLengthToPixel(planBounds.getHeight() + MARGIN * 2) + insets.top + insets.bottom);
     }
   }*/
 
@@ -2246,7 +2266,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 
   /**
    * Returns an image of the selected items displayed by this component
-   * (camera excepted) with no outline at scale 1/1 (1 pixel = 1cm).
+   * (camera excepted) with no outline at scale 1/1 (1 pixel = 1cm)
+   * or at a smaller scale if image is larger than 100m x 100m
+   * or if free memory is missing.
    */
   public BufferedImage getClipboardImage() {
     // Create an image that contains only selected items
@@ -2254,8 +2276,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     if (selectionBounds == null) {
       return null;
     } else {
-      // Use a scale of 1
+      // Use a scale of 1 except if image is very large or free memory is missing
       float clipboardScale = 1f;
+      //PJPJPJ no ignore clipboards
       float extraMargin = getStrokeWidthExtraMargin(this.home.getSelectedItems(), PaintMode.CLIPBOARD);
       BufferedImage image = new BufferedImage((int)Math.ceil(selectionBounds.getWidth() * clipboardScale + 2 * extraMargin),
               (int)Math.ceil(selectionBounds.getHeight() * clipboardScale + 2 * extraMargin), BufferedImage.TYPE_INT_ARGB);
@@ -2353,7 +2376,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   }*/
 
   /**
-   * Throws an <code>InterruptedRecorderException</code> exception if current thread
+   * Throws an <code>InterruptedIOException</code> exception if current thread
    * is interrupted and <code>paintMode</code> is equal to <code>PaintMode.EXPORT</code>.
    */
   private void checkCurrentThreadIsntInterrupted(PaintMode paintMode) throws InterruptedIOException {
@@ -4327,8 +4350,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.rotate(piece.getAngle());
       float pieceDepth = piece.getDepthInPlan();
       // Scale icon to fit in its area
-      if (piece.isModelMirrored()) {
-        // If piece model is mirrored, inverse x scale
+      if (piece.isModelMirrored()
+          && piece.getRoll() == 0) {
+        // If piece model is mirrored when its roll rotation is 0, inverse x scale
         g2D.scale(-piece.getWidthInPlan() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
       } else {
         g2D.scale(piece.getWidthInPlan() / icon.getIconWidth(), pieceDepth / icon.getIconHeight());
@@ -4935,21 +4959,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestWall != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestWall > 0) {
-          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestWall - 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestWall - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestWall + 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestWall + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestWall != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestWall > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestWall - 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestWall - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestWall + 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestWall + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         }
       }
 
@@ -4984,17 +5008,18 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
                                   Paint pointPaint, Stroke pointStroke) {
     g2D.setPaint(pointPaint);
     g2D.setStroke(pointStroke);
-    g2D.draw(new Ellipse2D.Float((float)locationFeedback.getX() - 5f * fatFingerScaleUp / planScale,
-        (float)locationFeedback.getY() - 5f * fatFingerScaleUp / planScale, 10f * fatFingerScaleUp / planScale, 10f * fatFingerScaleUp / planScale));
+    float radius = 10 * fatFingerScaleUp;
+    g2D.draw(new Ellipse2D.Float((float)locationFeedback.getX() - radius / planScale,
+        (float)locationFeedback.getY() - radius / planScale, 2 * radius / planScale, 2 * radius / planScale));
     g2D.setPaint(feedbackPaint);
     g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
     g2D.draw(new Line2D.Float((float)locationFeedback.getX(),
-        (float)locationFeedback.getY() - 5f * fatFingerScaleUp / planScale,
+        (float)locationFeedback.getY() - radius / planScale,
         (float)locationFeedback.getX(),
-        (float)locationFeedback.getY() + 5f* fatFingerScaleUp  / planScale));
-    g2D.draw(new Line2D.Float((float)locationFeedback.getX() - 5f* fatFingerScaleUp  / planScale,
+        (float)locationFeedback.getY() + radius  / planScale));
+    g2D.draw(new Line2D.Float((float)locationFeedback.getX() - radius  / planScale,
         (float)locationFeedback.getY(),
-        (float)locationFeedback.getX() + 5f* fatFingerScaleUp  / planScale,
+        (float)locationFeedback.getX() + radius  / planScale,
         (float)locationFeedback.getY()));
   }
 
@@ -5072,21 +5097,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestObject - 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestObject + 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestObject - 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestObject + 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         }
       }
 
@@ -5204,21 +5229,21 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       g2D.setStroke(feedbackStroke);
       if (deltaXToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaXToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x + 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestObject - 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         } else {
-          g2D.draw(new Line2D.Float(x - 25 * fatFingerScaleUp / planScale, y,
-              x - deltaXToClosestObject + 25 * fatFingerScaleUp / planScale, y));
+          g2D.draw(new Line2D.Float(x - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y,
+              x - deltaXToClosestObject + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale, y));
         }
       }
 
       if (deltaYToClosestObject != Float.POSITIVE_INFINITY) {
         if (deltaYToClosestObject > 0) {
-          g2D.draw(new Line2D.Float(x, y + 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestObject - 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         } else {
-          g2D.draw(new Line2D.Float(x, y - 25 * fatFingerScaleUp / planScale,
-              x, y - deltaYToClosestObject + 25 * fatFingerScaleUp / planScale));
+          g2D.draw(new Line2D.Float(x, y - ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale,
+              x, y - deltaYToClosestObject + ALIGNMENT_LINE_OFFSET * fatFingerScaleUp / planScale));
         }
       }
 
@@ -5243,32 +5268,34 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private void paintAngleFeedback(Graphics2D g2D, Point2D center,
                                   Point2D point1, Point2D point2,
                                   float planScale, Color selectionColor) {
-    g2D.setColor(selectionColor);
-    g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
-    // Compute angles
-    double angle1 = Math.atan2(center.getY() - point1.getY(), point1.getX() - center.getX());
-    if (angle1 < 0) {
-      angle1 = 2 * Math.PI + angle1;
+    if (!point1.equals(center) && !point2.equals(center)) {
+      g2D.setColor(selectionColor);
+      g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / planScale * this.resolutionScale));
+      // Compute angles
+      double angle1 = Math.atan2(center.getY() - point1.getY(), point1.getX() - center.getX());
+      if (angle1 < 0) {
+        angle1 = 2 * Math.PI + angle1;
+      }
+      double angle2 = Math.atan2(center.getY() - point2.getY(), point2.getX() - center.getX());
+      if (angle2 < 0) {
+        angle2 = 2 * Math.PI + angle2;
+      }
+      double extent = angle2 - angle1;
+      if (angle1 > angle2) {
+        extent = 2 * Math.PI + extent;
+      }
+      AffineTransform previousTransform = g2D.getTransform();
+      // Draw an arc
+      g2D.translate(center.getX(), center.getY());
+      float radius = 20 * fatFingerScaleUp / planScale;
+      g2D.draw(new Arc2D.Double(-radius, -radius,
+          radius * 2, radius * 2, Math.toDegrees(angle1), Math.toDegrees(extent), Arc2D.OPEN));
+      // Draw two radius
+      radius += 5 * fatFingerScaleUp / planScale;
+      g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1), -radius * Math.sin(angle1)));
+      g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1 + extent), -radius * Math.sin(angle1 + extent)));
+      g2D.setTransform(previousTransform);
     }
-    double angle2 = Math.atan2(center.getY() - point2.getY(), point2.getX() - center.getX());
-    if (angle2 < 0) {
-      angle2 = 2 * Math.PI + angle2;
-    }
-    double extent = angle2 - angle1;
-    if (angle1 > angle2) {
-      extent = 2 * Math.PI + extent;
-    }
-    AffineTransform previousTransform = g2D.getTransform();
-    // Draw an arc
-    g2D.translate(center.getX(), center.getY());
-    float radius = 20 * fatFingerScaleUp / planScale;
-    g2D.draw(new Arc2D.Double(-radius, -radius,
-        radius * 2, radius * 2, Math.toDegrees(angle1), Math.toDegrees(extent), Arc2D.OPEN));
-    // Draw two radius
-    radius += 5 * fatFingerScaleUp / planScale;
-    g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1), -radius * Math.sin(angle1)));
-    g2D.draw(new Line2D.Double(0, 0, radius * Math.cos(angle1 + extent), -radius * Math.sin(angle1 + extent)));
-    g2D.setTransform(previousTransform);
   }
 
   /**
@@ -5555,7 +5582,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * moving scroll bars if needed.
    */
   public void makePointVisible(float x, float y) {
-    scrollRectToVisible(getShapePixelBounds(new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
+    scrollRectToVisible(getShapePixelBounds(
+      new Rectangle2D.Float(x, y, 1 / getScale(), 1 / getScale())));
   }
 
 	/**
@@ -5704,10 +5732,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   private Rectangle getShapePixelBounds(Shape shape) {
     Rectangle2D shapeBounds = shape.getBounds2D();
     return new Rectangle(
-    				convertXModelToPixel((float)shapeBounds.getMinX()),
-						convertYModelToPixel((float)shapeBounds.getMinY()),
-        		(int)Math.round(shapeBounds.getWidth() * getScale()),
-						(int)Math.round(shapeBounds.getHeight() * getScale()));
+      convertXModelToPixel((float)shapeBounds.getMinX()),
+	  convertYModelToPixel((float)shapeBounds.getMinY()),
+      (int)Math.round(shapeBounds.getWidth() * getScale()),
+	  (int)Math.round(shapeBounds.getHeight() * getScale()));
   }
 
   /**
@@ -5786,7 +5814,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       //this.toolTipWindow.setFocusableWindowState(false);
       //this.toolTipWindow.add(toolTipComponent);
 
-			toolTipManager.showTooltip(toolTipComponent);
+      toolTipManager.showTooltip(toolTipComponent);
 
       // Add to window a mouse listener that redispatch mouse events to
       // plan component (if the user moves fast enough the mouse pointer in a way
@@ -5916,6 +5944,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
           if (this.focusedTextField != null) {
             this.focusedTextField.getCaret().setVisible(false);
             this.focusedTextField.getCaret().setSelectionVisible(false);
+            this.focusedTextField.setValue(this.focusedTextField.getValue());
           }
           this.focusedTextFieldIndex = textFieldIndex;
           this.focusedTextField = toolTipEditableTextFields.get(toolTipEditedProperties [textFieldIndex]);
@@ -6180,7 +6209,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
   //note this guy is added to a scroll pane like this, in HomePane
 	//planScrollPane.setColumnHeaderView((JComponent)controller.getPlanController().getHorizontalRulerView());
   public static class PlanRulerComponent extends JComponent implements com.eteks.sweethome3d.viewcontroller.View {
-		private PlanComponent pc;
+	private PlanComponent pc;
   	private int   orientation;
     private Point mouseLocation;
 
@@ -6190,8 +6219,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
      *                    <code>SwingConstants.VERTICAL</code>.
      */
     public void init(int orientation, PlanComponent pc) {
-			this.pc = pc;
-    	this.orientation = orientation;
+	  this.pc = pc;
+      this.orientation = orientation;
       setOpaque(true);
       // Use same font as tool tips
       setFont(new VMFont(Typeface.DEFAULT, 12));//UIManager.getFont("ToolTip.font"));
@@ -6293,7 +6322,6 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 			float paintScale = pc.getScale();
 			g2D.translate((insets.left + (MARGIN - planBounds.getMinX()) * paintScale) - pc.getXScroll(),
 							(insets.top + (MARGIN - planBounds.getMinY()) * paintScale) - pc.getYScroll());
-
 			g2D.scale(paintScale, paintScale);
 			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -6387,18 +6415,18 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         // Draw big ticks
         if (this.orientation == HORIZONTAL) {
           for (double x = ((int)(xMin / mainGridSize) - 1) * mainGridSize; x < xMax; x += mainGridSize) {
-			  		AffineTransform previousTransform = g2D.getTransform();
+            AffineTransform previousTransform = g2D.getTransform();
             g2D.draw(new Line2D.Double(x, yMax + mainTickSize, x, yMax));//PJ - to + not sure why needed
             // Draw unit text
             g2D.translate(x, yMax - mainTickSize);
             g2D.scale(densityScale / rulerScale, densityScale / rulerScale);
-			  		g2D.setFont(getFont());
+            g2D.setFont(getFont());
             g2D.drawString(getFormattedTickText(format, x), 3, fontAscent - 1);
             g2D.setTransform(previousTransform);
           }
         } else {
           for (double y = ((int)(yMin / mainGridSize) - 1) * mainGridSize; y < yMax; y += mainGridSize) {
-			  		AffineTransform previousTransform = g2D.getTransform();
+			AffineTransform previousTransform = g2D.getTransform();
             String yText = getFormattedTickText(format, y);
             if (leftToRightOriented) {
               g2D.draw(new Line2D.Double(xMax + mainTickSize, y, xMax, y));//PJ - to + not sure why needed
@@ -6406,8 +6434,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
               g2D.translate(xMax - mainTickSize, y);
               g2D.scale(densityScale / rulerScale, densityScale / rulerScale);
               g2D.rotate(-Math.PI / 2);
-							g2D.setFont(getFont());
-							g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
+              g2D.setFont(getFont());
+              g2D.drawString(yText, -((VMGraphics2D)g2D).canvasPaint.measureText(yText, 0, yText.length()) - 3, fontAscent - 1);
               //PJ swapped for above g2D.drawString(yText, -metrics.stringWidth(yText) - 3, fontAscent - 1);
             } else {
               g2D.draw(new Line2D.Double(xMin, y, xMin - mainTickSize, y));//PJ + to - not sure why needed
@@ -6415,7 +6443,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
               g2D.translate(xMin + mainTickSize, y);
               g2D.scale(densityScale / rulerScale, densityScale / rulerScale);
               g2D.rotate(Math.PI / 2);
-							g2D.setFont(getFont());
+              g2D.setFont(getFont());
               g2D.drawString(yText, 3, fontAscent - 1);
             }
             g2D.setTransform(previousTransform);
@@ -6424,8 +6452,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
       }
 
       //if (this.mouseLocation != null) {
-			if (pc.touchyListener.mActivePointerId != TouchyListener.INVALID_POINTER_ID ) {
-				mouseLocation = new Point((int)pc.touchyListener.getLastDragLocation().x, (int)pc.touchyListener.getLastDragLocation().y);
+      if (pc.touchyListener.mActivePointerId != TouchyListener.INVALID_POINTER_ID ) {
+        mouseLocation = new Point((int)pc.touchyListener.getLastDragLocation().x, (int)pc.touchyListener.getLastDragLocation().y);
         g2D.setColor(pc.getSelectionColor());
         g2D.setStroke(new BasicStroke(1 * fatFingerScaleUp / rulerScale));
         if (this.orientation == HORIZONTAL) {
@@ -6618,9 +6646,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
    * A proxy for the furniture top view icon generated from its 3D model.
    */
   public static class PieceOfFurnitureModelIcon extends PieceOfFurnitureTopViewIcon {
-	  private static Canvas3D        canvas3D;
-	  private static SimpleUniverse  universe;
-		private static Semaphore 			 offScreenRenderSemaphore = new Semaphore(1, true);
+	private static Canvas3D        canvas3D;
+	private static SimpleUniverse  universe;
+	private static Semaphore 	   offScreenRenderSemaphore = new Semaphore(1, true);
     private static BranchGroup     sceneRoot;
     private static ExecutorService iconsCreationExecutor;
 
@@ -6632,9 +6660,9 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
      * @param iconSize the size in pixels of the generated icon
      */
     public PieceOfFurnitureModelIcon(final HomePieceOfFurniture piece,
-																		 final Object3DFactory object3dFactory,
+									 final Object3DFactory object3dFactory,
                                      final JComponent waitingComponent,
-																		 final int iconSize) {
+									 final int iconSize) {
       super(IconManager.getInstance().getWaitIcon());
       ModelManager.getInstance().loadModel(piece.getModel(), waitingComponent == null,
           new ModelManager.ModelObserver() {
@@ -6643,7 +6671,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
               // work on a clone of the piece centered at the origin
               // with the same size to get a correct texture mapping
               final HomePieceOfFurniture normalizedPiece = piece.clone();
-              if (normalizedPiece.isResizable()) {
+              if (normalizedPiece.isResizable()
+                  && piece.getRoll() == 0) {
                 normalizedPiece.setModelMirrored(false);
               }
               final float pieceWidth = normalizedPiece.getWidthInPlan();
@@ -6760,7 +6789,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
     private Icon createIcon(Object3DBranch pieceNode,
                             float pieceWidth, float pieceDepth, float pieceHeight,
 														int iconSize) {
-			ensureUniverseCreated();
+	  ensureUniverseCreated();
       // Add piece model scene to a normalized transform group
       Transform3D scaleTransform = new Transform3D();
       scaleTransform.setScale(new Vector3d(2 / pieceWidth, 2 / pieceHeight, 2 / pieceDepth));
@@ -6926,7 +6955,10 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 												+ 37 * Float.valueOf(piece.getDepthInPlan()).hashCode()
 												+ 37 * Float.valueOf(piece.getHeightInPlan()).hashCode();
 			}
-			if (this.piece.getPlanIcon() != null) {
+            if (piece.getRoll() != 0) {
+              this.hashCode += 37 * Boolean.valueOf(piece.isModelMirrored()).hashCode();
+            }
+            if (piece.getPlanIcon() != null) {
 				this.hashCode +=
 								37 * Arrays.deepHashCode(piece.getModelRotation())
 												+ 37 * Boolean.valueOf(piece.isModelCenteredAtOrigin()).hashCode()
@@ -6935,7 +6967,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 												+ 37 * Float.valueOf(piece.getRoll()).hashCode()
 												+ 37 * Arrays.hashCode(piece.getModelTransformations())
 												+ 37 * Arrays.hashCode(piece.getModelMaterials())
-												+ (piece.getShininess() != null ? 37 * this.piece.getShininess().hashCode() : 3456);
+                                                + (piece.getShininess() != null ? 37 * piece.getShininess().hashCode() : 3456);
 			}
 		}
 
@@ -6948,19 +6980,22 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				return (this.piece.getPlanIcon() != null
 								? this.piece.getPlanIcon().equals(piece2.getPlanIcon())
 								: this.piece.getModel().equals(piece2.getModel()))
-								&& (this.piece.getColor() == piece2.getColor()
+                        && (this.piece.getColor() == piece2.getColor()
 								|| this.piece.getColor() != null && this.piece.getColor().equals(piece2.getColor()))
-								&& (this.piece.getTexture() == piece2.getTexture()
+                        && (this.piece.getTexture() == piece2.getTexture()
 								|| this.piece.getTexture() != null && this.piece.getTexture().equals(piece2.getTexture()))
-								&& (!this.piece.isHorizontallyRotated()
+                        && (!this.piece.isHorizontallyRotated()
 								&& !piece2.isHorizontallyRotated()
 								&& this.piece.getTexture() == null
 								&& piece2.getTexture() == null
-								|| this.piece.getWidthInPlan() == piece2.getWidthInPlan()
+                        || this.piece.getWidthInPlan() == piece2.getWidthInPlan()
 								&& this.piece.getDepthInPlan() == piece2.getDepthInPlan()
 								&& this.piece.getHeightInPlan() == piece2.getHeightInPlan())
-								&& (this.piece.getPlanIcon() != null
-								|| Arrays.deepEquals(this.piece.getModelRotation(), piece2.getModelRotation())
+                        && (this.piece.getRoll() == 0
+                        && piece2.getRoll() == 0
+                        || this.piece.isModelMirrored() == piece2.isModelMirrored())
+                        && (this.piece.getPlanIcon() != null
+                        || Arrays.deepEquals(this.piece.getModelRotation(), piece2.getModelRotation())
 								&& this.piece.isModelCenteredAtOrigin() == piece2.isModelCenteredAtOrigin()
 								&& this.piece.isBackFaceShown() == piece2.isBackFaceShown()
 								&& this.piece.getPitch() == piece2.getPitch()

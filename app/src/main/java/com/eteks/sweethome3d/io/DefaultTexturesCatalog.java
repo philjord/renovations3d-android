@@ -193,6 +193,7 @@ public class DefaultTexturesCatalog extends TexturesCatalog {
   public DefaultTexturesCatalog(URL [] pluginTexturesCatalogUrls,
                                 URL    texturesResourcesUrlBase) {
     List<String> identifiedTextures = new ArrayList<String>();
+    //PJPJPJ not using ResourceBundleTools so keep the checks in
     try {
       SecurityManager securityManager = System.getSecurityManager();
       if (securityManager != null) {
@@ -378,8 +379,8 @@ public class DefaultTexturesCatalog extends TexturesCatalog {
         texturesUrl, texturesResourcesUrlBase);
     float width = Float.parseFloat(resource.getString(PropertyKey.WIDTH.getKey(index)));
     float height = Float.parseFloat(resource.getString(PropertyKey.HEIGHT.getKey(index)));
-    String creator = getOptionalString(resource, PropertyKey.CREATOR.getKey(index));
-    String id = getOptionalString(resource, PropertyKey.ID.getKey(index));
+    String creator = ResourceBundleTools.getOptionalString(resource, PropertyKey.CREATOR.getKey(index), null);
+    String id = ResourceBundleTools.getOptionalString(resource, PropertyKey.ID.getKey(index), null);
 
     return new CatalogTexture(id, name, image, width, height, creator);
   }
@@ -434,7 +435,7 @@ public class DefaultTexturesCatalog extends TexturesCatalog {
         }
       }
     }
-    String contentDigest = getOptionalString(resource, contentDigestKey);
+    String contentDigest = ResourceBundleTools.getOptionalString(resource, contentDigestKey, null);
     if (contentDigest != null && contentDigest.length() > 0) {
       try {
         ContentDigestManager.getInstance().setContentDigest(content, Base64.decode(contentDigest));
@@ -443,18 +444,5 @@ public class DefaultTexturesCatalog extends TexturesCatalog {
       }
     }
     return content; 
-  }
-
-  /**
-   * Returns the value of <code>propertyKey</code> in <code>resource</code>, 
-   * or <code>null</code> if the property doesn't exist.
-   */
-  private String getOptionalString(ResourceBundle resource, 
-                                   String propertyKey) {
-    try {
-      return resource.getString(propertyKey);
-    } catch (MissingResourceException ex) {
-      return null;
-    }
   }
 }

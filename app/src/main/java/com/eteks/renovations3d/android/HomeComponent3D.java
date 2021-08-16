@@ -45,6 +45,7 @@ import com.eteks.renovations3d.Tutorial;
 import com.eteks.renovations3d.android.utils.LevelSpinnerControl;
 import com.eteks.renovations3d.android.utils.ToolSpinnerControl;
 import com.eteks.sweethome3d.model.Elevatable;
+import com.eteks.sweethome3d.model.HomeDoorOrWindow;
 import com.eteks.sweethome3d.model.Polyline;
 import com.eteks.sweethome3d.viewcontroller.PlanController;
 import com.google.firebase.components.Component;
@@ -1563,15 +1564,18 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 		view.setFieldOfView(fieldOfView);
 		double frontClipDistance = 2.5f;
-		// It's recommended to keep ratio between back and front clip distances under 3000
-		final float frontBackDistanceRatio = 3000;
-		BoundingBox approximateHomeBounds = getApproximateHomeBounds();
-		// If camera is out of home bounds, adjust the front clip distance to the distance to home bounds
-		if (approximateHomeBounds != null
-				&& !approximateHomeBounds.intersect(new Point3d(camera.getX(), camera.getY(), camera.getZ()))) {
-			float distanceToClosestBoxSide = getDistanceToBox(camera.getX(), camera.getY(), camera.getZ(), approximateHomeBounds);
-			if (!Float.isNaN(distanceToClosestBoxSide)) {
-				frontClipDistance = Math.max(frontClipDistance, 0.1f * distanceToClosestBoxSide);
+    	float frontBackDistanceRatio = 500000; // More than 10 km for a 2.5 cm front distance
+		if (Component3DManager.getInstance().getDepthSize() <= 16) {
+		  // It's recommended to keep ratio between back and front clip distances under 3000 for a 16 bit Z-buffer
+		  frontBackDistanceRatio = 3000;
+			BoundingBox approximateHomeBounds = getApproximateHomeBounds();
+			// If camera is out of home bounds, adjust the front clip distance to the distance to home bounds
+			if (approximateHomeBounds != null
+					&& !approximateHomeBounds.intersect(new Point3d(camera.getX(), camera.getY(), camera.getZ()))) {
+				float distanceToClosestBoxSide = getDistanceToBox(camera.getX(), camera.getY(), camera.getZ(), approximateHomeBounds);
+				if (!Float.isNaN(distanceToClosestBoxSide)) {
+					frontClipDistance = Math.max(frontClipDistance, 0.1f * distanceToClosestBoxSide);
+				}
 			}
 		}
 		if (camera.getZ() > 0 && width != 0 && height != 0) {
@@ -1957,7 +1961,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				}
 			});
 		}
-
 	}
 
 
@@ -2140,7 +2143,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	/**
-	 * Returns the closest {@link Selectable} object at screen coordinates (x, y),
+	 * Returns the closest {@link Selectable} object at component coordinates (x, y),
 	 * or <code>null</code> if not found.
 	 */
 	public Selectable getClosestItemAt(int x, int y) {
@@ -2274,7 +2277,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		}
 
 		final Background background = new Background(backgroundBranch);
-    updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, this.home, waitForLoading);
+    	updateBackgroundColorAndTexture(skyBackgroundAppearance, groundBackgroundAppearance, this.home, waitForLoading);
 		background.setImageScaleMode(Background.SCALE_FIT_ALL);
 		//PJPJ used an isInfinite version
 		background.setApplicationBounds(new BoundingSphere(new Point3d(0,0,0), Double.POSITIVE_INFINITY));
@@ -2646,6 +2649,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					}
 				}
 			};
+
 			this.home.getEnvironment().addPropertyChangeListener(
 					HomeEnvironment.Property.SUBPART_SIZE_UNDER_LIGHT,this.subpartSizeListener);
 			this.subpartSizeListener.propertyChange(null);
@@ -2774,7 +2778,6 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		//  Allow group to have new children
 		homeGroup.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		homeGroup.setCapability(Group.ALLOW_CHILDREN_EXTEND);
-
 		homeGroup.setPickable(true);
 		return homeGroup;
 	}
@@ -2785,32 +2788,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	 */
 	private void addLevelListener(final Group group) {
 		this.levelChangeListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent ev) {
-        if (Level.Property.VISIBLE.name().equals(ev.getPropertyName())
+		  public void propertyChange(PropertyChangeEvent ev) {
+        	if (Level.Property.VISIBLE.name().equals(ev.getPropertyName())
 						|| Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
-          Set<Selectable> objects = homeObjects.keySet();
-          ArrayList<Selectable> updatedItems = new ArrayList<Selectable>(objects.size());
-          for (Selectable item : objects) {
-            if (item instanceof Room // 3D rooms depend on rooms at other levels
+          	Set<Selectable> objects = homeObjects.keySet();
+          	ArrayList<Selectable> updatedItems = new ArrayList<Selectable>(objects.size());
+          	for (Selectable item : objects) {
+            	if (item instanceof Room // 3D rooms depend on rooms at other levels
                   || !(item instanceof Elevatable)
                   || ((Elevatable)item).isAtLevel((Level)ev.getSource())) {
-                updatedItems.add(item);
-            }
-          }
-          updateObjects(updatedItems);
-          groundChangeListener.propertyChange(null);
-        } else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())) {
+                	updatedItems.add(item);
+            	}
+          	}
+          	updateObjects(updatedItems);
+          	groundChangeListener.propertyChange(null);
+        	} else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())) {
 				updateObjects(homeObjects.keySet());
 				groundChangeListener.propertyChange(null);
-        } else if (Level.Property.BACKGROUND_IMAGE.name().equals(ev.getPropertyName())) {
-          groundChangeListener.propertyChange(null);
-				} else if (Level.Property.FLOOR_THICKNESS.name().equals(ev.getPropertyName())) {
-					updateObjects(home.getWalls());
-					updateObjects(home.getRooms());
-				} else if (Level.Property.HEIGHT.name().equals(ev.getPropertyName())) {
-					updateObjects(home.getRooms());
-				}
-			}
+        	} else if (Level.Property.BACKGROUND_IMAGE.name().equals(ev.getPropertyName())) {
+          		groundChangeListener.propertyChange(null);
+			} else if (Level.Property.FLOOR_THICKNESS.name().equals(ev.getPropertyName())) {
+        		updateObjects(home.getWalls());
+        		updateObjects(home.getRooms());
+        	} else if (Level.Property.HEIGHT.name().equals(ev.getPropertyName())) {
+        		updateObjects(home.getRooms());
+        	}
+		  }
 		};
 		for (Level level : this.home.getLevels()) {
 			level.addPropertyChangeListener(this.levelChangeListener);
@@ -2934,19 +2937,32 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 				if (HomePieceOfFurniture.Property.X.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.Y.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.ANGLE.name().equals(propertyName)
-            || HomePieceOfFurniture.Property.ROLL.name().equals(propertyName)
-            || HomePieceOfFurniture.Property.PITCH.name().equals(propertyName)
+            			|| HomePieceOfFurniture.Property.ROLL.name().equals(propertyName)
+            			|| HomePieceOfFurniture.Property.PITCH.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.WIDTH.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.DEPTH.name().equals(propertyName)) {
 					updatePieceOfFurnitureGeometry(updatedPiece, propertyName, (Float)ev.getOldValue());
 					updateObjectsLightScope(Arrays.asList(new HomePieceOfFurniture[]{updatedPiece}));
 				} else if (HomePieceOfFurniture.Property.HEIGHT.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.ELEVATION.name().equals(propertyName)
+              			|| HomePieceOfFurniture.Property.MODEL.name().equals(propertyName)
+              			|| HomePieceOfFurniture.Property.MODEL_ROTATION.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MIRRORED.name().equals(propertyName)
+              			|| HomePieceOfFurniture.Property.BACK_FACE_SHOWN.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_TRANSFORMATIONS.name().equals(propertyName)
+             			|| HomePieceOfFurniture.Property.STAIRCASE_CUT_OUT_SHAPE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.VISIBLE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.LEVEL.name().equals(propertyName)) {
-          updatePieceOfFurnitureGeometry(updatedPiece, null, null);
+          			updatePieceOfFurnitureGeometry(updatedPiece, null, null);
+				  } else if (HomeDoorOrWindow.Property.CUT_OUT_SHAPE.name().equals(propertyName)
+					  || HomeDoorOrWindow.Property.WALL_CUT_OUT_ON_BOTH_SIDES.name().equals(propertyName)
+					  || HomeDoorOrWindow.Property.WALL_WIDTH.name().equals(propertyName)
+					  || HomeDoorOrWindow.Property.WALL_LEFT.name().equals(propertyName)
+					  || HomeDoorOrWindow.Property.WALL_HEIGHT.name().equals(propertyName)
+					  || HomeDoorOrWindow.Property.WALL_TOP.name().equals(propertyName)) {
+					if (containsDoorsAndWindows(updatedPiece)) {
+					  updateIntersectingWalls(updatedPiece);
+					}
 				} else if (HomePieceOfFurniture.Property.COLOR.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.TEXTURE.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.MODEL_MATERIALS.name().equals(propertyName)
@@ -3311,6 +3327,10 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	private void deleteObject(Selectable homeObject) {
 		this.homeObjects.get(homeObject).detach();
 		this.homeObjects.remove(homeObject);
+		if (this.homeObjectsToUpdate != null
+			&& this.homeObjectsToUpdate.contains(homeObject)) {
+		  this.homeObjectsToUpdate.remove(homeObject);
+		}
 		clearPrintedImageCache();
 	}
 

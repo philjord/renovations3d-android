@@ -83,6 +83,8 @@ public class URLContent implements Content {
             // Even if cache is actually not used for JAR entries of files, refuse explicitly to use 
             // caches to be able to delete the writable files accessed with jar protocol under Windows, 
             // as suggested in http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6962459 
+            // Under other systems this is also required, otherwise the opened file is not closed on a call
+            // to close() on the returned input stream, leading to resource leak when too many files are opened
             connection.setUseCaches(false);
           }
         } catch (URISyntaxException ex) {
@@ -114,7 +116,7 @@ public class URLContent implements Content {
     }
     try {
       String file = this.url.getFile();
-      return new URL(file.substring(0, file.indexOf('!')));
+      return new URL(file.substring(0, file.indexOf("!/")));
     } catch (MalformedURLException ex) {
       throw new IllegalStateException("Invalid URL base for JAR entry", ex);
     }
@@ -132,7 +134,7 @@ public class URLContent implements Content {
       throw new IllegalStateException("Content isn't a JAR entry");
     }
     String file = this.url.getFile();
-    return file.substring(file.indexOf('!') + 2);
+    return file.substring(file.indexOf("!/") + 2);
   }
   
   /**

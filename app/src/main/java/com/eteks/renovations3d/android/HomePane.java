@@ -170,10 +170,11 @@ public class HomePane implements HomeView {
 		createPluginActions(controller instanceof HomePluginController
 			? ((HomePluginController)controller).getPlugins()
 			: null);
+    initActions(preferences);
 		createTransferHandlers(home, controller);
 		addHomeListener(home);
 		addLevelVisibilityListener(home);
-		addLanguageListener(preferences);
+    addUserPreferencesListener(preferences);
 		addPlanControllerListener(controller.getPlanController());
 		addFocusListener();
 		updateFocusTraversalPolicy();
@@ -181,7 +182,7 @@ public class HomePane implements HomeView {
 		JMenuBar homeMenuBar = createMenuBar(home, preferences, controller);
 		setJMenuBar(homeMenuBar);
 		Container contentPane = getContentPane();
-		contentPane.add(createToolBar(home), BorderLayout.NORTH);
+    contentPane.add(createToolBar(home, preferences), BorderLayout.NORTH);
 		contentPane.add(createMainPane(home, preferences, controller));
 		if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
 		  // Under Mac OS X 10.5, add some dummy labels at left and right borders
@@ -365,10 +366,17 @@ public class HomePane implements HomeView {
       createAction(ActionType.DELETE_SELECTION, preferences, planController, "deleteSelection");
       createAction(ActionType.LOCK_BASE_PLAN, preferences, planController, "lockBasePlan");
       createAction(ActionType.UNLOCK_BASE_PLAN, preferences, planController, "unlockBasePlan");
+      createAction(ActionType.ENABLE_MAGNETISM, preferences, controller, "enableMagnetism");
+      createAction(ActionType.DISABLE_MAGNETISM, preferences, controller, "disableMagnetism");
+      createAction(ActionType.FLIP_HORIZONTALLY, preferences, planController, "flipHorizontally");
+      createAction(ActionType.FLIP_VERTICALLY, preferences, planController, "flipVertically");
       createAction(ActionType.MODIFY_COMPASS, preferences, planController, "modifyCompass");
       createAction(ActionType.MODIFY_WALL, preferences, planController, "modifySelectedWalls");
       createAction(ActionType.MODIFY_ROOM, preferences, planController, "modifySelectedRooms");
-      // ADD_ROOM_POINT and DELETE_ROOM_POINT actions are actually defined later in updateRoomActions  
+      createAction(ActionType.JOIN_WALLS, preferences, planController, "joinSelectedWalls");
+      createAction(ActionType.REVERSE_WALL_DIRECTION, preferences, planController, "reverseSelectedWallsDirection");
+      createAction(ActionType.SPLIT_WALL, preferences, planController, "splitSelectedWall");
+      // ADD_ROOM_POINT and DELETE_ROOM_POINT actions are actually defined later in updateRoomActions
       createAction(ActionType.ADD_ROOM_POINT, preferences);
       createAction(ActionType.DELETE_ROOM_POINT, preferences);
       createAction(ActionType.MODIFY_POLYLINE, preferences, planController, "modifySelectedPolylines");
@@ -381,9 +389,6 @@ public class HomePane implements HomeView {
       toggleBoldAction.putValue(ResourceAction.TOGGLE_BUTTON_MODEL, createBoldStyleToggleModel(home, preferences));
       Action toggleItalicAction = createAction(ActionType.TOGGLE_ITALIC_STYLE, preferences, planController, "toggleItalicStyle");
       toggleItalicAction.putValue(ResourceAction.TOGGLE_BUTTON_MODEL, createItalicStyleToggleModel(home, preferences));
-      createAction(ActionType.JOIN_WALLS, preferences, planController, "joinSelectedWalls");
-      createAction(ActionType.REVERSE_WALL_DIRECTION, preferences, planController, "reverseSelectedWallsDirection");
-      createAction(ActionType.SPLIT_WALL, preferences, planController, "splitSelectedWall");
       createAction(ActionType.IMPORT_BACKGROUND_IMAGE, preferences, controller, "importBackgroundImage");
       createAction(ActionType.MODIFY_BACKGROUND_IMAGE, preferences, controller, "modifyBackgroundImage");
       createAction(ActionType.HIDE_BACKGROUND_IMAGE, preferences, controller, "hideBackgroundImage");
@@ -393,6 +398,8 @@ public class HomePane implements HomeView {
       createAction(ActionType.ADD_LEVEL_AT_SAME_ELEVATION, preferences, planController, "addLevelAtSameElevation");
       createAction(ActionType.MAKE_LEVEL_VIEWABLE, preferences, planController, "toggleSelectedLevelViewability");
       createAction(ActionType.MAKE_LEVEL_UNVIEWABLE, preferences, planController, "toggleSelectedLevelViewability");
+      createAction(ActionType.MAKE_LEVEL_ONLY_VIEWABLE_ONE, preferences, planController, "setSelectedLevelOnlyViewable");
+      createAction(ActionType.MAKE_ALL_LEVELS_VIEWABLE, preferences, planController, "setAllLevelsViewable");
       createAction(ActionType.MODIFY_LEVEL, preferences, planController, "modifySelectedLevel");
       createAction(ActionType.DELETE_LEVEL, preferences, planController, "deleteSelectedLevel");
       createAction(ActionType.ZOOM_IN, preferences, controller, "zoomIn");
@@ -402,6 +409,10 @@ public class HomePane implements HomeView {
     */
    /*
    	  if (homeController3D.getView() != null) {
+      // SELECT_OBJECT and TOGGLE_SELECTION actions are actually defined later in updatePickingActions
+      createAction(ActionType.SELECT_OBJECT, preferences);
+      createAction(ActionType.TOGGLE_SELECTION, preferences);
+
       ButtonGroup viewGroup = new ButtonGroup();
       createToggleAction(ActionType.VIEW_FROM_TOP, home.getCamera() == home.getTopCamera(), viewGroup, 
           preferences, homeController3D, "viewFromTop");
@@ -410,20 +421,8 @@ public class HomePane implements HomeView {
       createAction(ActionType.MODIFY_OBSERVER, preferences, planController, "modifyObserverCamera");
       createAction(ActionType.STORE_POINT_OF_VIEW, preferences, controller, "storeCamera");
       createAction(ActionType.DELETE_POINTS_OF_VIEW, preferences, controller, "deleteCameras");
-      getActionMap().put(ActionType.DETACH_3D_VIEW, 
-          new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, ActionType.DETACH_3D_VIEW.name()) {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-              controller.detachView(homeController3D.getView());
-            }
-          });
-      getActionMap().put(ActionType.ATTACH_3D_VIEW, 
-          new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, ActionType.ATTACH_3D_VIEW.name()) {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-              controller.attachView(homeController3D.getView());
-            }
-          });
+      createAction(ActionType.DETACH_3D_VIEW, preferences, controller, "detachView", controller.getHomeController3D().getView());
+      createAction(ActionType.ATTACH_3D_VIEW, preferences, controller, "attachView", controller.getHomeController3D().getView());
 
       ButtonGroup displayLevelGroup = new ButtonGroup();
       boolean allLevelsVisible = home.getEnvironment().isAllLevelsVisible();
@@ -619,32 +618,40 @@ public class HomePane implements HomeView {
 
   /**
    * Adds a property change listener to <code>preferences</code> to update
-   * actions when preferred language changes.
+   * actions when some preferences change.
    */
-	private void addLanguageListener(UserPreferences preferences) {
-		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
-				new LanguageChangeListener(this));
+	private void addUserPreferencesListener(UserPreferences preferences) {
+		UserPreferencesChangeListener listener = new UserPreferencesChangeListener(this);
+		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE, listener);
+		preferences.addPropertyChangeListener(UserPreferences.Property.CURRENCY, listener);
+		preferences.addPropertyChangeListener(UserPreferences.Property.VALUE_ADDED_TAX_ENABLED, listener);
 	}
 
 	/**
 	 * Preferences property listener bound to this component with a weak reference to avoid
 	 * strong link between preferences and this component.
 	 */
-	private static class LanguageChangeListener implements PropertyChangeListener {
+    private static class UserPreferencesChangeListener implements PropertyChangeListener {
 		private WeakReference<HomePane> homePane;
 
-		public LanguageChangeListener(HomePane homePane) {
+        public UserPreferencesChangeListener(HomePane homePane) {
 			this.homePane = new WeakReference<HomePane>(homePane);
 		}
 
 		public void propertyChange(PropertyChangeEvent ev) {
 			// If home pane was garbage collected, remove this listener from preferences
 			HomePane homePane = this.homePane.get();
+      		UserPreferences preferences = (UserPreferences)ev.getSource();
+      		UserPreferences.Property property = UserPreferences.Property.valueOf(ev.getPropertyName());
 			if (homePane == null) {
 				((UserPreferences) ev.getSource()).removePropertyChangeListener(
 						UserPreferences.Property.LANGUAGE, this);
 			} else {
-				SwingTools.updateSwingResourceLanguage((UserPreferences) ev.getSource());
+				switch (property) {
+					case LANGUAGE :
+					SwingTools.updateSwingResourceLanguage((UserPreferences) ev.getSource());
+					break;
+				}
 			}
 		}
 	}
@@ -803,7 +810,8 @@ public class HomePane implements HomeView {
       
       @Override
       public void keyTyped(KeyEvent ev) {
-        if (ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+        char typedKey = ev.getKeyChar();
+        if (typedKey != KeyEvent.CHAR_UNDEFINED) {
         // This listener manages accelerator keys that may require the use of shift key
         // depending on keyboard layout (like + - or ?) 
         ActionMap actionMap = getActionMap();
@@ -822,7 +830,7 @@ public class HomePane implements HomeView {
         for (Action specialKeyAction : specialKeyActions) {
           KeyStroke actionKeyStroke = (KeyStroke)specialKeyAction.getValue(Action.ACCELERATOR_KEY);
           if (actionKeyStroke != null
-              && ev.getKeyChar() == actionKeyStroke.getKeyChar()
+              && typedKey == actionKeyStroke.getKeyChar()
               && (ev.getModifiers() & modifiersMask) == (actionKeyStroke.getModifiers() & modifiersMask)
               && specialKeyAction.isEnabled()) {
             specialKeyAction.actionPerformed(new ActionEvent(HomePane.this, 
@@ -888,8 +896,8 @@ public class HomePane implements HomeView {
     
     Action openRecentHomeAction = this.menuActionMap.get(MenuActionType.OPEN_RECENT_HOME_MENU);
     if (openRecentHomeAction.getValue(Action.NAME) != null) {
-      final JMenu openRecentHomeMenu = 
-          new JMenu(openRecentHomeAction);
+      final JMenu openRecentHomeMenu = new JMenu(
+          new ResourceAction.MenuItemAction(openRecentHomeAction));
       addActionToMenu(ActionType.DELETE_RECENT_HOMES, openRecentHomeMenu);
       openRecentHomeMenu.addMenuListener(new MenuListener() {
           public void menuSelected(MenuEvent ev) {
@@ -914,11 +922,14 @@ public class HomePane implements HomeView {
     addActionToMenu(ActionType.PAGE_SETUP, fileMenu);
     addActionToMenu(ActionType.PRINT_PREVIEW, fileMenu);
     addActionToMenu(ActionType.PRINT, fileMenu);
-    // Don't add PRINT_TO_PDF, PREFERENCES and EXIT menu items under Mac OS X, 
+    // Don't add PRINT_TO_PDF, PREFERENCES and EXIT menu items under Mac OS X when screen menu bar is used,
     // because PREFERENCES and EXIT items are displayed in application menu
     // and PRINT_TO_PDF is available in standard Mac OS X Print dialog
     if (!OperatingSystem.isMacOSX()) {
       addActionToMenu(ActionType.PRINT_TO_PDF, fileMenu);
+    }
+    if (!OperatingSystem.isMacOSX()
+        || !Boolean.getBoolean("apple.laf.useScreenMenuBar")) {
       fileMenu.addSeparator();
       addActionToMenu(ActionType.PREFERENCES, fileMenu);
     }
@@ -983,6 +994,8 @@ public class HomePane implements HomeView {
     if (lockUnlockBasePlanMenuItem != null) {
       planMenu.add(lockUnlockBasePlanMenuItem);
     }
+    addActionToMenu(ActionType.FLIP_HORIZONTALLY, planMenu);
+    addActionToMenu(ActionType.FLIP_VERTICALLY, planMenu);
     addActionToMenu(ActionType.MODIFY_COMPASS, planMenu);
     addActionToMenu(ActionType.MODIFY_WALL, planMenu);
     addActionToMenu(ActionType.JOIN_WALLS, planMenu);
@@ -1009,6 +1022,8 @@ public class HomePane implements HomeView {
     if (makeLevelUnviewableViewableMenuItem != null) {
       planMenu.add(makeLevelUnviewableViewableMenuItem);
     }
+    addActionToMenu(ActionType.MAKE_LEVEL_ONLY_VIEWABLE_ONE, planMenu);
+    addActionToMenu(ActionType.MAKE_ALL_LEVELS_VIEWABLE, planMenu);
     addActionToMenu(ActionType.MODIFY_LEVEL, planMenu);
     addActionToMenu(ActionType.DELETE_LEVEL, planMenu);
     planMenu.addSeparator();
@@ -1047,8 +1062,7 @@ public class HomePane implements HomeView {
     JMenu helpMenu = new JMenu(this.menuActionMap.get(MenuActionType.HELP_MENU));
     addActionToMenu(ActionType.HELP, helpMenu);      
     if (!OperatingSystem.isMacOSX()
-        || !Boolean.getBoolean("apple.laf.useScreenMenuBar")
-        || OperatingSystem.isJavaVersionGreaterOrEqual("1.9")) {
+        || !Boolean.getBoolean("apple.laf.useScreenMenuBar")) {
       addActionToMenu(ActionType.ABOUT, helpMenu);      
     }
     
@@ -1111,11 +1125,11 @@ public class HomePane implements HomeView {
 	 * Adds the given action to <code>menu</code>.
 	 */
 /*  private void addActionToMenu(ActionType actionType,
-                               boolean tooltippopup,
+                               boolean popup,
                                JMenu menu) {
     Action action = getActionMap().get(actionType);
     if (action != null && action.getValue(Action.NAME) != null) {
-      menu.add(tooltippopup
+      menu.add(popup
           ? new ResourceAction.PopupMenuItemAction(action)
           : new ResourceAction.MenuItemAction(action));
     }
@@ -1134,12 +1148,12 @@ public class HomePane implements HomeView {
 	 * Adds to <code>menu</code> the menu item matching the given <code>actionType</code>.
 	 */
 /*  private void addToggleActionToMenu(ActionType actionType,
-                                     boolean tooltippopup,
+                                     boolean popup,
                                      boolean radioButton,
                                      JMenu menu) {
     Action action = getActionMap().get(actionType);
     if (action != null && action.getValue(Action.NAME) != null) {
-      menu.add(createToggleMenuItem(action, tooltippopup, radioButton));
+      menu.add(createToggleMenuItem(action, popup, radioButton));
     }
   }
 
@@ -1147,7 +1161,7 @@ public class HomePane implements HomeView {
 	 * Creates a menu item for a toggle action.
 	 */
 /*  private JMenuItem createToggleMenuItem(Action action,
-                                         boolean tooltippopup,
+                                         boolean popup,
                                          boolean radioButton) {
     JMenuItem menuItem;
     if (radioButton) {
@@ -1158,7 +1172,7 @@ public class HomePane implements HomeView {
     // Configure model
     menuItem.setModel((JToggleButton.ToggleButtonModel)action.getValue(ResourceAction.TOGGLE_BUTTON_MODEL));
     // Configure menu item action after setting its model to avoid losing its mnemonic
-    menuItem.setAction(tooltippopup
+    menuItem.setAction(popup
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action));
     return menuItem;
@@ -1197,7 +1211,7 @@ public class HomePane implements HomeView {
       Component child = component.getComponent(i);
       if (child instanceof JSeparator
           && (i == component.getComponentCount() - 1
-              || component.getComponent(i - 1) instanceof JSeparator)) {
+              || i > 0 && component.getComponent(i - 1) instanceof JSeparator)) {
         component.remove(i);
       } else if (child instanceof JMenu) {
         removeUselessSeparatorsAndEmptyMenus(((JMenu)child).getPopupMenu());
@@ -1221,19 +1235,19 @@ public class HomePane implements HomeView {
 	 */
 /*  private JMenu createAlignOrDistributeMenu(final Home home,
                                             final UserPreferences preferences,
-                                            boolean tooltippopup) {
+                                            boolean popup) {
     JMenu alignOrDistributeMenu = new JMenu(this.menuActionMap.get(MenuActionType.ALIGN_OR_DISTRIBUTE_MENU));    
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_TOP, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BOTTOM, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_FRONT_SIDE, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BACK_SIDE, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT_SIDE, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT_SIDE, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.ALIGN_FURNITURE_SIDE_BY_SIDE, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_HORIZONTALLY, tooltippopup, alignOrDistributeMenu);
-    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_VERTICALLY, tooltippopup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_TOP, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BOTTOM, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_FRONT_SIDE, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_BACK_SIDE, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_LEFT_SIDE, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_ON_RIGHT_SIDE, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.ALIGN_FURNITURE_SIDE_BY_SIDE, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_HORIZONTALLY, popup, alignOrDistributeMenu);
+    addActionToMenu(ActionType.DISTRIBUTE_FURNITURE_VERTICALLY, popup, alignOrDistributeMenu);
     return alignOrDistributeMenu;
   }
 
@@ -1242,15 +1256,13 @@ public class HomePane implements HomeView {
 	 */
  /* private JMenu createFurnitureSortMenu(final Home home, UserPreferences preferences) {
     // Create Furniture Sort submenu
-    JMenu sortMenu = new JMenu(this.menuActionMap.get(MenuActionType.SORT_HOME_FURNITURE_MENU));
+    JMenu sortMenu = new JMenu(new ResourceAction.MenuItemAction(
+        this.menuActionMap.get(MenuActionType.SORT_HOME_FURNITURE_MENU)));
     // Map sort furniture properties to sort actions
     Map<HomePieceOfFurniture.SortableProperty, Action> sortActions = 
-        new LinkedHashMap<HomePieceOfFurniture.SortableProperty, Action>();     
-    // Use catalog id if currency isn't null
-    if (preferences.getCurrency() != null) {
+        new LinkedHashMap<HomePieceOfFurniture.SortableProperty, Action>();
       addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_CATALOG_ID, 
-          sortActions, HomePieceOfFurniture.SortableProperty.CATALOG_ID); 
-    }
+          sortActions, HomePieceOfFurniture.SortableProperty.CATALOG_ID);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_NAME, 
         sortActions, HomePieceOfFurniture.SortableProperty.NAME); 
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_CREATOR,
@@ -1283,8 +1295,6 @@ public class HomePane implements HomeView {
         sortActions, HomePieceOfFurniture.SortableProperty.DOOR_OR_WINDOW);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_VISIBILITY, 
         sortActions, HomePieceOfFurniture.SortableProperty.VISIBLE);
-    // Use prices if currency isn't null
-    if (preferences.getCurrency() != null) {
       addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_PRICE, 
           sortActions, HomePieceOfFurniture.SortableProperty.PRICE);
       addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_VALUE_ADDED_TAX_PERCENTAGE, 
@@ -1293,13 +1303,13 @@ public class HomePane implements HomeView {
           sortActions, HomePieceOfFurniture.SortableProperty.VALUE_ADDED_TAX);
       addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_PRICE_VALUE_ADDED_TAX_INCLUDED, 
           sortActions, HomePieceOfFurniture.SortableProperty.PRICE_VALUE_ADDED_TAX_INCLUDED);
-    }
+
     // Add radio button menu items to sub menu and make them share the same radio button group
     ButtonGroup sortButtonGroup = new ButtonGroup();
     for (Map.Entry<HomePieceOfFurniture.SortableProperty, Action> entry : sortActions.entrySet()) {
       final HomePieceOfFurniture.SortableProperty furnitureProperty = entry.getKey();
       Action sortAction = entry.getValue();
-      JRadioButtonMenuItem sortMenuItem = new JRadioButtonMenuItem();
+      final JRadioButtonMenuItem sortMenuItem = new JRadioButtonMenuItem();
       // Use a special model for sort radio button menu item that is selected if
       // home is sorted on furnitureProperty criterion
       sortMenuItem.setModel(new JToggleButton.ToggleButtonModel() {
@@ -1308,8 +1318,22 @@ public class HomePane implements HomeView {
             return furnitureProperty == home.getFurnitureSortedProperty();
           }
         }); 
+      sortMenuItem.setVisible(Boolean.TRUE.equals(sortAction.getValue(ResourceAction.VISIBLE)));
       // Configure check box menu item action after setting its model to avoid losing its mnemonic
-      sortMenuItem.setAction(new ResourceAction.MenuItemAction(sortAction));
+      final Action menuItemAction = new ResourceAction.MenuItemAction(sortAction);
+      // Add listener on action visibility to update menu item and furniture sort
+      sortAction.addPropertyChangeListener(new PropertyChangeListener() {
+          public void propertyChange(PropertyChangeEvent ev) {
+            if (ResourceAction.VISIBLE.equals(ev.getPropertyName())) {
+              Boolean visible = (Boolean)ev.getNewValue();
+              sortMenuItem.setVisible(visible);
+              if (furnitureProperty == home.getFurnitureSortedProperty()) {
+                menuItemAction.actionPerformed(null);
+              }
+            }
+          }
+        });
+      sortMenuItem.setAction(menuItemAction);
       sortMenu.add(sortMenuItem);
       sortButtonGroup.add(sortMenuItem);
     }
@@ -1348,16 +1372,13 @@ public class HomePane implements HomeView {
 	 */
 /*  private JMenu createFurnitureDisplayPropertyMenu(final Home home, UserPreferences preferences) {
     // Create Furniture Display property submenu
-    JMenu displayPropertyMenu = new JMenu(
-        this.menuActionMap.get(MenuActionType.DISPLAY_HOME_FURNITURE_PROPERTY_MENU));
+    JMenu displayPropertyMenu = new JMenu(new ResourceAction.MenuItemAction(
+        this.menuActionMap.get(MenuActionType.DISPLAY_HOME_FURNITURE_PROPERTY_MENU)));
     // Map displayProperty furniture properties to displayProperty actions
     Map<HomePieceOfFurniture.SortableProperty, Action> displayPropertyActions = 
-        new LinkedHashMap<HomePieceOfFurniture.SortableProperty, Action>(); 
-    // Use catalog id if currency isn't null
-    if (preferences.getCurrency() != null) {
+        new LinkedHashMap<HomePieceOfFurniture.SortableProperty, Action>();
       addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_CATALOG_ID, 
-          displayPropertyActions, HomePieceOfFurniture.SortableProperty.CATALOG_ID); 
-    }
+          displayPropertyActions, HomePieceOfFurniture.SortableProperty.CATALOG_ID);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_NAME, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.NAME); 
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_CREATOR,
@@ -1390,8 +1411,6 @@ public class HomePane implements HomeView {
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.DOOR_OR_WINDOW);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_VISIBLE, 
         displayPropertyActions, HomePieceOfFurniture.SortableProperty.VISIBLE);
-    // Use prices if currency isn't null
-    if (preferences.getCurrency() != null) {
       addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_PRICE, 
           displayPropertyActions, HomePieceOfFurniture.SortableProperty.PRICE);
       addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_VALUE_ADDED_TAX_PERCENTAGE, 
@@ -1400,12 +1419,12 @@ public class HomePane implements HomeView {
           displayPropertyActions, HomePieceOfFurniture.SortableProperty.VALUE_ADDED_TAX);
       addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_PRICE_VALUE_ADDED_TAX_INCLUDED, 
           displayPropertyActions, HomePieceOfFurniture.SortableProperty.PRICE_VALUE_ADDED_TAX_INCLUDED);
-    }
+
     // Add radio button menu items to sub menu 
     for (Map.Entry<HomePieceOfFurniture.SortableProperty, Action> entry : displayPropertyActions.entrySet()) {
       final HomePieceOfFurniture.SortableProperty furnitureProperty = entry.getKey();
-      Action displayPropertyAction = entry.getValue();
-      JCheckBoxMenuItem displayPropertyMenuItem = new JCheckBoxMenuItem();
+      final Action displayPropertyAction = entry.getValue();
+      final JCheckBoxMenuItem displayPropertyMenuItem = new JCheckBoxMenuItem();
       // Use a special model for displayProperty check box menu item that is selected if
       // home furniture visible properties contains furnitureProperty
       displayPropertyMenuItem.setModel(new JToggleButton.ToggleButtonModel() {
@@ -1414,8 +1433,22 @@ public class HomePane implements HomeView {
             return home.getFurnitureVisibleProperties().contains(furnitureProperty);
           }
         }); 
+      displayPropertyMenuItem.setVisible(Boolean.TRUE.equals(displayPropertyAction.getValue(ResourceAction.VISIBLE)));
       // Configure check box menu item action after setting its model to avoid losing its mnemonic
       displayPropertyMenuItem.setAction(displayPropertyAction);
+      // Add listener on action visibility to update menu item and furniture property visibility
+      displayPropertyAction.addPropertyChangeListener(new PropertyChangeListener() {
+          public void propertyChange(PropertyChangeEvent ev) {
+            if (ResourceAction.VISIBLE.equals(ev.getPropertyName())) {
+              Boolean visible = (Boolean)ev.getNewValue();
+              displayPropertyMenuItem.setVisible(visible);
+              if (!visible
+                  && home.getFurnitureVisibleProperties().contains(furnitureProperty)) {
+                displayPropertyAction.actionPerformed(null);
+              }
+            }
+          }
+        });
       displayPropertyMenu.add(displayPropertyMenuItem);
     }
     return displayPropertyMenu;
@@ -1425,7 +1458,7 @@ public class HomePane implements HomeView {
 	 * Returns Lock / Unlock base plan menu item.
 	 */
 /*  private JMenuItem createLockUnlockBasePlanMenuItem(final Home home,
-                                                       final boolean tooltippopup) {
+                                                       final boolean popup) {
     ActionMap actionMap = getActionMap();
     final Action unlockBasePlanAction = actionMap.get(ActionType.UNLOCK_BASE_PLAN);
     final Action lockBasePlanAction = actionMap.get(ActionType.LOCK_BASE_PLAN);
@@ -1433,14 +1466,14 @@ public class HomePane implements HomeView {
         && unlockBasePlanAction.getValue(Action.NAME) != null
         && lockBasePlanAction.getValue(Action.NAME) != null) {
       final JMenuItem lockUnlockBasePlanMenuItem = new JMenuItem(
-          createLockUnlockBasePlanAction(home, tooltippopup));
+          createLockUnlockBasePlanAction(home, popup));
       // Add a listener to home on basePlanLocked property change to 
       // switch action according to basePlanLocked change
       home.addPropertyChangeListener(Home.Property.BASE_PLAN_LOCKED, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
               lockUnlockBasePlanMenuItem.setAction(
-                  createLockUnlockBasePlanAction(home, tooltippopup));
+                  createLockUnlockBasePlanAction(home, popup));
             }
           });    
       return lockUnlockBasePlanMenuItem;
@@ -1452,12 +1485,12 @@ public class HomePane implements HomeView {
 	/**
 	 * Returns the action active on Lock / Unlock base plan menu item.
 	 */
-/*  private Action createLockUnlockBasePlanAction(Home home, boolean tooltippopup) {
+/*  private Action createLockUnlockBasePlanAction(Home home, boolean popup) {
     ActionType actionType = home.isBasePlanLocked() 
         ? ActionType.UNLOCK_BASE_PLAN
         : ActionType.LOCK_BASE_PLAN;
     Action action = getActionMap().get(actionType);
-    return tooltippopup
+    return popup
         ? new ResourceAction.PopupMenuItemAction(action)
         : new ResourceAction.MenuItemAction(action);
   }
@@ -1496,19 +1529,73 @@ public class HomePane implements HomeView {
     }
   }
 
+  /**
+   * Returns Enable / Disable magnetism button.
+   */
+/*  private JComponent createEnableDisableMagnetismButton(final UserPreferences preferences) {
+    ActionMap actionMap = getActionMap();
+    final Action disableMagnetismAction = actionMap.get(ActionType.DISABLE_MAGNETISM);
+    final Action enableMagnetismAction = actionMap.get(ActionType.ENABLE_MAGNETISM);
+    if (disableMagnetismAction != null
+        && disableMagnetismAction.getValue(Action.NAME) != null
+        && enableMagnetismAction.getValue(Action.NAME) != null) {
+      final JButton enableDisableMagnetismButton = new JButton(
+          new ResourceAction.ToolBarAction(preferences.isMagnetismEnabled()
+              ? disableMagnetismAction
+              : enableMagnetismAction));
+      // Add a listener to preferences on magnestismEnabled property change to
+      // switch action according to magnestismEnabled change
+      preferences.addPropertyChangeListener(UserPreferences.Property.MAGNETISM_ENABLED,
+          new MagnetismChangeListener(this, enableDisableMagnetismButton));
+      return enableDisableMagnetismButton;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Preferences property listener bound to this component with a weak reference to avoid
+   * strong link between preferences and this component.
+   */
+/*  private static class MagnetismChangeListener implements PropertyChangeListener {
+    private WeakReference<HomePane> homePane;
+    private WeakReference<JButton>  enableDisableMagnetismButton;
+
+    public MagnetismChangeListener(HomePane homePane, JButton enableDisableMagnetismButton) {
+      this.enableDisableMagnetismButton = new WeakReference<JButton>(enableDisableMagnetismButton);
+      this.homePane = new WeakReference<HomePane>(homePane);
+    }
+
+    public void propertyChange(PropertyChangeEvent ev) {
+      // If home pane was garbage collected, remove this listener from preferences
+      HomePane homePane = this.homePane.get();
+      UserPreferences preferences = (UserPreferences)ev.getSource();
+      UserPreferences.Property property = UserPreferences.Property.valueOf(ev.getPropertyName());
+      if (homePane == null) {
+        preferences.removePropertyChangeListener(property, this);
+      } else {
+        this.enableDisableMagnetismButton.get().setAction(
+            new ResourceAction.ToolBarAction(preferences.isMagnetismEnabled()
+                ? homePane.getActionMap().get(ActionType.DISABLE_MAGNETISM)
+                : homePane.getActionMap().get(ActionType.ENABLE_MAGNETISM)));
+      }
+    }
+  }
+
 	/**
 	 * Returns text style menu.
 	 */
 /*  private JMenu createTextStyleMenu(final Home home,
                                     final UserPreferences preferences,
-                                    boolean tooltippopup) {
-    JMenu modifyTextStyleMenu = new JMenu(this.menuActionMap.get(MenuActionType.MODIFY_TEXT_STYLE));
+                                    boolean popup) {
+    JMenu modifyTextStyleMenu = new JMenu(new ResourceAction.MenuItemAction(
+        this.menuActionMap.get(MenuActionType.MODIFY_TEXT_STYLE)));
     
-    addActionToMenu(ActionType.INCREASE_TEXT_SIZE, tooltippopup, modifyTextStyleMenu);
-    addActionToMenu(ActionType.DECREASE_TEXT_SIZE, tooltippopup, modifyTextStyleMenu);
+    addActionToMenu(ActionType.INCREASE_TEXT_SIZE, popup, modifyTextStyleMenu);
+    addActionToMenu(ActionType.DECREASE_TEXT_SIZE, popup, modifyTextStyleMenu);
     modifyTextStyleMenu.addSeparator();
-    addToggleActionToMenu(ActionType.TOGGLE_BOLD_STYLE, tooltippopup, false, modifyTextStyleMenu);
-    addToggleActionToMenu(ActionType.TOGGLE_ITALIC_STYLE, tooltippopup, false, modifyTextStyleMenu);
+    addToggleActionToMenu(ActionType.TOGGLE_BOLD_STYLE, popup, false, modifyTextStyleMenu);
+    addToggleActionToMenu(ActionType.TOGGLE_ITALIC_STYLE, popup, false, modifyTextStyleMenu);
     return modifyTextStyleMenu;
   }
 
@@ -1629,7 +1716,7 @@ public class HomePane implements HomeView {
    * Returns Import / Modify background image menu item.
    */
 /*  private JMenuItem createImportModifyBackgroundImageMenuItem(final Home home,
-                                                                final boolean tooltippopup) {
+                                                                final boolean popup) {
     ActionMap actionMap = getActionMap();
     Action importBackgroundImageAction = actionMap.get(ActionType.IMPORT_BACKGROUND_IMAGE);
     Action modifyBackgroundImageAction = actionMap.get(ActionType.MODIFY_BACKGROUND_IMAGE);
@@ -1637,13 +1724,13 @@ public class HomePane implements HomeView {
         && importBackgroundImageAction.getValue(Action.NAME) != null
         && modifyBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem importModifyBackgroundImageMenuItem = new JMenuItem(
-          createImportModifyBackgroundImageAction(home, tooltippopup));
+          createImportModifyBackgroundImageAction(home, popup));
       // Add a listener to home and levels on backgroundImage property change to 
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             importModifyBackgroundImageMenuItem.setAction(
-                createImportModifyBackgroundImageAction(home, tooltippopup));
+                createImportModifyBackgroundImageAction(home, popup));
           }
         });
       return importModifyBackgroundImageMenuItem;
@@ -1685,7 +1772,7 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Import / Modify menu item.
    */
-/*  private Action createImportModifyBackgroundImageAction(Home home, boolean tooltippopup) {
+/*  private Action createImportModifyBackgroundImageAction(Home home, boolean popup) {
     BackgroundImage backgroundImage = home.getSelectedLevel() != null
         ? home.getSelectedLevel().getBackgroundImage()
         : home.getBackgroundImage();
@@ -1693,7 +1780,7 @@ public class HomePane implements HomeView {
         ? ActionType.IMPORT_BACKGROUND_IMAGE
         : ActionType.MODIFY_BACKGROUND_IMAGE;
     Action backgroundImageAction = getActionMap().get(backgroundImageActionType);
-    return tooltippopup
+    return popup
         ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
         : new ResourceAction.MenuItemAction(backgroundImageAction);
   }
@@ -1702,7 +1789,7 @@ public class HomePane implements HomeView {
    * Returns Hide / Show background image menu item.
    */
 /*  private JMenuItem createHideShowBackgroundImageMenuItem(final Home home,
-                                                          final boolean tooltippopup) {
+                                                          final boolean popup) {
     ActionMap actionMap = getActionMap();
     Action hideBackgroundImageAction = actionMap.get(ActionType.HIDE_BACKGROUND_IMAGE);
     Action showBackgroundImageAction = actionMap.get(ActionType.SHOW_BACKGROUND_IMAGE);
@@ -1710,13 +1797,13 @@ public class HomePane implements HomeView {
         && hideBackgroundImageAction.getValue(Action.NAME) != null
         && showBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem hideShowBackgroundImageMenuItem = new JMenuItem(
-          createHideShowBackgroundImageAction(home, tooltippopup));
+          createHideShowBackgroundImageAction(home, popup));
       // Add a listener to home and levels on backgroundImage property change to 
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             hideShowBackgroundImageMenuItem.setAction(
-                createHideShowBackgroundImageAction(home, tooltippopup));
+                createHideShowBackgroundImageAction(home, popup));
           }
         });
       return hideShowBackgroundImageMenuItem;
@@ -1728,7 +1815,7 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Hide / Show menu item.
    */
-/*  private Action createHideShowBackgroundImageAction(Home home, boolean tooltippopup) {
+/*  private Action createHideShowBackgroundImageAction(Home home, boolean popup) {
     BackgroundImage backgroundImage = home.getSelectedLevel() != null
         ? home.getSelectedLevel().getBackgroundImage()
         : home.getBackgroundImage();
@@ -1736,7 +1823,7 @@ public class HomePane implements HomeView {
         ? ActionType.HIDE_BACKGROUND_IMAGE
         : ActionType.SHOW_BACKGROUND_IMAGE;
     Action backgroundImageAction = getActionMap().get(backgroundImageActionType);
-    return tooltippopup
+    return popup
         ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
         : new ResourceAction.MenuItemAction(backgroundImageAction);
   }
@@ -1745,7 +1832,7 @@ public class HomePane implements HomeView {
    * Returns Make level unviewable / viewable menu item.
    */
 /*  private JMenuItem createMakeLevelUnviewableViewableMenuItem(final Home home,
-                                                              final boolean tooltippopup) {
+                                                              final boolean popup) {
     ActionMap actionMap = getActionMap();
     Action makeLevelUnviewableAction = actionMap.get(ActionType.MAKE_LEVEL_UNVIEWABLE);
     Action makeLevelViewableAction = actionMap.get(ActionType.MAKE_LEVEL_VIEWABLE);
@@ -1753,12 +1840,12 @@ public class HomePane implements HomeView {
         && makeLevelUnviewableAction.getValue(Action.NAME) != null
         && makeLevelViewableAction.getValue(Action.NAME) != null) {
       final JMenuItem makeLevelUnviewableViewableMenuItem = new JMenuItem(
-          createMakeLevelUnviewableViewableAction(home, tooltippopup));
+          createMakeLevelUnviewableViewableAction(home, popup));
       // Add a listener to home and selected level on viewable property change to switch action
       final PropertyChangeListener viewabilityChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             makeLevelUnviewableViewableMenuItem.setAction(
-                createMakeLevelUnviewableViewableAction(home, tooltippopup));
+                createMakeLevelUnviewableViewableAction(home, popup));
           }
         };
       Level selectedLevel = home.getSelectedLevel();
@@ -1769,7 +1856,7 @@ public class HomePane implements HomeView {
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
               makeLevelUnviewableViewableMenuItem.setAction(
-                  createMakeLevelUnviewableViewableAction(home, tooltippopup));
+                  createMakeLevelUnviewableViewableAction(home, popup));
               if (ev.getOldValue() != null) {
                 ((Level)ev.getOldValue()).removePropertyChangeListener(viewabilityChangeListener);
               }
@@ -1787,13 +1874,13 @@ public class HomePane implements HomeView {
   /**
    * Returns the action active on Make level unviewable / viewable  menu item.
    */
-/*  private Action createMakeLevelUnviewableViewableAction(Home home, boolean tooltippopup) {
+/*  private Action createMakeLevelUnviewableViewableAction(Home home, boolean popup) {
     Level selectedLevel = home.getSelectedLevel();
     ActionType levelViewabilityActionType = selectedLevel == null || selectedLevel.isViewable()        
         ? ActionType.MAKE_LEVEL_UNVIEWABLE
         : ActionType.MAKE_LEVEL_VIEWABLE;
     Action levelViewabilityAction = getActionMap().get(levelViewabilityActionType);
-    return tooltippopup
+    return popup
         ? new ResourceAction.PopupMenuItemAction(levelViewabilityAction)
         : new ResourceAction.MenuItemAction(levelViewabilityAction);
   }
@@ -1806,7 +1893,8 @@ public class HomePane implements HomeView {
                                           final HomeController controller) {
     Action goToPointOfViewAction = this.menuActionMap.get(MenuActionType.GO_TO_POINT_OF_VIEW);
     if (goToPointOfViewAction.getValue(Action.NAME) != null) {
-      final JMenu goToPointOfViewMenu = new JMenu(goToPointOfViewAction);
+      final JMenu goToPointOfViewMenu = new JMenu(
+          new ResourceAction.MenuItemAction(goToPointOfViewAction));
       updateGoToPointOfViewMenu(goToPointOfViewMenu, home, controller);
       home.addPropertyChangeListener(Home.Property.STORED_CAMERAS, 
           new PropertyChangeListener() {
@@ -1830,7 +1918,7 @@ public class HomePane implements HomeView {
     goToPointOfViewMenu.removeAll();
     if (storedCameras.isEmpty()) {
       goToPointOfViewMenu.setEnabled(false);
-      goToPointOfViewMenu.add(new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "NoStoredPointOfView", false));
+      goToPointOfViewMenu.add(new ResourceAction(preferences, HomePane.class, "NoStoredPointOfView", false));
     } else {
       goToPointOfViewMenu.setEnabled(true);
       for (final Camera camera : storedCameras) {
@@ -1848,7 +1936,7 @@ public class HomePane implements HomeView {
    * Returns Attach / Detach menu item for the 3D view.
    */
 /*  private JMenuItem createAttachDetach3DViewMenuItem(final HomeController controller,
-                                                     final boolean tooltippopup) {
+                                                     final boolean popup) {
     ActionMap actionMap = getActionMap();
     Action display3DViewInSeparateWindowAction = actionMap.get(ActionType.DETACH_3D_VIEW);
     Action display3DViewInMainWindowAction = actionMap.get(ActionType.ATTACH_3D_VIEW);
@@ -1856,13 +1944,13 @@ public class HomePane implements HomeView {
         && display3DViewInSeparateWindowAction.getValue(Action.NAME) != null
         && display3DViewInMainWindowAction.getValue(Action.NAME) != null) {
       final JMenuItem attachDetach3DViewMenuItem = new JMenuItem(
-          createAttachDetach3DViewAction(controller, tooltippopup));
+          createAttachDetach3DViewAction(controller, popup));
       // Add a listener to 3D view to switch action when its parent changes
       JComponent view3D = (JComponent)controller.getHomeController3D().getView();
       view3D.addAncestorListener(new AncestorListener() {        
           public void ancestorAdded(AncestorEvent ev) {
             attachDetach3DViewMenuItem.setAction(
-                createAttachDetach3DViewAction(controller, tooltippopup));
+                createAttachDetach3DViewAction(controller, popup));
           }
           
           public void ancestorRemoved(AncestorEvent ev) {
@@ -1885,10 +1973,10 @@ public class HomePane implements HomeView {
     ActionType display3DViewActionType = view3DRootPane == this        
         ? ActionType.DETACH_3D_VIEW
         : ActionType.ATTACH_3D_VIEW;
-    Action backgroundImageAction = getActionMap().get(display3DViewActionType);
-    return tooltippopup
-        ? new ResourceAction.PopupMenuItemAction(backgroundImageAction)
-        : new ResourceAction.MenuItemAction(backgroundImageAction);
+    Action attachmentAction = getActionMap().get(display3DViewActionType);
+    return popup
+        ? new ResourceAction.PopupMenuItemAction(attachmentAction)
+        : new ResourceAction.MenuItemAction(attachmentAction);
   }
   
   /**
@@ -1925,9 +2013,12 @@ public class HomePane implements HomeView {
     }
     toolBar.addSeparator();
     
+    int previousCount = toolBar.getComponentCount();
     addActionToToolBar(ActionType.UNDO, toolBar);
     addActionToToolBar(ActionType.REDO, toolBar);
+    if (previousCount != toolBar.getComponentCount()) {
     toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
+    }
     addActionToToolBar(ActionType.CUT, toolBar);
     addActionToToolBar(ActionType.COPY, toolBar);
     addActionToToolBar(ActionType.PASTE, toolBar);
@@ -1936,6 +2027,7 @@ public class HomePane implements HomeView {
     addActionToToolBar(ActionType.ADD_HOME_FURNITURE, toolBar);
     toolBar.addSeparator();
    
+    previousCount = toolBar.getComponentCount();
     addToggleActionToToolBar(ActionType.SELECT, toolBar);
     addToggleActionToToolBar(ActionType.PAN, toolBar);
     addToggleActionToToolBar(ActionType.CREATE_WALLS, toolBar);
@@ -1943,14 +2035,28 @@ public class HomePane implements HomeView {
     addToggleActionToToolBar(ActionType.CREATE_POLYLINES, toolBar);
     addToggleActionToToolBar(ActionType.CREATE_DIMENSION_LINES, toolBar);
     addToggleActionToToolBar(ActionType.CREATE_LABELS, toolBar);
-    toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
-    
+    if (previousCount != toolBar.getComponentCount()) {
+      toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
+      previousCount = toolBar.getComponentCount();
+    }
+
+    if (false && (!OperatingSystem.isMacOSX() || getToolkit().getScreenSize().width >= 1024)) {
+      JComponent enableDisableMagnetismButton = createEnableDisableMagnetismButton(preferences);
+      if (enableDisableMagnetismButton != null) {
+        toolBar.add(enableDisableMagnetismButton);
+    	toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
+        previousCount = toolBar.getComponentCount();
+      }
+    }
+
     addActionToToolBar(ActionType.INCREASE_TEXT_SIZE, toolBar);
     addActionToToolBar(ActionType.DECREASE_TEXT_SIZE, toolBar);
     addToggleActionToToolBar(ActionType.TOGGLE_BOLD_STYLE, toolBar);
     addToggleActionToToolBar(ActionType.TOGGLE_ITALIC_STYLE, toolBar);
-    toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
-    
+    if (previousCount != toolBar.getComponentCount()) {
+		toolBar.add(Box.createRigidArea(new Dimension(2, 2)));
+    }
+
     addActionToToolBar(ActionType.ZOOM_IN, toolBar);
     addActionToToolBar(ActionType.ZOOM_OUT, toolBar);
     toolBar.addSeparator();
@@ -1977,7 +2083,7 @@ public class HomePane implements HomeView {
       Component child = toolBar.getComponent(i);
       if (child instanceof JSeparator
           && (i == toolBar.getComponentCount() - 1
-              || toolBar.getComponent(i - 1) instanceof JSeparator)) {
+              || i > 0 && toolBar.getComponent(i - 1) instanceof JSeparator)) {
         toolBar.remove(i);
       } 
     }
@@ -2035,7 +2141,7 @@ public class HomePane implements HomeView {
    */
 /*  private void addActionToToolBar(Action action,
                                   JToolBar toolBar) {
-    if (OperatingSystem.isMacOSXLeopardOrSuperior() && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
+    if (OperatingSystem.isMacOSXLeopardOrSuperior() && OperatingSystem.isJavaVersionBetween("1.7", "1.7.0_40")) {
       // Add a button with higher insets to ensure the top and bottom of segmented buttons are correctly drawn 
       toolBar.add(new JButton(new ResourceAction.ToolBarAction(action)) {
           @Override
@@ -2376,11 +2482,31 @@ public class HomePane implements HomeView {
     } else if (planView3DPane == null) {
       return catalogFurniturePane;
     } else {
-      final JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, catalogFurniturePane, planView3DPane);
+      boolean leftToRightOrientation = ComponentOrientation.getOrientation(Locale.getDefault()).isLeftToRight();
+      final JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+          leftToRightOrientation ? catalogFurniturePane  : planView3DPane,
+          leftToRightOrientation ? planView3DPane  : catalogFurniturePane);
       // Set default divider location
-      mainPane.setDividerLocation(360);
-      configureSplitPane(mainPane, home, 
-          MAIN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY, 0.3, true, controller);
+      mainPane.setDividerLocation((int)((leftToRightOrientation ? 360 : 670) * SwingTools.getResolutionScale()));
+      configureSplitPane(mainPane, home, MAIN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY,
+          leftToRightOrientation ? 0.3 : 0.7,
+          true, controller);
+      mainPane.addPropertyChangeListener("componentOrientation", new PropertyChangeListener () {
+          public void propertyChange(PropertyChangeEvent ev) {
+            if (mainPane.getComponentOrientation().isLeftToRight()) {
+              mainPane.setRightComponent(null); // Needed to avoid twice the same child component
+              mainPane.setLeftComponent(catalogFurniturePane);
+              mainPane.setRightComponent(planView3DPane);
+            } else {
+              mainPane.setRightComponent(null);
+              mainPane.setLeftComponent(planView3DPane);
+              mainPane.setRightComponent(catalogFurniturePane);
+            }
+            if (mainPane.isShowing()) {
+              mainPane.setDividerLocation(mainPane.getWidth() - mainPane.getDividerLocation());
+            }
+          }
+        });
       return mainPane;
     }
   }
@@ -2425,13 +2551,9 @@ public class HomePane implements HomeView {
       splitPane.setDividerLocation(dividerLocation.intValue());
       // Update resize weight once split pane location is set
       splitPane.addAncestorListener(new AncestorListener() {
-        private boolean firstCall = true;
-        
         public void ancestorAdded(AncestorEvent ev) {
-          if (this.firstCall) {
-            this.firstCall = false;
             resizeWeightUpdater.propertyChange(null);
-          }
+            splitPane.removeAncestorListener(this);
         }
   
         public void ancestorRemoved(AncestorEvent ev) {
@@ -2472,7 +2594,7 @@ public class HomePane implements HomeView {
                                                 final HomeController controller) {
     JComponent catalogView = (JComponent)controller.getFurnitureCatalogController().getView();
     if (catalogView != null) {
-      // Create catalog view tooltippopup menu
+      // Create catalog view popup menu
       JPopupMenu catalogViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.COPY, catalogViewPopup);
       catalogViewPopup.addSeparator();
@@ -2496,14 +2618,7 @@ public class HomePane implements HomeView {
     // Configure furniture view
     JComponent furnitureView = (JComponent)controller.getFurnitureController().getView();
     if (furnitureView != null) {
-      // Set default traversal keys of furniture view
-      KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-      furnitureView.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-          focusManager.getDefaultFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
-      furnitureView.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-          focusManager.getDefaultFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
-  
-      // Create furniture view tooltippopup menu
+      // Create furniture view popup menu
       JPopupMenu furnitureViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.UNDO, furnitureViewPopup);
       addActionToPopupMenu(ActionType.REDO, furnitureViewPopup);
@@ -2531,6 +2646,13 @@ public class HomePane implements HomeView {
       furnitureView.setComponentPopupMenu(furnitureViewPopup);
   
       if (furnitureView instanceof Scrollable) {
+        // Set default traversal keys of furniture view
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        furnitureView.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+            focusManager.getDefaultFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        furnitureView.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+            focusManager.getDefaultFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
+
         JScrollPane furnitureScrollPane = SwingTools.createScrollPane(furnitureView);
         // Add a mouse listener that gives focus to furniture view when
         // user clicks in its viewport (tables don't spread vertically if their row count is too small)
@@ -2553,6 +2675,15 @@ public class HomePane implements HomeView {
           });
         ((JViewport)furnitureView.getParent()).setComponentPopupMenu(furnitureViewPopup);
 
+        if (OperatingSystem.isMacOSXHighSierraOrSuperior()
+            && !OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
+          // Add missing repaint calls on viewport when scroll bar is moved
+          furnitureScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+              public void adjustmentValueChanged(AdjustmentEvent ev) {
+                viewport.repaint();
+              }
+            });
+        }
         furnitureView = furnitureScrollPane;
       }
     }
@@ -2608,8 +2739,9 @@ public class HomePane implements HomeView {
 					splitPaneTopComponent = newFurnitureCatalogView;
 				  }
 				  ((JSplitPane)SwingUtilities.getAncestorOfClass(JSplitPane.class, oldFurnitureCatalogView)).
-					  setTopComponent(splitPaneTopComponent);*/
-					this.furnitureCatalogView = new WeakReference<JComponent>(newFurnitureCatalogView);
+              	  setTopComponent(splitPaneTopComponent);
+          		  newFurnitureCatalogView.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));*/
+				  this.furnitureCatalogView = new WeakReference<JComponent>(newFurnitureCatalogView);
 				}
 			}
 		}
@@ -2622,7 +2754,7 @@ public class HomePane implements HomeView {
                                           final HomeController controller) {
     JComponent planView = (JComponent)controller.getPlanController().getView();
     if (planView != null) {
-      // Create plan view tooltippopup menu
+      // Create plan view popup menu
       JPopupMenu planViewPopup = new JPopupMenu();
       addActionToPopupMenu(ActionType.UNDO, planViewPopup);
       addActionToPopupMenu(ActionType.REDO, planViewPopup);
@@ -2679,6 +2811,8 @@ public class HomePane implements HomeView {
       if (lockUnlockBasePlanMenuItem != null) {
         planViewPopup.add(lockUnlockBasePlanMenuItem);
       }
+      addActionToPopupMenu(ActionType.FLIP_HORIZONTALLY, planViewPopup);
+      addActionToPopupMenu(ActionType.FLIP_VERTICALLY, planViewPopup);
       addActionToPopupMenu(ActionType.MODIFY_FURNITURE, planViewPopup);
       addActionToPopupMenu(ActionType.GROUP_FURNITURE, planViewPopup);
       addActionToPopupMenu(ActionType.UNGROUP_FURNITURE, planViewPopup);
@@ -2712,6 +2846,8 @@ public class HomePane implements HomeView {
       if (makeLevelUnviewableViewableMenuItem != null) {
         planViewPopup.add(makeLevelUnviewableViewableMenuItem);
       }
+      addActionToPopupMenu(ActionType.MAKE_LEVEL_ONLY_VIEWABLE_ONE, planViewPopup);
+      addActionToPopupMenu(ActionType.MAKE_ALL_LEVELS_VIEWABLE, planViewPopup);
       addActionToPopupMenu(ActionType.MODIFY_LEVEL, planViewPopup);
       addActionToPopupMenu(ActionType.DELETE_LEVEL, planViewPopup);
       planViewPopup.addSeparator();
@@ -2721,11 +2857,11 @@ public class HomePane implements HomeView {
       addActionToPopupMenu(ActionType.EXPORT_TO_SVG, planViewPopup);
       SwingTools.hideDisabledMenuItems(planViewPopup);
       if (selectObjectMenu != null) {
-        // Add a tooltippopup listener to manage Select object sub menu before the menu is hidden when empty
+        // Add a popup listener to manage Select object sub menu before the menu is hidden when empty
         addSelectObjectMenuItems(selectObjectMenu, controller.getPlanController(), preferences);
       }
       if (addRoomPointMenuItem != null || deleteRoomPointMenuItem != null) {
-        // Add a tooltippopup listener to manage ADD_ROOM_POINT and DELETE_ROOM_POINT actions according to selection
+        // Add a popup listener to manage ADD_ROOM_POINT and DELETE_ROOM_POINT actions according to selection
         updateRoomActions(addRoomPointMenuItem, deleteRoomPointMenuItem, controller.getPlanController(), preferences);
       }
       planView.setComponentPopupMenu(planViewPopup);
@@ -2786,8 +2922,35 @@ public class HomePane implements HomeView {
           : new Dimension(400, 400));
       view3D.setMinimumSize(new Dimension());
       
-      // Create 3D view tooltippopup menu
+      // Create 3D view popup menu
       JPopupMenu view3DPopup = new JPopupMenu();
+      final JMenuItem selectObjectMenuItem = addActionToPopupMenu(ActionType.SELECT_OBJECT, view3DPopup);
+      if (selectObjectMenuItem != null) {
+        Action toggleSelectionAction = getActionMap().get(ActionType.TOGGLE_SELECTION);
+        if (toggleSelectionAction.getValue(Action.NAME) != null) {
+          // Change "Select object" menu to "Toggle selection" when shift key is pressed
+          final KeyEventDispatcher shiftKeyListener = new KeyEventDispatcher() {
+              public boolean dispatchKeyEvent(KeyEvent ev) {
+                selectObjectMenuItem.setAction(getActionMap().get(ev.isShiftDown()
+                    ? ActionType.TOGGLE_SELECTION
+                    : ActionType.SELECT_OBJECT));
+                return false;
+              }
+            };
+          addAncestorListener(new AncestorListener() {
+              public void ancestorAdded(AncestorEvent event) {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(shiftKeyListener);
+              }
+              public void ancestorRemoved(AncestorEvent event) {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(shiftKeyListener);
+              }
+
+              public void ancestorMoved(AncestorEvent event) {
+              }
+            });
+        }
+      }
+      view3DPopup.addSeparator();
       addToggleActionToPopupMenu(ActionType.VIEW_FROM_TOP, true, view3DPopup);
       addToggleActionToPopupMenu(ActionType.VIEW_FROM_OBSERVER, true, view3DPopup);
       addActionToPopupMenu(ActionType.MODIFY_OBSERVER, view3DPopup);
@@ -2812,6 +2975,10 @@ public class HomePane implements HomeView {
       view3DPopup.addSeparator();
       addActionToPopupMenu(ActionType.EXPORT_TO_OBJ, view3DPopup);
       SwingTools.hideDisabledMenuItems(view3DPopup);
+      if (selectObjectMenuItem != null) {
+        // Add a popup listener to manage SELECT_OBJECT and TOGGLE_SELECTION actions according to picked point
+        updatePickingActions(selectObjectMenuItem, controller.getHomeController3D(), controller.getPlanController(), preferences);
+      }
       view3D.setComponentPopupMenu(view3DPopup);
       
       if (view3D instanceof Scrollable) {
@@ -2916,11 +3083,11 @@ public class HomePane implements HomeView {
     popupMenu.addPopupMenuListener(new PopupMenuListenerWithMouseLocation((JComponent)planController.getView()) {
         {
           // Replace ADD_ROOM_POINT and DELETE_ROOM_POINT actions by ones 
-          // that will use the mouse location when the tooltippopup is displayed
+          // that will use the mouse location when the popup is displayed
           ActionMap actionMap = getActionMap();
           if (addRoomPointMenuItem != null) {
             ResourceAction addRoomPointAction = 
-                new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, ActionType.ADD_ROOM_POINT.name()) {
+                new ResourceAction(preferences, HomePane.class, ActionType.ADD_ROOM_POINT.name()) {
                   @Override
                   public void actionPerformed(ActionEvent ev) {
                     PlanView planView = planController.getView();
@@ -2934,7 +3101,7 @@ public class HomePane implements HomeView {
           }
           if (deleteRoomPointMenuItem != null) {
             ResourceAction deleteRoomPointAction = 
-                new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, ActionType.DELETE_ROOM_POINT.name()) {
+                new ResourceAction(preferences, HomePane.class, ActionType.DELETE_ROOM_POINT.name()) {
                   @Override
                   public void actionPerformed(ActionEvent ev) {
                     PlanView planView = planController.getView();
@@ -2983,7 +3150,7 @@ public class HomePane implements HomeView {
   }
 
   /**
-   * Adds to the menu a tooltippopup listener that will update the menu items able to select
+   * Adds to the menu a popup listener that will update the menu items able to select
    * the selectable items in plan at the location where the menu will be triggered.
    */
 /*  private void addSelectObjectMenuItems(final JMenu           selectObjectMenu,
@@ -3005,7 +3172,7 @@ public class HomePane implements HomeView {
                   new HashMap<Class<? extends Selectable>, SelectableFormat>();            
               formatters.put(Compass.class, new SelectableFormat<Compass>() {
                   public String format(Compass compass) {
-                    return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.compass");
+                    return preferences.getLocalizedString(HomePane.class, "selectObject.compass");
                   }
                 });
               formatters.put(HomePieceOfFurniture.class, new SelectableFormat<HomePieceOfFurniture>() {
@@ -3013,13 +3180,13 @@ public class HomePane implements HomeView {
                     if (piece.getName().length() > 0) {
                       return piece.getName();
                     } else {
-                      return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.furniture");
+                      return preferences.getLocalizedString(HomePane.class, "selectObject.furniture");
                     }
                   }
                 });
               formatters.put(Wall.class, new SelectableFormat<Wall>() {
                   public String format(Wall wall) {
-                    return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.wall", 
+                    return preferences.getLocalizedString(HomePane.class, "selectObject.wall",
                         preferences.getLengthUnit().getFormatWithUnit().format(wall.getLength()));
                   }
                 });
@@ -3031,23 +3198,23 @@ public class HomePane implements HomeView {
                               ? preferences.getLengthUnit().getAreaFormatWithUnit().format(room.getArea())
                               : "");
                     if (room.isFloorVisible() && !room.isCeilingVisible()) {
-                      return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.floor", roomInfo);
+                      return preferences.getLocalizedString(HomePane.class, "selectObject.floor", roomInfo);
                     } else if (!room.isFloorVisible() && room.isCeilingVisible()) {
-                      return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.ceiling", roomInfo);
+                      return preferences.getLocalizedString(HomePane.class, "selectObject.ceiling", roomInfo);
                     } else {
-                      return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.room", roomInfo);
+                      return preferences.getLocalizedString(HomePane.class, "selectObject.room", roomInfo);
                     }
                   }
                 });
               formatters.put(Polyline.class, new SelectableFormat<Polyline>() {
                   public String format(Polyline polyline) {
-                    return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.polyline", 
+                    return preferences.getLocalizedString(HomePane.class, "selectObject.polyline",
                         preferences.getLengthUnit().getFormatWithUnit().format(polyline.getLength()));
                   }
                 });
               formatters.put(DimensionLine.class, new SelectableFormat<DimensionLine>() {
                   public String format(DimensionLine dimensionLine) {
-                    return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.dimensionLine", 
+                    return preferences.getLocalizedString(HomePane.class, "selectObject.dimensionLine",
                         preferences.getLengthUnit().getFormatWithUnit().format(dimensionLine.getLength()));
                   }
                 });
@@ -3056,7 +3223,7 @@ public class HomePane implements HomeView {
                     if (label.getText().length() > 0) {
                       return label.getText();
                     } else {
-                      return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "selectObject.label");
+                      return preferences.getLocalizedString(HomePane.class, "selectObject.label");
                     }
                   }
                 });
@@ -3088,6 +3255,59 @@ public class HomePane implements HomeView {
             selectObjectMenu.removeAll();
           }
    
+          public void popupMenuCanceled(PopupMenuEvent ev) {
+          }
+        });
+  }
+
+  /**
+   * Adds to the menu a listener that updates the actions that allow to
+   * pick and select an object.
+   */
+/*  private void updatePickingActions(final JMenuItem        selectObjectMenuItem,
+                                    final HomeController3D homeController3D,
+                                    final PlanController   planController,
+                                    final UserPreferences  preferences) {
+    JPopupMenu popupMenu = (JPopupMenu)selectObjectMenuItem.getParent();
+    popupMenu.addPopupMenuListener(new PopupMenuListenerWithMouseLocation((JComponent)homeController3D.getView()) {
+        {
+          selectObjectMenuItem.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent ev) {
+                if ((ev.getModifiers() & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) {
+                  planController.toggleItemSelection(selectableItem);
+                } else {
+                  planController.selectItem(selectableItem);
+                  if (selectableItem instanceof Elevatable
+                      && !((Elevatable)selectableItem).isAtLevel(home.getSelectedLevel())) {
+                    planController.setSelectedLevel(((Elevatable)selectableItem).getLevel());
+                  }
+                  planController.getView().makeSelectionVisible();
+                }
+              }
+            });
+        }
+
+        private Selectable selectableItem;
+
+        public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
+          super.popupMenuWillBecomeVisible(ev);
+          Point mouseLocation = getMouseLocation();
+          if (mouseLocation != null
+              && planController != null
+              && !planController.isModificationState()) {
+            this.selectableItem = homeController3D.getView() instanceof HomeComponent3D
+                ? ((HomeComponent3D)homeController3D.getView()).getClosestItemAt(mouseLocation.x, mouseLocation.y)
+                : null;
+          } else {
+            this.selectableItem = null;
+          }
+          getActionMap().get(ActionType.SELECT_OBJECT).setEnabled(this.selectableItem != null);
+          getActionMap().get(ActionType.TOGGLE_SELECTION).setEnabled(this.selectableItem != null);
+        }
+
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent ev) {
+        }
+
           public void popupMenuCanceled(PopupMenuEvent ev) {
           }
         });
@@ -3152,12 +3372,16 @@ public class HomePane implements HomeView {
     class MouseAndFocusListener extends MouseAdapter implements FocusListener {      
       @Override
       public void mousePressed(MouseEvent ev) {
-        setMenusEnabled(menuBar, false);
+        if (SwingUtilities.isLeftMouseButton(ev)) {
+        	setMenusEnabled(menuBar, false);
+      	}
       }
-      
+
       @Override
       public void mouseReleased(MouseEvent ev) {
-        setMenusEnabled(menuBar, true);
+        if (SwingUtilities.isLeftMouseButton(ev)) {
+        	setMenusEnabled(menuBar, true);
+      	}
       }
 
       // Need to take into account focus events because a mouse released event 
@@ -5104,6 +5328,11 @@ public class HomePane implements HomeView {
           public void mouseExited(MouseEvent ev) {
             lastMouseMoveLocation = null;
           }
+
+          @Override
+          public void mouseEntered(MouseEvent ev) {
+            lastMouseMoveLocation = ev.getPoint();
+          }
         });
     }
     
@@ -5112,7 +5341,7 @@ public class HomePane implements HomeView {
     }
     
     public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
-      // Copy last mouse move location in case mouseExited is called while tooltippopup menu is displayed
+      // Copy last mouse move location in case mouseExited is called while popup menu is displayed
       this.mouseLocation = this.lastMouseMoveLocation;      
     }
   }

@@ -1297,7 +1297,7 @@ public class Max3DSLoader extends LoaderBase implements Loader {
 						}
 					} else if ("jar".equals(baseUrl.getProtocol())) {
 						String file = baseUrl.getFile();
-						int entryIndex = file.indexOf('!') + 2;
+            			int entryIndex = file.indexOf("!/") + 2;
 						URL zipUrl = new URL(file.substring(0, entryIndex - 2));
 						// Seek map name in the same sub folder as base URL
 						String mapNamePath = file.substring(entryIndex, file.lastIndexOf('/') + 1) + mapName;
@@ -1865,4 +1865,3 @@ public class Max3DSLoader extends LoaderBase implements Loader {
 		}
 	}
 }
-

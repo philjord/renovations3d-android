@@ -293,9 +293,45 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			public void location(final File downloadsLocation) {
 
 				String fileName = importInfo.libraryName;
-				if (!(new File(downloadsLocation, fileName).exists())) {
-					menuItem.setEnabled(false);
+				menuItem.setEnabled(false);
 
+
+				// now present the notice about length and the license info
+				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setPositiveButton(close, null);
+
+				String libraryDownLoadNotice = getActivity().getString(R.string.libraryDownLoadNotice);
+				String license = "";
+				if (importInfo.license != null) {
+					try {
+						AssetManager am = getActivity().getAssets();
+						InputStream is = am.open("licenses/" + importInfo.license);
+						BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+						String line;
+						while ((line = reader.readLine()) != null) {
+							license += line + System.getProperty("line.separator");
+						}
+						reader.close();
+					}
+					catch (IOException ioe) {
+						ioe.printStackTrace();
+					}
+				}
+
+				boolean alreadyExists = (new File(downloadsLocation, fileName).exists());
+
+				ScrollView scrollView = new ScrollView(getActivity());
+				TextView textView = new TextView(getActivity());
+				textView.setPadding(10, 10, 10, 10);
+				textView.setText((!alreadyExists ? libraryDownLoadNotice + "\n\n" : "") + license);
+				scrollView.addView(textView);
+				builder.setView(scrollView);
+				AlertDialog dialog = builder.create();
+				dialog.show();
+
+				if (!alreadyExists) {
 					String url = importInfo.url;
 
 					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -303,7 +339,10 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					request.setTitle(fileName);
 					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-					request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
+					// oddly see https://stackoverflow.com/questions/16749845/android-download-manager-setdestinationinexternalfilesdir
+					// request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
+
+					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
 					// get download service and enqueue file
 					DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
@@ -312,40 +351,9 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 					getActivity().registerReceiver(((Renovations3DActivity) getActivity()).onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-					// now present the notice about length and the license info
-					final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setPositiveButton(close, null);
-
-					String libraryDownLoadNotice = getActivity().getString(R.string.libraryDownLoadNotice);
-					String license = "";
-					if (importInfo.license != null) {
-						try {
-							AssetManager am = getActivity().getAssets();
-							InputStream is = am.open("licenses/" + importInfo.license);
-							BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-							String line;
-							while ((line = reader.readLine()) != null) {
-								license += line + System.getProperty("line.separator");
-							}
-							reader.close();
-						}
-						catch (IOException ioe) {
-							ioe.printStackTrace();
-						}
-					}
-
-					ScrollView scrollView = new ScrollView(getActivity());
-					TextView textView = new TextView(getActivity());
-					textView.setPadding(10, 10, 10, 10);
-					textView.setText(libraryDownLoadNotice + "\n\n" + license);
-					scrollView.addView(textView);
-					builder.setView(scrollView);
-					AlertDialog dialog = builder.create();
-					dialog.show();
 				} else {
 					//If it already exists in the downloads folder, just import it
+
 					Thread t3 = new Thread() {
 						public void run() {
 							HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
@@ -354,11 +362,22 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 								File importFile = new File(downloadsLocation, fileName);
 
 								if (importInfo.type == ImportType.FURNITURE) {
-									controller.importFurnitureLibrary(importFile.getAbsolutePath());
+									//controller.importFurnitureLibrary(importFile.getAbsolutePath());
+									((Renovations3DActivity) getActivity()).loadFile(importFile);
 									Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", importFile.getName());
 								}
 								else if (importInfo.type == ImportType.TEXTURE) {
-									controller.importTexturesLibrary(importFile.getAbsolutePath());
+									//controller.importTexturesLibrary(importFile.getAbsolutePath());
+									// this guy records the fact the library is loaded
+									//this.preferences.addTexturesLibrary(texturesLibraryName);
+
+
+									// but this calls the one above
+									//getHomeController().importTexturesLibrary(extractedFile.getAbsolutePath());
+
+									// so am I getting list updated and I should set menus based on it?
+
+									((Renovations3DActivity) getActivity()).loadFile(importFile);
 									Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
 								}
 								getActivity().runOnUiThread(new Runnable() {
@@ -367,7 +386,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 										getActivity().invalidateOptionsMenu();
 									}
 								});
-
 							}
 						}
 					};
@@ -401,51 +419,50 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 
 
-
 		ImportInfo[] importInfos = new ImportInfo[]{
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Contributions-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Contributions-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ContributionsModels", "Contributions",
-										"3DModels-Contributions-1.7.1.zip",
+										"3DModels-Contributions-1.8.zip",
 										"ALL_LICENSEContributions.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-Contributions-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-Contributions-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-LucaPresidente-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-LucaPresidente-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#LucaPresidenteModels", "LucaPresidente",
-										"3DModels-LucaPresidente-1.7.1.zip",
+										"3DModels-LucaPresidente-1.8.zip",
 										"ALL_LICENSELucaPresidente.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-LucaPresidente-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-LucaPresidente-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Scopia-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Scopia-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ScopiaModels", "Scopia",
-										"3DModels-Scopia-1.7.1.zip",
+										"3DModels-Scopia-1.8.zip",
 										"ALL_LICENSEScopia.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-Scopia-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-Scopia-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-KatorLegaz-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-KatorLegaz-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#KatorLegazModels", "KatorLegaz",
-										"3DModels-KatorLegaz-1.7.1.zip",
+										"3DModels-KatorLegaz-1.8.zip",
 										"ALL_LICENSEKatorLegaz.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-KatorLegaz-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-KatorLegaz-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Reallusion-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-Reallusion-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#ReallusionModels", "Reallusion",
-										"3DModels-Reallusion-1.7.1.zip",
+										"3DModels-Reallusion-1.8.zip",
 										"ALL_LICENSEReallusion.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-Reallusion-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-Reallusion-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-BlendSwap-CC-0-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-BlendSwap-CC-0-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-0-Models", "BlendSwap-CC-0",
-										"3DModels-BlendSwap-CC-0-1.7.1.zip",
+										"3DModels-BlendSwap-CC-0-1.8.zip",
 										null,
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-BlendSwap-CC-0-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-BlendSwap-CC-0-1.8.zip/download"),
 
-						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-BlendSwap-CC-BY-1.7.1.zip
+						//http://prdownloads.sourceforge.net/sweethome3d/3DModels-BlendSwap-CC-BY-1.8.zip
 						new ImportInfo(ImportType.FURNITURE, "SweetHome3D#BlendSwap-CC-BY-Models", "BlendSwap-CC-BY",
-										"3DModels-BlendSwap-CC-BY-1.7.1.sh3f",
+										"3DModels-BlendSwap-CC-BY-1.8.sh3f",
 										"ALL_LICENSEBlendSwap-CC-BY-v2.TXT",
-										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.7.1/3DModels-BlendSwap-CC-BY-1.7.1.zip/download"),
+										"https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-BlendSwap-CC-BY-1.8.zip/download"),
 
-						//https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.6.3/3DModels-Trees-1.6.3.zip/download
+						//https://sourceforge.net/projects/sweethome3d/files/SweetHome3D-models/3DModels-1.8/3DModels-Trees-1.8.zip/download
 						//trees not included for each tree model being too big generally (800kb average)
 
 						new ImportInfo(ImportType.FURNITURE, "Local_Furniture", "Local", null, null, null),

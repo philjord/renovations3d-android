@@ -63,7 +63,6 @@ public class Component3DManager {
   private int                    	depthSize;
 
 	private Component3DManager() {
-
 	}
 
 	/**
@@ -112,7 +111,6 @@ public class Component3DManager {
 	 * is equal to <code>true</code>.
 	 */
 	public boolean isOffScreenImageSupported() {
-
 		if (this.offScreenImageSupported == null) {
 			if ("false".equalsIgnoreCase(System.getProperty(CHECK_OFF_SCREEN_IMAGE_SUPPORT, "true"))) {
 				this.offScreenImageSupported = Boolean.FALSE;
@@ -140,7 +138,6 @@ public class Component3DManager {
 			}
 		}
 		return this.offScreenImageSupported;
-
 	}
 
 	/**
@@ -281,7 +278,7 @@ public class Component3DManager {
 			offScreenCanvas.waitForOffScreenRendering();
 
 			// If latch count becomes equal to 0 during the past instructions or in the coming 10 milliseconds,
-			// this means that a rendering error happened
+      		// this means that a rendering error happened (for example, in case changing default depth size isn't supported)
 			if (latch.await(10, TimeUnit.MILLISECONDS)) {
 				throw new IllegalRenderingStateException("Off screen rendering unavailable");
 			}
@@ -299,6 +296,7 @@ public class Component3DManager {
 					// Free off screen buffer and context
 					offScreenCanvas.setOffScreenBuffer(null);
 				} catch (NullPointerException ex) {
+					// Java 3D 1.3 may throw an exception
 					ex.printStackTrace();
 				}
 			}
