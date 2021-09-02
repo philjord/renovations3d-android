@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import javaawt.Color;
@@ -229,5 +230,31 @@ public abstract class JComponent extends Fragment implements ImageObserver {
 			Insets insets = new Insets(this.getPaddingLeft(), this.getPaddingRight(), this.getPaddingTop(), this.getPaddingBottom());
 			return insets;
 		}
+	}
+
+
+
+
+
+	public static ViewGroup getParent(android.view.View view) {
+		return (ViewGroup)view.getParent();
+	}
+
+	public static void removeViewFromParent(android.view.View view) {
+		ViewGroup parent = getParent(view);
+		if(parent != null) {
+			parent.removeView(view);
+		}
+	}
+
+	public static void replaceView(android.view.View currentView, android.view.View newView) {
+		ViewGroup parent = getParent(currentView);
+		if(parent == null) {
+			return;
+		}
+		final int index = parent.indexOfChild(currentView);
+		removeViewFromParent(currentView);
+		removeViewFromParent(newView);
+		parent.addView(newView, index);
 	}
 }

@@ -118,9 +118,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public View createFurnitureView(Home home, UserPreferences preferences,
 									FurnitureController furnitureController)
 	{
-		FurnitureTable furnitureTable = new FurnitureTable();
-		furnitureTable.init(home, preferences, furnitureController);
-		return furnitureTable;
+		//FurnitureTable furnitureTable = new FurnitureTable();
+		//furnitureTable.init(home, preferences, furnitureController);
+		//return furnitureTable;
+		//NOT USED replaced by HomeDataPanel with furniture table embedded
+		return null;
 	}
 
 	/**

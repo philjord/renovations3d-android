@@ -19,9 +19,22 @@
  */
 package com.eteks.renovations3d.android;
 
+import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Looper;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 
+import com.eteks.renovations3d.FileActivityResult;
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.mindblowing.swingish.JOptionPane;
 import com.eteks.sweethome3d.model.Content;
@@ -35,7 +48,11 @@ import com.mindblowing.swingish.JFileChooser;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -550,6 +567,10 @@ private Renovations3DActivity activity;//for dialogs etc
     } else {
       return showFileChooser(parentView, dialogTitle, contentType, null, false);
     }
+
+
+
+
   }
   
   /**
@@ -706,9 +727,9 @@ private Renovations3DActivity activity;//for dialogs etc
   /**
    * Displays a Swing open file chooser.
    */
-  private String showFileChooser(View          parentView,
-                                 String        dialogTitle,
-																 final ContentType   contentType,
+  private String showFileChooser(View                parentView,
+                                 String              dialogTitle,
+								 final ContentType   contentType,
                                  final String        path,
                                  final boolean       save) {
 	  if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
@@ -720,84 +741,228 @@ private Renovations3DActivity activity;//for dialogs etc
 	  final File selectedFile[] = new File[1];
 	  final Semaphore dialogSemaphore = new Semaphore(0, true);
 
-	  String ok = save ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "saveDialog.title")
-			  : this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "openDialog.title");
-	  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
-	  final String[] okCancel = new String[]{ok,cancel};
+      //android 29 onwards has a different storage model
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-		FileContentManager.this.activity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
+          if (save == false) {
+              //OPEN save == false
 
-			public void location(File downloadsLocation) {
-				// just a name picker for the save as system
-				if (save) {
-					final File parent;
-					if (path == null || path.length() == 0 || path.contains("com.mindblowing.renovations3d")) {
-						parent = downloadsLocation;
-					} else {
-						parent = new File(path).getParentFile();
-					}
-					activity.runOnUiThread(new Runnable() {
-						public void run() {
-							final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
-							fileChooser.setFileFilters(fileFilters.get(contentType));
-							fileChooser.getDialog().setTitle(getFileDialogTitle(false));
-							fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-																														 @Override
-																														 public void onDismiss(DialogInterface dialog) {
-																															 dialogSemaphore.release();
-																														 }
-																													 }
-							);
+              // these ones use the Intent system with camera shot and is unrelated to open dialog
+              //BackgroundImageWizardStepsPanel.showImageChoiceDialog()
+              //ImportedTextureWizardStepsPanel.showImageChoiceDialog()
 
-							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
-								@Override
-								public void fileSelected(final File file) {
-									selectedFile[0] = file;
-								}
-							});
-							fileChooser.showDialog();
-						}
-					});
+              //showOpenDialog (save = false) used by
+              if(contentType == ContentManager.ContentType.SWEET_HOME_3D
+                      || contentType == ContentManager.ContentType.LANGUAGE_LIBRARY
+                      || contentType == ContentManager.ContentType.FURNITURE_LIBRARY
+                      || contentType == ContentManager.ContentType.TEXTURES_LIBRARY
+                      || contentType == ContentManager.ContentType.MODEL) {
+                  //HomePane.showOpenDialog()
+                  //   -> Renovation3DActivity.loadSh3dFile() / which replaces HomeController.open()
+                  //ContentManager.ContentType.SWEET_HOME_3D,
+                  // all three file requested here, but loaded by Renovations3DActivity.loadFile(File)
+                  //HomePane.showImportLanguageLibraryDialog()
+                  //ContentManager.ContentType.LANGUAGE_LIBRARY,
+                  //HomePane.showImportFurnitureLibraryDialog()
+                  //ContentManager.ContentType.FURNITURE_LIBRARY,
+                  //HomePane.showImportTexturesLibraryDialog()
+                  //ContentManager.ContentType.TEXTURES_LIBRARY,
 
-				} else {
-					// in this case we want ot show a real file picker (with an extension filter of the right type
-					//TODO:  if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
-					//TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
-					//MUST use filefilter array cos furniture model has loads of options, note furniture model import handles teh zip files as well
-					final File parent = downloadsLocation;
-					activity.runOnUiThread(new Runnable() {
-						public void run() {
-							final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, false, false, okCancel);
-							fileChooser.setFileFilters(fileFilters.get(contentType));
-							fileChooser.getDialog().setTitle(getFileDialogTitle(false));
-							fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-																														 @Override
-																														 public void onDismiss(DialogInterface dialog) {
-																															 dialogSemaphore.release();
-																														 }
-																													 }
-							);
 
-							fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
-								@Override
-								public void fileSelected(final File file) {
-									selectedFile[0] = file;
-								}
-							});
-							fileChooser.showDialog();
-						}
-					});
-				}
-			}
-		});
 
-	  try {
-		  //NOTE: this is a reverse semphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
-		  dialogSemaphore.acquire();
-	  } catch (InterruptedException e) {
-	  }
 
-	  Renovations3DActivity.logFireBaseContent("showFileChooser" +(save ? "Save" : "Open"), "Selected file " + selectedFile[0]);
+                  // In this case we leave selectedFile[0] = null so the callee assumes a cancel and moves on
+                  Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                  intent.addCategory(Intent.CATEGORY_OPENABLE);
+                  intent.setType("*/*");//TODO: only sh3t and zip files ??? or what ever the content request is
+
+                  activity.fileActivityLauncher.launch(intent, result -> {
+                      if (result.getResultCode() == Activity.RESULT_OK) {
+                          // There are no request codes
+                          Intent data = result.getData();
+
+                          // Get the Uri of the selected file
+                          Uri uri = data.getData();
+                          String uriString = uri.toString();
+                          File libraryFile = null;
+                          if (uriString.startsWith("content://")) {
+                              Cursor cursor = null;
+                              try {
+                                  cursor = activity.getContentResolver().query(uri, null, null, null, null);
+                                  if (cursor != null && cursor.moveToFirst()) {
+                                      String libraryName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                                      try {
+                                          InputStream in = activity.getContentResolver().openInputStream(data.getData());
+                                          libraryFile = FileActivityResult.copyInputStreamToTempFile(in, libraryName, activity);
+
+                                      } catch (FileNotFoundException e) {
+                                          e.printStackTrace();
+                                      }
+                                  }
+                              } finally {
+                                  cursor.close();
+                              }
+                          } else if (uriString.startsWith("file://")) {
+                              libraryFile = new File(uri.getPath());
+                          }
+
+                          if (libraryFile != null) {
+                              Renovations3DActivity.logFireBaseLevelUp("loadFile", libraryFile.getName());
+                              if (contentType == ContentManager.ContentType.MODEL) {
+                                  //TODO: this will only work for "singleton" file zip, dae etc, *.obj will not find textures as they are file relative and the file is well lost
+                                  //return null as though a cancel occurs (as loadFile above does the work of loading)
+                                  selectedFile[0] = libraryFile;
+                                  // release the acquire that has been taken below (before this return)
+                                  dialogSemaphore.release();
+                              } else {
+                                  //controller2.importTexturesLibrary(texturesLibraryName);
+                                  // use the Activity in case of a zip file requiring unzip, extension dictates what gets imported
+                                  activity.loadFile(libraryFile);
+                              }
+
+                          }
+                      }
+                  });
+
+                  //Only model wants to wait for return value like a modal dialog
+                  if (contentType == ContentManager.ContentType.MODEL) {
+                      try {
+                          //NOTE: this is a reverse semaphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
+                          dialogSemaphore.acquire();
+                      } catch (InterruptedException e) {
+                      }
+                  } else {
+                      //return null as though a cancel occurs (as loadFile above does the work of loading)
+                      selectedFile[0] = null;
+                  }
+              }
+          } else {
+              //SAVE save == true
+
+              //showOpenDialog (save = true) used by
+              //HomePane.showPrintToPDFDialog() / not enabled
+              //ContentManager.ContentType.PDF,
+              //HomePane.showExportToCSVDialog() / not enabled
+              //ContentManager.ContentType.CSV,
+              //HomePane.showExportToSVGDialog() / not enabled
+              //ContentManager.ContentType.SVG,
+              //HomePane.showExportToOBJDialog() / not enabled
+              //ContentManager.ContentType.OBJ,
+
+              //PhotosPanel.startPhotosCreation() / not ported across (requires the DOCUMENT_TREE picker option)
+              //ContentManager.ContentType.PHOTOS_DIRECTORY, // used by photos panel, not in renovations3d-android but probably should be at some point
+              //Plugins are not supported
+              //ContentManager.ContentType.PLUGIN,
+              //not used even in base code
+              //ContentManager.ContentType.USER_DEFINED;
+
+
+              //PhotoPanel.savePhoto()
+              //ContentManager.ContentType.IMAGE, - used as image opener not save
+              //ContentManager.ContentType.JPEG, - not used
+              //ContentManager.ContentType.PNG,
+              //MediaStore.Images
+              //https://developer.android.com/training/data-storage/shared/media
+              // This is now handled in PhotoPanel as the Uri and OutputStream need to be opened and closed in one operation
+
+
+              //VideoPanel.saveVideo()
+              //ContentManager.ContentType.MOV,
+              //MediaStore.Video
+              //https://developer.android.com/training/data-storage/shared/media
+              // This is now handled in VideoPanel as the Uri and OutputStream need to be opened and closed in one operation
+
+
+              //HomePane.showSaveDialog()
+              // -> HomeController.saveAs()
+              // -> HomeController.saveAs(...)
+              // -> HomeController.saveAsAndCompress()
+              // -> -> all called by Renovation3DActivity.saveAsSh3dFile()
+              //ContentManager.ContentType.SWEET_HOME_3D,
+              // this is now handled by Renovations3DActivity.saveSh3dFile or Renovations3DActivity.saveasSh3dFile
+
+          }
+      } else {
+          String ok = save ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "saveDialog.title")
+                  : this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "openDialog.title");
+          String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
+          final String[] okCancel = new String[]{ok, cancel};
+
+          FileContentManager.this.activity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
+              public void location(File downloadsLocation) {
+                  // just a name picker for the save as system
+                  if (save) {
+                      final File parent;
+                      if (path == null || path.length() == 0 || path.contains("com.mindblowing.renovations3d")) {
+                          parent = downloadsLocation;
+                      } else {
+                          parent = new File(path).getParentFile();
+                      }
+                      activity.runOnUiThread(new Runnable() {
+                          public void run() {
+                              final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, true, false, okCancel);
+                              fileChooser.setFileFilters(fileFilters.get(contentType));
+                              fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+                              fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                                               @Override
+                                                                               public void onDismiss(DialogInterface dialog) {
+                                                                                   // release the acquire that has been taken below (before this return)
+                                                                                   dialogSemaphore.release();
+                                                                               }
+                                                                           }
+                              );
+
+                              fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
+                                  @Override
+                                  public void fileSelected(final File file) {
+                                      selectedFile[0] = file;
+                                  }
+                              });
+                              fileChooser.showDialog();
+                          }
+                      });
+
+                  } else {
+                      // in this case we want to show a real file picker (with an extension filter of the right type
+                      //TODO: if(contentType == ContentType.FURNITURE_LIBRARY ||contentType == ContentType.TEXTURES_LIBRARY ) need  zip as well one day
+                      //TODO: filefilter array should be used like getFileFilter(ContentType contentType) which can be used for sh3d as well etc
+                      //MUST use filefilter array cos furniture model has loads of options, note furniture model import handles teh zip files as well
+                      final File parent = downloadsLocation;
+                      activity.runOnUiThread(new Runnable() {
+                          public void run() {
+                              final JFileChooser fileChooser = new JFileChooser(FileContentManager.this.activity, parent, false, false, okCancel);
+                              fileChooser.setFileFilters(fileFilters.get(contentType));
+                              fileChooser.getDialog().setTitle(getFileDialogTitle(false));
+                              fileChooser.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                                               @Override
+                                                                               public void onDismiss(DialogInterface dialog) {
+                                                                                   // release the acquire that has been taken below (before this return)
+                                                                                   dialogSemaphore.release();
+                                                                               }
+                                                                           }
+                              );
+
+                              fileChooser.setFileListener(new JFileChooser.FileSelectedListener() {
+                                  @Override
+                                  public void fileSelected(final File file) {
+                                      selectedFile[0] = file;
+                                  }
+                              });
+                              fileChooser.showDialog();
+                          }
+                      });
+                  }
+              }
+          });
+
+          try {
+              //NOTE: this is a reverse semaphore see(0,true) above, it waits here until the dialog above releases it, reverse of a sync block
+              dialogSemaphore.acquire();
+          } catch (InterruptedException e) {
+          }
+
+          Renovations3DActivity.logFireBaseContent("showFileChooser" + (save ? "Save" : "Open"), "Selected file " + selectedFile[0]);
+      }
 
 	  if( selectedFile[0] == null)
 		  return null;
@@ -1218,4 +1383,122 @@ private Renovations3DActivity activity;//for dialogs etc
       }
     }
   }*/
+
+    //https://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore/51227392#51227392
+    public static String getFullPathFromContentUri(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }//non-primary e.g sd card
+                else {
+                    String filePath = "";
+                    if (Build.VERSION.SDK_INT > 20) {
+                        //getExternalMediaDirs() added in API 21
+                        File extenal[] = context.getExternalMediaDirs();
+                        for (File f : extenal) {
+                            filePath = f.getAbsolutePath();
+                            if (filePath.contains(type)) {
+                                int endIndex = filePath.indexOf("Android");
+                                filePath = filePath.substring(0, endIndex) + split[1];
+                            }
+                        }
+                    }else{
+                        filePath = "/storage/" + type + "/" + split[1];
+                    }
+                    return filePath;
+                }
+            }
+            // DownloadsProvider
+            else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                Cursor cursor = null;
+                final String column = "_data";
+                final String[] projection = {
+                        column
+                };
+
+                try {
+                    cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                            null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        final int column_index = cursor.getColumnIndexOrThrow(column);
+                        return cursor.getString(column_index);
+                    }
+                } finally {
+                    if (cursor != null)
+                        cursor.close();
+                }
+                return null;
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    private static String getDataColumn(Context context, Uri uri, String selection,
+                                        String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
 }

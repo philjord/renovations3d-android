@@ -20,10 +20,14 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -32,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 import javaawt.AlphaComposite;
@@ -60,6 +65,7 @@ import javaawt.geom.Rectangle2D;
 import javaawt.image.BufferedImage;
 import javaawt.image.VMBufferedImage;
 import javaxswing.ImageIcon;
+import me.drakeet.support.toast.ToastCompat;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -1530,10 +1536,53 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
   private void saveVideo(final boolean share) {
 		Thread t = new Thread(new Runnable(){
 			public void run(){
-				final String movFileName = controller.getContentManager().showSaveDialog(VideoPanel.this,
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "saveVideoDialog.title"),
-						ContentManager.ContentType.MOV, home.getName());
-				if (movFileName != null) {
+
+                // to be set one way or the other
+                final Uri outputFileUri;
+                final File movFile;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    String homeName = new File(((Renovations3DActivity) activity).getHome().getName()).getName().replace(".sh3d", "");
+                    // TODO: make video generic string
+
+                    //TODO: check multiple saves and any fails
+                    // so save home simply uses the homename
+                    // save video or image uses the homename+photo+next number up into the media, same as video, with a toast telling the user
+
+
+                    String filename = activity.getResources().getString(R.string.app_name) + "_" + homeName + "_video";
+                    // just let the media store know about it and save it to our local image file location
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Video.Media.TITLE, filename);
+                    values.put(MediaStore.Video.Media.DISPLAY_NAME, filename);
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                    values.put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+                    values.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+                    values.put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES );
+
+                    values.put(MediaStore.Video.Media.IS_PENDING, true);
+
+                    outputFileUri = activity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                    movFile = null;
+
+                } else {
+                    final String movFileName = controller.getContentManager().showSaveDialog(VideoPanel.this,
+                            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "saveVideoDialog.title"),
+                            ContentManager.ContentType.MOV, home.getName());
+                    if (movFileName != null) {
+                        movFile = new File(movFileName);
+                        if (Build.VERSION.SDK_INT > M) {
+                            outputFileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", movFile);
+                        } else {
+                            outputFileUri = Uri.fromFile(movFile);
+                        }
+                    } else {
+                        outputFileUri = null;
+                        movFile = null;
+                    }
+
+                }
+				if (outputFileUri != null) {
 					//final Component rootPane = SwingUtilities.getRoot(this);
 					//final Cursor defaultCursor = rootPane.getCursor();
 					//rootPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -1553,10 +1602,11 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 								OutputStream out = null;
 								InputStream in = null;
 								IOException exception = null;
+								String videoName;
 								try {
 									// Copy temporary file to home file
 									// Overwriting home file will ensure that its rights are kept
-									out = new FileOutputStream(movFileName);
+                                    out = activity.getContentResolver().openOutputStream(outputFileUri);
 									byte [] buffer = new byte [8192];
 									in = new FileInputStream(videoFile);
 									int size;
@@ -1566,74 +1616,95 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 								} catch (IOException ex) {
 									exception = ex;
 								} finally {
-									try {
-										if (out != null) {
-											out.close();
-										}
-									} catch (IOException ex) {
-										if (exception == null) {
-											exception = ex;
-										}
-									}
-									try {
-										if (in != null) {
-											in.close();
-										}
-									} catch (IOException ex) {
-										// Ignore close exception
-									}
-									// Delete saved file in case of error or if panel was closed meanwhile
-									if (exception != null) {
-										new File(movFileName).delete();
-										//if (!isDisplayable()) {
-										//	exception = null;
-										//}
-									} else if(share) {
-										Renovations3DActivity.logFireBaseContent("sharemovFile_start", "movFileName: " + movFileName);
-										final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-										emailIntent.setType("image/png");
+                                    try {
+                                        if (out != null) {
+                                            out.close();
+                                        }
+                                    } catch (IOException ex) {
+                                        if (exception == null) {
+                                            exception = ex;
+                                        }
+                                    }
+                                    try {
+                                        if (in != null) {
+                                            in.close();
+                                        }
+                                    } catch (IOException ex) {
+                                        // Ignore close exception
+                                    }
+                                    // Delete saved file in case of error or if panel was closed meanwhile
+                                    if (exception == null) {
 
-										String subjectText = activity.getResources().getString(R.string.app_name) + " " + movFileName;
-										emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
-										//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                            ContentValues values = new ContentValues();
+                                            values.put(MediaStore.Images.Media.IS_PENDING, false);
+                                            activity.getContentResolver().update(outputFileUri, values, null, null);
+                                            Cursor cursor = activity.getContentResolver().query(outputFileUri, new String[]{MediaStore.Video.Media.DISPLAY_NAME},null,null,null);
+                                            cursor.moveToNext();
 
-										Uri outputFileUri = null;
-										if (Build.VERSION.SDK_INT > M) {
-											outputFileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", new File(movFileName));
-										} else {
-											outputFileUri = Uri.fromFile(new File(movFileName));
-										}
-										emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-										emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+                                            videoName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME));
 
-										activity.runOnUiThread(new Runnable(){public void run(){
-										String title = activity.getResources().getString(R.string.share);
-										// Create intent to show chooser
-										Intent chooser = Intent.createChooser(emailIntent, title);
+                                            final String toastName = videoName;
+                                            activity.runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    //As the file anme is unknown to the user show it in a toast
+                                                    ToastCompat.makeText(activity, "Saved as " + toastName, Toast.LENGTH_SHORT).show();
+                                                }});
+                                        } else {
+                                            videoName = movFile.getName();
+                                        }
+                                    } else {
+                                        videoName = null;
+                                        movFile.delete();
+                                        //if (!isDisplayable()) {
+                                        //	exception = null;
+                                        //}
+                                    }
+                                }
 
-										// Verify the intent will resolve to at least one activity
-										if (emailIntent.resolveActivity(activity.getPackageManager()) != null) {
-											activity.startActivity(chooser);
-										}
-										Renovations3DActivity.logFireBaseContent("sharemovFile_end", "movFileName: " + movFileName);}});
-									}
+								if(share && exception != null && outputFileUri != null) {
 
-									final IOException caughtException = exception;
-									EventQueue.invokeLater(new Runnable() {
-											public void run() {
-												// Restore action state
-												ActionMap actionMap = getActionMap();
-												for (ActionType action : ActionType.values()) {
-													actionMap.get(action).setEnabled(actionEnabledStates [action.ordinal()]);
-												}
+                                    Renovations3DActivity.logFireBaseContent("sharemovFile_start", "movFileName: " + videoName);
+                                    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                                    emailIntent.setType("image/png");
 
-												//rootPane.setCursor(defaultCursor);
-												if (caughtException != null) {
-													showError("saveVideoError.message", caughtException.getMessage());
-												}
-											}
-										});
-								}
+                                    String subjectText = activity.getResources().getString(R.string.app_name) + " " + videoName;
+                                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
+                                    //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+
+                                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run(){
+                                            String title = activity.getResources().getString(R.string.share);
+                                            // Create intent to show chooser
+                                            Intent chooser = Intent.createChooser(emailIntent, title);
+
+                                            // Verify the intent will resolve to at least one activity
+                                            if (emailIntent.resolveActivity(activity.getPackageManager()) != null) {
+                                                activity.startActivity(chooser);
+                                            }
+                                            Renovations3DActivity.logFireBaseContent("sharemovFile_end", "movFileName: " + videoName);
+                                        }
+                                    });
+                                }
+
+                                final IOException caughtException = exception;
+                                EventQueue.invokeLater(new Runnable() {
+                                        public void run() {
+                                            // Restore action state
+                                            ActionMap actionMap = getActionMap();
+                                            for (ActionType action : ActionType.values()) {
+                                                actionMap.get(action).setEnabled(actionEnabledStates [action.ordinal()]);
+                                            }
+
+                                            //rootPane.setCursor(defaultCursor);
+                                            if (caughtException != null) {
+                                                showError("saveVideoError.message", caughtException.getMessage());
+                                            }
+                                        }
+                                    });
 							}
 						});
 				}

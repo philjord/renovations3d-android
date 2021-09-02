@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.eteks.renovations3d.android.FurnitureCatalogListPanel;
 import com.eteks.renovations3d.android.FurnitureTable;
 import com.eteks.renovations3d.android.HomeComponent3D;
+import com.eteks.renovations3d.android.HomeDataPanel;
 import com.eteks.renovations3d.android.MultipleLevelsPlanPanel;
 
 import androidx.fragment.app.Fragment;
@@ -23,15 +24,17 @@ import androidx.viewpager.widget.PagerAdapter;
 public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 {
 	private Renovations3D renovations3D;
+	private Renovations3DActivity r3da;
 
 	private final FragmentManager mFragmentManager;
 	private FragmentTransaction mCurTransaction = null;
 	private Fragment mCurrentPrimaryItem = null;
 
-	public Renovations3DPagerAdapter(FragmentManager fm)
+	public Renovations3DPagerAdapter(FragmentManager fm, Renovations3DActivity r3da)
 	{
 		super(fm);
 		this.mFragmentManager = fm;
+		this.r3da = r3da;
 	}
 
 	public void setRenovations3D(Renovations3D renovations3D)
@@ -49,7 +52,11 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 
 		if (position == 0)
 		{
-			return (FurnitureTable) renovations3D.getHomeController().getFurnitureController().getView();
+			//return (FurnitureTable) renovations3D.getHomeController().getFurnitureController().getView();
+
+			HomeDataPanel homeDataPanel = new HomeDataPanel();
+			homeDataPanel.init(renovations3D.getHome(), renovations3D.getUserPreferences(), renovations3D.getHomeController(), r3da);
+			return homeDataPanel;
 		}
 		else if (position == 1)
 		{
@@ -129,7 +136,7 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 		}
 	}
 
-	@Override
+
 	public void setPrimaryItem(ViewGroup container, int position, Object object)
 	{
 		Fragment fragment = (Fragment) object;

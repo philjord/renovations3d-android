@@ -1,6 +1,7 @@
 package com.eteks.renovations3d.android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import com.eteks.sweethome3d.model.Selectable;
 import com.eteks.sweethome3d.model.SelectionEvent;
 import com.eteks.sweethome3d.model.SelectionListener;
 import com.eteks.sweethome3d.model.UserPreferences;
+import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.FurnitureController;
 import com.mindblowing.swingish.JTable;
 import com.mindblowing.renovations3d.R;
@@ -69,8 +71,6 @@ import com.eteks.sweethome3d.viewcontroller.TransferableView;
 
 public class FurnitureTable extends JTable implements TransferableView, ExportableView, Printable {
 	private static final String EXPANDED_ROWS_VISUAL_PROPERTY = "com.eteks.sweethome3d.SweetHome3D.ExpandedGroups";
-	// if we are not initialized then ignore onCreateViews
-	private boolean initialized = false;
 
 	public static final String WELCOME_SCREEN_UNWANTED = "FURNITURE_TABLE_WELCOME_SCREEN_UNWANTED";
 
@@ -109,34 +109,23 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	private TableLayout tableLayout;
 	private LinearLayout header;
-	private View rootView;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater,
-							 ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.home_furniture_panel, container, false);
-		if (initialized) {
-			header = (LinearLayout) rootView.findViewById(R.id.header);
-			tableLayout = (TableLayout) rootView.findViewById(R.id.table);
 
-			updateTable();
+	public FurnitureTable(Home home,
+						  UserPreferences preferences,
+						  FurnitureController controller,
+						  Activity activity) {
+		super(activity, R.layout.home_furniture_panel);
+		this.home = home;
+		this.preferences = preferences;
+		this.controller = controller;
 
-			final float scale = getResources().getDisplayMetrics().density;
-			iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
-		}
+		init(home, preferences, controller);
+		header = (LinearLayout) inflatedView.findViewById(R.id.furniture_table_header);
+		tableLayout = (TableLayout) inflatedView.findViewById(R.id.furniture_table);
 
-		// make the right swiper work
-		ImageButton furnitureTableRightSwiper = (ImageButton)rootView.findViewById(R.id.furnitureTableRightSwiper);
-		furnitureTableRightSwiper.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				((Renovations3DActivity)getActivity()).getViewPager().setCurrentItem(1, true);
-			}
-		});
-
-		return rootView;
+		final float scale = getResources().getDisplayMetrics().density;
+		iconHeightPx = (int) (ICON_HEIGHT_DP * scale + 0.5f);
 	}
 
 
@@ -144,7 +133,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	private void updateHeader() {
 		// sometimes Exception java.lang.IllegalStateException: Fragment ii{d4006c0} not attached to Activity  is thrown, presumably during destroy or dispose
 		if (header != null && this.getContext() != null) {
-			final int fragWidthPx = rootView.getWidth();
+			final int fragWidthPx = inflatedView.getWidth();
 			final float scale = getResources().getDisplayMetrics().density;
 
 			for (int i = 0; i < widthsPx.length; i++)
@@ -171,7 +160,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	/**
 	 * This is really expensive and is not simple an update, I need a single row updater system , not this super expensive one
 	 */
-	private void updateTable() {
+	public void updateTable() {
 
 		if (tableLayout != null && this.getContext() != null) {
 			updateHeader();
@@ -296,6 +285,13 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				v.setBackgroundColor(Color.rgb(51, 51, 51));
 				tableLayout.addView(v);
 			}
+
+			if( model.getRowCount() == 0 ) {
+				TextView tv = new TextView(this.getContext());
+				tv.setText("...");
+				tableLayout.addView(tv);
+			}
+
 		}
 	}
 	private class HomePieceOfFurnitureTableRow extends TableRow {
@@ -332,15 +328,15 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		final int oldHeight = rootView.getHeight();
-		final int oldWidth = rootView.getWidth();
+		final int oldHeight = inflatedView.getHeight();
+		final int oldWidth = inflatedView.getWidth();
 
-		rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+		inflatedView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
-				if (rootView.getHeight() != oldHeight && rootView.getWidth() != oldWidth) {
+				if (inflatedView.getHeight() != oldHeight && inflatedView.getWidth() != oldWidth) {
 
-					rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+					inflatedView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 					//mView now has the correct dimensions, continue with your stuff
 					updateTable();
 				}
@@ -350,26 +346,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	}
 
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		// this gets called heaps of time, wait until we have an activity
-		if(isVisibleToUser && getActivity() != null) {
-			//PJ cut out as it provides almost no infomation at all now, add back when table is functional
-			//JOptionPane.possiblyShowWelcomeScreen(getActivity(), WELCOME_SCREEN_UNWANTED, R.string.furnitureview_welcometext, preferences);
-		}
 
-		if(isVisibleToUser && getView()!= null) {
-			// As furniture properties values change may alter sort order and filter, update the whole table
-			((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
-			// Update selected rows
-			updateTableSelectedFurniture(home);
-			//storeExpandedRows(home, controller);
-			//PJPJPJ note wildly expensive, must use only the value in source and update a single row
-			updateTable();
-			getView().postInvalidate();
-		}
-	}
 
 	/**
 	 * Creates a table controlled by <code>controller</code>
@@ -377,7 +354,6 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	 */
 	public void init(Home home, UserPreferences preferences,
 					 FurnitureController controller) {
-		initialized = true;
 		this.home = home;
 		this.preferences = preferences;
 		this.controller = controller;
@@ -398,6 +374,13 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		addHomeListener(home, controller);
 		addUserPreferencesListener(preferences);
 
+		//TODO: too expensive
+		// keep the table views updated
+		/*home.addFurnitureListener(new CollectionListener<HomePieceOfFurniture>() {
+									  public void collectionChanged(CollectionEvent<HomePieceOfFurniture> ev) {
+										  updateTable();
+									  }
+								  });*/
 	/*
 		if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
 			try {
@@ -418,16 +401,13 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	private FurnitureTreeTableModel furnitureTreeTableModel;
 	private FurnitureTableColumnModel furnitureTableColumnModel;
-	public void setModel(FurnitureTreeTableModel model)
-	{
+	public void setModel(FurnitureTreeTableModel model) {
 		furnitureTreeTableModel = model;
 	}
-	public FurnitureTreeTableModel getModel()
-	{
+	public FurnitureTreeTableModel getModel() {
 		return furnitureTreeTableModel;
 	}
-	public void setColumnModel(FurnitureTableColumnModel model)
-	{
+	public void setColumnModel(FurnitureTableColumnModel model) {
 		furnitureTableColumnModel = model;
 	}
 
@@ -513,7 +493,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	/**
 	 * Updates selected furniture in table from selected items in <code>home</code>.
 	 */
-	private void updateTableSelectedFurniture(Home home) {
+	public void updateTableSelectedFurniture(Home home) {
 		//ListSelectionModel selectionModel = getSelectionModel();
 		//selectionModel.removeListSelectionListener(this.tableSelectionListener);
 
@@ -858,10 +838,8 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 			} else {
 				//furnitureTable.repaint();
 				//furnitureTable.getTableHeader().repaint();
-				if (furnitureTable.getView() != null) {
-					furnitureTable.updateTable();
-					furnitureTable.getView().postInvalidate();
-				}
+				furnitureTable.updateTable();
+				furnitureTable.postInvalidate();
 			}
 		}
 	}
@@ -889,7 +867,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		final PropertyChangeListener changeListener =
 				new PropertyChangeListener () {
 					public void propertyChange(PropertyChangeEvent ev) {
-						if(FurnitureTable.this.getUserVisibleHint()) {
+						if(FurnitureTable.this.getVisibility() == VISIBLE) {
 							// As furniture properties values change may alter sort order and filter, update the whole table
 							((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
 							// Update selected rows
@@ -897,8 +875,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 							//storeExpandedRows(home, controller);
 							//PJPJPJ note wildly expensive, must use only the value in source and update a single row
 							updateTable();
-							if(getView()!= null)
-								getView().postInvalidate();
+							postInvalidate();
 						}
 					}
 				};
@@ -1420,8 +1397,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 				} else {
 					updateHeader();
 					updateTable();
-					if(getView()!= null)
-						getView().postInvalidate();
+					postInvalidate();
 					// Change column name and renderer from current locale
 /*					for (TableColumn tableColumn : furnitureTableColumnModel.availableColumns.values()) {
 						HomePieceOfFurniture.SortableProperty columnIdentifier =
@@ -2409,7 +2385,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 	/**
 	 * Model used by this table.
 	 */
-	private static class FurnitureTreeTableModel {//PJ extends AbstractTableModel implements TreeModel {
+	public static class FurnitureTreeTableModel {//PJ extends AbstractTableModel implements TreeModel {
 		private Home                                    home;
 		private List<HomePieceOfFurniture> filteredAndSortedFurniture;
 		private FurnitureFilter                         furnitureFilter;

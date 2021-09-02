@@ -22,7 +22,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/header"
+                android:id="@+id/furniture_table_header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -34,10 +34,10 @@
             <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/header">
+                android:layout_below="@+id/furniture_table_header">
 
                 <TableLayout
-                    android:id="@+id/table"
+                    android:id="@+id/furniture_table"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     >
@@ -46,14 +46,4 @@
             </ScrollView>
         </RelativeLayout>
     </HorizontalScrollView>
-
-    <ImageButton
-        android:id="@+id/furnitureTableRightSwiper"
-        android:layout_width="30dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="-5dp"
-        android:layout_weight="0"
-        android:src="@drawable/ic_chevron_left_black_24dp"
-        />
 </LinearLayout>

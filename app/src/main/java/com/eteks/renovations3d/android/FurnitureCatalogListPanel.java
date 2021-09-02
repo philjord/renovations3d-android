@@ -19,19 +19,24 @@
  */
 package com.eteks.renovations3d.android;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -50,6 +55,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eteks.renovations3d.FileActivityResult;
 import com.eteks.renovations3d.Tutorial;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.swingish.DefaultComboBoxModel;
@@ -80,6 +86,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -288,111 +295,79 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	private void importLibrary(final ImportInfo importInfo, final MenuItem menuItem) {
 		Renovations3DActivity renovations3DActivity = ((Renovations3DActivity) getActivity());
-
-		renovations3DActivity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
-			public void location(final File downloadsLocation) {
-
-				String fileName = importInfo.libraryName;
-				menuItem.setEnabled(false);
-
-
-				// now present the notice about length and the license info
-				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setPositiveButton(close, null);
-
-				String libraryDownLoadNotice = getActivity().getString(R.string.libraryDownLoadNotice);
-				String license = "";
-				if (importInfo.license != null) {
-					try {
-						AssetManager am = getActivity().getAssets();
-						InputStream is = am.open("licenses/" + importInfo.license);
-						BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-						String line;
-						while ((line = reader.readLine()) != null) {
-							license += line + System.getProperty("line.separator");
-						}
-						reader.close();
-					}
-					catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			// in android 10 there is a new storage model so simply use the private storage for the app, but try external private first
+			File downloadRoot = renovations3DActivity.getExternalFilesDir(null);
+			if (downloadRoot == null)
+				downloadRoot = renovations3DActivity.getFilesDir();
+			importLibrary(importInfo, menuItem, downloadRoot);
+		} else {
+			// prior version ask for the public downloads folder
+			renovations3DActivity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
+				public void location(final File downloadsLocation) {
+					importLibrary(importInfo, menuItem, downloadsLocation);
 				}
+			});
+		}
+	}
 
-				boolean alreadyExists = (new File(downloadsLocation, fileName).exists());
+	private void importLibrary(ImportInfo importInfo, MenuItem menuItem, File downloadsLocation) {
+		String fileName = importInfo.libraryName;
+		menuItem.setEnabled(false);
 
-				ScrollView scrollView = new ScrollView(getActivity());
-				TextView textView = new TextView(getActivity());
-				textView.setPadding(10, 10, 10, 10);
-				textView.setText((!alreadyExists ? libraryDownLoadNotice + "\n\n" : "") + license);
-				scrollView.addView(textView);
-				builder.setView(scrollView);
-				AlertDialog dialog = builder.create();
-				dialog.show();
+		// now present the notice about length and the license info
+		final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setPositiveButton(close, null);
 
-				if (!alreadyExists) {
-					String url = importInfo.url;
+		String libraryDownLoadNotice = getActivity().getString(R.string.libraryDownLoadNotice);
+		String license = "";
+		if (importInfo.license != null) {
+			try {
+				AssetManager am = getActivity().getAssets();
+				InputStream is = am.open("licenses/" + importInfo.license);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-					DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-					request.setDescription(fileName + " download");
-					request.setTitle(fileName);
-					request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-					// oddly see https://stackoverflow.com/questions/16749845/android-download-manager-setdestinationinexternalfilesdir
-					// request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
-
-					request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-					// get download service and enqueue file
-					DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-					manager.enqueue(request);
-					Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
-
-					getActivity().registerReceiver(((Renovations3DActivity) getActivity()).onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-				} else {
-					//If it already exists in the downloads folder, just import it
-
-					Thread t3 = new Thread() {
-						public void run() {
-							HomeController controller = ((Renovations3DActivity) FurnitureCatalogListPanel.this.getActivity()).getHomeController();
-							if (controller != null) {
-								String fileName = importInfo.libraryName;
-								File importFile = new File(downloadsLocation, fileName);
-
-								if (importInfo.type == ImportType.FURNITURE) {
-									//controller.importFurnitureLibrary(importFile.getAbsolutePath());
-									((Renovations3DActivity) getActivity()).loadFile(importFile);
-									Renovations3DActivity.logFireBaseLevelUp("importFurnitureLibrary", importFile.getName());
-								}
-								else if (importInfo.type == ImportType.TEXTURE) {
-									//controller.importTexturesLibrary(importFile.getAbsolutePath());
-									// this guy records the fact the library is loaded
-									//this.preferences.addTexturesLibrary(texturesLibraryName);
-
-
-									// but this calls the one above
-									//getHomeController().importTexturesLibrary(extractedFile.getAbsolutePath());
-
-									// so am I getting list updated and I should set menus based on it?
-
-									((Renovations3DActivity) getActivity()).loadFile(importFile);
-									Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", importFile.getName());
-								}
-								getActivity().runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										getActivity().invalidateOptionsMenu();
-									}
-								});
-							}
-						}
-					};
-					t3.start();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					license += line + System.getProperty("line.separator");
 				}
+				reader.close();
 			}
-		});
+			catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+
+		ScrollView scrollView = new ScrollView(getActivity());
+		TextView textView = new TextView(getActivity());
+		textView.setPadding(10, 10, 10, 10);
+		textView.setText(libraryDownLoadNotice + "\n\n"  + license);
+		scrollView.addView(textView);
+		builder.setView(scrollView);
+		AlertDialog dialog = builder.create();
+		dialog.show();
+
+
+		String url = importInfo.url;
+
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+		request.setDescription(fileName + " download");
+		request.setTitle(fileName);
+		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+		// oddly see https://stackoverflow.com/questions/16749845/android-download-manager-setdestinationinexternalfilesdir
+		// request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
+
+		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+		// get download service and enqueue file
+		DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+		manager.enqueue(request);
+		Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+
+		getActivity().registerReceiver(((Renovations3DActivity) getActivity()).onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
 	}
 
 	enum ImportType {
@@ -484,7 +459,6 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		private static int MENU_IMPORT_FURNITURE = 10;
 		private static int MENU_IMPORT_TEXTURE = 11;
 
-
 		private void updateImportSubMenus(MenuItem furnitureMenu,
 																			MenuItem textureMenu) {
 			furnitureMenu.getSubMenu().clear();
@@ -514,18 +488,18 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		}
 
 		private void importTextureLibrary() {
+			// so this business is only when the dialog last "Other" item is selected
 			if(!getActivity().isFinishing())
 				Toast.makeText(getActivity(), getActivity().getString(R.string.pleaseSelectSh3t) , Toast.LENGTH_LONG).show();
 			Thread t3 = new Thread() {
 				public void run() {
-					HomeController controller2 = ((Renovations3DActivity) getActivity()).getHomeController();
-					if (controller2 != null) {
+					HomeController controller = ((Renovations3DActivity) getActivity()).getHomeController();
+					if (controller != null) {
 						//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
-						//	controller.importTexturesLibrary();
-
-						String texturesLibraryName = controller2.getView().showImportTexturesLibraryDialog();
+						//controller.importTexturesLibrary();
+						String texturesLibraryName = controller.getView().showImportTexturesLibraryDialog();
 						if (texturesLibraryName != null) {
-							controller2.importTexturesLibrary(texturesLibraryName);
+							controller.importTexturesLibrary(texturesLibraryName);
 							Renovations3DActivity.logFireBaseLevelUp("importTexturesLibrary", texturesLibraryName);
 
 							getActivity().runOnUiThread(new Runnable() {

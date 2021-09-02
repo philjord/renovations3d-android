@@ -48,9 +48,11 @@ import java.util.Map;
 
 import com.eteks.renovations3d.Renovations3DActivity;
 import com.eteks.sweethome3d.tools.OperatingSystem;
+import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.mindblowing.swingish.ItemListener;
 import com.mindblowing.swingish.JButton;
 import com.mindblowing.swingish.JCheckBox;
+import com.mindblowing.swingish.JImageButton;
 import com.mindblowing.swingish.JLabel;
 import com.mindblowing.swingish.JRadioButton;
 import com.mindblowing.swingish.JSpinner;
@@ -79,10 +81,10 @@ import javaawt.image.VMBufferedImage;
  * @author Emmanuel Puybaret and Philip Jordan
  */
 public class UserPreferencesPanel extends AndroidDialogView implements DialogView {
-  private final UserPreferencesController controller;
+  	private final UserPreferencesController controller;
 	private JLabel           languageLabel;
 	private JComboBox        languageComboBox;
-	//private JButton          languageLibraryImportButton;
+	private JImageButton languageLibraryImportButton;
 	private JLabel           unitLabel;
 	private JComboBox        unitComboBox;
 	private JLabel           currencyLabel;
@@ -95,8 +97,8 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 	private JCheckBox        navigationPanelCheckBox;
 	private JLabel           aerialViewCenteredOnSelectionLabel;
 	private JCheckBox        aerialViewCenteredOnSelectionCheckBox;
-  private JLabel           observerCameraSelectedAtChangeLabel;
-  private JCheckBox        observerCameraSelectedAtChangeCheckBox;
+  	private JLabel           observerCameraSelectedAtChangeLabel;
+  	private JCheckBox        observerCameraSelectedAtChangeCheckBox;
 	private JLabel           magnetismLabel;
 	private JCheckBox        magnetismCheckBox;
 	private JLabel           rulersLabel;
@@ -142,7 +144,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
    */
   public UserPreferencesPanel(UserPreferences preferences,
                               UserPreferencesController controller, Activity activity) {
-	  super(preferences, activity, R.layout.dialog_preferences);
+  	super(preferences, activity, R.layout.dialog_preferences);
     this.controller = controller;
     createComponents(preferences, controller);
     layoutComponents();
@@ -152,7 +154,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
    * Creates and initializes components and spinners model.
    */
   private void createComponents(final UserPreferences preferences,
-																final UserPreferencesController controller) {
+								final UserPreferencesController controller) {
 		if (controller.isPropertyEditable(UserPreferencesController.Property.LANGUAGE)) {
 			// Create language label and combo box bound to controller LANGUAGE property
 			this.languageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
@@ -202,21 +204,32 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			preferences.addPropertyChangeListener(UserPreferences.Property.SUPPORTED_LANGUAGES,
 							new SupportedLanguagesChangeListener(this));
 		}
-    
-  /*  if (controller.mayImportLanguageLibrary()) {
-      this.languageLibraryImportButton = new JButton(activity, "Import lanaguage");
-		//TODO: note this has an icon, not a text
-		//		 new ResourceAction(
-        //  preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY", true) {
-		languageLibraryImportButton.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View view)
-			{
-				controller.importLanguageLibrary();
-			}
-          });
-     // this.languageLibraryImportButton.setToolTipText(preferences.getLocalizedString(
-      //    com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
-    }*/
+
+		if (controller.mayImportLanguageLibrary()) {
+		 // this.languageLibraryImportButton = new JButton(activity,
+		//		  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
+			this.languageLibraryImportButton = new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(
+					com.eteks.sweethome3d.android_props.UserPreferencesPanel.class.getResource("resources/actions/language-import.png")).getImage().getDelegate());
+ 	  		languageLibraryImportButton.setOnClickListener(new View.OnClickListener(){
+				public void onClick(View view) {
+					//We can't use this as it gets onto the the EDT and cause much trouble, so we just copy out
+					//controller.importLanguageLibrary();
+					Thread t3 = new Thread() {
+						public void run() {
+							HomeController controller = ((Renovations3DActivity) activity).getHomeController();
+							if (controller != null) {
+								String languageLibraryName = controller.getView().showImportLanguageLibraryDialog();
+								if (languageLibraryName != null) {
+									controller.importLanguageLibrary(languageLibraryName);
+									Renovations3DActivity.logFireBaseLevelUp("languageLibraryName", languageLibraryName);
+								}
+							}}};
+					t3.start();;
+				}
+			  });
+		  	//this.languageLibraryImportButton.setToolTipText(preferences.getLocalizedString(
+			//  com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
+		}
 
 		if (controller.isPropertyEditable(UserPreferencesController.Property.UNIT)) {
 			// Create unit label and combo box bound to controller UNIT property
@@ -805,7 +818,7 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 
 	  final SharedPreferences settings = getContext().getSharedPreferences(Renovations3DActivity.PREFS_NAME, 0);
 
-    this.resetDisplayedActionTipsButton = new JButton(activity,
+      this.resetDisplayedActionTipsButton = new JButton(activity,
 			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.UserPreferencesPanel.class, "RESET_DISPLAYED_ACTION_TIPS.Name"));
 	  resetDisplayedActionTipsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View view) {
@@ -1013,15 +1026,14 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 			swapOut(this.languageLabel, R.id.prefs_languageLabel);
 			swapOut(this.languageComboBox, R.id.prefs_languageSpinner);
 
-		/*	if (this.languageLibraryImportButton != null) {
+			if (this.languageLibraryImportButton != null) {
 				swapOut(this.languageLibraryImportButton, R.id.prefs_languageLibraryImportButton);
 			} else {
 				removeView(R.id.prefs_languageLibraryImportButton);
-			}*/
+			}
 		} else {
 			removeView(R.id.prefs_languageLabel);
 			removeView(R.id.prefs_languageSpinner);
-			//removeView(R.id.prefs_languageLibraryImportButton);
 		}
 
 		if (this.unitLabel != null) {

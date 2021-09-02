@@ -21,17 +21,22 @@ package com.eteks.renovations3d.android;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eteks.renovations3d.AdMobManager;
 import com.eteks.renovations3d.Renovations3DActivity;
@@ -68,6 +73,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,6 +98,7 @@ import javaawt.image.VMBufferedImage;
 import javaawt.imageio.ImageIO;
 import javaxswing.Icon;
 import javaxswing.ImageIcon;
+import me.drakeet.support.toast.ToastCompat;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -829,70 +836,109 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Saves the created image.
 	 */
-	private void savePhoto(final boolean share)
-	{
-		Thread t = new Thread(new Runnable()
-		{
-			public void run()
-			{
-				String pngFile = controller.getContentManager().showSaveDialog(PhotoPanel.this,
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoDialog.title"),
-						ContentManager.ContentType.PNG, home.getName());
-				try
-				{
-					if (pngFile != null)
-					{
-						final File photoFile = new File(pngFile);
-						ImageIO.write(photoComponent.getImage(), "PNG", photoFile);
-						Renovations3DActivity.logFireBaseLevelUp("Photo Saved as", pngFile);
+	private void savePhoto(final boolean share) {
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					// to be set one way or the other
+					Uri outputFileUri = null;
+					String imageName = "";
 
-						((Renovations3DActivity)activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.PHOTO_SAVE_OR_SHARE);
+					//android Q p doesn't want file picking at all
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+						String homeName = new File(((Renovations3DActivity)activity).getHome().getName()).getName().replace(".sh3d","");
+						// TODO: make photo generic string
+						String filename =  activity.getResources().getString(R.string.app_name) + "_" + homeName + "_photo";
 
-						if(share)
-						{
-							Renovations3DActivity.logFireBaseContent("sharephoto_start", "photo name: " + photoFile.getName());
-							final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-							emailIntent.setType("image/png");
+						// just let the media store know about it and save it to our local image file location
+						ContentValues values = new ContentValues();
+						values.put(MediaStore.Images.Media.TITLE, filename);
+						values.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
+						values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+						values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+						values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+						values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES );
 
-							String subjectText = activity.getResources().getString(R.string.app_name) + " " + photoFile.getName();
-							emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
-							//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+						values.put(MediaStore.Images.Media.IS_PENDING, true);
 
-							Uri outputFileUri = null;
-							if (Build.VERSION.SDK_INT > M)
-							{
-								outputFileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", photoFile);
-							}
-							else
-							{
-								outputFileUri = Uri.fromFile(photoFile);
-							}
-							emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-							emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+						outputFileUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-							activity.runOnUiThread(new Runnable(){public void run(){
-							// Always use string resources for UI text.
-							// This says something like "Share this photo with"
-							String title = activity.getResources().getString(R.string.share);
-							// Create intent to show chooser
-							Intent chooser = Intent.createChooser(emailIntent, title);
+						if(outputFileUri != null) {
+							OutputStream os = activity.getContentResolver().openOutputStream(outputFileUri);
+							ImageIO.write(photoComponent.getImage(), "PNG", os);
+							os.flush();
+							os.close();
 
-							// Verify the intent will resolve to at least one activity
-							if (emailIntent.resolveActivity(activity.getPackageManager()) != null) {
-								activity.startActivity(chooser);
-							}
-							Renovations3DActivity.logFireBaseContent("sharephoto_end", "photo name: " + photoFile.getName());}});
+							values.clear();
+							values.put(MediaStore.Images.Media.IS_PENDING, false);
+							activity.getContentResolver().update(outputFileUri, values, null, null);
+							Cursor cursor = activity.getContentResolver().query(outputFileUri, new String[]{MediaStore.Images.Media.DISPLAY_NAME},null,null,null);
+							cursor.moveToNext();
+
+							imageName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME));
+
+							final String toastName = imageName;
+							activity.runOnUiThread(new Runnable() {
+								public void run() {
+									//As the file anme is unknown to the user show it in a toast
+									ToastCompat.makeText(activity, "Saved as " + toastName, Toast.LENGTH_SHORT).show();
+								}});
 						}
 
+					} else {
+						String pngFile = controller.getContentManager().showSaveDialog(PhotoPanel.this,
+								preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoDialog.title"),
+								ContentManager.ContentType.PNG, home.getName());
 
+						if (pngFile != null) {
+							final File photoFile = new File(pngFile);
+							ImageIO.write(photoComponent.getImage(), "PNG", photoFile);
+							imageName = photoFile.getName();
+							if (Build.VERSION.SDK_INT > M) {
+								outputFileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", photoFile);
+							} else {
+								outputFileUri = Uri.fromFile(photoFile);
+							}
+						}
 					}
-				}
-				catch (Exception ex)
-				{
+
+					if (share && outputFileUri != null) {
+
+						Renovations3DActivity.logFireBaseContent("sharephoto_start");
+						final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+						emailIntent.setType("image/png");
+
+						String subjectText = activity.getResources().getString(R.string.app_name) + " " + imageName;
+						emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
+						//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+
+						emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+						emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+
+						activity.runOnUiThread(new Runnable() {
+							public void run() {
+								// Always use string resources for UI text.
+								// This says something like "Share this photo with"
+								String title = activity.getResources().getString(R.string.share);
+								// Create intent to show chooser
+								Intent chooser = Intent.createChooser(emailIntent, title);
+
+								// Verify the intent will resolve to at least one activity
+								if (emailIntent.resolveActivity(activity.getPackageManager()) != null) {
+									activity.startActivity(chooser);
+								}
+								Renovations3DActivity.logFireBaseContent("sharephoto_end");
+							}
+						});
+					}
+				} catch (Exception ex) {
 					String messageFormat = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoError.message");
 					JOptionPane.showMessageDialog(activity, String.format(messageFormat, ex.getMessage()),
 							preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoError.title"), JOptionPane.ERROR_MESSAGE);
 				}
+
+				Renovations3DActivity.logFireBaseLevelUp("Photo Saved");
+				((Renovations3DActivity) activity).getAdMobManager().eventTriggered(AdMobManager.InterstitialEventType.PHOTO_SAVE_OR_SHARE);
 			}
 		});
 		t.start();
@@ -951,7 +997,5 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 			System.out.print("                                                                      \r");
 		}
 	}
-
-
 
 }

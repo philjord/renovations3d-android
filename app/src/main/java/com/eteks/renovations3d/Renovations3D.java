@@ -27,6 +27,7 @@ import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
 import com.eteks.renovations3d.android.HomePane;
 import com.eteks.sweethome3d.io.HomeFileRecorder;
+import com.eteks.sweethome3d.io.HomeStreamRecorder;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.swingish.JOptionPane;
 import com.eteks.renovations3d.j3d.Component3DManager;
@@ -53,6 +54,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -75,7 +77,9 @@ public class Renovations3D extends HomeApplication {
 	public static final float LARGE_HOME_MIN_BYTES_RATIO = 0.05f;//512 max = 25.5mb is large, for 256 max = 12.75mb is large
 
 	private HomeRecorder homeRecorder;
+	private HomeRecorder homeStreamRecorder;
 	private HomeRecorder compressedHomeRecorder;
+	private HomeRecorder compressedHomeStreamRecorder;
 	//private UserPreferences userPreferences;	// moved to Renovations3DActivity to make a singleton
 	private ContentManager contentManager;
 	private ViewFactory viewFactory;
@@ -228,106 +232,167 @@ public class Renovations3D extends HomeApplication {
 
 
 	// this is a butchery of HomeController.open(String)
-	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp) {
-		Renovations3DActivity.logFireBaseContent("loadHomeFile", homeFile.getName());
+	// homeFile must be either File or InputStream
+	public void loadHome(final Object homeIn, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp) {
 
-		// force dump old pref property change support
-		this.getUserPreferences().clearPropertyChangeListeners();
+		if( homeIn instanceof File) {
+			File homeFile = (File)homeIn;
+			Renovations3DActivity.logFireBaseContent("loadHomeFile", homeFile.getName());
 
-		final String homeName = homeFile.getAbsolutePath();
-		// this guy is stolen from the HomeController.open method which does fancy stuff
-		// Read home in a threaded task
-		Callable<Void> openTask = new Callable<Void>() {
-			public Void call() throws RecorderException {
+			// force dump old pref property change support
+			this.getUserPreferences().clearPropertyChangeListeners();
 
-				// Read home with application recorder
-				home = getHomeRecorder().readHome(homeName);
-				if(overrideName != null) {
-					home.setName(overrideName.length() == 0 ? null : overrideName);// Notice this is used as the save name
-					home.setModified(isModifiedOverrideValue);
-				} else {
-					home.setName(homeName);
-				}
-				homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
+			final String homeName = homeFile.getAbsolutePath();
+			// this guy is stolen from the HomeController.open method which does fancy stuff
+			// Read home in a threaded task
+			Callable<Void> openTask = new Callable<Void>() {
+				public Void call() throws RecorderException {
 
-				currentHomeReduceVisibleModels = false;
-				//TODO: More correctly I want to know the zipped size, but home getHomeRecorder().readHome(homeName); above works out zip-ness but does not record that fact
-				// So instead I'm just working with modelsizes which is all I can play with anyway
-				long maxMem = Runtime.getRuntime().maxMemory();
-				long largeModelsLimitSize = (long)(LARGE_HOME_MIN_BYTES_RATIO * maxMem);
-				//512 max meme * 0.05 = 25.5Mb is large home, large model = 25.5Mb / 10 = 2.5Mb
-				long largeModelSize = (long)(largeModelsLimitSize * 0.1f);
-
-				//temp saves already have the reduce visibility choices in them inherently
-				if(!loadedFromTemp)
-				{
-					boolean hasModelToMakeInvisible = false;
-					long totalModelSize = 0;
-					for (HomePieceOfFurniture f : home.getFurniture()) {
-						long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
-						totalModelSize += modelSize;
-						if (modelSize > largeModelSize) {
-							hasModelToMakeInvisible = true;
-						}
+					// Read home with application recorder
+					home = getHomeRecorder().readHome(homeName);
+					if (overrideName != null) {
+						home.setName(overrideName.length() == 0 ? null : overrideName);// Notice this is used as the save name
+						home.setModified(isModifiedOverrideValue);
+					} else {
+						home.setName(homeName);
 					}
-					if(totalModelSize > largeModelsLimitSize)
-					{
-						if (hasModelToMakeInvisible) {
-							String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
-							String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
-							String messageHtml = warningMessageHtml.replace("%1", size);
+					homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
 
-							int result = JOptionPane.showConfirmDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
-											JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					currentHomeReduceVisibleModels = false;
+					//TODO: More correctly I want to know the zipped size, but home getHomeRecorder().readHome(homeName); above works out zip-ness but does not record that fact
+					// So instead I'm just working with modelsizes which is all I can play with anyway
+					long maxMem = Runtime.getRuntime().maxMemory();
+					long largeModelsLimitSize = (long) (LARGE_HOME_MIN_BYTES_RATIO * maxMem);
+					//512 max meme * 0.05 = 25.5Mb is large home, large model = 25.5Mb / 10 = 2.5Mb
+					long largeModelSize = (long) (largeModelsLimitSize * 0.1f);
 
-							currentHomeReduceVisibleModels = result == JOptionPane.OK_OPTION;
-						}
-					}
-				}
-
-				if(currentHomeReduceVisibleModels == true) {
-					for(HomePieceOfFurniture f : home.getFurniture()) {
-						long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
-						if(modelSize > largeModelSize) {
-							f.setVisible(false);
-						}
-					}
-				}
-
-				homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						parentActivity.setUpViews();
-						parentActivity.invalidateOptionsMenu();
-					}
-				});
-
-				for(OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners) {
-					onHomeLoadedListener.onHomeLoaded(home, homeController);
-				}
-				return null;
-			}
-		};
-		ThreadedTaskController.ExceptionHandler exceptionHandler =
-				new ThreadedTaskController.ExceptionHandler() {
-					public void handleException(Exception ex) {
-						if (!(ex instanceof InterruptedRecorderException)) {
-							//if (ex instanceof DamagedHomeRecorderException) {
-							//	DamagedHomeRecorderException ex2 = (DamagedHomeRecorderException)ex;
-							//	openDamagedHome(homeName, ex2.getDamagedHome(), ex2.getInvalidContent());
-							//} else {
-							ex.printStackTrace();
-							if (ex instanceof RecorderException) {
-								String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", homeName);
-								new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
+					//temp saves already have the reduce visibility choices in them inherently
+					if (!loadedFromTemp) {
+						boolean hasModelToMakeInvisible = false;
+						long totalModelSize = 0;
+						for (HomePieceOfFurniture f : home.getFurniture()) {
+							long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
+							totalModelSize += modelSize;
+							if (modelSize > largeModelSize) {
+								hasModelToMakeInvisible = true;
 							}
-							//}
+						}
+						if (totalModelSize > largeModelsLimitSize) {
+							if (hasModelToMakeInvisible) {
+								String warningMessageHtml = parentActivity.getString(R.string.large_home_question);
+								String size = Formatter.formatShortFileSize(parentActivity, homeFile.length());
+								String messageHtml = warningMessageHtml.replace("%1", size);
+
+								int result = JOptionPane.showConfirmDialog(parentActivity, messageHtml, parentActivity.getString(R.string.large_home_question_title),
+										JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+								currentHomeReduceVisibleModels = result == JOptionPane.OK_OPTION;
+							}
 						}
 					}
-				};
-		(new ThreadedTaskController(openTask,
-				getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
-				getUserPreferences(), this.viewFactory)).executeTask(new View(){});
+
+					if (currentHomeReduceVisibleModels == true) {
+						for (HomePieceOfFurniture f : home.getFurniture()) {
+							long modelSize = (f.getModelSize() == null ? 0 : f.getModelSize());// can be a null Long oddly
+							if (modelSize > largeModelSize) {
+								f.setVisible(false);
+							}
+						}
+					}
+
+					homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							parentActivity.setUpViews();
+							parentActivity.invalidateOptionsMenu();
+						}
+					});
+
+					for (OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners) {
+						onHomeLoadedListener.onHomeLoaded(home, homeController);
+					}
+					return null;
+				}
+			};
+			ThreadedTaskController.ExceptionHandler exceptionHandler =
+					new ThreadedTaskController.ExceptionHandler() {
+						public void handleException(Exception ex) {
+							if (!(ex instanceof InterruptedRecorderException)) {
+								//if (ex instanceof DamagedHomeRecorderException) {
+								//	DamagedHomeRecorderException ex2 = (DamagedHomeRecorderException)ex;
+								//	openDamagedHome(homeName, ex2.getDamagedHome(), ex2.getInvalidContent());
+								//} else {
+								ex.printStackTrace();
+								if (ex instanceof RecorderException) {
+									String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", homeName);
+									new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
+								}
+								//}
+							}
+						}
+					};
+			(new ThreadedTaskController(openTask,
+					getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+					getUserPreferences(), this.viewFactory)).executeTask(new View() {
+			});
+		} else if (homeIn instanceof InputStream) {
+			InputStream homeInputStream = (InputStream)homeIn;
+
+			// force dump old pref property change support
+			this.getUserPreferences().clearPropertyChangeListeners();
+
+
+			// this guy is stolen from the HomeController.open method which does fancy stuff
+			// Read home in a threaded task
+			Callable<Void> openTask = new Callable<Void>() {
+				public Void call() throws RecorderException {
+
+					// Read home with application recorder
+					home = ((HomeStreamRecorder)getHomeStreamRecorder()).readHome(homeInputStream);
+					if (overrideName != null) {
+						home.setName(overrideName.length() == 0 ? null : overrideName);// Notice this is used as the save name
+						home.setModified(isModifiedOverrideValue);
+					} else {
+						home.setName("");
+					}
+					homeController = new HomeController(home, Renovations3D.this, viewFactory, contentManager);
+
+					homeController.getView();// this must be called in order to add the edit listeners so isModified is set correctly.
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							parentActivity.setUpViews();
+							parentActivity.invalidateOptionsMenu();
+						}
+					});
+
+					for (OnHomeLoadedListener onHomeLoadedListener : onHomeLoadedListeners) {
+						onHomeLoadedListener.onHomeLoaded(home, homeController);
+					}
+					return null;
+				}
+			};
+			ThreadedTaskController.ExceptionHandler exceptionHandler =
+					new ThreadedTaskController.ExceptionHandler() {
+						public void handleException(Exception ex) {
+							if (!(ex instanceof InterruptedRecorderException)) {
+								//if (ex instanceof DamagedHomeRecorderException) {
+								//	DamagedHomeRecorderException ex2 = (DamagedHomeRecorderException)ex;
+								//	openDamagedHome(homeName, ex2.getDamagedHome(), ex2.getInvalidContent());
+								//} else {
+								ex.printStackTrace();
+								if (ex instanceof RecorderException) {
+									String message = getUserPreferences().getLocalizedString(HomeController.class, "openError", "");
+									new HomePane(null, getUserPreferences(), null, parentActivity).showError(message);
+								}
+								//}
+							}
+						}
+					};
+			(new ThreadedTaskController(openTask,
+					getUserPreferences().getLocalizedString(HomeController.class, "openMessage"), exceptionHandler,
+					getUserPreferences(), this.viewFactory)).executeTask(new View() {
+			});
+		}
 	}
 
 
@@ -352,6 +417,13 @@ public class Renovations3D extends HomeApplication {
 		}
 		return this.homeRecorder;
 	}
+	public HomeRecorder getHomeStreamRecorder() {
+		// Initialize homeRecorder lazily
+		if (this.homeStreamRecorder == null) {
+			this.homeStreamRecorder = new HomeStreamRecorder(0, false, getUserPreferences(), false, true, true);
+		}
+		return this.homeStreamRecorder;
+	}
 
 	@Override
 	public HomeRecorder getHomeRecorder(HomeRecorder.Type type) {
@@ -361,6 +433,17 @@ public class Renovations3D extends HomeApplication {
 				this.compressedHomeRecorder = new HomeFileRecorder(9, false, getUserPreferences(), false, true, true);
 			}
 			return this.compressedHomeRecorder;
+		} else {
+			return super.getHomeRecorder(type);
+		}
+	}
+	public HomeRecorder getHomeStreamRecorder(HomeRecorder.Type type) {
+		if (type == HomeRecorder.Type.COMPRESSED) {
+			// Initialize compressedHomeRecorder lazily
+			if (this.compressedHomeStreamRecorder == null) {
+				this.compressedHomeStreamRecorder = new HomeStreamRecorder(9, false, getUserPreferences(), false, true, true);
+			}
+			return this.compressedHomeStreamRecorder;
 		} else {
 			return super.getHomeRecorder(type);
 		}

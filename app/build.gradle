@@ -59,6 +59,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.3.0')// and this does that thing
     implementation 'com.google.firebase:firebase-core'
     implementation 'com.google.firebase:firebase-config'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     releaseImplementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     //apparently ads is not part of the bom system, how do I know, trial and error like everything gradle based

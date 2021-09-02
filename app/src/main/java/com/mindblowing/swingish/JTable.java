@@ -1,15 +1,14 @@
 package com.mindblowing.swingish;
 
-import javaawt.Graphics;
+
+import android.app.Activity;
 
 /**
  * Created by phil on 1/16/2017.
  */
-public class JTable extends JComponent
+public class JTable extends JPanel
 {
-	@Override
-	public void paintComponent(Graphics g)
-	{
-		//PJ do I ever need this
+	public JTable(Activity activity, int rootViewId) {
+		super(activity, rootViewId);
 	}
 }

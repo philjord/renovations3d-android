@@ -3,10 +3,13 @@ package com.eteks.renovations3d;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +23,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -32,7 +37,9 @@ import android.widget.Toast;
 
 import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.sweethome3d.io.FileUserPreferences;
+import com.eteks.sweethome3d.io.HomeStreamRecorder;
 import com.eteks.sweethome3d.model.HomeRecorder;
+import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.mindblowing.utils.SopInterceptor;
@@ -53,8 +60,11 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -68,10 +78,12 @@ import java.util.concurrent.Semaphore;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import androidx.activity.result.ActivityResult;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
+
 import javaawt.EventQueue;
 import javaawt.VMEventQueue;
 import javaawt.image.VMBufferedImage;
@@ -87,9 +99,7 @@ import static android.os.Build.VERSION_CODES.M;
 public class Renovations3DActivity extends FragmentActivity {
 	public static final String PREFS_NAME = "SweetHomeAVRActivityDefault";// can't touch as current users use this!
 
-	public static final String autoOpenFirstOpen = "SweetHome3DExample2.sh3d";
 	public static final String CURRENT_WORK_FILENAME = "currentWork.sh3d";
-	public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
 	public static final String LANGUAGE_SET_ON_FIRST_USE = "LANGUAGE_SET_ON_FIRST_USE";
 	public static final String SHOW_PAGER_BUTTONS_PREF = "SHOW_PAGER_BUTTONS_PREF";
 	public static final String SHOW_PLAN_ZOOM_BUTTONS_PREF = "SHOW_PLAN_ZOOM_BUTTONS_PREF";
@@ -103,8 +113,6 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	private static String STATE_TEMP_HOME_REAL_NAME = "STATE_TEMP_HOME_REAL_NAME";
 	private static String STATE_TEMP_HOME_REAL_MODIFIED = "STATE_TEMP_HOME_REAL_MODIFIED";
-	private static String STATE_CURRENT_HOME_NAME = "STATE_CURRENT_HOME_NAME";
-	private static String EXAMPLE_DOWNLOAD_COUNT = "EXAMPLE_DOWNLOAD_COUNT";
 
 	// used as a modal mouse click blocker
 	public AndroidDialogView currentDialog = null;
@@ -126,6 +134,7 @@ public class Renovations3DActivity extends FragmentActivity {
 	private ImageAcquireManager imageAcquireManager;
 	private AdMobManager adMobManager;
 	private Tutorial tutorial;
+	public final FileActivityResult<Intent, ActivityResult> fileActivityLauncher = FileActivityResult.registerActivityForResult(this);
 
 	private Renovations3D renovations3D; // for plan undo redo, now for import statements too
 
@@ -352,15 +361,26 @@ public class Renovations3DActivity extends FragmentActivity {
 
 		// If we were given locations permission at some point then use it here now for ads, but don't ask for it (the compass does that)
 		if (Build.VERSION.SDK_INT >= M) {
-				locationPermission(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+			locationPermission(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 		} else {
 			locationPermission(true);
 		}
 
 		billingManager.initialize();
 		invalidateOptionsMenu();
-		loadUpContent();
 
+		// set up the auto save system now as various things below call return
+		final TimerTask autoSaveTask = new TimerTask() {
+			public void run() {
+				System.out.println("Possibly auto save");
+				doAutoSave();
+			}
+		};
+		autoSaveTimer.purge();// in case of restart we don't want 2 tasks running
+		//TODO: in fact use the users preference for teh prefs dialog, this is 1 minute in ms
+		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 1 * 60 * 1000, 1 * 60 * 1000);
+
+		loadUpContent();
 
 	}
 
@@ -537,65 +557,7 @@ public class Renovations3DActivity extends FragmentActivity {
 		}
 	}
 
-	private void share() {
-		//https://developer.android.com/training/basics/intents/sending.html
 
-		Home home = getHome();
-		if(home != null) {
-			final Home autoSaveHome = home.clone();
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					//name will be null for a new home and "" for some corrupted autosaves
-					// to share with a name the user needs to do a save as
-					String name = autoSaveHome.getName();
-					name = (name == null || name.length() == 0) ? "Home.sh3d" : name;
-					final String homeName = new File(name).getName();
-
-					Renovations3DActivity.logFireBaseContent("shareemail_start", "homeName: " +  homeName);
-					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-					emailIntent.setType("text/*");
-
-					String subjectText = getResources().getString(R.string.app_name) + " " + homeName;
-					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
-					//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
-
-					//let's do a temp save
-					File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-					File homeFile = new File(storageDir,  homeName);
-
-					try {
-						//NOTE compressed VERY slow
-						renovations3D.getHomeRecorder(HomeRecorder.Type.COMPRESSED).writeHome(autoSaveHome, homeFile.getAbsolutePath());
-
-						Uri outputFileUri = null;
-						if (Build.VERSION.SDK_INT > M) {
-							outputFileUri = FileProvider.getUriForFile(Renovations3DActivity.this, getApplicationContext().getPackageName() + ".provider", homeFile);
-						} else {
-							outputFileUri = Uri.fromFile(homeFile);
-						}
-						emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-						emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
-
-						Renovations3DActivity.this.runOnUiThread(new Runnable(){public void run(){
-						// Always use string resources for UI text.
-						// This says something like "Share this photo with"
-						String title = getResources().getString(R.string.share);
-						// Create intent to show chooser
-						Intent chooser = Intent.createChooser(emailIntent, title);
-
-						// Verify the intent will resolve to at least one activity
-						if (emailIntent.resolveActivity(getPackageManager()) != null) {
-							startActivity(chooser);
-						}
-						Renovations3DActivity.logFireBaseContent("shareemail_end", "homeName: " + homeName);}});
-					} catch (RecorderException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			t.start();
-		}
-	}
 
 	private void showHelp() {
 		//if (renovations3D.getHomeController() != null)
@@ -604,11 +566,9 @@ public class Renovations3DActivity extends FragmentActivity {
 		Renovations3DActivity.logFireBaseLevelUp("menu_help");
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 		dialog.setMessage(getString(R.string.helpRedirectNotice));
-		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-		{
+		dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
+			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 
 				// build a localized version if possible
@@ -670,6 +630,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	@Override
 	public void onResume() {
+		System.out.println("onResume");
 		super.onResume();
 
 		if(tutorial != null)
@@ -686,12 +647,11 @@ public class Renovations3DActivity extends FragmentActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	private void recordHomeStateInPrefs(String tempHomeRealName, boolean tempHomeRealModified, String currentHomeName) {
+	private void recordHomeStateInPrefs(String tempHomeRealName, boolean tempHomeRealModified) {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(STATE_TEMP_HOME_REAL_NAME, tempHomeRealName);
 		editor.putBoolean(STATE_TEMP_HOME_REAL_MODIFIED, tempHomeRealModified);
-		editor.putString(STATE_CURRENT_HOME_NAME, currentHomeName);
 		editor.apply();
 	}
 
@@ -724,7 +684,7 @@ public class Renovations3DActivity extends FragmentActivity {
 		//I must get off the EDT as it may ask the question in a blocking manner
 		Thread t = new Thread() {
 			public void run() {
-				Home home = getHome();
+				final Home home = getHome();
 				if (getHomeController() != null && home != null) {
 					String homeName = home.getName();
 					Renovations3DActivity.logFireBaseContent("menu_save", homeName);
@@ -738,7 +698,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 					if (homeName != null && !home.isRepaired()) {
 						// update prefs to base a check of a ral file save
-						recordHomeStateInPrefs("", false, homeName);
+						recordHomeStateInPrefs(homeName, false);
 					} else {
 						// no current name will get a modified homes change
 						// record the name into prefs after it is changed
@@ -746,7 +706,7 @@ public class Renovations3DActivity extends FragmentActivity {
 							@Override
 							public void propertyChange(PropertyChangeEvent evt) {
 								if(getHome() != null) {
-									recordHomeStateInPrefs("", false, getHome().getName());
+									recordHomeStateInPrefs(getHome().getName(), false);
 								}
 								// only once
 								if (getUserPreferences() != null)
@@ -757,7 +717,89 @@ public class Renovations3DActivity extends FragmentActivity {
 							getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener);
 					}
 
-					getHomeController().saveAndCompress();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+						String saveHomeName = new File(homeName).getName() + (homeName.endsWith(".sh3d") ? "" : ".sh3d"); // strip path from filename and add ext if required
+						HomeController homeController = renovations3D.getHomeController();
+						final Home savedHome;
+						try {
+							savedHome = home.clone();
+						} catch (RuntimeException var7) {
+							homeController.getView().showError(
+									getUserPreferences().getLocalizedString(HomeController.class, "saveError", new Object[]{saveHomeName, var7}));
+							throw var7;
+						}
+
+						Uri collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL);
+
+						String[] projection = new String[] {
+								MediaStore.Downloads._ID,
+								MediaStore.Downloads.DISPLAY_NAME
+						};
+						String selection = MediaStore.Downloads.DISPLAY_NAME +
+								" = ?";
+						String[] selectionArgs = new String[] {saveHomeName};
+
+						String sortOrder = MediaStore.Downloads.DISPLAY_NAME + " ASC";
+
+						Cursor cursor = null;
+						try {
+							cursor = getApplicationContext().getContentResolver().query(
+								collection,
+								projection,
+								selection,
+								selectionArgs,
+								sortOrder);
+
+							// Cache column indices.
+							int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads._ID);
+							int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads.DISPLAY_NAME);
+
+							// I hope there is only one!
+							if (cursor.moveToNext()) {
+								// Get values of columns for a given video.
+								long id = cursor.getLong(idColumn);
+								String name = cursor.getString(nameColumn);
+
+								Uri outputFileUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id);
+
+								ContentResolver resolver = getApplicationContext().getContentResolver();
+								try {
+									OutputStream out = resolver.openOutputStream(outputFileUri);
+									((HomeStreamRecorder)Renovations3DActivity.this.renovations3D.getHomeStreamRecorder(HomeRecorder.Type.COMPRESSED)).writeHome(savedHome, out);
+
+									cursor = getContentResolver().query(outputFileUri, new String[]{MediaStore.Downloads.DISPLAY_NAME},null,null,null);
+									cursor.moveToNext();
+
+									//As the file name is unknown to the user show it in a toast
+									runOnUiThread(()->{ToastCompat.makeText(Renovations3DActivity.this, "Saved as " + name, Toast.LENGTH_SHORT).show();});
+								} catch (IOException e) {
+									// https://developer.android.com/training/data-storage/shared/media
+									//If your app tries to access a file using the File API and it doesn't have the necessary permissions, a FileNotFoundException occurs.
+									// give it a new file name by way of saveas
+									saveAsSh3dFile();
+								}
+								catch (RecorderException e) {
+									homeController.getView().showError(
+											getUserPreferences().getLocalizedString(HomeController.class, "saveError", new Object[]{saveHomeName, e}));
+								}
+							} else {
+								// no pre saved file of this name that is also owned by this app, so go saveas
+								saveAsSh3dFile();
+							}
+
+						} finally {
+							cursor.close();
+						}
+					} else {
+						// on android < 11 I need to see if the homename is a valid file now otherwise open the saveas dialog
+						// rather than simply failing with a file not found error
+						File checkOutput = new File(home.getName());
+						if(!checkOutput.exists() || checkOutput.canWrite()) {
+							getHomeController().saveAndCompress();
+						} else {
+							getHomeController().saveAsAndCompress();
+						}
+					}
 					getAdMobManager().interstitialDisplayPoint();
 				}
 			}
@@ -771,25 +813,100 @@ public class Renovations3DActivity extends FragmentActivity {
 			public void run() {
 				Home home = getHome();
 				if (getHomeController() != null && home != null) {
-					String homeName = home.getName();
+					String homeName = home.getName(); //this may include path
 					Renovations3DActivity.logFireBaseContent("menu_saveas", homeName);
 
-					// record the name into prefs after it is changed
-					PropertyChangeListener newNameListener = new PropertyChangeListener() {
-						@Override
-						public void propertyChange(PropertyChangeEvent evt) {
-							recordHomeStateInPrefs("", false, getHome().getName());
-							// only once
-							if (getUserPreferences() != null)
-								getUserPreferences().removePropertyChangeListener(UserPreferences.Property.RECENT_HOMES, this);
+					// in android 10 onwards all homes are saved to the download loads, FileContentManager is not used for saves
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+						// this wants files, only
+						//getHomeController().saveAsAndCompress();
+						String saveHomeName = new File(homeName).getName() + (homeName.endsWith(".sh3d") ? "" : ".sh3d"); // strip path from filename and add ext if required
+
+						HomeController homeController = renovations3D.getHomeController();
+						final Home savedHome;
+						try {
+							savedHome = home.clone();
+						} catch (RuntimeException var7) {
+							homeController.getView().showError(
+									getUserPreferences().getLocalizedString(HomeController.class, "saveError", new Object[]{saveHomeName, var7}));
+							throw var7;
 						}
-					};
 
-					//TODO: consider if this should be an OnHomeLoadedListener of Renovations3D instead
-					if (getUserPreferences() != null)
-						getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener);
+						// just let the media store know about it and save it to our local image file location
+						ContentValues values = new ContentValues();
+						values.put(MediaStore.Downloads.TITLE, saveHomeName);
+						values.put(MediaStore.Downloads.DISPLAY_NAME, saveHomeName);
+						values.put(MediaStore.Downloads.MIME_TYPE, "application/octet-stream");// MediaStore.Downloads.CONTENT_TYPE);// "application/sh3d");
+						values.put(MediaStore.Downloads.DATE_ADDED, System.currentTimeMillis() / 1000);
+						values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS );
 
-					getHomeController().saveAsAndCompress();
+						// notice this is not pending as we need the new file name now
+						Uri outputFileUri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+
+						Cursor cursor = getContentResolver().query(outputFileUri, new String[]{MediaStore.Downloads.DISPLAY_NAME},null,null,null);
+						//TODO: what does false mean??
+						if (cursor.moveToNext()) {
+
+							// to get the new name, if a (x) has been added
+							String newHomeName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Downloads.DISPLAY_NAME));
+
+							//change the savedhome name to record it as matching the file
+							savedHome.setName(newHomeName);
+
+							// make it pending
+							values = new ContentValues();
+							values.put(MediaStore.Downloads.IS_PENDING, true);
+							getContentResolver().update(outputFileUri, values, null, null);
+
+							try {
+
+								// actually write the home out to teh stream
+								OutputStream out = getContentResolver().openOutputStream(outputFileUri);
+								((HomeStreamRecorder) Renovations3DActivity.this.renovations3D.getHomeStreamRecorder(HomeRecorder.Type.COMPRESSED)).writeHome(savedHome, out);
+
+								// set pending to false now its complete
+								values = new ContentValues();
+								values.put(MediaStore.Downloads.IS_PENDING, false);
+								getContentResolver().update(outputFileUri, values, null, null);
+
+								// notice this may have been alters to (x) version
+								home.setName(newHomeName);
+								home.setModified(false);
+								home.setRecovered(false);
+								home.setRepaired(false);
+								home.setVersion(savedHome.getVersion());
+
+								// remember the name of the home file, for reload and autosave etc
+								recordHomeStateInPrefs(newHomeName, false);
+
+								//As the file name may be unknown to the user, show it in a toast
+								String toastMessage = "Saved as " + newHomeName;
+								runOnUiThread(() -> {ToastCompat.makeText(Renovations3DActivity.this, toastMessage, Toast.LENGTH_SHORT).show();});
+
+							} catch (RecorderException | FileNotFoundException e) {
+								homeController.getView().showError(
+										getUserPreferences().getLocalizedString(HomeController.class, "saveError", new Object[]{saveHomeName, e}));
+							}
+						}
+					} else {
+
+						// record the name into prefs after it is changed
+						PropertyChangeListener newNameListener = new PropertyChangeListener() {
+							@Override
+							public void propertyChange(PropertyChangeEvent evt) {
+								recordHomeStateInPrefs(getHome().getName(), false);
+								// only once
+								if (getUserPreferences() != null)
+									getUserPreferences().removePropertyChangeListener(UserPreferences.Property.RECENT_HOMES, this);
+							}
+						};
+
+						if (getUserPreferences() != null)
+							getUserPreferences().addPropertyChangeListener(UserPreferences.Property.RECENT_HOMES, newNameListener);
+
+						getHomeController().saveAsAndCompress();
+					}
+
 					getAdMobManager().interstitialDisplayPoint();
 				}
 			}
@@ -798,22 +915,128 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	}
 
+	private void share() {
+		//https://developer.android.com/training/basics/intents/sending.html
+
+		Home home = getHome();
+		if(home != null) {
+			final Home autoSaveHome = home.clone();
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					//name will be null for a new home and "" for some corrupted autosaves
+					// to share with a name the user needs to do a save as
+					String homeName = autoSaveHome.getName();
+					homeName = (homeName == null || homeName.length() == 0) ? "Home.sh3d" : homeName;
+					String saveHomeName = new File(homeName).getName() + (homeName.endsWith(".sh3d") ? "" : ".sh3d"); // strip path from filename and add ext if required
 
 
-	private void loadSh3dFile() {
-		// get off EDT for showOpenDialog call
-		Thread t2 = new Thread() {
-			public void run() {
-				if (getHomeController() != null) {
-					HomeController controller = getHomeController();
-					String openFileName = controller.getView().showOpenDialog();
-					if (openFileName != null) {
-						loadHome(new File(openFileName));
+					Renovations3DActivity.logFireBaseContent("shareemail_start", "homeName: " +  saveHomeName);
+					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+					emailIntent.setType("text/*");
+
+					String subjectText = getResources().getString(R.string.app_name) + " " + saveHomeName;
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectText);
+					//emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Attached");
+
+					//let's do a temp save, can't use GetCacheDir as the getUriForFile below fails
+					File storageDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+					File homeFile = new File(storageDir, saveHomeName);
+
+					try {
+						//NOTE compressed slower
+						renovations3D.getHomeRecorder(HomeRecorder.Type.COMPRESSED).writeHome(autoSaveHome, homeFile.getAbsolutePath());
+
+						Uri outputFileUri = null;
+						if (Build.VERSION.SDK_INT > M) {
+							outputFileUri = FileProvider.getUriForFile(Renovations3DActivity.this, getApplicationContext().getPackageName() + ".provider", homeFile);
+						} else {
+							outputFileUri = Uri.fromFile(homeFile);
+						}
+						emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+						emailIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+
+						Renovations3DActivity.this.runOnUiThread(new Runnable(){public void run(){
+							// Always use string resources for UI text.
+							// This says something like "Share this photo with"
+							String title = getResources().getString(R.string.share);
+							// Create intent to show chooser
+							Intent chooser = Intent.createChooser(emailIntent, title);
+
+							// Verify the intent will resolve to at least one activity
+							if (emailIntent.resolveActivity(getPackageManager()) != null) {
+								startActivity(chooser);
+							}
+							Renovations3DActivity.logFireBaseContent("shareemail_end", "homeName: " + saveHomeName);}});
+					} catch (RecorderException e) {
+						e.printStackTrace();
 					}
 				}
-			}
-		};
-		t2.start();
+			});
+			t.start();
+		}
+	}
+
+	private void loadSh3dFile() {
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
+			intent.setType("*/*");//TODO: only sh3d files ???
+
+			// Optionally, specify a URI for the file that should appear in the
+			// system file picker when it loads.
+			// intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
+
+			fileActivityLauncher.launch(intent, result -> {
+				if (result.getResultCode() == Activity.RESULT_OK) {
+					// There are no request codes
+					Intent data = result.getData();
+
+					// Get the Uri of the selected file
+					Uri uri = data.getData();
+					String uriString = uri.toString();
+					File myFile = new File(uriString);
+					String path = myFile.getAbsolutePath();
+					String displayName = null;
+
+					if (uriString.startsWith("content://")) {
+						Cursor cursor = null;
+						try {
+							cursor = getContentResolver().query(uri, null, null, null, null);
+							if (cursor != null && cursor.moveToFirst()) {
+								displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+							}
+						} finally {
+							cursor.close();
+						}
+					} else if (uriString.startsWith("file://")) {
+						displayName = myFile.getName();
+					}
+
+					try {
+						Renovations3DActivity.this.loadHome(getContentResolver().openInputStream(data.getData()),displayName,false,false);
+					}  catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+		} else {
+			// get off EDT for controller.getView().showOpenDialog() call
+			Thread t2 = new Thread() {
+				public void run() {
+					if (getHomeController() != null) {
+						HomeController controller = getHomeController();
+						String openFileName = controller.getView().showOpenDialog();
+						if (openFileName != null) {
+							loadHome(new File(openFileName));
+						}
+					}
+				}
+			};
+			t2.start();
+		}
+
 	}
 
 	private void newHomeFromExample() {
@@ -876,7 +1099,7 @@ public class Renovations3DActivity extends FragmentActivity {
 									}
 								});
 								renovations3D.loadHomeFromExample(exampleName);
-								recordHomeStateInPrefs("", false, "");
+								recordHomeStateInPrefs("", false);
 							}
 						}
 						);
@@ -899,17 +1122,17 @@ public class Renovations3DActivity extends FragmentActivity {
 	 *
 	 * @param homeFile
 	 */
-	public void loadHome(final File homeFile) {
+	public void loadHome(final Object homeFile) {
 		loadHome(homeFile, null, false, false);
 	}
 
 	/**
 	 * Only call when not on EDT as blocking save question may arise
 	 *
-	 * @param homeFile
+	 * @param homeFile must be a file or an inputstream
 	 * @param loadedFromTemp
 	 */
-	public void loadHome(final File homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp) {
+	public void loadHome(final Object homeFile, final String overrideName, final boolean isModifiedOverrideValue, final boolean loadedFromTemp) {
 		// must get off the EDT thread as the close may ask for a save
 		Thread t2 = new Thread() {
 			public void run() {
@@ -929,7 +1152,7 @@ public class Renovations3DActivity extends FragmentActivity {
 						}
 
 						// must recreate this each time TEST that this is not holding onto views and causing a memory leak on reload of homes
-						mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+						mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), Renovations3DActivity.this);
 
 						mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 						//see http://stackoverflow.com/questions/10396321/remove-fragment-page-from-viewpager-in-android/26944013#26944013 for ensuring new fragments
@@ -968,11 +1191,16 @@ public class Renovations3DActivity extends FragmentActivity {
 
 						// load home and trigger the new views
 						if (homeFile != null) {
-							renovations3D.loadHome(homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
-							recordHomeStateInPrefs(overrideName == null ? "" : overrideName, isModifiedOverrideValue, homeFile.getAbsolutePath());
+							if(homeFile instanceof File) {
+								renovations3D.loadHome((File)homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
+								recordHomeStateInPrefs(overrideName == null ? "" : overrideName, isModifiedOverrideValue);
+							} else if(homeFile instanceof InputStream) {
+								renovations3D.loadHome((InputStream)homeFile, overrideName, isModifiedOverrideValue, loadedFromTemp);
+								recordHomeStateInPrefs(overrideName == null ? "" : overrideName, isModifiedOverrideValue);
+							}
 						} else {
 							renovations3D.newHome();
-							recordHomeStateInPrefs("", false, "");//TODO: should I clear now or just let auto save sort it out?
+							recordHomeStateInPrefs("", false);
 						}
 
 						mRenovations3DPagerAdapter.notifyChangeInPosition(4);
@@ -988,64 +1216,68 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	public BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver() {
 		public void onReceive(Context ctxt, Intent intent) {
-			//don't call unregisterReceiver(this); in case multiple downloads are set up
-			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+		//don't call unregisterReceiver(this); in case multiple downloads are set up
+		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
-			// This is one of our downloads.
-			final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-			DownloadManager.Query query = new DownloadManager.Query();
-			query.setFilterById(id);
-			Cursor cursor = downloadManager.query(query);
+		// This is one of our downloads.
+		final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Query query = new DownloadManager.Query();
+		query.setFilterById(id);
+		Cursor cursor = downloadManager.query(query);
 
-			if (cursor.moveToFirst()) {
-				int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-				int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-				int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+		if (cursor.moveToFirst()) {
+			int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+			int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+			int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-				int status = cursor.getInt(statusIndex);
+			int status = cursor.getInt(statusIndex);
 
-				if (status == DownloadManager.STATUS_SUCCESSFUL) {
-					String localUri = cursor.getString(localUriIndex);
-					try {
-						//WHAT? local storage returns "" paht?
-						URI u = new URI(localUri);
-						String path =   u.getPath();
+			if (status == DownloadManager.STATUS_SUCCESSFUL) {
+				String localUri = cursor.getString(localUriIndex);
+				try {
+					URI u = new URI(localUri);
+					String path =   u.getPath();
 
-						File file = new File(new URI(localUri).getPath());
-						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
-						loadFile(file);
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}
-				} else if (status == DownloadManager.STATUS_FAILED) {
-					int reason = cursor.getInt(reasonIndex);
-
-					String message;
-					switch (reason) {
-						case DownloadManager.ERROR_FILE_ERROR:
-						case DownloadManager.ERROR_DEVICE_NOT_FOUND:
-						case DownloadManager.ERROR_INSUFFICIENT_SPACE:
-							message = "DownloadErrorDisk";
-							break;
-						case DownloadManager.ERROR_HTTP_DATA_ERROR:
-						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-							message = "DownloadErrorHttp";
-							break;
-						case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
-							message = "DownloadErrorRedirection";
-							break;
-						default:
-							message = "DownloadErrorUnknown";
-							break;
-					}
-
-					ToastCompat.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
-					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
+					File file = new File(new URI(localUri).getPath());
+					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
+					loadFile(file);
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
 				}
+			} else if (status == DownloadManager.STATUS_FAILED) {
+				int reason = cursor.getInt(reasonIndex);
+
+				String message;
+				switch (reason) {
+					case DownloadManager.ERROR_FILE_ERROR:
+					case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+					case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+						message = "DownloadErrorDisk";
+						break;
+					case DownloadManager.ERROR_HTTP_DATA_ERROR:
+					case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+						message = "DownloadErrorHttp";
+						break;
+					case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+						message = "DownloadErrorRedirection";
+						break;
+					default:
+						message = "DownloadErrorUnknown";
+						break;
+				}
+
+				ToastCompat.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
+				Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
 			}
+		}
 		}
 	};
 
+	/**
+	 * Either extracts and loads a file or simply extracts the file and returns the temp part
+	 * @param inFile
+	 * @return
+	 */
 
 	public void loadFile(final File inFile) {
 		if (inFile.getName().toLowerCase().endsWith(".sh3d")) {
@@ -1062,80 +1294,91 @@ public class Renovations3DActivity extends FragmentActivity {
 					mRenovations3DPagerAdapter.notifyDataSetChanged();
 				}
 
-				mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager());
+				mRenovations3DPagerAdapter = new Renovations3DPagerAdapter(getSupportFragmentManager(), Renovations3DActivity.this);
 
 				mRenovations3DPagerAdapter.setRenovations3D(renovations3D);
 
 				// create new home and trigger the new views
 				renovations3D.newHome();
-				recordHomeStateInPrefs("", false, "");
+				recordHomeStateInPrefs("", false);
 
 				mRenovations3DPagerAdapter.notifyChangeInPosition(4);
 				mRenovations3DPagerAdapter.notifyDataSetChanged();
 			}
 
-			//get off EDT so blocking questions can be asked
-			Thread t = new Thread() {
-				public void run() {
-					if (getHomeController() != null) {
-						// try the zip wrapped option
-						if (inFile.getName().toLowerCase().endsWith(".zip")) {
-							int BUFFER = 1024;
-							ZipInputStream zipIn = null;
-							try {
-								zipIn = new ZipInputStream(new FileInputStream(inFile));
 
-								ZipEntry entry;
-								while ((entry = zipIn.getNextEntry()) != null) {
-									if (entry.getName().toLowerCase().endsWith(".sh3f")) {
-										int count;
-										byte data[] = new byte[1024];
-										// Write the files to the disk
-										File extractedFile = new File(inFile.getParentFile(), entry.getName());
-										FileOutputStream fos = new FileOutputStream(extractedFile);
-										BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-										while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
-											dest.write(data, 0, count);
-										}
-										dest.flush();
-										dest.close();
-										zipIn.closeEntry();
-										getHomeController().importFurnitureLibrary(extractedFile.getAbsolutePath());
-									} else if (entry.getName().toLowerCase().endsWith(".sh3t")) {
-										int count;
-										byte data[] = new byte[1024];
-										// Write the files to the disk
-										File extractedFile = new File(inFile.getParentFile(), entry.getName());
-										FileOutputStream fos = new FileOutputStream(extractedFile);
-										BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-										while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
-											dest.write(data, 0, count);
-										}
-										dest.flush();
-										dest.close();
-										zipIn.closeEntry();
-										getHomeController().importTexturesLibrary(extractedFile.getAbsolutePath());
-									}
+			if (getHomeController() != null) {
+				// original or extracted
+				File extractedFile = inFile;
+				// try the zip wrapped option
+				if (inFile.getName().toLowerCase().endsWith(".zip")) {
+					int BUFFER = 1024;
+					ZipInputStream zipIn = null;
+					try {
+						zipIn = new ZipInputStream(new FileInputStream(inFile));
+
+						ZipEntry entry;
+						while ((entry = zipIn.getNextEntry()) != null) {
+							String entryName = entry.getName();
+
+							if (entryName.toLowerCase().endsWith(".sh3f")
+									|| entryName.toLowerCase().endsWith(".sh3t")
+									|| entryName.toLowerCase().endsWith(".sh3l")) {
+								//unzip to a cache file of entry name
+								int count;
+								byte data[] = new byte[1024];
+								// Write the files to the disk
+								extractedFile = new File(Renovations3DActivity.this.getCacheDir(), entryName);
+								FileOutputStream fos = new FileOutputStream(extractedFile);
+								BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+								while ((count = zipIn.read(data, 0, BUFFER)) != -1) {
+									dest.write(data, 0, count);
 								}
-							} catch (IOException e) {
-								//System.out.println(e);
-								e.printStackTrace();
-							} finally {
-								if (zipIn != null) {
-									try {
-										zipIn.close();
-									} catch(IOException e) {;}
-								}
+								dest.flush();
+								dest.close();
+								zipIn.closeEntry();
+
+
 							}
-						} else if (inFile.getName().toLowerCase().endsWith(".sh3f")) {
-							getHomeController().importFurnitureLibrary(inFile.getAbsolutePath());
-						} else if (inFile.getName().toLowerCase().endsWith(".sh3t")) {
-							getHomeController().importTexturesLibrary(inFile.getAbsolutePath());
+						}
+					} catch (IOException e) {
+						//System.out.println(e);
+						e.printStackTrace();
+					} finally {
+						if (zipIn != null) {
+							try {
+								zipIn.close();
+							} catch (IOException e) {
+								;
+							}
 						}
 					}
 				}
-			};
-			t.start();
+
+				// point at it and fall through
+				File finalFile = extractedFile;
+
+				if (finalFile.getName().toLowerCase().endsWith(".sh3f")
+						|| finalFile.getName().toLowerCase().endsWith(".sh3t")
+						|| finalFile.getName().toLowerCase().endsWith(".sh3l")) {
+					//get off EDT so blocking questions can be asked
+					Thread t = new Thread() {
+						public void run() {
+							// after optionally unzipping above try and load it
+							if (finalFile.getName().toLowerCase().endsWith(".sh3f")) {
+								getHomeController().importFurnitureLibrary(finalFile.getAbsolutePath());
+							} else if (finalFile.getName().toLowerCase().endsWith(".sh3t")) {
+								getHomeController().importTexturesLibrary(finalFile.getAbsolutePath());
+							} else if (finalFile.getName().toLowerCase().endsWith(".sh3l")) {
+								getHomeController().importLanguageLibrary(finalFile.getAbsolutePath());
+							}
+						}
+					};
+					t.start();
+				} else {
+					// do something else?
+				}
+			}
 		}
 	}
 
@@ -1144,15 +1387,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 
 	private void loadUpContent() {
-		// set up the auto save system now as various things below call return
-		final TimerTask autoSaveTask = new TimerTask() {
-			public void run() {
-				System.out.println("Possibly auto save");
-				doAutoSave();
-			}
-		};
-		autoSaveTimer.purge();// in case of restart we don't want 2 tasks running
-		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 3 * 60 * 1000, 3 * 60 * 1000);
+
 
 		//TODO: see eclipse Renovations3D.protected void start(String[] args) for exactly this setup, but better
 		Intent intent = getIntent();
@@ -1175,7 +1410,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 						setIntent(null);
 						return;
-					}	else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
+					} else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
 						Uri uri = intent.getData();
 						String name = uri.getLastPathSegment();
 
@@ -1188,7 +1423,7 @@ public class Renovations3DActivity extends FragmentActivity {
 						setIntent(null);
 						Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", intent.getDataString());
 						return;
-					} else if (scheme.compareTo("http") == 0) {
+					} else if (scheme.compareTo("http") == 0 || scheme.compareTo("https") == 0) {
 						ToastCompat.makeText(Renovations3DActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 
 						Uri uri = intent.getData();
@@ -1228,67 +1463,34 @@ public class Renovations3DActivity extends FragmentActivity {
 			}
 		}
 
+		// figure out how many times we've been opened
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		int appOpenedCount = settings.getInt(APP_OPENED_COUNT, 0);
-		appOpenedCount++;
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(APP_OPENED_COUNT, appOpenedCount);
-		editor.apply();
 
-		boolean firstOpening = appOpenedCount <= 1;
+		//This is where we open the temp file that was last used, but wait for any writes to finish
+		String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
+		boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
+		File outputDir = getCacheDir();
+		File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
 
-		if (!firstOpening) {
-			// do we have a temp home we were working on
-			String unmodifiedFileName = settings.getString(STATE_CURRENT_HOME_NAME, "");
-			if (unmodifiedFileName.length() > 0 && !unmodifiedFileName.endsWith(CURRENT_WORK_FILENAME)) {
-				File homeName = new File(unmodifiedFileName);
-				Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME", "homeName: " + homeName.getName());
-				if (homeName.exists()) {
-					loadHome(homeName);
-				} else {
-					Renovations3DActivity.logFireBaseContent("loadUpContentSTATE_CURRENT_HOME_NAME does not exist");
-					newHome();
-				}
-			} else {
-				//This is where we open the temp file that was last used, but wait for any writes to finish
-				String tempWorkingFileRealName = settings.getString(STATE_TEMP_HOME_REAL_NAME, null);
-				boolean isModifiedOverrideValue = settings.getBoolean(STATE_TEMP_HOME_REAL_MODIFIED, false);
-				File outputDir = getCacheDir();
-				File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
+		if (homeName.exists()) {
+			Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
+					+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
-				if (homeName.exists()) {
-					// wait for any previous still running autosaves to finish up
-					try {
-						autoSaveSemaphore.acquire();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWork", "temp: " + homeName.getName() + " original: " + tempWorkingFileRealName
-							+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
-
-					loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
-					autoSaveSemaphore.release();
-				} else {
-					Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWorkNoFile", "original: " + tempWorkingFileRealName);
-					// or just fire up a lovely clear new home
-					newHome();
-				}
-			}
+			loadHome(homeName, tempWorkingFileRealName, isModifiedOverrideValue, true);
 		} else {
-			Renovations3DActivity.logFireBaseContent("loadUpContentFirstOpenNoAutoFile");
+			Renovations3DActivity.logFireBaseContent("loadUpContentCurrentWorkNoFile", "original: " + tempWorkingFileRealName);
+			// or just fire up a lovely clear new home
 			newHome();
 		}
-
-
 	}
 
+	//TODO: the load has had this removed as it was only possible from onCreate so this is redundant
 	//NOTE static as this is reused by the load to wait for auto save,
 	// static will stay around as long as exiting activity is alive saving
 	private static final Semaphore autoSaveSemaphore = new Semaphore(1, true);
 
 	public void doAutoSave() {
-		if (renovations3D != null && renovations3D.getHome() != null) {
+		if (getHome() != null) {
 			// get off the caller in case this is an onPause
 			Thread t = new Thread(new Runnable() {
 				public void run() {
@@ -1297,12 +1499,18 @@ public class Renovations3DActivity extends FragmentActivity {
 						autoSaveSemaphore.acquire();
 					} catch (InterruptedException e) {
 					}
-
-					if (getHome() != null && getHome().isModified()) {
+					Home home = getHome();
+					//Notice isModified ignored, we always always save current work, and reload, we don't try to load the orginal file
+					if (home != null) {
 						try {
+							// give it a default name if required
+							if(home.getName() == null || home.getName().trim().length() == 0) {
+								home.setName(SwingTools.getLocalizedLabelText(getUserPreferences(),
+										com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
+							}
 							//clone so original modified flag is not changed
-							Home autoSaveHome = getHome().clone();
-							boolean isModifiedOverrideValue = getHome().isModified();
+							Home autoSaveHome = home.clone();
+							boolean isModifiedOverrideValue = home.isModified();
 							String originalName = autoSaveHome.getName();
 							File outputDir = getCacheDir();
 							File homeName = new File(outputDir, CURRENT_WORK_FILENAME);
@@ -1310,21 +1518,20 @@ public class Renovations3DActivity extends FragmentActivity {
 							// not compressed = 8 seconds
 							System.out.println("doAutoSave start");
 							renovations3D.getHomeRecorder().writeHome(autoSaveHome, homeName.getAbsolutePath());
-							recordHomeStateInPrefs(originalName, isModifiedOverrideValue, "");
+							recordHomeStateInPrefs(originalName, isModifiedOverrideValue);
 
 							Renovations3DActivity.logFireBaseContent("doAutoSave", "temp: " + homeName.getName() + " original: " + originalName
 									+ " isModifiedOverrideValue: " + isModifiedOverrideValue);
 
 						} catch (RecorderException e) {
 							e.printStackTrace();
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "RecorderException during autosave", getHome().getName());
+							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "RecorderException during autosave", home.getName());
 						}
 					}
 					autoSaveSemaphore.release();
 				}
 			});
 			t.start();
-
 		}
 	}
 
@@ -1424,7 +1631,7 @@ public class Renovations3DActivity extends FragmentActivity {
 	// called by Compass
 	public void getLocationPermission(LocationPermissionRequestor locationPermissionRequestor) {
 		this.locationPermissionRequestor = locationPermissionRequestor;
-		if (Build.VERSION.SDK_INT >= M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSION_LOCATION);
 			} else {
@@ -1445,14 +1652,20 @@ public class Renovations3DActivity extends FragmentActivity {
 	}
 	public void getDownloadsLocation(DownloadsLocationRequestor downloadsLocationRequestor) {
 		this.downloadsLocationRequestor = downloadsLocationRequestor;
-		if (Build.VERSION.SDK_INT >= M) {
-			if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
+		//android 29 onwards has a different storage model, it never use the downloads callback system
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			throw new UnsupportedOperationException();
+		} else {
+			//below android 11
+			if (Build.VERSION.SDK_INT >= M) {
+				if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+					requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSION_STORAGE);
+				} else {
+					storagePermission(true);
+				}
 			} else {
 				storagePermission(true);
 			}
-		} else {
-			storagePermission(true);
 		}
 	}
 	private DownloadsLocationRequestor	downloadsLocationRequestor = null;
