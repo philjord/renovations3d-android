@@ -213,9 +213,9 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       });
     try {
       this.findModelsButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text"));
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text"));
       final String findModelsUrl = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
       this.findModelsButton.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent ev) {
             boolean documentShown = false;
@@ -229,14 +229,14 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
               // If the document wasn't shown, display a message 
               // with a copiable URL in a message box 
 //              JTextArea findModelsMessageTextArea = new JTextArea(activity, preferences.getLocalizedString(
-//					  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text"));
+//					  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text"));
 /*              String findModelsTitle = preferences.getLocalizedString(
-					  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.title");
+					  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.title");
 //              findModelsMessageTextArea.setEditable(false);
 //              findModelsMessageTextArea.setOpaque(false);
 
 							String string  = preferences.getLocalizedString(
-									com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text");
+									com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsMessage.text");
 
 							string.replace("http://www.sweethome3d.com/importModels.html", "<a href=\"http://www.sweethome3d.com/importModels.html\">http://www.sweethome3d.com/importModels.html</a>");
 							string = "<html>" + string + "</html>";
@@ -258,7 +258,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       // Don't create findModelsButton if its text or url isn't defined
     }
     this.modelChoiceErrorLabel = new JLabel(activity, preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceErrorLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceErrorLabel.text"));
     // Make modelChoiceErrorLabel visible only if an error occurred during model content loading
     this.modelChoiceErrorLabel.setVisible(false);
     this.modelPreviewComponent = new ModelPreviewComponent(true, activity);
@@ -297,7 +297,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
                   JOptionPane.showMessageDialog(SwingUtilities.getRootPane(ImportedFurnitureWizardStepsPanel.this),
-                      preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceErrorLabel.text"));
+                      preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceErrorLabel.text"));
                 }
               });
           }
@@ -315,7 +315,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
 	  //PJ removed as wrong and too large
 	//  String messageLessStyle3 = preferences.getLocalizedString(
-	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "orientationLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+	//		  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "orientationLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  // Orientation panel components
 	  //  this.orientationLabel = new JLabel(activity, "");
 	//  this.orientationLabel.setText(Html.fromHtml(messageLessStyle3, null, new JOptionPane.ListTagHandler()));
@@ -330,7 +330,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         }
       });
     //final String angleTooltipFormat = preferences.getLocalizedString(
-	//		com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "angleTooltipFeedback");
+	//		com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "angleTooltipFeedback");
     //this.orientationToolTip = new JToolTip();
 	  //FIXME: all of the below should be lovely jogspinners, but left right up down would need to be merged
     this.turnLeftButton = new JButton(activity, "←");
@@ -403,13 +403,13 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       });
 
 	  String messageLessStyle4 = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "backFaceShownLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "backFaceShownLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle4 = messageLessStyle4.replace("<br>", " ");
 	  this.backFaceShownLabel = new JLabel(activity, "");
 	  this.backFaceShownLabel.setText(Html.fromHtml(messageLessStyle4, null, new JOptionPane.ListTagHandler()));
 
     this.backFaceShownCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "backFaceShownCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "backFaceShownCheckBox.text"));
     this.backFaceShownCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setBackFaceShown(backFaceShownCheckBox.isSelected());
@@ -426,12 +426,12 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     
     // Attributes panel components
 	  String messageLessStyle = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "attributesLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "attributesLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle = messageLessStyle.replace("<br>", " ");
     //this.attributesLabel = new JLabel(activity, "");
 	//  this.attributesLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "nameLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "nameLabel.text"));
     this.nameTextField = new JTextField(activity, 10);
 //    if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
  //     SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
@@ -473,7 +473,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
 
     this.addToCatalogCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "addToCatalogCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "addToCatalogCheckBox.text"));
     // Propose the add to catalog option only for home furniture import
     this.addToCatalogCheckBox.setVisible(importHomePiece);
     this.addToCatalogCheckBox.addItemListener(new ItemListener() {
@@ -507,7 +507,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
 
     this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "categoryLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "categoryLabel.text"));
 	/*this.categoryComboBox = new JComboBox(preferences.getFurnitureCatalog().getCategories().toArray());
     // The piece category isn't enabled by default for home furniture import
     this.categoryComboBox.setEnabled(!importHomePiece);
@@ -586,7 +586,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
     }*/
 
 	  this.creatorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "creatorLabel.text"));
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "creatorLabel.text"));
 	  this.creatorTextField = new JTextField(activity,10);
 	  /*if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
 		  SwingTools.addAutoSelectionOnFocusGain(this.creatorTextField);
@@ -627,7 +627,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 		  });
 
     this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "widthLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "widthLabel.text", unitName));
     final float minimumLength = preferences.getLengthUnit().getMinimumLength();
     final float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel =
@@ -651,7 +651,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
     
     this.depthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "depthLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "depthLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, Math.min(controller.getDepth(), minimumLength), maximumLength);
     this.depthSpinner = new NullableSpinner(activity, depthSpinnerModel, true);
@@ -673,7 +673,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
     
     this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "heightLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "heightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, Math.min(controller.getHeight(), minimumLength), maximumLength);
     this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
@@ -694,7 +694,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           }
         });
     this.keepProportionsCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "keepProportionsCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "keepProportionsCheckBox.text"));
     this.keepProportionsCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setProportional(keepProportionsCheckBox.isSelected());
@@ -709,7 +709,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
     
     this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "elevationLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "elevationLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
     this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel);
@@ -729,7 +729,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
     
     this.movableCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "movableCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "movableCheckBox.text"));
     this.movableCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setMovable(movableCheckBox.isSelected());
@@ -744,7 +744,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
 
     this.doorOrWindowCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "doorOrWindowCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "doorOrWindowCheckBox.text"));
     this.doorOrWindowCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setDoorOrWindow(doorOrWindowCheckBox.isSelected());
@@ -761,7 +761,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
         });
 
     this.staircaseCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "staircaseCheckBox.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "staircaseCheckBox.text"));
     this.staircaseCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setStaircaseCutOutShape(staircaseCheckBox.isSelected() 
@@ -781,10 +781,10 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
     this.colorLabel = new JLabel(activity,
 			String.format(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "colorLabel.text"), unitName));
+				com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "colorLabel.text"), unitName));
     this.colorButton = new ColorButton(activity, preferences);
     this.colorButton.setColorDialogTitle(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "colorDialog.title"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "colorDialog.title"));
     this.colorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
@@ -792,7 +792,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           }
         });
     this.clearColorButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "clearColorButton.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "clearColorButton.text"));
     this.clearColorButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
           controller.setColor(null);
@@ -812,7 +812,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 
     // Icon panel components
 	String messageLessStyle2 = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "iconLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "iconLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	messageLessStyle2 = messageLessStyle2.replace("<br>", " ");
 	this.iconLabel = new JLabel(activity, "");
 	this.iconLabel.setText(Html.fromHtml(messageLessStyle2, null, new JOptionPane.ListTagHandler()));
@@ -1239,7 +1239,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
                   setDefaultState();
                   setModelChoiceTexts(preferences);
                   JOptionPane.showMessageDialog(activity,
-                      preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceFormatError"),"",JOptionPane.ERROR_MESSAGE);
+                      preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceFormatError"),"",JOptionPane.ERROR_MESSAGE);
               //  }
               }
             });
@@ -1292,7 +1292,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
           public void run() {
             JOptionPane.showMessageDialog(activity,
                 preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceError", modelName), "", JOptionPane.ERROR_MESSAGE);
+						com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceError", modelName), "", JOptionPane.ERROR_MESSAGE);
           }
         });
     }
@@ -1392,11 +1392,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    */
   private void setModelChangeTexts(UserPreferences preferences) {
 	  String findModelsUrl = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
 	  String findModelsTxt = SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
 	  String messageLessStyle = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChangeLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle = messageLessStyle.replace("<br>", " ");
 	  messageLessStyle += "<br><a href=\""+findModelsUrl+"\">"+findModelsTxt+"</a>";
 	  this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
@@ -1404,11 +1404,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	  modelChoiceOrChangeLabel.setMovementMethod(LinkMovementMethod.getInstance());
 
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.text"));
    /* if (!OperatingSystem.isMacOSX()) {
       this.modelChoiceOrChangeButton.setMnemonic(
           KeyStroke.getKeyStroke(preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.mnemonic")).getKeyCode());
+				  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChangeButton.mnemonic")).getKeyCode());
     }*/
   }
 
@@ -1417,11 +1417,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
    */
   private void setModelChoiceTexts(UserPreferences preferences) {
 	  String findModelsUrl = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.url");
 	  String findModelsTxt = SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "findModelsButton.text");
 	  String messageLessStyle = preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 	  messageLessStyle = messageLessStyle.replace("<br>", " ");
 	  messageLessStyle += "<br><a href=\""+findModelsUrl+"\">"+findModelsTxt+"</a>";
     this.modelChoiceOrChangeLabel.setText(Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
@@ -1429,11 +1429,11 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
 	  modelChoiceOrChangeLabel.setMovementMethod(LinkMovementMethod.getInstance());
 
     this.modelChoiceOrChangeButton.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.text"));
+			com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.text"));
    /* if (!OperatingSystem.isMacOSX()) {
       this.modelChoiceOrChangeButton.setMnemonic(
           KeyStroke.getKeyStroke(preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.mnemonic")).getKeyCode());
+				  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceButton.mnemonic")).getKeyCode());
     }*/
   }
 
@@ -1444,7 +1444,7 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
                                        ContentManager contentManager) {
     return contentManager.showOpenDialog(this, 
         preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "modelChoiceDialog.title"),
+				com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "modelChoiceDialog.title"),
         ContentManager.ContentType.MODEL);
   }
   
@@ -1597,13 +1597,13 @@ public class ImportedFurnitureWizardStepsPanel extends JPanel
       addRotationListener(this.topViewComponent3D, controller, false);
 
     //  this.frontViewLabel = new JLabel(activity, preferences.getLocalizedString(
-	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "frontViewLabel.text"));
+	//		  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "frontViewLabel.text"));
     //  this.sideViewLabel = new JLabel(activity, preferences.getLocalizedString(
-	//		  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "sideViewLabel.text"));
+	//		  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "sideViewLabel.text"));
       this.topViewLabel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "topViewLabel.text"));
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "topViewLabel.text"));
       this.perspectiveViewLabel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "perspectiveViewLabel.text"));
+			  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "perspectiveViewLabel.text"));
     }
 
    // @Override

@@ -229,16 +229,16 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.furnitureAdd).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "ADD_HOME_FURNITURE.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "ADD_HOME_FURNITURE.Name"));
 		menu.findItem(R.id.import_furniture_lib).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE_LIBRARY.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "IMPORT_FURNITURE_LIBRARY.Name"));
 		menu.findItem(R.id.import_texture_lib).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_TEXTURES_LIBRARY.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "IMPORT_TEXTURES_LIBRARY.Name"));
 
 		menu.findItem(R.id.importTexture).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_TEXTURE.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "IMPORT_TEXTURE.Name"));
 		menu.findItem(R.id.importFurniture).setTitle(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_FURNITURE.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "IMPORT_FURNITURE.Name"));
 
 
 		localString = getActivity().getString(R.string.local);
@@ -295,8 +295,8 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 	private void importLibrary(final ImportInfo importInfo, final MenuItem menuItem) {
 		Renovations3DActivity renovations3DActivity = ((Renovations3DActivity) getActivity());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			// in android 10 there is a new storage model so simply use the private storage for the app, but try external private first
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+			// in android 11 there is a new storage model so simply use the private storage for the app, but try external private first
 			File downloadRoot = renovations3DActivity.getExternalFilesDir(null);
 			if (downloadRoot == null)
 				downloadRoot = renovations3DActivity.getFilesDir();
@@ -316,7 +316,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 		menuItem.setEnabled(false);
 
 		// now present the notice about length and the license info
-		final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
+		final String close = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.close");
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setPositiveButton(close, null);
 
@@ -807,7 +807,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 			addSelectionListeners(catalog, controller);
 
 			this.categoryFilterLabel = new JLabel(getActivity(), SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
+							com.eteks.sweethome3d.swing.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
 			ArrayList<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
 			categories.add(dummyAllCategory);//PJ blank was not clear
 			categories.addAll(catalog.getCategories());
@@ -838,7 +838,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 														int index, boolean isSelected, boolean cellHasFocus) {
 			if (value == null) {
 				return super.getListCellRendererComponent(list,
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterComboBox.noCategory"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureCatalogListPanel.class, "categoryFilterComboBox.noCategory"),
 						index, isSelected, cellHasFocus);
 			} else {
 				return super.getListCellRendererComponent(list,
@@ -923,7 +923,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					preferences.removePropertyChangeListener(UserPreferences.Property.LANGUAGE, this);
 				} else {
 					furnitureCatalogPanel.categoryFilterLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-									com.eteks.sweethome3d.android_props.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
+									com.eteks.sweethome3d.swing.FurnitureCatalogListPanel.class, "categoryFilterLabel.text"));
 		/*furnitureCatalogPanel.searchLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 				FurnitureCatalogListPanel.class, "searchLabel.text"));*/
 

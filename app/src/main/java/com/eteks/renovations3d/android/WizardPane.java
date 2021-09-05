@@ -57,13 +57,13 @@ public class WizardPane extends AndroidDialogView implements DialogView {
 	  super(preferences, activity, R.layout.dialog_wizard_pane, true);
     this.preferences = preferences;
     this.controller = controller;
-    this.defaultTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WizardPane.class, "wizard.title");
+    this.defaultTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.WizardPane.class, "wizard.title");
 
     //setMessage(new JPanel(new BorderLayout(10, 0)));
 
     createOptionButtons(preferences, controller);    
     //setOptionType(DEFAULT_OPTION);
-    String cancelOption = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WizardPane.class, "cancelOption");
+    String cancelOption = preferences.getLocalizedString(com.eteks.sweethome3d.swing.WizardPane.class, "cancelOption");
     // Make backOptionButton appear at left of nextFinishOptionButton
 
 	  //PJ close becomes cancel
@@ -100,7 +100,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
   private void createOptionButtons(UserPreferences preferences, 
                                    final WizardController controller) {
     this.backOptionButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WizardPane.class, "backOptionButton.text"));
+        com.eteks.sweethome3d.swing.WizardPane.class, "backOptionButton.text"));
     this.backOptionButton.setEnabled(controller.isBackStepEnabled());
     controller.addPropertyChangeListener(WizardController.Property.BACK_STEP_ENABLED, 
         new PropertyChangeListener() {
@@ -159,7 +159,7 @@ public class WizardPane extends AndroidDialogView implements DialogView {
    * Sets whether this wizard view is displaying the last step or not.
    */
   private void updateNextFinishOptionButton(WizardController controller) {
-    this.nextFinishOptionButton.setText(SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.WizardPane.class,
+    this.nextFinishOptionButton.setText(SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.swing.WizardPane.class,
         controller.isLastStep() 
             ? "finishOptionButton.text" 
             : "nextOptionButton.text"));

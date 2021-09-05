@@ -449,28 +449,28 @@ public class Renovations3DActivity extends FragmentActivity {
 
 		if (renovations3D != null) {
 			MenuItem fileMI = menu.findItem(R.id.menu_file);
-			String fileStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FILE_MENU.Name");
+			String fileStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "FILE_MENU.Name");
 			fileMI.setTitle(fileStr + "...");
 			fileMI.setTitleCondensed(fileStr);
 
 			MenuItem newMI = menu.findItem(R.id.menu_new);
-			String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name");
+			String newStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "NEW_HOME.Name");
 			setIconizedMenuTitle(newMI, newStr, android.R.drawable.ic_input_add, this);
 
 			MenuItem newFromExampleMI = menu.findItem(R.id.menu_new_from_example);
-			String newFromExampleStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME_FROM_EXAMPLE.Name");
+			String newFromExampleStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "NEW_HOME_FROM_EXAMPLE.Name");
 			setIconizedMenuTitle(newFromExampleMI, newFromExampleStr, android.R.drawable.ic_input_add, this);
 
 			MenuItem loadMI = menu.findItem(R.id.menu_load);
-			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "OPEN.Name");
+			String loadStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "OPEN.Name");
 			setIconizedMenuTitle(loadMI, loadStr, R.drawable.ic_open_in_new_black_24dp, this);
 
 			MenuItem  saveMI = menu.findItem(R.id.menu_save);
-			String  saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE.Name");
+			String  saveStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SAVE.Name");
 			setIconizedMenuTitle(saveMI, saveStr, android.R.drawable.ic_menu_save, this);
 
 			MenuItem saveAsMI = menu.findItem(R.id.menu_saveas);
-			String saveAsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SAVE_AS.Name");
+			String saveAsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SAVE_AS.Name");
 			setIconizedMenuTitle(saveAsMI, saveAsStr, R.drawable.ic_menu_save_as, this);
 
 			MenuItem shareMI = menu.findItem(R.id.menu_share);
@@ -478,11 +478,11 @@ public class Renovations3DActivity extends FragmentActivity {
 			setIconizedMenuTitle(shareMI, shareStr, R.drawable.ic_send_black_24dp, this);
 
 			MenuItem prefsMI = menu.findItem(R.id.menu_preferences);
-			String prefsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PREFERENCES.Name");
+			String prefsStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "PREFERENCES.Name");
 			setIconizedMenuTitle(prefsMI, prefsStr, android.R.drawable.ic_menu_preferences, this);
 
 			MenuItem helpMI = menu.findItem(R.id.menu_help);
-			String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HELP_MENU.Name");
+			String helpStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "HELP_MENU.Name");
 			setIconizedMenuTitle(helpMI, helpStr, android.R.drawable.ic_menu_help, this);
 
 			MenuItem onlineHelpMI = menu.findItem(R.id.menu_online_help);
@@ -490,7 +490,7 @@ public class Renovations3DActivity extends FragmentActivity {
 			setIconizedMenuTitle(onlineHelpMI, onlineHelpStr, android.R.drawable.ic_menu_help, this);
 
 			MenuItem aboutMI = menu.findItem(R.id.menu_about);
-			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ABOUT.Name");
+			String aboutStr = renovations3D.getUserPreferences().getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "ABOUT.Name");
 			setIconizedMenuTitle(aboutMI, aboutStr, android.R.drawable.ic_menu_info_details, this);
 
 		}
@@ -816,8 +816,8 @@ public class Renovations3DActivity extends FragmentActivity {
 					String homeName = home.getName(); //this may include path
 					Renovations3DActivity.logFireBaseContent("menu_saveas", homeName);
 
-					// in android 10 onwards all homes are saved to the download loads, FileContentManager is not used for saves
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					// in android 11 onwards all homes are saved to the download loads, FileContentManager is not used for saves
+					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 						// this wants files, only
 						//getHomeController().saveAsAndCompress();
 						String saveHomeName = new File(homeName).getName() + (homeName.endsWith(".sh3d") ? "" : ".sh3d"); // strip path from filename and add ext if required
@@ -860,7 +860,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 							try {
 
-								// actually write the home out to teh stream
+								// actually write the home out to the stream
 								OutputStream out = getContentResolver().openOutputStream(outputFileUri);
 								((HomeStreamRecorder) Renovations3DActivity.this.renovations3D.getHomeStreamRecorder(HomeRecorder.Type.COMPRESSED)).writeHome(savedHome, out);
 
@@ -978,7 +978,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	private void loadSh3dFile() {
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 			intent.addCategory(Intent.CATEGORY_OPENABLE);
 			intent.setType("*/*");//TODO: only sh3d files ???
@@ -1506,7 +1506,7 @@ public class Renovations3DActivity extends FragmentActivity {
 							// give it a default name if required
 							if(home.getName() == null || home.getName().trim().length() == 0) {
 								home.setName(SwingTools.getLocalizedLabelText(getUserPreferences(),
-										com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
+										com.eteks.sweethome3d.swing.HomePane.class, "NEW_HOME.Name"));
 							}
 							//clone so original modified flag is not changed
 							Home autoSaveHome = home.clone();
@@ -1652,8 +1652,8 @@ public class Renovations3DActivity extends FragmentActivity {
 	}
 	public void getDownloadsLocation(DownloadsLocationRequestor downloadsLocationRequestor) {
 		this.downloadsLocationRequestor = downloadsLocationRequestor;
-		//android 29 onwards has a different storage model, it never use the downloads callback system
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+		//android 11, R, 30 onwards has a different storage model, it never use the downloads callback system
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 			throw new UnsupportedOperationException();
 		} else {
 			//below android 11

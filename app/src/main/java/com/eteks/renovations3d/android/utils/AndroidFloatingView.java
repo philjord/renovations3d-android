@@ -50,7 +50,7 @@ public abstract class AndroidFloatingView implements DialogView
 
 
 		this.closeButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.HomePane.class, "CLOSE.Name"));
+				com.eteks.sweethome3d.swing.HomePane.class, "CLOSE.Name"));
 		closeButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View view) {
 				dismissView();

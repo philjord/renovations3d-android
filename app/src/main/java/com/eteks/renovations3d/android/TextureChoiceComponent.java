@@ -218,13 +218,13 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
   public boolean confirmDeleteSelectedCatalogTexture() {
     // Retrieve displayed text in buttons and message
     String message = this.preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.message");
+        com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.message");
     String title = this.preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.title");
+        com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.title");
     String delete = this.preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.delete");
+        com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.delete");
     String cancel = this.preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.cancel");
+        com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "confirmDeleteSelectedCatalogTexture.cancel");
 
     return JOptionPane.showOptionDialog(
         activity, message, title,
@@ -282,7 +282,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
     private void createComponents(final UserPreferences preferences,
                                   final TextureChoiceController controller) {
       this.availableTexturesLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "availableTexturesLabel.text"));
+          com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "availableTexturesLabel.text"));
       final TexturesCatalogListModel texturesListModel = new TexturesCatalogListModel(preferences.getTexturesCatalog());
       this.availableTexturesList = new JList(activity, texturesListModel);
       this.availableTexturesList.setSelectionMode(JList.ListSelectionModel.SINGLE_SELECTION);
@@ -306,7 +306,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
           });
 
       this.searchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "searchLabel.text"));
+          com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "searchLabel.text"));
       this.searchTextField = new JTextField(activity, 5);
 			searchTextField.setHint(R.string.search_hint);
 			searchTextField.addTextChangedListener(new TextWatcher(){
@@ -348,7 +348,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 */
 
       this.chosenTextureLabel = new JLabel(activity, preferences.getLocalizedString(
-          com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "chosenTextureLabel.text"));
+          com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "chosenTextureLabel.text"));
       this.texturePreviewComponent = new ScaledImageComponent(null, true, activity) {
           protected void paintComponent(Graphics g) {
             Graphics2D g2D = (Graphics2D)g;
@@ -365,7 +365,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 
       try {
         String importTextureButtonText = SwingTools.getLocalizedLabelText(
-            preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "importTextureButton.text");
+            preferences, com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "importTextureButton.text");
         //this.texturePreviewComponent.setBorder(SwingTools.getDropableComponentBorder());
         // Add to label a transfer handler to let user drag and drop a file on it
       /*  this.texturePreviewComponent.setTransferHandler(new TransferHandler() {
@@ -393,7 +393,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             }
           });*/
 
-        this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class,
+        this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.TextureChoiceComponent.class,
             "angleLabel.text"));
 				final NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 								0, 0, 360, 15);
@@ -405,7 +405,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
 					}
 				});
 
-				this.scaleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.TextureChoiceComponent.class,
+				this.scaleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.TextureChoiceComponent.class,
 								"scaleLabel.text"));
 				final SpinnerNumberModel scaleSpinnerModel = new SpinnerNumberModel(new Float(100f), new Float(1f), new Float(10000f), new Float(5f));
 				this.scaleSpinner = new AutoCommitSpinner(activity, scaleSpinnerModel,true);
@@ -422,7 +422,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             }
           });
         this.modifyTextureButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-            com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "modifyTextureButton.text"));
+            com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "modifyTextureButton.text"));
         this.modifyTextureButton.setEnabled(false);
         this.modifyTextureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -438,7 +438,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
             }
           });
         this.deleteTextureButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-            com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "deleteTextureButton.text"));
+            com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "deleteTextureButton.text"));
         this.deleteTextureButton.setEnabled(false);
         this.deleteTextureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -465,7 +465,7 @@ public class TextureChoiceComponent extends JButton implements TextureChoiceView
       }
       //TODO: add back the recent textures panel
       //this.recentTexturesPanel = SwingTools.createTitledPanel(preferences.getLocalizedString(
-      //    com.eteks.sweethome3d.android_props.TextureChoiceComponent.class, "recentPanel.title"));
+      //    com.eteks.sweethome3d.swing.TextureChoiceComponent.class, "recentPanel.title"));
       // Reduce border to align it on list left border
       //int reducedBorderWidth = OperatingSystem.isMacOSXLeopardOrSuperior() ? -8 : -2;
       //this.recentTexturesPanel.setBorder(BorderFactory.createCompoundBorder(

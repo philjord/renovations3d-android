@@ -140,7 +140,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.NAME)) {
 		  // Create name label and its text field bound to NAME controller property
-		  this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "nameLabel.text"));
+		  this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "nameLabel.text"));
 		  this.nameTextField = new AutoCompleteTextField(activity, controller.getName(), 15, preferences.getAutoCompletionStrings("HomePieceOfFurnitureName"));
 		  // if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
 		  //   SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
@@ -195,7 +195,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.NAME_VISIBLE)) {
 		  // Create name visible check box bound to NAME_VISIBLE controller property
 		  this.nameVisibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "nameVisibleCheckBox.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "nameVisibleCheckBox.text"));
 		  this.nameVisibleCheckBox.setNullable(controller.getNameVisible() == null);
 		  this.nameVisibleCheckBox.setValue(controller.getNameVisible());
 		  final PropertyChangeListener nameVisibleChangeListener = new PropertyChangeListener() {
@@ -216,7 +216,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.DESCRIPTION)) {
 		  // Create description label and its text field bound to DESCRIPTION controller property
-		  this.descriptionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "descriptionLabel.text"));
+		  this.descriptionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "descriptionLabel.text"));
 		  this.descriptionTextField = new AutoCompleteTextField(activity, controller.getDescription(), 15, preferences.getAutoCompletionStrings("HomePieceOfFurnitureDescription"));
 		  // if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
 		  //   SwingTools.addAutoSelectionOnFocusGain(this.descriptionTextField);
@@ -271,7 +271,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.PRICE)) {
 		  // Create Price label and its spinner bound to PRICE controller property
 		  this.priceLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "priceLabel.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "priceLabel.text"));
 		  final NullableSpinnerNumberModel priceSpinnerModel =
 				  new NullableSpinnerNumberModel(0, 0, 10000, 1f);
 		  this.priceSpinner = new NullableSpinner(activity, priceSpinnerModel, true);
@@ -295,7 +295,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
       if (controller.isPropertyEditable(HomeFurnitureController.Property.VALUE_ADDED_TAX_PERCENTAGE)) {
         this.valueAddedTaxPercentageLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-								com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "valueAddedTaxPercentageLabel.text"));
+								com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "valueAddedTaxPercentageLabel.text"));
 				final BigDecimal hundred = new BigDecimal("100");
         final NullableSpinnerNumberModel valueAddedTaxPercentageSpinnerModel = new NullableSpinnerNumberModel(
             0, 0, hundred.floatValue(), 0.5f);
@@ -337,7 +337,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.X)) {
 		  // Create X label and its spinner bound to X controller property
 		  this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "xLabel.text", unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
 				  new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
 		  this.xSpinner = new NullableSpinner(activity, xSpinnerModel, true);
@@ -361,7 +361,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.Y)) {
 		  // Create Y label and its spinner bound to Y controller property
-		  this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text",
+		  this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "yLabel.text",
 				  unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 				  preferences, -maximumLength, maximumLength);
@@ -386,7 +386,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.ELEVATION)) {
 		  // Create elevation label and its spinner bound to ELEVATION controller property
-		  this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "elevationLabel.text", unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 				  preferences, 0f, preferences.getLengthUnit().getMaximumElevation());
@@ -412,7 +412,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.ANGLE_IN_DEGREES)
 			  || controller.isPropertyEditable(HomeFurnitureController.Property.ANGLE)) {
 		  // Create angle label and its spinner bound to ANGLE controller property
-		  this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.angleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "angleLabel.text"));
 		  final NullableSpinnerNumberModel angleSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerModuloNumberModel(
 				  0, 0, 360, 1);
@@ -446,7 +446,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (!Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
 		  if (controller.isPropertyEditable(HomeFurnitureController.Property.ROLL)) {
 			  // Create roll label and its spinner bound to ROLL_IN_DEGREES controller property
-			  this.rollRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+			  this.rollRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 					  "rollRadioButton.text"));
 			  this.rollRadioButton.addChangeListener(new ChangeListener() {
 				  public void stateChanged(ChangeEvent ev) {
@@ -488,7 +488,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 		  if (controller.isPropertyEditable(HomeFurnitureController.Property.PITCH)) {
 			  // Create pitch label and its spinner bound to PITCH_IN_DEGREES controller property
-			  this.pitchRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+			  this.pitchRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 					  "pitchRadioButton.text"));
 			  this.pitchRadioButton.addChangeListener(new ChangeListener() {
 				  public void stateChanged(ChangeEvent ev) {
@@ -545,8 +545,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.BASE_PLAN_ITEM)) {
 		  // Create base plan item check box bound to BASE_PLAN_ITEM controller property
 		  this.basePlanItemCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "basePlanItemCheckBox.text"));
-		  String basePlanItemToolTip = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "basePlanItemCheckBox.text"));
+		  String basePlanItemToolTip = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "basePlanItemCheckBox.tooltip");
 		  if (basePlanItemToolTip.length() > 0) {
 			  this.basePlanItemCheckBox.setToolTipText(basePlanItemToolTip);
@@ -577,7 +577,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.WIDTH)) {
 		  // Create width label and its spinner bound to WIDTH controller property
-		  this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "widthLabel.text", unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 				  preferences, minimumLength, maximumLength);
@@ -605,7 +605,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.DEPTH)) {
 		  // Create depth label and its spinner bound to DEPTH controller property
-		  this.depthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.depthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "depthLabel.text", unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel depthSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 				  preferences, minimumLength, maximumLength);
@@ -633,7 +633,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.HEIGHT)) {
 		  // Create height label and its spinner bound to HEIGHT controller property
-		  this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "heightLabel.text", unitName));
 		  final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel = new NullableSpinnerNumberModel.NullableSpinnerLengthModel(
 				  preferences, minimumLength, maximumLength);
@@ -662,7 +662,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.PROPORTIONAL)) {
 		  // Create keep proportions check box bound to PROPORTIONAL controller property
 		  this.keepProportionsCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.ImportedFurnitureWizardStepsPanel.class, "keepProportionsCheckBox.text"));
+				  com.eteks.sweethome3d.swing.ImportedFurnitureWizardStepsPanel.class, "keepProportionsCheckBox.text"));
 		  this.keepProportionsCheckBox.addItemListener(new ItemListener() {
 			  public void itemStateChanged(ItemEvent ev) {
 				  controller.setProportional(keepProportionsCheckBox.isSelected());
@@ -686,8 +686,8 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.MODEL_MIRRORED)) {
 		  // Create mirror check box bound to MODEL_MIRRORED controller property
 		  this.mirroredModelCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "mirroredModelCheckBox.text"));
-		  String mirroredModelToolTip = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "mirroredModelCheckBox.text"));
+		  String mirroredModelToolTip = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "mirroredModelCheckBox.tooltip");
 		  if (mirroredModelToolTip.length() > 0) {
 			  this.mirroredModelCheckBox.setToolTipText(mirroredModelToolTip);
@@ -729,7 +729,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
                     ModelManager modelManager = ModelManager.getInstance();
                     if (modelManager.containsDeformableNode(modelRoot)) {
                       // Make button visible only if model contains some deformable nodes
-                      modelTransformationsButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+                      modelTransformationsButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
                           modelManager.containsNode(modelRoot, ModelManager.MANNEQUIN_ABDOMEN_PREFIX)
                               ? "mannequinTransformationsButton.text"
                               : "modelTransformationsButton.text"));
@@ -757,7 +757,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  ButtonGroup buttonGroup = new ButtonGroup();
 		  // Create radio buttons bound to COLOR and TEXTURE controller properties
 		  this.defaultColorAndTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "defaultColorAndTextureRadioButton.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "defaultColorAndTextureRadioButton.text"));
 		  buttonGroup.add(this.defaultColorAndTextureRadioButton);
 		  this.defaultColorAndTextureRadioButton.addChangeListener(new ChangeListener() {
 			  public void stateChanged(ChangeEvent ev) {
@@ -772,7 +772,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  }
 		  });
 
-		  this.colorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.colorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "colorRadioButton.text"));
 		  buttonGroup.add(this.colorRadioButton);
 		  this.colorRadioButton.addChangeListener(new ChangeListener() {
@@ -789,7 +789,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  //  this.colorButton.putClientProperty("JButton.segmentPosition", "only");
 		  //}
 		  this.colorButton.setColorDialogTitle(preferences
-				  .getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorDialog.title"));
+				  .getLocalizedString(com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "colorDialog.title"));
 		  this.colorButton.setColor(controller.getColor());
 		  this.colorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, new PropertyChangeListener() {
 			  public void propertyChange(PropertyChangeEvent ev) {
@@ -806,7 +806,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  TextureChoiceController textureController = controller.getTextureController();
 		  if (textureController != null) {
 			  this.textureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-					  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "textureRadioButton.text"));
+					  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "textureRadioButton.text"));
 			  this.textureRadioButton.addChangeListener(new ChangeListener() {
 				  public void stateChanged(ChangeEvent ev) {
 					  if (textureRadioButton.isSelected()) {
@@ -827,7 +827,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  if (modelMaterialsController != null
 					  && !Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
 				  this.modelMaterialsRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-						  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "modelMaterialsRadioButton.text"));
+						  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "modelMaterialsRadioButton.text"));
 				  this.modelMaterialsRadioButton.addChangeListener(new ChangeListener() {
 					  public void stateChanged(ChangeEvent ev) {
 						  if (modelMaterialsRadioButton.isSelected()) {
@@ -853,7 +853,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.SHININESS)) {
 		  // Create radio buttons bound to SHININESS controller properties
 		  this.defaultShininessRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "defaultShininessRadioButton.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "defaultShininessRadioButton.text"));
 		  this.defaultShininessRadioButton.addChangeListener(new ChangeListener() {
 			  public void stateChanged(ChangeEvent ev) {
 				  if (defaultShininessRadioButton.isSelected()) {
@@ -866,7 +866,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  updateShininessRadioButtons(controller);
 			  }
 		  });
-		  this.mattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.mattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "mattRadioButton.text"));
 		  this.mattRadioButton.addChangeListener(new ChangeListener() {
 			  public void stateChanged(ChangeEvent ev) {
@@ -875,7 +875,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				  }
 			  }
 		  });
-		  this.shinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.shinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "shinyRadioButton.text"));
 		  this.shinyRadioButton.addChangeListener(new ChangeListener() {
 			  public void stateChanged(ChangeEvent ev) {
@@ -898,7 +898,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.VISIBLE)) {
 		  // Create visible check box bound to VISIBLE controller property
 		  this.visibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "visibleCheckBox.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "visibleCheckBox.text"));
 		  this.visibleCheckBox.setNullable(controller.getVisible() == null);
 		  this.visibleCheckBox.setValue(controller.getVisible());
 		  final PropertyChangeListener visibleChangeListener = new PropertyChangeListener() {
@@ -919,7 +919,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  if (controller.isPropertyEditable(HomeFurnitureController.Property.LIGHT_POWER)) {
 		  // Create power label and its spinner bound to POWER controller property
-		  this.lightPowerLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomeFurniturePanel.class,
+		  this.lightPowerLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomeFurniturePanel.class,
 				  "lightPowerLabel.text", unitName));
 		  final NullableSpinnerNumberModel lightPowerSpinnerModel = new NullableSpinnerNumberModel(
 				  0, 0, 100, 5);
@@ -959,7 +959,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  controller.addPropertyChangeListener(HomeFurnitureController.Property.RESIZABLE, sizeListener);
 	  controller.addPropertyChangeListener(HomeFurnitureController.Property.DEFORMABLE, sizeListener);
 
-	  this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "homeFurniture.title");
+	  this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "homeFurniture.title");
   }
 
   /**
@@ -1070,7 +1070,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			  && (this.rollRadioButton != null || this.pitchRadioButton != null);
 
 	  //JLabel namePanel = new JLabel(activity, preferences.getLocalizedString(
-	//		  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, priceDisplayed ? "nameAndPricePanel.title" : "namePanel.title"));
+	//		  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, priceDisplayed ? "nameAndPricePanel.title" : "namePanel.title"));
 	  //swapOut(namePanel, R.id.furniture_panel_namePanel);
 		//PJ removed as pointless
 	  removeView(R.id.furniture_panel_namePanel);
@@ -1114,7 +1114,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  }
 	  // Location panel
 	  JLabel locationPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "locationPanel.title"));
+			  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "locationPanel.title"));
 	  swapOut(locationPanel, R.id.furniture_panel_locationPanel);
 	  if (this.xLabel != null) {
 		  swapOut(this.xLabel, R.id.furniture_panel_xLabel);
@@ -1158,14 +1158,14 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  if (orientationPanelDisplayed) {
 		  // Orientation panel
 		  JLabel orientationPanel = new JLabel(activity, preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationPanel.title"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "orientationPanel.title"));
 		  swapOut(orientationPanel, R.id.furniture_panel_orientationPanel);
 		  JLabel verticalRotationLabel = new JLabel(activity, preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "verticalRotationLabel.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "verticalRotationLabel.text"));
 		  JLabel horizontalRotationLabel = new JLabel(activity, preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "horizontalRotationLabel.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "horizontalRotationLabel.text"));
 		  //JLabel orientationLabel = new JLabel(activity, preferences.getLocalizedString(
-			//	  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "orientationLabel.text"));
+			//	  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "orientationLabel.text"));
 		  swapOut(verticalRotationLabel, R.id.furniture_panel_verticalRotationLabel);
 		  swapOut(horizontalRotationLabel, R.id.furniture_panel_horizontalRotationLabel);
 		 	// swapOut(orientationLabel, R.id.furniture_panel_orientationLabel);
@@ -1212,7 +1212,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 
 	  // Size panel
 	  JLabel sizePanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "sizePanel.title"));
+			  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "sizePanel.title"));
 	  swapOut(sizePanel, R.id.furniture_panel_sizePanel);
 	  if (this.widthLabel != null) {
 		  swapOut(this.widthLabel, R.id.furniture_panel_widthLabel);
@@ -1246,7 +1246,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 		  removeView(R.id.furniture_panel_modelTransformationsButton);
 	  }
 	  JLabel paintPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
+			  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "colorAndTexturePanel.title"));
 	  if (this.defaultColorAndTextureRadioButton != null) {
 		  /*int buttonPadY;
 		  int buttonsBottomInset;
@@ -1307,7 +1307,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 	  }
 	  if (this.defaultShininessRadioButton != null) {
 		  JLabel shininessPanel = new JLabel(activity, preferences.getLocalizedString(
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "shininessPanel.title"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "shininessPanel.title"));
 		  swapOut(shininessPanel, R.id.furniture_panel_shininessPanel);
 		  swapOut(this.defaultShininessRadioButton, R.id.furniture_panel_defaultShininessRadioButton);
 		  swapOut(this.mattRadioButton, R.id.furniture_panel_mattRadioButton);
@@ -1421,12 +1421,12 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			});
 
 			String messageLessStyle = SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "transformationsLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
+							com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "transformationsLabel.text").replaceAll("<style([\\s\\S]+?)</style>", "");
 			messageLessStyle = messageLessStyle.replace("<br>", " ");
 			this.transformationsLabel = new JLabel(activity, Html.fromHtml(messageLessStyle, null, new JOptionPane.ListTagHandler()));
 
 			this.resetTransformationsButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "resetTransformationsButton.text"));
+							com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "resetTransformationsButton.text"));
 			resetTransformationsButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					previewComponent.resetModelTranformations();
@@ -1435,7 +1435,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 			});
 			updateComponents(controller);
 			this.viewFromFrontButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromFrontButton.text"));
+							com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "viewFromFrontButton.text"));
 			viewFromFrontButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					previewComponent.setViewYaw(0);
@@ -1443,7 +1443,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				}
 			});
 			this.viewFromSideButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromSideButton.text"));
+							com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "viewFromSideButton.text"));
 			viewFromSideButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					previewComponent.setViewYaw((float)(Math.PI / 2));
@@ -1451,7 +1451,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				}
 			});
 			this.viewFromTopButton = new JButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "viewFromTopButton.text"));
+							com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "viewFromTopButton.text"));
 			viewFromTopButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					previewComponent.setViewYaw(0);
@@ -1459,7 +1459,7 @@ public class HomeFurniturePanel extends AndroidDialogView implements DialogView 
 				}
 			});
 
-			this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ModelTransformationsPanel.class, "modelTransformations.title");
+			this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ModelTransformationsPanel.class, "modelTransformations.title");
 		}
 
 		private void updateComponents(HomeFurnitureController controller) {

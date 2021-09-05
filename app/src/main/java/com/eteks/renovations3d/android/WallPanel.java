@@ -130,7 +130,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create X start label and its spinner bound to X_START controller property
     this.xStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "xLabel.text", unitName));
     final float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
@@ -154,7 +154,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create Y start label and its spinner bound to Y_START controller property
     this.yStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel yStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
     this.yStartSpinner = new NullableSpinner(activity, yStartSpinnerModel, true);
@@ -177,7 +177,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create X end label and its spinner bound to X_END controller property
     this.xEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "xLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "xLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
     this.xEndSpinner = new NullableSpinner(activity, xEndSpinnerModel, true);
@@ -200,7 +200,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create Y end label and its spinner bound to Y_END controller property
     this.yEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "yLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel yEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
     this.yEndSpinner = new NullableSpinner(activity, yEndSpinnerModel, true);
@@ -223,7 +223,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Create distance to end point label and its spinner bound to DISTANCE_TO_END_POINT controller property
     this.distanceToEndPointLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "distanceToEndPointLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "distanceToEndPointLabel.text", unitName));
     float minimumLength = preferences.getLengthUnit().getMinimumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel distanceToEndPointSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2 * maximumLength * (float)Math.sqrt(2));
@@ -250,7 +250,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Left side color and texture buttons bound to left side controller properties
     this.leftSideColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "leftSideColorRadioButton.text"));
     this.leftSideColorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (leftSideColorRadioButton.isSelected()) {
@@ -267,7 +267,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     this.leftSideColorButton = new ColorButton(activity, preferences);
     this.leftSideColorButton.setColorDialogTitle(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideColorDialog.title"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "leftSideColorDialog.title"));
     this.leftSideColorButton.setColor(controller.getLeftSideColor());
     this.leftSideColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
@@ -284,7 +284,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         });
 
     this.leftSideTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideTextureRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "leftSideTextureRadioButton.text"));
     this.leftSideTextureRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (leftSideTextureRadioButton.isSelected()) {
@@ -302,7 +302,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Left side shininess radio buttons bound to LEFT_SIDE_SHININESS controller property
     this.leftSideMattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideMattRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "leftSideMattRadioButton.text"));
     this.leftSideMattRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (leftSideMattRadioButton.isSelected()) {
@@ -319,7 +319,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         leftSideShininessListener);
 
     this.leftSideShinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideShinyRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "leftSideShinyRadioButton.text"));
     this.leftSideShinyRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (leftSideShinyRadioButton.isSelected()) {
@@ -336,28 +336,28 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     updateLeftSideShininessRadioButtons(controller);
 
    /* this.leftSideBaseboardButton = new JButton(new ResourceAction.ButtonAction(
-        new ResourceAction(preferences, com.eteks.sweethome3d.android_props.WallPanel.class, "MODIFY_LEFT_SIDE_BASEBOARD", true) {
+        new ResourceAction(preferences, com.eteks.sweethome3d.swing.WallPanel.class, "MODIFY_LEFT_SIDE_BASEBOARD", true) {
           @Override
           public void actionPerformed(ActionEvent ev) {
             editBaseboard((JComponent)ev.getSource(), 
-                preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideBaseboardDialog.title"),
+                preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "leftSideBaseboardDialog.title"),
                 controller.getLeftSideBaseboardController());
           }
         }));*/
 	  this.leftSideBaseboardButton = new JButton(activity,
-			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.WallPanel.class, "MODIFY_LEFT_SIDE_BASEBOARD.Name"));
+			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.WallPanel.class, "MODIFY_LEFT_SIDE_BASEBOARD.Name"));
 	  leftSideBaseboardButton.setOnClickListener(new View.OnClickListener(){
 		  public void onClick(View view)
 		  {
 			  editBaseboard(null,
-					  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSideBaseboardDialog.title"),
+					  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "leftSideBaseboardDialog.title"),
 					  controller.getLeftSideBaseboardController());
 		  }
 	  });
     
     // Right side color and texture buttons bound to right side controller properties
     this.rightSideColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rightSideColorRadioButton.text"));
     this.rightSideColorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
           if (rightSideColorRadioButton.isSelected()) {
@@ -375,7 +375,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     this.rightSideColorButton = new ColorButton(activity, preferences);
     this.rightSideColorButton.setColor(controller.getRightSideColor());
     this.rightSideColorButton.setColorDialogTitle(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideColorDialog.title"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rightSideColorDialog.title"));
     this.rightSideColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
@@ -391,7 +391,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         });
     
     this.rightSideTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideTextureRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rightSideTextureRadioButton.text"));
     this.rightSideTextureRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
           if (rightSideTextureRadioButton.isSelected()) {
@@ -409,7 +409,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Right side shininess radio buttons bound to LEFT_SIDE_SHININESS controller property
     this.rightSideMattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideMattRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rightSideMattRadioButton.text"));
     this.rightSideMattRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (rightSideMattRadioButton.isSelected()) {
@@ -426,7 +426,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         rightSideShininessListener);
 
     this.rightSideShinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideShinyRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rightSideShinyRadioButton.text"));
     this.rightSideShinyRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (rightSideShinyRadioButton.isSelected()) {
@@ -443,28 +443,28 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     updateRightSideShininessRadioButtons(controller);
     
    /* this.rightSideBaseboardButton = new JButton(new ResourceAction.ButtonAction(
-        new ResourceAction(preferences, com.eteks.sweethome3d.android_props.WallPanel.class, "MODIFY_RIGHT_SIDE_BASEBOARD", true) {
+        new ResourceAction(preferences, com.eteks.sweethome3d.swing.WallPanel.class, "MODIFY_RIGHT_SIDE_BASEBOARD", true) {
           @Override
           public void actionPerformed(ActionEvent ev) {
             editBaseboard((JComponent)ev.getSource(), 
-                preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideBaseboardDialog.title"), 
+                preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "rightSideBaseboardDialog.title"),
                 controller.getRightSideBaseboardController());
           }
         }));*/
 	  this.rightSideBaseboardButton = new JButton(activity,
-			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.WallPanel.class, "MODIFY_RIGHT_SIDE_BASEBOARD.Name"));
+			  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.WallPanel.class, "MODIFY_RIGHT_SIDE_BASEBOARD.Name"));
 	  rightSideBaseboardButton.setOnClickListener(new View.OnClickListener(){
 		  public void onClick(View view)
 		  {
 			  editBaseboard(null,
-					  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSideBaseboardDialog.title"),
+					  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "rightSideBaseboardDialog.title"),
 					  controller.getRightSideBaseboardController());
 		  }
 	  });
     
     // Top pattern and 3D color
     this.patternLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "patternLabel.text"));    
+        com.eteks.sweethome3d.swing.WallPanel.class, "patternLabel.text"));
     List<TextureImage> patterns = preferences.getPatternsCatalog().getPatterns();
     if (controller.getPattern() == null) {
       patterns = new ArrayList<TextureImage>(patterns);
@@ -520,9 +520,9 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         });
     
     this.topColorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "topColorLabel.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "topColorLabel.text"));
     this.topDefaultColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "topDefaultColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "topDefaultColorRadioButton.text"));
     this.topDefaultColorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (topDefaultColorRadioButton.isSelected()) {
@@ -531,7 +531,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         }
       });
     this.topColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "topColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "topColorRadioButton.text"));
     this.topColorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (topColorRadioButton.isSelected()) {
@@ -547,7 +547,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         });
     this.topColorButton = new ColorButton(activity, preferences);
     this.topColorButton.setColorDialogTitle(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.WallPanel.class, "topColorDialog.title"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "topColorDialog.title"));
     this.topColorButton.setColor(controller.getTopColor());
     this.topColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
@@ -570,7 +570,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Create height label and its spinner bound to RECTANGULAR_WALL_HEIGHT controller property
     this.rectangularWallRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "rectangularWallRadioButton.text"));
     this.rectangularWallRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (rectangularWallRadioButton.isSelected()) {
@@ -586,7 +586,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
         });
 
     this.rectangularWallHeightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-            com.eteks.sweethome3d.android_props.WallPanel.class, "rectangularWallHeightLabel.text", unitName));
+            com.eteks.sweethome3d.swing.WallPanel.class, "rectangularWallHeightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel rectangularWallHeightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
     this.rectangularWallHeightSpinner = new NullableSpinner(activity, rectangularWallHeightSpinnerModel, true);
@@ -611,7 +611,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
       });
    
     this.slopingWallRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallRadioButton.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "slopingWallRadioButton.text"));
     this.slopingWallRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (slopingWallRadioButton.isSelected()) {
@@ -626,7 +626,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Create height at start label and its spinner bound to SLOPING_WALL_HEIGHT_AT_START controller property
     this.slopingWallHeightAtStartLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtStartLabel.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "slopingWallHeightAtStartLabel.text"));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtStartSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
     this.slopingWallHeightAtStartSpinner = new NullableSpinner(activity, slopingWallHeightAtStartSpinnerModel, true);
@@ -652,7 +652,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create height at end label and its spinner bound to SLOPING_WALL_HEIGHT_AT_END controller property
     this.slopingWallHeightAtEndLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "slopingWallHeightAtEndLabel.text"));
+        com.eteks.sweethome3d.swing.WallPanel.class, "slopingWallHeightAtEndLabel.text"));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel slopingWallHeightAtEndSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
     this.slopingWallHeightAtEndSpinner = new NullableSpinner(activity, slopingWallHeightAtEndSpinnerModel, true);
@@ -678,7 +678,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
     // Create thickness label and its spinner bound to THICKNESS controller property
     this.thicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "thicknessLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "thicknessLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
     this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel, true);
@@ -704,7 +704,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // Create arc extent label and its spinner bound to ARC_EXTENT_IN_DEGREES controller property
     this.arcExtentLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.WallPanel.class, "arcExtentLabel.text", unitName));
+        com.eteks.sweethome3d.swing.WallPanel.class, "arcExtentLabel.text", unitName));
     final NullableSpinnerNumberModel arcExtentSpinnerModel =
         new NullableSpinnerNumberModel(new Float(0), new Float(-270), new Float(270), new Float(5));
     this.arcExtentSpinner = new NullableSpinner(activity, arcExtentSpinnerModel, true);
@@ -730,13 +730,13 @@ public class WallPanel extends AndroidDialogView implements DialogView {
     
     // wallOrientationLabel shows an HTML explanation of wall orientation with an image URL in resource
     this.wallOrientationLabel = new JLabel(activity, preferences.getLocalizedString(
-            com.eteks.sweethome3d.android_props.WallPanel.class, "wallOrientationLabel.text", 
-            new ResourceURLContent(com.eteks.sweethome3d.android_props.WallPanel.class, "resources/wallOrientation.png").getURL()));//,
+            com.eteks.sweethome3d.swing.WallPanel.class, "wallOrientationLabel.text",
+            new ResourceURLContent(com.eteks.sweethome3d.swing.WallPanel.class, "resources/wallOrientation.png").getURL()));//,
         //JLabel.CENTER);
     // Use same font for label as tooltips
     //this.wallOrientationLabel.setFont(UIManager.getFont("ToolTip.font"));
 
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "wall.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "wall.title");
   }
 
   /**
@@ -869,7 +869,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
                                 final WallController controller) {
 
 	  JLabel startPointPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "startPointPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "startPointPanel.title"));
 	  swapOut(startPointPanel, R.id.wall_panel_startPanel);
 	  swapOut(this.xStartLabel, R.id.wall_panel_xStartLabel);
 	  swapOut(this.xStartSpinner, R.id.wall_panel_xStartSpinner);
@@ -878,7 +878,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 
 	  JLabel endPointPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "endPointPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "endPointPanel.title"));
 	  swapOut(endPointPanel, R.id.wall_panel_endPanel);
 	  swapOut(this.xEndLabel, R.id.wall_panel_xEndLabel);
 	  swapOut(this.xEndSpinner, R.id.wall_panel_xEndSpinner);
@@ -889,7 +889,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.distanceToEndPointSpinner, R.id.wall_panel_distanceSpinner);
 
 	  JLabel leftSidePanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "leftSidePanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "leftSidePanel.title"));
 	  swapOut(leftSidePanel, R.id.wall_panel_leftSideLabel);
 	  swapOut(this.leftSideColorRadioButton, R.id.wall_panel_leftSideColorRadioButton);
 	  swapOut(this.leftSideColorButton, R.id.wall_panel_leftSideColorButton);
@@ -901,7 +901,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 
 	  JLabel rightSidePanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "rightSidePanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "rightSidePanel.title"));
 	  swapOut(rightSidePanel, R.id.wall_panel_rightSideLabel);
 	  swapOut(this.rightSideColorRadioButton, R.id.wall_panel_rightSideColorRadioButton);
 	  swapOut(this.rightSideColorButton, R.id.wall_panel_rightSideColorButton);
@@ -912,7 +912,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.rightSideBaseboardButton, R.id.wall_panel_rightSideModifyBaseboardButton);
 
 	  JLabel topPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "topPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "topPanel.title"));
 	  swapOut(topPanel, R.id.wall_panel_wallTopPanel);
 	  swapOut(this.patternLabel, R.id.wall_panel_wallTopTextureLabel);
 	  swapOut(this.patternComboBox, R.id.wall_panel_wallTopTextureSpinner);
@@ -923,7 +923,7 @@ public class WallPanel extends AndroidDialogView implements DialogView {
 
 
 	  JLabel heightPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "heightPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "heightPanel.title"));
 	  swapOut(heightPanel, R.id.wall_panel_heightPanel);
 	  swapOut(this.rectangularWallRadioButton, R.id.wall_panel_rectangularWallRadioButton);
 	  swapOut(this.rectangularWallHeightLabel, R.id.wall_panel_heightRectangularLabel);

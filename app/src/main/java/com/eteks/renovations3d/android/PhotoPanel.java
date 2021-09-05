@@ -187,7 +187,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.photoComponent.setPreferredSize(320);
 		//this.photoComponent.setPreferredSize(new Dimension(getToolkit().getScreenSize().width <= 1024 ? 320 : 400, 400));
 
-		//this.animatedWaitLabel = new JLabel(activity, new ImageIcon(com.eteks.sweethome3d.android_props.PhotoPanel.class.getResource("resources/animatedWait.gif")));
+		//this.animatedWaitLabel = new JLabel(activity, new ImageIcon(com.eteks.sweethome3d.swing.PhotoPanel.class.getResource("resources/animatedWait.gif")));
 
 		// Create size and quality panel
 		this.sizeAndQualityPanel = new PhotoSizeAndQualityPanel(home, preferences, controller, activity);
@@ -300,8 +300,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		timeSpinnerModel.addChangeListener(dateTimeChangeListener);
 
 		this.dayNightLabel = new ImageView(activity);
-		final ImageIcon dayIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.PhotoPanel.class.getResource("resources/day.png"));
-		final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.PhotoPanel.class.getResource("resources/night.png"));
+		final ImageIcon dayIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.PhotoPanel.class.getResource("resources/day.png"));
+		final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.PhotoPanel.class.getResource("resources/night.png"));
 
 		PropertyChangeListener dayNightListener = new PropertyChangeListener()
 		{
@@ -344,17 +344,17 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				switch (value)
 				{
 					case NORMAL:
-						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "lensComboBox.normalLens.text");
+						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "lensComboBox.normalLens.text");
 						break;
 					case SPHERICAL:
-						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "lensComboBox.sphericalLens.text");
+						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "lensComboBox.sphericalLens.text");
 						break;
 					case FISHEYE:
-						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "lensComboBox.fisheyeLens.text");
+						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "lensComboBox.fisheyeLens.text");
 						break;
 					case PINHOLE:
 					default:
-						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "lensComboBox.pinholeLens.text");
+						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "lensComboBox.pinholeLens.text");
 						break;
 				}
 				ret.setText(displayedValue);
@@ -412,7 +412,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		controller.set3DViewAspectRatio((float) view3D.getView().getWidth() / view3D.getView().getHeight());
 
 		this.createButton = new JButton(activity,
-				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
+				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
 		createButton.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View view)
@@ -421,7 +421,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 			}
 		});
 		this.saveButton = new JButton(activity,
-				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "SAVE_PHOTO.Name"));
+				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "SAVE_PHOTO.Name"));
 		saveButton.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View view)
@@ -436,7 +436,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.shareButton.setEnabled(false);
 
 		this.closeButton = new JButton(activity,
-				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "CLOSE.Name"));
+				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "CLOSE.Name"));
 		closeButton.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View view)
@@ -455,14 +455,14 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	private void setComponentTexts(UserPreferences preferences)
 	{
 		this.dateLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.PhotoPanel.class, "dateLabel.text"));
+				com.eteks.sweethome3d.swing.PhotoPanel.class, "dateLabel.text"));
 		this.timeLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.PhotoPanel.class, "timeLabel.text"));
+				com.eteks.sweethome3d.swing.PhotoPanel.class, "timeLabel.text"));
 		this.lensLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.PhotoPanel.class, "lensLabel.text"));
+				com.eteks.sweethome3d.swing.PhotoPanel.class, "lensLabel.text"));
 		this.ceilingLightEnabledCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.PhotoPanel.class, "ceilingLightEnabledCheckBox.text"));
-		this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "createPhoto.title");
+				com.eteks.sweethome3d.swing.PhotoPanel.class, "ceilingLightEnabledCheckBox.text"));
+		this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "createPhoto.title");
 
 		// Buttons text changes automatically through their action
 	}
@@ -610,7 +610,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.ceilingLightEnabledCheckBox.setEnabled(false);
 		this.saveButton.setEnabled(false);
 		this.shareButton.setEnabled(false);
-		this.createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "STOP_PHOTO_CREATION.Name"));
+		this.createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "STOP_PHOTO_CREATION.Name"));
 		createButton.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View view)
@@ -750,7 +750,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 					saveButton.setEnabled(photoImage != null);
 					shareButton.setEnabled(photoImage != null);
 
-					createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
+					createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
 					createButton.setOnClickListener(new View.OnClickListener()
 					{
 						public void onClick(View view)
@@ -797,8 +797,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 						&& (!confirmStop
 						|| System.currentTimeMillis() - photoCreationStartTime < MINIMUM_DELAY_BEFORE_DISCARDING_WITHOUT_WARNING
 						|| JOptionPane.showConfirmDialog(activity,
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "confirmStopCreation.message"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "confirmStopCreation.title"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "confirmStopCreation.message"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "confirmStopCreation.title"),
 						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION))
 				{
 					if (photoCreationExecutor != null)
@@ -811,7 +811,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 						{
 							public void run()
 							{
-								createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
+								createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
 								createButton.setOnClickListener(new View.OnClickListener()
 								{
 									public void onClick(View view)
@@ -844,8 +844,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 					Uri outputFileUri = null;
 					String imageName = "";
 
-					//android Q p doesn't want file picking at all
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					//android 11 doesn't want file picking at all
+					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 						String homeName = new File(((Renovations3DActivity)activity).getHome().getName()).getName().replace(".sh3d","");
 						// TODO: make photo generic string
 						String filename =  activity.getResources().getString(R.string.app_name) + "_" + homeName + "_photo";
@@ -887,7 +887,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 					} else {
 						String pngFile = controller.getContentManager().showSaveDialog(PhotoPanel.this,
-								preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoDialog.title"),
+								preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "savePhotoDialog.title"),
 								ContentManager.ContentType.PNG, home.getName());
 
 						if (pngFile != null) {
@@ -932,9 +932,9 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 						});
 					}
 				} catch (Exception ex) {
-					String messageFormat = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoError.message");
+					String messageFormat = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "savePhotoError.message");
 					JOptionPane.showMessageDialog(activity, String.format(messageFormat, ex.getMessage()),
-							preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PhotoPanel.class, "savePhotoError.title"), JOptionPane.ERROR_MESSAGE);
+							preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "savePhotoError.title"), JOptionPane.ERROR_MESSAGE);
 				}
 
 				Renovations3DActivity.logFireBaseLevelUp("Photo Saved");

@@ -246,8 +246,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
   private void createActions(UserPreferences preferences) {
 		final ActionMap actions = getActionMap();
 		actions.put(ActionType.PLAYBACK,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "PLAYBACK.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "PLAYBACK.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.PLAYBACK).setEnabled(false);
 		actions.get(ActionType.PLAYBACK).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -255,24 +255,24 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.PAUSE,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "PAUSE.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "PAUSE.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.PAUSE).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				pausePlayback();
 			}
 		});
 		actions.put(ActionType.RECORD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "RECORD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "RECORD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.RECORD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				recordCameraLocation();
 			}
 		});
 		actions.put(ActionType.SEEK_BACKWARD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SEEK_BACKWARD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "SEEK_BACKWARD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.SEEK_BACKWARD).setEnabled(false);
 		actions.get(ActionType.SEEK_BACKWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -280,8 +280,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.SEEK_FORWARD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SEEK_FORWARD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "SEEK_FORWARD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.SEEK_FORWARD).setEnabled(false);
 		actions.get(ActionType.SEEK_FORWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -289,8 +289,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.SKIP_BACKWARD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SKIP_BACKWARD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "SKIP_BACKWARD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.SKIP_BACKWARD).setEnabled(false);
 		actions.get(ActionType.SKIP_BACKWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -298,8 +298,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.SKIP_FORWARD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SKIP_FORWARD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "SKIP_FORWARD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.SKIP_FORWARD).setEnabled(false);
 		actions.get(ActionType.SKIP_FORWARD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -307,8 +307,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.DELETE_LAST_RECORD,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "DELETE_LAST_RECORD.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "DELETE_LAST_RECORD.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.DELETE_LAST_RECORD).setEnabled(false);
 		actions.get(ActionType.DELETE_LAST_RECORD).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -316,8 +316,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.DELETE_CAMERA_PATH,
-						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource(
-						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "DELETE_CAMERA_PATH.SmallIcon"))).getImage().getDelegate()));
+						new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource(
+						SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "DELETE_CAMERA_PATH.SmallIcon"))).getImage().getDelegate()));
 		actions.get(ActionType.DELETE_CAMERA_PATH).setEnabled(false);
 		actions.get(ActionType.DELETE_CAMERA_PATH).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -326,7 +326,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 		});
 
 		actions.put(ActionType.START_VIDEO_CREATION,
-						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "START_VIDEO_CREATION.Name")));
+						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "START_VIDEO_CREATION.Name")));
 		actions.get(ActionType.START_VIDEO_CREATION).setEnabled(false);
 		actions.get(ActionType.START_VIDEO_CREATION).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -334,14 +334,14 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 			}
 		});
 		actions.put(ActionType.STOP_VIDEO_CREATION,
-						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "STOP_VIDEO_CREATION.Name")));
+						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "STOP_VIDEO_CREATION.Name")));
 		actions.get(ActionType.STOP_VIDEO_CREATION).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
 				stopVideoCreation(true);
 			}
 		});
 		actions.put(ActionType.SAVE_VIDEO,
-						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.VideoPanel.class, "SAVE_VIDEO.Name")));
+						new JButton(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.VideoPanel.class, "SAVE_VIDEO.Name")));
 		actions.get(ActionType.SAVE_VIDEO).setEnabled(false);
 		actions.get(ActionType.SAVE_VIDEO).setOnClickListener(new android.view.View.OnClickListener() {
 			public void onClick(android.view.View view) {
@@ -547,7 +547,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
             progressLabel.setText("");
             if (progressValue == progressBar.getMinimum()) {
               int framesCount = progressBar.getMaximum() - progressBar.getMinimum();
-              String progressLabelFormat = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "progressStartLabel.format");
+              String progressLabelFormat = preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "progressStartLabel.format");
               progressLabel.setText(String.format(progressLabelFormat, framesCount,
                   formatDuration(framesCount * 1000 / controller.getFrameRate())));
             }
@@ -556,7 +556,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
           } else {
             // Update progress label once the second image is generated 
             // (the first one can take more time because of initialization process)
-            String progressLabelFormat = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "progressLabel.format");
+            String progressLabelFormat = preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "progressLabel.format");
             long estimatedRemainingTime = (System.currentTimeMillis() - this.timeAfterFirstImage) 
                 / (progressValue - 1 - progressBar.getMinimum())  
                 * (progressBar.getMaximum() - progressValue - 1);
@@ -577,15 +577,15 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
           String estimatedRemainingTimeText;
           if (durationInSeconds < 60) {
             estimatedRemainingTimeText = String.format(preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.VideoPanel.class, "seconds.format"), durationInSeconds);
+										com.eteks.sweethome3d.swing.VideoPanel.class, "seconds.format"), durationInSeconds);
           } else if (durationInSeconds < 3600) {
             estimatedRemainingTimeText = String.format(preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.VideoPanel.class, "minutesSeconds.format"), durationInSeconds / 60, durationInSeconds % 60);
+										com.eteks.sweethome3d.swing.VideoPanel.class, "minutesSeconds.format"), durationInSeconds / 60, durationInSeconds % 60);
           } else {
             long hours = durationInSeconds / 3600;
             long minutes = (durationInSeconds % 3600) / 60;
             estimatedRemainingTimeText = String.format(preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.VideoPanel.class, "hoursMinutes.format"), hours, minutes);
+										com.eteks.sweethome3d.swing.VideoPanel.class, "hoursMinutes.format"), hours, minutes);
           }
           return estimatedRemainingTimeText;
         }
@@ -611,16 +611,16 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 				switch (getAspectRatio(size.width, size.height)) {
 					case RATIO_4_3 :
 						aspectRatio = preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.4_3Ratio.text");
+										com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.4_3Ratio.text");
 						break;
 					case RATIO_24_10 :
 						aspectRatio = preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.2.40_1Ratio.text");
+										com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.2.40_1Ratio.text");
 						break;
 					default :
 					case RATIO_16_9 :
 						aspectRatio = preferences.getLocalizedString(
-										com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.16_9Ratio.text");
+										com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.16_9Ratio.text");
 						break;
 				}
 				Dimension videoSize = size;
@@ -654,7 +654,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     this.qualityLabel = new JLabel(activity, "");
     Dimension imageSize;
     try {
-      imageSize = SwingTools.getImageSizeInPixels(new ResourceURLContent(com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class,
+      imageSize = SwingTools.getImageSizeInPixels(new ResourceURLContent(com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class,
             "resources/quality0.jpg"));
     } catch (IOException ex) {
       // Shouldn't happen since resource exists
@@ -671,7 +671,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
           float valueToTick = valueUnderMouse - (float)Math.floor(valueUnderMouse);
           if (valueToTick < 0.25f || valueToTick > 0.75f) {
             // Display a tooltip that explains the different quality levels
-            URL imageUrl = new ResourceURLContent(com.eteks.sweethome3d.android_props.VideoPanel.class, "resources/quality" + Math.round(valueUnderMouse - qualitySlider.getMinimum()) + ".jpg").getURL();
+            URL imageUrl = new ResourceURLContent(com.eteks.sweethome3d.swing.VideoPanel.class, "resources/quality" + Math.round(valueUnderMouse - qualitySlider.getMinimum()) + ".jpg").getURL();
             String imageHtmlCell = "<td><img border='1' width='" + imageWidth + "' height='" + imageHeight + "' src='" + imageUrl + "'></td>";
             String description = preferences.getLocalizedString(PhotoSizeAndQualityPanel.class, "quality" + Math.round(valueUnderMouse - qualitySlider.getMinimum()) + "DescriptionLabel.text");
             boolean leftToRightOrientation = false;//qualitySlider.getComponentOrientation().isLeftToRight();
@@ -726,9 +726,9 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     this.qualitySlider.setValue(this.qualitySlider.getMinimum() + controller.getQuality());
 
 		this.fastLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "fastLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "fastLabel.text"));
 		this.bestLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "bestLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "bestLabel.text"));
     //this.advancedComponentsSeparator = new JSeparator();
 
     // Create date and time labels and spinners bound to TIME controller property
@@ -812,8 +812,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     timeSpinnerModel.addChangeListener(dateTimeChangeListener);
 
     this.dayNightLabel = new ImageView(activity);
-    final ImageIcon dayIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource("resources/day.png"));
-    final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.android_props.VideoPanel.class.getResource("resources/night.png"));
+    final ImageIcon dayIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource("resources/day.png"));
+    final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource("resources/night.png"));
     PropertyChangeListener dayNightListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           if (home.getCompass().getSunElevation(
@@ -894,11 +894,11 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     int fastLabelOffset = OperatingSystem.isLinux() 
         ? 0
         : new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "fastLabel.text")).getPreferredSize().width / 2;
+						com.eteks.sweethome3d.swing.VideoPanel.class, "fastLabel.text")).getPreferredSize().width / 2;
     int bestLabelOffset = OperatingSystem.isLinux() 
         ? 0
         : new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "bestLabel.text")).getPreferredSize().width / 2;
+						com.eteks.sweethome3d.swing.VideoPanel.class, "bestLabel.text")).getPreferredSize().width / 2;
     int sliderWidth = qualitySlider.getWidth() - fastLabelOffset - bestLabelOffset;
     return qualitySlider.getMinimum()
         + (float)(qualitySlider.getComponentOrientation().isLeftToRight()
@@ -911,33 +911,33 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
    * Sets the texts of the components.
    */
   private void setComponentTexts(UserPreferences preferences) {
-    this.tipLabel.setText(Html.fromHtml(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "tipLabel.text").replace("<br>", " ")));
+    this.tipLabel.setText(Html.fromHtml(preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "tipLabel.text").replace("<br>", " ")));
     this.videoFormatLabel.setText(preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "videoFormatLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "videoFormatLabel.text"));
     this.videoFormatComboBoxFormat = preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "videoFormatComboBox.format");
+						com.eteks.sweethome3d.swing.VideoPanel.class, "videoFormatComboBox.format");
     //frames/seonds is far to long knock it all back to fps regardless of text
 		videoFormatComboBoxFormat = videoFormatComboBoxFormat.substring(0,videoFormatComboBoxFormat.lastIndexOf(" ")) + " fps";
     this.qualityLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "qualityLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "qualityLabel.text"));
     this.dateLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "dateLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "dateLabel.text"));
     this.timeLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "timeLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "timeLabel.text"));
     this.ceilingLightEnabledCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "ceilingLightEnabledCheckBox.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "ceilingLightEnabledCheckBox.text"));
     this.fastLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "fastLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "fastLabel.text"));
     //if (!Component3DManager.getInstance().isOffScreenImageSupported()) {
     //  fastLabel.setEnabled(false);
     //}
     this.bestLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.VideoPanel.class, "bestLabel.text"));
+						com.eteks.sweethome3d.swing.VideoPanel.class, "bestLabel.text"));
     //Dictionary<Integer, JComponent> qualitySliderLabelTable = new Hashtable<Integer,JComponent>();
     //qualitySliderLabelTable.put(this.qualitySlider.getMinimum(), fastLabel);
     //qualitySliderLabelTable.put(this.qualitySlider.getMaximum(), bestLabel);
     //this.qualitySlider.setLabelTable(qualitySliderLabelTable);
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "createVideo.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "createVideo.title");
     //Window window = SwingUtilities.getWindowAncestor(this);
     //if (window != null) {
     //  ((JDialog)window).setTitle(this.dialogTitle);
@@ -1480,7 +1480,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
       file = null;
     } catch (OutOfMemoryError ex) {
       showError("createVideoError.message", 
-          this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "outOfMemory.message"));
+          this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "outOfMemory.message"));
       file = null;
     }
   }
@@ -1492,9 +1492,9 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
                          final String messageDetail) {
     EventQueue.invokeLater(new Runnable() {
         public void run() {
-          String messageFormat = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, messageKey);
+          String messageFormat = preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, messageKey);
           JOptionPane.showMessageDialog(activity, String.format(messageFormat, messageDetail),
-              preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "videoError.title"), JOptionPane.ERROR_MESSAGE);
+              preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "videoError.title"), JOptionPane.ERROR_MESSAGE);
         }
       });
   }
@@ -1510,8 +1510,8 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 					if (!confirmStop
 									|| System.currentTimeMillis() - videoCreationStartTime < MINIMUM_DELAY_BEFORE_DISCARDING_WITHOUT_WARNING
 									|| JOptionPane.showConfirmDialog(activity,
-									preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "confirmStopCreation.message"),
-									preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "confirmStopCreation.title"),
+									preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "confirmStopCreation.message"),
+									preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "confirmStopCreation.title"),
 									JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 						if (videoCreationExecutor != null) { // Check a second time in case rendering stopped meanwhile
 							// Interrupt executor thread
@@ -1541,14 +1541,9 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
                 final Uri outputFileUri;
                 final File movFile;
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                     String homeName = new File(((Renovations3DActivity) activity).getHome().getName()).getName().replace(".sh3d", "");
                     // TODO: make video generic string
-
-                    //TODO: check multiple saves and any fails
-                    // so save home simply uses the homename
-                    // save video or image uses the homename+photo+next number up into the media, same as video, with a toast telling the user
-
 
                     String filename = activity.getResources().getString(R.string.app_name) + "_" + homeName + "_video";
                     // just let the media store know about it and save it to our local image file location
@@ -1567,7 +1562,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
 
                 } else {
                     final String movFileName = controller.getContentManager().showSaveDialog(VideoPanel.this,
-                            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.VideoPanel.class, "saveVideoDialog.title"),
+                            preferences.getLocalizedString(com.eteks.sweethome3d.swing.VideoPanel.class, "saveVideoDialog.title"),
                             ContentManager.ContentType.MOV, home.getName());
                     if (movFileName != null) {
                         movFile = new File(movFileName);
@@ -1635,7 +1630,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
                                     // Delete saved file in case of error or if panel was closed meanwhile
                                     if (exception == null) {
 
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                                             ContentValues values = new ContentValues();
                                             values.put(MediaStore.Images.Media.IS_PENDING, false);
                                             activity.getContentResolver().update(outputFileUri, values, null, null);

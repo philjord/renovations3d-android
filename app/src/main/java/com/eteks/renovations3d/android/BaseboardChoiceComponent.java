@@ -79,7 +79,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
                                 final BaseboardChoiceController controller) {
     // Baseboard visible check box bound to VISIBLE controller property
     this.visibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "visibleCheckBox.text"));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "visibleCheckBox.text"));
     this.visibleCheckBox.setNullable(controller.getVisible() == null);
     this.visibleCheckBox.setValue(controller.getVisible());
     this.visibleCheckBox.addChangeListener(new ChangeListener() {
@@ -105,7 +105,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
         visibleChangeListener);
 
     this.sameColorAsWallRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "sameColorAsWallRadioButton.text"));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "sameColorAsWallRadioButton.text"));
     this.sameColorAsWallRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (sameColorAsWallRadioButton.isSelected()) {
@@ -122,7 +122,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
 
     // Baseboard color and texture buttons bound to baseboard controller properties
     this.colorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "colorRadioButton.text"));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "colorRadioButton.text"));
     this.colorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (colorRadioButton.isSelected()) {
@@ -139,7 +139,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
     
     this.colorButton = new ColorButton(activity, preferences);
     this.colorButton.setColorDialogTitle(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "colorDialog.title"));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "colorDialog.title"));
     this.colorButton.setColor(controller.getColor());
     this.colorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
@@ -156,7 +156,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
         });
 
     this.textureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "textureRadioButton.text"));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "textureRadioButton.text"));
     this.textureRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (textureRadioButton.isSelected()) {
@@ -177,7 +177,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
     String unitName = preferences.getLengthUnit().getName();
     float minimumLength = preferences.getLengthUnit().getMinimumLength();
     this.heightLabel = new JLabel(activity,SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "heightLabel.text", unitName));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "heightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength,
             controller.getMaxHeight() == null
@@ -222,7 +222,7 @@ public class BaseboardChoiceComponent extends JPanel implements View {
     
     // Create baseboard thickness label and its spinner bound to THICKNESS controller property
     this.thicknessLabel = new JLabel(activity,SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.BaseboardChoiceComponent.class, "thicknessLabel.text", unitName));
+			com.eteks.sweethome3d.swing.BaseboardChoiceComponent.class, "thicknessLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, 2);
     this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel, true);

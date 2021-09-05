@@ -86,7 +86,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     // Create X label and its spinner bound to X controller property
     this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "xLabel.text", unitName));
+        com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "xLabel.text", unitName));
     final float maximumLength = 5E5f;
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
@@ -106,7 +106,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     // Create Y label and its spinner bound to Y controller property
     this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "yLabel.text", unitName));
+			com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
     this.ySpinner = new NullableSpinner(activity, ySpinnerModel, true);
@@ -125,7 +125,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 
     // Create camera elevation label and spinner bound to ELEVATION controller property
     this.elevationLabel = new JLabel(activity, String.format(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "elevationLabel.text"), unitName));
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "elevationLabel.text"), unitName));
     float maximumElevation = preferences.getLengthUnit().getMaximumElevation();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, controller.getMinimumElevation(), maximumElevation);
@@ -145,7 +145,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     // Create yaw label and spinner bound to YAW_IN_DEGREES controller property
     this.yawLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "yawLabel.text"));
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "yawLabel.text"));
     final SpinnerNumberModel yawSpinnerModel = new SpinnerNumberModel(0, -360, 720, 5);
     this.yawSpinner = new AutoCommitSpinnerJogDial(activity, yawSpinnerModel);
     yawSpinnerModel.setValue(controller.getYawInDegrees() % 360);//PJPJP added % 360
@@ -163,7 +163,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     // Create pitch label and spinner bound to SPIN_IN_DEGREES controller property
     this.pitchLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "pitchLabel.text"));
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "pitchLabel.text"));
     final SpinnerNumberModel pitchSpinnerModel = new SpinnerNumberModel(0, -90, 90, 5);
     this.pitchSpinner = new AutoCommitSpinnerJogDial(activity, pitchSpinnerModel);
     pitchSpinnerModel.setValue(controller.getPitchInDegrees());
@@ -181,7 +181,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
     
     // Create field of view label and spinner bound to FIELD_OF_VIEW_IN_DEGREES controller property
     this.fieldOfViewLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "fieldOfViewLabel.text"));
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "fieldOfViewLabel.text"));
     final SpinnerNumberModel fieldOfViewSpinnerModel = new SpinnerNumberModel(10, 10, 120, 1);
     this.fieldOfViewSpinner = new AutoCommitSpinnerJogDial(activity, fieldOfViewSpinnerModel);
     fieldOfViewSpinnerModel.setValue(controller.getFieldOfViewInDegrees());
@@ -198,7 +198,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
         });
     
     this.adjustObserverCameraElevationCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "adjustObserverCameraElevationCheckBox.text"), controller.isElevationAdjusted());
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "adjustObserverCameraElevationCheckBox.text"), controller.isElevationAdjusted());
     this.adjustObserverCameraElevationCheckBox.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ev) {
           controller.setElevationAdjusted(adjustObserverCameraElevationCheckBox.isSelected());
@@ -222,7 +222,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
         });
 
     this.dialogTitle = preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "observerCamera.title");
+			com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "observerCamera.title");
   }
 
 	/**
@@ -236,7 +236,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
    */
   private void layoutComponents(UserPreferences preferences) {
 	  JLabel rendering3DPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "locationPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "locationPanel.title"));
 	  swapOut(rendering3DPanel, R.id.observercamera_rendering3DPanel);
 
 	  swapOut(this.xLabel, R.id.observercamera_xLabel);
@@ -247,7 +247,7 @@ public class ObserverCameraPanel extends AndroidDialogView implements DialogView
 	  swapOut(this.elevationSpinner, R.id.observercamera_elevationSpinner);
 
 	  JLabel anglesPanel = new JLabel(activity,
-			  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ObserverCameraPanel.class, "anglesPanel.title"));
+			  preferences.getLocalizedString(com.eteks.sweethome3d.swing.ObserverCameraPanel.class, "anglesPanel.title"));
 	  swapOut(anglesPanel, R.id.observercamera_anglesPanel);
 
 	  swapOut(this.yawLabel, R.id.observercamera_yawLabel);

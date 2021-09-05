@@ -168,11 +168,11 @@ public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweeth
 				  switch (aspectRatio) {
 					  case VIEW_3D_RATIO :
 						  displayedValue = preferences.getLocalizedString(
-								  com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.view3DRatio.text");
+								  com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.view3DRatio.text");
 						  break;
 					  case SQUARE_RATIO :
 						  displayedValue = preferences.getLocalizedString(
-								  com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.squareRatio.text");
+								  com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "aspectRatioComboBox.squareRatio.text");
 						  break;
 					  case RATIO_4_3 :
 						  displayedValue = "4/3";
@@ -272,20 +272,20 @@ public class PhotoSizeAndQualityPanel extends JPanel implements com.eteks.sweeth
    */
   private void setComponentTexts(UserPreferences preferences) {
     this.widthLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "widthLabel.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "widthLabel.text"));
     this.heightLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "heightLabel.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "heightLabel.text"));
     this.applyProportionsCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "applyProportionsCheckBox.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "applyProportionsCheckBox.text"));
     this.qualityLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "qualityLabel.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "qualityLabel.text"));
     this.fastQualityLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "fastLabel.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "fastLabel.text"));
     if (!Component3DManager.getInstance().isOffScreenImageSupported()) {
       this.fastQualityLabel.setEnabled(false);
     }
     this.bestQualityLabel.setText(SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PhotoSizeAndQualityPanel.class, "bestLabel.text"));
+			com.eteks.sweethome3d.swing.PhotoSizeAndQualityPanel.class, "bestLabel.text"));
   }
 
 

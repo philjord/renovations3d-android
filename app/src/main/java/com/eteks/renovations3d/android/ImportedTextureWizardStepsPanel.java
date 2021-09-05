@@ -251,7 +251,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
       // Don't create findImagesButton if its text or url isn't defined
     }*/
     this.imageChoiceErrorLabel = new JLabel(activity, preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "imageChoiceErrorLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "imageChoiceErrorLabel.text"));
     // Make imageChoiceErrorLabel visible only if an error occurred during image content loading
     this.imageChoiceErrorLabel.setVisibility(android.view.View.GONE);
     this.imageChoicePreviewComponent = new ScaledImageComponent(activity);
@@ -300,9 +300,9 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
     */
     // Attributes panel components
     this.attributesLabel = new JLabel(activity, Html.fromHtml(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "attributesLabel.text").replace("<br>", " ")));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "attributesLabel.text").replace("<br>", " ")));
     this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "nameLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "nameLabel.text"));
     this.nameTextField = new JTextField(activity, 10);
 	  nameTextField.addTextChangedListener(new TextWatcher(){
 		  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
@@ -340,7 +340,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
         });
 
     this.categoryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "categoryLabel.text"));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "categoryLabel.text"));
 	  ArrayList<TexturesCategory> cats = new ArrayList<TexturesCategory>(preferences.getTexturesCatalog().getCategories());
     this.categoryComboBox = new JComboBox(activity, cats);
 	  categoryComboBox.setAdapter(new ArrayAdapter<TexturesCategory>(activity, android.R.layout.simple_list_item_1, cats)
@@ -437,7 +437,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
           }
         });
     this.creatorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-						com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "creatorLabel.text"));
+						com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "creatorLabel.text"));
 		this.creatorTextField = new JTextField(activity,10);
 		creatorTextField.addTextChangedListener(new TextWatcher(){
 			public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {}
@@ -475,7 +475,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 				});
 
     this.widthLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "widthLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "widthLabel.text", unitName));
     float minimumLength = preferences.getLengthUnit().getMinimumLength();
     float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel widthSpinnerModel =
@@ -498,7 +498,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
         });
     
     this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "heightLabel.text", unitName));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "heightLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
     this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
@@ -653,7 +653,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                   public void run() {
                     JOptionPane.showMessageDialog(activity,
                         preferences.getLocalizedString(
-								com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "imageChoiceError", imageName), "", JOptionPane.ERROR_MESSAGE);
+								com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "imageChoiceError", imageName), "", JOptionPane.ERROR_MESSAGE);
                   }
                 });
             }
@@ -689,7 +689,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                       ContentManager.ContentType.IMAGE));
                   // Use user category as default category and create it if it doesn't exist
                   TexturesCategory userCategory = new TexturesCategory(preferences.getLocalizedString(
-						  com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "userCategory"));
+						  com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "userCategory"));
                   for (TexturesCategory category : preferences.getTexturesCatalog().getCategories()) {
                     if (category.equals(userCategory)) {
                       userCategory = category;
@@ -711,7 +711,7 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
                   setImageChoiceTexts(preferences);
                   JOptionPane.showMessageDialog(activity,
                       preferences.getLocalizedString(
-							  com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "imageChoiceFormatError"), "", JOptionPane.ERROR_MESSAGE);
+							  com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "imageChoiceFormatError"), "", JOptionPane.ERROR_MESSAGE);
                 }
               }
             });
@@ -746,12 +746,12 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
 		result.set(JOptionPane.YES_OPTION);
       /*EventQueue.invokeAndWait(new Runnable() {
           public void run() {
-            String title = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.title");
-            String confirmMessage = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class,
+            String title = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "reduceImageSize.title");
+            String confirmMessage = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class,
                 "reduceImageSize.message", imageSize.width, imageSize.height, reducedWidth, reducedHeight);
-            String reduceSize = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.reduceSize");
-            String keepUnchanged = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.keepUnchanged");
-            String cancel = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "reduceImageSize.cancel");
+            String reduceSize = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "reduceImageSize.reduceSize");
+            String keepUnchanged = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "reduceImageSize.keepUnchanged");
+            String cancel = preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "reduceImageSize.cancel");
 
 
 			 result.set(JOptionPane.showOptionDialog(activity,
@@ -825,8 +825,8 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
   private void updatePreviewComponentsWithWaitImage(UserPreferences preferences) throws IOException {
     // Display a waiting image while loading
     if (waitImage == null) {
-      waitImage = ImageIO.read(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class.getResource(
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "waitIcon")));
+      waitImage = ImageIO.read(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class.getResource(
+          preferences.getLocalizedString(com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "waitIcon")));
     }
     updatePreviewComponentsImage(waitImage);
   }
@@ -853,11 +853,11 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
    */
   private void setImageChangeTexts(UserPreferences preferences) {
     this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
 	  this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
+			  com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
 	  this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
+			  com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
   }
 
   /**
@@ -866,11 +866,11 @@ public class ImportedTextureWizardStepsPanel extends JPanel implements com.eteks
    */
   private void setImageChoiceTexts(UserPreferences preferences) {
     this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.ImportedTextureWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
+			com.eteks.sweethome3d.swing.ImportedTextureWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
 	  this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
+			  com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
 	  this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
+			  com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
   }
   
   /**

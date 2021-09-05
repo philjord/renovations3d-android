@@ -451,7 +451,9 @@ public class DefaultFurnitureCatalog extends FurnitureCatalog {
 
     for (URL pluginFurnitureCatalogUrl : pluginFurnitureCatalogUrls) {
       try {
-        ResourceBundle resource = ResourceBundleTools.getBundle(pluginFurnitureCatalogUrl, PLUGIN_FURNITURE_CATALOG_FAMILY);
+        //PJPJP don't use FurnitureBundleTools
+        ResourceBundle resource = ResourceBundle.getBundle(PLUGIN_FURNITURE_CATALOG_FAMILY, Locale.getDefault(),
+                new URLContentClassLoader(pluginFurnitureCatalogUrl), new ISO8859FileControl());
         this.libraries.add(0, new DefaultLibrary(pluginFurnitureCatalogUrl.toExternalForm(),
             UserPreferences.FURNITURE_LIBRARY_TYPE, resource));
         readFurniture(resource, pluginFurnitureCatalogUrl, furnitureResourcesUrlBase, identifiedFurniture);

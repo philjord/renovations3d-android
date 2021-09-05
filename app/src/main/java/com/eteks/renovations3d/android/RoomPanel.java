@@ -106,7 +106,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.NAME)) {
       // Create name label and its text field bound to NAME controller property
       this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "nameLabel.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "nameLabel.text"));
       this.nameTextField = new JTextField(activity, controller.getName());//, 10, preferences.getAutoCompletionStrings("RoomName"));
     //  if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
      //   SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
@@ -157,7 +157,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.AREA_VISIBLE)) {
       // Create area visible check box bound to AREA_VISIBLE controller property
       this.areaVisibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "areaVisibleCheckBox.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "areaVisibleCheckBox.text"));
       this.areaVisibleCheckBox.setNullable(controller.getAreaVisible() == null);
       this.areaVisibleCheckBox.setValue(controller.getAreaVisible());
       final PropertyChangeListener visibleChangeListener = new PropertyChangeListener() {
@@ -179,7 +179,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.FLOOR_VISIBLE)) {
       // Create floor visible check box bound to FLOOR_VISIBLE controller property
       this.floorVisibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorVisibleCheckBox.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorVisibleCheckBox.text"));
       this.floorVisibleCheckBox.setNullable(controller.getFloorVisible() == null);
       this.floorVisibleCheckBox.setValue(controller.getFloorVisible());
       final PropertyChangeListener floorVisibleChangeListener = new PropertyChangeListener() {
@@ -201,7 +201,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.FLOOR_PAINT)) {
       // Floor color and texture buttons bound to floor controller properties
       this.floorColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorColorRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorColorRadioButton.text"));
       this.floorColorRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (floorColorRadioButton.isSelected()) {
@@ -218,7 +218,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
       
       this.floorColorButton = new ColorButton(activity, preferences);
       this.floorColorButton.setColorDialogTitle(preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorColorDialog.title"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorColorDialog.title"));
       this.floorColorButton.setColor(controller.getFloorColor());
       this.floorColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
           new PropertyChangeListener() {
@@ -235,7 +235,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           });
 
       this.floorTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorTextureRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorTextureRadioButton.text"));
       this.floorTextureRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (floorTextureRadioButton.isSelected()) {
@@ -255,7 +255,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.FLOOR_SHININESS)) {
       // Floor shininess radio buttons bound to FLOOR_SHININESS controller property
       this.floorMattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorMattRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorMattRadioButton.text"));
       this.floorMattRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (floorMattRadioButton.isSelected()) {
@@ -272,7 +272,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           floorShininessListener);
   
       this.floorShinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "floorShinyRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "floorShinyRadioButton.text"));
       this.floorShinyRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (floorShinyRadioButton.isSelected()) {
@@ -292,7 +292,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.CEILING_VISIBLE)) {
       // Create ceiling visible check box bound to CEILING_VISIBLE controller property
       this.ceilingVisibleCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingVisibleCheckBox.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingVisibleCheckBox.text"));
       this.ceilingVisibleCheckBox.setNullable(controller.getCeilingVisible() == null);
       this.ceilingVisibleCheckBox.setValue(controller.getCeilingVisible());
       final PropertyChangeListener ceilingVisibleChangeListener = new PropertyChangeListener() {
@@ -314,7 +314,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.CEILING_PAINT)) {
       // Ceiling color and texture buttons bound to ceiling controller properties
       this.ceilingColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingColorRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingColorRadioButton.text"));
       this.ceilingColorRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent e) {
             if (ceilingColorRadioButton.isSelected()) {
@@ -332,7 +332,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
       this.ceilingColorButton = new ColorButton(activity, preferences);
       this.ceilingColorButton.setColor(controller.getCeilingColor());
       this.ceilingColorButton.setColorDialogTitle(preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingColorDialog.title"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingColorDialog.title"));
       this.ceilingColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
@@ -348,7 +348,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           });
       
       this.ceilingTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingTextureRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingTextureRadioButton.text"));
       this.ceilingTextureRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent e) {
             if (ceilingTextureRadioButton.isSelected()) {
@@ -368,7 +368,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.CEILING_SHININESS)) {
       // Ceiling shininess radio buttons bound to CEILING_SHININESS controller property
       this.ceilingMattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingMattRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingMattRadioButton.text"));
       this.ceilingMattRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (ceilingMattRadioButton.isSelected()) {
@@ -385,7 +385,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           ceilingShininessListener);
   
       this.ceilingShinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingShinyRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingShinyRadioButton.text"));
       this.ceilingShinyRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (ceilingShinyRadioButton.isSelected()) {
@@ -405,9 +405,9 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.SPLIT_SURROUNDING_WALLS)) {
       // Create visible check box bound to SPLIT_SURROUNDING_WALLS controller property
       this.splitSurroundingWallsCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "splitSurroundingWallsCheckBox.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "splitSurroundingWallsCheckBox.text"));
       final String splitSurroundingWallsToolTip = 
-          preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "splitSurroundingWallsCheckBox.tooltip");
+          preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "splitSurroundingWallsCheckBox.tooltip");
       PropertyChangeListener splitSurroundingWallsChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
           splitSurroundingWallsCheckBox.setEnabled(controller.isSplitSurroundingWallsNeeded());
@@ -432,7 +432,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.WALL_SIDES_PAINT)) {
       // Wall sides color and texture buttons bound to walls controller properties
       this.wallSidesColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesColorRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesColorRadioButton.text"));
       this.wallSidesColorRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent e) {
             if (wallSidesColorRadioButton.isSelected()) {
@@ -451,7 +451,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
       this.wallSidesColorButton = new ColorButton(activity, preferences);
       this.wallSidesColorButton.setColor(controller.getWallSidesColor());
       this.wallSidesColorButton.setColorDialogTitle(preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesColorDialog.title"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesColorDialog.title"));
       this.wallSidesColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
           new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
@@ -467,7 +467,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           });
       
       this.wallSidesTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesTextureRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesTextureRadioButton.text"));
       this.wallSidesTextureRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent e) {
             if (wallSidesTextureRadioButton.isSelected()) {
@@ -494,7 +494,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(RoomController.Property.WALL_SIDES_SHININESS)) {
       // Wall sides shininess radio buttons bound to WALL_SIDES_SHININESS controller property
       this.wallSidesMattRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesMattRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesMattRadioButton.text"));
       this.wallSidesMattRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (wallSidesMattRadioButton.isSelected()) {
@@ -512,7 +512,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
           wallSidesShininessListener);
   
       this.wallSidesShinyRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-			  com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesShinyRadioButton.text"));
+			  com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesShinyRadioButton.text"));
       this.wallSidesShinyRadioButton.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (wallSidesShinyRadioButton.isSelected()) {
@@ -540,7 +540,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
             }
           });
     }
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "room.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "room.title");
 
 
 	  //add a tutorial listener to the floor texture
@@ -653,7 +653,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	  if (this.nameLabel != null || this.areaVisibleCheckBox != null)
 	  {
 		  //JLabel nameAndAreaPanel = new JLabel(activity,
-			//	  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "nameAndAreaPanel.title"));
+			//	  preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "nameAndAreaPanel.title"));
 		  //swapOut(nameAndAreaPanel, R.id.roompanel_nameAndAreaPanel);
 		  //PJ removed as pointless
 		  removeView(R.id.roompanel_nameAndAreaPanel);
@@ -674,7 +674,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	  if (this.floorVisibleCheckBox != null || this.floorColorRadioButton != null || this.floorMattRadioButton != null)
 	  {
 		  JLabel floorPanel = new JLabel(activity,
-				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "floorPanel.title"));
+				  preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "floorPanel.title"));
 		  swapOut(floorPanel, R.id.roompanel_floorPanel);
 		  swapOut(this.floorVisibleCheckBox, R.id.roompanel_floorVisibleCheckBox);
 		  swapOut(this.floorColorRadioButton, R.id.roompanel_floorColorRadioButton);
@@ -691,7 +691,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	  if (this.ceilingVisibleCheckBox != null || this.ceilingColorRadioButton != null || this.ceilingMattRadioButton != null)
 	  {
 		  JLabel ceilingPanel = new JLabel(activity,
-				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "ceilingPanel.title"));
+				  preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "ceilingPanel.title"));
 		  swapOut(ceilingPanel, R.id.roompanel_ceilingPanel);
 		  swapOut(this.ceilingVisibleCheckBox, R.id.roompanel_ceilingVisibleCheckBox);
 		  swapOut(this.ceilingColorRadioButton, R.id.roompanel_ceilingColorRadioButton);
@@ -708,7 +708,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	  if (this.wallSidesColorRadioButton != null || this.wallSidesMattRadioButton != null)
 	  {
 		  JLabel wallSidesPanel = new JLabel(activity,
-				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesPanel.title"));
+				  preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesPanel.title"));
 		  swapOut(wallSidesPanel, R.id.roompanel_wallSidesPanel);
 		  swapOut(this.splitSurroundingWallsCheckBox, R.id.roompanel_splitSurroundingWallsCheckBox);
 		  swapOut(this.wallSidesColorRadioButton, R.id.roompanel_wallSidesColorRadioButton);
@@ -725,7 +725,7 @@ public class RoomPanel extends AndroidDialogView implements DialogView {
 	  if (this.wallSidesBaseboardComponent != null)
 	  {
 		  JLabel wallSidesBaseboardPanel = new JLabel(activity,
-				  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.RoomPanel.class, "wallSidesBaseboardPanel.title"));
+				  preferences.getLocalizedString(com.eteks.sweethome3d.swing.RoomPanel.class, "wallSidesBaseboardPanel.title"));
 		  swapOut(wallSidesBaseboardPanel, R.id.roompanel_wallSidesBaseboardPanel);
 		  swapOut(this.wallSidesBaseboardComponent, R.id.roompanel_wallSidesBaseboardComponent);
 	  }

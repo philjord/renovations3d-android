@@ -31,8 +31,8 @@ public class WelcomeDialog
 
 			if (!welcomeScreenUnwanted)
 			{
-				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
+				final String close = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.close");
+				final String closeAndNoShow = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayTipCheckBox.text");
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				// Add the buttons
 				builder.setPositiveButton(close, new DialogInterface.OnClickListener()

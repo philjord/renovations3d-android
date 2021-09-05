@@ -89,7 +89,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(LevelController.Property.VIEWABLE)) {
       // Create viewable check box bound to VIEWABLE controller property
       this.viewableCheckBox = new NullableCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.LevelPanel.class, "viewableCheckBox.text"));
+          com.eteks.sweethome3d.swing.LevelPanel.class, "viewableCheckBox.text"));
       this.viewableCheckBox.setNullable(controller.getViewable() == null);
       this.viewableCheckBox.setValue(controller.getViewable());
       this.viewableCheckBox.addChangeListener(new ChangeListener() {
@@ -107,7 +107,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
 
     if (controller.isPropertyEditable(LevelController.Property.NAME)) {
       // Create name label and its text field bound to NAME controller property
-      this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "nameLabel.text"));
+      this.nameLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "nameLabel.text"));
       this.nameTextField = new AutoCompleteTextField(activity, controller.getName(), 15, preferences.getAutoCompletionStrings("LevelName"));
       //if (!OperatingSystem.isMacOSXLeopardOrSuperior()) {
       //  SwingTools.addAutoSelectionOnFocusGain(this.nameTextField);
@@ -159,7 +159,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(LevelController.Property.ELEVATION)) {
       // Create elevation label and its spinner bound to ELEVATION controller property
       this.elevationLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.LevelPanel.class, "elevationLabel.text", unitName));
+          com.eteks.sweethome3d.swing.LevelPanel.class, "elevationLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel elevationSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -1000f, preferences.getLengthUnit().getMaximumElevation());
       this.elevationSpinner = new NullableSpinner(activity, elevationSpinnerModel, true);
@@ -190,7 +190,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(LevelController.Property.FLOOR_THICKNESS)) {
       // Create floor thickness label and its spinner bound to FLOOR_THICKNESS controller property
       this.floorThicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.LevelPanel.class, "floorThicknessLabel.text", unitName));
+          com.eteks.sweethome3d.swing.LevelPanel.class, "floorThicknessLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel floorThicknessSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength / 10);
       this.floorThicknessSpinner = new NullableSpinner(activity, floorThicknessSpinnerModel, true);
@@ -216,7 +216,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(LevelController.Property.HEIGHT)) {
       // Create floor thickness label and its spinner bound to HEIGHT controller property
       this.heightLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-          com.eteks.sweethome3d.android_props.LevelPanel.class, "heightLabel.text", unitName));
+          com.eteks.sweethome3d.swing.LevelPanel.class, "heightLabel.text", unitName));
       final NullableSpinnerNumberModel.NullableSpinnerLengthModel heightSpinnerModel =
           new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
       this.heightSpinner = new NullableSpinner(activity, heightSpinnerModel, true);
@@ -241,7 +241,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     if (controller.isPropertyEditable(LevelController.Property.ELEVATION_INDEX)) {
 
 		this.increaseElevationIndexButton = new JButton(activity,
-				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "INCREASE_ELEVATION_INDEX.ShortDescription"));
+				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "INCREASE_ELEVATION_INDEX.ShortDescription"));
 		increaseElevationIndexButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View view)
 			{
@@ -250,7 +250,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
 			}
 		});
 		this.decreaseElevationIndexButton = new JButton(activity,
-				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "DECREASE_ELEVATION_INDEX.ShortDescription"));
+				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "DECREASE_ELEVATION_INDEX.ShortDescription"));
 		decreaseElevationIndexButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View view)
 			{
@@ -258,14 +258,14 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
 				setElevationIndexButtonsEnabled(controller);
 			}
 		});
-     /* this.increaseElevationIndexButton = new JButton(activity, new ResourceAction(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "INCREASE_ELEVATION_INDEX") {
+     /* this.increaseElevationIndexButton = new JButton(activity, new ResourceAction(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "INCREASE_ELEVATION_INDEX") {
           @Override
           public void actionPerformed(ActionEvent ev) {
             controller.setElevationIndex(controller.getElevationIndex() + 1);
             setElevationIndexButtonsEnabled(controller);
           }
         });
-      this.decreaseElevationIndexButton = new JButton(activity,  ResourceAction(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "DECREASE_ELEVATION_INDEX") {
+      this.decreaseElevationIndexButton = new JButton(activity,  ResourceAction(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "DECREASE_ELEVATION_INDEX") {
           @Override
           public void actionPerformed(ActionEvent ev) {
             controller.setElevationIndex(controller.getElevationIndex() - 1);
@@ -276,12 +276,12 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
     }
     
     this.levelsSummaryLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.LevelPanel.class, "levelsSummaryLabel.text", unitName));
+        com.eteks.sweethome3d.swing.LevelPanel.class, "levelsSummaryLabel.text", unitName));
     final String [] columnNames = {
-         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "nameColumn"),
-         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "elevationColumn"),
-         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "floorThicknessColumn"),
-         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.LevelPanel.class, "heightColumn")};
+         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "nameColumn"),
+         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "elevationColumn"),
+         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "floorThicknessColumn"),
+         SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.LevelPanel.class, "heightColumn")};
 /*    this.levelsSummaryTable = new JTable(activity, new LevelsTableModel(controller, columnNames));
     float resolutionScale = SwingTools.getResolutionScale();
     if (resolutionScale != 1) {
@@ -364,7 +364,7 @@ public class LevelPanel extends AndroidDialogView implements DialogView {
         }
       });*/
     
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.LevelPanel.class, "level.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.LevelPanel.class, "level.title");
   }
   
   private void setFloorThicknessEnabled(final LevelController controller) {

@@ -1447,47 +1447,47 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 									 UserPreferences preferences) {
 			switch (property) {
 				case CATALOG_ID :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "catalogIdColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "catalogIdColumn");
 				case NAME :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "nameColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "nameColumn");
 				case CREATOR :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "creatorColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "creatorColumn");
 				case WIDTH :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "widthColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "widthColumn");
 				case DEPTH :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "depthColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "depthColumn");
 				case HEIGHT :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "heightColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "heightColumn");
 				case X :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "xColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "xColumn");
 				case Y :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "yColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "yColumn");
 				case ELEVATION :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "elevationColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "elevationColumn");
 				case ANGLE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "angleColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "angleColumn");
 				case LEVEL :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "levelColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "levelColumn");
 				case MODEL_SIZE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "modelSizeColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "modelSizeColumn");
 				case COLOR :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "colorColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "colorColumn");
 				case TEXTURE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "textureColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "textureColumn");
 				case MOVABLE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "movableColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "movableColumn");
 				case DOOR_OR_WINDOW :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "doorOrWindowColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "doorOrWindowColumn");
 				case VISIBLE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "visibleColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "visibleColumn");
 				case PRICE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "priceColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "priceColumn");
 				case VALUE_ADDED_TAX_PERCENTAGE :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "valueAddedTaxPercentageColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "valueAddedTaxPercentageColumn");
 				case VALUE_ADDED_TAX :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "valueAddedTaxColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "valueAddedTaxColumn");
 				case PRICE_VALUE_ADDED_TAX_INCLUDED :
-					return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FurnitureTable.class, "priceValueAddedTaxIncludedColumn");
+					return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FurnitureTable.class, "priceValueAddedTaxIncludedColumn");
 				default :
 					throw new IllegalArgumentException("Unknown column name " + property);
 			}

@@ -84,7 +84,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
                                 final PolylineController controller) {
     // Create thickness label and spinner bound to controller THICKNESS property
     this.thicknessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "thicknessLabel.text", preferences.getLengthUnit().getName()));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "thicknessLabel.text", preferences.getLengthUnit().getName()));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel thicknessSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, preferences.getLengthUnit().getMinimumLength(), 20f);
     this.thicknessSpinner = new NullableSpinner(activity, thicknessSpinnerModel);
@@ -104,7 +104,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
 
     // Create cap style label and combo box bound to controller CAP_STYLE property
     this.arrowsStyleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "arrowsStyleLabel.text"));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "arrowsStyleLabel.text"));
     ArrowsStyle[] arrowsStyles = ArrowsStyle.getArrowsStyle();
     if (controller.getCapStyle() == null) {
       List<ArrowsStyle> arrowsStylesList = new ArrayList<ArrowsStyle>();
@@ -179,7 +179,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
     
     // Create join style label and combo box bound to controller JOIN_STYLE property
     this.joinStyleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "joinStyleLabel.text"));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "joinStyleLabel.text"));
     Polyline.JoinStyle [] joinStyles = Polyline.JoinStyle.values();
     if (controller.getJoinStyle() == null) {
       List<Polyline.JoinStyle> joinStylesList = new ArrayList<Polyline.JoinStyle>();
@@ -238,7 +238,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
     
     // Create dash style label and combo box bound to controller DASH_STYLE property
     this.dashStyleLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "dashStyleLabel.text"));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "dashStyleLabel.text"));
     Polyline.DashStyle [] dashStyles = Polyline.DashStyle.values();
     if (controller.getDashStyle() == null) {
       List<Polyline.DashStyle> dashStylesList = new ArrayList<Polyline.DashStyle>();
@@ -294,10 +294,10 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
     
     // Create color label and its button bound to COLOR controller property
     this.colorLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "colorLabel.text"));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "colorLabel.text"));
     this.colorButton = new ColorButton(activity, preferences);
     this.colorButton.setColorDialogTitle(preferences.getLocalizedString(
-			com.eteks.sweethome3d.android_props.PolylinePanel.class, "colorDialog.title"));
+			com.eteks.sweethome3d.swing.PolylinePanel.class, "colorDialog.title"));
     this.colorButton.setColor(controller.getColor());
     this.colorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY,
         new PropertyChangeListener() {
@@ -313,7 +313,7 @@ public class PolylinePanel extends AndroidDialogView implements DialogView {
         });
 
 
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.PolylinePanel.class, "polyline.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PolylinePanel.class, "polyline.title");
   }
 
 

@@ -453,7 +453,7 @@ public class HomePane implements HomeView {
                               Object ... parameters) {
     try {
       ControllerAction action = new ControllerAction(
-          preferences, com.eteks.sweethome3d.android_props.HomePane.class, actionType.name(), controller, method, parameters);
+          preferences, com.eteks.sweethome3d.swing.HomePane.class, actionType.name(), controller, method, parameters);
       getActionMap().put(actionType, action);
       return action;
     } catch (NoSuchMethodException ex) {
@@ -467,7 +467,7 @@ public class HomePane implements HomeView {
    */
 /*  private Action createAction(ActionType actionType,
                               UserPreferences preferences) {
-    ResourceAction action = new ResourceAction(preferences, com.eteks.sweethome3d.android_props.HomePane.class, actionType.name()) {
+    ResourceAction action = new ResourceAction(preferences, com.eteks.sweethome3d.swing.HomePane.class, actionType.name()) {
         @Override
         public void actionPerformed(ActionEvent ev) {
         }
@@ -507,7 +507,7 @@ public class HomePane implements HomeView {
                                      final Action clipboardAction,
                                      final boolean copyAction) {
     getActionMap().put(actionType,
-        new ResourceAction (preferences, com.eteks.sweethome3d.android_props.HomePane.class, actionType.name()) {
+        new ResourceAction (preferences, com.eteks.sweethome3d.swing.HomePane.class, actionType.name()) {
           public void actionPerformed(ActionEvent ev) {
             if (copyAction) {
               clipboardEmpty = false;
@@ -546,7 +546,7 @@ public class HomePane implements HomeView {
 /*  private void createMenuAction(UserPreferences preferences,
                                 MenuActionType action) {
     this.menuActionMap.put(action, new ResourceAction(
-        preferences, com.eteks.sweethome3d.android_props.HomePane.class, action.name(), true));
+        preferences, com.eteks.sweethome3d.swing.HomePane.class, action.name(), true));
   }
 
   /**
@@ -3685,7 +3685,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showOpenDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openHomeDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openHomeDialog.title"),
 				ContentManager.ContentType.SWEET_HOME_3D);
 	}
 
@@ -3693,11 +3693,11 @@ public class HomePane implements HomeView {
    * Displays a dialog to let the user choose a home example.
    */
   public String showNewHomeFromExampleDialog() {
-    final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.message");
-    final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.title");
-    //final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.useSelectedExample");
-    final String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.findMoreExamples");
-    //String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "newHomeFromExample.cancel");
+    final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "newHomeFromExample.message");
+    final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "newHomeFromExample.title");
+    //final String useSelectedHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "newHomeFromExample.useSelectedExample");
+    final String findMoreExamples = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "newHomeFromExample.findMoreExamples");
+    //String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "newHomeFromExample.cancel");
     final JList homeExamplesList = new JList(activity, new JList.DefaultListModel(this.preferences.getHomeExamples()));
 		final HomeExamplesListCellRenderer adapter = new HomeExamplesListCellRenderer(activity, this.preferences.getHomeExamples());
     homeExamplesList.setAdapter(adapter);
@@ -3729,7 +3729,7 @@ public class HomePane implements HomeView {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 							case DialogInterface.BUTTON_POSITIVE:
-								String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "findMoreExamples.url");
+								String findModelsUrl = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "findMoreExamples.url");
 								// Display Find more demos (gallery) page in browser
 								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(findModelsUrl));
 								// Verify the intent will resolve to at least one activity
@@ -3833,12 +3833,12 @@ public class HomePane implements HomeView {
 														Home damagedHome,
 														List<Content> invalidContent) {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openDamagedHome.message",
 				homeName, Math.max(1, invalidContent.size()));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.title");
-		String removeDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.removeDamagedItems");
-		String replaceDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.replaceDamagedItems");
-		String doNotOpenHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "openDamagedHome.doNotOpenHome");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openDamagedHome.title");
+		String removeDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openDamagedHome.removeDamagedItems");
+		String replaceDamagedItems = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openDamagedHome.replaceDamagedItems");
+		String doNotOpenHome = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "openDamagedHome.doNotOpenHome");
 
 		switch (JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
@@ -3857,7 +3857,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showImportLanguageLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importLanguageLibraryDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "importLanguageLibraryDialog.title"),
 				ContentManager.ContentType.LANGUAGE_LIBRARY);
 	}
 
@@ -3867,11 +3867,11 @@ public class HomePane implements HomeView {
 	 */
 	public boolean confirmReplaceLanguageLibrary(String languageLibraryName) {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceLanguageLibrary.message",
 				this.controller.getContentManager().getPresentationName(languageLibraryName, ContentManager.ContentType.LANGUAGE_LIBRARY));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.title");
-		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.replace");
-		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceLanguageLibrary.doNotReplace");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceLanguageLibrary.title");
+		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceLanguageLibrary.replace");
+		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceLanguageLibrary.doNotReplace");
 
 		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -3884,7 +3884,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showImportFurnitureLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importFurnitureLibraryDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "importFurnitureLibraryDialog.title"),
 				ContentManager.ContentType.FURNITURE_LIBRARY);
 	}
 
@@ -3894,11 +3894,11 @@ public class HomePane implements HomeView {
 	 */
 	public boolean confirmReplaceFurnitureLibrary(String furnitureLibraryName) {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceFurnitureLibrary.message",
 				this.controller.getContentManager().getPresentationName(furnitureLibraryName, ContentManager.ContentType.FURNITURE_LIBRARY));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.title");
-		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.replace");
-		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceFurnitureLibrary.doNotReplace");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceFurnitureLibrary.title");
+		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceFurnitureLibrary.replace");
+		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceFurnitureLibrary.doNotReplace");
 
 		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -3910,7 +3910,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showImportTexturesLibraryDialog() {
 		return this.controller.getContentManager().showOpenDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "importTexturesLibraryDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "importTexturesLibraryDialog.title"),
 				ContentManager.ContentType.TEXTURES_LIBRARY);
 	}
 
@@ -3920,11 +3920,11 @@ public class HomePane implements HomeView {
 	 */
 	public boolean confirmReplaceTexturesLibrary(String texturesLibraryName) {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceTexturesLibrary.message",
 				this.controller.getContentManager().getPresentationName(texturesLibraryName, ContentManager.ContentType.TEXTURES_LIBRARY));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.title");
-		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.replace");
-		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplaceTexturesLibrary.doNotReplace");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceTexturesLibrary.title");
+		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceTexturesLibrary.replace");
+		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplaceTexturesLibrary.doNotReplace");
 
 		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -3937,11 +3937,11 @@ public class HomePane implements HomeView {
 	 */
 	public boolean confirmReplacePlugin(String pluginName) {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplacePlugin.message",
 				this.controller.getContentManager().getPresentationName(pluginName, ContentManager.ContentType.PLUGIN));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.title");
-		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.replace");
-		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmReplacePlugin.doNotReplace");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplacePlugin.title");
+		String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplacePlugin.replace");
+		String doNotReplace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmReplacePlugin.doNotReplace");
 
 		return JOptionPane.showOptionDialog(activity,
 				message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -3953,7 +3953,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showSaveDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "saveHomeDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "saveHomeDialog.title"),
 				ContentManager.ContentType.SWEET_HOME_3D, homeName);
 	}
 
@@ -3961,7 +3961,7 @@ public class HomePane implements HomeView {
 	 * Displays <code>message</code> in an error message box.
 	 */
 	public void showError(String message) {
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "error.title");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "error.title");
 		JOptionPane.showMessageDialog(activity, message, title,
 				JOptionPane.ERROR_MESSAGE);
 	}
@@ -3970,7 +3970,7 @@ public class HomePane implements HomeView {
 	 * Displays <code>message</code> in a message box.
 	 */
 	public void showMessage(String message) {
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "message.title");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "message.title");
 		JOptionPane.showMessageDialog(activity, message, title,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -3986,8 +3986,8 @@ public class HomePane implements HomeView {
 			return false;
 		}
 
-		final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipTitle");
-		final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionTipKey + ".tipMessage");
+		final String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, actionTipKey + ".tipTitle");
+		final String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, actionTipKey + ".tipMessage");
 
 		// no tips while tutorial is showing
 		if (!activity.getTutorial().isEnabled() && message.length() > 0) {
@@ -4000,10 +4000,10 @@ public class HomePane implements HomeView {
       
       // Add a check box that lets user choose whether he wants to display again the tip or not
       JCheckBox doNotDisplayTipCheckBox = new JCheckBox(
-          SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text"));
+          SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayTipCheckBox.text"));
       if (!OperatingSystem.isMacOSX()) {
         doNotDisplayTipCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-            this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.mnemonic")).getKeyCode());
+            this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayTipCheckBox.mnemonic")).getKeyCode());
       }
       tipPanel.add(doNotDisplayTipCheckBox, new GridBagConstraints(
           0, 1, 1, 1, 0, 1, GridBagConstraints.CENTER, 
@@ -4014,8 +4014,8 @@ public class HomePane implements HomeView {
       return doNotDisplayTipCheckBox.isSelected();
       */
 
-			final String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-			final String closeAndNoShow = SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayTipCheckBox.text");
+			final String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.close");
+			final String closeAndNoShow = SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayTipCheckBox.text");
 			boolean noShow = JOptionPane.showOptionDialog(activity, message, title,
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
 					null, new String[]{closeAndNoShow, close}, close) == JOptionPane.OK_OPTION;
@@ -4040,16 +4040,16 @@ public class HomePane implements HomeView {
 		// Retrieve displayed text in buttons and message
 		String message;
 		if (homeName != null) {
-			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.message",
+			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.message",
 					"\"" + this.controller.getContentManager().getPresentationName(
 							homeName, ContentManager.ContentType.SWEET_HOME_3D) + "\"");
 		} else {
-			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.message", "");
+			message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.message", "");
 		}
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.title");
-		String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.save");
-		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.doNotSave");
-		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSave.cancel");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.title");
+		String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.save");
+		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.doNotSave");
+		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSave.cancel");
 
 		switch (JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -4069,12 +4069,12 @@ public class HomePane implements HomeView {
 	 * @return <code>true</code> if user confirmed to save.
 	 */
 	public boolean confirmSaveNewerHome(String homeName) {
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.message",
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSaveNewerHome.message",
 				this.controller.getContentManager().getPresentationName(
 						homeName, ContentManager.ContentType.SWEET_HOME_3D));
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.title");
-		String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.save");
-		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmSaveNewerHome.doNotSave");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSaveNewerHome.title");
+		String save = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSaveNewerHome.save");
+		String doNotSave = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmSaveNewerHome.doNotSave");
 
 		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -4087,10 +4087,10 @@ public class HomePane implements HomeView {
 	 * @return <code>true</code> if user confirmed to exit.
 	 */
 	public boolean confirmExit() {
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.message");
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.title");
-		String quit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.quit");
-		String doNotQuit = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExit.doNotQuit");
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExit.message");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExit.title");
+		String quit = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExit.quit");
+		String doNotQuit = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExit.doNotQuit");
 
 		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -4101,7 +4101,7 @@ public class HomePane implements HomeView {
 	 * Displays an about dialog.
 	 */
 	public void showAboutDialog() {
-		//String messageFormat = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.message");
+		//String messageFormat = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.message");
 		String aboutMessageHtml = activity.getString(R.string.help_about);
 
 		String aboutVersion = this.controller.getVersion();
@@ -4129,12 +4129,12 @@ public class HomePane implements HomeView {
 		//  JComponent messagePane = createEditorPane(message);
 		//  messagePane.setOpaque(false);
 
-		//String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.title");
+		//String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.title");
 		String title = activity.getString(R.string.app_name);
 		Icon icon = new ImageIcon(new VMImage(BitmapFactory.decodeResource(activity.getResources(), R.drawable.renovations3dicon)));
 		//try {
-		String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.close");
-    /*  String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "about.showLibraries");
+		String close = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.close");
+    /*  String showLibraries = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "about.showLibraries");
 		  List<Library> libraries = this.preferences.getLibraries();
 		  if (!libraries.isEmpty()) {
 			if (JOptionPane.showOptionDialog(this, messagePane, title,
@@ -4185,16 +4185,16 @@ public class HomePane implements HomeView {
    * Displays the given <code>libraries</code> in a dialog.
    */
  /* private void showLibrariesDialog(List<Library> libraries) {
-    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.title");
+    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.title");
     Map<String, String> librariesLabels = new LinkedHashMap<String, String>();
     librariesLabels.put(UserPreferences.FURNITURE_LIBRARY_TYPE, 
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.furnitureLibraries"));
+        this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.furnitureLibraries"));
     librariesLabels.put(UserPreferences.TEXTURES_LIBRARY_TYPE, 
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.texturesLibraries"));
+        this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.texturesLibraries"));
     librariesLabels.put(UserPreferences.LANGUAGE_LIBRARY_TYPE, 
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.languageLibraries"));
+        this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.languageLibraries"));
     librariesLabels.put(PluginManager.PLUGIN_LIBRARY_TYPE, 
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.plugins"));
+        this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.plugins"));
     
     JPanel messagePanel = new JPanel(new GridBagLayout());
     int row = 0;
@@ -4231,11 +4231,11 @@ public class HomePane implements HomeView {
  /* private JTable createLibrariesTable(final List<Library> libraries) {
     AbstractTableModel librariesTableModel = new AbstractTableModel() {
         private String [] columnNames = {
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.libraryFileColumn"),
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.libraryNameColumn"),
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.libraryVersionColumn"),
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.libraryLicenseColumn"),
-            preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "libraries.libraryProviderColumn")};
+            preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.libraryFileColumn"),
+            preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.libraryNameColumn"),
+            preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.libraryVersionColumn"),
+            preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.libraryLicenseColumn"),
+            preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "libraries.libraryProviderColumn")};
 
         public int getRowCount() {
           return libraries.size();
@@ -4426,10 +4426,10 @@ public class HomePane implements HomeView {
 
     // Add a check box that lets user choose whether he wants to display the update again at next program launch
     JCheckBox doNotDisplayShownUpdatesCheckBox = new JCheckBox(
-        SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayShownUpdatesCheckBox.text"));
+        SwingTools.getLocalizedLabelText(this.preferences, com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayShownUpdatesCheckBox.text"));
     if (!OperatingSystem.isMacOSX()) {
       doNotDisplayShownUpdatesCheckBox.setMnemonic(KeyStroke.getKeyStroke(
-          this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "doNotDisplayShownUpdatesCheckBox.mnemonic")).getKeyCode());
+          this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "doNotDisplayShownUpdatesCheckBox.mnemonic")).getKeyCode());
     }
     if (!showOnlyMessage) {
       updatesPanel.add(doNotDisplayShownUpdatesCheckBox, new GridBagConstraints(
@@ -4438,7 +4438,7 @@ public class HomePane implements HomeView {
     }
     
     SwingTools.showMessageDialog(this, updatesPanel, 
-        this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showUpdatesMessage.title"), 
+        this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showUpdatesMessage.title"),
         JOptionPane.PLAIN_MESSAGE, doNotDisplayShownUpdatesCheckBox);
     return !doNotDisplayShownUpdatesCheckBox.isSelected();*/
 		throw new UnsupportedOperationException("No update but what I make...");
@@ -4456,7 +4456,7 @@ public class HomePane implements HomeView {
  /*   PageFormat pageFormat = HomePrintableComponent.getPageFormat(this.home.getPrint());
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
     printerJob.setPrintable(new HomePrintableComponent(this.home, this.controller, getFont()), pageFormat);
-    String jobName = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "print.jobName");
+    String jobName = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "print.jobName");
     if (this.home.getName() != null) {
       jobName += " - " + this.controller.getContentManager().getPresentationName(
           this.home.getName(), ContentManager.ContentType.SWEET_HOME_3D);
@@ -4486,7 +4486,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showPrintToPDFDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "printToPDFDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "printToPDFDialog.title"),
 				ContentManager.ContentType.PDF, homeName);
 	}
 
@@ -4528,7 +4528,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showExportToCSVDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToCSVDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "exportToCSVDialog.title"),
 				ContentManager.ContentType.CSV, homeName);
 	}
 
@@ -4576,7 +4576,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showExportToSVGDialog(String homeName) {
 		return this.controller.getContentManager().showSaveDialog(this,
-				this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToSVGDialog.title"),
+				this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "exportToSVGDialog.title"),
 				ContentManager.ContentType.SVG, homeName);
 	}
 
@@ -4624,7 +4624,7 @@ public class HomePane implements HomeView {
 	 */
 	public String showExportToOBJDialog(String homeName) {
 		homeName = this.controller.getContentManager().showSaveDialog(this,
-			this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "exportToOBJDialog.title"),
+			this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "exportToOBJDialog.title"),
 			ContentManager.ContentType.OBJ, homeName);
 
 		//PJPJPJ
@@ -4645,11 +4645,11 @@ public class HomePane implements HomeView {
 			&& !selectedItems.isEmpty()
 			&& (selectedItems.size() > 1
 				 || !(selectedItems.get(0) instanceof Camera))) {
-		  String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.message");
-		  String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.title");
-		  String exportAll = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportAll");
-		  String exportSelection = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.exportSelection");
-		  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmExportAllToOBJ.cancel");
+		  String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExportAllToOBJ.message");
+		  String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExportAllToOBJ.title");
+		  String exportAll = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExportAllToOBJ.exportAll");
+		  String exportSelection = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExportAllToOBJ.exportSelection");
+		  String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmExportAllToOBJ.cancel");
 		  int response = JOptionPane.showOptionDialog(activity,  message, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				  null, new Object [] {exportAll, exportSelection, cancel}, exportAll);
 		  if (response == JOptionPane.NO_OPTION) {
@@ -4675,7 +4675,7 @@ public class HomePane implements HomeView {
 	 */
 	protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException {
     	String header = this.preferences != null
-        	? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class,
+        	? this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class,
                                               "exportToOBJ.header", new Date())
         	: "";
         
@@ -4855,10 +4855,10 @@ public class HomePane implements HomeView {
    */
 	public boolean confirmDeleteCatalogSelection() {
 		// Retrieve displayed text in buttons and message
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.message");
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.title");
-		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.delete");
-		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCatalogSelection.cancel");
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCatalogSelection.message");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCatalogSelection.title");
+		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCatalogSelection.delete");
+		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCatalogSelection.cancel");
 
 		return JOptionPane.showOptionDialog(activity, message, title,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -4871,8 +4871,8 @@ public class HomePane implements HomeView {
 	 */
 	public String showStoreCameraDialog(final String cameraName) {
 		// Retrieve displayed text in dialog
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.message");
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showStoreCameraDialog.title");
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showStoreCameraDialog.message");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showStoreCameraDialog.title");
 
 		final LinearLayout cameraNamePanel = new LinearLayout(activity);
 		cameraNamePanel.setOrientation(LinearLayout.VERTICAL);
@@ -4979,8 +4979,8 @@ public class HomePane implements HomeView {
 	 */
 	public List<Camera> showDeletedCamerasDialog() {
 		// Retrieve displayed text in dialog
-		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.message");
-		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.title");
+		String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showDeletedCamerasDialog.message");
+		String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showDeletedCamerasDialog.title");
 
 		LinearLayout camerasPanel = new LinearLayout(activity);
 		camerasPanel.setOrientation(LinearLayout.VERTICAL);
@@ -5010,9 +5010,9 @@ public class HomePane implements HomeView {
 		ViewGroup.LayoutParams listLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
 		camerasPanel.addView(camerasList, listLP);
 
-		//String confirmMessage = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.message");
-		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.delete");
-		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.cancel");
+		//String confirmMessage = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.message");
+		String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.delete");
+		String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.cancel");
 
 		ScrollView scrollViewRoot = new ScrollView(activity);
 		scrollViewRoot.addView(camerasPanel);
@@ -5080,8 +5080,8 @@ public class HomePane implements HomeView {
     camerasList.setSelectedIndex(0);
 
     // Retrieve displayed text in dialog
-    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.message");
-    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "showDeletedCamerasDialog.title");
+    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showDeletedCamerasDialog.message");
+    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "showDeletedCamerasDialog.title");
 
     JPanel camerasPanel = new JPanel(new BorderLayout(0, 5));
     camerasPanel.add(new JLabel(message), BorderLayout.NORTH);
@@ -5089,9 +5089,9 @@ public class HomePane implements HomeView {
 
     if (SwingTools.showConfirmDialog(this, camerasPanel, title, camerasList) == JOptionPane.OK_OPTION
         && selectedCameras.size() > 0) {
-      String confirmMessage = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.message");
-      String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.delete");
-      String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "confirmDeleteCameras.cancel");      
+      String confirmMessage = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.message");
+      String delete = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.delete");
+      String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "confirmDeleteCameras.cancel");
       if (JOptionPane.showOptionDialog(this, confirmMessage, title, 
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
             null, new Object [] {delete, cancel}, cancel) == JOptionPane.OK_OPTION) {

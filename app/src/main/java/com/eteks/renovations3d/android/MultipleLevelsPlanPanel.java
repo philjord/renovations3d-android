@@ -376,13 +376,13 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	private String[] toolNames;
 	private void updateToolNames() {
 		toolNames = new String[] {
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_WALLS.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_ROOMS.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_POLYLINES.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_DIMENSION_LINES.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_LABELS.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SELECT.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_WALLS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_ROOMS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_POLYLINES.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_DIMENSION_LINES.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_LABELS.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "PAN.Name")
 		};
 	}
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -405,7 +405,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		sortOutBackgroundMenu(menu);
 
-		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE.Name"));
+		menu.findItem(R.id.delete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "DELETE.Name"));
 
 		updateToolNames();
 		toolSpinner = (Spinner) menu.findItem(R.id.planToolSelectSpinner).getActionView();
@@ -447,17 +447,17 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	private void sortOutBackgroundMenu(Menu menu) {
 		final BackgroundImage backgroundImage = currentBackgroundImage();
 
-		String importModifyString = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "IMPORT_BACKGROUND_IMAGE.Name");
+		String importModifyString = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "IMPORT_BACKGROUND_IMAGE.Name");
 		if (backgroundImage != null)
-			importModifyString = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_BACKGROUND_IMAGE.Name");
+			importModifyString = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_BACKGROUND_IMAGE.Name");
 		menu.findItem(R.id.bgImageImportModify).setTitle(importModifyString);
 
-		String showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "HIDE_BACKGROUND_IMAGE.Name");
+		String showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "HIDE_BACKGROUND_IMAGE.Name");
 		if (backgroundImage != null && !backgroundImage.isVisible())
-			showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SHOW_BACKGROUND_IMAGE.Name");
+			showHideVis = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SHOW_BACKGROUND_IMAGE.Name");
 		menu.findItem(R.id.bgImageToggleVis).setTitle(showHideVis);
 
-		menu.findItem(R.id.bgImageDelete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_BACKGROUND_IMAGE.Name"));
+		menu.findItem(R.id.bgImageDelete).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "DELETE_BACKGROUND_IMAGE.Name"));
 
 		menu.findItem(R.id.bgImageToggleVis).setEnabled(backgroundImage != null);
 		menu.findItem(R.id.bgImageDelete).setEnabled(backgroundImage != null);
@@ -495,37 +495,37 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 		menu.findItem(R.id.editUndo).setEnabled(undoEnabled);
 
 		MenuItem redo = menu.findItem(R.id.editRedo);
-		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REDO.Name") : redoText;
+		String redoStr = redoText == null ? preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "REDO.Name") : redoText;
 		Renovations3DActivity.setIconizedMenuTitle(redo, redoStr, R.drawable.edit_redo, getContext());
 		redo.setEnabled(redoEnabled);
 
 
-		menu.findItem(R.id.planModifyWallsMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_WALL.Name"));
-		menu.findItem(R.id.planModifyWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.WallPanel.class, "wall.title").replace("...", ""));
+		menu.findItem(R.id.planModifyWallsMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_WALL.Name"));
+		menu.findItem(R.id.planModifyWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.WallPanel.class, "wall.title").replace("...", ""));
 		menu.findItem(R.id.planModifyWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planJoinWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "JOIN_WALLS.Name"));
+		menu.findItem(R.id.planJoinWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "JOIN_WALLS.Name"));
 		menu.findItem(R.id.planJoinWalls).setEnabled(joinWallsEnabled);// enabled via the setEnabled call
-		menu.findItem(R.id.planReverseWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "REVERSE_WALL_DIRECTION.Name"));
+		menu.findItem(R.id.planReverseWalls).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "REVERSE_WALL_DIRECTION.Name"));
 		menu.findItem(R.id.planReverseWalls).setEnabled(!Home.getWallsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planSplitWall).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SPLIT_WALL.Name"));
+		menu.findItem(R.id.planSplitWall).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SPLIT_WALL.Name"));
 		menu.findItem(R.id.planSplitWall).setEnabled(Home.getWallsSubList(this.home.getSelectedItems()).size() == 1);
 
-		menu.findItem(R.id.planModifyMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name"));
-		String modifyFurniture = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_FURNITURE.Name").replace("...", "") + " "
-				+ preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "FURNITURE_MENU.Name") + "...";
+		menu.findItem(R.id.planModifyMenu).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_FURNITURE.Name"));
+		String modifyFurniture = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_FURNITURE.Name").replace("...", "") + " "
+				+ preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "FURNITURE_MENU.Name") + "...";
 		menu.findItem(R.id.planModifyFurniture).setTitle(modifyFurniture);
 		menu.findItem(R.id.planModifyFurniture).setEnabled(!Home.getFurnitureSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planModifyPolylines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_POLYLINE.Name"));
+		menu.findItem(R.id.planModifyPolylines).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_POLYLINE.Name"));
 		menu.findItem(R.id.planModifyPolylines).setEnabled(!Home.getPolylinesSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planModifyText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LABEL.Name"));
+		menu.findItem(R.id.planModifyText).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_LABEL.Name"));
 		menu.findItem(R.id.planModifyText).setEnabled(!Home.getLabelsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
-		menu.findItem(R.id.planModifyRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_ROOM.Name"));
+		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_COMPASS.Name"));
+		menu.findItem(R.id.planModifyRooms).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_ROOM.Name"));
 		menu.findItem(R.id.planModifyRooms).setEnabled(!Home.getRoomsSubList(this.home.getSelectedItems()).isEmpty());
-		menu.findItem(R.id.planAddRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_ROOM_POINT.Name"));
+		menu.findItem(R.id.planAddRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "ADD_ROOM_POINT.Name"));
 		menu.findItem(R.id.planAddRoomPoint).setEnabled(this.addRoomPointEnabled);// enabled via the setEnabled call
 		menu.findItem(R.id.planAddRoomPoint).setChecked(this.addRoomPointEnabled && this.planComponent.addRoomPointActivated);
-		menu.findItem(R.id.planDeleteRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_ROOM_POINT.Name"));
+		menu.findItem(R.id.planDeleteRoomPoint).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "DELETE_ROOM_POINT.Name"));
 		menu.findItem(R.id.planDeleteRoomPoint).setEnabled(this.deleteRoomPointEnabled);// enabled via the setEnabled call
 		menu.findItem(R.id.planDeleteRoomPoint).setChecked(this.deleteRoomPointEnabled && this.planComponent.deleteRoomPointActivated);
 
@@ -534,21 +534,21 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		int iconId = itemLocked.isChecked() ? R.drawable.plan_locked : R.drawable.plan_unlocked;
 		String actionName = itemLocked.isChecked() ? "UNLOCK_BASE_PLAN.Name" : "LOCK_BASE_PLAN.Name";
-		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, actionName);
+		String lockedText = preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, actionName);
 		Renovations3DActivity.setIconizedMenuTitle(itemLocked, lockedText, iconId, getContext() );
 
 		// use the new default name without the number format
 		String planeLevelMenuName = preferences.getLocalizedString(com.eteks.sweethome3d.viewcontroller.PlanController.class, "levelName").replace(" %d", "") + "...";
 		menu.findItem(R.id.planLevelMenu).setTitle(planeLevelMenuName);
-		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL.Name"));
-		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
-		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_LEVEL.Name"));
+		menu.findItem(R.id.planAddLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "ADD_LEVEL.Name"));
+		menu.findItem(R.id.planAddLevelAtSame).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "ADD_LEVEL_AT_SAME_ELEVATION.Name"));
+		menu.findItem(R.id.planModifyLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_LEVEL.Name"));
 		boolean canModLevel = ((Renovations3DActivity) getActivity()).getHome() != null && ((Renovations3DActivity) getActivity()).getHome().getSelectedLevel() != null;
 		menu.findItem(R.id.planModifyLevel).setEnabled(canModLevel);
-		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "DELETE_LEVEL.Name"));
-		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_COMPASS.Name"));
+		menu.findItem(R.id.planDeleteLevel).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "DELETE_LEVEL.Name"));
+		menu.findItem(R.id.planModifyCompass).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_COMPASS.Name"));
 
-		menu.findItem(R.id.planEdit).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "EDIT_MENU.Name") + "...");
+		menu.findItem(R.id.planEdit).setTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "EDIT_MENU.Name") + "...");
 		menu.findItem(R.id.planSelectLasso).setChecked(this.planComponent.selectLasso);
 		menu.findItem(R.id.planSelectMultiple).setChecked(this.planComponent.selectMultiple);
 

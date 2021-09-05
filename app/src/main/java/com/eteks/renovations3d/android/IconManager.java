@@ -56,8 +56,8 @@ public class IconManager {
 
 	private IconManager() {
 		// use a class from inside the jar and inside the swing package too
-		this.errorIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/error.png");
-		this.waitIconContent = new ResourceURLContent(com.eteks.sweethome3d.android_props.FileContentManager.class, "resources/wait.png");
+		this.errorIconContent = new ResourceURLContent(com.eteks.sweethome3d.swing.FileContentManager.class, "resources/error.png");
+		this.waitIconContent = new ResourceURLContent(com.eteks.sweethome3d.swing.FileContentManager.class, "resources/wait.png");
 		this.icons = Collections.synchronizedMap(new WeakHashMap<Content, SparseArray<Icon>>());
 	}
 

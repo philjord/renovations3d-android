@@ -231,7 +231,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 			}
 		});
 		this.imageChoiceErrorLabel = new JLabel(activity, preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceErrorLabel.text"));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceErrorLabel.text"));
 		// Make imageChoiceErrorLabel visible only if an error occurred during image content loading
 		this.imageChoiceErrorLabel.setVisibility(android.view.View.GONE);
 		this.imageChoicePreviewComponent = new ImageViewTouchable(null, true, activity);
@@ -262,7 +262,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
                   JOptionPane.showMessageDialog(SwingUtilities.getRootPane(BackgroundImageWizardStepsPanel.this),
-                      preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceError"));
+                      preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceError"));
                 }
               });
           }
@@ -273,9 +273,9 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 
 		// Image scale panel components
 		this.scaleLabel = new JLabel(activity, Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "scaleLabel.text").replace("<br>", " ")));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "scaleLabel.text").replace("<br>", " ")));
 		this.scaleDistanceLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "scaleDistanceLabel.text", unitName));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "scaleDistanceLabel.text", unitName));
 		final float maximumLength = preferences.getLengthUnit().getMaximumLength();
 
 		final NullableSpinnerNumberModel.NullableSpinnerLengthModel scaleDistanceSpinnerModel =
@@ -306,11 +306,11 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 
 		// Image origin panel components
 		this.originLabel = new JLabel(activity, Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "originLabel.text").replace("<br>", " ")));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "originLabel.text").replace("<br>", " ")));
 		this.xOriginLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "xOriginLabel.text", unitName));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "xOriginLabel.text", unitName));
 		this.yOriginLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "yOriginLabel.text", unitName));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "yOriginLabel.text", unitName));
 		final NullableSpinnerNumberModel.NullableSpinnerLengthModel xOriginSpinnerModel =
 				new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, controller.getXOrigin(), -maximumLength, maximumLength);
 		this.xOriginSpinner = new NullableSpinner(activity, xOriginSpinnerModel);
@@ -602,7 +602,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 						public void run()
 						{
 							JOptionPane.showMessageDialog(activity,
-									preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class,
+									preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class,
 											"imageChoiceError", imageName), "", JOptionPane.ERROR_MESSAGE);
 						}
 					});
@@ -673,7 +673,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 							controller.setImage(null);
 							setImageChoiceTexts(preferences);
 							JOptionPane.showMessageDialog(activity,
-									preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class,
+									preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class,
 											"imageChoiceFormatError"), "", JOptionPane.ERROR_MESSAGE);
 						}
 					}
@@ -705,12 +705,12 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 			{
 				public void run()
 				{
-					String title = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "reduceImageSize.title");
-					String confirmMessage = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class,
+					String title = preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "reduceImageSize.title");
+					String confirmMessage = preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class,
 							"reduceImageSize.message", imageSize.width, imageSize.height, reducedWidth, reducedHeight);
-					String reduceSize = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "reduceImageSize.reduceSize");
-					String keepUnchanged = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "reduceImageSize.keepUnchanged");
-					String cancel = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "reduceImageSize.cancel");
+					String reduceSize = preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "reduceImageSize.reduceSize");
+					String keepUnchanged = preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "reduceImageSize.keepUnchanged");
+					String cancel = preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "reduceImageSize.cancel");
 					result.set(JOptionPane.showOptionDialog(activity,
 							confirmMessage, title, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 							null, new Object[]{reduceSize, keepUnchanged, cancel}, keepUnchanged));
@@ -796,8 +796,8 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 		// Display a waiting image while loading
 		if (waitImage == null)
 		{
-			waitImage = ImageIO.read(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class.
-					getResource(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "waitIcon")));
+			waitImage = ImageIO.read(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class.
+					getResource(preferences.getLocalizedString(com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "waitIcon")));
 		}
 		System.out.println("updatePreviewComponentsImage(waitImage);");
 
@@ -823,11 +823,11 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 	private void setImageChangeTexts(UserPreferences preferences)
 	{
 		this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
 		this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
 		this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
 
 	}
 
@@ -838,11 +838,11 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 	private void setImageChoiceTexts(UserPreferences preferences)
 	{
 		this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
 		this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
 		this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
 
 	}
 
@@ -854,7 +854,7 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 										 ContentManager contentManager)
 	{
 		return contentManager.showOpenDialog(this, preferences.getLocalizedString(
-				com.eteks.sweethome3d.android_props.BackgroundImageWizardStepsPanel.class, "imageChoiceDialog.title"), ContentManager.ContentType.IMAGE);
+				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceDialog.title"), ContentManager.ContentType.IMAGE);
 	}*/
 
 	/**

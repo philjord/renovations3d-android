@@ -17,6 +17,7 @@ public class JImageButton extends ImageButton
 	public JImageButton(Context context, Bitmap image)
 	{
 		super(context);
+		setScaleType(ScaleType.FIT_CENTER);
 		setImageBitmap(image);
 	}
 

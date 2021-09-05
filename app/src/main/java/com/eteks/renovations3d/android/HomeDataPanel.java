@@ -176,14 +176,14 @@ public class HomeDataPanel extends JComponent {
 
 		  // Create name label and its text field bound to NAME controller property
 		  this.nameLabel = new JLabel(this.getContext(), SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomeFurniturePanel.class, "nameLabel.text"));
+				  com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "nameLabel.text"));
 
 		  // force a name so the user can figure out where it might have saved,
 		  // but don't bother with a path component, the save in Activity will discover its
 		  // not writable and open saveas for older versions
 		  if(home.getName() == null || home.getName().trim().length() == 0) {
 			  home.setName(SwingTools.getLocalizedLabelText(preferences,
-					  com.eteks.sweethome3d.android_props.HomePane.class, "NEW_HOME.Name"));
+					  com.eteks.sweethome3d.swing.HomePane.class, "NEW_HOME.Name"));
 		  } else {
 			  home.setName(new File(home.getName()).getName().replace(".sh3d",""));
 		  }
@@ -226,7 +226,7 @@ public class HomeDataPanel extends JComponent {
 
 
 		  this.furnitureTableLabel = new JLabel(this.getContext(), SwingTools.getLocalizedLabelText(preferences,
-				  com.eteks.sweethome3d.android_props.HomePane.class, "FURNITURE_MENU.Name"));
+				  com.eteks.sweethome3d.swing.HomePane.class, "FURNITURE_MENU.Name"));
 
 
 		  this.furnitureTable = new FurnitureTable(home,

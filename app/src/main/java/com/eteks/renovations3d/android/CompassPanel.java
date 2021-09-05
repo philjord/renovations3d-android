@@ -119,7 +119,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 
     // Create X label and its spinner bound to X controller property
     this.xLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.CompassPanel.class, "xLabel.text", unitName));
+        com.eteks.sweethome3d.swing.CompassPanel.class, "xLabel.text", unitName));
     float maximumLength = preferences.getLengthUnit().getMaximumLength();
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel xSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
@@ -141,7 +141,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     
     // Create Y label and its spinner bound to Y controller property
     this.yLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.CompassPanel.class, "yLabel.text", unitName));
+			com.eteks.sweethome3d.swing.CompassPanel.class, "yLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel ySpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences, -maximumLength, maximumLength);
     this.ySpinner = new NullableSpinner(activity, ySpinnerModel, true);
@@ -162,7 +162,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     
     // Create diameter label and its spinner bound to DIAMETER controller property
     this.diameterLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.CompassPanel.class, "diameterLabel.text", unitName));
+			com.eteks.sweethome3d.swing.CompassPanel.class, "diameterLabel.text", unitName));
     final NullableSpinnerNumberModel.NullableSpinnerLengthModel diameterSpinnerModel =
         new NullableSpinnerNumberModel.NullableSpinnerLengthModel(preferences,
             preferences.getLengthUnit().getMinimumLength(), preferences.getLengthUnit().getMaximumLength()  / 10);
@@ -187,7 +187,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
     
     // Create visible check box bound to VISIBLE controller property
     this.visibleCheckBox = new JCheckBox(activity, SwingTools.getLocalizedLabelText(preferences,
-			com.eteks.sweethome3d.android_props.CompassPanel.class, "visibleCheckBox.text"));
+			com.eteks.sweethome3d.swing.CompassPanel.class, "visibleCheckBox.text"));
     this.visibleCheckBox.setSelected(controller.isVisible());
     final PropertyChangeListener visibleChangeListener = new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent ev) {
@@ -203,7 +203,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         }
       });
 
-    this.latitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "latitudeLabel.text"));
+    this.latitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.CompassPanel.class, "latitudeLabel.text"));
     final SpinnerNumberModel latitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-90), new Float(90), new Float(5));
     this.latitudeSpinner = new AutoCommitSpinner(activity, latitudeSpinnerModel);
 	  latitudeSpinner.setFormat(new DecimalFormat("N ##0;S ##0"));
@@ -228,7 +228,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         }
       });
     
-    this.longitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "longitudeLabel.text"));
+    this.longitudeLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.CompassPanel.class, "longitudeLabel.text"));
     final SpinnerNumberModel longitudeSpinnerModel = new SpinnerNumberModel(new Float(0), new Float(-180), new Float(180), new Float(5));
     this.longitudeSpinner = new AutoCommitSpinner(activity, longitudeSpinnerModel);
 	  longitudeSpinner.setFormat(new DecimalFormat("E ##0;W ##0"));
@@ -253,7 +253,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         }
       });
 
-    this.timeZoneLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "timeZoneLabel.text"));
+    this.timeZoneLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.CompassPanel.class, "timeZoneLabel.text"));
     List<String> timeZoneIds = new ArrayList<String>(Arrays.asList(TimeZone.getAvailableIDs()));
     // Remove synonymous time zones
     timeZoneIds.remove("GMT");
@@ -317,7 +317,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
       });
     //this.timeZoneComboBox.setPrototypeDisplayValue("GMT");
     
-    this.northDirectionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.CompassPanel.class, "northDirectionLabel.text"));
+    this.northDirectionLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.CompassPanel.class, "northDirectionLabel.text"));
     // Create a spinner model able to choose an angle modulo 360
     final SpinnerNumberModel northDirectionSpinnerModel = new SpinnerModuloNumberModel(0, 0, 360, 5);
     this.northDirectionSpinner = new AutoCommitSpinnerJogDial(activity, northDirectionSpinnerModel);
@@ -381,7 +381,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
         }
       });
 
-    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.CompassPanel.class, "compass.title");
+    this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.CompassPanel.class, "compass.title");
 
 		Button setToLocationButton = (Button)this.findViewById(R.id.compasspanel_locationButton);
 		setToLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -424,7 +424,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
    */
   private void layoutComponents(UserPreferences preferences) {
 	  JLabel compassRosePanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.CompassPanel.class, "compassRosePanel.title"));
+			  com.eteks.sweethome3d.swing.CompassPanel.class, "compassRosePanel.title"));
 	  swapOut(compassRosePanel, R.id.compasspanel_compassRosePanel);
 	  swapOut(this.xLabel, R.id.compasspanel_xLabel);
 	  swapOut(this.xSpinner, R.id.compasspanel_xSpinner);
@@ -435,7 +435,7 @@ public class CompassPanel extends AndroidDialogView implements DialogView {
 	  swapOut(this.diameterSpinner, R.id.compasspanel_diameterSpinner);
 
 	  JLabel geographicLocationPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.CompassPanel.class, "geographicLocationPanel.title"));
+			  com.eteks.sweethome3d.swing.CompassPanel.class, "geographicLocationPanel.title"));
 	  swapOut(geographicLocationPanel, R.id.compasspanel_geographicLocationPanel);
 	  swapOut(this.latitudeLabel, R.id.compasspanel_latitudeLabel);
 	  swapOut(this.latitudeSpinner, R.id.compasspanel_latitudeSpinner);

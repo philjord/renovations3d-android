@@ -610,8 +610,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 	private void updateToolNames() {
 		toolNames = new String[]{
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "SELECT.Name"),
-						preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "PAN.Name")
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "SELECT.Name"),
+						preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "PAN.Name")
 		};
 	}
 
@@ -660,7 +660,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	public void onPrepareOptionsMenu(Menu menu) {
 		MenuItem virtualVisit = menu.findItem(R.id.virtual_visit);
 		virtualVisit.setTitle(preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
+						com.eteks.sweethome3d.swing.HomePane.class, "VIEW_FROM_OBSERVER.Name"));
 		setIconFromSelector(virtualVisit, R.drawable.virtualvist_selector);
 
 		//both on action bar
@@ -683,25 +683,25 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		Renovations3DActivity.setIconizedMenuTitle(cameraMenu, cameraMenuStr, R.drawable.ic_videocam_black_24dp, getContext());
 
 		MenuItem modVV = menu.findItem(R.id.modify_virtual_visitor);
-		String modVVStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_OBSERVER.Name");
+		String modVVStr =  preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_OBSERVER.Name");
 		Renovations3DActivity.setIconizedMenuTitle(modVV, modVVStr, R.drawable.view3d_view_from_observer, getContext());
 
 		menu.findItem(R.id.viewalllevels).setTitle(preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
+						com.eteks.sweethome3d.swing.HomePane.class, "DISPLAY_ALL_LEVELS.Name"));
 
 		menu.findItem(R.id.modify3dview).setTitle(preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
+						com.eteks.sweethome3d.swing.HomePane.class, "MODIFY_3D_ATTRIBUTES.Name"));
 
 		MenuItem createPhoto = menu.findItem(R.id.createPhoto);
-		String createPhotoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_PHOTO.Name");
+		String createPhotoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_PHOTO.Name");
 		Renovations3DActivity.setIconizedMenuTitle(createPhoto, createPhotoStr, R.drawable.ic_add_a_photo_black_24dp, getContext());
 
 		MenuItem createVideo = menu.findItem(R.id.createVideo);
-		String createVideoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.android_props.HomePane.class, "CREATE_VIDEO.Name");
+		String createVideoStr =  preferences.getLocalizedString(com.eteks.sweethome3d.swing.HomePane.class, "CREATE_VIDEO.Name");
 		Renovations3DActivity.setIconizedMenuTitle(createVideo, createVideoStr, R.drawable.ic_video_call_black_24dp, getContext());
 
 		menu.findItem(R.id.exportToObj).setTitle(preferences.getLocalizedString(
-						com.eteks.sweethome3d.android_props.HomePane.class, "EXPORT_TO_OBJ.Name"));
+						com.eteks.sweethome3d.swing.HomePane.class, "EXPORT_TO_OBJ.Name"));
 
 		updateGoToPointOfViewMenu(menu.findItem(R.id.go_to_camera_position), home);
 
@@ -756,7 +756,7 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 
 		if (storedCameras.isEmpty()) {
 			goToPointOfViewMenu.setEnabled(false);
-			String name = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.HomePane.class, "NoStoredPointOfView");
+			String name = SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.HomePane.class, "NoStoredPointOfView");
 			goToPointOfViewMenu.getSubMenu().add(MENU_STORED_CAMERAS, NoViewMenuId, Menu.NONE, name);
 			//goToPointOfViewMenu.add(new ResourceAction(preferences, HomePane.class, "NoStoredPointOfView", false));
 		} else {

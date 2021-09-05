@@ -88,7 +88,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
 		ModelMaterialsComponent.ModelMaterialsPanel.iconSizePx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.ICON_SIZE_DP * scale + 0.5f);
 		ModelMaterialsComponent.ModelMaterialsPanel.fontSizePx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.fontSizeDp * scale + 0.5f);
 		ModelMaterialsComponent.ModelMaterialsPanel.namePadBottomPx = (int) (ModelMaterialsComponent.ModelMaterialsPanel.namePadBottomDp * scale + 0.5f);
-    setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "modifyButton.text"));
+    setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "modifyButton.text"));
     //if (!OperatingSystem.isMacOSX()) {
     //  setMnemonic(KeyStroke.getKeyStroke(preferences.getLocalizedString(
     //      ModelMaterialsComponent.class, "modifyButton.mnemonic")).getKeyCode());
@@ -148,14 +148,14 @@ public class ModelMaterialsComponent  extends JButton implements View {
     private void createComponents(final UserPreferences preferences, 
                                   final ModelMaterialsController controller) {
       this.materialsLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "materialsLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "materialsLabel.text"));
 			MaterialsListModel materialsListModel = new MaterialsListModel(controller);
       this.materialsList = new JList(activity, materialsListModel);
       this.materialsList.setSelectionMode(JList.ListSelectionModel.SINGLE_SELECTION);
       this.materialsList.setCellRenderer(new MaterialListCellRenderer(activity, materialsListModel.toList()));
       
       this.previewLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "previewLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "previewLabel.text"));
       this.previewComponent = new ModelPreviewComponent(true, activity);
       this.previewComponent.setFocusable(false);
 			this.previewComponent.setMinimumWidth(this.previewComponent.getPreferredSize().width);
@@ -188,11 +188,11 @@ public class ModelMaterialsComponent  extends JButton implements View {
         });
       
       this.colorAndTextureLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "colorAndTextureLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "colorAndTextureLabel.text"));
 
       // Create color and texture image radio buttons properties
       this.defaultColorAndTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "defaultColorAndTextureRadioButton.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "defaultColorAndTextureRadioButton.text"));
       final ChangeListener defaultChoiceChangeListener = new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (defaultColorAndTextureRadioButton.isEnabled() && defaultColorAndTextureRadioButton.isSelected()) {
@@ -208,7 +208,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
       this.defaultColorAndTextureRadioButton.addChangeListener(defaultChoiceChangeListener);
 
       this.invisibleRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "invisibleRadioButton.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "invisibleRadioButton.text"));
       final ChangeListener invisibleChoiceChangeListener = new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (invisibleRadioButton.isEnabled() && invisibleRadioButton.isSelected()) {
@@ -224,7 +224,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
       this.invisibleRadioButton.addChangeListener(invisibleChoiceChangeListener);
 
       this.colorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "colorRadioButton.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "colorRadioButton.text"));
       final ChangeListener colorChoiceChangeListener = new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (colorRadioButton.isEnabled() && colorRadioButton.isSelected()) {
@@ -243,7 +243,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
         };
       this.colorRadioButton.addChangeListener(colorChoiceChangeListener);
       this.colorButton = new ColorButton(activity, preferences);
-      this.colorButton.setColorDialogTitle(preferences.getLocalizedString(com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "colorDialog.title"));
+      this.colorButton.setColorDialogTitle(preferences.getLocalizedString(com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "colorDialog.title"));
       final PropertyChangeListener colorChangeListener = new PropertyChangeListener() {
           public void propertyChange(PropertyChangeEvent ev) {
             if (!colorRadioButton.isSelected()) {
@@ -257,7 +257,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
       
       final TextureChoiceController textureController = controller.getTextureController();
       this.textureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "textureRadioButton.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "textureRadioButton.text"));
       final ChangeListener textureChoiceChangeListener = new ChangeListener() {
           public void stateChanged(ChangeEvent ev) {
             if (textureRadioButton.isEnabled() && textureRadioButton.isSelected()) {
@@ -295,12 +295,12 @@ public class ModelMaterialsComponent  extends JButton implements View {
       buttonGroup.add(this.textureRadioButton);
       
       this.shininessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "shininessLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "shininessLabel.text"));
       this.shininessSlider = new JSlider(activity, 0, 128);
       JLabel mattLabel = new JLabel(activity, preferences.getLocalizedString(
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "mattLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "mattLabel.text"));
       JLabel shinyLabel = new JLabel(activity, preferences.getLocalizedString(
-							com.eteks.sweethome3d.android_props.ModelMaterialsComponent.class, "shinyLabel.text"));
+							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "shinyLabel.text"));
       Dictionary<Integer,JLabel> shininessSliderLabelTable = new Hashtable<Integer,JLabel>();
       shininessSliderLabelTable.put(0, mattLabel);
       shininessSliderLabelTable.put(128, shinyLabel);

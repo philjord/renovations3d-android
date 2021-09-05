@@ -319,19 +319,19 @@ private Renovations3DActivity activity;//for dialogs etc
   public FileContentManager(final UserPreferences preferences, Renovations3DActivity activity) {
    this. activity = activity;
     this.preferences = preferences;
-    this.sweetHome3DFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension");
+    this.sweetHome3DFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "homeExtension");
     String homeExtension2;
     try {
       // Get optional second extension
-      homeExtension2 = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeExtension2");
+      homeExtension2 = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "homeExtension2");
     } catch (IllegalArgumentException ex) {
       homeExtension2 = null;
     }
     this.sweetHome3DFileExtension2 = homeExtension2;
-    this.languageLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "languageLibraryExtension");
-    this.furnitureLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "furnitureLibraryExtension");
-    this.texturesLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "texturesLibraryExtension");
-    this.pluginFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "pluginExtension");
+    this.languageLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "languageLibraryExtension");
+    this.furnitureLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "furnitureLibraryExtension");
+    this.texturesLibraryFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "texturesLibraryExtension");
+    this.pluginFileExtension = preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "pluginExtension");
     this.lastDirectories = new HashMap<ContentManager.ContentType, File>();
     
     // Fill file filters map
@@ -358,7 +358,7 @@ private Renovations3DActivity activity;//for dialogs etc
 
 
           public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "homeDescription");
+            return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "homeDescription");
           }
         }
       });
@@ -373,7 +373,7 @@ private Renovations3DActivity activity;//for dialogs etc
          
 
           public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "languageLibraryDescription");
+            return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "languageLibraryDescription");
           }
         }
       });
@@ -388,7 +388,7 @@ private Renovations3DActivity activity;//for dialogs etc
           
 
           public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "furnitureLibraryDescription");
+            return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "furnitureLibraryDescription");
           }
         }
       });
@@ -403,7 +403,7 @@ private Renovations3DActivity activity;//for dialogs etc
          
 
           public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "texturesLibraryDescription");
+            return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "texturesLibraryDescription");
           }
         }
       });
@@ -418,7 +418,7 @@ private Renovations3DActivity activity;//for dialogs etc
          
 
           public String getDescription() {
-            return preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "pluginDescription");
+            return preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "pluginDescription");
           }
         }
       });
@@ -741,8 +741,8 @@ private Renovations3DActivity activity;//for dialogs etc
 	  final File selectedFile[] = new File[1];
 	  final Semaphore dialogSemaphore = new Semaphore(0, true);
 
-      //android 29 onwards has a different storage model
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      //android 30 onwards has a different storage model
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
 
           if (save == false) {
               //OPEN save == false
@@ -883,9 +883,9 @@ private Renovations3DActivity activity;//for dialogs etc
 
           }
       } else {
-          String ok = save ? this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "saveDialog.title")
-                  : this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "openDialog.title");
-          String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
+          String ok = save ? this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "saveDialog.title")
+                  : this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "openDialog.title");
+          String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "confirmOverwrite.cancel");
           final String[] okCancel = new String[]{ok, cancel};
 
           FileContentManager.this.activity.getDownloadsLocation(new Renovations3DActivity.DownloadsLocationRequestor() {
@@ -1012,7 +1012,7 @@ private Renovations3DActivity activity;//for dialogs etc
     int option;
     if (isDirectory(contentType)) {
       option = fileChooser.showDialog((JComponent)parentView,
-          this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "selectFolderButton.text"));
+          this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "selectFolderButton.text"));
     } else if (save) {
       option = fileChooser.showSaveDialog((JComponent)parentView);
     } else {
@@ -1039,9 +1039,9 @@ private Renovations3DActivity activity;//for dialogs etc
    */
   protected String getFileDialogTitle(boolean save) {
     if (save) {
-      return this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "saveDialog.title");
+      return this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "saveDialog.title");
     } else {
-      return this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "openDialog.title");
+      return this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "openDialog.title");
     }
   }
     
@@ -1052,10 +1052,10 @@ private Renovations3DActivity activity;//for dialogs etc
    */
   protected boolean confirmOverwrite(View parentView, String path) {
     // Retrieve displayed text in buttons and message
-    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.message", path);
-    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.title");
-    String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.overwrite");
-    String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "confirmOverwrite.cancel");
+    String message = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "confirmOverwrite.message", path);
+    String title = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "confirmOverwrite.title");
+    String replace = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "confirmOverwrite.overwrite");
+    String cancel = this.preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "confirmOverwrite.cancel");
 
     boolean replaceAnswer =  JOptionPane.showOptionDialog(activity, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 			null, new Object[]{replace, cancel}, replace) == JOptionPane.OK_OPTION;
@@ -1147,7 +1147,7 @@ private Renovations3DActivity activity;//for dialogs etc
               newDirectoryName += i;
             }
             newDirectoryName = (String)JOptionPane.showInputDialog(DirectoryChooser.this, 
-                preferences.getLocalizedString(com.eteks.sweethome3d.android_props.FileContentManager.class, "createFolder.message"),
+                preferences.getLocalizedString(com.eteks.sweethome3d.swing.FileContentManager.class, "createFolder.message"),
                 newDirectoryText, JOptionPane.QUESTION_MESSAGE, null, null, newDirectoryName);
             if (newDirectoryName != null) {
               File newDirectory = new File(parentDirectory, newDirectoryName);

@@ -81,7 +81,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
                                 final Home3DAttributesController controller) {
     // Ground color and texture buttons bound to ground controller properties
     this.groundColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "groundColorRadioButton.text"));
     this.groundColorRadioButton.addChangeListener(new ChangeListener() {
 		public void stateChanged(ChangeEvent ev) {
 			if (groundColorRadioButton.isSelected()) {
@@ -98,7 +98,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
   
     this.groundColorButton = new ColorButton(activity, preferences);
     this.groundColorButton.setColorDialogTitle(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundColorDialog.title"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "groundColorDialog.title"));
     this.groundColorButton.setColor(controller.getGroundColor());
     this.groundColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
@@ -114,7 +114,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
         });
 
     this.groundTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundTextureRadioButton.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "groundTextureRadioButton.text"));
     this.groundTextureRadioButton.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ev) {
         if (groundTextureRadioButton.isSelected()) {
@@ -132,7 +132,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
     
     // Sky color and texture buttons bound to sky controller properties
     this.skyColorRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyColorRadioButton.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "skyColorRadioButton.text"));
     this.skyColorRadioButton.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent ev) {
           if (skyColorRadioButton.isSelected()) {
@@ -149,7 +149,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
   
     this.skyColorButton = new ColorButton(activity, preferences);
     this.skyColorButton.setColorDialogTitle(preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyColorDialog.title"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "skyColorDialog.title"));
     this.skyColorButton.setColor(controller.getSkyColor());
     this.skyColorButton.addPropertyChangeListener(ColorButton.COLOR_PROPERTY, 
         new PropertyChangeListener() {
@@ -165,7 +165,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
         });
 
     this.skyTextureRadioButton = new JRadioButton(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyTextureRadioButton.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "skyTextureRadioButton.text"));
     this.skyTextureRadioButton.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ev) {
         if (skyTextureRadioButton.isSelected()) {
@@ -183,12 +183,12 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
     
     // Brightness label and slider bound to LIGHT_COLOR controller property
     this.brightnessLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "brightnessLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "brightnessLabel.text"));
     this.brightnessSlider = new JSlider(activity, 0, 255);
     this.darkBrightnessLabel = new JLabel(activity, preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "darkLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "darkLabel.text"));
     this.brightBrightnessLabel = new JLabel(activity, preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "brightLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "brightLabel.text"));
     this.brightnessSlider.setPaintTicks(true);
     this.brightnessSlider.setMajorTickSpacing(17);
     this.brightnessSlider.setValue(controller.getLightColor() & 0xFF);
@@ -207,12 +207,12 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
     
     // Walls transparency label and slider bound to WALLS_ALPHA controller property
     this.wallsTransparencyLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "wallsTransparencyLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "wallsTransparencyLabel.text"));
     this.wallsTransparencySlider = new JSlider(activity, 0, 255);
     this.opaqueWallsTransparencyLabel = new JLabel(activity, preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "opaqueLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "opaqueLabel.text"));
     this.invisibleWallsTransparencyLabel = new JLabel(activity, preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "invisibleLabel.text"));
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "invisibleLabel.text"));
     this.wallsTransparencySlider.setPaintTicks(true);
     this.wallsTransparencySlider.setMajorTickSpacing(17);
     this.wallsTransparencySlider.setValue((int)(controller.getWallsAlpha() * 255));
@@ -229,7 +229,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
         });
     
     this.dialogTitle = preferences.getLocalizedString(
-        com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "home3DAttributes.title");
+        com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "home3DAttributes.title");
 
   }
 
@@ -260,7 +260,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
    */
   private void layoutComponents(UserPreferences preferences) {
 	  JLabel groundPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "groundPanel.title"));
+			  com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "groundPanel.title"));
 	  swapOut(groundPanel, R.id.home3dattributespanel_groundPanel);
 	  swapOut(this.groundColorRadioButton, R.id.home3dattributespanel_groundColorRadioButton);
 	  swapOut(this.groundColorButton, R.id.home3dattributespanel_groundColorButton);
@@ -268,7 +268,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
 	  swapOut(this.groundTextureComponent, R.id.home3dattributespanel_groundTextureComponent);
 
 	  JLabel skyPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "skyPanel.title"));
+			  com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "skyPanel.title"));
 	  swapOut(skyPanel, R.id.home3dattributespanel_skyPanel);
 	  swapOut(this.skyColorRadioButton, R.id.home3dattributespanel_skyColorRadioButton);
 	  swapOut(this.skyColorButton, R.id.home3dattributespanel_skyColorButton);
@@ -276,7 +276,7 @@ public class Home3DAttributesPanel extends AndroidDialogView implements DialogVi
 	  swapOut(this.skyTextureComponent, R.id.home3dattributespanel_skyTextureComponent);
 
 	  JLabel renderingPanel = new JLabel(activity, preferences.getLocalizedString(
-			  com.eteks.sweethome3d.android_props.Home3DAttributesPanel.class, "renderingPanel.title"));
+			  com.eteks.sweethome3d.swing.Home3DAttributesPanel.class, "renderingPanel.title"));
 	  swapOut(renderingPanel, R.id.home3dattributespanel_renderingPanel);
 	  swapOut(this.brightnessLabel, R.id.home3dattributespanel_brightnessLabel);
 	  swapOut(this.brightnessSlider, R.id.home3dattributespanel_brightnessSlider);
