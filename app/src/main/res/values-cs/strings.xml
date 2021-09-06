@@ -120,5 +120,6 @@ Změna shora dolů k návštěvě může být provedena ikonou plánu / osoby. <
     <string name="showPlanZoomButtons">Zobrazit tlačítka Zvětšení plánu</string>
     <string name="doubleTapEdit2D">Poklepáním upravte plán</string>
     <string name="doubleTapEdit3D">Dvojitým klepnutím upravte zobrazení ve 3D</string>
+    <string name="pleaseSelectSh3l">Vyberte soubor sh3l, který chcete importovat</string>
 
 </resources>

@@ -20,6 +20,7 @@
 package com.eteks.renovations3d.android;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.os.Looper;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.webkit.MimeTypeMap;
 
 import com.eteks.renovations3d.FileActivityResult;
 import com.eteks.renovations3d.Renovations3DActivity;
@@ -757,10 +759,11 @@ private Renovations3DActivity activity;//for dialogs etc
                       || contentType == ContentManager.ContentType.FURNITURE_LIBRARY
                       || contentType == ContentManager.ContentType.TEXTURES_LIBRARY
                       || contentType == ContentManager.ContentType.MODEL) {
+
+                  // all four file requested here, but loaded by Renovations3DActivity.loadFile(File)
                   //HomePane.showOpenDialog()
                   //   -> Renovation3DActivity.loadSh3dFile() / which replaces HomeController.open()
                   //ContentManager.ContentType.SWEET_HOME_3D,
-                  // all three file requested here, but loaded by Renovations3DActivity.loadFile(File)
                   //HomePane.showImportLanguageLibraryDialog()
                   //ContentManager.ContentType.LANGUAGE_LIBRARY,
                   //HomePane.showImportFurnitureLibraryDialog()
@@ -768,13 +771,30 @@ private Renovations3DActivity activity;//for dialogs etc
                   //HomePane.showImportTexturesLibraryDialog()
                   //ContentManager.ContentType.TEXTURES_LIBRARY,
 
+                  //ContentManager.ContentType.MODEL <- is a blocking call and the file is copied to temp and returned
+
+                //TODO: perhaps use the picker library for better file filtering?
+                 // https://github.com/informramiz/AndroidFilePickerLibrary
 
 
-
-                  // In this case we leave selectedFile[0] = null so the callee assumes a cancel and moves on
                   Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                   intent.addCategory(Intent.CATEGORY_OPENABLE);
-                  intent.setType("*/*");//TODO: only sh3t and zip files ??? or what ever the content request is
+                  intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                  intent.setType("*/*");
+                  intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                  String[] mimeTypes = {
+                          "application/sweethome3d" //sh3l files hav this set, pity not all sh3d files have i in the manifest
+                          ,"application/octet-stream"
+                          ,"application/x-zip"
+                          ,"application/x-bzip"
+                          ,"application/x-bzip2"
+                          ,"application/gzip"
+                          ,"application/zip"
+                          ,"application/x-7z-compressed"
+                          //,"application/java-archive"
+
+                  }; //binaries and zips
+                  intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
                   activity.fileActivityLauncher.launch(intent, result -> {
                       if (result.getResultCode() == Activity.RESULT_OK) {
@@ -784,7 +804,7 @@ private Renovations3DActivity activity;//for dialogs etc
                           // Get the Uri of the selected file
                           Uri uri = data.getData();
                           String uriString = uri.toString();
-                          File libraryFile = null;
+                          File loadFile = null;
                           if (uriString.startsWith("content://")) {
                               Cursor cursor = null;
                               try {
@@ -792,9 +812,8 @@ private Renovations3DActivity activity;//for dialogs etc
                                   if (cursor != null && cursor.moveToFirst()) {
                                       String libraryName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                                       try {
-                                          InputStream in = activity.getContentResolver().openInputStream(data.getData());
-                                          libraryFile = FileActivityResult.copyInputStreamToTempFile(in, libraryName, activity);
-
+                                          InputStream in = activity.getContentResolver().openInputStream(uri);
+                                          loadFile = FileActivityResult.copyInputStreamToTempFile(in, libraryName, activity);
                                       } catch (FileNotFoundException e) {
                                           e.printStackTrace();
                                       }
@@ -803,21 +822,22 @@ private Renovations3DActivity activity;//for dialogs etc
                                   cursor.close();
                               }
                           } else if (uriString.startsWith("file://")) {
-                              libraryFile = new File(uri.getPath());
+                              loadFile = new File(uri.getPath());
                           }
 
-                          if (libraryFile != null) {
-                              Renovations3DActivity.logFireBaseLevelUp("loadFile", libraryFile.getName());
+                          // In most cases we leave selectedFile[0] = null so the callee assumes a cancel and moves on
+                          if (loadFile != null) {
+                              Renovations3DActivity.logFireBaseLevelUp("loadFile", loadFile.getName());
                               if (contentType == ContentManager.ContentType.MODEL) {
                                   //TODO: this will only work for "singleton" file zip, dae etc, *.obj will not find textures as they are file relative and the file is well lost
                                   //return null as though a cancel occurs (as loadFile above does the work of loading)
-                                  selectedFile[0] = libraryFile;
+                                  selectedFile[0] = loadFile;
                                   // release the acquire that has been taken below (before this return)
                                   dialogSemaphore.release();
                               } else {
                                   //controller2.importTexturesLibrary(texturesLibraryName);
                                   // use the Activity in case of a zip file requiring unzip, extension dictates what gets imported
-                                  activity.loadFile(libraryFile);
+                                  activity.loadFile(loadFile);
                               }
 
                           }

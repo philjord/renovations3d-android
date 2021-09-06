@@ -119,4 +119,5 @@
     <string name="showPlanZoomButtons">Εμφάνιση κουμπιών μεγέθυνσης σχεδίου</string>
     <string name="doubleTapEdit2D">Πατήστε δύο φορές για επεξεργασία στο σχέδιο</string>
     <string name="doubleTapEdit3D">Πατήστε δύο φορές για επεξεργασία σε προβολή 3D</string>
+    <string name="pleaseSelectSh3l">Επιλέξτε sh3l αρχείο για εισαγωγή</string>
 </resources>

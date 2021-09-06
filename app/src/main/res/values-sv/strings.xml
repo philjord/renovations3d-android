@@ -119,5 +119,6 @@ Byte från toppen ner till besöket kan göras med ikonen för en plan / person.
     <string name="showPlanZoomButtons">Visa planzoomknappar</string>
     <string name="doubleTapEdit2D">Dubbelklicka för att redigera planen</string>
     <string name="doubleTapEdit3D">Dubbelklicka för att redigera i 3D-vy</string>
+    <string name="pleaseSelectSh3l">Var god välj sh3l-fil som ska importeras</string>
 
 </resources>

@@ -71,6 +71,7 @@ import org.jogamp.java3d.BranchGroup;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.security.AccessControlException;
 
@@ -228,6 +229,7 @@ public class HomeDataPanel extends JComponent {
 		  this.furnitureTableLabel = new JLabel(this.getContext(), SwingTools.getLocalizedLabelText(preferences,
 				  com.eteks.sweethome3d.swing.HomePane.class, "FURNITURE_MENU.Name"));
 
+		  addLanguageListener(preferences);
 
 		  this.furnitureTable = new FurnitureTable(home,
 												  preferences,
@@ -277,4 +279,41 @@ public class HomeDataPanel extends JComponent {
 		}
 	}
 
+	/**
+	 * Adds a property change listener to <code>preferences</code> to update
+	 * column names when preferred language changes.
+	 */
+	private void addLanguageListener(UserPreferences preferences) {
+		preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
+				new LanguageChangeListener(this));
+	}
+
+	/**
+	 * Preferences property listener bound to this component with a weak reference to avoid
+	 * strong link between preferences and this component.
+	 */
+	private class LanguageChangeListener implements PropertyChangeListener {
+		private WeakReference<HomeDataPanel> homeDataPanel;
+
+		public LanguageChangeListener(HomeDataPanel homeDataPanel) {
+			this.homeDataPanel = new WeakReference<HomeDataPanel>(homeDataPanel);
+		}
+
+		public void propertyChange(PropertyChangeEvent ev) {
+			// If furniture table column model was garbage collected, remove this listener from preferences
+			HomeDataPanel homeDataPanel = this.homeDataPanel.get();
+			UserPreferences preferences = (UserPreferences)ev.getSource();
+			if (homeDataPanel == null) {
+				preferences.removePropertyChangeListener(
+						UserPreferences.Property.LANGUAGE, this);
+			} else {
+				nameLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+						com.eteks.sweethome3d.swing.HomeFurniturePanel.class, "nameLabel.text"));
+				furnitureTableLabel.setText( SwingTools.getLocalizedLabelText(preferences,
+						com.eteks.sweethome3d.swing.HomePane.class, "FURNITURE_MENU.Name"));
+			}
+		}
+	}
 }
+
+

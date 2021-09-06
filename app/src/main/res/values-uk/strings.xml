@@ -118,5 +118,6 @@
     <string name="showPlanZoomButtons">Показати кнопки масштабування плану</string>
     <string name="doubleTapEdit2D">Двічі торкніться, щоб змінити план</string>
     <string name="doubleTapEdit3D">Двічі торкніться для редагування в режимі 3D-перегляду</string>
+    <string name="pleaseSelectSh3l">Будь ласка, виберіть sh3l файл для імпорту</string>
 
 </resources>

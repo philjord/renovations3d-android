@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- android hates http addresses, so allow this one for translation files -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">sweethome3d.com</domain>
+    </domain-config>
+</network-security-config>

@@ -27,6 +27,17 @@
                 android:title="Default" />
         </menu>
     </item>
+    <item android:id="@+id/import_language_lib"
+        android:title="@string/importLanguageLib"
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource">
+        <menu>
+            <item
+                android:id="@+id/empty3"
+                android:title="Default" />
+        </menu>
+    </item>
+
     <item
         android:id="@+id/importTexture"
         android:title="Import Texture"
@@ -37,4 +48,5 @@
         android:title="Import Furniture"
         android:showAsAction="never"
         tools:ignore="AppCompatResource" />
+
 </menu>

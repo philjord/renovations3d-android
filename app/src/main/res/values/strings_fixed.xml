@@ -12,6 +12,7 @@
     <string name="menu_preferences" translatable="false">Preferences</string>
     <string name="importFurnitureLib" translatable="false">Import furniture library&#8230;</string>
     <string name="importTextureLib" translatable="false">Import texture library&#8230;</string>
+    <string name="importLanguageLib" translatable="false">Import language library&#8230;</string>
     <string name="modifyVirtualVisitor" translatable="false">Modify virtual visitor</string>
     <string name="modify3dview" translatable="false">Modify 3D view</string>
     <string name="viewAllLevels" translatable="false">View all levels</string>

@@ -70,6 +70,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -132,6 +133,7 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	private BillingManager billingManager;
 	private ImageAcquireManager imageAcquireManager;
+	private ImportManager importManager;
 	private AdMobManager adMobManager;
 	private Tutorial tutorial;
 	public final FileActivityResult<Intent, ActivityResult> fileActivityLauncher = FileActivityResult.registerActivityForResult(this);
@@ -325,6 +327,7 @@ public class Renovations3DActivity extends FragmentActivity {
 		this.imageAcquireManager = new ImageAcquireManager(this);
 		// set up billing manager will call back adsmanager once connected
 		this.billingManager = new BillingManager(this);
+		this.importManager = new ImportManager(this);
 		this.adMobManager = new AdMobManager(this);
 		this.tutorial = new Tutorial(this, (ViewGroup) this.findViewById(R.id.tutorial));
 
@@ -977,66 +980,19 @@ public class Renovations3DActivity extends FragmentActivity {
 	}
 
 	private void loadSh3dFile() {
-
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			intent.setType("*/*");//TODO: only sh3d files ???
-
-			// Optionally, specify a URI for the file that should appear in the
-			// system file picker when it loads.
-			// intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
-
-			fileActivityLauncher.launch(intent, result -> {
-				if (result.getResultCode() == Activity.RESULT_OK) {
-					// There are no request codes
-					Intent data = result.getData();
-
-					// Get the Uri of the selected file
-					Uri uri = data.getData();
-					String uriString = uri.toString();
-					File myFile = new File(uriString);
-					String path = myFile.getAbsolutePath();
-					String displayName = null;
-
-					if (uriString.startsWith("content://")) {
-						Cursor cursor = null;
-						try {
-							cursor = getContentResolver().query(uri, null, null, null, null);
-							if (cursor != null && cursor.moveToFirst()) {
-								displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-							}
-						} finally {
-							cursor.close();
-						}
-					} else if (uriString.startsWith("file://")) {
-						displayName = myFile.getName();
-					}
-
-					try {
-						Renovations3DActivity.this.loadHome(getContentResolver().openInputStream(data.getData()),displayName,false,false);
-					}  catch (FileNotFoundException e) {
-						e.printStackTrace();
+		// get off EDT for controller.getView().showOpenDialog() call
+		Thread t2 = new Thread() {
+			public void run() {
+				if (getHomeController() != null) {
+					HomeController controller = getHomeController();
+					String openFileName = controller.getView().showOpenDialog();
+					if (openFileName != null) {
+						loadHome(new File(openFileName));
 					}
 				}
-			});
-
-		} else {
-			// get off EDT for controller.getView().showOpenDialog() call
-			Thread t2 = new Thread() {
-				public void run() {
-					if (getHomeController() != null) {
-						HomeController controller = getHomeController();
-						String openFileName = controller.getView().showOpenDialog();
-						if (openFileName != null) {
-							loadHome(new File(openFileName));
-						}
-					}
-				}
-			};
-			t2.start();
-		}
-
+			}
+		};
+		t2.start();
 	}
 
 	private void newHomeFromExample() {
@@ -1216,60 +1172,57 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	public BroadcastReceiver onCompleteHTTPIntent = new BroadcastReceiver() {
 		public void onReceive(Context ctxt, Intent intent) {
-		//don't call unregisterReceiver(this); in case multiple downloads are set up
-		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+			//don't call unregisterReceiver(this); in case multiple downloads are set up
+			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
-		// This is one of our downloads.
-		final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-		DownloadManager.Query query = new DownloadManager.Query();
-		query.setFilterById(id);
-		Cursor cursor = downloadManager.query(query);
+			// This is one of our downloads.
+			final DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+			DownloadManager.Query query = new DownloadManager.Query();
+			query.setFilterById(id);
+			Cursor cursor = downloadManager.query(query);
 
-		if (cursor.moveToFirst()) {
-			int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-			int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-			int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+			if (cursor.moveToFirst()) {
+				int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+				int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+				int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-			int status = cursor.getInt(statusIndex);
+				int status = cursor.getInt(statusIndex);
 
-			if (status == DownloadManager.STATUS_SUCCESSFUL) {
-				String localUri = cursor.getString(localUriIndex);
-				try {
-					URI u = new URI(localUri);
-					String path =   u.getPath();
+				if (status == DownloadManager.STATUS_SUCCESSFUL) {
+					String localUri = cursor.getString(localUriIndex);
+					try {
+						File file = new File(new URI(localUri).getPath());
+						Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
+						loadFile(file);
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
+				} else if (status == DownloadManager.STATUS_FAILED) {
+					int reason = cursor.getInt(reasonIndex);
 
-					File file = new File(new URI(localUri).getPath());
-					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceive", file.getAbsolutePath());
-					loadFile(file);
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
+					String message;
+					switch (reason) {
+						case DownloadManager.ERROR_FILE_ERROR:
+						case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+						case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+							message = "DownloadErrorDisk";
+							break;
+						case DownloadManager.ERROR_HTTP_DATA_ERROR:
+						case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+							message = "DownloadErrorHttp";
+							break;
+						case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+							message = "DownloadErrorRedirection";
+							break;
+						default:
+							message = "DownloadErrorUnknown";
+							break;
+					}
+
+					ToastCompat.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
+					Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
 				}
-			} else if (status == DownloadManager.STATUS_FAILED) {
-				int reason = cursor.getInt(reasonIndex);
-
-				String message;
-				switch (reason) {
-					case DownloadManager.ERROR_FILE_ERROR:
-					case DownloadManager.ERROR_DEVICE_NOT_FOUND:
-					case DownloadManager.ERROR_INSUFFICIENT_SPACE:
-						message = "DownloadErrorDisk";
-						break;
-					case DownloadManager.ERROR_HTTP_DATA_ERROR:
-					case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-						message = "DownloadErrorHttp";
-						break;
-					case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
-						message = "DownloadErrorRedirection";
-						break;
-					default:
-						message = "DownloadErrorUnknown";
-						break;
-				}
-
-				ToastCompat.makeText(Renovations3DActivity.this, "DownloadFailedWithErrorMessage: " + message, Toast.LENGTH_SHORT).show();
-				Renovations3DActivity.logFireBaseLevelUp("onCompleteHTTPIntent.OnReceiveError", message);
 			}
-		}
 		}
 	};
 
@@ -1370,6 +1323,32 @@ public class Renovations3DActivity extends FragmentActivity {
 							} else if (finalFile.getName().toLowerCase().endsWith(".sh3t")) {
 								getHomeController().importTexturesLibrary(finalFile.getAbsolutePath());
 							} else if (finalFile.getName().toLowerCase().endsWith(".sh3l")) {
+								// like pref panel listen for the update and change language to the one loaded below
+								getUserPreferences().addPropertyChangeListener(UserPreferences.Property.SUPPORTED_LANGUAGES,
+										new PropertyChangeListener() {
+											@Override
+											public void propertyChange(PropertyChangeEvent ev) {
+												//remove the listener
+												((UserPreferences)ev.getSource()).removePropertyChangeListener(
+														UserPreferences.Property.SUPPORTED_LANGUAGES, this);
+												List<String> oldSupportedLanguages = Arrays.asList((String [])ev.getOldValue());
+												String [] supportedLanguages = (String [])ev.getNewValue();
+												// on a new thread otherwise stack overflow in FurnitureTable, weird
+												runOnUiThread(new Runnable(){
+													public void run() {
+														// Select the first language added to supported languages
+														for (final String language : supportedLanguages) {
+															if (!oldSupportedLanguages.contains(language)) {
+																getUserPreferences().setLanguage(language);
+																break;
+															}
+														}
+													}
+												});
+
+											}
+										}
+								);
 								getHomeController().importLanguageLibrary(finalFile.getAbsolutePath());
 							}
 						}
@@ -1623,6 +1602,10 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	public BillingManager getBillingManager() {
 		return billingManager;
+	}
+
+	public ImportManager getImportManager() {
+		return importManager;
 	}
 
 	final public int REQUEST_CODE_ASK_PERMISSION_STORAGE = 123;//just has to match from request to response below

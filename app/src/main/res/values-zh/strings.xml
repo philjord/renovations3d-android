@@ -117,5 +117,6 @@
     <string name="showPlanZoomButtons">显示计划缩放按钮</string>
     <string name="doubleTapEdit2D">双击以编辑计划</string>
     <string name="doubleTapEdit3D">双击以在3D视图中进行编辑</string>
+    <string name="pleaseSelectSh3l">请选择要导入的sh3l文件</string>
 
 </resources>

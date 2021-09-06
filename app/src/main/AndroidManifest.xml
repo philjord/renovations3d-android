@@ -31,6 +31,9 @@
 
     <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with the Jogl renderering -->
     <!-- android:requestLegacyExternalStorage="true" because android Q has breaking bugs in the scoped storage implementation -->
+    <!-- android:networkSecurityConfig="@xml/network_security_config" allows downloads from  http://sweethome3d.com -->
+    <!--android:allowBackup="false" ensures sharedprefs is cleared on reinstall-->
+
     <application
         android:hardwareAccelerated="false"
         android:icon="@drawable/renovations3dicon"
@@ -38,7 +41,10 @@
         android:largeHeap="true"
         android:launchMode="singleInstance"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/MyCustomTheme">
+        android:theme="@style/MyCustomTheme"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:allowBackup="false"
+        >
 
         <provider
             android:name="androidx.core.content.FileProvider"

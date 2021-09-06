@@ -117,5 +117,6 @@ Het veranderen van bovenaf naar het bezoek kan gedaan worden door het pictogram 
     <string name="showPlanZoomButtons">Toon zoomknoppen van het plan</string>
     <string name="doubleTapEdit2D">Dubbeltik om in plan te bewerken</string>
     <string name="doubleTapEdit3D">Dubbeltik om te bewerken in 3D-weergave</string>
+    <string name="pleaseSelectSh3l">Selecteer alsjeblieft sh3l-bestand om te importeren</string>
 
 </resources>

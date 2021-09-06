@@ -124,6 +124,7 @@
     <string name="showPlanZoomButtons">계획 확대 / 축소 단추 표시</string>
     <string name="doubleTapEdit2D">계획을 편집하려면 두 번 탭하세요</string>
     <string name="doubleTapEdit3D">3D보기에서 편집하려면 두 번 탭하세요</string>
+    <string name="pleaseSelectSh3l">가져올 sh3l 파일을 선택하십시오.</string>
 
 
 </resources>

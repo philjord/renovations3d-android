@@ -120,5 +120,6 @@ Alterar de cima para baixo para visitar pode ser feito pelo ícone de um plano /
     <string name="showPlanZoomButtons">Mostrar botões de zoom do plano</string>
     <string name="doubleTapEdit2D">Toque duas vezes para editar o plano</string>
     <string name="doubleTapEdit3D">Toque duas vezes para editar na visualização 3D</string>
+    <string name="pleaseSelectSh3l">Selecione o arquivo sh3l para importar</string>
 
 </resources>

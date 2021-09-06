@@ -117,5 +117,6 @@
     <string name="showPlanZoomButtons">プランズームボタンを表示</string>
     <string name="doubleTapEdit2D">ダブルタップしてプランを編集します</string>
     <string name="doubleTapEdit3D">ダブルタップすると3Dビューで編集できます</string>
+    <string name="pleaseSelectSh3l">インポートするsh3lファイルを選択してください</string>
 
 </resources>

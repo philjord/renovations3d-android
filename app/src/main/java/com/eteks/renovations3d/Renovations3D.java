@@ -20,11 +20,15 @@
 package com.eteks.renovations3d;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.text.format.Formatter;
 import android.widget.Toast;
 
+import androidx.core.os.ConfigurationCompat;
+
 import com.eteks.renovations3d.android.AndroidViewFactory;
 import com.eteks.renovations3d.android.FileContentManager;
+import com.eteks.renovations3d.android.FurnitureCatalogListPanel;
 import com.eteks.renovations3d.android.HomePane;
 import com.eteks.sweethome3d.io.HomeFileRecorder;
 import com.eteks.sweethome3d.io.HomeStreamRecorder;
@@ -136,12 +140,31 @@ public class Renovations3D extends HomeApplication {
 			EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					String language = Locale.getDefault().getLanguage();
-					List<String> supportedLanguages = Arrays.asList(getUserPreferences().getSupportedLanguages());
-					if (supportedLanguages.contains(language)) {
-						getUserPreferences().setLanguage(language);
-						ToastCompat.makeText(parentActivity, "Language set to " + language, Toast.LENGTH_SHORT).show();
+					//see https://stackoverflow.com/questions/4212320/get-the-current-language-in-device
+					Locale defaultLocale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0);
+					String language = defaultLocale.getLanguage();
+					String country = defaultLocale.getCountry();
+					String[] langNames = new String[]{language + "_" + country, language};
+
+					for( String lang : langNames) {
+						List<String> supportedLanguages = Arrays.asList(getUserPreferences().getSupportedLanguages());
+						if (supportedLanguages.contains(lang)) {
+							getUserPreferences().setLanguage(lang);
+							ToastCompat.makeText(parentActivity, "Language set to " + lang, Toast.LENGTH_SHORT).show();
+							return;
+						}
+
+						// let's see if there exists as a downloadable language file
+						for (ImportManager.ImportInfo imp : ImportManager.importInfos) {
+							if (imp.type == ImportManager.ImportType.LANGUAGE && imp.id.equals(lang)) {
+								parentActivity.getImportManager().importLibrary(imp, null);
+								ToastCompat.makeText(parentActivity, "Downloading language " + lang, Toast.LENGTH_SHORT).show();
+								return;
+							}
+						}
 					}
+
+
 				}
 			});
 		}

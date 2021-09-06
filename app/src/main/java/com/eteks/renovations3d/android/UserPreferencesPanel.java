@@ -206,8 +206,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 		}
 
 		if (controller.mayImportLanguageLibrary()) {
-		 // this.languageLibraryImportButton = new JButton(activity,
-		//		  SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
 			this.languageLibraryImportButton = new JImageButton(activity, (Bitmap) SwingTools.getScaledImageIcon(
 					com.eteks.sweethome3d.swing.UserPreferencesPanel.class.getResource("resources/actions/language-import.png")).getImage().getDelegate());
  	  		languageLibraryImportButton.setOnClickListener(new View.OnClickListener(){
@@ -227,8 +225,6 @@ public class UserPreferencesPanel extends AndroidDialogView implements DialogVie
 					t3.start();;
 				}
 			  });
-		  	//this.languageLibraryImportButton.setToolTipText(preferences.getLocalizedString(
-			//  com.eteks.sweethome3d.swing.UserPreferencesPanel.class, "IMPORT_LANGUAGE_LIBRARY.tooltip"));
 		}
 
 		if (controller.isPropertyEditable(UserPreferencesController.Property.UNIT)) {
