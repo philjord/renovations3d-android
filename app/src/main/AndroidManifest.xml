@@ -2,8 +2,8 @@
 <manifest
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="6320"
-    android:versionName="6.320">
+    android:versionCode="6600"
+    android:versionName="6.600">
 
     <supports-screens
         android:anyDensity="true"
