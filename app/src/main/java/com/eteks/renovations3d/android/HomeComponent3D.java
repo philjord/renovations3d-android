@@ -418,8 +418,12 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 			this.toolSpinnerControl = new ToolSpinnerControl(this.getContext());
 			this.levelSpinnerControl = new LevelSpinnerControl(this.getContext());
 		}
-		android.view.View rootView = getContentView(this.getWindow(), gl_window);
-		return rootView;
+		//make sure we aren't being destroyed by onPause
+		if(gl_window.getDelegatedWindow() != null) {
+			android.view.View rootView = getContentView(this.getWindow(), gl_window);
+			return rootView;
+		}
+		return null;
 	}
 
 	public void onStart() {

@@ -802,17 +802,17 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 
 			public void collectionChanged(CollectionEvent<CatalogPieceOfFurniture> ev) {
 				// If panel was garbage collected, remove this listener from catalog
-				FurnitureCatalogListPanel furnitureCatalogPanel = this.furnitureCatalogPanel.get();
+				FurnitureCatalogListPanel furnitureCatalogPanel2 = this.furnitureCatalogPanel.get();
 				FurnitureCatalog catalog = (FurnitureCatalog) ev.getSource();
-				if (furnitureCatalogPanel == null) {
+				if (furnitureCatalogPanel2 == null || furnitureCatalogPanel2.getActivity() == null) {
 					catalog.removeFurnitureListener(this);
 				} else {
 					ArrayList<FurnitureCategory> categories = new ArrayList<FurnitureCategory>();
-					categories.add(furnitureCatalogPanel.dummyAllCategory);//PJ blank was not clear
+					categories.add(furnitureCatalogPanel2.dummyAllCategory);//PJ blank was not clear
 					categories.addAll(catalog.getCategories());
 					//my rubbish JComboBox need Model and Adapter set at the same time
-					furnitureCatalogPanel.categoryFilterComboBox.setModel(new DefaultComboBoxModel(categories));
-					furnitureCatalogPanel.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(furnitureCatalogPanel.getActivity(), android.R.layout.simple_list_item_1, categories) {
+					furnitureCatalogPanel2.categoryFilterComboBox.setModel(new DefaultComboBoxModel(categories));
+					furnitureCatalogPanel2.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(furnitureCatalogPanel2.getActivity(), android.R.layout.simple_list_item_1, categories) {
 						@Override
 						public View getView(int position, View convertView, ViewGroup parent) {
 							return getDropDownView(position, convertView, parent);
@@ -820,7 +820,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 						@Override
 						public View getDropDownView (int position, View convertView, ViewGroup parent) {
 							TextView ret = new TextView(getContext());
-							ret.setText(((FurnitureCategory)furnitureCatalogPanel.categoryFilterComboBox.getItemAtPosition(position)).getName());
+							ret.setText(((FurnitureCategory)furnitureCatalogPanel2.categoryFilterComboBox.getItemAtPosition(position)).getName());
 							ret.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
 							return ret;
 						}
