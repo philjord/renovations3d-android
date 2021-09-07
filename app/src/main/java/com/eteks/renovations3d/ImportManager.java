@@ -84,22 +84,29 @@ public class ImportManager {
         dialog.show();
 
         String url = importInfo.url;
+
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription(fileName + " download");
         request.setTitle(fileName);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
         // oddly see https://stackoverflow.com/questions/16749845/android-download-manager-setdestinationinexternalfilesdir
-        // request.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_DOWNLOADS, fileName);
-
+        //request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, fileName);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+        activity.registerReceiver(activity.onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         // get download service and enqueue file
         DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
         Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
 
-        activity.registerReceiver(activity.onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        //NOTE TO FUTURE SELF!
+        // if enqueue appears to do nothing, look at logcat and turn off filtering, I got this
+        //2021-09-07 17:25:23.344 5955-7374/? W/DownloadManager: Path appears to be invalid: /storage/emulated/0/Download/3DModels-Contributions-1.8.zip
+
+        //This line aboveis actually a bug in DownloadManager that can be fixed by clearing the cache and storage.
+        //https://stackoverflow.com/questions/52055952/downloadmanager-requests-delayed-on-android-pie/53026503#53026503
 
     }
 
