@@ -1415,16 +1415,20 @@ public class Renovations3DActivity extends FragmentActivity {
 						request.setTitle(fileName);
 
 						request.allowScanningByMediaScanner();
-						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
 						try {
-							request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);
+							// oddly see https://stackoverflow.com/questions/16749845/android-download-manager-setdestinationinexternalfilesdir
+							//request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, fileName);
+							request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+							setIntent(null);
 
 							// get download service and enqueue file
 							DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 							manager.enqueue(request);
-							registerReceiver(onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-							setIntent(null);
+
 							ToastCompat.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
 							Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
 						} catch (IllegalStateException e) {
