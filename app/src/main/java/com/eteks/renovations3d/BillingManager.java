@@ -111,9 +111,11 @@ public class BillingManager implements PurchasesUpdatedListener {
                     public void onSkuDetailsResponse(BillingResult billingResult,
                                                      List<SkuDetails> skuDetailsList) {
                         // Process the result.
-                        for (SkuDetails skuDetail : skuDetailsList) {
-                            if (skuDetail.getSku().equals(basicAdFreeSKU)) {
-                                basicAdFreeSKU = skuDetail;
+                        if (skuDetailsList != null) {
+                            for (SkuDetails skuDetail : skuDetailsList) {
+                                if (skuDetail.getSku().equals(basicAdFreeSKU)) {
+                                    basicAdFreeSKU = skuDetail;
+                                }
                             }
                         }
                     }
@@ -127,10 +129,11 @@ public class BillingManager implements PurchasesUpdatedListener {
     private void cacheOwnerShip() {
         Purchase.PurchasesResult ownedItems = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         List<Purchase> purchaseDataList = ownedItems.getPurchasesList();
-
-        for (Purchase ownedPurchase: purchaseDataList) {
-            if (ownedPurchase.getSku().equals(basicAdFreeSKU)) {
-                cachedOwnsBasicAdFree = new Boolean(true);
+        if (purchaseDataList != null) {
+            for (Purchase ownedPurchase : purchaseDataList) {
+                if (ownedPurchase.getSku().equals(basicAdFreeSKU)) {
+                    cachedOwnsBasicAdFree = new Boolean(true);
+                }
             }
         }
     }
