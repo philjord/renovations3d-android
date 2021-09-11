@@ -21,8 +21,7 @@ import androidx.viewpager.widget.PagerAdapter;
  * because we don't want the back stack to memory leak these fragments when we swap out for a new sweethome avr
  * which is simply putting in the call mCurTransaction.remove((Fragment) object);
  */
-public class Renovations3DPagerAdapter extends FragmentPagerAdapter
-{
+public class Renovations3DPagerAdapter extends FragmentPagerAdapter {
 	private Renovations3D renovations3D;
 	private Renovations3DActivity r3da;
 
@@ -30,8 +29,7 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	private FragmentTransaction mCurTransaction = null;
 	private Fragment mCurrentPrimaryItem = null;
 
-	public Renovations3DPagerAdapter(FragmentManager fm, Renovations3DActivity r3da)
-	{
+	public Renovations3DPagerAdapter(FragmentManager fm, Renovations3DActivity r3da) {
 		super(fm);
 		this.mFragmentManager = fm;
 		this.r3da = r3da;
@@ -44,30 +42,22 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 
 
 	@Override
-	public Fragment getItem(int position)
-	{
+	public Fragment getItem(int position) {
 		// in case we are in an unloading phase before a new renovations3D arrives
 		if (renovations3D == null || renovations3D.getHomeController() == null)
 			return new Fragment();
 
-		if (position == 0)
-		{
+		if (position == 0) {
 			//return (FurnitureTable) renovations3D.getHomeController().getFurnitureController().getView();
 
 			HomeDataPanel homeDataPanel = new HomeDataPanel();
 			homeDataPanel.init(renovations3D.getHome(), renovations3D.getUserPreferences(), renovations3D.getHomeController(), r3da);
 			return homeDataPanel;
-		}
-		else if (position == 1)
-		{
+		} else if (position == 1) {
 			return (MultipleLevelsPlanPanel) renovations3D.getHomeController().getPlanController().getView();
-		}
-		else if (position == 2)
-		{
+		} else if (position == 2) {
 			return (FurnitureCatalogListPanel) renovations3D.getHomeController().getFurnitureCatalogController().getView();
-		}
-		else if (position == 3)
-		{//return new Fragment();
+		} else if (position == 3) {
 			return (HomeComponent3D) renovations3D.getHomeController().getHomeController3D().getView();
 		}
 
@@ -84,33 +74,29 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		if (mCurTransaction == null)
-		{
+		if (mCurTransaction == null) {
 			mCurTransaction = mFragmentManager.beginTransaction();
 		}
 
-		final long itemId = getItemId(position);
+
 
 		// Do we already have this fragment?
-		String name = makeFragmentName(container.getId(), itemId);
-		Fragment fragment = mFragmentManager.findFragmentByTag(name);
-		if (fragment != null)
-		{
+		String tag = makeFragmentTag(container.getId(), getItemId(position));
+		Fragment fragment = mFragmentManager.findFragmentByTag(tag);
+		if (fragment != null) {
 			mCurTransaction.attach(fragment);
-		}
-		else
-		{
+		} else {
 			fragment = getItem(position);
 			// position might be out of range 0-3
-			if (fragment != null)
-			{
-				mCurTransaction.add(container.getId(), fragment, makeFragmentName(container.getId(), itemId));
+			if (fragment != null) {
+				if( fragment.getTag() != null)
+					tag = fragment.getTag();
+				mCurTransaction.add(container.getId(), fragment, tag);
 			}
 		}
 
 
-		if (fragment != mCurrentPrimaryItem)
-		{
+		if (fragment != mCurrentPrimaryItem) {
 			fragment.setMenuVisibility(false);
 			fragment.setUserVisibleHint(false);
 		}
@@ -121,10 +107,8 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object)
 	{
-		if(object != null)
-		{
-			if (mCurTransaction == null)
-			{
+		if(object != null) {
+			if (mCurTransaction == null) {
 				mCurTransaction = mFragmentManager.beginTransaction();
 			}
 
@@ -137,18 +121,14 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	}
 
 
-	public void setPrimaryItem(ViewGroup container, int position, Object object)
-	{
+	public void setPrimaryItem(ViewGroup container, int position, Object object) {
 		Fragment fragment = (Fragment) object;
-		if (fragment != mCurrentPrimaryItem)
-		{
-			if (mCurrentPrimaryItem != null)
-			{
+		if (fragment != mCurrentPrimaryItem) {
+			if (mCurrentPrimaryItem != null) {
 				mCurrentPrimaryItem.setMenuVisibility(false);
 				mCurrentPrimaryItem.setUserVisibleHint(false);
 			}
-			if (fragment != null)
-			{
+			if (fragment != null) {
 				fragment.setMenuVisibility(true);
 				fragment.setUserVisibleHint(true);
 			}
@@ -159,21 +139,19 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public void finishUpdate(ViewGroup container)
 	{
-		if (mCurTransaction != null)
-		{
+		if (mCurTransaction != null) {
 			//attempt to solve
 			//https://console.firebase.google.com/u/0/project/renovations-3d/monitoring/app/android:com.mindblowing.renovations3d/cluster/3ea8661b?duration=172800000
 			//https://console.firebase.google.com/project/renovations-3d/crashlytics/app/android:com.mindblowing.renovations3d/issues/4ccbbb9218f6c761e41fcec0a6bee290?time=last-seven-days&sessionId=5EA6764503600001106B50F1391CC373_DNE_0_v2
 			try
 			{
 				mCurTransaction.commitNowAllowingStateLoss();
-			}catch(Exception e){}
+			} catch(Exception e){}
 			mCurTransaction = null;
 		}
 	}
 
-	private String makeFragmentName(int viewId, long id)
-	{
+	private String makeFragmentTag(int viewId, long id) {
 		return "android:switcher:" + viewId + ":" + id;
 	}
 
@@ -182,15 +160,13 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 
 	//this is called when notifyDataSetChanged() is called
 	@Override
-	public int getItemPosition(Object object)
-	{
+	public int getItemPosition(Object object) {
 		// refresh all fragments when data set changed
 		return PagerAdapter.POSITION_NONE;
 	}
 
 	@Override
-	public long getItemId(int position)
-	{
+	public long getItemId(int position) {
 		// give an ID different from position when position has been changed
 		return baseId + position;
 	}
@@ -201,8 +177,7 @@ public class Renovations3DPagerAdapter extends FragmentPagerAdapter
 	 *
 	 * @param n number of items which have been changed
 	 */
-	public void notifyChangeInPosition(int n)
-	{
+	public void notifyChangeInPosition(int n) {
 		// shift the ID returned by getItemId outside the range of all previous fragments
 		baseId += getCount() + n;
 	}

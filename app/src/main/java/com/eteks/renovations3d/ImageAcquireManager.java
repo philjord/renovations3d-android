@@ -323,8 +323,13 @@ public class ImageAcquireManager
 				}
 				else if (isDownloadsDocument(uri)) {
 					final String id = DocumentsContract.getDocumentId(uri);
-					uri = ContentUris.withAppendedId(
-									Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+					try {
+						// note the below can throw a NumberFormatException in case of bad uri formats
+						uri = ContentUris.withAppendedId(
+								Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+					} catch (NumberFormatException e) {
+						throw new URISyntaxException(uri.toString(),"NumberFormatException");
+					}
 				}
 				else if (isMediaDocument(uri)) {
 					final String docId = DocumentsContract.getDocumentId(uri);
