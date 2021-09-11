@@ -98,14 +98,20 @@ public class ImportManager {
 
         // get download service and enqueue file
         DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.enqueue(request);
-        Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+        // ANdorid 10 appears to throw security erros possibly the downloads folder is not mounted or some oddity in the config
+        try {
+            manager.enqueue(request);
+            Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue", "fileName: " + fileName);
+        } catch (SecurityException e) {
+            Renovations3DActivity.logFireBaseContent("DownloadManager.enqueue SecurityException", "fileName: " + fileName);
+        }
+
 
         //NOTE TO FUTURE SELF!
         // if enqueue appears to do nothing, look at logcat and turn off filtering, I got this
         //2021-09-07 17:25:23.344 5955-7374/? W/DownloadManager: Path appears to be invalid: /storage/emulated/0/Download/3DModels-Contributions-1.8.zip
 
-        //This line aboveis actually a bug in DownloadManager that can be fixed by clearing the cache and storage.
+        //This line above is actually a bug in DownloadManager that can be fixed by clearing the cache and storage.
         //https://stackoverflow.com/questions/52055952/downloadmanager-requests-delayed-on-android-pie/53026503#53026503
 
     }
