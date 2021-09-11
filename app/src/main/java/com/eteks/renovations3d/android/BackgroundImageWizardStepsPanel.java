@@ -822,28 +822,35 @@ public class BackgroundImageWizardStepsPanel extends JPanel implements View
 	 */
 	private void setImageChangeTexts(UserPreferences preferences)
 	{
-		this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
-		this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
-		this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
-
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+			imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
+					com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeLabel.text").replace("<br>", " ")));
+			imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
+					com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_file));
+			imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
+					com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChangeButton.text") + ": " + activity.getString(R.string.get_image_camera));
+			}
+		});
 	}
 
 	/**
 	 * Sets the texts of label and button of image choice panel with
 	 * choice texts.
 	 */
-	private void setImageChoiceTexts(UserPreferences preferences)
-	{
-		this.imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
-		this.imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
-		this.imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
-				com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
-
+	private void setImageChoiceTexts(UserPreferences preferences) {
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				imageChoiceOrChangeLabel.setText(Html.fromHtml(preferences.getLocalizedString(
+						com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceLabel.text").replace("<br>", " ")));
+				imageChoiceOrChangeButtonFile.setText(SwingTools.getLocalizedLabelText(preferences,
+						com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_file));
+				imageChoiceOrChangeButtonCamera.setText(SwingTools.getLocalizedLabelText(preferences,
+						com.eteks.sweethome3d.swing.BackgroundImageWizardStepsPanel.class, "imageChoiceButton.text") + ": " + activity.getString(R.string.get_image_camera));
+			}
+		});
 	}
 
 	/**
