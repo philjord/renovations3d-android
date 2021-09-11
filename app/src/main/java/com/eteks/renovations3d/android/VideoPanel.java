@@ -808,12 +808,16 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.VideoPanel.class.getResource("resources/night.png"));
     PropertyChangeListener dayNightListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-          if (home.getCompass().getSunElevation(
-                Camera.convertTimeToTimeZone(controller.getTime(), home.getCompass().getTimeZone())) > 0) {
-						dayNightLabel.setImageBitmap(((Bitmap) dayIcon.getImage().getDelegate()));
-          } else {
-						dayNightLabel.setImageBitmap(((Bitmap) nightIcon.getImage().getDelegate()));
-          }
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    if (home.getCompass().getSunElevation(
+                            Camera.convertTimeToTimeZone(controller.getTime(), home.getCompass().getTimeZone())) > 0) {
+                        dayNightLabel.setImageBitmap(((Bitmap) dayIcon.getImage().getDelegate()));
+                    } else {
+                        dayNightLabel.setImageBitmap(((Bitmap) nightIcon.getImage().getDelegate()));
+                    }
+                }
+            });
         }
       };
     controller.addPropertyChangeListener(VideoController.Property.TIME, dayNightListener);
@@ -1155,7 +1159,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     }
 		actionMap.get(ActionType.PLAYBACK).setEnabled(playable);
 		actionMap.get(ActionType.RECORD).setEnabled(this.videoCreationExecutor == null);
-    boolean emptyCameraPath = cameraPath.isEmpty();
+        boolean emptyCameraPath = cameraPath.isEmpty();
 		actionMap.get(ActionType.DELETE_CAMERA_PATH).setEnabled(this.videoCreationExecutor == null && !emptyCameraPath);
 		actionMap.get(ActionType.DELETE_LAST_RECORD).setEnabled(this.videoCreationExecutor == null && !emptyCameraPath);
 		actionMap.get(ActionType.SEEK_BACKWARD).setEnabled(playable && this.cameraPathIterator.hasPrevious());

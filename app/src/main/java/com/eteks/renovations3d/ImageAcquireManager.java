@@ -221,19 +221,18 @@ public class ImageAcquireManager
 					if (data != null)
 					{
 						Uri imageUri = data.getData();
-						try
-						{
-							File tempFile = File.createTempFile("tempFileImageIntentReturn", ".png", activity.getCacheDir());
+						if (imageUri != null) {
+							try {
+								File tempFile = File.createTempFile("tempFileImageIntentReturn", ".png", activity.getCacheDir());
 
-							Bitmap bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
-							FileOutputStream out = new FileOutputStream(tempFile);
-							bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-							fileName = tempFile.getAbsolutePath();
-						}
-						catch (IOException e)
-						{
-							e.printStackTrace();
-							Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IOException - onActivityResult", null);
+								Bitmap bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
+								FileOutputStream out = new FileOutputStream(tempFile);
+								bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+								fileName = tempFile.getAbsolutePath();
+							} catch (IOException e) {
+								e.printStackTrace();
+								Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "IOException - onActivityResult", null);
+							}
 						}
 					}
 				}
