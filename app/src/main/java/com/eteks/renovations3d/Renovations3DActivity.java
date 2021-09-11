@@ -39,7 +39,6 @@ import com.eteks.renovations3d.android.SwingTools;
 import com.eteks.sweethome3d.io.FileUserPreferences;
 import com.eteks.sweethome3d.io.HomeStreamRecorder;
 import com.eteks.sweethome3d.model.HomeRecorder;
-import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
 import com.mindblowing.utils.SopInterceptor;
@@ -1394,7 +1393,7 @@ public class Renovations3DActivity extends FragmentActivity {
 						String name = uri.getLastPathSegment();
 
 						Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-						ToastCompat.makeText(Renovations3DActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
+						//ToastCompat.makeText(Renovations3DActivity.this, "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name, Toast.LENGTH_LONG).show();
 
 						File inFile = new File(uri.getPath());
 						loadFile(inFile);
@@ -1403,13 +1402,11 @@ public class Renovations3DActivity extends FragmentActivity {
 						Renovations3DActivity.logFireBaseLevelUp("ImportFromFile", intent.getDataString());
 						return;
 					} else if (scheme.compareTo("http") == 0 || scheme.compareTo("https") == 0) {
-						ToastCompat.makeText(Renovations3DActivity.this, "http: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
-
 						Uri uri = intent.getData();
 						final String fileName = uri.getLastPathSegment();
 
 						Log.v("tag", "Http intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName);
-						ToastCompat.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
+						//ToastCompat.makeText(Renovations3DActivity.this, "Content intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + fileName, Toast.LENGTH_LONG).show();
 						DownloadManager.Request request = new DownloadManager.Request(uri);
 						request.setDescription(fileName + "_download");
 						request.setTitle(fileName);
@@ -1429,6 +1426,7 @@ public class Renovations3DActivity extends FragmentActivity {
 							DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 							manager.enqueue(request);
 
+							//TODO: localise this!
 							ToastCompat.makeText(Renovations3DActivity.this, "Download started, please wait...", Toast.LENGTH_LONG).show();
 							Renovations3DActivity.logFireBaseLevelUp("ImportFromHttp.enqueue", intent.getDataString());
 						} catch (IllegalStateException e) {
@@ -1437,7 +1435,7 @@ public class Renovations3DActivity extends FragmentActivity {
 						return;
 					} else if (scheme.compareTo("ftp") == 0) {
 						Renovations3DActivity.logFireBaseLevelUp("ImportFromFtp.enqueue", intent.getDataString());
-						// TODO Import from FTP!
+						// TODO Import from FTP?
 						ToastCompat.makeText(Renovations3DActivity.this, "Import from ftp not supported: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : ", Toast.LENGTH_LONG).show();
 						setIntent(null);
 						return;
