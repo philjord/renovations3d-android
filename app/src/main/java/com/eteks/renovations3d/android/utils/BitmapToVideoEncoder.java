@@ -1,9 +1,6 @@
-package com.eteks.renovations3d.android;
+package com.eteks.renovations3d.android.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.YuvImage;
 import android.media.Image;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
@@ -255,14 +252,22 @@ public class BitmapToVideoEncoder {
 
 	private void release() {
 		if (mediaCodec != null) {
-			mediaCodec.stop();
-			mediaCodec.release();
+			try {
+				mediaCodec.stop();
+				mediaCodec.release();
+			} catch(IllegalStateException e){
+				//ignore
+			}
 			mediaCodec = null;
 			Log.d(TAG,"RELEASE CODEC");
 		}
 		if (mediaMuxer != null) {
-			mediaMuxer.stop();
-			mediaMuxer.release();
+			try {
+				mediaMuxer.stop();
+				mediaMuxer.release();
+			} catch(IllegalStateException e){
+				//ignore
+			}
 			mediaMuxer = null;
 			Log.d(TAG,"RELEASE MUXER");
 		}
