@@ -1935,12 +1935,24 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 		Transform3D yawRotation = new Transform3D();
 		yawRotation.rotY(-cameraYaw + Math.PI);
 
+		// reset if not affine
+		if((yawRotation.getType() & Transform3D.AFFINE) == 0)
+			yawRotation.setIdentity();
+
 		Transform3D pitchRotation = new Transform3D();
 		pitchRotation.rotX(-cameraPitch);
-		yawRotation.mul(pitchRotation);
+		// only multiply if affine
+		if((pitchRotation.getType() & Transform3D.AFFINE) != 0)
+			yawRotation.mul(pitchRotation);
 
 		transform.setIdentity();
 		transform.setTranslation(new Vector3f(cameraX, cameraZ, cameraY));
+
+		//perhaps the translation is not affine now
+		if((transform.getType() & Transform3D.AFFINE) == 0)
+			transform.setIdentity();
+
+		// add yawPitch which will be affine as checked above
 		transform.mul(yawRotation);
 
 		this.camera = new Camera(cameraX, cameraY, cameraZ, cameraYaw, cameraPitch, 0);
