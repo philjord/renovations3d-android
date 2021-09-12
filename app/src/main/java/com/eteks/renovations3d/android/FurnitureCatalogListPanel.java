@@ -681,7 +681,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 	};
 	this.categoryFilterComboBox.setMaximumRowCount(20);*/
 
-			this.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(getActivity(), android.R.layout.simple_list_item_1, categories) {
+			this.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(getContext(), android.R.layout.simple_list_item_1, categories) {
 				@Override
 				public View getView(int position, View convertView, ViewGroup parent) {
 					return getDropDownView(position, convertView, parent);
@@ -812,7 +812,7 @@ public class FurnitureCatalogListPanel extends JComponent implements com.eteks.s
 					categories.addAll(catalog.getCategories());
 					//my rubbish JComboBox need Model and Adapter set at the same time
 					furnitureCatalogPanel2.categoryFilterComboBox.setModel(new DefaultComboBoxModel(categories));
-					furnitureCatalogPanel2.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(furnitureCatalogPanel2.getActivity(), android.R.layout.simple_list_item_1, categories) {
+					furnitureCatalogPanel2.categoryFilterComboBox.setAdapter(new ArrayAdapter<FurnitureCategory>(furnitureCatalogPanel2.getContext(), android.R.layout.simple_list_item_1, categories) {
 						@Override
 						public View getView(int position, View convertView, ViewGroup parent) {
 							return getDropDownView(position, convertView, parent);
