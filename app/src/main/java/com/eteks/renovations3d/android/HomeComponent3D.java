@@ -2977,7 +2977,8 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 					  || HomeDoorOrWindow.Property.WALL_HEIGHT.name().equals(propertyName)
 					  || HomeDoorOrWindow.Property.WALL_TOP.name().equals(propertyName)) {
 					if (containsDoorsAndWindows(updatedPiece)) {
-					  updateIntersectingWalls(updatedPiece);
+						// deferred to visible see RUN_UPDATES updateIntersectingWalls(updatedPiece);
+						fullWallUpdateRequired = true;
 					}
 				} else if (HomePieceOfFurniture.Property.COLOR.name().equals(propertyName)
 						|| HomePieceOfFurniture.Property.TEXTURE.name().equals(propertyName)
@@ -3390,8 +3391,9 @@ public class HomeComponent3D extends NewtBaseFragment implements com.eteks.sweet
 	}
 
 	/**
-   * Updates walls that may intersect from the given doors or window.
-   */
+	 * PJ NOTE! this method is never called now, all objects that touch walls in have wall updates deferred to RUN_UPDATES, which redoes all walls
+	 * Updates walls that may intersect from the given doors or window.
+	 */
   private void updateIntersectingWalls(HomePieceOfFurniture ... doorOrWindows) {
     Collection<Wall> walls = this.home.getWalls();
     int wallCount = 0;

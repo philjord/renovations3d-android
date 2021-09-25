@@ -109,6 +109,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 	private TableLayout tableLayout;
 	private LinearLayout header;
+	private boolean isVisibleToUser = false;
 
 
 	public FurnitureTable(Home home,
@@ -294,6 +295,11 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 
 		}
 	}
+
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		this.isVisibleToUser = isVisibleToUser;
+	}
+
 	private class HomePieceOfFurnitureTableRow extends TableRow {
 		public HomePieceOfFurniture homePieceOfFurniture;
 		public HomePieceOfFurnitureTableRow(Context context, HomePieceOfFurniture homePieceOfFurniture) {
@@ -867,7 +873,7 @@ public class FurnitureTable extends JTable implements TransferableView, Exportab
 		final PropertyChangeListener changeListener =
 				new PropertyChangeListener () {
 					public void propertyChange(PropertyChangeEvent ev) {
-						if(FurnitureTable.this.getVisibility() == VISIBLE) {
+						if(FurnitureTable.this.isVisibleToUser) {
 							// As furniture properties values change may alter sort order and filter, update the whole table
 							((FurnitureTreeTableModel) getModel()).filterAndSortFurniture();
 							// Update selected rows

@@ -260,6 +260,11 @@ public class HomeDataPanel extends JComponent {
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
+
+		// tell the furnitureTable it is also visible (or not)
+		if(this.furnitureTable != null)
+			this.furnitureTable.setUserVisibleHint(isVisibleToUser);
+
 		// this gets called heaps of time, wait until we have an activity
 		if(isVisibleToUser && getActivity() != null) {
 			//PJ cut out as it provides almost no infomation at all now, add back when table is functional
