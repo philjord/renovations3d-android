@@ -83,7 +83,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
                     @Override
                     public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                        if (purchase.getSku().equals(basicAdFreeSKU)) {
+                        if (purchase.getSku().equals(BASIC_AD_FREE_SKU)) {
                             cachedOwnsBasicAdFree = new Boolean(true);
                             // the menu should update on the next prepare
                             renovations3DActivity.getAdMobManager().removeBasicLowerBannerAdView();
@@ -113,7 +113,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                         // Process the result.
                         if (skuDetailsList != null) {
                             for (SkuDetails skuDetail : skuDetailsList) {
-                                if (skuDetail.getSku().equals(basicAdFreeSKU)) {
+                                if (skuDetail.getSku().equals(BASIC_AD_FREE_SKU)) {
                                     basicAdFreeSKU = skuDetail;
                                 }
                             }
@@ -131,7 +131,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         List<Purchase> purchaseDataList = ownedItems.getPurchasesList();
         if (purchaseDataList != null) {
             for (Purchase ownedPurchase : purchaseDataList) {
-                if (ownedPurchase.getSku().equals(basicAdFreeSKU)) {
+                if (ownedPurchase.getSku().equals(BASIC_AD_FREE_SKU)) {
                     cachedOwnsBasicAdFree = new Boolean(true);
                 }
             }
