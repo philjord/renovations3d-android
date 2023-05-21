@@ -8,12 +8,17 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryProductDetailsParams.Product;
+import com.android.billingclient.api.QueryPurchasesParams;
+import com.google.common.collect.ImmutableList;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mindblowing.renovations3d.BuildConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +32,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     private BillingClient billingClient;
     private static final String BASIC_AD_FREE_SKU = "basic_ad_free";
     private Renovations3DActivity renovations3DActivity;
-    private SkuDetails basicAdFreeSKU = null;
+    private ProductDetails basicAdFreeSKU = null;
     private Boolean cachedOwnsBasicAdFree = new Boolean(false);
 
     public BillingManager(Renovations3DActivity renovations3DActivity) {
@@ -52,7 +57,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
             @Override
             public void onBillingServiceDisconnected() {
-
+                //TODO: something here, probably a toast
             }
         });
     }
@@ -83,7 +88,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
                     @Override
                     public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                        if (purchase.getSku().equals(BASIC_AD_FREE_SKU)) {
+                        if (purchase.getProducts().contains(BASIC_AD_FREE_SKU)) {
                             cachedOwnsBasicAdFree = new Boolean(true);
                             // the menu should update on the next prepare
                             renovations3DActivity.getAdMobManager().removeBasicLowerBannerAdView();
@@ -100,21 +105,27 @@ public class BillingManager implements PurchasesUpdatedListener {
 
 
     private void setupSKus() {
-        ArrayList<String> skuList = new ArrayList<String>();
-        skuList.add(BASIC_AD_FREE_SKU);
+        QueryProductDetailsParams queryProductDetailsParams =
+                QueryProductDetailsParams.newBuilder()
+                        .setProductList(
+                                ImmutableList.of(
+                                        Product.newBuilder()
+                                                .setProductId(BASIC_AD_FREE_SKU)
+                                                .setProductType(BillingClient.ProductType.INAPP)
+                                                .build()))
+                        .build();
 
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-        billingClient.querySkuDetailsAsync(params.build(),
-                new SkuDetailsResponseListener() {
-                    @Override
-                    public void onSkuDetailsResponse(BillingResult billingResult,
-                                                     List<SkuDetails> skuDetailsList) {
-                        // Process the result.
-                        if (skuDetailsList != null) {
-                            for (SkuDetails skuDetail : skuDetailsList) {
-                                if (skuDetail.getSku().equals(BASIC_AD_FREE_SKU)) {
-                                    basicAdFreeSKU = skuDetail;
+
+
+        billingClient.queryProductDetailsAsync(
+                queryProductDetailsParams,
+                new ProductDetailsResponseListener() {
+                    public void onProductDetailsResponse(BillingResult billingResult,
+                                                         List<ProductDetails> productDetailsList) {
+                        if (productDetailsList != null) {
+                            for (ProductDetails productDetail : productDetailsList ) {
+                                if (productDetail.getProductId().equals(BASIC_AD_FREE_SKU)) {
+                                    basicAdFreeSKU = productDetail;
                                 }
                             }
                         }
@@ -127,26 +138,49 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void cacheOwnerShip() {
-        Purchase.PurchasesResult ownedItems = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
-        List<Purchase> purchaseDataList = ownedItems.getPurchasesList();
-        if (purchaseDataList != null) {
-            for (Purchase ownedPurchase : purchaseDataList) {
-                if (ownedPurchase.getSku().equals(BASIC_AD_FREE_SKU)) {
-                    cachedOwnsBasicAdFree = new Boolean(true);
-                }
-            }
-        }
+        billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+                new PurchasesResponseListener() {
+                    public void onQueryPurchasesResponse(
+                            BillingResult billingResult,
+                            List<Purchase> purchases) {
+                        // Process the result, forced ads mean we ignore purchases
+                        if (purchases != null && !(BuildConfig.DEBUG && AdMobManager.FORCE_DEBUG_ADS)) {
+                            for (Purchase ownedPurchases : purchases) {
+                                for (String ownedPurchase : ownedPurchases.getProducts()) {
+                                    if (ownedPurchase.equals(BASIC_AD_FREE_SKU)) {
+                                        cachedOwnsBasicAdFree = new Boolean(true);
+                                        // timing for this thread changed and the answer now arrives after AdMobManager is ready to ask,
+                                        // so we call back to it now (as well)
+                                        renovations3DActivity.getAdMobManager().removeBasicLowerBannerAdView();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     public synchronized void buyBasicAdFree() {
         if (basicAdFreeSKU != null) {
-            BillingFlowParams purchaseParams =
-                    BillingFlowParams.newBuilder()
-                            .setSkuDetails(basicAdFreeSKU)
-                            .build();
-
-            billingClient.launchBillingFlow(renovations3DActivity, purchaseParams);
             // Purchase is handled in onPurchasesUpdated
+            // Retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+            // Set the parameters for the offer that will be presented
+            // in the billing flow creating separate productDetailsParamsList variable
+            ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
+                    ImmutableList.of(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                    .setProductDetails(basicAdFreeSKU)
+                                    .build()
+                    );
+
+            BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                    .setProductDetailsParamsList(productDetailsParamsList)
+                    .build();
+
+            // Launch the billing flow
+            BillingResult billingResult = billingClient.launchBillingFlow(renovations3DActivity, billingFlowParams);
+
         }
     }
 

@@ -42,7 +42,7 @@ import java.util.List;
 public class AdMobManager
 {
 	private static final boolean SUPPRESS_ADS = false;//for debug and screenshots overrides force_ads
-	private static final boolean FORCE_DEBUG_ADS = true;//for debug build to still have ads <= PREFER this one! Less dangerous
+	public static final boolean FORCE_DEBUG_ADS = false;//for debug build to still have ads <= PREFER this one! Less dangerous
 	private static final String INTERSTITIAL_POINTS = "INTERSTITIAL_POINTS";
 	private static final String INTERSTITIAL_LAST_SHOWN_TIME = "INTERSTITIAL_LAST_SHOWN_TIME";
 	private static final int INTERSTITIAL_POINTS_THRESHOLD = 10;
@@ -74,27 +74,26 @@ public class AdMobManager
 					}
 				});
 
-		List<String> testDevices = new ArrayList<>();
-		//To get the Device ID Check the logcat output for a message that looks like the one below, which shows you your device ID and how to add it as a test device:
-
-		//I/Ads: Use RequestConfiguration.Builder.setTestDeviceIds(Arrays.asList("33BE2250B43518CCDA7DE426D04EE231"))
-		//to get test ads on this device."
 		if(BuildConfig.DEBUG) {
+			List<String> testDevices = new ArrayList<>();
+			//To get the Device ID Check the logcat output for a message that looks like the one below, which shows you your device ID and how to add it as a test device:
+
+			//I/Ads: Use RequestConfiguration.Builder.setTestDeviceIds(Arrays.asList("33BE2250B43518CCDA7DE426D04EE231"))
+			//to get test ads on this device."
+
 			testDevices.add("56ACE73C453B9562B288E8C2075BDA73");//T580
 			testDevices.add("4A1B3B44655FDE15F64CFD90EFD60699");//I9505
 			testDevices.add("F1F03BC6248C8ECF32CBB4DD027F78B9");//T210
 			testDevices.add("3A757DEE674365779CF90E1E82546B04");//samsung 9
 			testDevices.add("39B3EC8638721A37B3E6B0DE8E5F414F");//samsung 9  again?
 			testDevices.add("1E402426FE6157896DDA311AE9D06182");//s21 plus
+
+			RequestConfiguration requestConfiguration
+					= new RequestConfiguration.Builder()
+					.setTestDeviceIds(testDevices)
+					.build();
+			MobileAds.setRequestConfiguration(requestConfiguration);
 		}
-
-
-		RequestConfiguration requestConfiguration
-				= new RequestConfiguration.Builder()
-				.setTestDeviceIds(testDevices)
-				.build();
-		MobileAds.setRequestConfiguration(requestConfiguration);
-
 		MobileAds.initialize(renovations3DActivity.getApplicationContext(), new OnInitializationCompleteListener() {
 			@Override
 			public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -148,9 +147,7 @@ public class AdMobManager
 			// set up admob ads if they don't own ad free option and it's not debug
 			if (shouldSuppressAds())
 			{
-				// same thing should be called when purchase complete
-				mBasicLowerBannerAdView.setEnabled(false);
-				mBasicLowerBannerAdView.setVisibility(View.GONE);
+				removeBasicLowerBannerAdView();
 			}
 			else
 			{
@@ -177,47 +174,13 @@ public class AdMobManager
 		}
 	}
 
-	public void locationPermission(boolean granted)
-	{
-		if (granted && renovations3DActivity != null)
-		{
-			if (ActivityCompat.checkSelfPermission(renovations3DActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-			{
-				// Acquire a reference to the system Location Manager
-				LocationManager locationManager = (LocationManager) renovations3DActivity.getSystemService(Context.LOCATION_SERVICE);
-				//String locationProvider = LocationManager.NETWORK_PROVIDER;
-				String locationProvider = LocationManager.GPS_PROVIDER;
-
-				AdRequest.Builder builder = new AdRequest.Builder();
-				builder.setLocation(locationManager.getLastKnownLocation(locationProvider));
-
-				mBasicLowerBannerAdView.loadAd(builder.build());
-
-				if (mFirebaseRemoteConfig.getBoolean("renovations3d_interstitial_enabled")) {
-					InterstitialAd.load(renovations3DActivity.getApplicationContext(), "ca-app-pub-7177705441403385/4587558769", builder.build(),
-							new InterstitialAdLoadCallback() {
-								@Override
-								public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-									// The mInterstitialAd reference will be null until an ad is loaded.
-									mInterstitialAd = interstitialAd;
-								}
-
-								@Override
-								public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-									mInterstitialAd = null;
-									Renovations3DActivity.logFireBase(FirebaseAnalytics.Event.POST_SCORE, "INTERSTITIAL onAdFailedToLoad " + loadAdError, null);
-								}
-							});
-				}
-			}
-
-		}
-	}
-
 	public void removeBasicLowerBannerAdView()
 	{
 		if (mBasicLowerBannerAdView != null)
 		{
+			// same thing should be called when purchase complete
+			mBasicLowerBannerAdView.setEnabled(false);
+			mBasicLowerBannerAdView.setVisibility(View.GONE);
 			ViewGroup parent = (ViewGroup) mBasicLowerBannerAdView.getParent();
 			if (parent != null)
 			{
@@ -229,9 +192,11 @@ public class AdMobManager
 
 	private boolean shouldSuppressAds()
 	{
-		return mBasicLowerBannerAdView == null || renovations3DActivity == null || SUPPRESS_ADS || renovations3DActivity.getBillingManager().ownsBasicAdFree() || (BuildConfig.DEBUG && !FORCE_DEBUG_ADS);
+		return mBasicLowerBannerAdView == null || renovations3DActivity == null || SUPPRESS_ADS
+				|| renovations3DActivity.getBillingManager().ownsBasicAdFree();
 	}
 
+	//used by the tutorial to not show ads until finished
 	public void hide()
 	{
 		if (mBasicLowerBannerAdView != null)
@@ -245,6 +210,7 @@ public class AdMobManager
 		}
 	}
 
+	//used by the tutorial to not show ads until finished
 	public void show()
 	{
 		if (mBasicLowerBannerAdView != null && renovations3DActivity != null)

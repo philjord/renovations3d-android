@@ -2,8 +2,8 @@
 <manifest
     package="com.mindblowing.renovations3d"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="6602"
-    android:versionName="6.602">
+    android:versionCode="6605"
+    android:versionName="6.605">
 
     <supports-screens
         android:anyDensity="true"
@@ -19,6 +19,8 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <!-- no internet required to use -->
     <uses-feature  android:name="android.permission.INTERNET" android:required="false"/>
+    <!-- I have ads so I have to add this -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -27,7 +29,7 @@
     <!-- still needed to read other apps media file for selecting -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!--  android:hardwareAccelerated="false" because Vivante GPUs fail to play nice with the Jogl renderering -->
     <!-- android:requestLegacyExternalStorage="true" because android Q has breaking bugs in the scoped storage implementation -->
@@ -60,6 +62,7 @@
             android:name="com.eteks.renovations3d.Renovations3DActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" android:exported="true"/>
