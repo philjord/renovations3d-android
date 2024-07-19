@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.mindblowing.renovations3d"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="6605"
-    android:versionName="6.605">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:versionCode="6606"
+    android:versionName="6.606">
 
     <supports-screens
         android:anyDensity="true"
@@ -46,8 +45,13 @@
         android:theme="@style/MyCustomTheme"
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="false"
-        >
 
+        >
+        <!-- cos https://issuetracker.google.com/issues/327696048 I don't know-->
+        <property
+            android:name="android.adservices.AD_SERVICES_CONFIG"
+            android:resource="@xml/gma_ad_services_config"
+            tools:replace="android:resource" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

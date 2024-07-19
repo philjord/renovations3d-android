@@ -3,12 +3,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 33
-
+    compileSdk = 34
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         multiDexEnabled = true
 
         ndk {
@@ -25,7 +24,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-release.pro'
-            zipAlignEnabled true
         }
         debug {
             minifyEnabled false
@@ -33,13 +31,16 @@ android {
             //multiDexKeepFile file('multidex_keep_file.txt')// not working yet, possibly need the script system to produce a big list
             //see ${sdk.dir}/tools/proguard/proguard-android-optimize.txt
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
-            zipAlignEnabled true
         }
     }
 
-    compileOptions {
+   compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+   }
+    namespace 'com.mindblowing.renovations3d'
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -53,23 +54,29 @@ dependencies {
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.guava:guava:32.0.1-jre'
 
     // all firebase libs versions must match
-    implementation platform('com.google.firebase:firebase-bom:28.4.0')// and this does that thing
-    implementation 'com.google.firebase:firebase-core'
-    implementation 'com.google.firebase:firebase-config'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')// and this does that thing
+    // but now I have to put the version on here, where there were none before, so who knows...
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation 'com.google.firebase:firebase-config:22.0.0'
+
     releaseImplementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     //apparently ads is not part of the bom system, how do I know, trial and error like everything gradle based
-    implementation 'com.google.firebase:firebase-ads:22.0.0'
+    implementation 'com.google.firebase:firebase-ads:23.2.0'
+
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
+    implementation 'androidx.fragment:fragment:1.8.1'
+
+    implementation 'com.android.billingclient:billing:7.0.0'
+
     implementation 'com.github.yukuku:ambilwarna:2.0.1'//color picker dialog     
     implementation 'com.andkulikov:transitionseverywhere:1.7.4'
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'// fix bad token exception on sdk 25
-    implementation 'com.android.billingclient:billing:5.1.0'
 
     //implementation 'com.google.vr:sdk-audio:1.10.0'
     //implementation 'com.google.vr:sdk-base:1.10.0'
