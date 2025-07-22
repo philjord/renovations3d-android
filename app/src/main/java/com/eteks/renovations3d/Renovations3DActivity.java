@@ -379,8 +379,8 @@ public class Renovations3DActivity extends FragmentActivity {
 			}
 		};
 		autoSaveTimer.purge();// in case of restart we don't want 2 tasks running
-		//TODO: in fact use the users preference for teh prefs dialog, this is 1 minute in ms
-		autoSaveTimer.scheduleAtFixedRate(autoSaveTask, 1 * 60 * 1000, 1 * 60 * 1000);
+		//TODO: in fact use the users preference for the prefs dialog, this is 1 minute in ms
+		autoSaveTimer.schedule(autoSaveTask, 1 * 60 * 1000, 1 * 60 * 1000);
 
 		loadUpContent();
 

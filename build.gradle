@@ -8,8 +8,6 @@ buildscript {
         google()
         mavenCentral()
 
-        //Gradle 8.0 can't have this in it, so I'm a bit stuck on that one
-        jcenter() //still needed for net.cachapa.expandablelayout:expandablelayout:2.9.2
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.5.1'
@@ -23,13 +21,8 @@ buildscript {
 allprojects {
     repositories {
 
-        //maven { url "https://jitpack.io" }
-        //maven {
-        //    url 'https://maven.google.com/'
-        //}
         google()
         mavenCentral()
-        //Gradle 8.0 can't have this in it, so I'm a bit stuck on that one
-        jcenter() //still needed for net.cachapa.expandablelayout:expandablelayout:2.9.2
+
     }
 }

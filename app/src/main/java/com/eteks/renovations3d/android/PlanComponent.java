@@ -2017,7 +2017,7 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
         defaultFont = new Font(fontName, fontStyle, 1);
       }
       //font = defaultFont.deriveFont(fontStyle, textStyle.getFontSize());*/
-			font = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
+      font = new VMFont(Typeface.DEFAULT, (int)textStyle.getFontSize());
       this.fonts.put(textStyle, font);
     }
     return font;
@@ -6763,6 +6763,8 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				Viewer viewer = viewingPlatform.getViewers()[0];
 				org.jogamp.java3d.View view = viewer.getView();
 				view.setProjectionPolicy(org.jogamp.java3d.View.PARALLEL_PROJECTION);
+                view.setFrontClipDistance(0.01f);
+                view.setBackClipDistance(100f);
 				sceneRoot = new BranchGroup();
 				// Prepare scene root
 				sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
@@ -6770,14 +6772,14 @@ public class PlanComponent extends JViewPort implements PlanView, Printable {
 				sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 				Background background = new Background(1.1f, 1.1f, 1.1f);
 				background.setCapability(Background.ALLOW_COLOR_WRITE);
-				background.setApplicationBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+				background.setApplicationBounds(new BoundingBox(new Point3d(-11, -11, -11), new Point3d(11, 11, 11)));
 				sceneRoot.addChild(background);
 				Light[] lights = {new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(1.5f, -0.8f, -1)),
 								new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(-1.5f, -0.8f, -1)),
 								new DirectionalLight(new Color3f(0.6f, 0.6f, 0.6f), new Vector3f(0, -0.8f, 1)),
 								new AmbientLight(new Color3f(0.2f, 0.2f, 0.2f))};
 				for (Light light : lights) {
-					light.setInfluencingBounds(new BoundingBox(new Point3d(-1.1, -1.1, -1.1), new Point3d(1.1, 1.1, 1.1)));
+					light.setInfluencingBounds(new BoundingBox(new Point3d(-11, -11, -11), new Point3d(11, 11, 11)));
 					sceneRoot.addChild(light);
 				}
 				universe.addBranchGraph(sceneRoot);
