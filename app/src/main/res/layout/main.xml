@@ -3,7 +3,7 @@
                 xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/mainLayout"
                 android:orientation="vertical"
-                android:padding="0px"
+                android:layout_marginTop="80dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
