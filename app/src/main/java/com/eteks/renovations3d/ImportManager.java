@@ -1,5 +1,7 @@
 package com.eteks.renovations3d;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -94,7 +96,14 @@ public class ImportManager {
         //request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, fileName);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
-        activity.registerReceiver(activity.onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        //more random goggled stringy madness, not clear reason given
+        //https://stackoverflow.com/questions/77235063/one-of-receiver-exported-or-receiver-not-exported-should-be-specified-when-a-rec
+        // but RECEIVER_EXPORTED used cos
+        //https://developer.android.com/develop/background-work/background-tasks/broadcasts#java
+
+        // this guys shows the API levels and devices handy stuf
+        //https://apilevels.com/
+        activity.registerReceiver(activity.onCompleteHTTPIntent, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_EXPORTED);
 
         // get download service and enqueue file
         DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
