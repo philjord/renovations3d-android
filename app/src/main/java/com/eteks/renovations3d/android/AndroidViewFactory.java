@@ -1,9 +1,7 @@
-
-
 /*
  * SwingViewFactory.java 28 oct. 2008
  *
- * Sweet Home 3D, Copyright (c) 2008 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ * Sweet Home 3D, Copyright (c) 2024 Space Mushrooms <info@sweethome3d.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +32,7 @@ import com.eteks.sweethome3d.viewcontroller.BackgroundImageWizardController;
 import com.eteks.sweethome3d.viewcontroller.BaseboardChoiceController;
 import com.eteks.sweethome3d.viewcontroller.CompassController;
 import com.eteks.sweethome3d.viewcontroller.DialogView;
+import com.eteks.sweethome3d.viewcontroller.DimensionLineController;
 import com.eteks.sweethome3d.viewcontroller.FurnitureCatalogController;
 import com.eteks.sweethome3d.viewcontroller.FurnitureController;
 import com.eteks.sweethome3d.viewcontroller.HelpController;
@@ -63,8 +62,8 @@ import com.eteks.sweethome3d.viewcontroller.TextureChoiceView;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskController;
 import com.eteks.sweethome3d.viewcontroller.ThreadedTaskView;
 import com.eteks.sweethome3d.viewcontroller.UserPreferencesController;
-import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.VideoController;
+import com.eteks.sweethome3d.viewcontroller.View;
 import com.eteks.sweethome3d.viewcontroller.ViewFactory;
 import com.eteks.sweethome3d.viewcontroller.WallController;
 import com.eteks.sweethome3d.viewcontroller.WizardController;
@@ -83,8 +82,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 
 	private DialogView dummy;
 
-	public AndroidViewFactory(Renovations3DActivity activity)
-	{
+	public AndroidViewFactory(Renovations3DActivity activity) {
 		this.activity = activity;
 		//AndroidTools.updateComponentDefaults();
 		dummy = new DialogView(){
@@ -98,26 +96,21 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public View createFurnitureCatalogView(FurnitureCatalog catalog,
 										   UserPreferences preferences,
-										   FurnitureCatalogController furnitureCatalogController)
-	{
-//		if (preferences == null || preferences.isFurnitureCatalogViewedInTree())
-		{
+										   FurnitureCatalogController furnitureCatalogController) {
+//		if (preferences == null || preferences.isFurnitureCatalogViewedInTree()) {
 //			return null;//return new FurnitureCatalogTree(catalog, preferences, furnitureCatalogController);
-		}
-//		else
-		{
+//		} else {
 			FurnitureCatalogListPanel furnitureCatalogListPanel = new FurnitureCatalogListPanel();
 			furnitureCatalogListPanel.init(catalog, preferences, furnitureCatalogController);
 			return furnitureCatalogListPanel;
-		}
+//		}
 	}
 
 	/**
 	 * Returns a new table that displays <code>home</code> furniture.
 	 */
 	public View createFurnitureView(Home home, UserPreferences preferences,
-									FurnitureController furnitureController)
-	{
+									FurnitureController furnitureController) {
 		//FurnitureTable furnitureTable = new FurnitureTable();
 		//furnitureTable.init(home, preferences, furnitureController);
 		//return furnitureTable;
@@ -129,9 +122,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that displays <code>home</code> plan.
 	 */
 	public PlanView createPlanView(Home home, UserPreferences preferences,
-								   PlanController planController)
-	{
-
+								   PlanController planController) {
 		MultipleLevelsPlanPanel multipleLevelsPlanPanel = new MultipleLevelsPlanPanel();
 		multipleLevelsPlanPanel.init(home, preferences, planController);
 		return multipleLevelsPlanPanel;
@@ -141,20 +132,15 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that displays <code>home</code> in 3D.
 	 */
 	public View createView3D(Home home, UserPreferences preferences,
-							 HomeController3D homeController3D)
-	{
-		try
-		{
-			if (!Boolean.getBoolean("com.eteks.sweethome3d.no3D"))
-			{
+							 HomeController3D homeController3D) {
+		try {
+			if (!Boolean.getBoolean("com.eteks.sweethome3d.no3D")) {
 				// nope must ask controller for it, must have controller by now
 				HomeComponent3D homeComponent3D = new HomeComponent3D();
 				homeComponent3D.init(home, preferences, homeController3D);
 				return homeComponent3D;
 			}
-		}
-		catch (AccessControlException ex)
-		{
+		} catch (AccessControlException ex) {
 			// If com.eteks.sweethome3d.no3D property can't be read,
 			// security manager won't allow to access to Java 3D DLLs required by HomeComponent3D class too
 		}
@@ -165,8 +151,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that displays <code>home</code> and its sub views.
 	 */
 	public HomeView createHomeView(Home home, UserPreferences preferences,
-								   HomeController homeController)
-	{
+								   HomeController homeController) {
 		return new HomePane(home, preferences, homeController, activity);
 	}
 
@@ -174,8 +159,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that displays a wizard.
 	 */
 	public DialogView createWizardView(UserPreferences preferences,
-									   WizardController wizardController)
-	{
+									   WizardController wizardController) {
 		return new WizardPane(preferences, wizardController, activity);
 	}
 
@@ -184,9 +168,9 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public View createBackgroundImageWizardStepsView(BackgroundImage backgroundImage,
 													   UserPreferences preferences,
-													   BackgroundImageWizardController backgroundImageWizardController)
-	{
-		return new BackgroundImageWizardStepsPanel(backgroundImage, preferences, backgroundImageWizardController, activity);
+													   BackgroundImageWizardController backgroundImageWizardController) {
+		return new BackgroundImageWizardStepsPanel(backgroundImage, preferences,
+				backgroundImageWizardController, activity);
 	}
 
 	/**
@@ -196,8 +180,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 			CatalogPieceOfFurniture piece,
 			String modelName, boolean importHomePiece,
 			UserPreferences preferences,
-			ImportedFurnitureWizardController importedFurnitureWizardController)
-	{
+			ImportedFurnitureWizardController importedFurnitureWizardController) {
 		return new ImportedFurnitureWizardStepsPanel(piece, modelName, importHomePiece,
 				preferences, importedFurnitureWizardController, activity);
 	}
@@ -208,8 +191,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public View createImportedTextureWizardStepsView(
 			CatalogTexture texture, String textureName,
 			UserPreferences preferences,
-			ImportedTextureWizardController importedTextureWizardController)
-	{
+			ImportedTextureWizardController importedTextureWizardController) {
 		return new ImportedTextureWizardStepsPanel(texture, textureName, preferences,
 				importedTextureWizardController, activity);
 	}
@@ -219,8 +201,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public ThreadedTaskView createThreadedTaskView(String taskMessage,
 												   UserPreferences preferences,
-												   ThreadedTaskController threadedTaskController)
-	{
+												   ThreadedTaskController threadedTaskController) {
 		return new ThreadedTaskPanel(taskMessage, preferences, threadedTaskController, activity);
 	}
 
@@ -228,15 +209,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits user preferences.
 	 */
 	public DialogView createUserPreferencesView(UserPreferences preferences,
-												UserPreferencesController userPreferencesController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+												UserPreferencesController userPreferencesController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new UserPreferencesPanel(preferences, userPreferencesController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -244,15 +221,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	/**
 	 * Returns a new view that edits level values.
 	 */
-	public DialogView createLevelView(UserPreferences preferences, LevelController levelController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+	public DialogView createLevelView(UserPreferences preferences, LevelController levelController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new LevelPanel(preferences, levelController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -261,15 +234,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits furniture values.
 	 */
 	public DialogView createHomeFurnitureView(UserPreferences preferences,
-											  HomeFurnitureController homeFurnitureController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+											  HomeFurnitureController homeFurnitureController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new HomeFurniturePanel(preferences, homeFurnitureController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -278,15 +247,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits wall values.
 	 */
 	public DialogView createWallView(UserPreferences preferences,
-									 WallController wallController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+									 WallController wallController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new WallPanel(preferences, wallController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -295,15 +260,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits room values.
 	 */
 	public DialogView createRoomView(UserPreferences preferences,
-									 RoomController roomController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+									 RoomController roomController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new RoomPanel(preferences, roomController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -312,15 +273,24 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits polyline values.
 	 */
 	public DialogView createPolylineView(UserPreferences preferences,
-										 PolylineController polylineController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+										 PolylineController polylineController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new PolylinePanel(preferences, polylineController, activity);
 			return activity.currentDialog;
+		} else {
+			return dummy;
 		}
-		else
-		{
+	}
+
+	/**
+	 * Returns a new view that edits dimension line values.
+	 */
+	public DialogView createDimensionLineView(boolean modification,
+											  UserPreferences preferences, DimensionLineController dimensionLineController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
+			activity.currentDialog = new DimensionLinePanel(modification, preferences, dimensionLineController, activity);
+			return activity.currentDialog;
+		} else {
 			return dummy;
 		}
 	}
@@ -330,15 +300,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createLabelView(boolean modification,
 									  UserPreferences preferences,
-									  LabelController labelController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+									  LabelController labelController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new LabelPanel(modification, preferences, labelController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -347,15 +313,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits compass values.
 	 */
 	public DialogView createCompassView(UserPreferences preferences,
-										CompassController compassController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+										CompassController compassController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new CompassPanel(preferences, compassController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -364,15 +326,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits 3D attributes.
 	 */
 	public DialogView createHome3DAttributesView(UserPreferences preferences,
-												 Home3DAttributesController home3DAttributesController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+												 Home3DAttributesController home3DAttributesController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new Home3DAttributesPanel(preferences, home3DAttributesController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -381,15 +339,11 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits observer camera values.
 	 */
 	public DialogView createObserverCameraView(UserPreferences preferences,
-											   ObserverCameraController observerCameraController)
-	{
-		if(activity.currentDialog == null || !activity.currentDialog.isShowing())
-		{
+											   ObserverCameraController observerCameraController) {
+		if(activity.currentDialog == null || !activity.currentDialog.isShowing()) {
 			activity.currentDialog = new ObserverCameraPanel(preferences, observerCameraController, activity);
 			return activity.currentDialog;
-		}
-		else
-		{
+		} else {
 			return dummy;
 		}
 	}
@@ -398,8 +352,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits the texture of the given controller.
 	 */
 	public TextureChoiceView createTextureChoiceView(UserPreferences preferences,
-													 TextureChoiceController textureChoiceController)
-	{
+													 TextureChoiceController textureChoiceController) {
 		return new TextureChoiceComponent(preferences, textureChoiceController, activity);
 	}
 
@@ -407,8 +360,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits the baseboard of its controller.
 	 */
 	public View createBaseboardChoiceView(UserPreferences preferences,
-										  BaseboardChoiceController baseboardChoiceController)
-	{
+										  BaseboardChoiceController baseboardChoiceController) {
 		return new BaseboardChoiceComponent(preferences, baseboardChoiceController, activity);
 	}
 
@@ -416,8 +368,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that edits the materials of its controller.
 	 */
 	public View createModelMaterialsView(UserPreferences preferences,
-										 ModelMaterialsController controller)
-	{
+										 ModelMaterialsController controller) {
 		return new ModelMaterialsComponent(preferences, controller, activity);
 	}
 
@@ -425,8 +376,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Creates a new view that edits page setup.
 	 */
 	public DialogView createPageSetupView(UserPreferences preferences,
-										  PageSetupController pageSetupController)
-	{
+										  PageSetupController pageSetupController) {
 		throw new UnsupportedOperationException();//return new PageSetupPanel(preferences, pageSetupController);
 	}
 
@@ -436,8 +386,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	public DialogView createPrintPreviewView(Home home,
 											 UserPreferences preferences,
 											 HomeController homeController,
-											 PrintPreviewController printPreviewController)
-	{
+											 PrintPreviewController printPreviewController) {
 		throw new UnsupportedOperationException();//return new PrintPreviewPanel(home, preferences, homeController, printPreviewController);
 	}
 
@@ -445,8 +394,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view able to compute a photos of a home from its stored points of view.
 	 */
 	public DialogView createPhotosView(Home home, UserPreferences preferences,
-									   PhotosController photosController)
-	{
+									   PhotosController photosController) {
 		throw new UnsupportedOperationException();//return new PhotosPanel(home, preferences, photosController);
 	}
 
@@ -455,8 +403,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createPhotoView(Home home,
 									  UserPreferences preferences,
-									  PhotoController photoController)
-	{
+									  PhotoController photoController) {
 		return new PhotoPanel(home, preferences, photoController, activity);
 	}
 
@@ -465,8 +412,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 */
 	public DialogView createVideoView(Home home,
 									  UserPreferences preferences,
-									  VideoController videoController)
-	{
+									  VideoController videoController) {
 		return new VideoPanel(home, preferences, videoController, activity);
 	}
 
@@ -474,8 +420,7 @@ public class AndroidViewFactory implements ViewFactory // could extend ViewFacto
 	 * Returns a new view that displays Sweet Home 3D help.
 	 */
 	public HelpView createHelpView(UserPreferences preferences,
-								   HelpController helpController)
-	{
+								   HelpController helpController) {
 		//NOTE this method is not linked to the help button, that buttons opens the sweethome3d.com help page
 		String helpMessage = activity.getString(R.string.helpmenu_no_work);
 		if(!this.activity.isFinishing())

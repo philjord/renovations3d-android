@@ -182,6 +182,10 @@ public class JSpinner extends LinearLayout {
 		}
 	}
 
+	public void setVisible(boolean visible)
+	{
+		super.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+	}
 
 	/**
 	 * A class, that can be used as a TouchListener on any view (e.g. a Button).

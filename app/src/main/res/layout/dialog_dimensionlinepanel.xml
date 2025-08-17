@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="10dp"
+                  android:showDividers="middle"
+                  android:divider="@drawable/empty_tall_divider">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TextView
+                android:id="@+id/dimline_panel_startPanel"
+                android:text="Start point"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TableRow>
+                <TextView
+                    android:id="@+id/dimline_panel_xStartLabel"
+                    android:text="X (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/dimline_panel_yStartLabel"
+                    android:text="Y (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/dimline_panel_elevationLabel"
+                    android:text="Elevation (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_xStartSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_yStartSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_elevationSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TextView
+                android:id="@+id/dimline_panel_endPanel"
+                android:text="End point"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TableRow>
+                <TextView
+                    android:id="@+id/dimline_panel_xEndLabel"
+                    android:text="X (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/dimline_panel_yEndLabel"
+                    android:text="Y (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_xEndSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_yEndSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/dimline_panel_distLabel"
+                    android:text="Distance between end points (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/dimline_panel_offsetLabel"
+                    android:text="Extension lines (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_distSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_offsetSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/dimline_panel_planDimension"
+                    android:text="Plan dimension"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+                <CheckBox
+                    android:id="@+id/dimline_panel_elevationDim"
+                    android:text="Elevation dimension"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+            </TableRow>
+            <TextView
+                android:id="@+id/dimline_panel_stylePanel"
+                android:text="Style"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TableRow>
+                <TextView
+                    android:id="@+id/dimline_panel_fontSizeLabel"
+                    android:text="Font size (cm):"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/dimline_panel_fontSizeSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/dimline_panel_colorLabel"
+                    android:text="Color:"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Button
+                    android:id="@+id/dimline_panel_colorButton"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </TableRow>
+
+                <TextView
+                    android:id="@+id/dimline_panel_3dRendLabel"
+                    android:text="3D rendering"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/dimline_panel_3dvisibleCheckBox"
+                    android:text="Visible in 3D view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+                <CheckBox
+                    android:id="@+id/dimline_panel_labelHorizontalRadioButton"
+                    android:text="Label Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+                <CheckBox
+                    android:id="@+id/dimline_panel_labelVerticalRadioButton"
+                    android:text="Label Vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/dimline_panel_closeButton"
+            android:text="Close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+    </LinearLayout>
+</ScrollView>

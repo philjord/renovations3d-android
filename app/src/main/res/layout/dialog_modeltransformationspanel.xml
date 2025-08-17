@@ -30,24 +30,44 @@
             <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_resetTransformationsButton"
-                    android:text="modeltransformations_panel_resetTransformationsButton"
+                    android:text="resetTransformationsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/modeltransformations_panel_presetTransformationsLabel"
+                    android:text="presetTransformationsLabel"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
+                <Spinner
+                    android:id="@+id/modeltransformations_panel_presetTransformationsComboBox"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromFrontButton"
-                    android:text="modeltransformations_panel_viewFromFrontButton"
+                    android:text="viewFromFrontButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </TableRow>
             <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromSideButton"
-                    android:text="modeltransformations_panel_viewFromSideButton"
+                    android:text="viewFromSideButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/modeltransformations_panel_viewFromTopButton"
-                    android:text="modeltransformations_panel_viewFromTopButton"
+                    android:text="viewFromTopButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </TableRow>

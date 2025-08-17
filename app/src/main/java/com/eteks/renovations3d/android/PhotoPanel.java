@@ -1,7 +1,7 @@
 /*
  * PhotoPanel.java 5 mai 2009
  *
- * Sweet Home 3D, Copyright (c) 2009 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ * Sweet Home 3D, Copyright (c) 2024 Space Mushrooms <info@sweethome3d.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.eteks.renovations3d.android;
-
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -51,7 +50,7 @@ import com.mindblowing.swingish.JOptionPane;
 import com.mindblowing.swingish.JSpinnerDate;
 import com.mindblowing.swingish.SpinnerDateModel;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
-import com.eteks.sweethome3d.j3d.PhotoRenderer;
+import com.eteks.sweethome3d.j3d.AbstractPhotoRenderer;
 import com.eteks.sweethome3d.model.AspectRatio;
 import com.eteks.sweethome3d.model.Camera;
 import com.eteks.sweethome3d.model.Camera.Lens;
@@ -112,6 +111,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 	//private static final String PHOTO_DIALOG_X_VISUAL_PROPERTY = "com.eteks.sweethome3d.swing.PhotoPanel.PhotoDialogX";
 	//private static final String PHOTO_DIALOG_Y_VISUAL_PROPERTY = "com.eteks.sweethome3d.swing.PhotoPanel.PhotoDialogY";
+	//private static final String PHOTO_DIALOG_WIDTH_VISUAL_PROPERTY = "com.eteks.sweethome3d.swing.PhotoPanel.PhotoDialogWidth";
+	//private static final String PHOTO_DIALOG_HEIGHT_VISUAL_PROPERTY = "com.eteks.sweethome3d.swing.PhotoPanel.PhotoDialogHeight";
 
 	private static final int MINIMUM_DELAY_BEFORE_DISCARDING_WITHOUT_WARNING = 30000;
 
@@ -134,6 +135,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	private JLabel lensLabel;
 	private JComboBox lensComboBox;
 	private JCheckBox ceilingLightEnabledCheckBox;
+    private JLabel                   rendererLabel;
+    private JComboBox                rendererComboBox;
 	private String dialogTitle;
 	//private JPanel                   photoPanel;
 	//private CardLayout               photoCardLayout;
@@ -145,19 +148,18 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	private JButton closeButton;
 
 	//private static PhotoPanel        currentPhotoPanel; // Support only one photo panel opened at a time
+	private AbstractPhotoRenderer    photoRenderer;
 
 	public PhotoPanel(Home home,
 					  UserPreferences preferences,
-					  PhotoController controller, Activity activity)
-	{
+					  PhotoController controller, Activity activity) {
 		this(home, preferences, null, controller, activity);
 	}
 
 	public PhotoPanel(Home home,
 					  UserPreferences preferences,
 					  Object3DFactory object3dFactory,
-					  PhotoController controller, Activity activity)
-	{
+					  PhotoController controller, Activity activity) {
 		super(preferences, activity, R.layout.dialog_photopanel);
 		this.home = home;
 		this.preferences = preferences;
@@ -172,13 +174,19 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	}
 
 	/**
+	 * Creates actions for variables.
+	 */
+
+	/**
+	 * Creates and initializes components.
+	 */
+
+	/**
 	 * Creates and initializes components.
 	 */
 	private void createComponents(final Home home,
 								  final UserPreferences preferences,
-								  final PhotoController controller)
-	{
-
+								  final PhotoController controller) {
 		this.statusLabel = new TextView(activity);
 		UI.set(new AndroidInterface(statusLabel));
 		statusLabel.setText("Ready.");
@@ -204,14 +212,11 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		// Create date and time labels and spinners bound to TIME controller property
 		Date time = new Date(Camera.convertTimeToTimeZone(controller.getTime(), TimeZone.getDefault().getID()));
 		this.dateLabel = new JLabel(activity, "");
-
-
 		final SpinnerDateModel dateSpinnerModel = new SpinnerDateModel();
 		dateSpinnerModel.setValue(time);
 		this.dateSpinner = new JSpinnerDate(activity, dateSpinnerModel);
 		String datePattern = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
-		if (datePattern.indexOf("yyyy") == -1)
-		{
+		if (datePattern.indexOf("yyyy") == -1) {
 			datePattern = datePattern.replace("yy", "yyyy");
 		}
 		dateSpinner.setTimePattern(datePattern);
@@ -220,7 +225,6 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		//SwingTools.addAutoSelectionOnFocusGain(dateEditor.getTextField());
 
 		this.timeLabel = new JLabel(activity, "");
-
 		final SpinnerDateModel timeSpinnerModel = new SpinnerDateModel();
 		timeSpinnerModel.setCalendarField(11);//11 is the hour of day field, PJ not sure hwo this gets set in teh desktop version exactly
 		timeSpinnerModel.setValue(time);
@@ -245,19 +249,13 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				"US",  // United States
 				"VE"}; // Venezuela
 		SimpleDateFormat timeInstance;
-		if ("en".equals(Locale.getDefault().getLanguage()))
-		{
-			if (Arrays.binarySearch(twelveHoursCountries, Locale.getDefault().getCountry()) >= 0)
-			{
+		if ("en".equals(Locale.getDefault().getLanguage())) {
+			if (Arrays.binarySearch(twelveHoursCountries, Locale.getDefault().getCountry()) >= 0) {
 				timeInstance = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, Locale.US); // 12 hours notation
-			}
-			else
-			{
+			} else {
 				timeInstance = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, Locale.UK); // 24 hours notation
 			}
-		}
-		else
-		{
+		} else {
 			timeInstance = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
 		}
 		timeSpinner.setTimePattern(timeInstance.toPattern());
@@ -265,20 +263,16 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		//this.timeSpinner.setEditor(timeEditor);
 		//SwingTools.addAutoSelectionOnFocusGain(timeEditor.getTextField());
 
-		final PropertyChangeListener timeChangeListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+		final PropertyChangeListener timeChangeListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				Date date = new Date(Camera.convertTimeToTimeZone(controller.getTime(), TimeZone.getDefault().getID()));
 				dateSpinnerModel.setValue(date);
 				timeSpinnerModel.setValue(date);
 			}
 		};
 		controller.addPropertyChangeListener(PhotoController.Property.TIME, timeChangeListener);
-		final ChangeListener dateTimeChangeListener = new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent ev)
-			{
+		final ChangeListener dateTimeChangeListener = new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
 				controller.removePropertyChangeListener(PhotoController.Property.TIME, timeChangeListener);
 				// Merge date and time
 				GregorianCalendar dateCalendar = new GregorianCalendar();
@@ -303,23 +297,16 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		final ImageIcon dayIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.PhotoPanel.class.getResource("resources/day.png"));
 		final ImageIcon nightIcon = SwingTools.getScaledImageIcon(com.eteks.sweethome3d.swing.PhotoPanel.class.getResource("resources/night.png"));
 
-		PropertyChangeListener dayNightListener = new PropertyChangeListener()
-		{
-			public void propertyChange(PropertyChangeEvent ev)
-			{
+		PropertyChangeListener dayNightListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent ev) {
 				if (home.getCompass().getSunElevation(
-						Camera.convertTimeToTimeZone(controller.getTime(), home.getCompass().getTimeZone())) > 0)
-				{
+						Camera.convertTimeToTimeZone(controller.getTime(), home.getCompass().getTimeZone())) > 0) {
 					dayNightLabel.setImageBitmap(((Bitmap) dayIcon.getImage().getDelegate()));
-				}
-				else
-				{
+				} else {
 					dayNightLabel.setImageBitmap(((Bitmap) nightIcon.getImage().getDelegate()));
 				}
 			}
 		};
-
-
 		controller.addPropertyChangeListener(PhotoController.Property.TIME, dayNightListener);
 		home.getCompass().addPropertyChangeListener(dayNightListener);
 		dayNightListener.propertyChange(null);
@@ -327,22 +314,18 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		// Create lens label and combo box
 		this.lensLabel = new JLabel(activity, "");
 		this.lensComboBox = new JComboBox(activity, new DefaultComboBoxModel(Lens.values()));
-		lensComboBox.setAdapter(new ArrayAdapter<Lens>(activity, android.R.layout.simple_list_item_1, Lens.values())
-		{
+		lensComboBox.setAdapter(new ArrayAdapter<Lens>(activity, android.R.layout.simple_list_item_1, Lens.values()) {
 			@Override
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
+			public View getView(int position, View convertView, ViewGroup parent) {
 				return getDropDownView(position, convertView, parent);
 			}
 
 			@Override
-			public View getDropDownView(int position, View convertView, ViewGroup parent)
-			{
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
 				TextView ret = new TextView(getContext());
 				Lens value = (Lens) lensComboBox.getItemAtPosition(position);
 				String displayedValue;
-				switch (value)
-				{
+          		switch ((Camera.Lens)value) {
 					case NORMAL:
 						displayedValue = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "lensComboBox.normalLens.text");
 						break;
@@ -361,28 +344,20 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				return ret;
 			}
 		});
-
 		this.lensComboBox.setSelectedItem(controller.getLens());
 		controller.addPropertyChangeListener(PhotoController.Property.LENS,
-				new PropertyChangeListener()
-				{
-					public void propertyChange(PropertyChangeEvent ev)
-					{
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent ev) {
 						lensComboBox.setSelectedItem(controller.getLens());
 					}
 				});
-		this.lensComboBox.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent ev)
-			{
-				Lens lens = (Lens) lensComboBox.getSelectedItem();
+		this.lensComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+          		Camera.Lens lens = (Camera.Lens)lensComboBox.getSelectedItem();
 				controller.setLens(lens);
-				if (lens == Lens.SPHERICAL)
-				{
+          		if (lens == Camera.Lens.SPHERICAL) {
 					controller.setAspectRatio(AspectRatio.RATIO_2_1);
-				}
-				else if (lens == Lens.FISHEYE)
-				{
+          		} else if (lens == Camera.Lens.FISHEYE) {
 					controller.setAspectRatio(AspectRatio.SQUARE_RATIO);
 				}
 				updateRatioComponents();
@@ -392,18 +367,45 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.ceilingLightEnabledCheckBox = new JCheckBox(activity, "");
 		this.ceilingLightEnabledCheckBox.setSelected(controller.getCeilingLightColor() > 0);
 		controller.addPropertyChangeListener(AbstractPhotoController.Property.CEILING_LIGHT_COLOR,
-				new PropertyChangeListener()
-				{
-					public void propertyChange(PropertyChangeEvent ev)
-					{
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent ev) {
 						ceilingLightEnabledCheckBox.setSelected(controller.getCeilingLightColor() > 0);
 					}
 				});
-		this.ceilingLightEnabledCheckBox.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent ev)
-			{
+		this.ceilingLightEnabledCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
 				controller.setCeilingLightColor(ceilingLightEnabledCheckBox.isSelected() ? 0xD0D0D0 : 0);
+			}
+		});
+
+		this.rendererLabel = new JLabel(activity, "");
+		this.rendererComboBox = new JComboBox(activity, AbstractPhotoRenderer.getAvailableRenderers().toArray());
+		rendererComboBox.setAdapter(new ArrayAdapter<Lens>(activity, android.R.layout.simple_list_item_1, Lens.values()) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				return getDropDownView(position, convertView, parent);
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
+				TextView ret = new TextView(getContext());
+				String value = (String) rendererComboBox.getItemAtPosition(position);
+				String photoRenderer = AbstractPhotoRenderer.createInstance((String)value, home, object3dFactory, AbstractPhotoRenderer.Quality.LOW).getName();
+				ret.setText(photoRenderer);
+				return ret;
+			}
+		});
+		this.rendererComboBox.setSelectedItem(controller.getRenderer());
+		controller.addPropertyChangeListener(PhotoController.Property.RENDERER,
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent ev) {
+						rendererComboBox.setSelectedItem(controller.getRenderer());
+					}
+				});
+		this.rendererComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				String renderer = (String)rendererComboBox.getSelectedItem();
+				controller.setRenderer(renderer);
 			}
 		});
 
@@ -413,19 +415,15 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 		this.createButton = new JButton(activity,
 				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
-		createButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View view)
-			{
+		createButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
 				startPhotoCreation();
 			}
 		});
 		this.saveButton = new JButton(activity,
 				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "SAVE_PHOTO.Name"));
-		saveButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View view)
-			{
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
 				savePhoto(false);
 			}
 		});
@@ -437,10 +435,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 		this.closeButton = new JButton(activity,
 				SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "CLOSE.Name"));
-		closeButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View view)
-			{
+		closeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
 				close();
 			}
 		});
@@ -452,8 +448,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Sets the texts of the components.
 	 */
-	private void setComponentTexts(UserPreferences preferences)
-	{
+	private void setComponentTexts(UserPreferences preferences) {
 		this.dateLabel.setText(SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.swing.PhotoPanel.class, "dateLabel.text"));
 		this.timeLabel.setText(SwingTools.getLocalizedLabelText(preferences,
@@ -462,36 +457,35 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 				com.eteks.sweethome3d.swing.PhotoPanel.class, "lensLabel.text"));
 		this.ceilingLightEnabledCheckBox.setText(SwingTools.getLocalizedLabelText(preferences,
 				com.eteks.sweethome3d.swing.PhotoPanel.class, "ceilingLightEnabledCheckBox.text"));
+		this.rendererLabel.setText(SwingTools.getLocalizedLabelText(preferences,
+				com.eteks.sweethome3d.swing.PhotoPanel.class, "rendererLabel.text"));
 		this.dialogTitle = preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "createPhoto.title");
 
 		// Buttons text changes automatically through their action
 	}
 
+	/**
+	 * Sets components mnemonics and label / component associations.
+	 */
 
 	/**
 	 * Preferences property listener bound to this panel with a weak reference to avoid
 	 * strong link between user preferences and this panel.
 	 */
-	public static class LanguageChangeListener implements PropertyChangeListener
-	{
+	public static class LanguageChangeListener implements PropertyChangeListener {
 		private final WeakReference<PhotoPanel> photoPanel;
 
-		public LanguageChangeListener(PhotoPanel photoPanel)
-		{
+		public LanguageChangeListener(PhotoPanel photoPanel) {
 			this.photoPanel = new WeakReference<PhotoPanel>(photoPanel);
 		}
 
-		public void propertyChange(PropertyChangeEvent ev)
-		{
+		public void propertyChange(PropertyChangeEvent ev) {
 			// If photo panel was garbage collected, remove this listener from preferences
 			PhotoPanel photoPanel = this.photoPanel.get();
 			UserPreferences preferences = (UserPreferences) ev.getSource();
-			if (photoPanel == null)
-			{
+			if (photoPanel == null) {
 				preferences.removePropertyChangeListener(UserPreferences.Property.LANGUAGE, this);
-			}
-			else
-			{
+			} else {
 				photoPanel.setComponentTexts(preferences);
 			}
 		}
@@ -500,9 +494,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Layouts panel components in panel with their labels.
 	 */
-	private void layoutComponents()
-	{
-
+	private void layoutComponents() {
 		swapOut(this.statusLabel, R.id.photopanel_statusLabel);
 
 		swapOut(this.photoComponent, R.id.photopanel_photoComponent);
@@ -515,6 +507,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		swapOut(this.lensLabel, R.id.photopanel_lensLabel);
 		swapOut(this.lensComboBox, R.id.photopanel_lensComboBox);
 		swapOut(this.ceilingLightEnabledCheckBox, R.id.photopanel_ceilingLightEnabledCheckBox);
+		swapOut(this.rendererLabel, R.id.photopanel_rendererLabel);
+		swapOut(this.rendererComboBox, R.id.photopanel_rendererComboBox);
 
 		this.setTitle(dialogTitle);
 		swapOut(createButton, R.id.photopanel_createButton);
@@ -523,9 +517,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		swapOut(closeButton, R.id.photopanel_closeButton);
 	}
 
-	private void updateAdvancedComponents()
-	{
-
+	private void updateAdvancedComponents() {
 		boolean highQuality = controller.getQuality() >= 2;
 
 		//PJPJPJ not sure why this didn't always just do it
@@ -536,8 +528,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 	}
 
-	private void setAdvancedComponentsVisible(boolean visible)
-	{
+	private void setAdvancedComponentsVisible(boolean visible) {
 		this.dateLabel.setEnabled(visible);
 		this.dateSpinner.setEnabled(visible);
 		this.timeLabel.setEnabled(visible);
@@ -546,6 +537,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.lensLabel.setEnabled(visible);
 		this.lensComboBox.setEnabled(visible);
 		this.ceilingLightEnabledCheckBox.setEnabled(visible);
+		this.rendererLabel.setEnabled(visible);
+		this.rendererComboBox.setEnabled(visible);
     /*this.dateLabel.setVisible(visible);
     this.dateSpinner.setVisible(visible);
     this.timeLabel.setVisible(visible);
@@ -553,32 +546,30 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
     this.dayNightLabel.setVisible(visible);
     this.lensLabel.setVisible(visible);
     this.lensComboBox.setVisible(visible);
-    this.ceilingLightEnabledCheckBox.setVisible(visible);*/
+    this.ceilingLightEnabledCheckBox.setVisible(visible);
+    this.rendererLabel.setVisible(visible);
+    this.rendererComboBox.setVisible(visible);*/
 	}
 
 	/**
 	 * Updates photo height.
 	 */
-	private void updateRatioComponents()
-	{
+	private void updateRatioComponents() {
 		Lens lens = this.controller.getLens();
 		boolean fixedProportions = this.lensComboBox.isEnabled()
-				&& (lens == Lens.FISHEYE
-				|| lens == Lens.SPHERICAL);
+				&& (lens == Camera.Lens.FISHEYE
+				|| lens == Camera.Lens.SPHERICAL);
 		this.sizeAndQualityPanel.setProportionsChoiceEnabled(!fixedProportions);
 	}
 
 	/**
 	 * Displays this panel in a non modal dialog.
 	 */
-	public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView)
-	{
+	public void displayView(com.eteks.sweethome3d.viewcontroller.View parentView) {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		this.setOnDismissListener(new OnDismissListener()
-		{
+		this.setOnDismissListener(new OnDismissListener() {
 			@Override
-			public void onDismiss(DialogInterface dialog)
-			{
+			public void onDismiss(DialogInterface dialog) {
 				stopPhotoCreation(false);
 			}
 		});
@@ -594,11 +585,9 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Creates the photo image depending on the quality requested by the user.
 	 */
-	private void startPhotoCreation()
-	{
+	private void startPhotoCreation() {
 		int quality = this.controller.getQuality();
-		if (quality >= 2)
-		{
+		if (quality >= 2) {
 			JOptionPane.showMessageDialog(activity, activity.getResources().getString(R.string.high_quality_photo_notice),
 					activity.getResources().getString(R.string.long_process_title), JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -611,10 +600,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		this.saveButton.setEnabled(false);
 		this.shareButton.setEnabled(false);
 		this.createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "STOP_PHOTO_CREATION.Name"));
-		createButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View view)
-			{
+		createButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
 				stopPhotoCreation(true);
 			}
 		});
@@ -625,10 +612,8 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 		List<Selectable> emptySelection = Collections.emptyList();
 		home.setSelectedItems(emptySelection);
 		this.photoCreationExecutor = Executors.newSingleThreadExecutor();
-		this.photoCreationExecutor.execute(new Runnable()
-		{
-			public void run()
-			{
+		this.photoCreationExecutor.execute(new Runnable() {
+			public void run() {
 				computePhoto(home);
 			}
 		});
@@ -638,63 +623,49 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	 * Computes the photo of the given home.
 	 * Caution : this method must be thread safe because it's called from an executor.
 	 */
-	private void computePhoto(Home home)
-	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
+	private void computePhoto(Home home) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
 				statusLabel.setText("Calculating...");
 			}
 		});
 		this.photoCreationStartTime = System.currentTimeMillis();
 		BufferedImage image = null;
-		try
-		{
+		try {
 			int quality = this.controller.getQuality();
 			int imageWidth = this.controller.getWidth();
 			int imageHeight = this.controller.getHeight();
 			Renovations3DActivity.logFireBaseLevelUp("computePhotoStart", "quality " + quality + " width " + imageWidth + " height " + imageHeight);
-			if (quality >= 2)
-			{
-				// Use photo renderer
-				PhotoRenderer photoRenderer = new PhotoRenderer(home, this.object3dFactory,
+			if (quality >= 2) {
+				this.photoRenderer = AbstractPhotoRenderer.createInstance(
+						this.controller.getRenderer(), home, this.object3dFactory,
 						quality == 2
-								? PhotoRenderer.Quality.LOW
-								: PhotoRenderer.Quality.HIGH);
+								? AbstractPhotoRenderer.Quality.LOW
+								: AbstractPhotoRenderer.Quality.HIGH);
 				int bestImageHeight;
 				// Check correct ratio if lens is fisheye or spherical
 				Camera camera = home.getCamera();
-				if (camera.getLens() == Lens.FISHEYE)
-				{
+				if (camera.getLens() == Camera.Lens.FISHEYE) {
 					bestImageHeight = imageWidth;
-				}
-				else if (camera.getLens() == Lens.SPHERICAL)
-				{
+				} else if (camera.getLens() == Camera.Lens.SPHERICAL) {
 					bestImageHeight = imageWidth / 2;
-				}
-				else
-				{
+				} else {
 					bestImageHeight = imageHeight;
 				}
-				if (photoCreationExecutor != null)
-				{
+				if (photoCreationExecutor != null) {
 					final BufferedImage image2 = new BufferedImage(imageWidth, bestImageHeight, BufferedImage.TYPE_INT_ARGB);
 					image = image2;
 					this.photoComponent.setImage(image);
 					//photoRenderer.render(image, camera, this.photoComponent);
-					ImageObserver io = new ImageObserver()
-					{
+					ImageObserver io = new ImageObserver() {
 						@Override
-						public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height)
-						{
+						public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 							photoComponent.setImage(image2);
 							return false;
 						}
 
 						@Override
-						public Object getDelegate()
-						{
+						public Object getDelegate() {
 							throw new UnsupportedOperationException();
 						}
 					};
@@ -705,9 +676,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 					}
 					photoRenderer.dispose();
 				}
-			}
-			else
-			{
+			} else {
 				// Compute 3D view offscreen image
 				HomeComponent3D homeComponent3D = new HomeComponent3D();
 				homeComponent3D.init(home, this.preferences, this.object3dFactory, quality == 1, null);
@@ -720,49 +689,41 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 			}
 			Renovations3DActivity.logFireBaseLevelUp("computePhotoEnd", "quality " + quality + " width " + imageWidth + " height " + imageHeight);
-		}
-		catch (OutOfMemoryError ex)
-		{
+		} catch (OutOfMemoryError ex) {
 			image = getErrorImage();
 			throw ex;
-		}
-		catch (IllegalStateException ex)
-		{
+		} catch (IllegalStateException ex) {
 			image = getErrorImage();
 			throw ex;
-		}
-		catch (IOException ex)
-		{
+		} catch (IOException ex) {
 			image = getErrorImage();
-		}
-		finally
-		{
-
+		} finally {
 			final BufferedImage photoImage = this.photoCreationExecutor != null
 					? image
 					: null;
-			EventQueue.invokeLater(new Runnable()
-			{
-				public void run()
-				{
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
 					statusLabel.setText("Ready");
 
 					saveButton.setEnabled(photoImage != null);
 					shareButton.setEnabled(photoImage != null);
 
 					createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
-					createButton.setOnClickListener(new View.OnClickListener()
-					{
-						public void onClick(View view)
-						{
+					createButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View view) {
 							startPhotoCreation();
 						}
 					});
+					createButton.setEnabled(true);
 					photoComponent.setImage(photoImage);
 					sizeAndQualityPanel.setEnabled(true);
 					updateAdvancedComponents();
 					updateRatioComponents();
-
+					dateSpinner.setEnabled(true);
+					timeSpinner.setEnabled(true);
+					lensComboBox.setEnabled(true);
+					rendererComboBox.setEnabled(true);
+					ceilingLightEnabledCheckBox.setEnabled(true);
 					photoCreationExecutor = null;
 				}
 			});
@@ -772,8 +733,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Returns the image used in case of an error.
 	 */
-	private BufferedImage getErrorImage()
-	{
+	private BufferedImage getErrorImage() {
 		Icon errorIcon = IconManager.getInstance().getErrorIcon(16);
 		BufferedImage errorImage = new BufferedImage(
 				errorIcon.getIconWidth(), errorIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -786,12 +746,9 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 	/**
 	 * Stops photo creation.
 	 */
-	private void stopPhotoCreation(final boolean confirmStop)
-	{
-		Thread t = new Thread(new Runnable()
-		{
-			public void run()
-			{
+	private void stopPhotoCreation(final boolean confirmStop) {
+		Thread t = new Thread(new Runnable() {
+			public void run() {
 				if (photoCreationExecutor != null
 						// Confirm the stop if a rendering has been running for more than 30 s
 						&& (!confirmStop
@@ -799,23 +756,18 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 						|| JOptionPane.showConfirmDialog(activity,
 						preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "confirmStopCreation.message"),
 						preferences.getLocalizedString(com.eteks.sweethome3d.swing.PhotoPanel.class, "confirmStopCreation.title"),
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION))
-				{
-					if (photoCreationExecutor != null)
-					{ // Check a second time in case rendering stopped meanwhile
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION)) {
+					if (photoCreationExecutor != null) {
+						// Check a second time in case rendering stopped meanwhile
 						// Will interrupt executor thread
 						photoCreationExecutor.shutdownNow();
 						photoCreationExecutor = null;
 						Renovations3DActivity.logFireBaseLevelUp("Photo Stopped");
-						EventQueue.invokeLater(new Runnable()
-						{
-							public void run()
-							{
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
 								createButton.setText(SwingTools.getLocalizedLabelText(preferences, com.eteks.sweethome3d.swing.PhotoPanel.class, "START_PHOTO_CREATION.Name"));
-								createButton.setOnClickListener(new View.OnClickListener()
-								{
-									public void onClick(View view)
-									{
+								createButton.setOnClickListener(new View.OnClickListener() {
+									public void onClick(View view) {
 										startPhotoCreation();
 									}
 								});
@@ -823,7 +775,6 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 								sizeAndQualityPanel.setEnabled(true);
 								updateAdvancedComponents();
 								updateRatioComponents();
-
 							}
 						});
 					}
@@ -903,7 +854,6 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 					}
 
 					if (share && outputFileUri != null) {
-
 						Renovations3DActivity.logFireBaseContent("sharephoto_start");
 						final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 						emailIntent.setType("image/png");

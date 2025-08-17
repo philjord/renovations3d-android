@@ -1,7 +1,7 @@
 /*
  * ModelPreviewComponent 16 jan. 2010
  *
- * Sweet Home 3D, Copyright (c) 2007-2010 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ * Sweet Home 3D, Copyright (c) 2024 Space Mushrooms <info@sweethome3d.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,7 @@ import org.jogamp.java3d.utils.universe.Viewer;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Matrix3f;
+import org.jogamp.vecmath.Matrix4f;
 import org.jogamp.vecmath.Point2d;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
@@ -88,6 +89,7 @@ import com.eteks.sweethome3d.model.CatalogPieceOfFurniture;
 import com.eteks.sweethome3d.model.Content;
 import com.eteks.sweethome3d.model.HomeMaterial;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
+import com.eteks.sweethome3d.model.PieceOfFurniture;
 import com.eteks.sweethome3d.model.Transformation;
 import com.eteks.sweethome3d.tools.OperatingSystem;
 import com.eteks.sweethome3d.tools.TemporaryURLContent;
@@ -103,7 +105,7 @@ import com.mindblowing.swingish.JPanel;
  * Super class of 3D preview component for model. 
  */
 public class ModelPreviewComponent extends JPanel {
-  private static final int MODEL_PREFERRED_SIZE = Math.round(240 * SwingTools.getResolutionScale());
+  private static final int MODEL_PREFERRED_SIZE = Math.round(200 * SwingTools.getResolutionScale());
   
   private SimpleUniverse          universe;
 //  private JPanel component3DPanel;
@@ -117,13 +119,14 @@ public class ModelPreviewComponent extends JPanel {
   private boolean                 parallelProjection;
   private Object                  iconImageLock;
   private HomePieceOfFurniture    previewedPiece;
+  private HomeMaterial            pickedMaterial;
   private boolean                 internalRotationAndSize;
   private Map<Texture, Texture>   pieceTextures = new HashMap<Texture, Texture>();
 
   private ScaledImageComponent 	  				modelPreviewImageComponent;
 
   private boolean postureChangeOccuring = false;
-	private ScaleGestureDetector mScaleDetector;
+  private ScaleGestureDetector mScaleDetector;
 
   /**
    * Returns an 3D model preview component that lets the user change its yaw.
@@ -145,8 +148,8 @@ public class ModelPreviewComponent extends JPanel {
 	 * according to parameters.
 	 */
 	public ModelPreviewComponent(boolean yawChangeSupported,
-															 boolean pitchChangeSupported,
-															 boolean scaleChangeSupported, Activity activity) {
+								 boolean pitchChangeSupported,
+								 boolean scaleChangeSupported, Activity activity) {
 		this(yawChangeSupported, pitchChangeSupported, scaleChangeSupported, false, activity);
 	}
 
@@ -157,20 +160,20 @@ public class ModelPreviewComponent extends JPanel {
   public ModelPreviewComponent(boolean yawChangeSupported, 
                                boolean pitchChangeSupported,
                                boolean scaleChangeSupported,
-															 boolean transformationsChangeSupported, Activity activity) {
+                               boolean transformationsChangeSupported, Activity activity) {
 	  super(activity, R.layout.jpanel_model_preview_component);
    // setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
     this.sceneTree = createSceneTree(transformationsChangeSupported);
 
-		// swap the imagePreviewComponent out for a component that just uses the getIcon to draw an image
-		modelPreviewImageComponent = new ScaledImageComponent(null, activity);
-		this.swapOut(modelPreviewImageComponent, R.id.mpc_imagePreviewPanel);
-		modelPreviewImageComponent.setPreferredSize(MODEL_PREFERRED_SIZE);// will be converted to px, after this call use the getPreferredSize() method
-		modelPreviewImageComponent.getLayoutParams().width = getPreferredSize().width;
-		modelPreviewImageComponent.getLayoutParams().height = getPreferredSize().height;
-		modelPreviewImageComponent.setMinimumWidth(getPreferredSize().width);
-		modelPreviewImageComponent.setMinimumHeight(getPreferredSize().height);
+    // swap the imagePreviewComponent out for a component that just uses the getIcon to draw an image
+    modelPreviewImageComponent = new ScaledImageComponent(null, activity);
+    this.swapOut(modelPreviewImageComponent, R.id.mpc_imagePreviewPanel);
+    modelPreviewImageComponent.setPreferredSize(MODEL_PREFERRED_SIZE);// will be converted to px, after this call use the getPreferredSize() method
+    modelPreviewImageComponent.getLayoutParams().width = getPreferredSize().width;
+    modelPreviewImageComponent.getLayoutParams().height = getPreferredSize().height;
+    modelPreviewImageComponent.setMinimumWidth(getPreferredSize().width);
+    modelPreviewImageComponent.setMinimumHeight(getPreferredSize().height);
 
 //    this.component3DPanel = new JPanel();
     //setLayout(new BorderLayout());
@@ -191,8 +194,6 @@ public class ModelPreviewComponent extends JPanel {
     // Add an ancestor listener to create 3D component and its universe once this component is made visible 
     // and clean up universe once its parent frame is disposed
     addAncestorListener(yawChangeSupported, pitchChangeSupported, scaleChangeSupported, transformationsChangeSupported);
-
-
   }
 
   /**
@@ -379,7 +380,7 @@ public class ModelPreviewComponent extends JPanel {
                                  final boolean yawChangeSupported, 
                                  final boolean pitchChangeSupported,
                                  final boolean scaleChangeSupported,
-																 final boolean transformationsChangeSupported) {
+								 final boolean transformationsChangeSupported) {
     final float ANGLE_FACTOR = 0.02f;
     final float ZOOM_FACTOR = 0.02f;
     MouseAdapter mouseListener = new MouseAdapter() {
@@ -428,7 +429,9 @@ public class ModelPreviewComponent extends JPanel {
           if (transformationsChangeSupported
               && getModelNode() != null) {
             ModelManager modelManager = ModelManager.getInstance();
-            this.boundedPitch = !modelManager.containsDeformableNode(getModelNode());
+            if (transformationsChangeSupported) {
+                this.boundedPitch = !modelManager.containsDeformableNode(getModelNode());
+            }
             Canvas3D canvas = getCanvas3D();
             PickCanvas pickCanvas = new PickCanvas(canvas, getModelNode());
             pickCanvas.setTolerance(0.0f); // make sure it's a ray not a cone
@@ -444,7 +447,8 @@ public class ModelPreviewComponent extends JPanel {
             if (pi != null) {
               PickResult result = new PickResult(pi.getSceneGraphPath(), pickCanvas.getPickShape());
               this.pickedTransformGroup = (TransformGroup)result.getNode(PickResult.TRANSFORM_GROUP);
-              if (this.pickedTransformGroup != null) {
+              if (transformationsChangeSupported
+                      && this.pickedTransformGroup != null) {
                 // The pivot node is the first sibling node which is not a transform group
                 Group group = (Group)this.pickedTransformGroup.getParent();
                 int i = group.indexOfChild(this.pickedTransformGroup) - 1;
@@ -455,7 +459,7 @@ public class ModelPreviewComponent extends JPanel {
                   Node referenceNode = group.getChild(i);
                   Point3f nodeCenter = modelManager.getCenter(referenceNode);
                   Point3f nodeCenterAtScreen = new Point3f(nodeCenter);
-                  Transform3D pivotTransform = getTransformBetweenNodes(referenceNode.getParent(), sceneTree);
+                  Transform3D pivotTransform = getTransformBetweenNodes(referenceNode.getParent(), sceneTree, false);
                   pivotTransform.transform(nodeCenterAtScreen);
                   Transform3D transformToCanvas = new Transform3D();
                   canvas.getVworldToImagePlate(transformToCanvas);
@@ -468,10 +472,6 @@ public class ModelPreviewComponent extends JPanel {
                   String transformationName = (String)this.pickedTransformGroup.getUserData();
                   this.translationFromOrigin = new Transform3D();
                   this.translationFromOrigin.setTranslation(new Vector3d(nodeCenter));
-                  Transform3D transformBetweenNodes = getTransformBetweenNodes(referenceNode.getParent(), getModelNode());
-                  transformBetweenNodes.setTranslation(new Vector3d());
-                  transformBetweenNodes.invert();
-                  this.translationFromOrigin.mul(transformBetweenNodes);
 
                   Transform3D pitchRotation = new Transform3D();
                   pitchRotation.rotX(viewPitch);
@@ -482,7 +482,9 @@ public class ModelPreviewComponent extends JPanel {
                       || transformationName.startsWith(ModelManager.RAIL_PREFIX)) {
                     Transform3D rotation = new Transform3D();
                     Vector3f nodeSize = modelManager.getSize(referenceNode);
-                    getTransformBetweenNodes(getModelRoot(referenceNode), getModelNode()).transform(nodeSize);
+                    BranchGroup modelRoot = getModelRoot(referenceNode);
+                    Transform3D transformBetweenRootAndModelNode = getTransformBetweenNodes(modelRoot, getModelNode(), true);
+                    transformBetweenRootAndModelNode.transform(nodeSize);
                     nodeSize.absolute();
 
                     Transform3D modelRotationAtScreen = new Transform3D(yawRotation);
@@ -520,9 +522,12 @@ public class ModelPreviewComponent extends JPanel {
                         rotation.rotY(Math.PI / 2);
                       }
                     }
+
+                    this.translationFromOrigin.mulInverse(transformBetweenRootAndModelNode);
                     this.translationFromOrigin.mul(rotation);
                   } else {
                     // Set rotation in the screen plan for mannequin or ball handling
+                    this.translationFromOrigin.mulInverse(getTransformBetweenNodes(referenceNode.getParent(), getModelNode(), true));
                     this.translationFromOrigin.mul(yawRotation);
                     this.translationFromOrigin.mul(pitchRotation);
                   }
@@ -561,15 +566,18 @@ public class ModelPreviewComponent extends JPanel {
           }
         }
 
-        private Transform3D getTransformBetweenNodes(Node node, Node parent) {
+        private Transform3D getTransformBetweenNodes(Node node, Node parent, boolean ignoreTranslation) {
           Transform3D transform = new Transform3D();
           if (node instanceof TransformGroup) {
             ((TransformGroup)node).getTransform(transform);
+            if (ignoreTranslation) {
+              transform.setTranslation(new Vector3f());
+            }
           }
           if (node != parent ) {
             Node nodeParent = node.getParent();
             if (nodeParent instanceof Group) {
-              transform.mul(getTransformBetweenNodes(nodeParent, parent), transform);
+              transform.mul(getTransformBetweenNodes(nodeParent, parent, ignoreTranslation), transform);
             } else {
               throw new IllegalStateException("Can't retrieve node transform");
             }
@@ -1176,6 +1184,14 @@ public class ModelPreviewComponent extends JPanel {
    */
   void setModel(final Content model, final boolean backFaceShown, final float [][] modelRotation,
                 final float width, final float depth, final float height) {
+    setModel(model, backFaceShown ? PieceOfFurniture.SHOW_BACK_FACE : 0, modelRotation, width, depth, height);
+  }
+
+  /**
+   * Sets the 3D model content displayed by this component.
+   */
+  void setModel(final Content model, final int modelFlags, final float [][] modelRotation,
+                final float width, final float depth, final float height) {
     final TransformGroup modelTransformGroup = (TransformGroup)this.sceneTree.getChild(0);
     modelTransformGroup.removeAllChildren();
     this.previewedPiece = null;
@@ -1193,7 +1209,9 @@ public class ModelPreviewComponent extends JPanel {
                 internalRotationAndSize = modelRotation != null;
                 previewedPiece = new HomePieceOfFurniture(
                     new CatalogPieceOfFurniture(null, null, model, 
-                        size.x, size.z, size.y, 0, false, null, modelRotation, backFaceShown, 0, false));
+                        size.x, size.z, size.y,
+                        0, false, null, null,
+                        modelRotation, modelFlags, null, null, 0, 0, 1, false));
                 previewedPiece.setX(0);
                 previewedPiece.setY(0);
                 previewedPiece.setElevation(-previewedPiece.getHeight() / 2);
@@ -1215,7 +1233,7 @@ public class ModelPreviewComponent extends JPanel {
             // Oddly the back faces appear to start off inverted or something? not sure?
             // but this make 2 calls to render icon
             setBackFaceShown(true);
-            setBackFaceShown(backFaceShown);
+            setBackFaceShown((modelFlags & PieceOfFurniture.SHOW_BACK_FACE) > 0);
           }
           
           public void modelError(Exception ex) {
@@ -1260,6 +1278,26 @@ public class ModelPreviewComponent extends JPanel {
     //PJPJ
 	updateIconImage();
   }
+
+    /**
+     * Sets the visibility of edge color materials of the children nodes of the displayed 3D model.
+     */
+    protected void setEdgeColorMaterialHidden(boolean edgeColorMaterialHidden) {
+        if (this.previewedPiece != null) {
+            setModelFlags((this.previewedPiece.getModelFlags() & ~PieceOfFurniture.HIDE_EDGE_COLOR_MATERIAL)
+                    | (edgeColorMaterialHidden ? PieceOfFurniture.HIDE_EDGE_COLOR_MATERIAL : 0));
+        }
+    }
+
+    /**
+     * Sets the model flags of the preview piece.
+     */
+    public void setModelFlags(int modelFlags) {
+        if (this.previewedPiece != null) {
+            this.previewedPiece.setModelFlags(modelFlags);
+            getModelNode().update();
+        }
+    }
 
   /**
    * Returns the 3D model node displayed by this component. 
@@ -1359,7 +1397,7 @@ public class ModelPreviewComponent extends JPanel {
   public void setModelMaterials(HomeMaterial [] materials) {
     if (this.previewedPiece != null) {
       this.previewedPiece.setModelMaterials(materials);
-      getModelNode().update(true);
+      getModelNode().update();
       // Replace textures by clones because Java 3D doesn't accept all the time to share textures 
       //cloneTextures(getModelNode(), this.pieceTextures);
       // PJPJ
@@ -1370,7 +1408,7 @@ public class ModelPreviewComponent extends JPanel {
 	/**
 	 * Sets the transformations applied to 3D model.
 	 */
-	public void setModelTranformations(Transformation[] transformations) {
+  public void setModelTransformations(Transformation [] transformations) {
 		if (this.previewedPiece != null) {
 			this.previewedPiece.setModelTransformations(transformations);
 			getModelNode().update();
@@ -1379,7 +1417,7 @@ public class ModelPreviewComponent extends JPanel {
 		}
 	}
 
-  void resetModelTranformations() {
+  void setPresetModelTransformations(Transformation [] transformations) {
     if (this.previewedPiece != null) {
       ModelManager modelManager = ModelManager.getInstance();
       BoundingBox oldBounds = modelManager.getBounds(getModelNode());
@@ -1388,35 +1426,55 @@ public class ModelPreviewComponent extends JPanel {
       Point3d oldUpper = new Point3d();
       oldBounds.getUpper(oldUpper);
 
-      resetTranformations(getModelNode());
+      setNodeTransformations(getModelNode(), transformations);
 
       BoundingBox newBounds = modelManager.getBounds(getModelNode());
       Point3d newLower = new Point3d();
       newBounds.getLower(newLower);
       Point3d newUpper = new Point3d();
       newBounds.getUpper(newUpper);
-      previewedPiece.setX(previewedPiece.getX() + (float)(newUpper.x + newLower.x) / 2 - (float)(oldUpper.x + oldLower.x) / 2);
-      previewedPiece.setY(previewedPiece.getY() + (float)(newUpper.z + newLower.z) / 2 - (float)(oldUpper.z + oldLower.z) / 2);
-      previewedPiece.setElevation(previewedPiece.getElevation() + (float)(newLower.y - oldLower.y));
+      this.previewedPiece.setX(this.previewedPiece.getX() + (float)(newUpper.x + newLower.x) / 2 - (float)(oldUpper.x + oldLower.x) / 2);
+      this.previewedPiece.setY(this.previewedPiece.getY() + (float)(newUpper.z + newLower.z) / 2 - (float)(oldUpper.z + oldLower.z) / 2);
+      this.previewedPiece.setElevation(this.previewedPiece.getElevation() + (float)(newLower.y - oldLower.y));
       this.previewedPiece.setWidth((float)(newUpper.x - newLower.x));
       this.previewedPiece.setDepth((float)(newUpper.z - newLower.z));
       this.previewedPiece.setHeight((float)(newUpper.y - newLower.y));
-      this.previewedPiece.setModelTransformations(null);
+      this.previewedPiece.setModelTransformations(transformations);
       //PJPJ
       updateIconImage();
     }
   }
 
-  private void resetTranformations(Node node) {
+  void resetModelTransformations() {
+    setPresetModelTransformations(null);
+  }
+
+  private void setNodeTransformations(Node node, Transformation [] transformations) {
     if (node instanceof Group) {
       if (node instanceof TransformGroup
           && node.getUserData() instanceof String
           && ((String)node.getUserData()).endsWith(ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX)) {
-        ((TransformGroup)node).setTransform(new Transform3D());
+          TransformGroup transformGroup = (TransformGroup)node;
+          transformGroup.setTransform(new Transform3D());
+          if (transformations != null) {
+              String transformationName = (String)node.getUserData();
+              transformationName = transformationName.substring(0, transformationName.length() - ModelManager.DEFORMABLE_TRANSFORM_GROUP_SUFFIX.length());
+              for (Transformation transformation : transformations) {
+                  if (transformationName.equals(transformation.getName())) {
+                      float [][] matrix = transformation.getMatrix();
+                      Matrix4f transformMatrix = new Matrix4f();
+                      transformMatrix.setRow(0, matrix[0]);
+                      transformMatrix.setRow(1, matrix[1]);
+                      transformMatrix.setRow(2, matrix[2]);
+                      transformMatrix.setRow(3, new float [] {0, 0, 0, 1});
+                      transformGroup.setTransform(new Transform3D(transformMatrix));
+                  }
+              }
+          }
       }
       Iterator<Node> enumeration = ((Group)node).getAllChildren();
       while (enumeration.hasNext()) {
-        resetTranformations(enumeration.next());
+          setNodeTransformations(enumeration.next(), transformations);
       }
     }
   }
@@ -1472,6 +1530,13 @@ public class ModelPreviewComponent extends JPanel {
    */
   float getModelHeight() {
     return this.previewedPiece.getHeight();
+  }
+
+  /**
+   * Returns the material of the shape last picked by the user.
+   */
+  public HomeMaterial getPickedMaterial() {
+    return this.pickedMaterial;
   }
 
   /**

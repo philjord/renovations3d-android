@@ -34,59 +34,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
-        <TableRow>
-            <TextView
-                android:id="@+id/photopanel_dateLabel"
-                android:text="dateLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="horizontal"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:padding="0dp"
-                          android:layout_gravity="center_vertical|center_horizontal">
-            <TextView
-                android:id="@+id/photopanel_timeLabel"
-                android:text="timeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-            <TextView
-                android:id="@+id/photopanel_dayNightLabel"
-                android:text="   "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-            </LinearLayout>
+            <TableRow>
+                <TextView
+                    android:id="@+id/photopanel_dateLabel"
+                    android:text="dateLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                              android:orientation="horizontal"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:padding="0dp"
+                              android:layout_gravity="center_vertical|center_horizontal">
+                <TextView
+                    android:id="@+id/photopanel_timeLabel"
+                    android:text="timeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/photopanel_dayNightLabel"
+                    android:text="   "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                </LinearLayout>
+                </TableRow>
+                <TableRow>
+                <NumberPicker
+                    android:id="@+id/photopanel_dateSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                     android:layout_gravity="center_vertical|center_horizontal"/>
+                <NumberPicker
+                    android:id="@+id/photopanel_timeSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
             </TableRow>
             <TableRow>
-            <NumberPicker
-                android:id="@+id/photopanel_dateSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                 android:layout_gravity="center_vertical|center_horizontal"/>
-            <NumberPicker
-                android:id="@+id/photopanel_timeSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/photopanel_lensLabel"
-                android:text="lensLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-            <Spinner
-                android:id="@+id/photopanel_lensComboBox"
-                android:text=""
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"/>
-        </TableRow>
+                <TextView
+                    android:id="@+id/photopanel_lensLabel"
+                    android:text="lensLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Spinner
+                    android:id="@+id/photopanel_lensComboBox"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/photopanel_rendererLabel"
+                    android:text="rendererLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <Spinner
+                    android:id="@+id/photopanel_rendererComboBox"
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"/>
+            </TableRow>
             <TableRow>
             <CheckBox
                 android:id="@+id/photopanel_ceilingLightEnabledCheckBox"

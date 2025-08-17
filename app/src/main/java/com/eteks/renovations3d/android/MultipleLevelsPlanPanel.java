@@ -1,7 +1,7 @@
 /*
  * MultipleLevelsPlanPanel.java 23 oct. 2011
  *
- * Sweet Home 3D, Copyright (c) 2011 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ * Sweet Home 3D, Copyright (c) 2024 Space Mushrooms <info@sweethome3d.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@ import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomeDoorOrWindow;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.Label;
+import com.eteks.sweethome3d.model.LengthUnit;
 import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.model.Room;
 import com.eteks.sweethome3d.model.Selectable;
@@ -74,6 +75,7 @@ import javaawt.Graphics;
 import javaawt.Graphics2D;
 import javaawt.geom.AffineTransform;
 import javaawt.print.PageFormat;
+import javaawt.print.Printable;
 import javaawt.print.PrinterException;
 
 /**
@@ -1076,7 +1078,8 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	}
 
 	/**
-	 * Creates the tabs from <code>home</code> levels.
+   * Creates the tabs from <code>home</code> levels, and returns <code>true</code>
+   * if an additional tab able to add a new level was added.
 	 */
 	private void createTabs(Home home, UserPreferences preferences) {
 		List<Level> levels = home.getLevels();
@@ -1188,28 +1191,28 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * Returns an image of the plan for transfer purpose.
 	 */
 	public Object createTransferData(DataType dataType) {
-		return this.planComponent.createTransferData(dataType);
+    	return ((PlanView)this.planComponent).createTransferData(dataType);
 	}
 
 	/**
 	 * Returns <code>true</code> if the plan component supports the given format type.
 	 */
 	public boolean isFormatTypeSupported(FormatType formatType) {
-		return this.planComponent.isFormatTypeSupported(formatType);
+    	return ((PlanView)this.planComponent).isFormatTypeSupported(formatType);
 	}
 
 	/**
 	 * Writes the plan in the given output stream at SVG (Scalable Vector Graphics) format if this is the requested format.
 	 */
 	public void exportData(OutputStream out, FormatType formatType, Properties settings) throws IOException {
-		this.planComponent.exportData(out, formatType, settings);
+    	((PlanView)this.planComponent).exportData(out, formatType, settings);
 	}
 
 	/**
 	 * Sets rectangle selection feedback coordinates.
 	 */
 	public void setRectangleFeedback(float x0, float y0, float x1, float y1) {
-		this.planComponent.setRectangleFeedback(x0, y0, x1, y1);
+    	((PlanView)this.planComponent).setRectangleFeedback(x0, y0, x1, y1);
 	}
 
 	/**
@@ -1217,7 +1220,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * its scroll bars if needed.
 	 */
 	public void makeSelectionVisible() {
-		this.planComponent.makeSelectionVisible();
+    	((PlanView)this.planComponent).makeSelectionVisible();
 	}
 
 	/**
@@ -1225,63 +1228,63 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * moving its scroll bars if needed.
 	 */
 	public void makePointVisible(float x, float y) {
-		this.planComponent.makePointVisible(x, y);
+    	((PlanView)this.planComponent).makePointVisible(x, y);
 	}
 
 	/**
 	 * Returns the scale used to display the plan displayed by this component.
 	 */
 	public float getScale() {
-		return this.planComponent.getScale();
+    	return ((PlanView)this.planComponent).getScale();
 	}
 
 	/**
 	 * Sets the scale used to display the plan displayed by this component.
 	 */
 	public void setScale(float scale) {
-		this.planComponent.setScale(scale);
+    	((PlanView)this.planComponent).setScale(scale);
 	}
 
 	/**
 	 * Moves the plan displayed by this component from (dx, dy) unit in the scrolling zone it belongs to.
 	 */
 	public void moveView(float dx, float dy) {
-		this.planComponent.moveView(dx, dy);
+    	((PlanView)this.planComponent).moveView(dx, dy);
 	}
 
 	/**
 	 * Returns <code>x</code> converted in model coordinates space.
 	 */
 	public float convertXPixelToModel(int x) {
-		return this.planComponent.convertXPixelToModel(SwingTools.convertPoint(this, x, 0, this.planComponent).x);
+    	return ((PlanView)this.planComponent).convertXPixelToModel(SwingTools.convertPoint(this, x, 0, this.planComponent).x);
 	}
 
 	/**
 	 * Returns <code>y</code> converted in model coordinates space.
 	 */
 	public float convertYPixelToModel(int y) {
-		return this.planComponent.convertYPixelToModel(SwingTools.convertPoint(this, 0, y, this.planComponent).y);
+    	return ((PlanView)this.planComponent).convertYPixelToModel(SwingTools.convertPoint(this, 0, y, this.planComponent).y);
 	}
 
 	/**
 	 * Returns <code>x</code> converted in screen coordinates space.
 	 */
 	public int convertXModelToScreen(float x) {
-		return this.planComponent.convertXModelToScreen(x);
+    	return ((PlanView)this.planComponent).convertXModelToScreen(x);
 	}
 
 	/**
 	 * Returns <code>y</code> converted in screen coordinates space.
 	 */
 	public int convertYModelToScreen(float y) {
-		return this.planComponent.convertYModelToScreen(y);
+    	return ((PlanView)this.planComponent).convertYModelToScreen(y);
 	}
 
 	/**
 	 * Returns the length in centimeters of a pixel with the current scale.
 	 */
 	public float getPixelLength() {
-		return this.planComponent.getPixelLength();
+    	return ((PlanView)this.planComponent).getPixelLength();
 	}
 
 	/**
@@ -1289,7 +1292,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * the point (<code>x</code>,<code>y</code>).
 	 */
 	public float[][] getTextBounds(String text, TextStyle style, float x, float y, float angle) {
-		return this.planComponent.getTextBounds(text, style, x, y, angle);
+    	return ((PlanView)this.planComponent).getTextBounds(text, style, x, y, angle);
 	}
 
 	/**
@@ -1319,22 +1322,30 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * Sets tool tip text displayed as feedback.
 	 */
 	public void setToolTipFeedback(String toolTipFeedback, float x, float y) {
-		this.planComponent.setToolTipFeedback(toolTipFeedback, x, y);
+    	((PlanView)this.planComponent).setToolTipFeedback(toolTipFeedback, x, y);
 	}
 
 	/**
-	 * Set properties edited in tool tip.
+   * Sets properties edited in tool tip.
 	 */
 	public void setToolTipEditedProperties(EditableProperty[] toolTipEditedProperties, Object[] toolTipPropertyValues,
 										   float x, float y) {
-		this.planComponent.setToolTipEditedProperties(toolTipEditedProperties, toolTipPropertyValues, x, y);
+    	((PlanView)this.planComponent).setToolTipEditedProperties(toolTipEditedProperties, toolTipPropertyValues, x, y);
+	}
+
+	/**
+	 * Sets the value of a property edited in tool tip.
+	 */
+	public void setToolTipEditedPropertyValue(PlanController.EditableProperty toolTipEditedProperty,
+											  Object toolTipPropertyValue) {
+		((PlanView)this.planComponent).setToolTipEditedPropertyValue(toolTipEditedProperty, toolTipPropertyValue);
 	}
 
 	/**
 	 * Deletes tool tip text from screen.
 	 */
 	public void deleteToolTipFeedback() {
-		this.planComponent.deleteToolTipFeedback();
+    	((PlanView)this.planComponent).deleteToolTipFeedback();
 	}
 
 	/**
@@ -1342,7 +1353,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * should be visible or not.
 	 */
 	public void setResizeIndicatorVisible(boolean visible) {
-		this.planComponent.setResizeIndicatorVisible(visible);
+    	((PlanView)this.planComponent).setResizeIndicatorVisible(visible);
 	}
 
 	/**
@@ -1350,14 +1361,14 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 */
 	public void setAlignmentFeedback(Class<? extends Selectable> alignedObjectClass, Selectable alignedObject, float x,
 									 float y, boolean showPoint) {
-		this.planComponent.setAlignmentFeedback(alignedObjectClass, alignedObject, x, y, showPoint);
+    	((PlanView)this.planComponent).setAlignmentFeedback(alignedObjectClass, alignedObject, x, y, showPoint);
 	}
 
 	/**
 	 * Sets the points used to draw an angle in the plan displayed by this component.
 	 */
 	public void setAngleFeedback(float xCenter, float yCenter, float x1, float y1, float x2, float y2) {
-		this.planComponent.setAngleFeedback(xCenter, yCenter, x1, y1, x2, y2);
+    	((PlanView)this.planComponent).setAngleFeedback(xCenter, yCenter, x1, y1, x2, y2);
 	}
 
 	/**
@@ -1365,21 +1376,21 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * initiated from outside of the plan displayed by this component.
 	 */
 	public void setDraggedItemsFeedback(List<Selectable> draggedItems) {
-		this.planComponent.setDraggedItemsFeedback(draggedItems);
+    	((PlanView)this.planComponent).setDraggedItemsFeedback(draggedItems);
 	}
 
 	/**
 	 * Sets the given dimension lines to be drawn as feedback.
 	 */
 	public void setDimensionLinesFeedback(List<DimensionLine> dimensionLines) {
-		this.planComponent.setDimensionLinesFeedback(dimensionLines);
+    	((PlanView)this.planComponent).setDimensionLinesFeedback(dimensionLines);
 	}
 
 	/**
 	 * Deletes all elements shown as feedback.
 	 */
 	public void deleteFeedback() {
-		this.planComponent.deleteFeedback();
+    	((PlanView)this.planComponent).deleteFeedback();
 	}
 
 	/**
@@ -1396,42 +1407,47 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 	 * Returns the size of the given piece of furniture in the horizontal plan.
 	 */
 	public float [] getPieceOfFurnitureSizeInPlan(HomePieceOfFurniture piece) {
-		return this.planComponent.getPieceOfFurnitureSizeInPlan(piece);
+    	return ((PlanView)this.planComponent).getPieceOfFurnitureSizeInPlan(piece);
 	}
 
 	/**
 	 * Returns <code>true</code> if this component is able to compute the size of horizontally rotated furniture.
 	 */
 	public boolean isFurnitureSizeInPlanSupported() {
-		return this.planComponent.isFurnitureSizeInPlanSupported();
+    	return ((PlanView)this.planComponent).isFurnitureSizeInPlanSupported();
 	}
 
 	/**
 	 * Returns the component used as an horizontal ruler for the plan displayed by this component.
 	 */
 	public com.eteks.sweethome3d.viewcontroller.View getHorizontalRuler() {
-		return this.planComponent.getHorizontalRuler();
+		return ((PlanView)this.planComponent).getHorizontalRuler();
 	}
 
 	/**
 	 * Returns the component used as a vertical ruler for the plan displayed by this component.
 	 */
 	public com.eteks.sweethome3d.viewcontroller.View getVerticalRuler() {
-		return this.planComponent.getVerticalRuler();
+		return ((PlanView)this.planComponent).getVerticalRuler();
 	}
 
 	/**
 	 * Prints the plan component.
 	 */
-	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-		return this.planComponent.print(graphics, pageFormat, pageIndex);
+  public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
+		if (this.planComponent instanceof Printable) {
+		  return ((Printable)this.planComponent).print(g, pageFormat, pageIndex);
+		} else {
+		  throw new IllegalStateException("Embeded plan view not printable");
+		}
 	}
 
 	/**
 	 * Returns the preferred scale to print the plan component.
 	 */
 	public float getPrintPreferredScale(Graphics graphics, PageFormat pageFormat) {
-		return this.planComponent.getPrintPreferredScale(graphics, pageFormat);
+    	return getPrintPreferredScale(LengthUnit.inchToCentimeter((float)pageFormat.getImageableWidth() / 72),
+        	LengthUnit.inchToCentimeter((float)pageFormat.getImageableHeight() / 72));
 	}
 
 	/**
@@ -1449,6 +1465,7 @@ public class MultipleLevelsPlanPanel extends JComponent implements PlanView {
 
 		public LevelLabel(Level level) {
 			this.level = level;
+
 		}
 
 		public Level getLevel() {

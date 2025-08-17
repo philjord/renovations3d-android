@@ -1,7 +1,7 @@
 /*
  * ModelMaterialsComponent.java 26 oct. 2012
  *
- * Sweet Home 3D, Copyright (c) 2012 Emmanuel PUYBARET / eTeks <info@eteks.com>
+ * Sweet Home 3D, Copyright (c) 2024 Space Mushrooms <info@sweethome3d.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import com.eteks.renovations3d.android.utils.CheckableImageView;
 import com.eteks.sweethome3d.j3d.ModelManager;
 import com.eteks.sweethome3d.model.HomeMaterial;
 import com.eteks.sweethome3d.model.HomeTexture;
+import com.eteks.sweethome3d.model.PieceOfFurniture;
 import com.eteks.sweethome3d.model.UserPreferences;
 import com.eteks.sweethome3d.viewcontroller.ModelMaterialsController;
 import com.eteks.sweethome3d.viewcontroller.TextureChoiceController;
@@ -115,27 +116,27 @@ public class ModelMaterialsComponent  extends JButton implements View {
 
     private final ModelMaterialsController controller;
     
-    private JLabel 								 previewLabel;
+    private JLabel 					previewLabel;
     private ModelPreviewComponent  previewComponent;
     private JLabel                 materialsLabel;
-    private JList 								 materialsList;
+    private JList 					materialsList;
     private JLabel                 colorAndTextureLabel;
-    private JRadioButton 					 defaultColorAndTextureRadioButton;
+    private JRadioButton 			defaultColorAndTextureRadioButton;
     private JRadioButton           invisibleRadioButton;
     private JRadioButton           colorRadioButton;
     private ColorButton            colorButton;
     private JRadioButton           textureRadioButton;
-    private JButton 						   textureComponent;
+    private JButton 				textureComponent;
     private JLabel                 shininessLabel;
-    private JSlider 							 shininessSlider;
+    private JSlider 				shininessSlider;
     private PropertyChangeListener textureChangeListener;
 
-		private Activity activity;
+    private Activity activity;
 
     public ModelMaterialsPanel(UserPreferences preferences, 
                                ModelMaterialsController controller, Activity activity) {
-			super(preferences, activity, R.layout.dialog_modelmaterialspanel);
-			this.activity = activity;
+        super(preferences, activity, R.layout.dialog_modelmaterialspanel);
+        this.activity = activity;
       this.controller = controller;
       createComponents(preferences, controller);
       setMnemonics(preferences);
@@ -149,7 +150,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
                                   final ModelMaterialsController controller) {
       this.materialsLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "materialsLabel.text"));
-			MaterialsListModel materialsListModel = new MaterialsListModel(controller);
+      MaterialsListModel materialsListModel = new MaterialsListModel(controller);
       this.materialsList = new JList(activity, materialsListModel);
       this.materialsList.setSelectionMode(JList.ListSelectionModel.SINGLE_SELECTION);
       this.materialsList.setCellRenderer(new MaterialListCellRenderer(activity, materialsListModel.toList()));
@@ -158,15 +159,15 @@ public class ModelMaterialsComponent  extends JButton implements View {
 							com.eteks.sweethome3d.swing.ModelMaterialsComponent.class, "previewLabel.text"));
       this.previewComponent = new ModelPreviewComponent(true, activity);
       this.previewComponent.setFocusable(false);
-			this.previewComponent.setMinimumWidth(this.previewComponent.getPreferredSize().width);
-			this.previewComponent.setMinimumHeight(this.previewComponent.getPreferredSize().height);
+      this.previewComponent.setMinimumWidth(this.previewComponent.getPreferredSize().width);
+      this.previewComponent.setMinimumHeight(this.previewComponent.getPreferredSize().height);
       ModelManager.getInstance().loadModel(controller.getModel(), new ModelManager.ModelObserver() {
           public void modelUpdated(BranchGroup modelRoot) {
             final MaterialsListModel materialsListModel = (MaterialsListModel)materialsList.getModel();
-            previewComponent.setModel(controller.getModel(), controller.isBackFaceShown(), controller.getModelRotation(),
+            previewComponent.setModel(controller.getModel(), controller.getModelFlags(), controller.getModelRotation(),
                 controller.getModelWidth(), controller.getModelDepth(), controller.getModelHeight());
             previewComponent.setModelMaterials(materialsListModel.getMaterials());
-            previewComponent.setModelTranformations(controller.getModelTransformations());
+            previewComponent.setModelTransformations(controller.getModelTransformations());
             materialsListModel.addListDataListener(new JList.ListDataListener() {
                 public void contentsChanged(JList.ListDataEvent ev) {
                   previewComponent.setModelMaterials(materialsListModel.getMaterials());
@@ -383,7 +384,7 @@ public class ModelMaterialsComponent  extends JButton implements View {
                 if (shininess != null) {
                   shininessSlider.setValue((int)(shininess * 128));
                 } else {
-                  shininessSlider.setValue((int)(defaultMaterial.getShininess() * 128));
+                  shininessSlider.setValue((int)((defaultMaterial.getShininess() != null) ? defaultMaterial.getShininess() * 128 : 0));
                 }
                 
                 defaultColorAndTextureRadioButton.addChangeListener(defaultChoiceChangeListener);
@@ -676,7 +677,8 @@ public class ModelMaterialsComponent  extends JButton implements View {
           ModelManager.getInstance().loadModel(controller.getModel(), 
             new ModelManager.ModelObserver() {
               public void modelUpdated(BranchGroup modelRoot) {
-                defaultMaterials = ModelManager.getInstance().getMaterials(modelRoot, controller.getModelCreator());
+              defaultMaterials = ModelManager.getInstance().getMaterials(
+                  modelRoot, (controller.getModelFlags() & PieceOfFurniture.HIDE_EDGE_COLOR_MATERIAL) != 0, controller.getModelCreator());
 								if (materials != null) {
 									// Keep only materials that are defined in default materials set
 									// (the list can be different if the model loader interprets differently a 3D model file
@@ -768,12 +770,12 @@ public class ModelMaterialsComponent  extends JButton implements View {
         return this.materials;
       }
 
-			public List<HomeMaterial> toList() {
-      	List<HomeMaterial> ret =  new ArrayList<HomeMaterial>();
-				for(int i = 0 ; i <  getSize(); i++)
-					ret.add((HomeMaterial) getElementAt(i));
-				return ret;
-			}
+	    public List<HomeMaterial> toList() {
+      	    List<HomeMaterial> ret =  new ArrayList<HomeMaterial>();
+            for(int i = 0 ; i <  getSize(); i++)
+                ret.add((HomeMaterial) getElementAt(i));
+            return ret;
+		}
     }
     
     /**
@@ -791,16 +793,16 @@ public class ModelMaterialsComponent  extends JButton implements View {
 
       private void toggleBlinkingState() {
         MaterialsListModel listModel = (MaterialsListModel)materialsList.getModel();
-        HomeMaterial [] materials = listModel.getMaterials();
         if (listModel.getSize() > 1) {
+        HomeMaterial [] materials = listModel.getMaterials();
           if (getDelay() != 1000) {
             setDelay(1000);
-            for (int index : materialsList.getSelectedIndices()) {
               if (materials == null) {
                 materials = new HomeMaterial [listModel.getSize()];
               } else {
                 materials = materials.clone();
               }
+            for (int index : materialsList.getSelectedIndices()) {
               HomeMaterial defaultMaterial = listModel.getDefaultMaterialAt(index);
               HomeMaterial selectedMaterial = materials [index] != null
                   ? materials [index]
@@ -810,6 +812,9 @@ public class ModelMaterialsComponent  extends JButton implements View {
                 Integer selectedColor = selectedMaterial.getColor();
                 if (selectedColor == null) {
                   selectedColor = defaultMaterial.getColor();
+                  if (selectedColor == null) {
+                    selectedColor = 0xFF000000;
+                  }
                 }
                 int red   = (selectedColor >> 16) & 0xFF;
                 int green = (selectedColor >> 8) & 0xFF;
@@ -824,10 +829,10 @@ public class ModelMaterialsComponent  extends JButton implements View {
               }
               materials [index] =
                   new HomeMaterial(selectedMaterial.getName(), blinkColor, null, selectedMaterial.getShininess());
-              previewComponent.setModelMaterials(materials);
             }
           } else {
             setDelay(100);
+          }
             previewComponent.setModelMaterials(materials);
           }
         }
