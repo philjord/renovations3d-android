@@ -41,6 +41,7 @@ import com.eteks.sweethome3d.io.HomeStreamRecorder;
 import com.eteks.sweethome3d.model.HomeRecorder;
 import com.mindblowing.swingish.JFileChooser;
 import com.eteks.renovations3d.android.utils.AndroidDialogView;
+import com.mindblowing.utils.LaserMeasureTool;
 import com.mindblowing.utils.SopInterceptor;
 import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.RecorderException;
@@ -384,8 +385,11 @@ public class Renovations3DActivity extends FragmentActivity {
 
 		loadUpContent();
 
-	}
 
+		//Bluetooth experiments begin
+		//laserMeasureTool = new LaserMeasureTool(this);
+	}
+	//private LaserMeasureTool laserMeasureTool;
 
 
 	public ViewPager getViewPager() {
@@ -1589,8 +1593,13 @@ public class Renovations3DActivity extends FragmentActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == LaserMeasureTool.SELECT_DEVICE_REQUEST_CODE && data != null) {
+		//	this.laserMeasureTool.onActivityResult(requestCode, resultCode, data);
+		} else if (requestCode == ImageAcquireManager.REQUEST_CODE_GET_IMAGE || requestCode == ImageAcquireManager.REQUEST_CODE_TAKE_IMAGE) {
+			this.imageAcquireManager.onActivityResult(requestCode, resultCode, data);
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 

@@ -35,8 +35,8 @@ public class ImageAcquireManager
 {
 	public enum Destination {IMPORT_BACKGROUND, IMPORT_TEXTURE};
 
-	private static final int REQUEST_CODE_GET_IMAGE = 4736;
-	private static final int REQUEST_CODE_TAKE_IMAGE = 4737;
+	public static final int REQUEST_CODE_GET_IMAGE = 4736;
+	public static final int REQUEST_CODE_TAKE_IMAGE = 4737;
 	private ImageReceiver imageReceiver = null;
 	private Destination imageDestination = null;
 	private String imagedReceivedFile = null;// used by the dialog itself to ask for a pending image

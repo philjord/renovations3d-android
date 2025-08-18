@@ -380,7 +380,7 @@ public class PhotoPanel extends AndroidDialogView implements DialogView
 
 		this.rendererLabel = new JLabel(activity, "");
 		this.rendererComboBox = new JComboBox(activity, AbstractPhotoRenderer.getAvailableRenderers().toArray());
-		rendererComboBox.setAdapter(new ArrayAdapter<Lens>(activity, android.R.layout.simple_list_item_1, Lens.values()) {
+		rendererComboBox.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, AbstractPhotoRenderer.getAvailableRenderers()) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				return getDropDownView(position, convertView, parent);
