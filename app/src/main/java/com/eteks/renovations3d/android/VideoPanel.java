@@ -717,9 +717,9 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
         });
     this.qualitySlider.setValue(this.qualitySlider.getMinimum() + controller.getQuality());
 
-		this.fastLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+    this.fastLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 						com.eteks.sweethome3d.swing.VideoPanel.class, "fastLabel.text"));
-		this.bestLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
+    this.bestLabel = new JLabel(activity, SwingTools.getLocalizedLabelText(preferences,
 						com.eteks.sweethome3d.swing.VideoPanel.class, "bestLabel.text"));
     //this.advancedComponentsSeparator = new JSeparator();
 
@@ -733,13 +733,14 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     if (datePattern.indexOf("yyyy") == -1) {
       datePattern = datePattern.replace("yy", "yyyy");
     }
-		dateSpinner.setTimePattern(datePattern);
+	dateSpinner.setTimePattern(datePattern);
     //JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(this.dateSpinner, datePattern);
     //this.dateSpinner.setEditor(dateEditor);
     //SwingTools.addAutoSelectionOnFocusGain(dateEditor.getTextField());
     
     this.timeLabel = new JLabel(activity, "");
     final SpinnerDateModel timeSpinnerModel = new SpinnerDateModel();
+    timeSpinnerModel.setCalendarField(11);//11 is the hour of day field, PJ not sure hwo this gets set in teh desktop version exactly
     timeSpinnerModel.setValue(time);
     this.timeSpinner = new JSpinnerDate(activity, timeSpinnerModel);
     // From http://en.wikipedia.org/wiki/12-hour_clock#Use_by_country
@@ -771,7 +772,7 @@ public class VideoPanel extends AndroidFloatingView implements DialogView {
     } else {
       timeInstance = (SimpleDateFormat)DateFormat.getTimeInstance(DateFormat.SHORT);
     }
-		timeSpinner.setTimePattern(timeInstance.toPattern());
+    timeSpinner.setTimePattern(timeInstance.toPattern());
 
     final PropertyChangeListener timeChangeListener = new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent ev) {
