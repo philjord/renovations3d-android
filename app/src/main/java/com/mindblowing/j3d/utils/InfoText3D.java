@@ -1,7 +1,7 @@
 package com.mindblowing.j3d.utils;
 
 import com.jogamp.graph.font.FontFactory;
-import com.mindblowing.hudbasics.graph.demos.ui.Label;
+import com.jogamp.graph.ui.shapes.Label;
 
 import org.jogamp.java3d.Behavior;
 import org.jogamp.java3d.BoundingSphere;
@@ -36,10 +36,10 @@ public abstract class InfoText3D
 		float pixelSizeFPS = 0.00003F * (float) canvas3d2d.getGLWindow().getSurfaceHeight();
 		try
 		{
-			this.fpsLabel = new Label(canvas3d2d.getVertexFactory(), 0, FontFactory.get(0).getDefault(), pixelSizeFPS, "");
+			this.fpsLabel = new Label(0, FontFactory.get(0).getDefault(), pixelSizeFPS, "");
 			canvas3d2d.addUIShape(fpsLabel);
-			this.fpsLabel.setEnabled(true);
-			this.fpsLabel.translate(-0.98F, 0.9F, 0.0F);
+			this.fpsLabel.setVisible(true);
+			this.fpsLabel.move(-0.98F, 0.9F, 0.0F);
 			this.fpsLabel.setColor(1.0F, 1.0F, 0.0F, 1.0F);
 		}
 		catch (IOException e)

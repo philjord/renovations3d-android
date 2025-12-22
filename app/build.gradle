@@ -45,33 +45,33 @@ android {
 }
 
 dependencies {
-    implementation files('libs/gluegen-rt-android2.4.0.jar')
-    implementation files('libs/jogl-all-android2.4.0.jar')
-    implementation files('libs/jogamp-natives2.4.0.jar')
     implementation files('libs/sweethome3D-android.jar')
-    implementation files('libs/sweethome3D-tools.jar')
+    implementation ('org.jogamp.java3d:java3d-core-and:1.7.2') { changing = true }
+    implementation ('org.jogamp.java3d:java3d-utils-and:1.7.2') { changing = true }
     implementation files('libs/sunflow-0.07.3pj.jar')
 
+    implementation files('libs/batik-svgparser-andy.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.guava:guava:32.0.1-jre'
 
     // all firebase libs versions must match
-    implementation platform('com.google.firebase:firebase-bom:33.1.2')// and this does that thing
+    implementation platform('com.google.firebase:firebase-bom:34.7.0')// and this does that thing
     // but now I have to put the version on here, where there were none before, so who knows...
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-config:22.0.0'
+    implementation 'com.google.firebase:firebase-config:23.0.1'
 
     releaseImplementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     //apparently ads is not part of the bom system, how do I know, trial and error like everything gradle based
-    implementation 'com.google.firebase:firebase-ads:23.2.0'
+    implementation 'com.google.firebase:firebase-ads:23.6.0'
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
-    implementation 'androidx.fragment:fragment:1.8.1'
+    implementation 'androidx.fragment:fragment:1.8.9'
 
-    implementation 'com.android.billingclient:billing:7.0.0'
+    implementation 'com.android.billingclient:billing:8.2.1'
 
     implementation 'com.github.yukuku:ambilwarna:2.0.1'//color picker dialog     
     implementation 'com.andkulikov:transitionseverywhere:1.7.4'

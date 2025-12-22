@@ -803,43 +803,48 @@ private Renovations3DActivity activity;//for dialogs etc
 
                           // Get the Uri of the selected file
                           Uri uri = data.getData();
-                          String uriString = uri.toString();
-                          File loadFile = null;
-                          if (uriString.startsWith("content://")) {
-                              Cursor cursor = null;
-                              try {
-                                  cursor = activity.getContentResolver().query(uri, null, null, null, null);
-                                  if (cursor != null && cursor.moveToFirst()) {
-                                      String libraryName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                                      try {
-                                          InputStream in = activity.getContentResolver().openInputStream(uri);
-                                          loadFile = FileActivityResult.copyInputStreamToTempFile(in, libraryName, activity);
-                                      } catch (FileNotFoundException e) {
-                                          e.printStackTrace();
+                          if (uri != null) {
+                              String uriString = uri.toString();
+                              File loadFile = null;
+                              if (uriString.startsWith("content://")) {
+                                  Cursor cursor = null;
+                                  try {
+                                      cursor = activity.getContentResolver().query(uri, null, null, null, null);
+                                      if (cursor != null && cursor.moveToFirst()) {
+                                          int col = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                                          if (col >= 0) {
+                                              String libraryName = cursor.getString(col);
+                                              try {
+                                                  InputStream in = activity.getContentResolver().openInputStream(uri);
+                                                  loadFile = FileActivityResult.copyInputStreamToTempFile(in, libraryName, activity);
+                                              } catch (FileNotFoundException e) {
+                                                  e.printStackTrace();
+                                              }
+                                          }
                                       }
+                                  } finally {
+                                      cursor.close();
                                   }
-                              } finally {
-                                  cursor.close();
-                              }
-                          } else if (uriString.startsWith("file://")) {
-                              loadFile = new File(uri.getPath());
-                          }
-
-                          // In most cases we leave selectedFile[0] = null so the callee assumes a cancel and moves on
-                          if (loadFile != null) {
-                              Renovations3DActivity.logFireBaseLevelUp("loadFile", loadFile.getName());
-                              if (contentType == ContentManager.ContentType.MODEL) {
-                                  //TODO: this will only work for "singleton" file zip, dae etc, *.obj will not find textures as they are file relative and the file is well lost
-                                  //return null as though a cancel occurs (as loadFile above does the work of loading)
-                                  selectedFile[0] = loadFile;
-                                  // release the acquire that has been taken below (before this return)
-                                  dialogSemaphore.release();
-                              } else {
-                                  //controller2.importTexturesLibrary(texturesLibraryName);
-                                  // use the Activity in case of a zip file requiring unzip, extension dictates what gets imported
-                                  activity.loadFile(loadFile);
+                              } else if (uriString.startsWith("file://")) {
+                                  loadFile = new File(uri.getPath());
                               }
 
+                              // In most cases we leave selectedFile[0] = null so the callee assumes a cancel and moves on
+                              if (loadFile != null) {
+                                  Renovations3DActivity.logFireBaseLevelUp("loadFile", loadFile.getName());
+                                  if (contentType == ContentManager.ContentType.MODEL) {
+                                      //TODO: this will only work for "singleton" file zip, dae etc, *.obj will not find textures as they are file relative and the file is well lost
+                                      //return the loaded file
+                                      selectedFile[0] = loadFile;
+                                      // release the acquire that has been taken below (before this return)
+                                      dialogSemaphore.release();
+                                  } else {
+                                      //controller2.importTexturesLibrary(texturesLibraryName);
+                                      // use the Activity in case of a zip file requiring unzip, extension dictates what gets imported
+                                      activity.loadFile(loadFile);
+                                  }
+
+                              }
                           }
                       }
                   });

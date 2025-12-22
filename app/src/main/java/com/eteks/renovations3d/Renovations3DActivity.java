@@ -1374,9 +1374,8 @@ public class Renovations3DActivity extends FragmentActivity {
 		//TODO: see eclipse Renovations3D.protected void start(String[] args) for exactly this setup, but better
 		Intent intent = getIntent();
 		if (intent != null) {
-			String action = intent.getAction();
-
-			if (action.compareTo(Intent.ACTION_VIEW) == 0) {
+			String action = intent.getAction();// action can be null
+			if (Intent.ACTION_VIEW.equals(action)) {
 				String scheme = intent.getScheme();
 				//ContentResolver resolver = getContentResolver();
 				if(scheme != null) {

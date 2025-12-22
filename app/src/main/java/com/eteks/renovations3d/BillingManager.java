@@ -8,6 +8,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
@@ -15,6 +16,7 @@ import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryProductDetailsParams.Product;
+import com.android.billingclient.api.QueryProductDetailsResult;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.google.common.collect.ImmutableList;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -42,7 +44,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     public void initialize() {
         billingClient = BillingClient.newBuilder(renovations3DActivity)
                 .setListener(this)
-                .enablePendingPurchases()
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
                 .build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -120,10 +122,10 @@ public class BillingManager implements PurchasesUpdatedListener {
         billingClient.queryProductDetailsAsync(
                 queryProductDetailsParams,
                 new ProductDetailsResponseListener() {
-                    public void onProductDetailsResponse(BillingResult billingResult,
-                                                         List<ProductDetails> productDetailsList) {
-                        if (productDetailsList != null) {
-                            for (ProductDetails productDetail : productDetailsList ) {
+                    @Override
+                    public void onProductDetailsResponse(@NonNull BillingResult billingResult, @NonNull QueryProductDetailsResult queryProductDetailsResult) {
+                        if (queryProductDetailsResult != null) {
+                            for (ProductDetails productDetail : queryProductDetailsResult.getProductDetailsList() ) {
                                 if (productDetail.getProductId().equals(BASIC_AD_FREE_SKU)) {
                                     basicAdFreeSKU = productDetail;
                                 }
