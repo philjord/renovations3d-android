@@ -48,8 +48,8 @@ dependencies {
     implementation files('libs/sweethome3D-android.jar')
     implementation ('org.jogamp.java3d:java3d-core-and:1.7.2') { changing = true }
     implementation ('org.jogamp.java3d:java3d-utils-and:1.7.2') { changing = true }
-    implementation files('libs/sunflow-0.07.3pj.jar')
 
+    implementation files('libs/sunflow-0.07.3-andy.jar')
     implementation files('libs/batik-svgparser-andy.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 

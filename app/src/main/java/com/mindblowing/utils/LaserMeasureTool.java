@@ -105,6 +105,8 @@ public class LaserMeasureTool {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LaserMeasureTool.SELECT_DEVICE_REQUEST_CODE && data != null) {
+            // this seems simpler?
+            //https://stackoverflow.com/questions/35447252/android-ble-how-is-onscanresult-method-being-called-in-scancallback
             BluetoothDevice deviceToPair =
                     data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE);
             if (deviceToPair != null) {
