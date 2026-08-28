@@ -14,7 +14,7 @@ import com.eteks.sweethome3d.model.HomeDoorOrWindow;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.mindblowing.renovations3d.R;
 import com.transitionseverywhere.ChangeText;
-import com.transitionseverywhere.TransitionManager;
+import androidx.transition.TransitionManager;
 
 import org.jogamp.vecmath.Point2f;
 

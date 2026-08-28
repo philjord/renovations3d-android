@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.mindblowing.renovations3d"
         minSdkVersion 26
-        targetSdkVersion 35
+        targetSdkVersion 36
         multiDexEnabled = true
 
         ndk {
@@ -54,14 +54,14 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
 
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'com.google.guava:guava:32.0.1-jre'
 
     // all firebase libs versions must match
-    implementation platform('com.google.firebase:firebase-bom:34.7.0')// and this does that thing
+    implementation platform('com.google.firebase:firebase-bom:34.18.0')// and this does that thing
     // but now I have to put the version on here, where there were none before, so who knows...
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-config:23.0.1'
+    implementation 'com.google.firebase:firebase-config:23.1.0'
 
     releaseImplementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
@@ -69,12 +69,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-ads:23.6.0'
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
-    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.fragment:fragment:1.9.0'
 
-    implementation 'com.android.billingclient:billing:8.2.1'
+    implementation 'com.android.billingclient:billing:9.1.0'
 
     implementation 'com.github.yukuku:ambilwarna:2.0.1'//color picker dialog     
-    implementation 'com.andkulikov:transitionseverywhere:1.7.4'
+    implementation 'com.andkulikov:transitionseverywhere:2.1.0'
     implementation 'me.drakeet.support:toastcompat:1.1.0'
 
     //implementation 'com.google.vr:sdk-audio:1.10.0'
