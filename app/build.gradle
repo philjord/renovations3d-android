@@ -63,7 +63,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-config:23.1.0'
 
-    releaseImplementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     //apparently ads is not part of the bom system, how do I know, trial and error like everything gradle based
     implementation 'com.google.firebase:firebase-ads:23.6.0'
